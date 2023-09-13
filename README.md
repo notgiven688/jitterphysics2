@@ -4,7 +4,10 @@ Jitter2, successor of [Jitter Physics](https://github.com/notgiven688/jitterphys
 
 [![JitterTests](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml/badge.svg)](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml)
 
-<img src="./docs/docs/img/jitter_screenshot.png" alt="screenshot" width="800"/>
+
+<img src="./docs/docs/img/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./docs/docs/img/jitter_screenshot1.png" alt="screenshot" width="400"/>
+
+<img src="./docs/docs/img/jitter_screenshot2.png" alt="screenshot" width="400"/> <img src="./docs/docs/img/jitter_screenshot3.png" alt="screenshot" width="400"/>
 
 ## Getting started
 
