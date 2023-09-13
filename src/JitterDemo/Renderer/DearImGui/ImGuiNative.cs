@@ -559,7 +559,7 @@ public static unsafe class ImGuiNative
 
     [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     public static extern byte igInputText(byte* label, byte* buf, uint buf_size, ImGuiInputTextFlags flags,
-        ImGuiInputTextCallback callback, void* user_data);
+        ImGuiInputTextCallback? callback, void* user_data);
 
     [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     public static extern byte igInputTextMultiline(byte* label, byte* buf, uint buf_size, Vector2 size,

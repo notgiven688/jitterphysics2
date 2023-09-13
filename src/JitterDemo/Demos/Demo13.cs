@@ -32,8 +32,11 @@ public class Demo13 : IDemo
             HingeJoint hj = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitX, AngularLimit.Full, true);
             UniversalJoint uj = new UniversalJoint(world, b0, b1, new JVector(0, 4, 0), JVector.UnitX, JVector.UnitX);
 
-            hj.Motor.TargetVelocity = 4;
-            hj.Motor.MaximumForce = 1;
+            if (hj.Motor != null)
+            {
+                hj.Motor.TargetVelocity = 4;
+                hj.Motor.MaximumForce = 1;
+            }
 
             if (world.BroadPhaseFilter is not Common.IgnoreCollisionBetweenFilter filter)
             {

@@ -252,7 +252,7 @@ public class Wheel
             RigidBody body;
 
             bool result = world.Raycast(newOrigin, wheelRayDelta,
-                raycast, null, out Shape shape, out JVector normal, out float frac);
+                raycast, null, out Shape? shape, out JVector normal, out float frac);
 
             // Debug Rendering
             // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2f);
@@ -265,7 +265,7 @@ public class Wheel
 
             if (result && frac <= 1.0f)
             {
-                body = shape.RigidBody;
+                body = shape!.RigidBody;
 
                 if (frac < deepestFrac)
                 {

@@ -12,11 +12,9 @@ public class Demo11 : IDemo
 {
     public string Name => "Double Pendulum";
 
-    private RigidBody fallingBody = null!;
+    private RigidBody b0 = null!, b1 = null!;
 
-    private RigidBody b0, b1 = null!;
-
-    private World world;
+    private World world = null!;
 
     public void Build()
     {

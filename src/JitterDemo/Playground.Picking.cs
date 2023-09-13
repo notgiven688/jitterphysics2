@@ -62,7 +62,7 @@ public partial class Playground : RenderWindow
         {
             grepBody = null;
             bool result = World.Raycast(origin, jdir, null, null,
-                out Shape grepShape, out JVector rayn, out hitDistance);
+                out Shape? grepShape, out JVector rayn, out hitDistance);
 
             if (grepShape != null)
                 grepBody = grepShape.RigidBody;

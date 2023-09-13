@@ -50,12 +50,6 @@
         </ContentWithTargetPath>
     </ItemGroup>
 
-    <ItemGroup>
-        <Content Include="assets\*.*">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(IsLinux)'=='true'">
         <ContentWithTargetPath Include="runtimes\linux-x64\native\libcimgui.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -64,7 +58,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ObjectLayoutInspector" Version="0.1.2"/>
+        <Content Include="assets\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <PropertyGroup>

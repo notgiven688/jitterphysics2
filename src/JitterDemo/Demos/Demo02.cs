@@ -15,8 +15,6 @@ public class Demo02 : IDemo
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
 
-        RigidBody body;
-
         pg.ResetScene();
         
         Common.BuildTower(Vector3.Zero);
