@@ -20,7 +20,6 @@ public class Demo02 : IDemo
         Common.BuildTower(Vector3.Zero);
 
         world.SolverIterations = 18;
-        world.NumberSubsteps = 0;
     }
 
     public void Draw()
