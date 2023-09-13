@@ -1,0 +1,606 @@
+/*
+ * Copyright (c) 2009-2023 Thorben Linneweber and others
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Jitter2.LinearMath;
+
+namespace Jitter2.Collision;
+
+/// <summary>
+/// Provides efficient and accurate collision detection algorithms for general convex objects
+/// implicitly defined by a support function, see <see cref="ISupportMap"/>.
+/// </summary>
+public static class NarrowPhase
+{
+    private const float NumericEpsilon = 1e-16f;
+
+    private unsafe struct Solver
+    {
+        public MinkowskiDifference MKD;
+        public ConvexPolytope ConvexPolytope;
+
+        public bool Raycast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            normal = JVector.Zero;
+            fraction = float.MaxValue;
+
+            float lambda = 0.0f;
+
+            JVector r = direction;
+            JVector x = origin;
+
+            MKD.SupportA.SupportMap(r, out JVector arbitraryPoint);
+
+            JVector.Subtract(x, arbitraryPoint, out JVector v);
+
+            ConvexPolytope.InitHeap();
+            ConvexPolytope.InitTetrahedron(v);
+
+            int maxIter = MaxIter;
+
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                MKD.SupportA.SupportMap(v, out JVector p);
+
+                JVector.Subtract(x, p, out JVector w);
+
+                float VdotW = JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    float VdotR = JVector.Dot(v, r);
+
+                    if (VdotR >= -NumericEpsilon)
+                    {
+                        return false;
+                    }
+
+                    lambda -= VdotW / VdotR;
+
+                    JVector.Multiply(r, lambda, out x);
+                    JVector.Add(origin, x, out x);
+                    JVector.Subtract(x, p, out w);
+                    normal = v;
+                }
+
+                ConvexPolytope.AddPoint(w);
+
+                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+
+                distSq = v.LengthSquared();
+            }
+
+            fraction = lambda;
+
+            if (normal.LengthSquared() > NumericEpsilon)
+                normal.Normalize();
+
+            return true;
+        }
+
+        private bool SolveMPREPA(ref JVector point1, ref JVector point2, ref JVector normal, ref float penetration)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 85;
+
+            ConvexPolytope.InitTetrahedron();
+
+            int iter = 0;
+
+            Unsafe.SkipInit(out ConvexPolytope.Triangle ctri);
+
+            while (++iter < MaxIter)
+            {
+                ctri = ConvexPolytope.GetClosestTriangle();
+
+                //Debug.Assert(ConvexPolytope.OriginEnclosed);
+
+                JVector searchDir = ctri.ClosestToOrigin;
+
+                if (ctri.ClosestToOriginSq < NumericEpsilon)
+                {
+                    searchDir = ctri.Normal;
+                }
+
+                MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
+
+                float deltaDist = ctri.ClosestToOriginSq - JVector.Dot(vertex.V, ctri.ClosestToOrigin);
+
+                // compare with the corresponding code in SolveGJKEPA.
+                if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * ctri.ClosestToOriginSq)
+                {
+                    goto converged;
+                }
+
+                if (!ConvexPolytope.AddVertex(vertex))
+                {
+                    goto converged;
+                }
+            }
+
+            Trace.WriteLine($"EPA: Could not converge within {MaxIter} iterations.");
+
+            return false;
+
+            converged:
+
+            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+
+            normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
+            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
+
+            return true;
+        }
+
+        public bool SolveMPR(out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        {
+            /*
+            XenoCollide is available under the zlib license:
+
+            XenoCollide Collision Detection and Physics Library
+            Copyright (c) 2007-2014 Gary Snethen http://xenocollide.com
+
+            This software is provided 'as-is', without any express or implied warranty.
+            In no event will the authors be held liable for any damages arising
+            from the use of this software.
+            Permission is granted to anyone to use this software for any purpose,
+            including commercial applications, and to alter it and redistribute it freely,
+            subject to the following restrictions:
+
+            1. The origin of this software must not be misrepresented; you must
+            not claim that you wrote the original software. If you use this
+            software in a product, an acknowledgment in the product documentation
+            would be appreciated but is not required.
+            2. Altered source versions must be plainly marked as such, and must
+            not be misrepresented as being the original software.
+            3. This notice may not be removed or altered from any source distribution.
+            */
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            // If MPR reports a penetration deeper than this value we do not trust
+            // MPR to have found the global minimum and perform an EPA run.
+            const float EPAPenetrationThreshold = 0.02f;
+
+            ConvexPolytope.InitHeap();
+
+            ref ConvexPolytope.Vertex v0 = ref ConvexPolytope.Vertices[0];
+            ref ConvexPolytope.Vertex v1 = ref ConvexPolytope.Vertices[1];
+            ref ConvexPolytope.Vertex v2 = ref ConvexPolytope.Vertices[2];
+            ref ConvexPolytope.Vertex v3 = ref ConvexPolytope.Vertices[3];
+            ref ConvexPolytope.Vertex v4 = ref ConvexPolytope.Vertices[4];
+
+            Unsafe.SkipInit(out JVector temp1);
+            Unsafe.SkipInit(out JVector temp2);
+            Unsafe.SkipInit(out JVector temp3);
+
+            penetration = 0.0f;
+
+            MKD.GeometricCenter(out v0);
+
+            if (Math.Abs(v0.V.X) < NumericEpsilon &&
+                Math.Abs(v0.V.Y) < NumericEpsilon &&
+                Math.Abs(v0.V.Y) < NumericEpsilon)
+            {
+                // any direction is fine
+                v0.V.X = 1e-05f;
+            }
+
+            JVector.Negate(v0.V, out normal);
+
+            MKD.Support(normal, out v1);
+
+            pointA = v1.A;
+            pointB = v1.B;
+
+            if (JVector.Dot(v1.V, normal) <= 0.0f) return false;
+            JVector.Cross(v1.V, v0.V, out normal);
+
+            if (normal.LengthSquared() < NumericEpsilon)
+            {
+                JVector.Subtract(v1.V, v0.V, out normal);
+
+                normal.Normalize();
+
+                JVector.Subtract(v1.A, v1.B, out temp1);
+                penetration = JVector.Dot(temp1, normal);
+
+                return true;
+            }
+
+            MKD.Support(normal, out v2);
+
+            if (JVector.Dot(v2.V, normal) <= 0.0f) return false;
+
+            // Determine whether origin is on + or - side of plane (v1.V,v0.V,v2.V)
+            JVector.Subtract(v1.V, v0.V, out temp1);
+            JVector.Subtract(v2.V, v0.V, out temp2);
+            JVector.Cross(temp1, temp2, out normal);
+
+            float dist = JVector.Dot(normal, v0.V);
+
+            // If the origin is on the - side of the plane, reverse the direction of the plane
+            if (dist > 0.0f)
+            {
+                JVector.Swap(ref v1.V, ref v2.V);
+                JVector.Swap(ref v1.A, ref v2.A);
+                JVector.Swap(ref v1.B, ref v2.B);
+                JVector.Negate(normal, out normal);
+            }
+
+            int phase2 = 0;
+            int phase1 = 0;
+            bool hit = false;
+
+            // Phase One: Identify a portal
+            while (true)
+            {
+                if (phase1 > MaxIter) return false;
+
+                phase1++;
+
+                MKD.Support(normal, out v3);
+
+                if (JVector.Dot(v3.V, normal) <= 0.0f)
+                {
+                    return false;
+                }
+
+                // If origin is outside (v1.V,v0.V,v3.V), then eliminate v2.V and loop
+                JVector.Cross(v1.V, v3.V, out temp1);
+                if (JVector.Dot(temp1, v0.V) < 0.0f)
+                {
+                    v2 = v3;
+                    JVector.Subtract(v1.V, v0.V, out temp1);
+                    JVector.Subtract(v3.V, v0.V, out temp2);
+                    JVector.Cross(temp1, temp2, out normal);
+                    continue;
+                }
+
+                // If origin is outside (v3.V,v0.V,v2.V), then eliminate v1.V and loop
+                JVector.Cross(v3.V, v2.V, out temp1);
+                if (JVector.Dot(temp1, v0.V) < 0.0f)
+                {
+                    v1 = v3;
+                    JVector.Subtract(v3.V, v0.V, out temp1);
+                    JVector.Subtract(v2.V, v0.V, out temp2);
+                    JVector.Cross(temp1, temp2, out normal);
+                    continue;
+                }
+
+                break;
+            }
+
+            // Phase Two: Refine the portal
+            // We are now inside of a wedge...
+            while (true)
+            {
+                phase2++;
+
+                // Compute normal of the wedge face
+                JVector.Subtract(v2.V, v1.V, out temp1);
+                JVector.Subtract(v3.V, v1.V, out temp2);
+                JVector.Cross(temp1, temp2, out normal);
+
+                // normal.Normalize();
+                float normalSq = normal.LengthSquared();
+
+                // Can this happen???  Can it be handled more cleanly?
+                if (normalSq < NumericEpsilon)
+                {
+                    // was: return true;
+                    // better not return a collision
+                    Trace.WriteLine("MPR: This should not happen.");
+                    return false;
+                }
+
+                if (!hit)
+                {
+                    // Compute distance from origin to wedge face
+                    float d = JVector.Dot(normal, v1.V);
+                    // If the origin is inside the wedge, we have a hit
+                    hit = d >= 0;
+                }
+
+                MKD.Support(normal, out v4);
+
+                JVector.Subtract(v4.V, v3.V, out temp3);
+                float delta = JVector.Dot(temp3, normal);
+                penetration = JVector.Dot(v4.V, normal);
+
+                // If the boundary is thin enough or the origin is outside the support plane for the newly discovered vertex, then we can terminate
+                if (delta * delta <= CollideEpsilon * CollideEpsilon * normalSq || penetration <= 0.0f ||
+                    phase2 > MaxIter)
+                {
+                    if (hit)
+                    {
+                        float invnormal = 1.0f / (float)Math.Sqrt(normalSq);
+
+                        penetration *= invnormal;
+
+                        if (penetration > EPAPenetrationThreshold)
+                        {
+                            // If epa fails it does not set any result data. We continue with the mpr data.
+                            if (SolveMPREPA(ref pointA, ref pointB, ref normal, ref penetration)) return true;
+                        }
+
+                        normal *= invnormal;
+
+                        // Compute the barycentric coordinates of the origin
+                        JVector.Cross(v1.V, temp1, out temp3);
+                        float gamma = JVector.Dot(temp3, normal) * invnormal;
+                        JVector.Cross(temp2, v1.V, out temp3);
+                        float beta = JVector.Dot(temp3, normal) * invnormal;
+                        float alpha = 1.0f - gamma - beta;
+
+                        pointA = alpha * v1.A + beta * v2.A + gamma * v3.A;
+                        pointB = alpha * v1.B + beta * v2.B + gamma * v3.B;
+                    }
+
+                    return hit;
+                }
+
+                // Compute the tetrahedron dividing face (v4.V,v0.V,v3.V)
+                JVector.Cross(v4.V, v0.V, out temp1);
+                float dot = JVector.Dot(temp1, v1.V);
+
+                if (dot >= 0.0f)
+                {
+                    dot = JVector.Dot(temp1, v2.V);
+
+                    if (dot >= 0.0f)
+                    {
+                        v1 = v4; // Inside d1 & inside d2 -> eliminate v1.V
+                    }
+                    else
+                    {
+                        v3 = v4; // Inside d1 & outside d2 -> eliminate v3.V
+                    }
+                }
+                else
+                {
+                    dot = JVector.Dot(temp1, v3.V);
+
+                    if (dot >= 0.0f)
+                    {
+                        v2 = v4; // Outside d1 & inside d3 -> eliminate v2.V
+                    }
+                    else
+                    {
+                        v1 = v4; // Outside d1 & outside d3 -> eliminate v1.V
+                    }
+                }
+            }
+        }
+
+        public bool SolveGJKEPA(out JVector point1, out JVector point2, out JVector normal, out float penetration)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 85;
+
+            MKD.GeometricCenter(out ConvexPolytope.Vertex centerVertex);
+            JVector center = centerVertex.V;
+
+            ConvexPolytope.InitHeap();
+            ConvexPolytope.InitTetrahedron(center);
+
+            int iter = 0;
+
+            Unsafe.SkipInit(out ConvexPolytope.Triangle ctri);
+
+            while (++iter < MaxIter)
+            {
+                ctri = ConvexPolytope.GetClosestTriangle();
+                JVector searchDir = ctri.ClosestToOrigin;
+
+                if (!ConvexPolytope.OriginEnclosed) searchDir.Negate();
+
+                if (ctri.ClosestToOriginSq < NumericEpsilon)
+                {
+                    searchDir = ctri.Normal;
+                }
+
+                MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
+
+                float deltaDist = ctri.ClosestToOriginSq - JVector.Dot(vertex.V, ctri.ClosestToOrigin);
+
+                // Can we further "extend" the convex hull by adding the new vertex?
+                //
+                //     c = Triangles[Head].ClosestToOrigin (closest point on the polytope)
+                //     v = Vertices[vPointer] (support point)
+                //     e = CollideEpsilon
+                //
+                // The condition reads:
+                //     abs(dot(normalize(c), v - c)) < e
+                //     <=>  abs(dot(c, v - c))/len(c) < e <=> abs((dot(c, v) - dot(c,c)))/len(c) < e
+                //     <=>  (dot(c, v) - dot(c,c))^2 < e^2*c^2 <=> (dot(c, v) - c^2)^2 < e^2*c^2
+                if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * ctri.ClosestToOriginSq)
+                {
+                    goto converged;
+                }
+
+                if (!ConvexPolytope.AddVertex(vertex))
+                {
+                    goto converged;
+                }
+            }
+
+            point1 = point2 = normal = JVector.Zero;
+            penetration = 0.0f;
+
+            Trace.WriteLine($"EPA: Could not converge within {MaxIter} iterations.");
+
+            return false;
+
+            converged:
+
+            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
+            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
+
+            // origin not enclosed: we basically did a pure GJK run
+            // without ever enclosing the origin, i.e. the shapes do not overlap
+            // and the penetration is negative.
+            if (!ConvexPolytope.OriginEnclosed) penetration *= -1.0f;
+
+            return true;
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------
+    [ThreadStatic] private static Solver solver;
+
+    /// <summary>
+    /// Raycast against a shape.
+    /// </summary>
+    /// <param name="support">Support function of the shape.</param>
+    /// <param name="orientation">Orientation of the shape in world space.</param>
+    /// <param name="position">Position of the shape in world space.</param>
+    /// <param name="origin">Origin of the ray.</param>
+    /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
+    /// <param name="fraction">The hit point of the ray is given by origin + fraction * direction.</param>
+    /// <param name="normal">The normalized normal perpendicular to the surface, pointing outwards.
+    /// Zero if ray does not hit.</param>
+    /// <returns>True if the ray and the shape intersect, false otherwise.</returns>
+    public static bool Raycast(ISupportMap support, ref JMatrix orientation,
+        ref JVector position, ref JVector origin, ref JVector direction, out float fraction, out JVector normal)
+    {
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+
+        // rotate the ray into the reference frame of bodyA..
+        JVector tdirection = JVector.TransposedTransform(direction, orientation);
+        JVector torigin = JVector.TransposedTransform(origin - position, orientation);
+
+        bool result = solver.Raycast(torigin, tdirection, out fraction, out normal);
+
+        // ..rotate back.
+        JVector.Transform(normal, orientation, out normal);
+
+        return result;
+    }
+
+    /// <summary>
+    /// This method detects whether two convex shapes overlap. For the overlapping as well as the separated
+    /// case detailed information is provided. Internally the Expanding Polytope Algorithm (EPA) is
+    /// employed to retrieve collision information.
+    /// </summary>
+    /// <param name="supportA">Support function of shape A.</param>
+    /// <param name="supportB">Support function of shape B.</param>
+    /// <param name="orientationA">Orientation of shape A in world space.</param>
+    /// <param name="orientationB">Orientation of shape B in world space.</param>
+    /// <param name="positionA">Position of shape A in world space.</param>
+    /// <param name="positionB">Position of shape B in world space.</param>
+    /// <param name="pointA">For the overlapping case: Deepest point on shape A inside shape B. For
+    /// the separated case: Closest point on shape A to shape B.</param>
+    /// <param name="pointB">For the overlapping case: Deepest point on shape B inside shape A. For
+    /// the separated case: Closest point on shape B to shape A.</param>
+    /// <param name="normal">Normalized collision normal pointing from pointB to pointA. The normal
+    /// is defined even if pointA and pointB coincide. The normal is the direction in which
+    /// the shapes must be moved by the minimal distance (given by the penetration depth) in order
+    /// to separate them for the overlapping case or bring them into touch for the separated case.</param>
+    /// <param name="penetration">Penetration depth.</param>
+    /// <returns>Returns true if the algorithm terminated successfully, false otherwise. Collision
+    /// information is set to the types default values when the algorithm fails to converge.</returns>
+    public static bool GJKEPA(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationA, in JMatrix orientationB,
+        in JVector positionA, in JVector positionB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+    {
+        solver.MKD.SupportA = supportA;
+        solver.MKD.SupportB = supportB;
+
+        // rotate into the reference frame of bodyA..
+        JMatrix.TransposedMultiply(orientationA, orientationB, out solver.MKD.OrientationB);
+        JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
+        JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
+
+        // ..perform collision detection..
+        bool success = solver.SolveGJKEPA(out pointA, out pointB, out normal, out penetration);
+
+        // ..rotate back. this hopefully saves some matrix vector multiplication
+        // when calling the support function multiple times.
+        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Add(pointA, positionA, out pointA);
+        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
+
+        return success;
+    }
+
+    /// <summary>
+    /// This method detects whether two convex shapes overlap. For overlapping shapes detailed collision
+    /// information is provided. Internally, Minkowski Portal Refinement (MPR) is employed to
+    /// retrieve the collision information. MPR is not exact but provides a strict upper bound for
+    /// the penetration depth. If the upper bound exceeds a threeshold the results are refined
+    /// by the Expanding Polytope Algorithm (EPA).
+    /// </summary>
+    /// <param name="supportA">Support function of shape A.</param>
+    /// <param name="supportB">Support function of shape B.</param>
+    /// <param name="orientationA">Orientation of shape A in world space.</param>
+    /// <param name="orientationB">Orientation of shape B in world space.</param>
+    /// <param name="positionA">Position of shape A in world space.</param>
+    /// <param name="positionB">Position of shape B in world space.</param>
+    /// <param name="pointA">Deepest point on shape A inside shape B.</param>
+    /// <param name="pointB">Deepest point on shape B inside shape A.</param>
+    /// <param name="normal">Normalized collision normal pointing from pointB to pointA. The normal
+    /// is defined even if pointA and pointB coincide. The normal is the direction in which
+    /// the shapes must be moved by the minimal distance (given by the penetration depth) in order
+    /// to separate them.</param>
+    /// <param name="penetration">Penetration depth.</param>
+    /// <returns>Returns true if the shapes overlap (collide), false otherwise.</returns>
+    public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationA, in JMatrix orientationB,
+        in JVector positionA, in JVector positionB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+    {
+        solver.MKD.SupportA = supportA;
+        solver.MKD.SupportB = supportB;
+
+        // rotate into the reference frame of bodyA..
+        JMatrix.TransposedMultiply(orientationA, orientationB, out solver.MKD.OrientationB);
+        JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
+        JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
+
+        // ..perform collision detection..
+        bool res = solver.SolveMPR(out pointA, out pointB, out normal, out penetration);
+
+        // ..rotate back. this hopefully saves some matrix vector multiplication
+        // when calling the support function multiple times.
+        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Add(pointA, positionA, out pointA);
+        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
+
+        return res;
+    }
+}
