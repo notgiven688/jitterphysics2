@@ -33,7 +33,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 
 - [x] Speculative contacts (avoiding the bullet-through-paper problem).
 - [x] A variety of constraints and motors with support for softness.
-- [x] A sophisticated deactivation scheme with minimal cost for inactive rigid bodies (scenes with 100k inactive bodies are easily possible).
+- [x] A sophisticated deactivation scheme with minimal cost for inactive rigid bodies (scenes with 100k inactive bodies are easily achievable).
 - [x] Edge collision filter for internal edges of triangle meshes.
 - [x] Substepping for improved constraint and contact stability.
 - [x] Generic convex-convex collision detection using EPA-aided MPR.
