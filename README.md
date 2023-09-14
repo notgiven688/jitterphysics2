@@ -37,8 +37,8 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and window-ha
 - [x] A sophisticated deactivation scheme, with minimal cost for inactive rigid bodies
 (scenes with 100k inactive bodies are easily possible).
 - [x] Edge collision filter for internal edges of triangle meshes.
-- [x] Substepping for improved constraint and contact stability
-- [x] Generic convex-convex collision detection with EPA aided MPR.
+- [x] Substepping for improved constraint and contact stability.
+- [x] Generic convex-convex collision detection using EPA aided MPR.
 - [x] "One-shot" contact manifolds using auxiliary contacts for flat surface collisions.
 - [x] Efficient compound shapes.
 - [x] Easy integration of custom shapes. Integrated: Box, Capsule, Cone, ConvexHull, PointCloud, Sphere, Triangle, Transformed.
