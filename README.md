@@ -1,9 +1,8 @@
-# Jitter2
-
-Jitter2, successor of [Jitter Physics](https://github.com/notgiven688/jitterphysics). Fast, simple, dependency-free, feature-complete physics engine written in C#.
-
 [![JitterTests](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml/badge.svg)](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml)
 
+# Jitter Physics 2
+
+Successor of [Jitter Physics](https://github.com/notgiven688/jitterphysics). Impulse based dynamics with a semi-implicit Euler integrator. Fast, simple, dependency-free physics engine written in C#.
 
 <img src="./docs/docs/img/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./docs/docs/img/jitter_screenshot1.png" alt="screenshot" width="400"/>
 
@@ -11,7 +10,7 @@ Jitter2, successor of [Jitter Physics](https://github.com/notgiven688/jitterphys
 
 ## Getting started
 
-Jitter2 is cross platform. The src directory contains four
+Jitter is cross platform. The `src` directory contains four
 projects:
 
 | Project | Description |
@@ -31,11 +30,22 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and window-ha
 
 ## Features
 
+- [x] Speculative contacts (Avoiding the bullet-through-paper problem).
+-[x] A variety of constraints and motors with support for softness.
+-[x] A sophisticated deactivation scheme, with minimal cost for inactive rigid bodies. 
+(scenes with 100k inactive bodies are easily possible.)
+- [x] Edge collision filter for internal edges of triangle meshes.
+- [x] Substepping for improved constraint and contact stability
+- [x] Generic convex-convex collision detection with EPA aided MPR.
+- [x] "One-shot" contact manifolds using auxiliary contacts for flat surface collisions.
+- [x] Efficient compound shapes.
 
 
 ## Documentation
-Most public methods are documented using XML-comments. A docusaurus documentation is beeing worked on at the moment. See ...
+Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
-## ToDo
-- [x] Get Docusaurus up and running
-- [ ] Constraints. Check 
+## Contribute
+
+Every contribution is welcome! Fork the project and create a pull request.
+
+
