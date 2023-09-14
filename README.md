@@ -22,9 +22,11 @@ projects:
 
 To run the demo scenes:
 
+```
 - Install [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 - git clone https://github.com/notgiven688/jitter2.git
 - cd ./Jitter2/src/JitterDemo && dotnet run -c Release
+```
 
 JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and window-handling and [cimgui](https://github.com/cimgui/cimgui) for GUI rendering. The project contains these native binaries in precompiled form.
 
@@ -44,7 +46,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and window-ha
 ## Documentation
 Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
-## Contribute
+## Contribute 👋
 
 Every contribution is welcome! Fork the project and create a pull request.
 
