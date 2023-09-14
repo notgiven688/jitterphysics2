@@ -47,7 +47,7 @@ Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
 ## TODO
 
-- [ ] Nuget packages. Releases.
+- [ ] NuGet packages. Releases.
 - [ ] Stabilizing engine and demo.
 - [ ] Extend documentation.
 
