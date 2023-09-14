@@ -39,7 +39,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and window-ha
 - [x] Generic convex-convex collision detection with EPA aided MPR.
 - [x] "One-shot" contact manifolds using auxiliary contacts for flat surface collisions.
 - [x] Efficient compound shapes.
-
+- [x] Easy integration of custom shapes. Integrated: Box, Capsule, Cone, ConvexHull, PointCloud, Sphere, Triangle, Transformed.
 
 ## Documentation
 Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
