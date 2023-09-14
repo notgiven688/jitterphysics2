@@ -1,4 +1,4 @@
-name: Build documentation test
+name: Build documentation
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   test-deploy:
-    name: Build documentation test
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
