@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkjitterphysics=self.webpackChunkjitterphysics||[]).push([[19],{3701:s=>{s.exports=JSON.parse('{"label":"general","permalink":"/jitterphysics2/blog/tags/general","allTagsPath":"/jitterphysics2/blog/tags","count":1}')}}]);
