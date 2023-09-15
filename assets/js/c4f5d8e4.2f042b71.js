@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkjitterphysics=self.webpackChunkjitterphysics||[]).push([[195],{2841:(t,e,s)=>{s.r(e),s.d(e,{default:()=>i});var r=s(7294),c=s(6550);function i(){return r.createElement(c.l_,{to:"/jitterphysics2/docs/intro"})}}}]);
