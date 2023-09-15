@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+  </PropertyGroup>
+
+    <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="definitions\cimgui\structs_and_enums.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimgui\definitions.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimgui\variants.json" CopyToOutputDirectory="PreserveNewest" />
+
+    <Content Include="definitions\cimplot\structs_and_enums.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimplot\definitions.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimplot\variants.json" CopyToOutputDirectory="PreserveNewest" />
+
+    <Content Include="definitions\cimnodes\structs_and_enums.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimnodes\definitions.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimnodes\variants.json" CopyToOutputDirectory="PreserveNewest" />
+
+    <Content Include="definitions\cimguizmo\structs_and_enums.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimguizmo\definitions.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="definitions\cimguizmo\variants.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+</Project>
