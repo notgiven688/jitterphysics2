@@ -2,7 +2,7 @@ import React from 'react';
 import  { Redirect } from 'react-router-dom';
 
 export default function Home() {
-  return <Redirect to='/jitterphysics2/docs/intro' />;
+  return <Redirect to='/docs/intro' />;
 }
 
 /* import React from 'react';
