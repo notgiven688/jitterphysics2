@@ -1,0 +1,8 @@
+{
+  "label": "Quickstart",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Implement a Jitter scene with raylib in about 100 lines of code."
+  }
+}
