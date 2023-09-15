@@ -1,0 +1,8 @@
+{
+  "label": "Documentation",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "A still incomplete collection of articles to shed light on how to use Jitter."
+  }
+}
