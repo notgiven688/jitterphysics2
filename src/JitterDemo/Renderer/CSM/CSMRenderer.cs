@@ -80,7 +80,7 @@ public class CSMRenderer
         }
 
         center *= 1.0f / 8.0f;
-        
+
         Vector3 rotv = new Vector3(1, 2, 1);
 
         lightDir = Vector3.Normalize(rotv);

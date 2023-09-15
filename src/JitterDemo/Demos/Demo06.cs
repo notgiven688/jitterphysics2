@@ -40,8 +40,8 @@ public class WheelMesh : TriangleMesh
     public override void LightPass(PhongShader shader)
     {
         shader.MaterialProperties.SetDefaultMaterial();
-        shader.MaterialProperties.ColorMixing.Set(0.05f,0, 1);
-        
+        shader.MaterialProperties.ColorMixing.Set(0.05f, 0, 1);
+
         shader.MaterialProperties.Specular.Set(1, 1, 1);
         shader.MaterialProperties.Shininess.Set(1000);
 
@@ -78,7 +78,7 @@ public class CarMesh : MultiMesh
         mg = mesh.Groups[1];
         shader.MaterialProperties.ColorMixing.Set(0.1f, 0, 1.2f);
         shader.MaterialProperties.Shininess.Set(1000);
-        shader.MaterialProperties.Specular.Set(1,1,1);
+        shader.MaterialProperties.Specular.Set(1, 1, 1);
         GLDevice.DrawElementsInstanced(DrawMode.Triangles, 3 * (mg.ToExlusive - mg.FromInclusive),
             IndexType.UnsignedInt, mg.FromInclusive * sof * 3, Count);
 
@@ -116,7 +116,7 @@ public class Demo06 : IDemo
         defaultCar = new RaycastCar(world);
         defaultCar.Body.Position = new JVector(0, 2, 0);
         defaultCar.Body.DeactivationTime = TimeSpan.MaxValue;
-        defaultCar.Body.Tag = new RigidBodyTag(true);
+        defaultCar.Body.Tag = new RigidBodyTag();
 
         Common.BuildPyramid(-JVector.UnitZ * 20, 10);
         Common.BuildJenga(new JVector(-20, 0, -10), 10);

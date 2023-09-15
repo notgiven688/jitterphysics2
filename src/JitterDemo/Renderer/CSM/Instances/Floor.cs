@@ -25,9 +25,9 @@ public class JitterFloor : CSMInstance
     public override void LightPass(PhongShader shader)
     {
         shader.MaterialProperties.SetDefaultMaterial();
-        
+
         shader.MaterialProperties.Shininess.Set(10.0f);
-        
+
         shader.MaterialProperties.ColorMixing.Set(0.0f, 0, 1f);
 
         base.LightPass(shader);

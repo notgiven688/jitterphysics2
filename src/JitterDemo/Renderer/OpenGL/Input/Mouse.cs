@@ -91,7 +91,7 @@ public class Mouse
     {
         return currentMouseState[(int)k] && !lastMouseState[(int)k];
     }
-    
+
     public bool ButtonPressEnd(Button k)
     {
         return !currentMouseState[(int)k] && lastMouseState[(int)k];

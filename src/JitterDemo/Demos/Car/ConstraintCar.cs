@@ -32,7 +32,7 @@ public class ConstraintCar
     public void BuildCar(World world, JVector position, Action<RigidBody>? action = null)
     {
         List<RigidBody> bodies = new List<RigidBody>(9);
-        
+
         car = world.CreateRigidBody();
         bodies.Add(car);
 
@@ -56,7 +56,7 @@ public class ConstraintCar
             TransformedShape tf = new TransformedShape(shape, JMatrix.CreateRotationZ(MathF.PI / 2.0f), JVector.Zero);
 
             wheels[i].AddShape(tf);
-            
+
             bodies.Add(wheels[i]);
             bodies.Add(damper[i]);
             //wheels[i].IsStatic = true;
@@ -116,8 +116,8 @@ public class ConstraintCar
         steerMotor[FrontLeft].Initialize(JVector.UnitY);
         steerMotor[FrontRight] = world.CreateConstraint<AngularMotor>(car, damper[FrontRight]);
         steerMotor[FrontRight].Initialize(JVector.UnitY);
-        
-        if(action != null) bodies.ForEach(action);
+
+        if (action != null) bodies.ForEach(action);
     }
 
     public void UpdateControls()

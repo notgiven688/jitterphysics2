@@ -68,7 +68,7 @@ public partial class Playground : RenderWindow
                 grepBody = grepShape.RigidBody;
 
             rayHitPoint = pos + hitDistance * dir;
-            
+
             if (result && grepBody != null && !grepBody.IsStatic)
             {
                 grepping = true;

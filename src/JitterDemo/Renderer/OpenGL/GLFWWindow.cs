@@ -268,8 +268,8 @@ public class GLFWWindow
     }
 
     private int targetFPS = 100;
-    double targetTicks = Stopwatch.Frequency / 100.0d;
-    
+    private double targetTicks = Stopwatch.Frequency / 100.0d;
+
     public int TargetFPS
     {
         get => targetFPS;
@@ -282,8 +282,6 @@ public class GLFWWindow
 
     private void Sync()
     {
-        
-        
         while (GLFW.WindowShouldClose(Handle) == 0)
         {
             long time = Stopwatch.GetTimestamp();
@@ -295,13 +293,11 @@ public class GLFWWindow
             Keyboard.SwapStates();
             Mouse.SwapStates();
             GLFW.PollEvents();
-            
+
             while (targetTicks - (Stopwatch.GetTimestamp() - time) > 0)
             {
-                System.Threading.Thread.Sleep(0);
+                Thread.Sleep(0);
             }
-            
-            
         }
 
         GLFW.DestroyWindow(Handle);

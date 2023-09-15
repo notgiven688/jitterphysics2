@@ -1,4 +1,3 @@
-using System.IO;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;
@@ -43,5 +42,4 @@ public class Cube : CSMInstance
     {
         base.LightPass(shader);
     }
-    
 }

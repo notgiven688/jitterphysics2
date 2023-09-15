@@ -37,16 +37,17 @@ public static unsafe class ImGui
     {
         int len = 0;
         byte* ptr = strPtr[index];
-        
+
         while (*ptr != 0)
         {
             if (++len == strPtrSize)
             {
                 return string.Empty;
             }
+
             ptr += 1;
         }
-        
+
         return Encoding.UTF8.GetString(strPtr[index], len);
     }
 
@@ -161,7 +162,7 @@ public static unsafe class ImGui
         ImGuiNative.igCheckbox(strPtr[0], &cb);
         value = cb == 0b1;
     }
-    
+
     public static void InputText(string label, ref string text, ImGuiInputTextFlags flags)
     {
         PushStr(label, 0);

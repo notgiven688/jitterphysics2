@@ -84,7 +84,7 @@ public static class Common
         LowerArmRight,
         Torso
     }
-    
+
 
     public static void BuildRagdoll(JVector position, Action<RigidBody>? action = null)
     {

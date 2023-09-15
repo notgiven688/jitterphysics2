@@ -1,7 +1,4 @@
 using Jitter2;
-using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
-using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using static JitterDemo.Common;
@@ -11,7 +8,7 @@ namespace JitterDemo;
 public class Demo04 : IDemo
 {
     public string Name => "Many Ragdolls";
-    
+
 
     public void Build()
     {

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
-using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -23,7 +21,6 @@ public class Dust : TriangleMesh
         base.LightPass(shader);
     }
 }
-
 
 public class Demo05 : IDemo
 {
@@ -65,10 +62,10 @@ public class Demo05 : IDemo
 
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
-        
-        
-        pg.ResetScene(true);
-        
+
+
+        pg.ResetScene();
+
         RigidBody body = world.CreateRigidBody();
         body.AddShape(CreateShapes());
         body.Position = new JVector(0, 0, 0);

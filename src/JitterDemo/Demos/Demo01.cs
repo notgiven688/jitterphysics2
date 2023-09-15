@@ -6,29 +6,29 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
-using static JitterDemo.Common;
 
 namespace JitterDemo;
 
 public class Demo01 : IDemo
 {
     public string Name => "Constraint car";
-    
+
     private readonly ConstraintCar car = new();
 
-    private List<HingeJoint> hinges = new List<HingeJoint>();
+    private readonly List<HingeJoint> hinges = new();
 
 
     public void Build()
     {
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
-        
+
         hinges.Clear();
 
         pg.ResetScene();
-        
-        {   // -------  bridge
+
+        {
+            // -------  bridge
             RigidBody body = null!;
 
             JVector startPos = new JVector(-10, 8, -20);
@@ -39,7 +39,7 @@ public class Demo01 : IDemo
                 var nbody = world.CreateRigidBody();
                 nbody.AddShape(new BoxShape(0.7f, 0.1f, 4f));
                 nbody.Position = startPos + new JVector(i * 0.8f, 0, 0);
-                
+
 
                 if (i == 0)
                 {
@@ -60,12 +60,13 @@ public class Demo01 : IDemo
                     var hinge = new HingeJoint(world, nbody, world.NullBody,
                         startPos + new JVector(i * 0.8f + 0.7f, 0, 0), JVector.UnitZ);
                 }
-                
+
                 body = nbody;
             }
         }
 
-        {   // Add a car made out of constraints
+        {
+            // Add a car made out of constraints
             JVector carPos = new JVector(10, 9, -20);
             JMatrix rot = JMatrix.CreateRotationY(MathF.PI / 2.0f);
 
@@ -75,7 +76,6 @@ public class Demo01 : IDemo
                     body.Orientation = rot;
                 }
             );
-            
         }
 
 
@@ -93,7 +93,7 @@ public class Demo01 : IDemo
                 h.HingeAngle.IsEnabled = false;
             }
         }
-        
+
         Playground pg = (Playground)RenderWindow.Instance;
         car.UpdateControls();
     }

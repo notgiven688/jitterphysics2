@@ -72,10 +72,10 @@ public class Conversion
     public static Matrix4 FromJitter(RigidBody body)
     {
         Unsafe.SkipInit(out Matrix4 mat);
-        
+
         ref JMatrix ori = ref body.Data.Orientation;
         ref JVector pos = ref body.Data.Position;
-        
+
         mat.M11 = ori.M11;
         mat.M12 = ori.M12;
         mat.M13 = ori.M13;

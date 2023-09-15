@@ -44,7 +44,6 @@ public class Demo12 : IDemo
                 body.SetActivationState(false);
             }
         );
-        
     }
 
     public void Draw()

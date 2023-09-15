@@ -28,8 +28,8 @@ public class MultiMesh : CSMInstance
         {
             shader.MaterialProperties.Color.Set(ColorGenerator.GetColor(i * (i << 6)));
             shader.MaterialProperties.ColorMixing.Set(0, 1, 0);
-            
-            
+
+
             GLDevice.DrawElementsInstanced(DrawMode.Triangles,
                 3 * (mesh.Groups[i].ToExlusive - mesh.Groups[i].FromInclusive), IndexType.UnsignedInt,
                 mesh.Groups[i].FromInclusive * sof * 3, Count);

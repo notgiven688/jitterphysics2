@@ -21,9 +21,8 @@ public class Demo07 : IDemo
         {
             for (int i = 0; i < 30; i++)
             {
-                Common.BuildPyramid(new JVector(-20 + 40 * e, 0, -75 + 5 * i), 20, 
+                Common.BuildPyramid(new JVector(-20 + 40 * e, 0, -75 + 5 * i), 20,
                     body => body.SetActivationState(false));
-
             }
         }
     }

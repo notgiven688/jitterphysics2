@@ -44,13 +44,13 @@ public class PhongShader : BasicShader
         public UniformVector3 Specular { get; }
         public UniformFloat Shininess { get; }
         public UniformFloat Alpha { get; }
-        
+
         /// <summary>
         /// Magic:
         /// Ambient = ColorMixing.X * vertexColor + ColorMixing.Y * shaderColor
         /// Diffusive = (1.0f - ColorMixing.Z) * vec3(0.6f) +  ColorMixing.Z * textureColor.
         /// </summary>
-        public UniformVector3 ColorMixing { private set; get; }
+        public UniformVector3 ColorMixing { get; }
 
         public Material(ShaderProgram shader)
         {

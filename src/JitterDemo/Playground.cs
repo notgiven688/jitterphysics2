@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -23,12 +21,12 @@ public class RigidBodyTag
 
 public partial class Playground : RenderWindow
 {
-    private World world;
+    private readonly World world;
 
     private bool multiThread;
     private bool persistentThreadModel = true;
     private Shape? floorShape;
-    
+
     private readonly List<IDemo> demos = new()
     {
         new Demo00(),
@@ -45,7 +43,7 @@ public partial class Playground : RenderWindow
         // new Demo11(), // double pendulum
         new Demo12(),
         new Demo13(),
-        new Demo14(),
+        new Demo14()
     };
 
     private IDemo? currentDemo;
@@ -86,7 +84,7 @@ public partial class Playground : RenderWindow
         base.Load();
         ResetScene();
 
-        base.VerticalSync = false;
+        VerticalSync = false;
     }
 
     public Shape? FloorShape => floorShape;
@@ -154,11 +152,11 @@ public partial class Playground : RenderWindow
         }
 
         Matrix4 mat = Matrix4.Identity;
-        
+
         foreach (RigidBody body in world.RigidBodies)
         {
             if (body.Tag is RigidBodyTag { DoNotDraw: true }) continue;
-            
+
             Conversion.FromJitterOpt(body, ref mat);
 
             foreach (Shape shape in body.Shapes)
@@ -194,8 +192,8 @@ public partial class Playground : RenderWindow
         {
             Pick();
         }
-        
-        if(!Mouse.IsButtonDown(Mouse.Button.Left))
+
+        if (!Mouse.IsButtonDown(Mouse.Button.Left))
         {
             if (grepConstraint != null) world.Remove(grepConstraint);
             grepBody = null;

@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using Jitter2;
 using Jitter2.Collision.Shapes;
-using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
-using Jitter2.UnmanagedMemory;
 using JitterDemo.Renderer;
 
 namespace JitterDemo;
@@ -19,8 +16,9 @@ public class Demo13 : IDemo
         World world = pg.World;
 
         pg.ResetScene();
-        
-        {   // Motor
+
+        {
+            // Motor
             var b0 = world.CreateRigidBody();
             b0.AddShape(new BoxShape(2, 0.1f, 0.1f));
             b0.Position = new JVector(-1.1f, 4, 0);
@@ -47,7 +45,8 @@ public class Demo13 : IDemo
             filter.IgnoreCollisionBetween(b0.Shapes[0], b1.Shapes[0]);
         }
 
-        {   // Hinge Joint with -120 <-> + 120 Limit
+        {
+            // Hinge Joint with -120 <-> + 120 Limit
             var b0 = world.CreateRigidBody();
             b0.AddShape(new BoxShape(2, 0.1f, 3));
             b0.AddShape(new BoxShape(0.1f, 2, 2.9f));

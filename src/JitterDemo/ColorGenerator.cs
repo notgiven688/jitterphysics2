@@ -1,5 +1,4 @@
 using System;
-using Jitter2.LinearMath;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
@@ -7,6 +6,7 @@ namespace JitterDemo;
 public static class ColorGenerator
 {
     private const int NumColors = 127;
+
     // Surprisingly buffering the colors is about 20 times
     // faster than generating them on the fly.
     private static readonly Vector3[] buffer = new Vector3[NumColors];

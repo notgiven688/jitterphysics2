@@ -125,15 +125,16 @@ public class CubemapTexture : Texture
 
 public class Texture2D : Texture
 {
-    public unsafe static Texture2D EmptyTexture()
+    public static unsafe Texture2D EmptyTexture()
     {
         var result = new Texture2D();
 
         int black = 0;
-        
+
         result.LoadImage((IntPtr)(&black), 1, 1, false);
         return result;
     }
+
     public void LoadImage(IntPtr data, int width, int height, bool generateMipmap = true)
     {
         GL.BindTexture(GLC.TEXTURE_2D, Handle);

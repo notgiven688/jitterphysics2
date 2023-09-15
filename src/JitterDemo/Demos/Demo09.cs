@@ -1,6 +1,5 @@
 using Jitter2;
 using Jitter2.Collision.Shapes;
-using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 
@@ -24,7 +23,7 @@ public class Demo09 : IDemo
             pg.FloorShape.RigidBody.Friction = 0.0f;
             pg.FloorShape.RigidBody.Restitution = 0.0f;
         }
-        
+
         for (int i = 0; i < 11; i++)
         {
             var body = world.CreateRigidBody();
@@ -33,7 +32,7 @@ public class Demo09 : IDemo
             body.Restitution = i * 0.1f;
             body.Damping = (0.999f, 0.999f);
         }
-        
+
         for (int i = 0; i < 11; i++)
         {
             var body = world.CreateRigidBody();
@@ -43,9 +42,6 @@ public class Demo09 : IDemo
             body.Velocity = new JVector(0, 0, -10);
             body.Damping = (0.999f, 0.999f);
         }
-        
-        
-        
     }
 
     public void Draw()

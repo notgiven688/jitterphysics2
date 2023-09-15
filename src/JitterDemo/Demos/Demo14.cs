@@ -148,7 +148,7 @@ public class Demo14 : IDemo
         ellipsoid = new EllipsoidShape();
         doublesSphere = new DoubleSphereShape();
         icosahedron = new Icosahedron();
-        
+
         var body1 = world.CreateRigidBody();
         body1.AddShape(ellipsoid);
         body1.Position = new JVector(-3, 3, 0);

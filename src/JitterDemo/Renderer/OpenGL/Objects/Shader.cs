@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using JitterDemo.Renderer.OpenGL.Native;
 
 namespace JitterDemo.Renderer.OpenGL;
@@ -219,7 +218,7 @@ public class ShaderProgram : GLObject
                     uniforms.Add(name, new UniformUint(this, location));
                     break;
                 default:
-                  throw new NotImplementedException($"Type '{type}' not supported!");
+                    throw new NotImplementedException($"Type '{type}' not supported!");
             }
         }
     }

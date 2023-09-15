@@ -1,5 +1,4 @@
 using System.IO;
-using JitterDemo.Renderer.DearImGui;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;

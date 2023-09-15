@@ -25,7 +25,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
     {
         RigidBody body = world.CreateRigidBody();
         body.Position = position;
-        
+
         foreach (ConvexHullShape s in shapesToAdd)
         {
             body.AddShape(s.Clone(), false);

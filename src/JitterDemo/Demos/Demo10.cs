@@ -24,19 +24,19 @@ public class Demo10 : IDemo
         {
             var body = world.CreateRigidBody();
             bodies.Add(body);
-            
+
             body.Position = new JVector(0, 0.5f + i * 0.999f, 0);
             body.AddShape(new BoxShape(1));
             body.Damping = (0.998f, 0.998f);
         }
-        
+
         for (int i = 0; i < 32; i++)
         {
             var body = world.CreateRigidBody();
             bodies.Add(body);
-            
+
             body.Position = new JVector(10, 0.5f + i * 0.999f, 0);
-            body.AddShape(new ConeShape(0.5f, 1));
+            body.AddShape(new ConeShape());
             body.Damping = (0.998f, 0.998f);
         }
 

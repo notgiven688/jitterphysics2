@@ -24,13 +24,13 @@ public class Demo00 : IDemo
         World world = pg.World;
 
         pg.ResetScene();
-        
+
         teapotDecomp = new ConvexDecomposition<Teapot>(world);
         teapotDecomp.Load();
-        
+
         for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(0, 10 + i * 3, -14));
-        
+
         for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(0, 10 + i * 3, -6));
 
@@ -39,7 +39,7 @@ public class Demo00 : IDemo
 
         for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(5, 10 + i * 3, -6));
-        
+
         world.SolverIterations = 12;
     }
 

@@ -61,7 +61,7 @@ public class ImGuiRenderer
     private ImGuiShader shader = null!;
 
     private readonly List<Texture2D> textures = new();
-    
+
     public bool WantsCaptureMouse { private set; get; }
     public bool WantsCaptureKeyboard { private set; get; }
 
@@ -123,16 +123,20 @@ public class ImGuiRenderer
         ImGuiNative.ImGuiIO_AddMouseButtonEvent(pio, 1, Convert.ToByte(m.IsButtonDown(Mouse.Button.Right)));
         ImGuiNative.ImGuiIO_AddMouseButtonEvent(pio, 2, Convert.ToByte(m.IsButtonDown(Mouse.Button.Middle)));
         ImGuiNative.ImGuiIO_AddMouseWheelEvent(pio, (float)m.ScrollWheel.X, (float)m.ScrollWheel.Y);
-        
+
         Keyboard k = Keyboard.Instance;
-        foreach(uint inputc in k.CharInput) { ImGuiNative.ImGuiIO_AddInputCharacter(pio, inputc); }
+        foreach (uint inputc in k.CharInput)
+        {
+            ImGuiNative.ImGuiIO_AddInputCharacter(pio, inputc);
+        }
+
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.LeftArrow, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Left)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.RightArrow, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Right)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.UpArrow, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Up)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.DownArrow, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Down)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.PageDown, Convert.ToByte(k.IsKeyDown(Keyboard.Key.PageDown)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.PageUp, Convert.ToByte(k.IsKeyDown(Keyboard.Key.PageUp)));
-        ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.LeftCtrl,Convert.ToByte(k.IsKeyDown(Keyboard.Key.LeftControl)));
+        ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.LeftCtrl, Convert.ToByte(k.IsKeyDown(Keyboard.Key.LeftControl)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.LeftAlt, Convert.ToByte(k.IsKeyDown(Keyboard.Key.LeftAlt)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.ModAlt, Convert.ToByte(k.IsKeyDown(Keyboard.Key.RightAlt)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.Backspace, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Backspace)));
@@ -144,9 +148,9 @@ public class ImGuiRenderer
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.Home, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Home)));
         ImGuiNative.ImGuiIO_AddKeyEvent(pio, ImGuiKey.Escape, Convert.ToByte(k.IsKeyDown(Keyboard.Key.Escape)));
 
-        this.WantsCaptureKeyboard = Convert.ToBoolean(pio->WantCaptureKeyboard);
-        this.WantsCaptureMouse = Convert.ToBoolean(pio->WantCaptureMouse);
-        
+        WantsCaptureKeyboard = Convert.ToBoolean(pio->WantCaptureKeyboard);
+        WantsCaptureMouse = Convert.ToBoolean(pio->WantCaptureMouse);
+
         var r = RenderWindow.Instance;
 
         pio->DisplaySize = new Vector2(r.Width, r.Height);
