@@ -2,7 +2,7 @@
 
 # Jitter Physics 2
 
-Successor of [Jitter Physics](https://github.com/notgiven688/jitterphysics). It is an impulse-based dynamics engine with a semi-implicit Euler integrator. This is a fast, simple, and dependency-free physics engine written in C#.
+Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven688/jitterphysics), is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
 
 <img src="./docs/docs/img/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./docs/docs/img/jitter_screenshot1.png" alt="screenshot" width="400"/>
 
@@ -12,12 +12,12 @@ Successor of [Jitter Physics](https://github.com/notgiven688/jitterphysics). It 
 
 Jitter is cross-platform. The `src` directory contains four projects:
 
-| Project         | Description                                          |
-| --------------- | ---------------------------------------------------- |
-| Jitter2         | The Jitter2 library.                                 |
-| JitterDemo      | Demo scenes rendered with OpenGL. Tested under Linux and Windows. |
-| JitterBenchmark | Setup for benchmarks utilizing BenchmarkDotNet.      |
-| JitterTests     | NUnit unit tests.                                    |
+| Project          | Description                                                |
+|------------------|------------------------------------------------------------|
+| Jitter2          | The main library housing Jitter2's functionalities.         |
+| JitterDemo       | Features demo scenes rendered with OpenGL, tested on Linux and Windows. |
+| JitterBenchmark  | The setup for conducting benchmarks using BenchmarkDotNet.  |
+| JitterTests      | Unit tests utilizing NUnit.
 
 To run the demo scenes:
 
@@ -47,10 +47,10 @@ Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
 ## ToDo
 
-- [ ] NuGet packages. Releases.
-- [ ] Stabilizing engine and demo.
-- [ ] Extend documentation.
+- [ ] Develop and distribute NuGet packages and releases.
+- [ ] Stabilize the engine and demo.
+- [ ] Expand the documentation to cover more topics and functionalities.
 
 ## Contribute 👋
 
-Every contribution is welcome! Fork the project and create a pull request.
+Contributions of all forms are welcome! Feel free to fork the project and create a pull request.
