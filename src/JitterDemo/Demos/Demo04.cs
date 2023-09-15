@@ -8,14 +8,6 @@ using static JitterDemo.Common;
 
 namespace JitterDemo;
 
-public class BroadPhaseIgnorer : IBroadPhaseFilter
-{
-    public bool Filter(Shape shapeA, Shape shapeB)
-    {
-        return shapeA.RigidBody.Tag != shapeB.RigidBody.Tag;
-    }
-}
-
 public class Demo04 : IDemo
 {
     public string Name => "Many Ragdolls";
