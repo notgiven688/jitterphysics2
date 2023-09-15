@@ -4,7 +4,7 @@
         <title>Jitter Physics Blog</title>
         <link>https://jitterphysics.com/jitterphysics2/blog</link>
         <description>Jitter Physics Blog</description>
-        <lastBuildDate>Fri, 15 Sep 2023 14:41:47 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 15 Sep 2023 15:25:06 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -12,7 +12,7 @@
             <title><![CDATA[Hello World]]></title>
             <link>https://jitterphysics.com/jitterphysics2/blog/Hello World</link>
             <guid>https://jitterphysics.com/jitterphysics2/blog/Hello World</guid>
-            <pubDate>Fri, 15 Sep 2023 14:41:47 GMT</pubDate>
+            <pubDate>Fri, 15 Sep 2023 15:25:06 GMT</pubDate>
             <description><![CDATA[Hello World]]></description>
             <content:encoded><![CDATA[<h4 class="anchor anchorWithStickyNavbar_LWe7" id="hello-world">Hello World<a href="#hello-world" class="hash-link" aria-label="Direct link to Hello World" title="Direct link to Hello World">​</a></h4>]]></content:encoded>
             <category>general</category>
