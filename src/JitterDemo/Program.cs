@@ -15,19 +15,6 @@ public static class Program
         Console.WriteLine(ex.Message);
     }
 
-    public static float GenerateRandom(ulong seed)
-    {
-        const uint A = 21_687_443;
-        const uint B = 35_253_893;
-
-        seed ^= seed << 13;
-        seed ^= seed >> 17;
-        seed ^= seed << 5;
-
-        uint randomBits = (uint)seed * A + B;
-        return MathF.Abs((float)randomBits / uint.MaxValue);
-    }
-
     public static void Main()
     {
         CreationSettings cs = new(1200, 800, "JitterDemo");
