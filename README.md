@@ -23,7 +23,7 @@ To run the demo scenes:
 
 ```
 - Install the [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-- git clone https://github.com/notgiven688/jitter2.git
+- git clone https://github.com/notgiven688/jitterphysics2.git
 - cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release
 ```
 
