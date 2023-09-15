@@ -91,11 +91,10 @@ public partial class World
     public double[] DebugTimings { get; } = new double[(int)Timings.Last];
 
     /// <summary>
-    /// Perform one simulation step.
+    /// Performs a single simulation step.
     /// </summary>
-    /// <param name="dt">How much time is simulated. Should be fixed and not larger than 1/60 second.</param>
-    /// <param name="multiThread">Specify if multiThreading should be used. <see cref="Parallelization.ThreadPool.Instance"/>
-    /// can be used to modify the behavior of the engine.</param>
+    /// <param name="dt">The duration of time to simulate. This should remain fixed and not exceed 1/60 of a second.</param>
+    /// <param name="multiThread">Indicates whether multithreading should be utilized. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
     public void Step(float dt, bool multiThread = true)
     {
         AssertNullBody();
@@ -131,8 +130,7 @@ public partial class World
 
         HandleDeferredArbiters();
         SetTime(Timings.AddArbiter);
-
-        // [checkdeactivation original place]
+        
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
 
@@ -147,7 +145,7 @@ public partial class World
         TrimPotentialPairs();
         SetTime(Timings.TrimPotentialPairs);
 
-        // Substepping
+        // Sub-stepping
         // TODO: comment...
         // -> prepare for iteration does calculate new positions, but only linear
         // -> inertia is not transformed in the substeps.
@@ -200,10 +198,10 @@ public partial class World
         // We actually only search 1/100 of the whole potentialPairs Hashset for
         // potentially prunable contacts. No need to sweep through the whole hashset
         // every step.
-        const int Divisions = 100;
+        const int divisions = 100;
         stepper += 1;
 
-        for (int i = 0; i < phs.Slots.Length / Divisions; i++)
+        for (int i = 0; i < phs.Slots.Length / divisions; i++)
         {
             int t = i * stepper % phs.Slots.Length;
 

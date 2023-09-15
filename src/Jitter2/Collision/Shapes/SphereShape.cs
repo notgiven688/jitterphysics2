@@ -33,6 +33,9 @@ public class SphereShape : Shape
 {
     private float radius;
 
+    /// <summary>
+    /// Gets or sets the radius of the sphere.
+    /// </summary>
     public float Radius
     {
         get => radius;
@@ -43,6 +46,11 @@ public class SphereShape : Shape
         }
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SphereShape"/> class with an optional radius parameter. 
+    /// The default radius is 1.0 units.
+    /// </summary>
+    /// <param name="radius">The radius of the sphere. Defaults to 1.0f.</param>
     public SphereShape(float radius = 1.0f)
     {
         this.radius = radius;
@@ -55,7 +63,7 @@ public class SphereShape : Shape
         result.Normalize();
         JVector.Multiply(result, radius, out result);
     }
-
+    
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         box.Min.X = -radius;

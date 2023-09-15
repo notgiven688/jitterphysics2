@@ -31,8 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints two bodies in such a way that they are only allowed to rotate around a given axis.
-/// Removes two angular degrees of freedom; three if the limit is enforced.
+/// Constrains two bodies to only allow rotation around a specified axis, removing two angular degrees of freedom, or three if a limit is enforced.
 /// </summary>
 public unsafe class HingeAngle : Constraint
 {

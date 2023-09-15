@@ -26,8 +26,8 @@ using System;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A 32bit floating point variable representing an angle. This struct exists to remove all
-/// ambiguity of radiant/degree in the Jitter API.
+/// A 32-bit floating point variable representing an angle. This structure exists to eliminate
+/// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
 public struct JAngle : IEquatable<JAngle>
 {

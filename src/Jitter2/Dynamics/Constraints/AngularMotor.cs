@@ -31,8 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A motor constraint driving relative angular movement between two axis fixed
-/// in the reference frame of the bodies.
+/// Represents a motor constraint that drives relative angular movement between two axes, which are fixed within the reference frames of their respective bodies.
 /// </summary>
 public unsafe class AngularMotor : Constraint
 {
@@ -71,8 +70,8 @@ public unsafe class AngularMotor : Constraint
     /// <summary>
     /// Initializes the constraint.
     /// </summary>
-    /// <param name="axis1">Axis on the first body in world space.</param>
-    /// <param name="axis2">Axis on the second body in world space.</param>
+    /// <param name="axis1">The axis on the first body, defined in world space.</param>
+    /// <param name="axis2">The axis on the second body, defined in world space.</param>
     public void Initialize(JVector axis1, JVector axis2)
     {
         ref AngularMotorData data = ref handle.Data;

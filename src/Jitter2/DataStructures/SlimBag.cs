@@ -28,9 +28,9 @@ using System.Diagnostics;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// A data structure with no particular order based on an array. Deleting an element at position n
-/// in the array causes the last element of the array to be copied to position n and a reduction of
-/// <see cref="Count"/> by one.
+/// A data structure based on an array, without a fixed order. Removing an element at position n 
+/// results in the last element of the array being moved to position n, with the <see cref="Count"/> 
+/// decrementing by one.
 /// </summary>
 internal class SlimBag<T>
 {

@@ -41,7 +41,7 @@ public interface IDynamicTreeProxy
     JBBox WorldBoundingBox { get; }
 
     /// <summary>
-    /// The entities velocity.
+    /// The velocity of the entity.
     /// </summary>
     JVector Velocity { get; }
 }

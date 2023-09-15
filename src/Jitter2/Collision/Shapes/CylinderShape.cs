@@ -34,6 +34,9 @@ public class CylinderShape : Shape
     private float radius;
     private float height;
 
+    /// <summary>
+    /// Gets or sets the radius of the cylinder.
+    /// </summary>
     public float Radius
     {
         get => radius;
@@ -44,6 +47,9 @@ public class CylinderShape : Shape
         }
     }
 
+    /// <summary>
+    /// Gets or sets the height of the cylinder.
+    /// </summary>
     public float Height
     {
         get => height;
@@ -55,8 +61,10 @@ public class CylinderShape : Shape
     }
 
     /// <summary>
-    /// Creates a cylinder shape. The symmetry axis of the cylinder is aligned along the y-axis.
+    /// Initializes a new instance of the <see cref="CylinderShape"/> class, creating a cylinder shape with the specified height and radius. The symmetry axis of the cylinder is aligned along the y-axis.
     /// </summary>
+    /// <param name="height">The height of the cylinder.</param>
+    /// <param name="radius">The radius of the cylinder at its base.</param>
     public CylinderShape(float height, float radius)
     {
         this.radius = radius;

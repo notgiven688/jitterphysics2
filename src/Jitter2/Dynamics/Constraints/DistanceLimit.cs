@@ -31,9 +31,9 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints the distance between a fixed point in the reference frame of one body to a fixed
-/// point in the reference frame of another body. This constraints removes one translational degree
-/// of freedom. For a distance of zero use the <see cref="BallSocket"/> constraint.
+/// Constrains the distance between a fixed point in the reference frame of one body and a fixed
+/// point in the reference frame of another body. This constraint removes one translational degree
+/// of freedom. For a distance of zero, use the <see cref="BallSocket"/> constraint.
 /// </summary>
 public unsafe class DistanceLimit : Constraint
 {
@@ -84,8 +84,8 @@ public unsafe class DistanceLimit : Constraint
     /// <summary>
     /// Initializes the constraint.
     /// </summary>
-    /// <param name="anchor1">Anchor point on the first rigid body in world space.</param>
-    /// <param name="anchor2">Anchor point on the second rigid body in world space.</param>
+    /// <param name="anchor1">Anchor point on the first rigid body, in world space.</param>
+    /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
     /// <param name="limit">The allowed distance between the anchor points.</param>
     public void Initialize(JVector anchor1, JVector anchor2, LinearLimit limit)
     {

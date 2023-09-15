@@ -24,7 +24,7 @@
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A triangle with three Vertices.
+/// Represents a triangle defined by three vertices.
 /// </summary>
 public struct JTriangle
 {
@@ -32,6 +32,12 @@ public struct JTriangle
     public JVector V1;
     public JVector V2;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="JTriangle"/> structure with the specified vertices.
+    /// </summary>
+    /// <param name="v0">The first vertex of the triangle.</param>
+    /// <param name="v1">The second vertex of the triangle.</param>
+    /// <param name="v2">The third vertex of the triangle.</param>
     public JTriangle(in JVector v0, in JVector v1, in JVector v2)
     {
         V0 = v0;

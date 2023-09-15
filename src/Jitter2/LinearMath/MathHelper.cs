@@ -69,9 +69,10 @@ public static class MathHelper
     */
 
     /// <summary>
-    /// Calculates an orthonormal vector.
+    /// Calculates an orthonormal vector to the given vector.
     /// </summary>
-    /// <param name="vec">Input vector, does not have to be normalized.</param>
+    /// <param name="vec">The input vector, which does not need to be normalized.</param>
+    /// <returns>An orthonormal vector to the input vector.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector CreateOrthonormal(in JVector vec)
     {
@@ -104,8 +105,11 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Checks if the columns of the matrix form an orthonormal basis.
+    /// Verifies whether the columns of the given matrix constitute an orthonormal basis.
+    /// An orthonormal basis means that the columns are mutually perpendicular and have unit length.
     /// </summary>
+    /// <param name="matrix">The input matrix to check for an orthonormal basis.</param>
+    /// <returns>True if the columns of the matrix form an orthonormal basis; otherwise, false.</returns>
     public static bool CheckOrthonormalBasis(in JMatrix matrix)
     {
         JMatrix delta = JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity;
@@ -116,11 +120,12 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Checks if the length of a vector is close to zero or zero.
+    /// Determines whether the length of the given vector is zero or close to zero.
     /// </summary>
-    /// <param name="v">The vector to check.</param>
-    /// <param name="epsilonSq">The squared magnitude of the vector is compared
-    /// to this value.</param>
+    /// <param name="v">The vector to evaluate.</param>
+    /// <param name="epsilonSq">A threshold value below which the squared magnitude of the vector 
+    /// is considered to be zero or close to zero.</param>
+    /// <returns>True if the vector is close to zero; otherwise, false.</returns>
     public static bool CloseToZero(in JVector v, float epsilonSq = 1e-16f)
     {
         return v.LengthSquared() < epsilonSq;

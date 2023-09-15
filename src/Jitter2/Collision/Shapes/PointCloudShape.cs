@@ -21,20 +21,16 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#region Using Statements
-
 using System.Collections.Generic;
 using Jitter2.LinearMath;
-
-#endregion
 
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
 /// Represents a generic convex hull, similar to <see cref="ConvexHullShape"/>. The shape is
-/// implicitly defined by a point cloud. It is not necessary for the points to lie on a convex hull.
-/// For performance reasons this shape should only be used for a small number of points (maximum
-/// 20-30).
+/// implicitly defined by a point cloud. It is not necessary for the points to lie on the convex hull.
+/// For performance optimization, this shape should ideally be used for a small number of points (maximum
+/// of 20-30).
 /// </summary>
 public class PointCloudShape : Shape
 {
@@ -42,10 +38,10 @@ public class PointCloudShape : Shape
     private JVector shifted;
 
     /// <summary>
-    /// Constructor of ConvexHullShape class.
+    /// Initializes a new instance of the <see cref="PointCloudShape"/> class.
     /// </summary>
     /// <param name="vertices">
-    /// A list containing all vertices defining the convex hull. The list is references and should
+    /// A list containing all vertices that define the convex hull. The list is referenced and should
     /// not be modified after passing it to the constructor.
     /// </param>
     public PointCloudShape(List<JVector> vertices)
@@ -60,7 +56,7 @@ public class PointCloudShape : Shape
     }
 
     /// <summary>
-    /// Clones the shape. The underlying data structure is shared
+    /// Creates a copy of this shape. The underlying data structure is shared
     /// among the instances.
     /// </summary>
     public PointCloudShape Clone()
@@ -77,8 +73,8 @@ public class PointCloudShape : Shape
     }
 
     /// <summary>
-    /// The shape can be shifted. This can be used to when constructing a rigid
-    /// body containing one or more shapes.
+    /// Gets or sets the shift value for the shape. This property can be used when constructing a rigid
+    /// body that contains one or more shapes.
     /// </summary>
     public JVector Shift
     {

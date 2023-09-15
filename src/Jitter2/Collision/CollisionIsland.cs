@@ -28,8 +28,7 @@ using Jitter2.Dynamics;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// An island is a collection of bodies which are directly or indirectly
-/// in touch with each other.
+/// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
 /// </summary>
 public sealed class Island : IListIndex
 {
@@ -38,17 +37,23 @@ public sealed class Island : IListIndex
     internal bool needsUpdate;
 
     /// <summary>
-    /// All bodies in this island.
+    /// Gets a collection of all the bodies present in this island.
     /// </summary>
     public ReadOnlyHashSet<RigidBody> Bodies { get; private set; }
 
     int IListIndex.ListIndex { get; set; } = -1;
-
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Island"/> class.
+    /// </summary>
     public Island()
     {
         Bodies = new ReadOnlyHashSet<RigidBody>(bodies);
     }
 
+    /// <summary>
+    /// Clears all the bodies from the lists within this island.
+    /// </summary>
     internal void ClearLists()
     {
         bodies.Clear();

@@ -27,16 +27,16 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface to implement a generic filter to filter out pairs of shapes or modify collision
-/// information after Jitter performed narrow phase collision detection between the shapes.
+/// Interface to facilitate the implementation of a generic filter. This filter can either exclude certain pairs of shapes or modify collision
+/// information subsequent to Jitter's execution of narrow phase collision detection between the shapes.
 /// </summary>
 public interface INarrowPhaseFilter
 {
     /// <summary>
-    /// Called after narrow phase collision detection in Jitter. Collision information can be
-    /// changed. For the parameters, see the corresponding <see cref="NarrowPhase"/> methods.
-    /// <returns>False if collision should be filtered out, true otherwise.</returns>
+    /// Invoked following the narrow phase of collision detection in Jitter. This allows for the modification of collision information.
+    /// Refer to the corresponding <see cref="NarrowPhase"/> methods for details on the parameters.
     /// </summary>
+    /// <returns>False if the collision should be filtered out, true otherwise.</returns>
     bool Filter(Shape shapeA, Shape shapeB,
         ref JVector pAA, ref JVector pBB,
         ref JVector normal, ref float penetration);

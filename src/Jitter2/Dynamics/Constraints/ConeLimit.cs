@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implementation of the ConeLimit constraint. Restricts the tilt of one body with respect to
+/// Implements the ConeLimit constraint, which restricts the tilt of one body relative to 
 /// another body.
 /// </summary>
 public unsafe class ConeLimit : Constraint

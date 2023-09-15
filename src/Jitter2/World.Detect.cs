@@ -200,14 +200,14 @@ public partial class World
     }
 
     /// <summary>
-    /// Specify an implementation of <see cref="INarrowPhaseFilter"/> to be used in the collision detection.
-    /// The default is an instance of <see cref="TriangleEdgeCollisionFilter"/>.
+    /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
+    /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
     public INarrowPhaseFilter? NarrowPhaseFilter { get; set; } = new TriangleEdgeCollisionFilter();
 
     /// <summary>
-    /// Specify an implementation of <see cref="IBroadPhaseFilter"/> to be used in the collision detection.
-    /// The default is null.
+    /// Specifies an implementation of the <see cref="IBroadPhaseFilter"/> to be used in collision detection.
+    /// The default value is null.
     /// </summary>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
@@ -219,28 +219,26 @@ public partial class World
     };
 
     /// <summary>
-    /// Enables the generation of additional contacts for flat surface which are in contact.
-    /// Traditionally the deepest collision point between two objects is reported by the collision system.
-    /// The full contact manifold is then generated over several time steps using contact caching. This
-    /// can be unstable. The method here tries to build the full (or a larger part) of the contact
-    /// manifold after one time step.
+    /// Enables the generation of additional contacts for flat surfaces that are in contact.
+    /// Traditionally, the collision system reports the deepest collision point between two objects.
+    /// A full contact manifold is then generated over several time steps using contact caching, which
+    /// can be unstable. This method attempts to build a fuller or complete contact manifold within a single time step.
     /// </summary>
     public bool EnableAuxiliaryContactPoints { set; get; } = true;
 
     /// <summary>
-    /// A speculative contact slows a body down such that the body does not penetrate or tunnel an
-    /// obstacle within one frame. The <see cref="SpeculativeRelaxationFactor"/> factor scales the
-    /// slowdown from 0 (the body is stopped immediately at this frame) to 1 (the body and the
-    /// obstacle are just touching after the next velocity integration). A value below 1 is
-    /// favorable since the left-over velocity may be enough to trigger another speculative contact
-    /// the next frame.
+    /// A speculative contact slows a body down such that it does not penetrate or tunnel through
+    /// an obstacle within one frame. The <see cref="SpeculativeRelaxationFactor"/> scales the
+    /// slowdown, ranging from 0 (where the body stops immediately during this frame) to 1 (where the body and the
+    /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity 
+    /// might be sufficient to trigger another speculative contact in the next frame.
     /// </summary>
     public float SpeculativeRelaxationFactor { get; set; } = 0.9f;
 
     /// <summary>
-    /// Speculative contacts are generated if the velocity towards an obstacle is greater than
-    /// the threshold value. To prevent bodies with diameter D from tunneling thin walls this
-    /// threshold should be set to approx. D / timestep, e.g. 100 for a unit cube and a
+    /// Speculative contacts are generated when the velocity towards an obstacle exceeds
+    /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
+    /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01s.
     /// </summary>
     public float SpeculativeVelocityThreshold { get; set; } = 10f;

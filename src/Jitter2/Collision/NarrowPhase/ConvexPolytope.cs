@@ -30,9 +30,9 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// A convex polytope builder used for collision detection in <see cref="NarrowPhase"/>.
-/// <see cref="ConvexPolytope.InitHeap"/> has to be called at least once before usage
-/// in order to allocate memory for vertices and triangles.
+/// Represents a convex polytope builder used in collision detection during the narrow phase.
+/// Note: Ensure to call <see cref="ConvexPolytope.InitHeap"/> at least once before utilizing this structure
+/// to allocate necessary memory for vertices and triangles.
 /// </summary>
 public unsafe struct ConvexPolytope
 {
@@ -52,7 +52,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Represents a vertex used in algorithms operating on the Minkowski sum of two shapes.
+    /// Represents a vertex utilized in algorithms that operate on the Minkowski sum of two shapes.
     /// </summary>
     public struct Vertex
     {
@@ -99,15 +99,15 @@ public unsafe struct ConvexPolytope
     private JVector center;
 
     /// <summary>
-    /// Returns whether or not the origin is enclosed. Important: This only returns
-    /// correct results if called after <see cref="GetClosestTriangle"/> and is invalidated
-    /// after a call to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
+    /// Indicates whether the origin is enclosed within the polyhedron.
+    /// Important: For accurate results, call this method only after invoking <see cref="GetClosestTriangle"/>.
+    /// The return value may be invalidated by subsequent calls to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
     /// </summary>
     public readonly bool OriginEnclosed => originEnclosed;
-
+    
     /// <summary>
-    /// Calculates the barycentric coordinates of the origin projected onto the triangle
-    /// which are used to return points in A- and B-space.
+    /// Computes the barycentric coordinates of the origin projected onto a given triangle. 
+    /// These coordinates are used to retrieve points in A- and B-space.
     /// </summary>
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
     {
@@ -270,8 +270,8 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Loops through all triangles of the convex polytope and returns the one with
-    /// the smallest distance to the origin (0, 0, 0).
+    /// Iterates through all triangles of the convex polytope and returns the one closest 
+    /// to the origin (0, 0, 0), based on the minimum distance.
     /// </summary>
     public ref Triangle GetClosestTriangle()
     {
@@ -295,7 +295,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Constructs a tetrahedron using the first four vertices in <see cref="Vertices"/>.
+    /// Initializes the structure with a tetrahedron formed using the first four vertices in the <see cref="Vertices"/> array.
     /// </summary>
     public void InitTetrahedron()
     {
@@ -312,7 +312,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Constructs a small tetrahedron enclosing the given point.
+    /// Creates a small tetrahedron that encapsulates the specified point.
     /// </summary>
     public void InitTetrahedron(in JVector point)
     {
@@ -334,9 +334,9 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Must be called, before calling any other method. Initializes memory for
-    /// <see cref="Vertices"/> and <see cref="Triangles"/>. Can be called multiple
-    /// times, initialization is only done once.
+    /// Initializes the memory for <see cref="Vertices"/> and <see cref="Triangles"/>.
+    /// Must be invoked prior to calling any other method in this struct.
+    /// Note: Can be called multiple times; however, initialization occurs only once.
     /// </summary>
     public void InitHeap()
     {
@@ -348,10 +348,10 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a single point to the polyhedron. Ignores A- and B-space. Compare with
-    /// <see cref="AddVertex"/>.
+    /// Incorporates a single point into the polyhedron, disregarding A- and B-space. 
+    /// This operation contrasts with <see cref="AddVertex"/>.
     /// </summary>
-    /// <returns>True if the polyhedron could be extended by this point, false otherwise.</returns>
+    /// <returns>Indicates whether the polyhedron successfully incorporated the new point.</returns>
     public bool AddPoint(in JVector point)
     {
         Unsafe.SkipInit(out Vertex v);
@@ -360,10 +360,11 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a vertex to the polyhedron. Important: Invalidates the reference from previous calls
-    /// to <see cref="GetClosestTriangle"/>, even if false is returned.
+    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference 
+    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of 
+    /// the return value of this method.
     /// </summary>
-    /// <returns>True if the polyhedron could be extended by this point, false otherwise.</returns>
+    /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
     public bool AddVertex(in Vertex vertex)
     {
         Edge* edges = stackalloc Edge[256];

@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints a fixed point in the reference frame of one body on a line which is fixed in
+/// Constrains a fixed point in the reference frame of one body to a line that is fixed in
 /// the reference frame of another body. This constraint removes one degree of translational
 /// freedom; two if the limit is enforced.
 /// </summary>

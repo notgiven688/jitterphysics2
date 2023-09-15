@@ -24,7 +24,7 @@
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// Represents an axis aligned bounding box.
+/// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
 public struct JBBox
 {

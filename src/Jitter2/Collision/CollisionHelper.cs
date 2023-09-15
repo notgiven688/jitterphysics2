@@ -33,9 +33,13 @@ namespace Jitter2.Collision;
 public static class CollisionHelper
 {
     /// <summary>
-    /// Checks if a point projected onto the plane of a triangle is within
-    /// the triangle.
+    /// Determines whether a point, when projected onto the plane of a triangle, lies within the triangle.
     /// </summary>
+    /// <param name="a">The first vertex of the triangle.</param>
+    /// <param name="b">The second vertex of the triangle.</param>
+    /// <param name="c">The third vertex of the triangle.</param>
+    /// <param name="point">The point to be projected onto the triangle's plane.</param>
+    /// <returns>Returns true if the projected point lies within the triangle, otherwise returns false.</returns>
     public static bool ProjectedPointOnTriangle(in JVector a, in JVector b, in JVector c,
         in JVector point)
     {
@@ -57,8 +61,16 @@ public static class CollisionHelper
     }
 
     /// <summary>
-    /// Ray triangle intersection.
+    /// Determines the intersection between a ray and a triangle.
     /// </summary>
+    /// <param name="a">The first vertex of the triangle.</param>
+    /// <param name="b">The second vertex of the triangle.</param>
+    /// <param name="c">The third vertex of the triangle.</param>
+    /// <param name="rayStart">The starting point of the ray.</param>
+    /// <param name="rayDir">The direction of the ray.</param>
+    /// <param name="lambda">The scalar value representing the point of intersection between the ray and the triangle's plane.</param>
+    /// <param name="normal">The normal vector at the point of intersection, or a zero vector if there is no intersection.</param>
+    /// <returns>Returns true if the ray intersects with the triangle, otherwise returns false.</returns>
     public static bool RayTriangle(in JVector a, in JVector b, in JVector c,
         in JVector rayStart, in JVector rayDir,
         out float lambda, out JVector normal)

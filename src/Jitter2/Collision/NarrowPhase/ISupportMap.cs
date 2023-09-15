@@ -26,19 +26,18 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface for a generic convex shape defined through its support function.
+/// Defines an interface for a generic convex shape, which is characterized by its support function.
 /// </summary>
 public interface ISupportMap
 {
     /// <summary>
-    /// Finds the point in the shape furthest away in the given direction.
+    /// Identifies the point on the shape that is furthest in the specified direction.
     /// </summary>
-    /// <param name="direction">The direction. Does not have to be normalized.</param>
+    /// <param name="direction">The direction in which to search for the furthest point. It does not need to be normalized.</param>
     void SupportMap(in JVector direction, out JVector result);
 
     /// <summary>
-    /// Returns the geometric center of the shape. For a shape with
-    /// constant mass density this is the center of mass.
+    /// Gets the geometric center of the shape. For a shape with a constant mass density, this represents the center of mass.
     /// </summary>
     JVector GeometricCenter { get; }
 }

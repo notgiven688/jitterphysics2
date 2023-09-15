@@ -28,7 +28,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Provides helper methods to calculate properties of implicitly defined shapes.
+/// Provides helper methods for calculating the properties of implicitly defined shapes.
 /// </summary>
 public static class ShapeHelper
 {
@@ -41,8 +41,11 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Calculates a convex hull of an implicitly defined shape.
+    /// Calculates the convex hull of an implicitly defined shape.
     /// </summary>
+    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <returns>An enumeration of triangles forming the convex hull.</returns>
     public static IEnumerable<JTriangle> MakeHull(ISupportMap support, int subdivisions = 3)
     {
         Stack<ClipTriangle> sphereTesselation = new();
@@ -128,9 +131,12 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Calculates mass properties of an implicitly defined shape under the assumption of unit mass
-    /// density.
+    /// Calculates the mass properties of an implicitly defined shape, assuming unit mass density.
     /// </summary>
+    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="inertia">Output parameter for the calculated inertia matrix.</param>
+    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
+    /// <param name="mass">Output parameter for the calculated mass.</param>
     public static void CalculateMassInertia(ISupportMap support, out JMatrix inertia, out JVector centerOfMass,
         out float mass)
     {

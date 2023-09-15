@@ -41,7 +41,7 @@ public unsafe struct ConstraintData
 }
 
 /// <summary>
-/// Base class for constraints.
+/// The base class for constraints.
 /// </summary>
 public abstract class Constraint : IDebugDrawable
 {
@@ -49,13 +49,13 @@ public abstract class Constraint : IDebugDrawable
     public RigidBody Body2 { private set; get; } = null!;
 
     /// <summary>
-    /// A handle for the raw constraint data.
+    /// A handle for accessing the raw constraint data.
     /// </summary>
     public JHandle<ConstraintData> Handle { internal set; get; }
 
     /// <summary>
-    /// Must be overridden. Create initializes the function pointers for
-    /// <see cref="CSDataCSDataIterate"/> and <see cref="CSDataCSDataPrepareForIteration"/>.
+    /// This method must be overridden. It initializes the function pointers for
+    /// <see cref="ConstraintData.Iterate"/> and <see cref="ConstraintData.PrepareForIteration"/>.
     /// </summary>
     protected virtual void Create()
     {
@@ -69,8 +69,8 @@ public abstract class Constraint : IDebugDrawable
     protected unsafe delegate*<ref ConstraintData, float, void> prepareForIteration = null;
 
     /// <summary>
-    /// Temporarily enable or disable this constraint. For a complete removal
-    /// of the constraint <see cref="World.Remove(Constraint)"/> should be used.
+    /// Enables or disables this constraint temporarily. For a complete removal of the constraint, 
+    /// use <see cref="World.Remove(Constraint)"/>.
     /// </summary>
     public unsafe bool IsEnabled
     {

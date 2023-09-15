@@ -27,9 +27,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores data of the Minkowski Difference aka Configuration Space Object (CSO)
-/// for two support functions SupportA and SupportB, where SupportB is subject to
-/// a transformation given by OrientationB and PositionB.
+/// Stores data representing the Minkowski Difference, also known as the Configuration Space Object (CSO), between two support functions: SupportA and SupportB. SupportB is transformed according to the specified OrientationB and PositionB.
 /// </summary>
 public struct MinkowskiDifference
 {
@@ -47,8 +45,7 @@ public struct MinkowskiDifference
     }
 
     /// <summary>
-    /// Calculates the support function S_{A-B}(d) = S_{A}(d) - S_{B}(-d),
-    /// where d is the direction.
+    /// Calculates the support function S_{A-B}(d) = S_{A}(d) - S_{B}(-d), where "d" represents the direction.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void Support(in JVector direction, out ConvexPolytope.Vertex v)
@@ -60,8 +57,7 @@ public struct MinkowskiDifference
     }
 
     /// <summary>
-    /// Returns the geometric center of the Minkowski Difference.
-    /// This point is guaranteed to lie within the Minkowski Difference.
+    /// Retrieves the geometric center of the Minkowski Difference. This point is guaranteed to be within the confines of the Minkowski Difference.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void GeometricCenter(out ConvexPolytope.Vertex center)

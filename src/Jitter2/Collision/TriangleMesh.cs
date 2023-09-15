@@ -28,7 +28,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// An exception which is thrown when a degenerate triangle is detected.
+/// Represents an exception thrown when a degenerate triangle is detected.
 /// </summary>
 public class DegenerateTriangleException : Exception
 {
@@ -47,8 +47,8 @@ public class DegenerateTriangleException : Exception
 
 
 /// <summary>
-/// Holds the data of a triangle mesh. An instance can be passed to <see cref="Jitter2.Collision.Shapes.TriangleShape"/>.
-/// Triangles contain indices to the neighboring triangles.
+/// Encapsulates the data of a triangle mesh. An instance of this can be supplied to the <see cref="Jitter2.Collision.Shapes.TriangleShape"/>.
+/// The triangles within this class contain indices pointing to neighboring triangles.
 /// </summary>
 public class TriangleMesh
 {
@@ -65,7 +65,7 @@ public class TriangleMesh
     }
 
     /// <summary>
-    /// This structure holds vertex indices, as well as indices to
+    /// This structure encapsulates vertex indices along with indices pointing to 
     /// neighboring triangles.
     /// </summary>
     public struct Triangle
@@ -92,21 +92,21 @@ public class TriangleMesh
     }
 
     /// <summary>
-    /// An array of vertices making up the triangle mesh.
+    /// An array containing the vertices that comprise the triangle mesh.
     /// </summary>
     public readonly JVector[] Vertices;
 
     /// <summary>
-    /// The triangles making up the triangle mesh.
+    /// The triangles constituting the triangle mesh.
     /// </summary>
     public readonly Triangle[] Indices;
 
     /// <summary>
-    /// Constructs a triangle mesh.
+    /// Initializes a new instance of the triangle mesh.
     /// </summary>
-    /// <param name="triangles">The triangles to add. The reference to the list can be
-    /// altered/deleted after calling the constructor.</param>
-    /// <exception cref="DegenerateTriangleException">Thrown if the triangle mesh contains one or
+    /// <param name="triangles">The triangles to be added. The reference to the list can be 
+    /// modified/deleted after invoking this constructor.</param>
+    /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or 
     /// more degenerate triangles.</exception>
     public TriangleMesh(List<JTriangle> triangles)
     {

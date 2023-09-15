@@ -37,7 +37,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2;
 
 /// <summary>
-/// Holds all simulation objects and manages their state.
+/// Represents a simulation environment that holds and manages the state of all simulation objects.
 /// </summary>
 public partial class World
 {
@@ -48,7 +48,7 @@ public partial class World
     }
 
     /// <summary>
-    /// Access to objects in unmanaged memory. Potentially unsafe.
+    /// Provides access to objects in unmanaged memory. This operation is potentially unsafe.
     /// </summary>
     public readonly struct SpanData
     {
@@ -74,8 +74,8 @@ public partial class World
     private readonly UnmanagedActiveList<ConstraintData> memConstraints;
 
     /// <summary>
-    /// Access to objects in unmanaged memory. Potentially unsafe. Use the
-    /// corresponding native properties if possible.
+    /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Utilize
+    /// the corresponding native properties where possible to mitigate risk.
     /// </summary>
     public SpanData RawData => new(this);
 
@@ -86,12 +86,11 @@ public partial class World
     private readonly ActiveList<Shape> activeShapes = new();
 
     /// <summary>
-    /// Two thread models are available. <see cref="ThreadModelType.Persistent"/> keeps the worker
-    /// threads spinning, even if <see cref="World.Step(float, bool)"/> is not performing
-    /// operations, wasting CPU-cycles and potentially harming the performance of other operations
-    /// like rendering. The advantage is that it keeps the threads 'warm' for the next call to <see
-    /// cref="World.Step(float, bool)"/>. <see cref="ThreadModelType.Regular"/> allows the worker
-    /// threads to yield and take over other work.
+    /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
+    /// threads active continuously, even when the <see cref="World.Step(float, bool)"/> is not in operation, which might
+    /// consume more CPU cycles and possibly affect the performance of other operations such as rendering. However, it ensures that the threads
+    /// remain 'warm' for the next invocation of <see cref="World.Step(float, bool)"/>. Conversely, the <see cref="ThreadModelType.Regular"/> model allows
+    /// the worker threads to yield and undertake other tasks.
     /// </summary>
     public ThreadModelType ThreadModel { get; set; } = ThreadModelType.Regular;
 
@@ -191,9 +190,8 @@ public partial class World
     public bool UseFullEPASolver { get; set; }
 
     /// <summary>
-    /// Creates an instance of the world class. Since Jitter uses its own memory model the maximum
-    /// number of <see cref="RigidBody"/>-, <see cref="ContactData"/>- and <see
-    /// cref="Constraint"/>-instances must be specified.
+    /// Creates an instance of the World class. As Jitter utilizes a distinct memory model, it is necessary to specify
+    /// the maximum number of instances for <see cref="RigidBody"/>, <see cref="ContactData"/>, and <see cref="Constraint"/>.
     /// </summary>
     public World(int numBodies = 32768, int numContacts = 65536, int numConstraints = 32768)
     {
@@ -218,7 +216,7 @@ public partial class World
     }
 
     /// <summary>
-    /// Removes all entities from the world.
+    /// Removes all entities from the simulation world.
     /// </summary>
     public void Clear()
     {
@@ -232,8 +230,8 @@ public partial class World
     }
 
     /// <summary>
-    /// Removes the body from the world. Automatically removes connected contacts
-    /// and constraints as well.
+    /// Removes the specified body from the world. This operation also automatically discards any associated contacts
+    /// and constraints.
     /// </summary>
     public void Remove(RigidBody body)
     {
@@ -270,10 +268,10 @@ public partial class World
     }
 
     /// <summary>
-    /// Remove a constraint from the world. To deactivate constraints
-    /// for short periods of time <see cref="Constraint.IsEnabled"/> can be used.
+    /// Removes a specific constraint from the world. For temporary deactivation of constraints, consider using the
+    /// <see cref="Constraint.IsEnabled"/> property.
     /// </summary>
-    /// <param name="constraint"></param>
+    /// <param name="constraint">The constraint to be removed.</param>
     public void Remove(Constraint constraint)
     {
         ActivateBodyNextStep(constraint.Body1);
@@ -285,7 +283,7 @@ public partial class World
     }
 
     /// <summary>
-    /// Removes an arbiter.
+    /// Removes a particular arbiter from the world.
     /// </summary>
     public void Remove(Arbiter arbiter)
     {
@@ -336,10 +334,12 @@ public partial class World
     }
 
     /// <summary>
-    /// Creates a constraint. The user must call Constraint.Initialize to initialize
-    /// the constraint after.
+    /// Constructs a constraint of the specified type. After creation, it is mandatory to initialize the constraint using the Constraint.Initialize method.
     /// </summary>
-    /// <typeparam name="T">Type of the constraint, which should be created.</typeparam>
+    /// <typeparam name="T">The specific type of constraint to create.</typeparam>
+    /// <param name="body1">The first rigid body involved in the constraint.</param>
+    /// <param name="body2">The second rigid body involved in the constraint.</param>
+    /// <returns>A new instance of the specified constraint type.</returns>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
         T constraint = new();
@@ -362,8 +362,9 @@ public partial class World
     }
 
     /// <summary>
-    /// Adds a new rigid body to the world.
+    /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
+    /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
     public RigidBody CreateRigidBody()
     {
         RigidBody body = new(memRigidBodies.Allocate(true, true), this);

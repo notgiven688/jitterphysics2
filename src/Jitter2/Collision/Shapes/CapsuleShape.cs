@@ -27,7 +27,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// A shape representing a capsule.
+/// Represents a shape in the form of a capsule.
 /// </summary>
 public class CapsuleShape : Shape
 {
@@ -35,7 +35,7 @@ public class CapsuleShape : Shape
     private float halfLength;
 
     /// <summary>
-    /// Radius of the capsule.
+    /// Gets or sets the radius of the capsule.
     /// </summary>
     public float Radius
     {
@@ -48,8 +48,7 @@ public class CapsuleShape : Shape
     }
 
     /// <summary>
-    /// Length of the cylindrical part of the capsule, i.e. excluding the half-spheres on both
-    /// sides.
+    /// Gets or sets the length of the cylindrical part of the capsule, excluding the half-spheres on both ends.
     /// </summary>
     public float Length
     {
@@ -62,11 +61,10 @@ public class CapsuleShape : Shape
     }
 
     /// <summary>
-    /// Creates a capsule. The symmetry axis of the capsule is aligned along the y-axis.
+    /// Initializes a new instance of the CapsuleShape class with the specified radius and length. The symmetry axis of the capsule is aligned along the Y-axis.
     /// </summary>
-    /// <param name="radius">Radius of the capsule.</param>
-    /// <param name="length">Length of the cylindrical part of the capsule, i.e. excluding the
-    /// half-spheres on both sides.</param>
+    /// <param name="radius">The radius of the capsule.</param>
+    /// <param name="length">The length of the cylindrical part of the capsule, excluding the half-spheres at both ends.</param>
     public CapsuleShape(float radius = 0.5f, float length = 1.0f)
     {
         this.radius = radius;

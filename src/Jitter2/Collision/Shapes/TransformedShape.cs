@@ -36,8 +36,11 @@ public class TransformedShape : Shape
     private readonly bool hasOrientation;
 
     /// <summary>
-    /// Construct a shape which is given an extra orientation and translation.
+    /// Constructs a transformed shape with specified orientation and translation applied to the original shape.
     /// </summary>
+    /// <param name="shape">The original shape to be transformed.</param>
+    /// <param name="orientation">The orientation matrix to be applied to the shape.</param>
+    /// <param name="translation">The translation vector to be applied to the shape.</param>
     public TransformedShape(Shape shape, JMatrix orientation, JVector translation)
     {
         OriginalShape = shape;

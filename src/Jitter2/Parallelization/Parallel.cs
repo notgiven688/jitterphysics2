@@ -27,13 +27,13 @@ using System.Diagnostics;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Methods and structs used in Jitter.Parallelization.
+/// Contains methods and structures used for parallelization within the Jitter Physics engine.
 /// </summary>
 public static class Parallel
 {
     /// <summary>
-    /// A batch defined by a start-, an end- and a batch-index.
-    /// Used in <see cref="ForBatch"/> to process a for-loop multi threaded in batches.
+    /// Represents a batch defined by a start index, an end index, and a batch index.
+    /// This struct is utilized in <see cref="ForBatch"/> to facilitate multi-threaded batch processing within a for-loop.
     /// </summary>
     public readonly struct Batch
     {

@@ -26,7 +26,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a single triangle.
+/// Represents a single triangle within a mesh.
 /// </summary>
 public class TriangleShape : Shape
 {
@@ -36,10 +36,10 @@ public class TriangleShape : Shape
     private readonly JVector geomCen;
 
     /// <summary>
-    /// Constructs a single triangle.
+    /// Initializes a new instance of the TriangleShape class.
     /// </summary>
-    /// <param name="mesh">A triangle mesh.</param>
-    /// <param name="index">The index of the triangle in the triangle mesh.</param>
+    /// <param name="mesh">The triangle mesh to which this triangle belongs.</param>
+    /// <param name="index">The index representing the position of the triangle within the mesh.</param>
     public TriangleShape(TriangleMesh mesh, int index)
     {
         Mesh = mesh;
@@ -64,8 +64,11 @@ public class TriangleShape : Shape
     }
 
     /// <summary>
-    /// Returns the vertices in world space, i.e. transformed by the rigid body.
+    /// Retrieves the vertices transformed to world space coordinates, as affected by the rigid body's transformation.
     /// </summary>
+    /// <param name="a">The transformed coordinate of the first vertex.</param>
+    /// <param name="b">The transformed coordinate of the second vertex.</param>
+    /// <param name="c">The transformed coordinate of the third vertex.</param>
     public void GetWorldVertices(out JVector a, out JVector b, out JVector c)
     {
         ref var triangle = ref Mesh.Indices[Index];

@@ -27,8 +27,7 @@ using System.Collections.Generic;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// Implements a wrapper for <see cref="List{T}"/> with no
-/// gc overhead for the enumerator.
+/// Implements a wrapper for <see cref="List{T}"/>, eliminating garbage collection (GC) overhead during enumeration.
 /// </summary>
 public class ReadOnlyList<T> : IReadOnlyCollection<T>
 {

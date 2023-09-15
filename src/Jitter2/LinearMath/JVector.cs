@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A vector of 3 floats.
+/// Represents a three-dimensional vector using three floating-point numbers. 
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Size = 12)]
 public struct JVector

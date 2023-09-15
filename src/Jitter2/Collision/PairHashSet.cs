@@ -29,8 +29,8 @@ using System.Runtime.InteropServices;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores pairs of (int, int) values. Used in Jitter to keep track of
-/// all potentially overlapping pairs of shapes. Implementation is based
+/// Stores pairs of (int, int) values. Utilized in Jitter to monitor 
+/// all potential overlapping pairs of shapes. The implementation is based 
 /// on open addressing.
 /// </summary>
 public class PairHashSet

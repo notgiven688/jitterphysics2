@@ -30,8 +30,8 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implementation of the BallSocket constraint. Constraints a fixed point in the reference frame of
-/// one body to a fixed point in the reference frame of another body. Removes three translational
+/// Implements the BallSocket constraint. This constraint anchors a fixed point in the reference frame of 
+/// one body to a fixed point in the reference frame of another body, eliminating three translational 
 /// degrees of freedom.
 /// </summary>
 public unsafe class BallSocket : Constraint

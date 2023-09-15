@@ -57,50 +57,50 @@ public struct RigidBodyData
 }
 
 /// <summary>
-/// Rigid body class. Represents the main entity in the Jitter <see cref="Jitter2.World"/>.
+/// Represents the primary entity in the Jitter physics world.
 /// </summary>
 public sealed class RigidBody : IListIndex, IDebugDrawable
 {
     internal JHandle<RigidBodyData> handle;
 
     /// <summary>
-    /// For performance reasons data used to simulate this body (e.g. velocity or position) is
-    /// stored within a continuous block of unmanaged memory. This points to the raw memory location
-    /// and should rarely or never be used outside of the engine. Use the properties provided by the
-    /// <see cref="RigidBody"/> class itself.
+    /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
+    /// is stored within a contiguous block of unmanaged memory. This refers to the raw memory location
+    /// and should seldom, if ever, be utilized outside of the engine. Instead, use the properties provided
+    /// by the <see cref="RigidBody"/> class itself.
     /// </summary>
     public ref RigidBodyData Data => ref handle.Data;
 
     /// <summary>
-    /// Access the handle to the rigid body data, <see cref="Data"/>.
+    /// Gets the handle to the rigid body data, see <see cref="Data"/>.
     /// </summary>
     public JHandle<RigidBodyData> Handle => handle;
 
     internal readonly List<Shape> shapes = new(1);
 
-    // There is only one way to create a body: world.CreateRigidBody. There we add an island
-    // to the new body. Should never be null.
+    // There is only one way to create a body: world.CreateRigidBody. There, we add an island
+    // to the new body. This should never be null.
     internal Island island = null!;
 
     /// <summary>
-    /// The collision island associated with this rigid body.
+    /// Gets the collision island associated with this rigid body.
     /// </summary>
     public Island Island => island;
 
     /// <summary>
-    /// Contains all bodies this body is in contact with. Should only
+    /// Contains all bodies this body is in contact with. This should only
     /// be modified within Jitter.
     /// </summary>
     public readonly List<RigidBody> Connections = new();
 
     /// <summary>
-    /// All contacts the body is involved in. Should only
+    /// Contains all contacts in which this body is involved. This should only
     /// be modified within Jitter.
     /// </summary>
     public readonly HashSet<Arbiter> Contacts = new(5);
 
     /// <summary>
-    /// All constraints the body is connected to. Should only
+    /// Contains all constraints connected to this body. This should only
     /// be modified within Jitter.
     /// </summary>
     public readonly HashSet<Constraint> Constraints = new(5);
@@ -120,7 +120,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal float mass = 1.0f;
 
     /// <summary>
-    /// List of shapes added to this rigid body.
+    /// Gets the list of shapes added to this rigid body.
     /// </summary>
     public ReadOnlyList<Shape> Shapes { get; }
 
@@ -132,7 +132,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     private static int hashCounter;
 
     /// <summary>
-    /// The world assigned to this body.
+    /// Gets or sets the world assigned to this body.
     /// </summary>
     public World World { get; }
 
@@ -162,8 +162,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// If the rigid body's angular and linear velocity magnitude are both below
-    /// <see cref="DeactivationThreshold"/> for the specified time the body gets deactivated.
+    /// Gets or sets the deactivation time. If the magnitudes of both the angular and linear velocity of the rigid body
+    /// remain below the <see cref="DeactivationThreshold"/> for the specified time, the body is deactivated.
     /// </summary>
     public TimeSpan DeactivationTime
     {
@@ -172,10 +172,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// If the rigid body's angular and linear velocity magnitude are both below the specified values
-    /// for <see cref="DeactivationTime" /> the body gets deactivated.
+    /// Gets or sets the deactivation threshold. If the magnitudes of both the angular and linear velocity of the rigid body
+    /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, the body is deactivated.
+    /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
-    /// <value>Velocity threshold in rad/s and length units/s, respectively.</value>
     public (float angular, float linear) DeactivationThreshold
     {
         set
@@ -186,13 +186,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Specify damping factors.
+    /// Specifies the damping factors. The angular and linear velocities are multiplied by these values at each step. 
+    /// Note that these values are not scaled by time; a smaller time-step in <see cref="World.Step(float, bool)"/> 
+    /// results in increased damping.
     /// </summary>
-    /// <value>
-    /// Angular and linear velocities get multiplied by these values every step.
-    /// The values are not scaled by time, i.e. a smaller timestep in
-    /// <see cref="World.Step(float, bool)"/> results in increased damping.
-    /// </value>
     public (float angular, float linear) Damping
     {
         get => (linearDamping, angularDamping);
@@ -259,7 +256,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     public bool AffectedByGravity { get; set; } = true;
 
     /// <summary>
-    /// A managed pointer to custom user data. Not used by the engine.
+    /// A managed pointer to custom user data. This is not utilized by the engine.
     /// </summary>
     public object? Tag { get; set; }
 
@@ -300,14 +297,14 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Returns if the rigid body is active or considered as sleeping.
-    /// Call <see cref="SetActivationState"/> to change the activation state.
+    /// Indicates whether the rigid body is active or considered to be in a sleeping state.
+    /// Use <see cref="SetActivationState"/> to alter the activation state.
     /// </summary>
     public bool IsActive => Data.IsActive;
 
     /// <summary>
-    /// Tells jitter to activate or deactivate the body at the beginning of
-    /// the next time step. The current state is not changed immediately.
+    /// Instructs Jitter to activate or deactivate the body at the commencement of
+    /// the next time step. The current state does not change immediately.
     /// </summary>
     public void SetActivationState(bool active)
     {
@@ -334,13 +331,13 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Add several shapes add once to the rigid body. Mass properties are
-    /// only recalculated once (if requested).
+    /// Adds several shapes to the rigid body at once. Mass properties are 
+    /// recalculated only once, if requested.
     /// </summary>
-    /// <param name="shapes">Shapes to add.</param>
-    /// <param name="setMassInertia">If true, uses the shape's mass properties to get the bodies
-    /// mass properties. Assumes unit density for the shapes. If false, inertia and mass are not
-    /// changed.</param>
+    /// <param name="shapes">The shapes to add.</param>
+    /// <param name="setMassInertia">If true, uses the mass properties of the shapes to determine the 
+    /// body's mass properties, assuming unit density for the shapes. If false, the inertia and mass remain 
+    /// unchanged.</param>
     public void AddShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
     {
         foreach (Shape shape in shapes)
@@ -355,10 +352,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Adds a shape to the body.
     /// </summary>
-    /// <param name="shape">Shape to add.</param>
-    /// <param name="setMassInertia">If true, uses the shape's mass properties to get the bodies
-    /// mass properties. Assumes unit density for the shape. If false, inertia and mass are not
-    /// changed.</param>
+    /// <param name="shape">The shape to be added.</param>
+    /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's 
+    /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
     public void AddShape(Shape shape, bool setMassInertia = true)
     {
         AttachToShape(shape);
@@ -367,42 +363,38 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Force added to the body with the next call to <see cref="World.Step(float, bool)"/>.
-    /// The value is automatically set to zero afterwards.
+    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>. 
+    /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Force { get; set; }
 
     /// <summary>
-    /// Torque added to the body with the next call to <see cref="World.Step(float, bool)"/>.
-    /// The value is automatically set to zero afterwards.
+    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>. 
+    /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Torque { get; set; }
 
     /// <summary>
-    /// Adds force to the rigid body which changes the body's velocity. The force
-    /// is added for one frame only, i.e. it is set to zero with the next call
-    /// to <see cref="World.Step(float, bool)"/>.
+    /// Applies a force to the rigid body, thereby altering its velocity. This force is effective for a single frame only and is reset to zero during the next call to <see cref="World.Step(float, bool)"/>.
     /// </summary>
-    /// <param name="force">Force to add.</param>
+    /// <param name="force">The force to be applied.</param>
     public void AddForce(in JVector force)
     {
         Force += force;
     }
 
     /// <summary>
-    /// Adds force to the rigid body which changes the body's velocity. The force
-    /// is added for one frame only, i.e. it is set to zero with the next call
-    /// to <see cref="World.Step(float, bool)"/>.
+    /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is reset to zero with the subsequent call to <see cref="World.Step(float, bool)"/>.
     /// </summary>
-    /// <param name="force">Force to add.</param>
-    /// <param name="pos">Position where the force is added.</param>
-    public void AddForce(in JVector force, in JVector pos)
+    /// <param name="force">The force to be applied.</param>
+    /// <param name="position">The position where the force will be applied.</param>
+    public void AddForce(in JVector force, in JVector position)
     {
         ref RigidBodyData data = ref Data;
 
         if (data.IsStatic) return;
 
-        JVector.Subtract(pos, data.Position, out JVector torque);
+        JVector.Subtract(position, data.Position, out JVector torque);
         JVector.Cross(torque, force, out torque);
 
         Force += force;
@@ -410,8 +402,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Removes a shape from the rigid body.
+    /// Removes a specified shape from the rigid body.
     /// </summary>
+    /// <param name="shape">The shape to remove from the rigid body.</param>
+    /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
     public void RemoveShape(Shape shape, bool setMassInertia = true)
     {
         if (!shapes.Remove(shape))
@@ -443,10 +437,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Removes all shapes from the rigid body.
+    /// Removes all shapes associated with the rigid body.
     /// </summary>
-    /// <param name="setMassInertia">Does not change the mass properties of the rigid body if set to
-    /// false.</param>
+    /// <param name="setMassInertia">If set to false, the mass properties of the rigid body remain unchanged.</param>
     public void ClearShapes(bool setMassInertia = true)
     {
         foreach (Shape shape in shapes)
@@ -456,7 +449,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Uses the shape mass properties to calculate the mass properties of the rigid body.
+    /// Utilizes the mass properties of the shape to determine the mass properties of the rigid body.
     /// </summary>
     public void SetMassInertia()
     {
@@ -483,7 +476,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Sets a new mass and scales the inertia by the ratio of the old mass and the new mass.
+    /// Sets a new mass value and scales the inertia according to the ratio of the old mass to the new mass.
     /// </summary>
     public void SetMassInertia(float mass)
     {
@@ -494,7 +487,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Sets new mass properties for this body by specifying inertia and mass directly.
+    /// Sets the new mass properties of this body by specifying both inertia and mass directly.
     /// </summary>
     public void SetMassInertia(in JMatrix inertia, float mass)
     {
@@ -510,8 +503,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Returns the mass of the rigid body. Use <see cref="RigidBody.SetMassInertia(float)"/>,
-    /// <see cref="RigidBody.SetMassInertia(in JMatrix, float)"/> to modify the mass.
+    /// Gets the mass of the rigid body. To modify the mass, use 
+    /// <see cref="RigidBody.SetMassInertia(float)"/> or 
+    /// <see cref="RigidBody.SetMassInertia(JMatrix, float)"/>.
     /// </summary>
     public float Mass => mass;
 

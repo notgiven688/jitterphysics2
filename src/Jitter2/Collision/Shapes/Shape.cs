@@ -29,18 +29,18 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Main entity of the collision system. Implements <see cref="ISupportMap"/> for
-/// narrow phase and <see cref="IDynamicTreeProxy"/> for broadphase collision detection.
-/// The shape itself has no position or orientation. Shapes can be owned by instances
-/// of <see cref="RigidBody"/>.
+/// The main entity of the collision system. Implements <see cref="ISupportMap"/> for
+/// narrow-phase and <see cref="IDynamicTreeProxy"/> for broad-phase collision detection.
+/// The shape itself does not have a position or orientation. Shapes can be associated with 
+/// instances of <see cref="RigidBody"/>.
 /// </summary>
 public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 {
     int IListIndex.ListIndex { get; set; } = -1;
 
     /// <summary>
-    /// 64-bit integer shape id. Used by algorithms which require to bring shapes into a well
-    /// defined order.
+    /// A 64-bit integer representing the shape ID. This is used by algorithms that require 
+    /// arranging shapes in a well-defined order.
     /// </summary>
     public readonly ulong ShapeID;
 
@@ -63,31 +63,30 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     }
 
     /// <summary>
-    /// The instance of <see cref="RigidBody"/> this shape is attached to.
+    /// The instance of <see cref="RigidBody"/> to which this shape is attached.
     /// </summary>
-    /// <value></value>
     public RigidBody RigidBody { get; private set; } = null!;
 
     /// <summary>
-    /// Bounding box of the shape in world space. Automatically updated when the position or
-    /// orientation of the corresponding instance of <see cref="RigidBody"/> is changed.
+    /// The bounding box of the shape in world space. It is automatically updated when the position or
+    /// orientation of the corresponding instance of <see cref="RigidBody"/> changes.
     /// </summary>
     public JBBox WorldBoundingBox { get; protected set; }
 
     /// <summary>
-    /// Inertia of the shape under the assumption of homogenous unit-mass density.
-    /// The inertia is calculated with respect to the origin, not necessarily with respectk to the center of mass.
+    /// The inertia of the shape, assuming a homogeneous unit-mass density.
+    /// The inertia is calculated with respect to the origin, not necessarily the center of mass.
     /// </summary>
     public JMatrix Inertia { get; protected set; }
 
     /// <summary>
-    /// Geometric center which is equivalent to the center of mass under the assumption of
-    /// homogenous unit-mass density.
+    /// The geometric center of the shape, equivalent to the center of mass when assuming a
+    /// homogeneous unit-mass density.
     /// </summary>
     public JVector GeometricCenter { get; protected set; }
 
     /// <summary>
-    /// Mass of the shape under the assumption of homogenous unit-mass density.
+    /// The mass of the shape, assuming a homogeneous unit-mass density.
     /// </summary>
     public float Mass { get; protected set; }
 
@@ -96,9 +95,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     public JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
 
     /// <summary>
-    /// Updates the mass and inertia properties, as well as the world bounding box. This should be
-    /// called by the child class whenever a property of a shape is changes, e.g. the radius of a
-    /// sphere.
+    /// Updates the mass and inertia properties, as well as the world bounding box. This method should be
+    /// called by child classes whenever a property of the shape changes, such as the radius of a sphere.
     /// </summary>
     public void UpdateShape()
     {
@@ -107,8 +105,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     }
 
     /// <summary>
-    /// Calls <see cref="CalculateMassInertia"/> to set <see cref="Inertia"/>,
-    /// <see cref="Mass"/> and <see cref="GeometricCenter"/>.
+    /// Calls <see cref="CalculateMassInertia"/> to set the values of <see cref="Inertia"/>, 
+    /// <see cref="Mass"/>, and <see cref="GeometricCenter"/>.
     /// </summary>
     public void UpdateMassInertia()
     {
@@ -119,9 +117,9 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     }
 
     /// <summary>
-    /// Calculate mass and inertia of the shape. Can be overriden by child classes
-    /// to improve performance or/and accuracy. The default implementation relies on
-    /// an approximation of the shape build using <see cref="SupportMap"/>.
+    /// Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
+    /// performance or accuracy. The default implementation relies on an approximation of the shape 
+    /// constructed using the <see cref="SupportMap"/> function.
     /// </summary>
     public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
@@ -129,8 +127,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     }
 
     /// <summary>
-    /// Calls <see cref="CalculateBoundingBox"/> to set <see cref="WorldBoundingBox"/> in the frame
-    /// of the instance of <see cref="RigidBody"/> connected to this shape.
+    /// Calls <see cref="CalculateBoundingBox"/> to set the <see cref="WorldBoundingBox"/> in the frame
+    /// of the <see cref="RigidBody"/> instance connected to this shape.
     /// </summary>
     public void UpdateWorldBoundingBox()
     {
@@ -142,7 +140,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// <summary>
     /// Expands the world bounding box of the shape.
     /// </summary>
-    /// <param name="sweptDirection">Direction for the expansion.</param>
+    /// <param name="sweptDirection">The direction in which to expand.</param>
     public void SweptExpandBoundingBox(in JVector sweptDirection)
     {
         JBBox box = WorldBoundingBox;
@@ -188,10 +186,10 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     }
 
     /// <summary>
-    /// Calculates the bounding box of the shape in a reference frame given by orientation and
-    /// position. This bounding box should enclose the shape which is implicitly defined by the
-    /// <seecref="SupportMap"/> function. The implementation should be overriden by child-classes to
-    /// improve performance.
+    /// Calculates the bounding box of the shape in a reference frame defined by the orientation and
+    /// position parameters. This bounding box should enclose the shape, which is implicitly defined by the
+    /// <see cref="SupportMap"/> function. Child classes should override this implementation to improve
+    /// performance.
     /// </summary>
     public virtual void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {

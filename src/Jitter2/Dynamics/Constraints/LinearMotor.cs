@@ -31,8 +31,8 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A motor constraint driving relative translational movement along two axis fixed
-/// in the reference frame of the bodies.
+/// A motor constraint that drives relative translational movement along two axes fixed 
+/// in the reference frames of the bodies.
 /// </summary>
 public unsafe class LinearMotor : Constraint
 {

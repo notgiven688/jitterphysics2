@@ -31,9 +31,9 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints a fixed point in the reference frame of one body on a plane which is fixed in
+/// Constrains a fixed point in the reference frame of one body to a plane that is fixed in
 /// the reference frame of another body. This constraint removes one degree of translational
-/// if the limit is enforced.
+/// freedom if the limit is enforced.
 /// </summary>
 public unsafe class PointOnPlane : Constraint
 {

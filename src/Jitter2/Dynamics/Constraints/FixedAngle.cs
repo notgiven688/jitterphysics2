@@ -30,8 +30,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints the relative orientation between two bodies. Removes three degrees of rotational
-/// freedom.
+/// Constrains the relative orientation between two bodies, eliminating three degrees of rotational freedom.
 /// </summary>
 public unsafe class FixedAngle : Constraint
 {

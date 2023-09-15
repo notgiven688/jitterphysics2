@@ -27,14 +27,14 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// A shape representing a box.
+/// Represents a three-dimensional box shape.
 /// </summary>
 public class BoxShape : Shape
 {
     private JVector halfSize;
 
     /// <summary>
-    /// Specify or retrieve side length of the box.
+    /// Gets or sets the dimensions of the box.
     /// </summary>
     public JVector Size
     {
@@ -47,9 +47,9 @@ public class BoxShape : Shape
     }
 
     /// <summary>
-    /// Creates a box.
+    /// Creates a box shape with specified dimensions.
     /// </summary>
-    /// <param name="size">Side length of the box.</param>
+    /// <param name="size">The dimensions of the box.</param>
     public BoxShape(JVector size)
     {
         halfSize = 0.5f * size;
@@ -57,9 +57,9 @@ public class BoxShape : Shape
     }
 
     /// <summary>
-    /// Creates a cube.
+    /// Creates a cube shape with the specified side length.
     /// </summary>
-    /// <param name="size">Side length of the cube.</param>
+    /// <param name="size">The length of each side of the cube.</param>
     public BoxShape(float size)
     {
         halfSize = new JVector(size * 0.5f);
@@ -67,8 +67,11 @@ public class BoxShape : Shape
     }
 
     /// <summary>
-    /// Creates a box.
+    /// Creates a box shape with the specified length, height, and width.
     /// </summary>
+    /// <param name="length">The length of the box.</param>
+    /// <param name="height">The height of the box.</param>
+    /// <param name="width">The width of the box.</param>
     public BoxShape(float length, float height, float width)
     {
         halfSize = 0.5f * new JVector(length, height, width);

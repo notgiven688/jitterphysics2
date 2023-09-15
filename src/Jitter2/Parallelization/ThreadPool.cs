@@ -161,7 +161,7 @@ public sealed class ThreadPool
     }
 
     /// <summary>
-    /// Singleton design pattern.
+    /// Implements the singleton pattern to provide a single instance of the ThreadPool.
     /// </summary>
     public static ThreadPool Instance
     {
@@ -173,8 +173,7 @@ public sealed class ThreadPool
     }
 
     /// <summary>
-    /// Allows the worker threads to execute tasks or wait for
-    /// new tasks in a tight loop.
+    /// Initiates the execution of tasks or allows worker threads to wait for new tasks in a continuous loop.
     /// </summary>
     public void SignalWait()
     {
@@ -182,9 +181,7 @@ public sealed class ThreadPool
     }
 
     /// <summary>
-    /// Signals a block to all worker threads. If signalled the worker
-    /// threads will block after finishing all tasks. <see cref="SignalWait"/> has to be called to continue to process
-    /// further tasks.
+    /// Instructs all worker threads to pause after completing all current tasks. Call <see cref="SignalWait"/> to resume processing new tasks.
     /// </summary>
     public void SignalReset()
     {
@@ -208,8 +205,7 @@ public sealed class ThreadPool
     }
 
     /// <summary>
-    /// Executes all tasks previously added to the ThreadManager.
-    /// The method returns after all tasks are complete.
+    /// Initiates the execution of all tasks added to the ThreadPool. This method returns only after all tasks have been completed.
     /// </summary>
     public void Execute()
     {

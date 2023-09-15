@@ -478,17 +478,19 @@ public static class NarrowPhase
     [ThreadStatic] private static Solver solver;
 
     /// <summary>
-    /// Raycast against a shape.
+    ///     Performs a raycast against a shape.
     /// </summary>
-    /// <param name="support">Support function of the shape.</param>
-    /// <param name="orientation">Orientation of the shape in world space.</param>
-    /// <param name="position">Position of the shape in world space.</param>
-    /// <param name="origin">Origin of the ray.</param>
-    /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
-    /// <param name="fraction">The hit point of the ray is given by origin + fraction * direction.</param>
-    /// <param name="normal">The normalized normal perpendicular to the surface, pointing outwards.
-    /// Zero if ray does not hit.</param>
-    /// <returns>True if the ray and the shape intersect, false otherwise.</returns>
+    /// <param name="support">The support function of the shape.</param>
+    /// <param name="orientation">The orientation of the shape in world space.</param>
+    /// <param name="position">The position of the shape in world space.</param>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
+    /// <param name="fraction">Specifies the hit point of the ray, calculated as 'origin + fraction * direction'.</param>
+    /// <param name="normal">
+    ///     The normalized normal vector perpendicular to the surface, pointing outwards. If the ray does not
+    ///     hit, this parameter will be zero.
+    /// </param>
+    /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     public static bool Raycast(ISupportMap support, ref JMatrix orientation,
         ref JVector position, ref JVector origin, ref JVector direction, out float fraction, out JVector normal)
     {
@@ -508,27 +510,34 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// This method detects whether two convex shapes overlap. For the overlapping as well as the separated
-    /// case detailed information is provided. Internally the Expanding Polytope Algorithm (EPA) is
-    /// employed to retrieve collision information.
+    ///     Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
+    ///     cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
     /// </summary>
-    /// <param name="supportA">Support function of shape A.</param>
-    /// <param name="supportB">Support function of shape B.</param>
-    /// <param name="orientationA">Orientation of shape A in world space.</param>
-    /// <param name="orientationB">Orientation of shape B in world space.</param>
-    /// <param name="positionA">Position of shape A in world space.</param>
-    /// <param name="positionB">Position of shape B in world space.</param>
-    /// <param name="pointA">For the overlapping case: Deepest point on shape A inside shape B. For
-    /// the separated case: Closest point on shape A to shape B.</param>
-    /// <param name="pointB">For the overlapping case: Deepest point on shape B inside shape A. For
-    /// the separated case: Closest point on shape B to shape A.</param>
-    /// <param name="normal">Normalized collision normal pointing from pointB to pointA. The normal
-    /// is defined even if pointA and pointB coincide. The normal is the direction in which
-    /// the shapes must be moved by the minimal distance (given by the penetration depth) in order
-    /// to separate them for the overlapping case or bring them into touch for the separated case.</param>
-    /// <param name="penetration">Penetration depth.</param>
-    /// <returns>Returns true if the algorithm terminated successfully, false otherwise. Collision
-    /// information is set to the types default values when the algorithm fails to converge.</returns>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationA">The orientation of shape A in world space.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionA">The position of shape A in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="pointA">
+    ///     For the overlapping case: the deepest point on shape A inside shape B; for the separated case: the
+    ///     closest point on shape A to shape B.
+    /// </param>
+    /// <param name="pointB">
+    ///     For the overlapping case: the deepest point on shape B inside shape A; for the separated case: the
+    ///     closest point on shape B to shape A.
+    /// </param>
+    /// <param name="normal">
+    ///     The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+    ///     if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
+    ///     (defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
+    ///     the separated case.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns>
+    ///     Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
+    ///     failure, collision information reverts to the type's default values.
+    /// </returns>
     public static bool GJKEPA(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationA, in JMatrix orientationB,
         in JVector positionA, in JVector positionB,
@@ -557,26 +566,26 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// This method detects whether two convex shapes overlap. For overlapping shapes detailed collision
-    /// information is provided. Internally, Minkowski Portal Refinement (MPR) is employed to
-    /// retrieve the collision information. MPR is not exact but provides a strict upper bound for
-    /// the penetration depth. If the upper bound exceeds a threeshold the results are refined
-    /// by the Expanding Polytope Algorithm (EPA).
+    ///     Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
+    ///     Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
+    ///     Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
+    ///     a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
     /// </summary>
-    /// <param name="supportA">Support function of shape A.</param>
-    /// <param name="supportB">Support function of shape B.</param>
-    /// <param name="orientationA">Orientation of shape A in world space.</param>
-    /// <param name="orientationB">Orientation of shape B in world space.</param>
-    /// <param name="positionA">Position of shape A in world space.</param>
-    /// <param name="positionB">Position of shape B in world space.</param>
-    /// <param name="pointA">Deepest point on shape A inside shape B.</param>
-    /// <param name="pointB">Deepest point on shape B inside shape A.</param>
-    /// <param name="normal">Normalized collision normal pointing from pointB to pointA. The normal
-    /// is defined even if pointA and pointB coincide. The normal is the direction in which
-    /// the shapes must be moved by the minimal distance (given by the penetration depth) in order
-    /// to separate them.</param>
-    /// <param name="penetration">Penetration depth.</param>
-    /// <returns>Returns true if the shapes overlap (collide), false otherwise.</returns>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationA">The orientation of shape A in world space.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionA">The position of shape A in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
+    /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
+    /// <param name="normal">
+    ///     The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+    ///     if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
+    ///     distance (determined by the penetration depth) to avoid overlap.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationA, in JMatrix orientationB,
         in JVector positionA, in JVector positionB,
@@ -593,8 +602,7 @@ public static class NarrowPhase
         // ..perform collision detection..
         bool res = solver.SolveMPR(out pointA, out pointB, out normal, out penetration);
 
-        // ..rotate back. this hopefully saves some matrix vector multiplication
-        // when calling the support function multiple times.
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
         JVector.Transform(pointA, orientationA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
         JVector.Transform(pointB, orientationA, out pointB);
@@ -603,4 +611,5 @@ public static class NarrowPhase
 
         return res;
     }
+
 }

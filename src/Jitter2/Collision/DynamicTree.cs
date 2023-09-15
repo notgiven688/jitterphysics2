@@ -31,10 +31,10 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Dynamic Axis Aligned Bounding Box (AABB) tree, where a hashset (see <see cref="PairHashSet"/>)
-/// keeps track of the potential overlapping pairs.
+/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>) 
+/// maintains a record of potential overlapping pairs.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">The type of elements stored in the dynamic tree.</typeparam>
 public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 {
     private SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
@@ -42,8 +42,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private readonly ActiveList<T> activeList;
 
     /// <summary>
-    /// PairHashSet holding pairs of potential collisions. Should not be modified
-    /// directly.
+    /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
     /// </summary>
     public readonly PairHashSet PotentialPairs = new();
 
@@ -51,20 +50,19 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     public const int InitialSize = 1024;
 
     /// <summary>
-    /// The bounding box in the dynamic tree structure gets expanded
-    /// by <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * alpha,
-    /// where alpha is a pseudo random number in the interval [1,2].
+    /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as 
+    /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * alpha, where alpha is a pseudo-random number in the range [1,2].
     /// </summary>
     public const float ExpandFactor = 0.1f;
 
     /// <summary>
-    /// A small additional expansion of the bounding box in the AABB tree structure to prevent
-    /// the existance of bounding boxes with zero volume.
+    /// Specifies a small additional expansion of the bounding box in the AABB tree structure to prevent 
+    /// the creation of bounding boxes with zero volume.
     /// </summary>
     public const float ExpandEps = 0.01f;
 
     /// <summary>
-    /// A node in the AABB tree.
+    /// Represents a node in the AABB tree.
     /// </summary>
     public struct Node
     {
@@ -89,6 +87,9 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private int nodePointer = -1;
     private int root = NullNode;
 
+    /// <summary>
+    /// Gets the root of the dynamic tree.
+    /// </summary>
     public int Root => root;
 
     private readonly Action<Parallel.Batch> scanOverlapsPre;
@@ -97,12 +98,10 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private readonly Func<T, T, bool>? filter;
 
     /// <summary>
-    /// Constructs a new AABB dynamic tree.
+    /// Initializes a new instance of the <see cref="DynamicTree{T}"/> class.
     /// </summary>
-    /// <param name="activeList">Active entities are considered for updates in <see cref="Update(bool)"/>.</param>
-    /// <param name="filter">A collision filter function. Used in Jitter to filter out collisions of
-    /// shapes belonging to the same body. Collision is filtered out if the functions returns false.
-    /// </param>
+    /// <param name="activeList">Active entities that are considered for updates during <see cref="Update(bool)"/>.</param>
+    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
     public DynamicTree(ActiveList<T> activeList, Func<T, T, bool>? filter = null)
     {
         this.activeList = activeList;
@@ -131,9 +130,9 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private int updatedProxies;
 
     /// <summary>
-    /// Update the state of the entity in the dynamic tree structure.
+    /// Updates the state of the specified entity within the dynamic tree structure.
     /// </summary>
-    /// <param name="shape"></param>
+    /// <param name="shape">The entity to update.</param>
     public void Update(T shape)
     {
         OverlapCheck(shape, false);
@@ -142,11 +141,15 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         OverlapCheck(shape, true);
     }
 
+    /// <summary>
+    /// Gets the number of updated proxies.
+    /// </summary>
     public int UpdatedProxies => updatedProxies;
 
     /// <summary>
-    /// Updates all entities which are marked as active in the active list.
+    /// Updates all entities that are marked as active in the active list.
     /// </summary>
+    /// <param name="multiThread">A boolean indicating whether to perform a multi-threaded update.</param>
     public void Update(bool multiThread)
     {
         long time = Stopwatch.GetTimestamp();
@@ -223,7 +226,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     }
 
     /// <summary>
-    /// Remove an entity from the tree.
+    /// Removes an entity from the tree.
     /// </summary>
     public void RemoveProxy(T proxy)
     {
@@ -233,7 +236,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     }
 
     /// <summary>
-    /// Clear all entities from the tree.
+    /// Clears all entities from the tree.
     /// </summary>
     public void Clear()
     {
@@ -244,16 +247,18 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     }
 
     /// <summary>
-    /// Evaluates the cost function of the tree.
+    /// Calculates the cost function of the tree.
     /// </summary>
+    /// <returns>The calculated cost.</returns>
     public double CalculateCost()
     {
         return Cost(ref Nodes[root]);
     }
 
     /// <summary>
-    /// Calculates the tree height.
+    /// Calculates the height of the tree.
     /// </summary>
+    /// <returns>The calculated height.</returns>
     public double CalculateHeight()
     {
         int calcHeight = Height(ref Nodes[root]);
@@ -262,9 +267,9 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     }
 
     /// <summary>
-    /// Enumerates all axis aligned bounding boxes in the tree.
+    /// Enumerates all axis-aligned bounding boxes in the tree.
     /// </summary>
-    /// <param name="action">Provides the extended bounding box and the height of the node.</param>
+    /// <param name="action">The action to perform on each bounding box and node height in the tree.</param>
     public void EnumerateAll(Action<JBBox, int> action)
     {
         if (root == -1) return;
@@ -272,13 +277,9 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     }
 
     /// <summary>
-    /// Forces an update for this proxy the next time the tree is updated. An update consists of
-    /// detecting all overlaps with the current extended box and removing all findings in the
-    /// <see cref="PairHashSet"/>, followed by an update of the extended box and overlap detection
-    /// where all new overlaps are again added to the <see cref="PairHashSet"/>. This effectively
-    /// resets the state of the entity in the <see cref="PairHashSet"/>. This method is used by Jitter
-    /// to re-add entities to the hashset which were pruned before because of inactivity.
+    /// Forces an update for the specified proxy during the next tree update. This update process identifies all overlaps with the current extended box and removes all detections from the <see cref="PairHashSet"/>, followed by an update of the extended box and overlap detection, adding new overlaps back to the <see cref="PairHashSet"/>. Essentially, this resets the state of the entity within the <see cref="PairHashSet"/>. Jitter utilizes this method to reintegrate entities into the hashset that were previously pruned due to inactivity.
     /// </summary>
+    /// <param name="proxy">The proxy to update.</param>
     public void ForceUpdate(T proxy)
     {
         Nodes[proxy.NodePtr].ForceUpdate = true;
@@ -287,8 +288,10 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     [ThreadStatic] private static Stack<int>? stack;
 
     /// <summary>
-    /// Query the tree against an axis aligned bounding box.
+    /// Queries the tree to find entities within the specified axis-aligned bounding box.
     /// </summary>
+    /// <param name="hits">A list to store the entities found within the bounding box.</param>
+    /// <param name="aabb">The axis-aligned bounding box used for the query.</param>
     public void Query(List<T> hits, in JBBox aabb)
     {
         stack ??= new Stack<int>(256);
@@ -321,10 +324,11 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         stack.Clear();
     }
 
+
     /// <summary>
-    /// Randomly removes and adds entities from the tree. This should
-    /// optimize the tree.
+    /// Randomly removes and adds entities to the tree to facilitate optimization.
     /// </summary>
+    /// <param name="sweeps">The number of optimization iterations to perform. The default value is 100.</param>
     public void Optimize(int sweeps = 100)
     {
         Random random = new(0);

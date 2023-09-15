@@ -52,13 +52,7 @@ public unsafe struct JHandle<T> where T : unmanaged
 }
 
 /// <summary>
-/// Manages memory for unmanaged structs. Structs are stored sequentially in continuous memory.
-/// Structs can be either active or inactive.  Despite of the name it does not fully behave like a
-/// regular list, the order of elements is not fixed. Indices of elements may be altered after
-/// calling <see cref="UnmanagedActiveList{T}.Allocate(bool, bool)"/>, <see
-/// cref="UnmanagedActiveList{T}.Free(JHandle{T})"/>, <see
-/// cref="UnmanagedActiveList{T}.MoveToActive(JHandle{T})"/> or <see
-/// cref="UnmanagedActiveList{T}.MoveToInactive(JHandle{T})"/>.
+/// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks. Each struct can either be active or inactive. Despite its name, this class does not fully mimic the behavior of a conventional list; the order of elements is not guaranteed to remain consistent. Indices of elements might change following calls to methods such as <see cref="UnmanagedActiveList{T}.Allocate(bool, bool)"/>, <see cref="UnmanagedActiveList{T}.Free(JHandle{T})"/>, <see cref="UnmanagedActiveList{T}.MoveToActive(JHandle{T})"/>, or <see cref="UnmanagedActiveList{T}.MoveToInactive(JHandle{T})"/>.
 /// </summary>
 public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmanaged
 {
@@ -80,12 +74,10 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     public int Count { get; private set; }
 
     /// <summary>
-    /// Construct a new instance of the class.
+    /// Initializes a new instance of the class.
     /// </summary>
-    /// <param name="maximumSize">The maximum number of elements which can ever fit in
-    /// this structure, compare <see cref="Allocate"/>. The number of bytes
-    /// preallocated is given by maximumSize times IntPtr.Size.</param>
-    /// <param name="initialSize">Initial size of the continuous memory block in number of elements.</param>
+    /// <param name="maximumSize">The maximum number of elements that can be accommodated within this structure, as determined by the <see cref="Allocate"/> method. The preallocated memory is calculated as the product of maximumSize and IntPtr.Size (in bytes).</param>
+    /// <param name="initialSize">The initial size of the contiguous memory block, denoted in the number of elements. The default value is 1024.</param>
     public UnmanagedActiveList(int maximumSize, int initialSize = 1024)
     {
         if (maximumSize < initialSize) initialSize = maximumSize;

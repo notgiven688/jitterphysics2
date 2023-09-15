@@ -64,14 +64,9 @@ public class ConvexHullShape : Shape
     private JVector shifted;
 
     /// <summary>
-    /// Creates a convex hull.
+    /// Initializes a new instance of the ConvexHullShape class, creating a convex hull.
     /// </summary>
-    /// <param name="triangles">
-    /// A list containing all vertices defining the convex hull. The vertices must strictly lie
-    /// on the surface of the convex hull, otherwise the collision algorithm returns
-    /// wrong results or hangs indefinitely. The passed triangle list is not referenced
-    /// can can be modified after calling the constructor without side effects.
-    /// </param>
+    /// <param name="triangles">A list containing all vertices defining the convex hull. The vertices must strictly lie on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm. Note that the passed triangle list is not referenced and can be modified after calling the constructor without side effects.</param>
     public ConvexHullShape(List<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
@@ -136,10 +131,9 @@ public class ConvexHullShape : Shape
     }
 
     /// <summary>
-    /// Clones the convex hull shape. The underlying data structure is shared
-    /// among the instances.
+    /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the original instance.</returns>
     public ConvexHullShape Clone()
     {
         ConvexHullShape result = new()

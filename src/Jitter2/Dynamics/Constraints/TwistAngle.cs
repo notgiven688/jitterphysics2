@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constraints the relative twist of two bodies. The constraint removes one angular
+/// Constrains the relative twist of two bodies. This constraint removes one angular 
 /// degree of freedom when the limit is enforced.
 /// </summary>
 public unsafe class TwistAngle : Constraint
@@ -76,9 +76,9 @@ public unsafe class TwistAngle : Constraint
     /// <summary>
     /// Initializes the constraint.
     /// </summary>
-    /// <param name="axis1">Axis fixed in the local reference frame of the first body in world space.</param>
-    /// <param name="axis2">Axis fixed in the local reference frame of the second body in world space.</param>
-    /// <param name="angle">The allowed relative twist of the bodies along the axis.</param>
+    /// <param name="axis1">Axis fixed in the local reference frame of the first body, represented in world space.</param>
+    /// <param name="axis2">Axis fixed in the local reference frame of the second body, represented in world space.</param>
+    /// <param name="angle">The permissible relative twist between the bodies along the specified axes.</param>
     public void Initialize(JVector axis1, JVector axis2, AngularLimit angle)
     {
         ref TwistLimitData data = ref handle.Data;
@@ -105,8 +105,8 @@ public unsafe class TwistAngle : Constraint
     /// <summary>
     /// Initializes the constraint.
     /// </summary>
-    /// <param name="axis1">Axis fixed in the local reference frame of the first body in world space.</param>
-    /// <param name="axis2">Axis fixed in the local reference frame of the second body in world space.</param>
+    /// <param name="axis1">Axis fixed in the local reference frame of the first body, defined in world space.</param>
+    /// <param name="axis2">Axis fixed in the local reference frame of the second body, defined in world space.</param>
     public void Initialize(JVector axis1, JVector axis2)
     {
         Initialize(axis1, axis2, AngularLimit.Fixed);

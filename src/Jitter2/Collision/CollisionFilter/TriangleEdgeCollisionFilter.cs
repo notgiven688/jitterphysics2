@@ -30,24 +30,24 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Level geometry is often represented by many instances of <see cref="Collision.Shapes.TriangleShape"/>
-/// added to a <see cref="Dynamics.RigidBody"/>. Other rigid bodies which slide over these triangles
-/// may stumble over "internal edges", causing jitter. The <see cref="TriangleEdgeCollisionFilter"/>
-/// implements <see cref="INarrowPhaseFilter"/> and tries to filter out these internal edges.
+/// Level geometry is often represented by multiple instances of <see cref="Collision.Shapes.TriangleShape"/>
+/// added to a <see cref="Dynamics.RigidBody"/>. Other rigid bodies sliding over these triangles
+/// might encounter "internal edges", resulting in jitter. The <see cref="TriangleEdgeCollisionFilter"/>
+/// implements the <see cref="INarrowPhaseFilter"/> to help filter out these internal edges.
 /// </summary>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
     /// <summary>
-    /// Tweakable parameter. Collision points closer than this to a triangle edge are considered
-    /// as edge collisions and are subject to modification or being dropped entirely.
+    /// A tweakable parameter. Collision points that are closer than this value to a triangle edge 
+    /// are considered as edge collisions and might be modified or discarded entirely.
     /// </summary>
     public float EdgeThreshold { get; set; } = 0.05f;
 
     private float cosAT = 0.99f;
 
     /// <summary>
-    /// Tweakable parameter which defines the threeshold for which two normals
-    /// are considered the same.
+    /// A tweakable parameter that defines the threshold to determine when two normals 
+    /// are considered identical.
     /// </summary>
     public JAngle AngleThreshold
     {

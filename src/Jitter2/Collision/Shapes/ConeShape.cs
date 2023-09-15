@@ -35,7 +35,7 @@ public class ConeShape : Shape
     private float height;
 
     /// <summary>
-    /// Radius of the cone at it's base.
+    /// Gets or sets the radius of the cone at its base.
     /// </summary>
     public float Radius
     {
@@ -48,7 +48,7 @@ public class ConeShape : Shape
     }
 
     /// <summary>
-    /// Height of the cone.
+    /// Gets or sets the height of the cone.
     /// </summary>
     public float Height
     {
@@ -61,8 +61,10 @@ public class ConeShape : Shape
     }
 
     /// <summary>
-    /// Creates a cone. The symmetry axis of the cone is aligned along the y-axis.
+    /// Initializes a new instance of the ConeShape class with specified radius and height. The symmetry axis of the cone is aligned along the Y-axis.
     /// </summary>
+    /// <param name="radius">The radius of the cone at its base.</param>
+    /// <param name="height">The height of the cone.</param>
     public ConeShape(float radius = 0.5f, float height = 1.0f)
     {
         this.radius = radius;

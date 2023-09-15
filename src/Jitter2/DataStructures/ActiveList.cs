@@ -59,11 +59,11 @@ public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
 }
 
 /// <summary>
-/// Managed counterpart to <see cref="UnmanagedMemory.UnmanagedActiveList{T}"/>. Stores objects
-/// which can either be active or inactive. Despite of the name it does not fully behave like a
-/// regular list, the order of elements is not fixed. Indices of elements may be altered after
-/// calling <see cref="ActiveList{T}.Add(T, bool)"/>, <see cref="ActiveList{T}.Remove(T)"/>, <see
-/// cref="ActiveList{T}.MoveToActive(T)"/> or <see cref="ActiveList{T}.MoveToInactive(T)"/>.
+/// Represents the managed counterpart to <see cref="UnmanagedMemory.UnmanagedActiveList{T}"/>. This structure stores objects
+/// that can either be active or inactive. Contrary to its name, it doesn't function exactly like a
+/// standard list; the order of the elements is not fixed. The indices of elements might change following
+/// calls to <see cref="ActiveList{T}.Add(T, bool)"/>, <see cref="ActiveList{T}.Remove(T)"/>, <see
+/// cref="ActiveList{T}.MoveToActive(T)"/>, or <see cref="ActiveList{T}.MoveToInactive(T)"/>.
 /// </summary>
 public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 {
