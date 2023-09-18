@@ -505,7 +505,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Gets the mass of the rigid body. To modify the mass, use 
     /// <see cref="RigidBody.SetMassInertia(float)"/> or 
-    /// <see cref="RigidBody.SetMassInertia(JMatrix, float)"/>.
+    /// <see cref="RigidBody.SetMassInertia(in JMatrix, float)"/>.
     /// </summary>
     public float Mass => mass;
 

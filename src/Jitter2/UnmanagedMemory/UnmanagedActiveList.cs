@@ -133,7 +133,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
     /// <summary>
     /// Checks if the element is stored as an active element. The object has to be in this instance
-    /// of <see cref="UnmanagedActiveList"/>. This operation is O(1).
+    /// of <see cref="Jitter2.UnmanagedMemory.UnmanagedActiveList{T}"/>. This operation is O(1).
     /// </summary>
     public bool IsActive(JHandle<T> handle)
     {
@@ -170,7 +170,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
     /// <summary>
     /// Reader-writer lock. Locked by a writer when a resize (triggered by <see
-    /// cref="UnmanagedActiveList.Allocate(bool, bool)"/>) occurs. Resizing does move all structs and
+    /// cref="Jitter2.UnmanagedMemory.UnmanagedActiveList{T}.Allocate(bool, bool)"/>) occurs. Resizing does move all structs and
     /// their memory addresses. It is not safe to use handles (<see cref="JHandle{T}"/>) during this
     /// operation. Use a reader lock to access native data if concurrent calls to <see cref="Allocate"/>
     /// are made.
