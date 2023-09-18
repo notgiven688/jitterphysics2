@@ -47,7 +47,7 @@ Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
 ## ToDo
 
-- [ ] Develop and distribute NuGet packages and releases.
+- [x] Develop and distribute NuGet packages and releases.
 - [ ] Stabilize the engine and demo.
 - [ ] Expand the documentation to cover more topics and functionalities.
 
