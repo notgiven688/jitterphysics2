@@ -27,12 +27,7 @@ Next, create a new console application in this directory and add Raylib#:
 ```sh
 dotnet new console
 dotnet add package Raylib-cs --version 4.5.0.4
-```
-
-Now, add Jitter2 as a reference to this project. Clone the git repository and add the reference:
-
-```sh
-dotnet add reference ./../{correct_path}/jitterphysics2/src/Jitter2/Jitter2.csproj
+dotnet add package Jitter2 --version 2.0.0-alpha
 ```
 
 You have completed the setup. If you now execute the following command:
