@@ -30,7 +30,7 @@ using Jitter2.DataStructures;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Manages worker threads, which can run arbitrary delegates <see cref="Action<T>"/>
+/// Manages worker threads, which can run arbitrary delegates <see cref="Action"/>
 /// multiThreaded.
 /// </summary>
 public sealed class ThreadPool

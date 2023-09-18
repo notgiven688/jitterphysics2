@@ -28,7 +28,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Provides a ParallelForBatch extension for <see cref="Jitter2.ActiveList{T}"/> and <see
+/// Provides a ParallelForBatch extension for <see cref="UnmanagedActiveList{T}"/> and <see
 /// cref="UnmanagedActiveList{T}"/>.
 /// </summary>
 public static class ParallelExtensions

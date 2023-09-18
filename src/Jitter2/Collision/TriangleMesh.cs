@@ -83,7 +83,7 @@ public class TriangleMesh
         public Triangle(int a, int b, int c)
         {
 #if NET6_0
-            Unsafe.SkipInit(out Normal);
+            System.Runtime.CompilerServices.Unsafe.SkipInit(out Normal);
 #endif
             
             IndexA = a;
