@@ -62,6 +62,10 @@ public unsafe struct ConvexPolytope
 
         public Vertex(JVector v)
         {
+#if NET6_0
+            Unsafe.SkipInit(out A);
+            Unsafe.SkipInit(out B);
+#endif
             V = v;
         }
     }

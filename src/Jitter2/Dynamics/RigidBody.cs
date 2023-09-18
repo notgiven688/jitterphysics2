@@ -129,7 +129,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     private readonly int hashCode;
 
-    private static int hashCounter;
+    private static uint hashCounter;
 
     /// <summary>
     /// Gets or sets the world assigned to this body.
@@ -146,17 +146,17 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         Data.Orientation = JMatrix.Identity;
         SetDefaultMassInertia();
 
-        int h = hashCounter++;
+        uint h = hashCounter++;
 
         // The rigid body is used in hash-based data structures, provide a
         // good hash - Thomas Wang, Jan 1997
-        h = h ^ 61 ^ (h >>> 16);
+        h = h ^ 61 ^ (h >> 16);
         h += h << 3;
-        h ^= h >>> 4;
+        h ^= h >> 4;
         h *= 0x27d4eb2d;
-        h ^= h >>> 15;
+        h ^= h >> 15;
 
-        hashCode = h;
+        hashCode = unchecked((int)h);
 
         Data._lockFlag = 0;
     }
