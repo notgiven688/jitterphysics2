@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
-name: publish
+name: Publish NuGet
 on:
   workflow_dispatch: # Allow running the workflow manually from the GitHub UI
   push:
@@ -99,7 +99,7 @@ jobs:
     # Publish only when creating a GitHub Release
     # https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
     # You can update this logic if you want to manage releases differently
-    if: github.event_name == 'DROPreleaseDROP'
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     needs: [ validate_nuget, run_test ]
     steps:
