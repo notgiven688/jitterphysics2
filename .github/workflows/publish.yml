@@ -41,6 +41,8 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
 
+    - run: dotnet add package MinVer
+
     - run: dotnet add package DotNet.ReproducibleBuilds
 
     # Create the NuGet package in the folder from the environment variable NuGetDirectory
@@ -97,7 +99,7 @@ jobs:
     # Publish only when creating a GitHub Release
     # https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
     # You can update this logic if you want to manage releases differently
-    if: github.event_name == 'release'
+    if: github.event_name == 'DROPreleaseDROP'
     runs-on: ubuntu-latest
     needs: [ validate_nuget, run_test ]
     steps:
