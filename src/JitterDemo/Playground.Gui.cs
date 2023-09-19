@@ -24,6 +24,7 @@ public partial class Playground : RenderWindow
     private double lastTime;
     private ushort frameCount;
     private ushort fps = 100;
+    private int primitiveVelocity = 20;
 
     private void UpdateDisplayText()
     {
@@ -89,6 +90,8 @@ public partial class Playground : RenderWindow
 
             ImGui.EndMenu();
         }
+
+        ImGui.Slider("##cubevel", ref primitiveVelocity, 1, 200, "Cube velocity (%d)", ImGuiSliderFlags.None);
 
         ImGui.Separator();
 

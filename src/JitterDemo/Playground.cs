@@ -98,7 +98,7 @@ public partial class Playground : RenderWindow
 
         var sb = World.CreateRigidBody();
         sb.Position = Conversion.ToJitterVector(pos);
-        sb.Velocity = Conversion.ToJitterVector(dir * 20);
+        sb.Velocity = Conversion.ToJitterVector(dir * primitiveVelocity);
 
         var ss = new BoxShape(1);
         sb.AddShape(ss);
