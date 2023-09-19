@@ -21,13 +21,11 @@ Jitter is cross-platform. The `src` directory contains four projects:
 
 To run the demo scenes:
 
-```
-- Install the [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-- git clone https://github.com/notgiven688/jitterphysics2.git
-- cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release
-```
+- Install [.NET 7.0](https://dotnet.microsoft.com/download/dotnet/7.0)
+- `git clone https://github.com/notgiven688/jitterphysics2.git`
+- `cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release`
 
-JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing windows, and [cimgui](https://github.com/cimgui/cimgui) for GUI rendering. The project contains these native binaries in a precompiled form.
+JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing windows, and [cimgui](https://github.com/cimgui/cimgui) for GUI rendering. The project contains these native binaries in a precompiled form. On Linux you may have to install GLFW, e.g. on Ubuntu `sudo apt-get install libglfw3-dev`.
 
 ## Features
 
