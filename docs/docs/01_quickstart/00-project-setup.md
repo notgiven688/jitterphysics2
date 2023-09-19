@@ -22,7 +22,7 @@ First, create a new directory named "BoxDrop" and navigate into it:
 mkdir BoxDrop && cd BoxDrop
 ```
 
-Next, create a new console application in this directory and add Raylib#:
+Next, create a new console application in this directory and add Raylib# and Jitter2:
 
 ```sh
 dotnet new console
