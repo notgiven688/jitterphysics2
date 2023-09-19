@@ -25,7 +25,7 @@ To run the demo scenes:
 - `git clone https://github.com/notgiven688/jitterphysics2.git`
 - `cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release`
 
-JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing windows, and [cimgui](https://github.com/cimgui/cimgui) for GUI rendering. The project contains these native binaries in a precompiled form. On Linux you may have to install glfw, e.g. on Ubuntu `sudo apt-get install libglfw3-dev`.
+JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing windows, and [cimgui](https://github.com/cimgui/cimgui) for GUI rendering. The project contains these native binaries in a precompiled form. On Linux you may have to install GLFW, e.g. on Ubuntu `sudo apt-get install libglfw3-dev`.
 
 ## Features
 
