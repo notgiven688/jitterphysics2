@@ -6,6 +6,11 @@ on:
   pull_request:
     types: [opened, reopened]
 
+permissions:
+  id-token: write
+  contents: read
+  checks: write
+
 jobs:
   build:
 
