@@ -95,14 +95,14 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private readonly Action<Parallel.Batch> scanOverlapsPre;
     private readonly Action<Parallel.Batch> scanOverlapsPost;
 
-    private readonly Func<T, T, bool>? filter;
+    public Func<T, T, bool> Filter { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree{T}"/> class.
     /// </summary>
     /// <param name="activeList">Active entities that are considered for updates during <see cref="Update(bool)"/>.</param>
-    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
-    public DynamicTree(ActiveList<T> activeList, Func<T, T, bool>? filter = null)
+    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
+    public DynamicTree(ActiveList<T> activeList, Func<T, T, bool> filter)
     {
         this.activeList = activeList;
 
@@ -114,7 +114,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
         scanOverlapsPost = batch => { ScanForOverlaps(batch.BatchIndex, true); };
 
-        this.filter = filter;
+        this.Filter = filter;
     }
 
     public enum Timings
@@ -416,7 +416,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         {
             if (node == index) return;
 
-            if (filter != null && !filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
+            if (!Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
 
             lock (PotentialPairs)
             {

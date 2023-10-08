@@ -243,37 +243,56 @@ public partial class World
     /// </summary>
     public float SpeculativeVelocityThreshold { get; set; } = 10f;
 
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body0, RigidBody body1,
+        in JVector point1, in JVector point2, in JVector normal, float penetration)
+    {
+        GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
+        
+        lock (arbiter)
+        {
+            memContacts.ResizeLock.EnterReadLock();
+            arbiter.Handle.Data.AddContact(point1, point2, normal, penetration);
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
     [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Detect(Shape sA, Shape sB)
+    private unsafe void Detect(Shape sA, Shape sB)
     {
-        Debug.Assert(sA.RigidBody != sB.RigidBody);
-
-        if (!sA.RigidBody.Data.IsActive && !sB.RigidBody.Data.IsActive) return;
-        if (sA.RigidBody.Data.IsStatic && sB.RigidBody.Data.IsStatic) return;
-
-        if (sB.ShapeID < sA.ShapeID)
+        if (sB.ShapeId < sA.ShapeId)
         {
             (sA, sB) = (sB, sA);
         }
 
         if (BroadPhaseFilter != null)
         {
-            if (!BroadPhaseFilter.Filter(sA, sB))
+            if (BroadPhaseFilter.Filter(sA, sB))
             {
                 return;
             }
         }
-
-        ref RigidBodyData b1 = ref sA.RigidBody.Data;
-        ref RigidBodyData b2 = ref sB.RigidBody.Data;
 
         bool colliding;
         Unsafe.SkipInit(out JVector normal);
         Unsafe.SkipInit(out JVector pA);
         Unsafe.SkipInit(out JVector pB);
         float penetration;
+
+        Debug.Assert(sA.RigidBody != sB.RigidBody);
+
+        if (sA.RigidBody == null || sB.RigidBody == null)
+        {
+            throw new InvalidOperationException(
+                "Shapes passed to default narrow phase collision handler are not associated with a rigid body.");
+        }
+
+        if (!sA.RigidBody.Data.IsActive && !sB.RigidBody.Data.IsActive) return;
+        if (sA.RigidBody.Data.IsStatic && sB.RigidBody.Data.IsStatic) return;
+
+        ref RigidBodyData b1 = ref sA.RigidBody.Data;
+        ref RigidBodyData b2 = ref sB.RigidBody.Data;
 
         bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
 
@@ -313,7 +332,7 @@ public partial class World
 
                 if (dvn > SpeculativeVelocityThreshold)
                 {
-                    GetArbiter(sA, sB, out Arbiter arbiter2);
+                    GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
 
                     lock (arbiter2)
                     {
@@ -337,7 +356,7 @@ public partial class World
             }
         }
 
-        GetArbiter(sA, sB, out Arbiter arbiter);
+        GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter);
 
         // Auxiliary Flat Surface Contact Points
         //
@@ -348,7 +367,7 @@ public partial class World
         {
             static void Support(Shape shape, in JVector direction, out JVector v)
             {
-                JVector.TransposedTransform(direction, shape.RigidBody.Data.Orientation, out JVector tmp);
+                JVector.TransposedTransform(direction, shape.RigidBody!.Data.Orientation, out JVector tmp);
                 shape.SupportMap(tmp, out v);
                 JVector.Transform(v, shape.RigidBody.Data.Orientation, out v);
                 JVector.Add(v, shape.RigidBody.Data.Position, out v);
@@ -402,15 +421,15 @@ public partial class World
             memContacts.ResizeLock.ExitReadLock();
         }
     }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void GetArbiter(Shape shape1, Shape shape2, out Arbiter arbiter)
+    public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {
-        ArbiterKey ak = new(shape1.ShapeID, shape2.ShapeID);
+        ArbiterKey arbiterKey = new(id0, id1);
 
         lock (arbiters)
         {
-            ref Arbiter? arb = ref CollectionsMarshal.GetValueRefOrAddDefault(arbiters, ak, out bool exists);
+            ref Arbiter? arb = ref CollectionsMarshal.GetValueRefOrAddDefault(arbiters, arbiterKey, out bool exists);
 
             if (!exists)
             {
@@ -423,11 +442,10 @@ public partial class World
 
                 var h = memContacts.Allocate(true, false);
                 arb.Handle = h;
-                h.Data.Init(shape1.RigidBody, shape2.RigidBody);
-                h.Data.Shape1 = shape1.ShapeID;
-                h.Data.Shape2 = shape2.ShapeID;
-                arb.Shape1 = shape1;
-                arb.Shape2 = shape2;
+                h.Data.Init(b0, b1);
+                h.Data.Key = arbiterKey;
+                arb.Body1 = b0;
+                arb.Body2 = b1;
             }
 
             Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));

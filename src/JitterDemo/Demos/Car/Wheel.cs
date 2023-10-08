@@ -265,7 +265,7 @@ public class Wheel
 
             if (result && frac <= 1.0f)
             {
-                body = shape!.RigidBody;
+                body = shape!.RigidBody!;
 
                 if (frac < deepestFrac)
                 {

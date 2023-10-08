@@ -89,6 +89,10 @@ public partial class World
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool Raycast(Shape shape, JVector origin, JVector direction, out JVector normal, out float fraction)
     {
+        if (shape.RigidBody == null)
+        {
+            return NarrowPhase.Raycast(shape, origin, direction, out fraction, out normal);
+        }
         ref RigidBodyData body = ref shape.RigidBody.Data;
 
         if (shape is TriangleShape tms)
@@ -99,8 +103,8 @@ public partial class World
             return result;
         }
 
-        return NarrowPhase.Raycast(shape, ref body.Orientation, ref body.Position,
-            ref origin, ref direction, out fraction, out normal);
+        return NarrowPhase.Raycast(shape, body.Orientation, body.Position,
+            origin, direction, out fraction, out normal);
     }
 
     /// <summary>

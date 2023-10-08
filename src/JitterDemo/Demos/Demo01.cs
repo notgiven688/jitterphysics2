@@ -14,14 +14,13 @@ public class Demo01 : IDemo
     public string Name => "Constraint car";
 
     private readonly ConstraintCar car = new();
-
     private readonly List<HingeJoint> hinges = new();
-
+    private World world = null!;
 
     public void Build()
     {
         Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        world = pg.World;
 
         hinges.Clear();
 
@@ -39,7 +38,6 @@ public class Demo01 : IDemo
                 var nbody = world.CreateRigidBody();
                 nbody.AddShape(new BoxShape(0.7f, 0.1f, 4f));
                 nbody.Position = startPos + new JVector(i * 0.8f, 0, 0);
-
 
                 if (i == 0)
                 {
@@ -78,19 +76,20 @@ public class Demo01 : IDemo
             );
         }
 
-
         world.NumberSubsteps = 4;
         world.SolverIterations = 4;
     }
 
     public void Draw()
     {
-        foreach (var h in hinges)
+        for (int i = hinges.Count; i-- > 0;)
         {
+            var h = hinges[i];
             if (h.BallSocket.Impulse.Length() > 0.5f)
             {
-                h.BallSocket.IsEnabled = false;
-                h.HingeAngle.IsEnabled = false;
+                world.Remove(h.BallSocket);
+                world.Remove(h.HingeAngle);
+                hinges.RemoveAt(i);
             }
         }
 

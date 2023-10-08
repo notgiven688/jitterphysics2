@@ -45,8 +45,7 @@ public struct ContactData
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
 
-    public ulong Shape1;
-    public ulong Shape2;
+    public ArbiterKey Key;
 
     private float Friction;
     private float Restitution;
@@ -296,7 +295,7 @@ public struct ContactData
     /*
     private bool GetCacheEntry(in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
-        JVector.Subtract(point1, Body1.Data.position, out JVector realRelPos1);
+        JVector.Subtract(point1, Key1.Data.position, out JVector realRelPos1);
 
         float shortestDist = Contact.BreakThreshold * Contact.BreakThreshold;
 
@@ -349,7 +348,7 @@ public struct ContactData
 
         if (index != -1)
         {
-            cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution,
+            cref.Initialize(ref Key1.Data, ref Key2.Data, point1, point2, normal, penetration, false, Restitution,
                 Friction);
             return true;
         }

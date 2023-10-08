@@ -21,54 +21,37 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Diagnostics;
 using Jitter2.Collision.Shapes;
 
-namespace Jitter2.Dynamics;
+namespace Jitter2.SoftBodies;
 
-/// <summary>
-/// Implementation of the IEqualityComparer for arbiter look-up.
-/// </summary>
-internal class ArbiterKeyComparer : IEqualityComparer<ArbiterKey>
+public static class DynamicTreeCollisionFilter
 {
-    public bool Equals(ArbiterKey x, ArbiterKey y)
+    public static bool Filter(Shape shapeA, Shape shapeB)
     {
-        bool result = x.Shape1.Equals(y.Shape1) && x.Shape2.Equals(y.Shape2);
-        return result;
-    }
+        if (shapeA.RigidBody != shapeB.RigidBody) return true;
 
-    public int GetHashCode(ArbiterKey obj)
-    {
-        return (int)obj.Shape1 + 2281 * (int)obj.Shape2;
-    }
-}
-
-/// <summary>
-/// Look-up key for stored <see cref="Arbiter"/>.
-/// </summary>
-public struct ArbiterKey
-{
-    public ulong Shape1;
-    public ulong Shape2;
-
-    public ArbiterKey(ulong s1, ulong s2)
-    {
-        Shape1 = s1;
-        Shape2 = s2;
-        Debug.Assert(Shape1 < Shape2);
-    }
-
-    public ArbiterKey(Shape s1, Shape s2)
-    {
-        Shape1 = s1.ShapeID;
-        Shape2 = s2.ShapeID;
-
-        if (Shape1 > Shape2)
+        if (shapeA is ISoftBodyShape softBodyShapeA &&
+            shapeB is ISoftBodyShape softBodyShapeB)
         {
-            (Shape1, Shape2) = (Shape2, Shape1);
+            SoftBody ta = softBodyShapeA.SoftBody;
+            SoftBody tb = softBodyShapeB.SoftBody;
+            return ta != tb;
         }
 
-        Debug.Assert(Shape1 < Shape2);
+        return false;
+    }
+
+    public static bool Filter2(Shape shapeA, Shape shapeB)
+    {
+        if (shapeA.RigidBody != shapeB.RigidBody) return true;
+
+        if (shapeA is ISoftBodyShape softBodyShapeA &&
+            shapeB is ISoftBodyShape softBodyShapeB)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

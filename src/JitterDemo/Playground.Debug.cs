@@ -36,17 +36,13 @@ public partial class Playground : RenderWindow
             World.DynamicTree.EnumerateAll(drawBox);
         }
 
-
         if (debugDrawShapes)
         {
-            foreach (RigidBody body in World.RigidBodies)
+            foreach (var shape in World.Shapes)
             {
-                foreach (Shape s in body.Shapes)
-                {
-                    var bb = s.WorldBoundingBox;
-                    DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(bb.Min),
-                        Conversion.FromJitter(bb.Max));
-                }
+                var bb = shape.WorldBoundingBox;
+                DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(bb.Min),
+                    Conversion.FromJitter(bb.Max));
             }
         }
 
@@ -59,8 +55,17 @@ public partial class Playground : RenderWindow
                 JBBox box = JBBox.SmallBox;
                 foreach (RigidBody body in island.Bodies)
                 {
-                    foreach (Shape s in body.Shapes)
-                        JBBox.CreateMerged(box, s.WorldBoundingBox, out box);
+                    if (body.Shapes.Count == 0)
+                    {
+                        // mass point
+                        box.AddPoint(body.Position);
+                    }
+                    else
+                    {
+                        foreach (Shape s in body.Shapes)
+                            JBBox.CreateMerged(box, s.WorldBoundingBox, out box);
+                    }
+
                 }
 
                 DebugRenderer.PushBox(DebugRenderer.Color.Red, Conversion.FromJitter(box.Min),
