@@ -43,13 +43,17 @@ public partial class Playground : RenderWindow
         // new Demo11(), // double pendulum
         new Demo12(),
         new Demo13(),
-        new Demo14()
+        new Demo14(),
+        new Demo15(),
+        new Demo16(),
+        new Demo17()
     };
 
     private IDemo? currentDemo;
 
     private void SwitchDemo(int index)
     {
+        (currentDemo as ICleanDemo)?.CleanUp();
         currentDemo = demos[index];
         currentDemo.Build();
     }
@@ -73,6 +77,7 @@ public partial class Playground : RenderWindow
             body.AddShape(floorShape);
         }
 
+        world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
         world.BroadPhaseFilter = null;
         world.Gravity = new JVector(0, -9.81f, 0);
         world.NumberSubsteps = 1;
@@ -106,6 +111,8 @@ public partial class Playground : RenderWindow
 
     public override void Draw()
     {
+        // if (Keyboard.KeyPressBegin(Keyboard.Key.P))
+
         world.Step(1.0f / 100.0f, multiThread);
 
         UpdateDisplayText();
@@ -162,6 +169,8 @@ public partial class Playground : RenderWindow
             foreach (Shape shape in body.Shapes)
             {
                 var color = ColorGenerator.GetColor(shape.GetHashCode());
+
+                if (shape.RigidBody == null) break;
 
                 if (shape == floorShape)
                 {

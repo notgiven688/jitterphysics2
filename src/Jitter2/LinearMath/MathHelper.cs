@@ -35,16 +35,16 @@ public static class MathHelper
     // Line 1: p1 + (p2 - p1)*mua
     // Line 2: p3 + (p4 - p3)*mub
 
-    public static bool LineLineIntersect(in JVector P1, in JVector P2, in JVector P3, in JVector P4,  out JVector Pa, out JVector Pb, out float mua, out float mub)
+    public static bool LineLineIntersect(in JVector p1, in JVector p2, in JVector p3, in JVector P4,  out JVector Pa, out JVector Pb, out float mua, out float mub)
     {
         const float Epsilon = 1e-12f;
 
         Pa = Pb = JVector.Zero;
         mua = mub = 0;
 
-        JVector p13 = P1 - P3;
-        JVector p43 = P4 - P3;
-        JVector p21 = P2 - P1;
+        JVector p13 = p1 - p3;
+        JVector p43 = P4 - p3;
+        JVector p21 = p2 - p1;
 
         float d1343 = p13 * p43;
         float d4321 = p43 * p21;
@@ -60,13 +60,63 @@ public static class MathHelper
         mua = numer / denom;
         mub = (d1343 + d4321 * mua) / d4343;
 
-        Pa = P1 + (p21 * mua);
-        Pb = P3 + (p43 * mub);
+        Pa = p1 + (p21 * mua);
+        Pb = p3 + (p43 * mub);
 
         return true;
     }
 
     */
+    
+    public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
+    {
+        float phi, cp, sp;
+        Unsafe.SkipInit(out JMatrix r);
+        
+        JMatrix rotation = JMatrix.Identity;
+        
+        for (int i = 0; i < sweeps; i++)
+        {
+            // M32
+            if (MathF.Abs(m.M23) > 1e-6f)
+            {
+                phi = MathF.Atan2(1, (m.M33 - m.M22) / (2.0f * m.M23)) / 2.0f;
+                (sp, cp) = MathF.SinCos(phi);
+                r = new JMatrix(1, 0, 0, 0, cp, sp, 0, -sp, cp);
+                JMatrix.Multiply(m, r, out m);
+                JMatrix.TransposedMultiply(r, m, out m);
+                JMatrix.Multiply(rotation, r, out rotation);
+            }
+
+            // M21
+            if (MathF.Abs(m.M21) > 1e-6f)
+            {
+                phi = MathF.Atan2(1, (m.M22 - m.M11) / (2.0f * m.M21)) / 2.0f;
+                (sp, cp) = MathF.SinCos(phi);
+                r = new JMatrix(cp, sp, 0, -sp, cp, 0, 0, 0, 1);
+                JMatrix.Multiply(m, r, out m);
+                JMatrix.TransposedMultiply(r, m, out m);
+                JMatrix.Multiply(rotation, r, out rotation);
+            }
+
+            // M31
+            if (MathF.Abs(m.M31) > 1e-6f)
+            {
+                phi = MathF.Atan2(1, (m.M33 - m.M11) / (2.0f * m.M31)) / 2.0f;
+                (sp, cp) = MathF.SinCos(phi);
+                r = new JMatrix(cp, 0, sp, 0, 1, 0, -sp, 0, cp);
+                JMatrix.Multiply(m, r, out m);
+                JMatrix.TransposedMultiply(r, m, out m);
+                JMatrix.Multiply(rotation, r, out rotation);
+            }
+        }
+
+        JMatrix d = new JMatrix(1.0f / MathF.Sqrt(m.M11), 0, 0, 
+            0, 1.0f / MathF.Sqrt(m.M22), 0, 
+            0, 0, 1.0f / MathF.Sqrt(m.M33));
+        
+        return rotation * d * JMatrix.Transpose(rotation);
+    }
 
     /// <summary>
     /// Calculates an orthonormal vector to the given vector.

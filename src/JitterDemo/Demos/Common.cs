@@ -13,61 +13,29 @@ namespace JitterDemo;
 
 public static class Common
 {
-    public static void BuildChain(JVector pos)
-    {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        RigidBody previous = world.NullBody;
-        float sq2 = MathF.Sqrt(2.0f);
-
-        /*
-
-        for (int i = 0; i < 20; i++)
-        {
-            RigidBody body = world.CreateRigidBody();
-            body.Position = pos + new JVector(0, -i * sq2 * 1.01f, 0);
-            body.Orientation = JMatrix.CreateRotationZ(MathF.PI / 4.0f);
-
-            {
-                var constr = world.CreateConstraint<Distance>(previous, body);
-                JVector cp1 = pos + new JVector(0, -i * sq2 + sq2 / 2.0f, +0.5f);
-                JVector cp2 = pos + new JVector(0, -i * sq2 + sq2 / 2.0f, -0.5f);
-
-                constr.Initialize(cp1, cp1);
-
-                var constr2 = world.CreateConstraint<Distance>(previous, body);
-                constr2.Initialize(cp2, cp2);
-            }
-            body.AddShape(new BoxShape(1, 1, 1));
-            previous = body;
-        }
-
-        */
-    }
-
     public class IgnoreCollisionBetweenFilter : IBroadPhaseFilter
     {
-        private readonly HashSet<ValueTuple<Shape, Shape>> ignore = new();
+        private readonly HashSet<ValueTuple<ulong, ulong>> ignore = new();
 
         public bool Filter(Shape shapeA, Shape shapeB)
         {
-            if (shapeB.ShapeID < shapeA.ShapeID)
-            {
-                (shapeA, shapeB) = (shapeB, shapeA);
-            }
+            ulong a = shapeA.ShapeId;
+            ulong b = shapeB.ShapeId;
 
-            return !ignore.Contains(new ValueTuple<Shape, Shape>(shapeA, shapeB));
+            if (b < a) (a, b) = (b, a);
+
+            bool contains = ignore.Contains(new (a, b));
+            return contains;
         }
 
         public void IgnoreCollisionBetween(Shape shapeA, Shape shapeB)
         {
-            if (shapeB.ShapeID < shapeA.ShapeID)
-            {
-                (shapeA, shapeB) = (shapeB, shapeA);
-            }
+            ulong a = shapeA.ShapeId;
+            ulong b = shapeB.ShapeId;
+            
+            if (b < a) (a, b) = (b, a);
 
-            ignore.Add(new ValueTuple<Shape, Shape>(shapeA, shapeB));
+            ignore.Add(new (a, b));
         }
     }
 

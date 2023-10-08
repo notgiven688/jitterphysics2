@@ -1,7 +1,9 @@
+using System;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
+using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
@@ -63,11 +65,20 @@ public partial class Playground : RenderWindow
             grepBody = null;
             bool result = World.Raycast(origin, jdir, null, null,
                 out Shape? grepShape, out JVector rayn, out hitDistance);
+            
 
             if (grepShape != null)
+            {
                 grepBody = grepShape.RigidBody;
 
-            rayHitPoint = pos + hitDistance * dir;
+                if (grepShape is ISoftBodyShape gs)
+                {
+                    grepBody = gs.GetClosest(origin + jdir * hitDistance);
+                }
+            }
+
+
+            
 
             if (result && grepBody != null && !grepBody.IsStatic)
             {

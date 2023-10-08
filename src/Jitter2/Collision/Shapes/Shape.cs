@@ -42,16 +42,14 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// A 64-bit integer representing the shape ID. This is used by algorithms that require 
     /// arranging shapes in a well-defined order.
     /// </summary>
-    public readonly ulong ShapeID;
-
-    private static ulong shapeCounter;
-
+    public readonly ulong ShapeId;
+    
     public Shape()
     {
-        ShapeID = shapeCounter++;
+        ShapeId = World.IdCounter++;
     }
 
-    internal bool AttachRigidBody(RigidBody body)
+    internal bool AttachRigidBody(RigidBody? body)
     {
         RigidBody ??= body;
         return RigidBody == body;
@@ -65,7 +63,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// <summary>
     /// The instance of <see cref="RigidBody"/> to which this shape is attached.
     /// </summary>
-    public RigidBody RigidBody { get; private set; } = null!;
+    public RigidBody? RigidBody { get; private set; } = null!;
 
     /// <summary>
     /// The bounding box of the shape in world space. It is automatically updated when the position or
@@ -92,7 +90,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 
     int IDynamicTreeProxy.NodePtr { get; set; }
 
-    public JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
+    public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
 
     /// <summary>
     /// Updates the mass and inertia properties, as well as the world bounding box. This method should be
@@ -130,7 +128,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// Calls <see cref="CalculateBoundingBox"/> to set the <see cref="WorldBoundingBox"/> in the frame
     /// of the <see cref="RigidBody"/> instance connected to this shape.
     /// </summary>
-    public void UpdateWorldBoundingBox()
+    public virtual void UpdateWorldBoundingBox()
     {
         if (RigidBody == null) return;
         CalculateBoundingBox(RigidBody.Data.Orientation, RigidBody.Data.Position, out JBBox box);

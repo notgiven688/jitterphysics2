@@ -21,52 +21,13 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Collections.Generic;
-using Jitter2.UnmanagedMemory;
+using Jitter2.Dynamics;
+using Jitter2.LinearMath;
 
-namespace Jitter2.Dynamics;
+namespace Jitter2.SoftBodies;
 
-/// <summary>
-/// Holds a reference to all contacts (maximum 4) between two shapes.
-/// </summary>
-public class Arbiter
+public interface ISoftBodyShape
 {
-    internal static Stack<Arbiter> Pool = new();
-
-    public RigidBody Body1 = null!;
-    public RigidBody Body2 = null!;
-    
-    public JHandle<ContactData> Handle;
-}
-
-/// <summary>
-/// Implementation of the IEqualityComparer for arbiter look-up.
-/// </summary>
-internal class ArbiterKeyComparer : IEqualityComparer<ArbiterKey>
-{
-    public bool Equals(ArbiterKey x, ArbiterKey y)
-    {
-        bool result = x.Key1.Equals(y.Key1) && x.Key2.Equals(y.Key2);
-        return result;
-    }
-
-    public int GetHashCode(ArbiterKey obj)
-    {
-        return (int)obj.Key1 + 2281 * (int)obj.Key2;
-    }
-}
-
-/// <summary>
-/// Look-up key for stored <see cref="Arbiter"/>.
-/// </summary>
-public struct ArbiterKey
-{
-    public ulong Key1;
-    public ulong Key2;
-
-    public ArbiterKey(ulong key1, ulong key2)
-    {
-        Key1 = key1;
-        Key2 = key2;
-    }
+    public RigidBody GetClosest(in JVector pos);
+    public SoftBody SoftBody { get; }
 }

@@ -1,3 +1,5 @@
+#pragma warning disable CS8602
+
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;

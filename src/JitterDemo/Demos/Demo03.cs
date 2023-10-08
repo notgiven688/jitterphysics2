@@ -19,8 +19,6 @@ public class Demo03 : IDemo
         Common.BuildPyramidCylinder(new JVector(10, 0, 10));
 
         world.SolverIterations = 12;
-
-        //foreach(var b in world.Bodies) b.Data.inverseInertia = JMatrix.Zero;
     }
 
     public void Draw()

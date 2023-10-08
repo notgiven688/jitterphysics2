@@ -491,8 +491,8 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool Raycast(ISupportMap support, ref JMatrix orientation,
-        ref JVector position, ref JVector origin, ref JVector direction, out float fraction, out JVector normal)
+    public static bool Raycast(ISupportMap support, in JMatrix orientation,
+        in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
@@ -508,7 +508,29 @@ public static class NarrowPhase
 
         return result;
     }
+    
+    /// <summary>
+    /// Performs a raycast against a shape.
+    /// </summary>
+    /// <param name="support">The support function of the shape.</param>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
+    /// <param name="fraction">Specifies the hit point of the ray, calculated as 'origin + fraction * direction'.</param>
+    /// <param name="normal">
+    /// The normalized normal vector perpendicular to the surface, pointing outwards. If the ray does not
+    /// hit, this parameter will be zero.
+    /// </param>
+    /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
+    public static bool Raycast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+    {
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+        
+        bool result = solver.Raycast(origin, direction, out fraction, out normal);
 
+        return result;
+    }
+    
     /// <summary>
     /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
     /// cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
@@ -608,6 +630,42 @@ public static class NarrowPhase
         JVector.Transform(pointB, orientationA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
         JVector.Transform(normal, orientationA, out normal);
+
+        return res;
+    }
+    
+    /// <summary>
+    /// Detects whether two convex shapes overlap and provides detailed collision information.
+    /// It assumes that support shape A is at position zero and not rotated.
+    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the 
+    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth
+    /// a predefined threshold, the results are further refined using the Expanding Polytope 
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
+    /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
+    /// <param name="normal">
+    /// The normalized collision normal pointing from pointB to pointA. This normal remains d
+    /// if pointA and pointB coincide, representing the direction in which the shapes must be
+    /// distance (determined by the penetration depth) to avoid overlap.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
+    public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationB, in JVector positionB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+    {
+        solver.MKD.SupportA = supportA;
+        solver.MKD.SupportB = supportB;
+
+        solver.MKD.OrientationB = orientationB;
+        solver.MKD.PositionB = positionB;
+
+        // ..perform collision detection..
+        bool res = solver.SolveMPR(out pointA, out pointB, out normal, out penetration);
 
         return res;
     }

@@ -165,12 +165,12 @@ public class Demo14 : IDemo
     public void Draw()
     {
         var cesd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<EllipsoidShape>>();
-        cesd.PushMatrix(Conversion.FromJitter(ellipsoid.RigidBody), Vector3.UnitX);
+        cesd.PushMatrix(Conversion.FromJitter(ellipsoid.RigidBody!), Vector3.UnitX);
 
         var rbsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<DoubleSphereShape>>();
-        rbsd.PushMatrix(Conversion.FromJitter(doublesSphere.RigidBody), Vector3.UnitY);
+        rbsd.PushMatrix(Conversion.FromJitter(doublesSphere.RigidBody!), Vector3.UnitY);
 
         var icsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<Icosahedron>>();
-        icsd.PushMatrix(Conversion.FromJitter(icosahedron.RigidBody), Vector3.UnitZ);
+        icsd.PushMatrix(Conversion.FromJitter(icosahedron.RigidBody!), Vector3.UnitZ);
     }
 }

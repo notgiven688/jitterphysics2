@@ -53,8 +53,8 @@ internal static class IslandHelper
 
     public static void ArbiterCreated(IslandList islands, Arbiter arbiter)
     {
-        RigidBody b1 = arbiter.Shape1.RigidBody;
-        RigidBody b2 = arbiter.Shape2.RigidBody;
+        RigidBody b1 = arbiter.Body1;
+        RigidBody b2 = arbiter.Body2;
         b1.Contacts.Add(arbiter);
         b2.Contacts.Add(arbiter);
 
@@ -65,10 +65,10 @@ internal static class IslandHelper
 
     public static void ArbiterRemoved(IslandList islands, Arbiter arbiter)
     {
-        arbiter.Shape1.RigidBody.Contacts.Remove(arbiter);
-        arbiter.Shape2.RigidBody.Contacts.Remove(arbiter);
+        arbiter.Body1.Contacts.Remove(arbiter);
+        arbiter.Body2.Contacts.Remove(arbiter);
 
-        RemoveConnection(islands, arbiter.Shape1.RigidBody, arbiter.Shape2.RigidBody);
+        RemoveConnection(islands, arbiter.Body1, arbiter.Body2);
     }
 
     public static void ConstraintCreated(IslandList islands, Constraint constraint)

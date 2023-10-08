@@ -62,6 +62,8 @@ public struct RigidBodyData
 public sealed class RigidBody : IListIndex, IDebugDrawable
 {
     internal JHandle<RigidBodyData> handle;
+    
+    public readonly ulong RigidBodyId;
 
     /// <summary>
     /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
@@ -146,7 +148,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         Data.Orientation = JMatrix.Identity;
         SetDefaultMassInertia();
 
-        uint h = hashCounter++;
+        RigidBodyId = World.IdCounter++;
+        uint h = (uint)RigidBodyId;
 
         // The rigid body is used in hash-based data structures, provide a
         // good hash - Thomas Wang, Jan 1997
@@ -334,9 +337,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// Adds several shapes to the rigid body at once. Mass properties are 
     /// recalculated only once, if requested.
     /// </summary>
-    /// <param name="shapes">The shapes to add.</param>
-    /// <param name="setMassInertia">If true, uses the mass properties of the shapes to determine the 
-    /// body's mass properties, assuming unit density for the shapes. If false, the inertia and mass remain 
+    /// <param name="shapes">The Shapes to add.</param>
+    /// <param name="setMassInertia">If true, uses the mass properties of the Shapes to determine the 
+    /// body's mass properties, assuming unit density for the Shapes. If false, the inertia and mass remain 
     /// unchanged.</param>
     public void AddShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
     {
@@ -418,7 +421,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         foreach (var contact in Contacts)
         {
-            if (contact.Shape1 == shape || contact.Shape2 == shape)
+            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId )
             {
                 toRemoveArbiter.Push(contact);
             }
@@ -431,7 +434,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
 
         shape.DetachRigidBody();
-        World.RemoveShape(shape);
+        World.Remove(shape);
 
         if (setMassInertia) SetMassInertia();
     }

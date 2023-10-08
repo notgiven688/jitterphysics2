@@ -32,6 +32,7 @@ using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
+using Jitter2.SoftBodies;
 using Jitter2.UnmanagedMemory;
 
 namespace Jitter2;
@@ -72,7 +73,14 @@ public partial class World
     private readonly UnmanagedActiveList<ContactData> memContacts;
     private readonly UnmanagedActiveList<RigidBodyData> memRigidBodies;
     private readonly UnmanagedActiveList<ConstraintData> memConstraints;
-
+    private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
+    
+    public delegate void WorldStep(float dt);
+        
+    // Post- and Pre-step
+    public event WorldStep? PreStep;
+    public event WorldStep? PostStep;
+    
     /// <summary>
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Utilize
     /// the corresponding native properties where possible to mitigate risk.
@@ -83,8 +91,10 @@ public partial class World
 
     private readonly ActiveList<Island> islands = new();
     private readonly ActiveList<RigidBody> bodies = new();
-    private readonly ActiveList<Shape> activeShapes = new();
-
+    private readonly ActiveList<Shape> shapes = new();
+    
+    public static ulong IdCounter;
+    
     /// <summary>
     /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
     /// threads active continuously, even when the <see cref="World.Step(float, bool)"/> is not in operation, which might
@@ -200,6 +210,7 @@ public partial class World
         memRigidBodies = new UnmanagedActiveList<RigidBodyData>(numBodies);
         memContacts = new UnmanagedActiveList<ContactData>(numContacts);
         memConstraints = new UnmanagedActiveList<ConstraintData>(numConstraints);
+        memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(numConstraints);
 
         InitParallelCallbacks();
 
@@ -210,9 +221,14 @@ public partial class World
         NullBody.SetMassInertia(float.PositiveInfinity);
         NullBody.IsStatic = true;
 
-        Shapes = new ReadOnlyActiveList<Shape>(activeShapes);
+        Shapes = new ReadOnlyActiveList<Shape>(shapes);
 
-        DynamicTree = new DynamicTree<Shape>(activeShapes, (s1, s2) => s1.RigidBody != s2.RigidBody);
+        DynamicTree = new DynamicTree<Shape>(shapes, DefaultDynamicTreeFilter);
+    }
+
+    public static bool DefaultDynamicTreeFilter(Shape shapeA, Shape shapeB)
+    {
+        return shapeA.RigidBody != shapeB.RigidBody;
     }
 
     /// <summary>
@@ -226,6 +242,14 @@ public partial class World
         while (bodyStack.Count > 0)
         {
             Remove(bodyStack.Pop());
+        }
+        
+        // Left-over shapes not associated with a rigid body.
+        Stack<Shape> shapeStack = new Stack<Shape>(this.shapes);
+
+        while (shapeStack.Count > 0)
+        {
+            Remove(shapeStack.Pop());
         }
     }
 
@@ -245,9 +269,10 @@ public partial class World
             Remove(constraint);
         }
 
-        foreach (var shape in body.shapes)
+        foreach (var shape in body.Shapes)
         {
-            RemoveShape(shape);
+            shape.DetachRigidBody();
+            Remove(shape);
         }
 
         foreach (var contact in body.Contacts)
@@ -278,7 +303,16 @@ public partial class World
         ActivateBodyNextStep(constraint.Body2);
 
         IslandHelper.ConstraintRemoved(islands, constraint);
-        memConstraints.Free(constraint.Handle);
+
+        if (constraint.IsSmallConstraint)
+        {
+            memSmallConstraints.Free(constraint.SmallHandle);
+        }
+        else
+        {
+            memConstraints.Free(constraint.Handle);
+        }
+        
         constraint.Handle = JHandle<ConstraintData>.Zero;
     }
 
@@ -287,20 +321,17 @@ public partial class World
     /// </summary>
     public void Remove(Arbiter arbiter)
     {
-        Shape shape1 = arbiter.Shape1;
-        Shape shape2 = arbiter.Shape2;
-
-        ActivateBodyNextStep(shape1.RigidBody);
-        ActivateBodyNextStep(shape2.RigidBody);
-
-        ArbiterKey key = new(shape1, shape2);
+        ActivateBodyNextStep(arbiter.Body1);
+        ActivateBodyNextStep(arbiter.Body2);
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
-        arbiters.Remove(key);
+        arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
+        Arbiter.Pool.Push(arbiter);
+        
         arbiter.Handle = JHandle<ContactData>.Zero;
     }
 
@@ -310,16 +341,58 @@ public partial class World
         DynamicTree.Update(shape);
     }
 
-    internal void AddShape(Shape shape)
+    /// <summary>
+    /// Add a shape not associated with a rigid body to the world.
+    /// </summary>
+    public void AddShape(Shape shape)
     {
-        activeShapes.Add(shape, true);
+        if ((shape as IListIndex).ListIndex != -1)
+        {
+            throw new ArgumentException("Shape already registered.");
+        }
+        
+        shapes.Add(shape, true);
+        shape.UpdateWorldBoundingBox();
         DynamicTree.AddProxy(shape);
     }
 
-    internal void RemoveShape(Shape shape)
+    public void Remove(Shape shape)
     {
-        activeShapes.Remove(shape);
+        if (shape.RigidBody != null)
+        {
+            throw new InvalidOperationException("Shape can not be removed because it is attached to a rigid body.");
+        }
+        
+        if ((shape as IListIndex).ListIndex == -1)
+        {
+            throw new ArgumentException("Shape can not be removed because it is not registered.");
+        }
+
         DynamicTree.RemoveProxy(shape);
+        shapes.Remove(shape);
+    }
+    
+    public void DeactivateShape(Shape shape)
+    {        
+        if (shape.RigidBody != null)
+        {
+            throw new InvalidOperationException(
+                "Can not modify activation state if a shape which is attached to a rigid body.");
+        }
+        
+        shapes.MoveToInactive(shape);
+    }
+
+    public void ActivateShape(Shape shape)
+    {
+        if (shape.RigidBody != null)
+        {
+            throw new InvalidOperationException(
+                "Can not modify activation state of a shape which is attached to a rigid body.");
+        }
+
+        shapes.MoveToActive(shape);
+        DynamicTree.ForceUpdate(shape);
     }
 
     internal void ActivateBodyNextStep(RigidBody body)
@@ -344,7 +417,14 @@ public partial class World
     {
         T constraint = new();
 
-        constraint.Create(memConstraints.Allocate(true, true), body1, body2);
+        if (constraint.IsSmallConstraint)
+        {
+            constraint.Create(memSmallConstraints.Allocate(true, true), body1, body2);
+        }
+        else
+        {
+            constraint.Create(memConstraints.Allocate(true, true), body1, body2);
+        }
 
         IslandHelper.ConstraintCreated(islands, constraint);
 
