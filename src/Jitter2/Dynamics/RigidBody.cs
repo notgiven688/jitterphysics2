@@ -360,7 +360,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
     public void AddShape(Shape shape, bool setMassInertia = true)
     {
-        if ((shape as IListIndex).ListIndex != -1)
+        if (shape.IsRegistered)
         {
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }

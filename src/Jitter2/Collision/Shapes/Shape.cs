@@ -61,6 +61,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
             return false;
         }
     }
+    
+    public bool IsRegistered => (this as IListIndex).ListIndex != -1; 
 
     internal void DetachRigidBody()
     {

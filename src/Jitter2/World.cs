@@ -349,7 +349,7 @@ public partial class World
     /// </summary>
     public void AddShape(Shape shape)
     {
-        if ((shape as IListIndex).ListIndex != -1)
+        if (shape.IsRegistered)
         {
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
