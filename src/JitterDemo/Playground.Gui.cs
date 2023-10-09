@@ -125,6 +125,7 @@ public partial class Playground : RenderWindow
             AddRow("Bodies", $"{data.RigidBodies.Length}", $"{data.ActiveRigidBodies.Length}");
             AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
             AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
+            AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
             AddRow("Shapes", $"{World.Shapes.Count}", $"{World.Shapes.Active}");
 
             ImGui.EndTable();

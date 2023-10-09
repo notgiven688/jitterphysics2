@@ -68,6 +68,9 @@ public partial class World
 
         public readonly Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
         public readonly Span<ConstraintData> Constraints => world.memConstraints.Elements;
+        
+        public readonly Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
+        public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
 
     private readonly UnmanagedActiveList<ContactData> memContacts;
@@ -348,7 +351,7 @@ public partial class World
     {
         if ((shape as IListIndex).ListIndex != -1)
         {
-            throw new ArgumentException("Shape already registered.");
+            throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
         
         shapes.Add(shape, true);
@@ -360,7 +363,7 @@ public partial class World
     {
         if (shape.RigidBody != null)
         {
-            throw new InvalidOperationException("Shape can not be removed because it is attached to a rigid body.");
+            throw new ArgumentException("Shape can not be removed because it is attached to a rigid body.");
         }
         
         if ((shape as IListIndex).ListIndex == -1)

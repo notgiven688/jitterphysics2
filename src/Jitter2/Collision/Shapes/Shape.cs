@@ -51,8 +51,15 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 
     internal bool AttachRigidBody(RigidBody? body)
     {
-        RigidBody ??= body;
-        return RigidBody == body;
+        if (RigidBody == null)
+        {
+            RigidBody = body;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     internal void DetachRigidBody()

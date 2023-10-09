@@ -31,7 +31,7 @@ public class SoftBodyCube : SoftBody
             var rb = world.CreateRigidBody();
             rb.SetMassInertia(JMatrix.Identity * 100000, 0.2f);
             rb.Position = vertices[i] + offset;
-            this.Add(rb);
+            Points.Add(rb);
         }
 
         SoftBodyTetrahedron[] tetrahedra = new SoftBodyTetrahedron[5];
@@ -45,7 +45,7 @@ public class SoftBodyCube : SoftBody
         {
             tetrahedra[i].UpdateWorldBoundingBox();
             world.AddShape(tetrahedra[i]);
-            this.Add(tetrahedra[i]);
+            Shapes.Add(tetrahedra[i]);
         }
 
         Center = world.CreateRigidBody();
