@@ -11,7 +11,7 @@ public class SoftBodyCube : SoftBody
 {
     public readonly ValueTuple<int, int>[] Edges = new ValueTuple<int, int>[12];
 
-    public RigidBody Center { get; private set; }
+    public RigidBody Center { get; }
 
     public SoftBodyCube(World world, JVector offset) : base(world)
     {
@@ -58,7 +58,7 @@ public class SoftBodyCube : SoftBody
             constraint.Initialize(Points[i].Position);
             constraint.Softness = 1;
         }
-        
+
         Edges[0] = new ValueTuple<int, int>(0, 1);
         Edges[1] = new ValueTuple<int, int>(1, 2);
         Edges[2] = new ValueTuple<int, int>(2, 3);

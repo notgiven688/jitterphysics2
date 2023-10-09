@@ -1,6 +1,5 @@
 namespace JitterDemo;
 
-
 public interface ICleanDemo
 {
     public void CleanUp();

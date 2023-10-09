@@ -43,7 +43,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// arranging shapes in a well-defined order.
     /// </summary>
     public readonly ulong ShapeId;
-    
+
     public Shape()
     {
         ShapeId = World.IdCounter++;
@@ -56,13 +56,11 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
             RigidBody = body;
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
-    
-    public bool IsRegistered => (this as IListIndex).ListIndex != -1; 
+
+    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
 
     internal void DetachRigidBody()
     {
@@ -72,7 +70,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// <summary>
     /// The instance of <see cref="RigidBody"/> to which this shape is attached.
     /// </summary>
-    public RigidBody? RigidBody { get; private set; } = null!;
+    public RigidBody? RigidBody { get; private set; }
 
     /// <summary>
     /// The bounding box of the shape in world space. It is automatically updated when the position or

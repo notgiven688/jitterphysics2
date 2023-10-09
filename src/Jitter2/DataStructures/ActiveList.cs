@@ -47,7 +47,10 @@ public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public T this[int i] => list[i];
 
-    public bool IsActive(T element) => list.IsActive(element);
+    public bool IsActive(T element)
+    {
+        return list.IsActive(element);
+    }
 
     public IEnumerator<T> GetEnumerator()
     {
@@ -151,7 +154,10 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         elements[index1].ListIndex = index1;
     }
 
-    public bool IsActive(T element) => (element.ListIndex < Active);
+    public bool IsActive(T element)
+    {
+        return (element.ListIndex < Active);
+    }
 
     public void MoveToActive(T element)
     {

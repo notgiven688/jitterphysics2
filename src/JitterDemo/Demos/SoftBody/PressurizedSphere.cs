@@ -34,7 +34,7 @@ public class SoftBodySphere : SoftBodyCloth
     {
         return ShapeHelper.MakeHull(new UnitSphere(offset));
     }
-    
+
     private static IEnumerable<JTriangle> GenSphereTrianglesFromMesh(JVector offset, string filename)
     {
         Mesh m = Mesh.LoadMesh(filename);

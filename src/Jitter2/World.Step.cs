@@ -127,7 +127,7 @@ public partial class World
         {
             ThreadPool.Instance.SignalWait();
         }
-        
+
         PreStep?.Invoke(dt);
 
         SetTime(Timings.Integrate);
@@ -138,7 +138,7 @@ public partial class World
 
         HandleDeferredArbiters();
         SetTime(Timings.AddArbiter);
-        
+
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
 
@@ -190,7 +190,7 @@ public partial class World
         // New arbiters are added to deferredArbiters
         DynamicTree.Update(multiThread);
         SetTime(Timings.CollisionDetect2);
-        
+
         PostStep?.Invoke(dt);
 
         // Signal the threadpool that threads can go into a wait state. If threadModel is set to
@@ -316,7 +316,7 @@ public partial class World
             UnlockTwoBody(ref b1, ref b2);
         }
     }
-    
+
     private unsafe void PrepareSmallConstraintsCallback(Parallel.Batch batch)
     {
         float istep_dt = 1.0f / step_dt;
@@ -360,7 +360,7 @@ public partial class World
             UnlockTwoBody(ref b1, ref b2);
         }
     }
-    
+
     private unsafe void PrepareConstraintsCallback(Parallel.Batch batch)
     {
         float istep_dt = 1.0f / step_dt;
@@ -466,7 +466,7 @@ public partial class World
         Debug.Assert(rigidBody.InverseMass == 0.0f);
         Debug.Assert(rigidBody.InverseInertiaWorld.Equals(JMatrix.Zero));
     }
-    
+
     private void ForeachActiveShape(bool multiThread)
     {
         if (multiThread)
@@ -543,12 +543,12 @@ public partial class World
         {
             Arbiter arb = deferredArbiters.Pop();
             IslandHelper.ArbiterCreated(islands, arb);
-            
+
             AddToActiveList(arb.Body1.island);
             AddToActiveList(arb.Body2.island);
         }
     }
-    
+
     /// <summary>
     /// Spin-wait loop to prevent accessing a body from multiple threads.
     /// </summary>
@@ -557,13 +557,31 @@ public partial class World
     {
         if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
         {
-            if (!b1.IsStatic) while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0) { Thread.SpinWait(10); }
-            if (!b2.IsStatic) while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0) { Thread.SpinWait(10); }
+            if (!b1.IsStatic)
+                while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(10);
+                }
+
+            if (!b2.IsStatic)
+                while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(10);
+                }
         }
         else
         {
-            if (!b2.IsStatic) while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0) { Thread.SpinWait(10); }
-            if (!b1.IsStatic) while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0) { Thread.SpinWait(10); }
+            if (!b2.IsStatic)
+                while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(10);
+                }
+
+            if (!b1.IsStatic)
+                while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(10);
+                }
         }
     }
 

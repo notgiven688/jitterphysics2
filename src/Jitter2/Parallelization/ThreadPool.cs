@@ -107,10 +107,7 @@ public sealed class ThreadPool
         ChangeThreadCount(ThreadCountSuggestion);
     }
 
-    public static int ThreadCountSuggestion
-    {
-        get => Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
-    }
+    public static int ThreadCountSuggestion => Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
 
     /// <summary>
     /// Changes the number of worker threads.

@@ -42,7 +42,7 @@ public sealed class Island : IListIndex
     public ReadOnlyHashSet<RigidBody> Bodies { get; private set; }
 
     int IListIndex.ListIndex { get; set; } = -1;
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Island"/> class.
     /// </summary>

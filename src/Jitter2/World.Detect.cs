@@ -247,7 +247,7 @@ public partial class World
         in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
         GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
-        
+
         lock (arbiter)
         {
             memContacts.ResizeLock.EnterReadLock();
@@ -259,7 +259,7 @@ public partial class World
     [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private unsafe void Detect(Shape sA, Shape sB)
+    private void Detect(Shape sA, Shape sB)
     {
         if (sB.ShapeId < sA.ShapeId)
         {
@@ -421,7 +421,7 @@ public partial class World
             memContacts.ResizeLock.ExitReadLock();
         }
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {

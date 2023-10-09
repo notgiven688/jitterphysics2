@@ -22,9 +22,7 @@
  */
 
 using System.Collections.Generic;
-using System.Threading;
 using Jitter2.Collision.Shapes;
-using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 
@@ -33,8 +31,8 @@ namespace Jitter2.SoftBodies;
 public class SoftBody
 {
     public List<RigidBody> Points { get; } = new();
-    public List<Constraint> Springs  { get; } = new();
-    public List<Shape> Shapes  { get; } = new();
+    public List<Constraint> Springs { get; } = new();
+    public List<Shape> Shapes { get; } = new();
 
     protected World world;
 

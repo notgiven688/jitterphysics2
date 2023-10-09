@@ -93,6 +93,7 @@ public partial class World
         {
             return NarrowPhase.Raycast(shape, origin, direction, out fraction, out normal);
         }
+
         ref RigidBodyData body = ref shape.RigidBody.Data;
 
         if (shape is TriangleShape tms)

@@ -62,7 +62,7 @@ public struct RigidBodyData
 public sealed class RigidBody : IListIndex, IDebugDrawable
 {
     internal JHandle<RigidBodyData> handle;
-    
+
     public readonly ulong RigidBodyId;
 
     /// <summary>
@@ -364,7 +364,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         {
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
-        
+
         AttachToShape(shape);
         shapes.Add(shape);
         if (setMassInertia) SetMassInertia();
@@ -426,7 +426,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         foreach (var contact in Contacts)
         {
-            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId )
+            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId)
             {
                 toRemoveArbiter.Push(contact);
             }

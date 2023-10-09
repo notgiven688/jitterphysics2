@@ -181,7 +181,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
             {
                 var sl = lists[ntask];
                 updatedProxies += sl.Count;
-                
+
                 for (int i = 0; i < sl.Count; i++)
                 {
                     T proxy = sl[i];

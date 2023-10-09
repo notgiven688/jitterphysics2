@@ -32,7 +32,6 @@ using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
-using Jitter2.SoftBodies;
 using Jitter2.UnmanagedMemory;
 
 namespace Jitter2;
@@ -68,7 +67,7 @@ public partial class World
 
         public readonly Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
         public readonly Span<ConstraintData> Constraints => world.memConstraints.Elements;
-        
+
         public readonly Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
         public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
@@ -77,13 +76,13 @@ public partial class World
     private readonly UnmanagedActiveList<RigidBodyData> memRigidBodies;
     private readonly UnmanagedActiveList<ConstraintData> memConstraints;
     private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
-    
+
     public delegate void WorldStep(float dt);
-        
+
     // Post- and Pre-step
     public event WorldStep? PreStep;
     public event WorldStep? PostStep;
-    
+
     /// <summary>
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Utilize
     /// the corresponding native properties where possible to mitigate risk.
@@ -95,9 +94,9 @@ public partial class World
     private readonly ActiveList<Island> islands = new();
     private readonly ActiveList<RigidBody> bodies = new();
     private readonly ActiveList<Shape> shapes = new();
-    
+
     public static ulong IdCounter;
-    
+
     /// <summary>
     /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
     /// threads active continuously, even when the <see cref="World.Step(float, bool)"/> is not in operation, which might
@@ -172,6 +171,7 @@ public partial class World
                 throw new ArgumentOutOfRangeException(nameof(value),
                     "The number of substeps has to be larger than zero.");
             }
+
             substeps = value;
         }
     }
@@ -246,9 +246,9 @@ public partial class World
         {
             Remove(bodyStack.Pop());
         }
-        
+
         // Left-over shapes not associated with a rigid body.
-        Stack<Shape> shapeStack = new Stack<Shape>(this.shapes);
+        Stack<Shape> shapeStack = new Stack<Shape>(shapes);
 
         while (shapeStack.Count > 0)
         {
@@ -315,7 +315,7 @@ public partial class World
         {
             memConstraints.Free(constraint.Handle);
         }
-        
+
         constraint.Handle = JHandle<ConstraintData>.Zero;
     }
 
@@ -334,7 +334,7 @@ public partial class World
         memContacts.Free(arbiter.Handle);
 
         Arbiter.Pool.Push(arbiter);
-        
+
         arbiter.Handle = JHandle<ContactData>.Zero;
     }
 
@@ -353,7 +353,7 @@ public partial class World
         {
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
-        
+
         shapes.Add(shape, true);
         shape.UpdateWorldBoundingBox();
         DynamicTree.AddProxy(shape);
@@ -365,7 +365,7 @@ public partial class World
         {
             throw new ArgumentException("Shape can not be removed because it is attached to a rigid body.");
         }
-        
+
         if ((shape as IListIndex).ListIndex == -1)
         {
             throw new ArgumentException("Shape can not be removed because it is not registered.");
@@ -374,15 +374,15 @@ public partial class World
         DynamicTree.RemoveProxy(shape);
         shapes.Remove(shape);
     }
-    
+
     public void DeactivateShape(Shape shape)
-    {        
+    {
         if (shape.RigidBody != null)
         {
             throw new InvalidOperationException(
                 "Can not modify activation state if a shape which is attached to a rigid body.");
         }
-        
+
         shapes.MoveToInactive(shape);
     }
 
