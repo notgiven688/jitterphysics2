@@ -71,7 +71,7 @@ public class Demo16 : IDemo, ICleanDemo
         var dr = RenderWindow.Instance.DebugRenderer;
         foreach (var cube in cubes)
         {
-            foreach (var spring in cube.Edges)
+            foreach (var spring in SoftBodyCube.Edges)
             {
                 dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(cube.Points[spring.Item1].Position),
                     Conversion.FromJitter(cube.Points[spring.Item2].Position));

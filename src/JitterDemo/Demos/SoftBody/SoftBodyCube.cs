@@ -9,7 +9,11 @@ namespace JitterDemo;
 
 public class SoftBodyCube : SoftBody
 {
-    public readonly ValueTuple<int, int>[] Edges = new ValueTuple<int, int>[12];
+    public static readonly ValueTuple<int, int>[] Edges = {
+        (0, 1), (1, 2), (2, 3), (3, 0),
+        (4, 5), (5, 6), (6, 7), (7, 4),
+        (0, 4), (1, 5), (2, 6), (3, 7)
+    };
 
     public RigidBody Center { get; }
 
@@ -58,18 +62,5 @@ public class SoftBodyCube : SoftBody
             constraint.Initialize(Points[i].Position);
             constraint.Softness = 1;
         }
-
-        Edges[0] = new ValueTuple<int, int>(0, 1);
-        Edges[1] = new ValueTuple<int, int>(1, 2);
-        Edges[2] = new ValueTuple<int, int>(2, 3);
-        Edges[3] = new ValueTuple<int, int>(3, 0);
-        Edges[4] = new ValueTuple<int, int>(4, 5);
-        Edges[5] = new ValueTuple<int, int>(5, 6);
-        Edges[6] = new ValueTuple<int, int>(6, 7);
-        Edges[7] = new ValueTuple<int, int>(7, 4);
-        Edges[8] = new ValueTuple<int, int>(0, 4);
-        Edges[9] = new ValueTuple<int, int>(1, 5);
-        Edges[10] = new ValueTuple<int, int>(2, 6);
-        Edges[11] = new ValueTuple<int, int>(3, 7);
     }
 }
