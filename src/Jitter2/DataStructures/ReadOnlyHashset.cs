@@ -29,7 +29,6 @@ namespace Jitter2.DataStructures;
 /// <summary>
 /// Implements a wrapper for <see cref="HashSet{T}"/>, eliminating garbage collection (GC) overhead during enumeration.
 /// </summary>
-
 public class ReadOnlyHashSet<T> : IReadOnlyCollection<T>
 {
     private readonly HashSet<T> hashset;

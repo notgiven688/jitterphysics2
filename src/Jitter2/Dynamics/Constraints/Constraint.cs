@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.UnmanagedMemory;
 
@@ -69,7 +68,7 @@ public abstract class Constraint : IDebugDrawable
     /// </summary>
     public JHandle<ConstraintData> Handle { internal set; get; }
 
-    public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(this.Handle);
+    public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(Handle);
 
     /// <summary>
     /// This method must be overridden. It initializes the function pointers for

@@ -1,4 +1,3 @@
-using System;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
@@ -65,7 +64,7 @@ public partial class Playground : RenderWindow
             grepBody = null;
             bool result = World.Raycast(origin, jdir, null, null,
                 out Shape? grepShape, out JVector rayn, out hitDistance);
-            
+
 
             if (grepShape != null)
             {
@@ -77,8 +76,6 @@ public partial class Playground : RenderWindow
                 }
             }
 
-
-            
 
             if (result && grepBody != null && !grepBody.IsStatic)
             {

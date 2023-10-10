@@ -13,8 +13,8 @@
 
     <PropertyGroup>
         <Description>
-        Jitter Physics 2, the evolution of Jitter Physics, is an impulse-based dynamics engine with a semi-implicit Euler integrator.
-        It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
+            Jitter Physics 2, the evolution of Jitter Physics, is an impulse-based dynamics engine with a semi-implicit Euler integrator.
+            It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
         </Description>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
@@ -32,8 +32,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Include="./../../publish/readme.md" Pack="true" PackagePath=""/>
-      <None Include="./../../publish/icon.png" Pack="true" PackagePath=""/>
+        <None Include="./../../publish/readme.md" Pack="true" PackagePath=""/>
+        <None Include="./../../publish/icon.png" Pack="true" PackagePath=""/>
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">

@@ -508,7 +508,7 @@ public static class NarrowPhase
 
         return result;
     }
-    
+
     /// <summary>
     /// Performs a raycast against a shape.
     /// </summary>
@@ -525,12 +525,12 @@ public static class NarrowPhase
     {
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
-        
+
         bool result = solver.Raycast(origin, direction, out fraction, out normal);
 
         return result;
     }
-    
+
     /// <summary>
     /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
     /// cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
@@ -633,7 +633,7 @@ public static class NarrowPhase
 
         return res;
     }
-    
+
     /// <summary>
     /// Detects whether two convex shapes overlap and provides detailed collision information.
     /// It assumes that support shape A is at position zero and not rotated.
@@ -669,5 +669,4 @@ public static class NarrowPhase
 
         return res;
     }
-
 }

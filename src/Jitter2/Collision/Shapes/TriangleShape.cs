@@ -77,7 +77,7 @@ public class TriangleShape : Shape
         c = Mesh.Vertices[triangle.IndexC];
 
         if (RigidBody == null) return;
-        
+
         ref JMatrix orientation = ref RigidBody.Data.Orientation;
         ref JVector position = ref RigidBody.Data.Position;
 

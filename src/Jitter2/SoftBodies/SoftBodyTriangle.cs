@@ -51,7 +51,7 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
     }
 
     public override JVector Velocity => 1.0f / 3.0f * (p1.Data.Velocity + p2.Data.Velocity + p3.Data.Velocity);
-    
+
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
         inertia = JMatrix.Identity;

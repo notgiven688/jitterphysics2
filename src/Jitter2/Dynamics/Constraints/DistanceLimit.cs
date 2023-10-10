@@ -151,10 +151,7 @@ public unsafe class DistanceLimit : Constraint
             ref DistanceLimitData data = ref handle.Data;
             data.Distance = value;
         }
-        get
-        {
-            return handle.Data.Distance;
-        }
+        get => handle.Data.Distance;
     }
 
     public float Distance

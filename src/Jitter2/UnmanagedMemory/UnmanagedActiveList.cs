@@ -202,12 +202,12 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
                 throw new MaximumSizeException($"{nameof(UnmanagedActiveList<T>)} reached " +
                                                $"its maximum size limit ({nameof(maximumSize)}={maximumSize}).");
             }
-            
+
             size = Math.Min(2 * osize, maximumSize);
 
             Trace.WriteLine($"{nameof(UnmanagedActiveList<T>)}: " +
                             $"Resizing to {size}x{typeof(T)} ({size}x{sizeof(T)} Bytes).");
-            
+
             var oldmemory = memory;
             memory = (T*)Marshal.AllocHGlobal(size * sizeof(T));
 

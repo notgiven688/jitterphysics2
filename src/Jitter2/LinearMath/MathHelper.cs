@@ -67,14 +67,14 @@ public static class MathHelper
     }
 
     */
-    
+
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
         float phi, cp, sp;
         Unsafe.SkipInit(out JMatrix r);
-        
+
         JMatrix rotation = JMatrix.Identity;
-        
+
         for (int i = 0; i < sweeps; i++)
         {
             // M32
@@ -111,10 +111,10 @@ public static class MathHelper
             }
         }
 
-        JMatrix d = new JMatrix(1.0f / MathF.Sqrt(m.M11), 0, 0, 
-            0, 1.0f / MathF.Sqrt(m.M22), 0, 
+        JMatrix d = new JMatrix(1.0f / MathF.Sqrt(m.M11), 0, 0,
+            0, 1.0f / MathF.Sqrt(m.M22), 0,
             0, 0, 1.0f / MathF.Sqrt(m.M33));
-        
+
         return rotation * d * JMatrix.Transpose(rotation);
     }
 

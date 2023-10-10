@@ -65,7 +65,6 @@ public partial class Playground : RenderWindow
                         foreach (Shape s in body.Shapes)
                             JBBox.CreateMerged(box, s.WorldBoundingBox, out box);
                     }
-
                 }
 
                 DebugRenderer.PushBox(DebugRenderer.Color.Red, Conversion.FromJitter(box.Min),

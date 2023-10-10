@@ -100,7 +100,7 @@ public unsafe class AngularMotor : Constraint
     }
 
     public JVector LocalAxis1 => handle.Data.LocalAxis1;
-    
+
     public JVector LocalAxis2 => handle.Data.LocalAxis2;
 
     public float MaximumForce

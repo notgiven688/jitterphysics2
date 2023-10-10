@@ -62,7 +62,7 @@ public struct RigidBodyData
 public sealed class RigidBody : IListIndex, IDebugDrawable
 {
     internal JHandle<RigidBodyData> handle;
-    
+
     public readonly ulong RigidBodyId;
 
     /// <summary>
@@ -319,7 +319,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     {
         if (!shape.AttachRigidBody(this))
         {
-            throw new InvalidOperationException("Shape has already been added to another body.");
+            throw new ArgumentException("Shape has already been added to another body.", nameof(shape));
         }
 
         if (shape.Mass == 0)
@@ -360,6 +360,11 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
     public void AddShape(Shape shape, bool setMassInertia = true)
     {
+        if (shape.IsRegistered)
+        {
+            throw new ArgumentException("Shape can not be added. Is the shape already registered?");
+        }
+
         AttachToShape(shape);
         shapes.Add(shape);
         if (setMassInertia) SetMassInertia();
@@ -413,7 +418,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     {
         if (!shapes.Remove(shape))
         {
-            throw new InvalidOperationException(
+            throw new ArgumentException(
                 "Shape is not part of this body.");
         }
 
@@ -421,7 +426,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         foreach (var contact in Contacts)
         {
-            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId )
+            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId)
             {
                 toRemoveArbiter.Push(contact);
             }

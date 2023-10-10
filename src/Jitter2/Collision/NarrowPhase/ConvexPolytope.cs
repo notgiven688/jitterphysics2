@@ -108,7 +108,7 @@ public unsafe struct ConvexPolytope
     /// The return value may be invalidated by subsequent calls to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
     /// </summary>
     public readonly bool OriginEnclosed => originEnclosed;
-    
+
     /// <summary>
     /// Computes the barycentric coordinates of the origin projected onto a given triangle. 
     /// These coordinates are used to retrieve points in A- and B-space.

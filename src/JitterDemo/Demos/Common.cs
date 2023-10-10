@@ -24,7 +24,7 @@ public static class Common
 
             if (b < a) (a, b) = (b, a);
 
-            bool contains = ignore.Contains(new (a, b));
+            bool contains = ignore.Contains(new ValueTuple<ulong, ulong>(a, b));
             return contains;
         }
 
@@ -32,10 +32,10 @@ public static class Common
         {
             ulong a = shapeA.ShapeId;
             ulong b = shapeB.ShapeId;
-            
+
             if (b < a) (a, b) = (b, a);
 
-            ignore.Add(new (a, b));
+            ignore.Add(new ValueTuple<ulong, ulong>(a, b));
         }
     }
 

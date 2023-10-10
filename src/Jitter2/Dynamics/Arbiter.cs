@@ -35,7 +35,7 @@ public class Arbiter
 
     public RigidBody Body1 = null!;
     public RigidBody Body2 = null!;
-    
+
     public JHandle<ContactData> Handle;
 }
 

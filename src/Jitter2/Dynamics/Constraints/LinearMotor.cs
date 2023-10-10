@@ -67,9 +67,9 @@ public unsafe class LinearMotor : Constraint
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);
     }
-    
+
     public JVector LocalAxis1 => handle.Data.LocalAxis1;
-    
+
     public JVector LocalAxis2 => handle.Data.LocalAxis2;
 
     /// <summary>

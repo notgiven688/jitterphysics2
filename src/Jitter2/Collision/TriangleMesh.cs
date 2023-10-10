@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision;
@@ -44,7 +45,6 @@ public class DegenerateTriangleException : Exception
     {
     }
 }
-
 
 /// <summary>
 /// Encapsulates the data of a triangle mesh. An instance of this can be supplied to the <see cref="Jitter2.Collision.Shapes.TriangleShape"/>.
@@ -85,7 +85,7 @@ public class TriangleMesh
 #if NET6_0
             System.Runtime.CompilerServices.Unsafe.SkipInit(out Normal);
 #endif
-            
+
             IndexA = a;
             IndexB = b;
             IndexC = c;
@@ -116,7 +116,7 @@ public class TriangleMesh
     {
         Dictionary<JVector, int> tmpIndices = new();
         List<JVector> tmpVertices = new();
-        
+
         // 1. step: build indices and vertices for triangles (JTriangle contains raw x, y, z coordinates).
 
         Indices = new Triangle[triangles.Count];
@@ -125,7 +125,7 @@ public class TriangleMesh
         {
             if (!tmpIndices.TryGetValue(v, out int result))
             {
-                result = (int)tmpVertices.Count;
+                result = tmpVertices.Count;
                 tmpIndices.Add(v, result);
                 tmpVertices.Add(v);
             }
@@ -145,9 +145,9 @@ public class TriangleMesh
         }
 
         Vertices = tmpVertices.ToArray();
-        
+
         // 2. step: Identify the neighbors.
-        
+
         Dictionary<Edge, int> tmpEdges = new();
 
         int GetEdge(Edge e)
@@ -179,7 +179,7 @@ public class TriangleMesh
             JVector A = Vertices[Indices[i].IndexA];
             JVector B = Vertices[Indices[i].IndexB];
             JVector C = Vertices[Indices[i].IndexC];
-            
+
             JVector normal = (C - A) % (B - A);
 
             if (MathHelper.CloseToZero(normal, 1e-12f))
