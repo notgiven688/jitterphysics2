@@ -183,7 +183,7 @@ public partial class Playground : RenderWindow
                 if (shape is TransformedShape ts)
                 {
                     Matrix4 tmat = mat * MatrixHelper.CreateTranslation(Conversion.FromJitter(ts.Translation)) *
-                                   Conversion.FromJitter(ts.Orientation);
+                                   Conversion.FromJitter(ts.Transformation);
                     DrawShape(ts.OriginalShape, tmat, color);
                 }
                 else

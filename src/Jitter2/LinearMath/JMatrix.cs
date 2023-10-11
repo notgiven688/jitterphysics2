@@ -236,6 +236,30 @@ public struct JMatrix
 
         return result;
     }
+    
+    /// <summary>
+    /// Create a scaling matrix.
+    /// </summary>
+    /// <returns></returns>
+    public static JMatrix CreateScale(in JVector scale)
+    {
+        JMatrix result = Zero;
+        
+        result.M11 = scale.X;
+        result.M22 = scale.Y;
+        result.M33 = scale.Z;
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Create a scaling matrix.
+    /// </summary>
+    /// <returns></returns>
+    public static JMatrix CreateScale(float x, float y, float z)
+    {
+        return CreateScale(new JVector(x, y, z));
+    }
 
     /// <summary>
     /// Calculates matrix1^\mathrm{T} \times matrix2.

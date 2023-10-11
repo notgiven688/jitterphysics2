@@ -53,7 +53,7 @@ public class ConstraintCar
             wheels[i] = world.CreateRigidBody();
 
             CylinderShape shape = new CylinderShape(0.1f, 0.3f);
-            TransformedShape tf = new TransformedShape(shape, JMatrix.CreateRotationZ(MathF.PI / 2.0f), JVector.Zero);
+            TransformedShape tf = new TransformedShape(shape, JVector.Zero, JMatrix.CreateRotationZ(MathF.PI / 2.0f));
 
             wheels[i].AddShape(tf);
 

@@ -30,33 +30,38 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class TransformedShape : Shape
 {
+    private enum TransformationType
+    {
+        Identity,
+        Rotation,
+        General
+    }
+    
     private JVector translation;
-    private JMatrix orientation;
-
-    private readonly bool hasOrientation;
+    private JMatrix transformation;
+    private TransformationType type;
 
     /// <summary>
-    /// Constructs a transformed shape with specified orientation and translation applied to the original shape.
+    /// Constructs a transformed shape through an affine transformation define by
+    /// a linear map and a translation. 
     /// </summary>
-    /// <param name="shape">The original shape to be transformed.</param>
-    /// <param name="orientation">The orientation matrix to be applied to the shape.</param>
-    /// <param name="translation">The translation vector to be applied to the shape.</param>
-    public TransformedShape(Shape shape, JMatrix orientation, JVector translation)
+    /// <param name="shape">The original shape which should be transformed.</param>
+    /// <param name="translation">Shape is translated by this vector.</param>
+    /// <param name="transform">A linear map (may include sheer and scale) of the transformation.</param>
+    public TransformedShape(Shape shape, in JVector translation, in JMatrix transform)
     {
         OriginalShape = shape;
         this.translation = translation;
-        this.orientation = orientation;
-        hasOrientation = !orientation.Equals(JMatrix.Identity);
+        this.transformation = transform;
+
+        AnalyzeTransformation();
         UpdateShape();
     }
 
-    public TransformedShape(Shape shape, JVector translation)
+    public TransformedShape(Shape shape, JVector translation) :
+        this(shape, translation, JMatrix.Identity)
     {
-        OriginalShape = shape;
-        this.translation = translation;
-        orientation = JMatrix.Identity;
-        hasOrientation = false;
-        UpdateShape();
+        
     }
 
     public Shape OriginalShape { get; }
@@ -71,36 +76,58 @@ public class TransformedShape : Shape
         }
     }
 
-    public JMatrix Orientation
+    private void AnalyzeTransformation()
     {
-        get => orientation;
+        if (MathHelper.IsRotationMatrix(transformation))
+        {
+            type = MathHelper.UnsafeIsZero(transformation - JMatrix.Identity) ? 
+                TransformationType.Identity : TransformationType.Rotation;
+        }
+        else
+        {
+            type = TransformationType.General;
+        }
+    }
+
+    public JMatrix Transformation
+    {
+        get => transformation;
         set
         {
-            orientation = value;
+            this.transformation = value;
+            AnalyzeTransformation();
             UpdateShape();
         }
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        if (hasOrientation)
+        if (type == TransformationType.Identity)
         {
-            JVector.TransposedTransform(direction, orientation, out JVector dir);
-            OriginalShape.SupportMap(dir, out JVector sm);
-            JVector.Transform(sm, orientation, out result);
+            OriginalShape.SupportMap(direction, out result);
             result += translation;
         }
         else
         {
-            OriginalShape.SupportMap(direction, out result);
+            JVector.TransposedTransform(direction, transformation, out JVector dir);
+            OriginalShape.SupportMap(dir, out JVector sm);
+            JVector.Transform(sm, transformation, out result);
             result += translation;
         }
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
-        OriginalShape.CalculateBoundingBox(orientation * this.orientation,
-            JVector.Transform(translation, orientation) + position, out box);
+        if (type == TransformationType.General)
+        {
+            // just get the bounding box from the support map
+            base.CalculateBoundingBox(orientation, position, out box);
+        }
+        else
+        {
+            OriginalShape.CalculateBoundingBox(orientation * this.transformation,
+                JVector.Transform(translation, transformation) + position, out box);
+        }
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
@@ -108,12 +135,9 @@ public class TransformedShape : Shape
         OriginalShape.AttachRigidBody(RigidBody);
         OriginalShape.CalculateMassInertia(out inertia, out com, out mass);
 
-        com = JVector.Transform(com, orientation) + translation;
-
-        inertia = orientation * JMatrix.Multiply(inertia, JMatrix.Transpose(orientation));
-
+        com = JVector.Transform(com, transformation) + translation;
+        inertia = transformation * JMatrix.Multiply(inertia, JMatrix.Transpose(transformation));
         JMatrix pat = Mass * (JMatrix.Identity * translation.LengthSquared() - JVector.Outer(translation, translation));
-
         inertia += pat;
     }
 }
