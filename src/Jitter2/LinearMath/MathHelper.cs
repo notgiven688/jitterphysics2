@@ -68,6 +68,46 @@ public static class MathHelper
 
     */
 
+    public static bool IsRotationMatrix(in JMatrix matrix, float epsilon = 1e-06f)
+    {
+        if (!UnsafeIsZero(JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity, epsilon))
+        {
+            return false;
+        }
+
+        return MathF.Abs(matrix.Determinant() - 1.0f) < epsilon;
+    }
+
+    public static void UnsafeDecomposeMatrix(in JMatrix matrix, out JMatrix orientation, out JVector scale)
+    {
+        orientation = matrix;
+
+        scale.X = orientation.UnsafeGet(0).Length();
+        scale.Y = orientation.UnsafeGet(1).Length();
+        scale.Z = orientation.UnsafeGet(2).Length();
+
+        orientation.UnsafeGet(0) *= 1.0f / scale.X;
+        orientation.UnsafeGet(1) *= 1.0f / scale.Y;
+        orientation.UnsafeGet(2) *= 1.0f / scale.Z;
+    }
+
+    public static bool IsZero(in JVector vector, float epsilon = 1e-6f)
+    {
+        float x = MathF.Abs(vector.X);
+        float y = MathF.Abs(vector.Y);
+        float z = MathF.Abs(vector.Z);
+
+        return MathF.Max(x, MathF.Max(y, z)) < epsilon;
+    }
+
+    public static bool UnsafeIsZero(in JMatrix matrix, float epsilon = 1e-6f)
+    {
+        if (!IsZero(matrix.UnsafeGet(0))) return false;
+        if (!IsZero(matrix.UnsafeGet(1))) return false;
+        if (!IsZero(matrix.UnsafeGet(2))) return false;
+        return true;
+    }
+
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
         float phi, cp, sp;
@@ -153,6 +193,7 @@ public static class MathHelper
 
         return result;
     }
+
 
     /// <summary>
     /// Verifies whether the columns of the given matrix constitute an orthonormal basis.
