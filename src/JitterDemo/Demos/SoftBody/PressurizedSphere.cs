@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -17,22 +18,18 @@ public class SoftBodySphere : SoftBodyCloth
 
     private class UnitSphere : ISupportMap
     {
-        public UnitSphere(JVector center)
-        {
-            GeometricCenter = center;
-        }
-
         public void SupportMap(in JVector direction, out JVector result)
         {
-            result = GeometricCenter + JVector.Normalize(direction);
+            result = JVector.Normalize(direction);
         }
 
-        public JVector GeometricCenter { get; }
+        public JVector GeometricCenter => throw new NotImplementedException();
     }
 
     private static IEnumerable<JTriangle> GenSphereTriangles(JVector offset)
     {
-        return ShapeHelper.MakeHull(new UnitSphere(offset));
+        return ShapeHelper.MakeHull(new UnitSphere())
+            .Select(t => new JTriangle(t.V0 + offset, t.V1 + offset, t.V2 + offset));
     }
 
     private static IEnumerable<JTriangle> GenSphereTrianglesFromMesh(JVector offset, string filename)
