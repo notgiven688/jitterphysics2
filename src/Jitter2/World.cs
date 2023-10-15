@@ -439,8 +439,8 @@ public partial class World
 
     private void AddToActiveList(Island island)
     {
-        island.markedAsActive = true;
-        island.needsUpdate = true;
+        island.MarkedAsActive = true;
+        island.NeedsUpdate = true;
         islands.MoveToActive(island);
     }
 
