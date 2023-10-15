@@ -41,17 +41,4 @@ public static class DynamicTreeCollisionFilter
 
         return false;
     }
-
-    public static bool Filter2(Shape shapeA, Shape shapeB)
-    {
-        if (shapeA.RigidBody != shapeB.RigidBody) return true;
-
-        if (shapeA is ISoftBodyShape softBodyShapeA &&
-            shapeB is ISoftBodyShape softBodyShapeB)
-        {
-            return true;
-        }
-
-        return false;
-    }
 }
