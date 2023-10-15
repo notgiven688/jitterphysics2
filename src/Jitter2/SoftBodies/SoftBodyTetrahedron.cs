@@ -29,19 +29,19 @@ namespace Jitter2.SoftBodies;
 
 public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 {
-    private readonly RigidBody[] bodies = new RigidBody[4];
-
     public SoftBodyTetrahedron(SoftBody body, RigidBody p1, RigidBody p2, RigidBody p3, RigidBody p4)
     {
-        bodies[0] = p1;
-        bodies[1] = p2;
-        bodies[2] = p3;
-        bodies[3] = p4;
+        Bodies[0] = p1;
+        Bodies[1] = p2;
+        Bodies[2] = p3;
+        Bodies[3] = p4;
 
         SoftBody = body;
 
         UpdateShape();
     }
+
+    public RigidBody[] Bodies { get; } = new RigidBody[4];
 
     public override JVector Velocity
     {
@@ -51,7 +51,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
             for (int i = 0; i < 4; i++)
             {
-                vel += bodies[i].Velocity;
+                vel += Bodies[i].Velocity;
             }
 
             vel *= 0.25f;
@@ -68,7 +68,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         for (int i = 0; i < 4; i++)
         {
-            com += bodies[i].Position;
+            com += Bodies[i].Position;
         }
 
         com *= 0.25f;
@@ -81,7 +81,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         for (int i = 0; i < 4; i++)
         {
-            float len = (pos - bodies[i].Position).LengthSquared();
+            float len = (pos - Bodies[i].Position).LengthSquared();
             if (len < dist)
             {
                 dist = len;
@@ -89,7 +89,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
             }
         }
 
-        return bodies[closest];
+        return Bodies[closest];
     }
 
     public SoftBody SoftBody { get; }
@@ -103,8 +103,8 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         for (int i = 0; i < 4; i++)
         {
-            box.AddPoint(bodies[i].Position);
-            GeometricCenter += bodies[i].Position;
+            box.AddPoint(Bodies[i].Position);
+            GeometricCenter += Bodies[i].Position;
         }
 
         GeometricCenter *= 0.25f;
@@ -122,7 +122,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         for (int i = 0; i < 4; i++)
         {
-            float dot = JVector.Dot(direction, bodies[i].Position);
+            float dot = JVector.Dot(direction, Bodies[i].Position);
             if (dot > maxDot)
             {
                 maxDot = dot;
@@ -130,6 +130,6 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
             }
         }
 
-        result = bodies[furthest].Position;
+        result = Bodies[furthest].Position;
     }
 }
