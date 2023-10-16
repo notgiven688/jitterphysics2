@@ -132,7 +132,6 @@ public class TransformedShape : Shape
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        OriginalShape.AttachRigidBody(RigidBody);
         OriginalShape.CalculateMassInertia(out inertia, out com, out mass);
 
         com = JVector.Transform(com, transformation) + translation;
