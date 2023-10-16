@@ -38,6 +38,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 - [x] "One-shot" contact manifolds using auxiliary contacts for flat surface collisions.
 - [x] Efficient compound shapes.
 - [x] Easy integration of custom shapes. Integrated: Box, Capsule, Cone, Convex Hull, Point Cloud, Sphere, Triangle, Transformed.
+- [x] Soft-body dynamics!
 
 ## Documentation
 
