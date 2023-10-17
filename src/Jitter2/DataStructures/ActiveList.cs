@@ -52,9 +52,14 @@ public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
         return list.IsActive(element);
     }
 
-    public IEnumerator<T> GetEnumerator()
+    public ActiveList<T>.Enumerator GetEnumerator()
     {
         return new ActiveList<T>.Enumerator(list);
+    }
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -187,11 +192,16 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         element.ListIndex = -1;
     }
 
-    public IEnumerator<T> GetEnumerator()
+    public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
     }
 
+    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+    
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();

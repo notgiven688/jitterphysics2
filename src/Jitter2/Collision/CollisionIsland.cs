@@ -33,8 +33,8 @@ namespace Jitter2.Collision;
 public sealed class Island : IListIndex
 {
     internal readonly HashSet<RigidBody> bodies = new();
-    internal bool markedAsActive;
-    internal bool needsUpdate;
+    internal bool MarkedAsActive;
+    internal bool NeedsUpdate;
 
     /// <summary>
     /// Gets a collection of all the bodies present in this island.

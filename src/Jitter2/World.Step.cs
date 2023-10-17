@@ -264,7 +264,7 @@ public partial class World
 
             if (body.sleepTime < body.deactivationTimeThreshold)
             {
-                body.island.markedAsActive = true;
+                body.island.MarkedAsActive = true;
             }
 
             if (!rigidBody.IsStatic && rigidBody.IsActive)
@@ -760,17 +760,17 @@ public partial class World
         {
             Island island = islands[i];
 
-            bool deactivateIsland = !island.markedAsActive;
+            bool deactivateIsland = !island.MarkedAsActive;
             if (!AllowDeactivation) deactivateIsland = false;
 
             // Mark the island as inactive
             // Next frame one active body will be enough to set
             // MarkedAsActive back to true;
-            island.markedAsActive = false;
+            island.MarkedAsActive = false;
 
-            if (!deactivateIsland && !island.needsUpdate) continue;
+            if (!deactivateIsland && !island.NeedsUpdate) continue;
 
-            island.needsUpdate = false;
+            island.NeedsUpdate = false;
 
             foreach (RigidBody body in island.bodies)
             {
