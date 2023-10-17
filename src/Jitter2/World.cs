@@ -95,7 +95,7 @@ public partial class World
     private readonly ActiveList<RigidBody> bodies = new();
     private readonly ActiveList<Shape> shapes = new();
 
-    public static ulong IdCounter;
+    internal static ulong IdCounter;
 
     /// <summary>
     /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
