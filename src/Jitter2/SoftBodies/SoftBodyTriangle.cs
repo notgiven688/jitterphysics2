@@ -38,7 +38,13 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
     public RigidBody Vertex2 => v2;
     public RigidBody Vertex3 => v3;
 
-    public float Thickness { get; set; } = 0.05f;
+    private float halfThickness = 0.05f;
+
+    public float Thickness
+    {
+        get => halfThickness * 2.0f;
+        set => halfThickness = value * 0.5f;
+    }
 
     public SoftBodyTriangle(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3)
     {
@@ -82,7 +88,7 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
 
     public override void UpdateWorldBoundingBox()
     {
-        float extraMargin = MathF.Max(Thickness, 0.01f);
+        float extraMargin = MathF.Max(halfThickness, 0.01f);
 
         var box = JBBox.SmallBox;
         box.AddPoint(v1.Position);
@@ -121,6 +127,6 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
             result = c;
         }
 
-        result += JVector.Normalize(direction) * Thickness;
+        result += JVector.Normalize(direction) * halfThickness;
     }
 }
