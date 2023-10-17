@@ -102,20 +102,20 @@ public class SoftBodyCloth : SoftBody
             RigidBody body = world.CreateRigidBody();
             body.SetMassInertia(JMatrix.Identity * 1000, 0.1f);
             body.Position = vertex;
-            Points.Add(body);
+            Vertices.Add(body);
         }
 
         foreach (var edge in edges)
         {
-            var constraint = world.CreateConstraint<SpringConstraint>(Points[edge.IndexA], Points[edge.IndexB]);
-            constraint.Initialize(Points[edge.IndexA].Position, Points[edge.IndexB].Position);
+            var constraint = world.CreateConstraint<SpringConstraint>(Vertices[edge.IndexA], Vertices[edge.IndexB]);
+            constraint.Initialize(Vertices[edge.IndexA].Position, Vertices[edge.IndexB].Position);
             constraint.Softness = 0.1f;
             Springs.Add(constraint);
         }
 
         foreach (var triangle in triangles)
         {
-            var tri = new SoftBodyTriangle(this, Points[triangle.IndexA], Points[triangle.IndexB], Points[triangle.IndexC]);
+            var tri = new SoftBodyTriangle(this, Vertices[triangle.IndexA], Vertices[triangle.IndexB], Vertices[triangle.IndexC]);
             tri.UpdateWorldBoundingBox();
             world.AddShape(tri);
             Shapes.Add(tri);

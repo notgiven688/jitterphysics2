@@ -73,8 +73,8 @@ public class Demo16 : IDemo, ICleanDemo
         {
             foreach (var spring in SoftBodyCube.Edges)
             {
-                dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(cube.Points[spring.Item1].Position),
-                    Conversion.FromJitter(cube.Points[spring.Item2].Position));
+                dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(cube.Vertices[spring.Item1].Position),
+                    Conversion.FromJitter(cube.Vertices[spring.Item2].Position));
 
                 dr.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(cube.Center.Position), 0.2f);
             }

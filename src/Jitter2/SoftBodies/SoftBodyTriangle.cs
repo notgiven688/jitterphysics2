@@ -30,52 +30,52 @@ namespace Jitter2.SoftBodies;
 
 public class SoftBodyTriangle : Shape, ISoftBodyShape
 {
-    private readonly RigidBody p2;
-    private readonly RigidBody p3;
-    private readonly RigidBody p1;
+    private readonly RigidBody v2;
+    private readonly RigidBody v3;
+    private readonly RigidBody v1;
 
-    public RigidBody Body1 => p1;
-    public RigidBody Body2 => p2;
-    public RigidBody Body3 => p3;
+    public RigidBody Vertex1 => v1;
+    public RigidBody Vertex2 => v2;
+    public RigidBody Vertex3 => v3;
 
     public float Thickness { get; set; } = 0.05f;
 
-    public SoftBodyTriangle(SoftBody body, RigidBody p1, RigidBody p2, RigidBody p3)
+    public SoftBodyTriangle(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3)
     {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
+        this.v1 = v1;
+        this.v2 = v2;
+        this.v3 = v3;
 
         SoftBody = body;
         UpdateShape();
     }
 
-    public override JVector Velocity => 1.0f / 3.0f * (p1.Data.Velocity + p2.Data.Velocity + p3.Data.Velocity);
+    public override JVector Velocity => 1.0f / 3.0f * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
         inertia = JMatrix.Identity;
         mass = 1;
-        com = 1.0f / 3.0f * (p1.Position + p2.Position + p3.Position);
+        com = 1.0f / 3.0f * (v1.Position + v2.Position + v3.Position);
     }
 
     public RigidBody GetClosest(in JVector pos)
     {
-        float len1 = (pos - p1.Position).LengthSquared();
-        float len2 = (pos - p2.Position).LengthSquared();
-        float len3 = (pos - p3.Position).LengthSquared();
+        float len1 = (pos - v1.Position).LengthSquared();
+        float len2 = (pos - v2.Position).LengthSquared();
+        float len3 = (pos - v3.Position).LengthSquared();
 
         if (len1 < len2 && len1 < len3)
         {
-            return p1;
+            return v1;
         }
 
         if (len2 < len3 && len2 <= len1)
         {
-            return p2;
+            return v2;
         }
 
-        return p3;
+        return v3;
     }
 
     public SoftBody SoftBody { get; }
@@ -85,23 +85,23 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
         float extraMargin = MathF.Max(Thickness, 0.01f);
 
         var box = JBBox.SmallBox;
-        box.AddPoint(p1.Position);
-        box.AddPoint(p2.Position);
-        box.AddPoint(p3.Position);
+        box.AddPoint(v1.Position);
+        box.AddPoint(v2.Position);
+        box.AddPoint(v3.Position);
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;
 
         WorldBoundingBox = box;
 
-        GeometricCenter = 1.0f / 3.0f * (p1.Position + p2.Position + p3.Position);
+        GeometricCenter = 1.0f / 3.0f * (v1.Position + v2.Position + v3.Position);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        JVector a = p1.Position;
-        JVector b = p2.Position;
-        JVector c = p3.Position;
+        JVector a = v1.Position;
+        JVector b = v2.Position;
+        JVector c = v3.Position;
 
         float min = JVector.Dot(a, direction);
         float dot = JVector.Dot(b, direction);

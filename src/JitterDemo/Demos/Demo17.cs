@@ -65,19 +65,19 @@ public class Demo17 : IDemo, ICleanDemo
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
 
-        RigidBody fb0 = cloth.Points.OrderByDescending(item => +item.Position.X + item.Position.Z).First();
+        RigidBody fb0 = cloth.Vertices.OrderByDescending(item => +item.Position.X + item.Position.Z).First();
         var c0 = world.CreateConstraint<BallSocket>(fb0, world.NullBody);
         c0.Initialize(fb0.Position);
 
-        RigidBody fb1 = cloth.Points.OrderByDescending(item => +item.Position.X - item.Position.Z).First();
+        RigidBody fb1 = cloth.Vertices.OrderByDescending(item => +item.Position.X - item.Position.Z).First();
         var c1 = world.CreateConstraint<BallSocket>(fb1, world.NullBody);
         c1.Initialize(fb1.Position);
 
-        RigidBody fb2 = cloth.Points.OrderByDescending(item => -item.Position.X + item.Position.Z).First();
+        RigidBody fb2 = cloth.Vertices.OrderByDescending(item => -item.Position.X + item.Position.Z).First();
         var c2 = world.CreateConstraint<BallSocket>(fb2, world.NullBody);
         c2.Initialize(fb2.Position);
 
-        RigidBody fb3 = cloth.Points.OrderByDescending(item => -item.Position.X - item.Position.Z).First();
+        RigidBody fb3 = cloth.Vertices.OrderByDescending(item => -item.Position.X - item.Position.Z).First();
         var c3 = world.CreateConstraint<BallSocket>(fb3, world.NullBody);
         c3.Initialize(fb3.Position);
 

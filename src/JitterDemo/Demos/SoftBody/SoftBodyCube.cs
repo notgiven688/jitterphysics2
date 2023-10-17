@@ -35,15 +35,15 @@ public class SoftBodyCube : SoftBody
             var rb = world.CreateRigidBody();
             rb.SetMassInertia(JMatrix.Identity * 100000, 0.2f);
             rb.Position = vertices[i] + offset;
-            Points.Add(rb);
+            Vertices.Add(rb);
         }
 
         SoftBodyTetrahedron[] tetrahedra = new SoftBodyTetrahedron[5];
-        tetrahedra[0] = new SoftBodyTetrahedron(this, Points[0], Points[1], Points[5], Points[2]);
-        tetrahedra[1] = new SoftBodyTetrahedron(this, Points[2], Points[5], Points[6], Points[7]);
-        tetrahedra[2] = new SoftBodyTetrahedron(this, Points[3], Points[0], Points[2], Points[7]);
-        tetrahedra[3] = new SoftBodyTetrahedron(this, Points[0], Points[4], Points[5], Points[7]);
-        tetrahedra[4] = new SoftBodyTetrahedron(this, Points[0], Points[2], Points[5], Points[7]);
+        tetrahedra[0] = new SoftBodyTetrahedron(this, Vertices[0], Vertices[1], Vertices[5], Vertices[2]);
+        tetrahedra[1] = new SoftBodyTetrahedron(this, Vertices[2], Vertices[5], Vertices[6], Vertices[7]);
+        tetrahedra[2] = new SoftBodyTetrahedron(this, Vertices[3], Vertices[0], Vertices[2], Vertices[7]);
+        tetrahedra[3] = new SoftBodyTetrahedron(this, Vertices[0], Vertices[4], Vertices[5], Vertices[7]);
+        tetrahedra[4] = new SoftBodyTetrahedron(this, Vertices[0], Vertices[2], Vertices[5], Vertices[7]);
 
         for (int i = 0; i < 5; i++)
         {
@@ -58,8 +58,8 @@ public class SoftBodyCube : SoftBody
 
         for (int i = 0; i < 8; i++)
         {
-            var constraint = world.CreateConstraint<BallSocket>(Center, Points[i]);
-            constraint.Initialize(Points[i].Position);
+            var constraint = world.CreateConstraint<BallSocket>(Center, Vertices[i]);
+            constraint.Initialize(Vertices[i].Position);
             constraint.Softness = 1;
         }
     }
