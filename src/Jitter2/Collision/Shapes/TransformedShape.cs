@@ -126,7 +126,7 @@ public class TransformedShape : Shape
         else
         {
             OriginalShape.CalculateBoundingBox(orientation * this.transformation,
-                JVector.Transform(translation, transformation) + position, out box);
+                JVector.Transform(translation, orientation) + position, out box);
         }
     }
 
