@@ -85,8 +85,8 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
         size = initialSize;
         this.maximumSize = maximumSize;
 
-        memory = (T*)Marshal.AllocHGlobal(size * sizeof(T));
-        handles = (T**)Marshal.AllocHGlobal(maximumSize * sizeof(IntPtr));
+        memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
+        handles = (T**)MemoryHelper.AllocateHeap(maximumSize * sizeof(IntPtr));
 
         for (int i = 0; i < size; i++)
         {
@@ -209,7 +209,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
                             $"Resizing to {size}x{typeof(T)} ({size}x{sizeof(T)} Bytes).");
 
             var oldmemory = memory;
-            memory = (T*)Marshal.AllocHGlobal(size * sizeof(T));
+            memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
 
             for (int i = 0; i < osize; i++)
             {
@@ -222,7 +222,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
                 Unsafe.AsRef<int>(&memory[i]) = i;
             }
 
-            Marshal.FreeHGlobal((IntPtr)oldmemory);
+            MemoryHelper.Free(oldmemory);
             ResizeLock.ExitWriteLock();
         }
 
@@ -248,10 +248,10 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     {
         if (!disposed)
         {
-            Marshal.FreeHGlobal((IntPtr)handles);
+            MemoryHelper.Free(handles);
             handles = (T**)0;
 
-            Marshal.FreeHGlobal((IntPtr)memory);
+            MemoryHelper.Free(memory);
             memory = (T*)0;
 
             disposed = true;

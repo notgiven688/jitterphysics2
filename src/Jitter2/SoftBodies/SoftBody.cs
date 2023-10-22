@@ -30,13 +30,13 @@ namespace Jitter2.SoftBodies;
 
 public class SoftBody
 {
-    public List<RigidBody> Points { get; } = new();
+    public List<RigidBody> Vertices { get; } = new();
     public List<Constraint> Springs { get; } = new();
     public List<Shape> Shapes { get; } = new();
 
     protected World world;
 
-    public bool IsActive => Points[0].IsActive;
+    public bool IsActive => Vertices[0].IsActive;
 
     public SoftBody(World world)
     {
@@ -58,7 +58,7 @@ public class SoftBody
             world.Remove(spring);
         }
 
-        foreach (var point in Points)
+        foreach (var point in Vertices)
         {
             world.Remove(point);
         }

@@ -14,11 +14,11 @@ public static unsafe class ImGui
 
     static ImGui()
     {
-        strPtr = (byte**)Marshal.AllocHGlobal(sizeof(IntPtr) * 3);
+        strPtr = (byte**)NativeMemory.Alloc((nuint)(sizeof(IntPtr) * 3));
 
         for (int i = 0; i < 3; i++)
         {
-            strPtr[i] = (byte*)Marshal.AllocHGlobal(strPtrSize);
+            strPtr[i] = (byte*)NativeMemory.Alloc((nuint)(strPtrSize));
         }
     }
 

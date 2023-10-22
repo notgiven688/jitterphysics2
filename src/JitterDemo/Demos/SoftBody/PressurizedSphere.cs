@@ -46,10 +46,10 @@ public class SoftBodySphere : SoftBodyCloth
 
     public SoftBodySphere(World world, JVector offset) : base(world, GenSphereTriangles(offset))
     {
-        foreach (var point in Points)
+        foreach (var rb in Vertices)
         {
-            point.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
-            point.Damping = (1, 0.99f);
+            rb.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
+            rb.Damping = (1, 0.99f);
         }
 
         foreach (var spring in Springs)
@@ -68,9 +68,9 @@ public class SoftBodySphere : SoftBodyCloth
 
         foreach (SoftBodyTriangle sbt in Shapes)
         {
-            JVector v1 = sbt.Body1.Position;
-            JVector v2 = sbt.Body2.Position;
-            JVector v3 = sbt.Body3.Position;
+            JVector v1 = sbt.Vertex1.Position;
+            JVector v2 = sbt.Vertex2.Position;
+            JVector v3 = sbt.Vertex3.Position;
 
             volume += ((v2.Y - v1.Y) * (v3.Z - v1.Z) -
                        (v2.Z - v1.Z) * (v3.Y - v1.Y)) * (v1.X + v2.X + v3.X);
@@ -80,16 +80,16 @@ public class SoftBodySphere : SoftBodyCloth
 
         foreach (SoftBodyTriangle sbt in Shapes)
         {
-            JVector p0 = sbt.Body1.Position;
-            JVector p1 = sbt.Body2.Position;
-            JVector p2 = sbt.Body3.Position;
+            JVector p0 = sbt.Vertex1.Position;
+            JVector p1 = sbt.Vertex2.Position;
+            JVector p2 = sbt.Vertex3.Position;
 
             JVector normal = (p1 - p0) % (p2 - p0);
             JVector force = normal * Pressure * invVol;
 
-            sbt.Body1.AddForce(force);
-            sbt.Body2.AddForce(force);
-            sbt.Body3.AddForce(force);
+            sbt.Vertex1.AddForce(force);
+            sbt.Vertex2.AddForce(force);
+            sbt.Vertex3.AddForce(force);
         }
     }
 }
