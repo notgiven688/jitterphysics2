@@ -85,8 +85,8 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
         size = initialSize;
         this.maximumSize = maximumSize;
 
-        memory = (T*)NativeMemory.Alloc((nuint)(size * sizeof(T)));
-        handles = (T**)NativeMemory.Alloc((nuint)(maximumSize * sizeof(IntPtr)));
+        memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
+        handles = (T**)MemoryHelper.AllocateHeap(maximumSize * sizeof(IntPtr));
 
         for (int i = 0; i < size; i++)
         {
