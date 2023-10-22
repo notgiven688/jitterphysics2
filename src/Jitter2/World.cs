@@ -209,7 +209,7 @@ public partial class World
     public World(int numBodies = 32768, int numContacts = 65536, int numConstraints = 32768)
     {
         // int numBodies = 32768, int numContacts = 65536, int numConstraints = 32768
-        // with this choice 1024 KB are directly allocated on the heap.
+        // with this choice (32768 + 65536 + 2 x 32768) x 8 Bytes = 1280 KB are allocated on the heap.
         memRigidBodies = new UnmanagedActiveList<RigidBodyData>(numBodies);
         memContacts = new UnmanagedActiveList<ContactData>(numContacts);
         memConstraints = new UnmanagedActiveList<ConstraintData>(numConstraints);
