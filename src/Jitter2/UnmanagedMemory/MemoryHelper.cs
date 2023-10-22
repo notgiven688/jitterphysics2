@@ -28,6 +28,22 @@ namespace Jitter2.UnmanagedMemory;
 public static unsafe class MemoryHelper
 {
     /// <summary>
+    /// A block of 32 bytes of memory.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size = 16)]
+    public struct MemBlock16
+    {
+    }
+
+    /// <summary>
+    /// A block of 32 bytes of memory.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size = 32)]
+    public struct MemBlock32
+    {
+    }
+
+    /// <summary>
     /// A block of 48 bytes of memory.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Size = 48)]
@@ -45,13 +61,16 @@ public static unsafe class MemoryHelper
 
     public static T* AllocateHeap<T>(int num) where T : unmanaged
     {
-        return (T*)Marshal.AllocHGlobal(num * sizeof(T));
+        return (T*)AllocateHeap(num * sizeof(T));
     }
 
     public static void Free<T>(T* ptr) where T : unmanaged
     {
-        Marshal.FreeHGlobal((nint)ptr);
+        Free((void*)ptr);
     }
+    
+    public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);
+    public static void Free(void* ptr) => NativeMemory.Free(ptr);
 
     /// <summary>
     /// Zeros out unmanaged memory.
