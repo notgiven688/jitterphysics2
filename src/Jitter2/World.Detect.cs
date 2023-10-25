@@ -244,13 +244,14 @@ public partial class World
     public float SpeculativeVelocityThreshold { get; set; } = 10f;
 
     public void RegisterContact(ulong id0, ulong id1, RigidBody body0, RigidBody body1,
-        in JVector point1, in JVector point2, in JVector normal, float penetration)
+        in JVector point1, in JVector point2, in JVector normal, float penetration, bool speculative = false)
     {
         GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
 
         lock (arbiter)
         {
             memContacts.ResizeLock.EnterReadLock();
+            arbiter.Handle.Data.IsSpeculative = speculative;
             arbiter.Handle.Data.AddContact(point1, point2, normal, penetration);
             memContacts.ResizeLock.ExitReadLock();
         }
