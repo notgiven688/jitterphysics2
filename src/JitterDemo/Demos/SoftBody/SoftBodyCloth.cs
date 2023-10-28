@@ -4,6 +4,7 @@ using Jitter2;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using Jitter2.SoftBodies;
+using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
@@ -32,23 +33,12 @@ public class SoftBodyCloth : SoftBody
         }
     }
 
-    private struct Triangle
-    {
-        public Triangle(ushort u0, ushort u1, ushort u2)
-        {
-            IndexA = u0;
-            IndexB = u1;
-            IndexC = u2;
-        }
-
-        public readonly ushort IndexA;
-        public readonly ushort IndexB;
-        public readonly ushort IndexC;
-    }
 
     private List<JVector> vertices = null!;
-    private List<Triangle> triangles = null!;
+    private List<TriangleVertexIndex> triangles = null!;
     private List<Edge> edges = null!;
+
+    public List<TriangleVertexIndex> Triangles => triangles;
 
     private List<SpringConstraint> MatchConstraints = new();
 
@@ -75,7 +65,7 @@ public class SoftBodyCloth : SoftBody
             return ind;
         }
 
-        triangles = new List<Triangle>();
+        triangles = new List<TriangleVertexIndex>();
 
         foreach (var tri in tris)
         {
@@ -83,7 +73,7 @@ public class SoftBodyCloth : SoftBody
             ushort u1 = AddVertex(tri.V1);
             ushort u2 = AddVertex(tri.V2);
 
-            Triangle t = new Triangle(u0, u1, u2);
+            TriangleVertexIndex t = new TriangleVertexIndex(u0, u1, u2);
             triangles.Add(t);
 
             edgs.Add(new Edge(u0, u1));
@@ -109,13 +99,13 @@ public class SoftBodyCloth : SoftBody
         {
             var constraint = world.CreateConstraint<SpringConstraint>(Vertices[edge.IndexA], Vertices[edge.IndexB]);
             constraint.Initialize(Vertices[edge.IndexA].Position, Vertices[edge.IndexB].Position);
-            constraint.Softness = 0.1f;
+            constraint.Softness = 0.2f;
             Springs.Add(constraint);
         }
 
         foreach (var triangle in triangles)
         {
-            var tri = new SoftBodyTriangle(this, Vertices[triangle.IndexA], Vertices[triangle.IndexB], Vertices[triangle.IndexC]);
+            var tri = new SoftBodyTriangle(this, Vertices[(int)triangle.T1], Vertices[(int)triangle.T2], Vertices[(int)triangle.T3]);
             tri.UpdateWorldBoundingBox();
             world.AddShape(tri);
             Shapes.Add(tri);

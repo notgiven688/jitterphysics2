@@ -45,6 +45,16 @@ public class PhongShader : BasicShader
         public UniformFloat Shininess { get; }
         public UniformFloat Alpha { get; }
 
+        private UniformFloat NormalMultiply { get; }
+
+        public bool FlipNormal
+        {
+            set
+            {
+                NormalMultiply.Set(value ? -1.0f : 1.0f);
+            }
+        }
+
         /// <summary>
         /// Magic:
         /// Ambient = ColorMixing.X * vertexColor + ColorMixing.Y * shaderColor
@@ -59,6 +69,7 @@ public class PhongShader : BasicShader
             Shininess = shader.GetUniform<UniformFloat>("material.shininess");
             Alpha = shader.GetUniform<UniformFloat>("material.alpha");
             ColorMixing = shader.GetUniform<UniformVector3>("material.mixing");
+            NormalMultiply = shader.GetUniform<UniformFloat>("material.flipnormal");
         }
 
         public void SetDefaultMaterial()
@@ -68,6 +79,7 @@ public class PhongShader : BasicShader
             Shininess.Set(128);
             Alpha.Set(1.0f);
             ColorMixing.Set(1, 0, 0);
+            NormalMultiply.Set(1);
         }
     }
 
@@ -142,6 +154,7 @@ public class PhongShader : BasicShader
             vec3 diffuse;
             float alpha;
             vec3 mixing;
+            float flipnormal;
         };
 
         uniform Material material;
@@ -224,6 +237,7 @@ public class PhongShader : BasicShader
         {
             vec3 lightColor = vec3(1, 1, 1);
             vec3 mix = material.mixing;
+            vec3 fnormal = normal * material.flipnormal;
 
             vec3 ambient = mix.x * vertexColor + mix.y * material.color;
             vec3 diffuse = (1.0f - mix.z) * vec3(0.6f, 0.6f, 0.6f) + mix.z * vec3(texture(diffuse, TexCoords));
@@ -249,7 +263,7 @@ public class PhongShader : BasicShader
             {
                 // diffuse
                 lightDir = normalize(lights[i]);
-                float diff = max(dot(normal, lightDir), 0.0);
+                float diff = max(dot(fnormal, lightDir), 0.0);
                 diffusive += lightColor * lightstrength[i] * diff * diffuse;
             }
 
@@ -257,12 +271,12 @@ public class PhongShader : BasicShader
             lightDir = normalize(lights[0]);
             vec3 viewDir = normalize(viewPos - pos);
             vec3 halfwayDir = normalize(lightDir + viewDir);
-            vec3 reflectDir = reflect(-lightDir, normal);
+            vec3 reflectDir = reflect(-lightDir, fnormal);
 
             float spec = pow(max(dot(viewDir, halfwayDir),0.0), material.shininess);
             specular = lightColor * spec * material.specular;
             
-            float shadow = ShadowCalculation(normal);
+            float shadow = ShadowCalculation(fnormal);
             
             vec3 result = (1.0f*ambient + 1.0f*(diffusive + 0.4f*specular) * (1- shadow));
             FragColor = vec4(result, material.alpha);

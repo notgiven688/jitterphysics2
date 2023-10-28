@@ -28,7 +28,7 @@ public class CSMInstance
     public ArrayBuffer ab = null!;
 
     protected ArrayBuffer worldMatrices = null!;
-    private int indexLen;
+    protected int IndexLen;
 
     public TransformColor[] WorldMatrices = { TransformColor.Default };
     public int Count { set; get; } = 1;
@@ -66,7 +66,7 @@ public class CSMInstance
         Texture?.Bind(3);
 
         Vao.Bind();
-        GLDevice.DrawElementsInstanced(DrawMode.Triangles, indexLen, IndexType.UnsignedInt, 0, Count);
+        GLDevice.DrawElementsInstanced(DrawMode.Triangles, IndexLen, IndexType.UnsignedInt, 0, Count);
     }
 
     public virtual void UpdateWorldMatrices()
@@ -80,7 +80,7 @@ public class CSMInstance
         if (Count == 0) return;
 
         Vao.Bind();
-        GLDevice.DrawElementsInstanced(DrawMode.Triangles, indexLen, IndexType.UnsignedInt, 0, Count);
+        GLDevice.DrawElementsInstanced(DrawMode.Triangles, IndexLen, IndexType.UnsignedInt, 0, Count);
     }
 
     public virtual void Load()
@@ -88,7 +88,7 @@ public class CSMInstance
         Vao = new VertexArrayObject();
 
         (var vertices, var indices) = ProvideVertices();
-        indexLen = indices.Length * 3;
+        IndexLen = indices.Length * 3;
 
         ab = new ArrayBuffer();
         ab.SetData(vertices);
