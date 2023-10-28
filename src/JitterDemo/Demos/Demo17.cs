@@ -25,11 +25,10 @@ public class Demo17 : IDemo, ICleanDemo
 
         pg.ResetScene();
 
-        const int len = 30;
-        const float scale = 0.3f;
-
+        const int len = 40;
+        const float scale = 0.2f;
         const int leno2 = len / 2;
-
+        
         List<JTriangle> tris = new();
 
         for (int i = 0; i < len; i++)
@@ -40,12 +39,24 @@ public class Demo17 : IDemo, ICleanDemo
                 JVector v1 = new JVector((-leno2 + e + 0) * scale, 6, (-leno2 + i + 1) * scale);
                 JVector v2 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 0) * scale);
                 JVector v3 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 1) * scale);
-                tris.Add(new JTriangle(v0, v1, v2));
-                tris.Add(new JTriangle(v1, v2, v3));
-                tris.Add(new JTriangle(v0, v2, v3));
+
+                bool even = (e + i) % 2 == 0;
+
+                if (even)
+                {
+                    tris.Add(new JTriangle(v0, v1, v2));
+                    tris.Add(new JTriangle(v1, v2, v3));
+                }
+                else
+                {
+                    tris.Add(new JTriangle(v1, v3, v0));
+                    tris.Add(new JTriangle(v3, v2, v0));
+                }
             }
         }
-
+        
+        cloth = new SoftBodyCloth(world, tris);
+        
         var b0 = world.CreateRigidBody();
         b0.Position = new JVector(-1, 10, 0);
         b0.AddShape(new BoxShape(1));
@@ -59,8 +70,6 @@ public class Demo17 : IDemo, ICleanDemo
         var b2 = world.CreateRigidBody();
         b2.Position = new JVector(1, 11, 0);
         b2.AddShape(new SphereShape(0.5f));
-
-        cloth = new SoftBodyCloth(world, tris);
 
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);

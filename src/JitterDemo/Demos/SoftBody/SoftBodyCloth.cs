@@ -100,7 +100,7 @@ public class SoftBodyCloth : SoftBody
         foreach (var vertex in vertices)
         {
             RigidBody body = world.CreateRigidBody();
-            body.SetMassInertia(JMatrix.Identity * 1000, 0.1f);
+            body.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
             body.Position = vertex;
             Vertices.Add(body);
         }
