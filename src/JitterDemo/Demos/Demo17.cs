@@ -7,6 +7,7 @@ using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
+using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
@@ -18,6 +19,7 @@ public class Demo17 : IDemo, ICleanDemo
     private SoftBodyCloth cloth = null!;
     private World world = null!;
 
+    private Renderer.Cloth clothRenderer;
     public void Build()
     {
         pg = (Playground)RenderWindow.Instance;
@@ -25,11 +27,10 @@ public class Demo17 : IDemo, ICleanDemo
 
         pg.ResetScene();
 
-        const int len = 30;
-        const float scale = 0.3f;
-
+        const int len = 40;
+        const float scale = 0.2f;
         const int leno2 = len / 2;
-
+        
         List<JTriangle> tris = new();
 
         for (int i = 0; i < len; i++)
@@ -40,12 +41,28 @@ public class Demo17 : IDemo, ICleanDemo
                 JVector v1 = new JVector((-leno2 + e + 0) * scale, 6, (-leno2 + i + 1) * scale);
                 JVector v2 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 0) * scale);
                 JVector v3 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 1) * scale);
-                tris.Add(new JTriangle(v0, v1, v2));
-                tris.Add(new JTriangle(v1, v2, v3));
-                tris.Add(new JTriangle(v0, v2, v3));
+
+                bool even = (e + i) % 2 == 0;
+
+                if (even)
+                {
+                    tris.Add(new JTriangle(v0, v2, v1));
+                    tris.Add(new JTriangle(v2, v3, v1));
+                }
+                else
+                {
+                    tris.Add(new JTriangle(v0, v3, v1));
+                    tris.Add(new JTriangle(v0, v2, v3));
+                }
             }
         }
-
+        
+        cloth = new SoftBodyCloth(world, tris);
+        
+        clothRenderer = pg.CSMRenderer.GetInstance<Cloth>();
+        clothRenderer.SetIndices(cloth.Triangles.ToArray());
+        SetUVCoordinates();
+        
         var b0 = world.CreateRigidBody();
         b0.Position = new JVector(-1, 10, 0);
         b0.AddShape(new BoxShape(1));
@@ -59,8 +76,6 @@ public class Demo17 : IDemo, ICleanDemo
         var b2 = world.CreateRigidBody();
         b2.Position = new JVector(1, 11, 0);
         b2.AddShape(new SphereShape(0.5f));
-
-        cloth = new SoftBodyCloth(world, tris);
 
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
@@ -85,15 +100,33 @@ public class Demo17 : IDemo, ICleanDemo
         world.NumberSubsteps = 4;
     }
 
+    private void SetUVCoordinates()
+    {
+        var vertices = clothRenderer.Vertices;
+        
+        for (int i = 0; i<cloth.Vertices.Count; i++)
+        {
+            ref var pos = ref cloth.Vertices[i].Data.Position;
+            vertices[i].Texture = new Vector2(pos.X, pos.Z);
+        }
+    }
+
+    private void UpdateRenderVertices()
+    {
+        var vertices = clothRenderer.Vertices;
+        
+        for (int i = 0; i<cloth.Vertices.Count; i++)
+        {
+            vertices[i].Position = Conversion.FromJitter(cloth.Vertices[i].Position);
+        }
+        
+        clothRenderer.VerticesChanged();
+    }
+
     public void Draw()
     {
-        var dr = RenderWindow.Instance.DebugRenderer;
-
-        foreach (var spring in cloth.Springs)
-        {
-            dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(spring.Body1.Position),
-                Conversion.FromJitter(spring.Body2.Position));
-        }
+        UpdateRenderVertices();
+        clothRenderer.PushMatrix(Matrix4.Identity, Vector3.UnitY);
     }
 
     public void CleanUp()
