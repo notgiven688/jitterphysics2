@@ -19,7 +19,7 @@ public class Demo17 : IDemo, ICleanDemo
     private SoftBodyCloth cloth = null!;
     private World world = null!;
 
-    private Renderer.Cloth clothRenderer;
+    private Renderer.Cloth clothRenderer = null!;
     public void Build()
     {
         pg = (Playground)RenderWindow.Instance;

@@ -30,7 +30,7 @@ public class Cloth : CSMInstance
     public void SetIndices(TriangleVertexIndex[] indices)
     {
         IndexLen = indices.Length * 3;
-        Vao.ElementArrayBuffer.SetData(indices);
+        Vao.ElementArrayBuffer!.SetData(indices);
 
         uint largest = 0;
         for (int i = 0; i < indices.Length; i++)
