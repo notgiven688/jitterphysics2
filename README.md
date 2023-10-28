@@ -6,7 +6,7 @@ Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven6
 
 <img src="./media/screenshots/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot1.png" alt="screenshot" width="400"/>
 
-<img src="./media/screenshots/jitter_screenshot2.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot3.png" alt="screenshot" width="400"/>
+<img src="./media/screenshots/jitter_screenshot2.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot4.png" alt="screenshot" width="400"/>
 
 ## Getting Started
 
