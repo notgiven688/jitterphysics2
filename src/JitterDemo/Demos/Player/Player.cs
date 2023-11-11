@@ -118,29 +118,27 @@ public class Player
             FrictionMotor.IsEnabled = false;
             return;
         }
-
-        FrictionMotor.IsEnabled = true;
-
+        
         deltaMove *= 3.0f;
 
-        float moveLen = deltaMove.Length();
+        float deltaMoveLen = deltaMove.Length();
 
-        JVector deltaMove2 = Body.Velocity;
-        deltaMove2.Y = 0;
+        JVector bodyVel = Body.Velocity;
+        bodyVel.Y = 0;
 
-        float moveLen2 = deltaMove2.Length();
+        float bodyVelLen = bodyVel.Length();
 
-        if (moveLen > 0.01f)
+        if (deltaMoveLen > 0.01f)
         {
-            if (moveLen2 < 5f)
+            if (bodyVelLen < 5f)
             {
                 Body.AddForce(JVector.Transform(deltaMove, Body.Orientation) * 10);
             }
         }
 
-        if (moveLen2 > 0.01f)
+        if (bodyVelLen > 0.01f)
         {
-            FrictionMotor.LocalAxis1 = JVector.TransposedTransform(deltaMove2 * (1.0f / moveLen2), Body.Orientation);
+            FrictionMotor.LocalAxis1 = JVector.TransposedTransform(bodyVel * (1.0f / bodyVelLen), Body.Orientation);
             FrictionMotor.TargetVelocity = 0;
             FrictionMotor.IsEnabled = true;
         }
