@@ -28,6 +28,8 @@ public class Demo05 : IDemo
 
     private TriangleMesh tm = null!;
 
+    private Player player = null!;
+
     public List<Shape> CreateShapes()
     {
         var indices = tm.mesh.Indices;
@@ -62,8 +64,7 @@ public class Demo05 : IDemo
 
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
-
-
+        
         pg.ResetScene();
 
         RigidBody body = world.CreateRigidBody();
@@ -72,10 +73,24 @@ public class Demo05 : IDemo
         body.IsStatic = true;
 
         Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
+
+        player = new Player(world, new JVector(-6, 7, 32));
     }
 
     public void Draw()
     {
         tm.PushMatrix(Matrix4.Identity, new Vector3(0.35f, 0.35f, 0.35f));
+
+        Keyboard kb = Keyboard.Instance;
+
+        if (kb.IsKeyDown(Keyboard.Key.Left))  player.SetAngularInput(-1.0f);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
+        else player.SetAngularInput(0.0f);
+
+        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);
+        else player.SetLinearInput(JVector.Zero);
+        
+        if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();
     }
 }

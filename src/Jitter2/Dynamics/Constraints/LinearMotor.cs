@@ -68,9 +68,17 @@ public unsafe class LinearMotor : Constraint
         handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);
     }
 
-    public JVector LocalAxis1 => handle.Data.LocalAxis1;
+    public JVector LocalAxis1
+    {
+        get => handle.Data.LocalAxis1;
+        set => handle.Data.LocalAxis1 = value;
+    }
 
-    public JVector LocalAxis2 => handle.Data.LocalAxis2;
+    public JVector LocalAxis2
+    {
+        get => handle.Data.LocalAxis2;
+        set => handle.Data.LocalAxis2 = value;
+    }
 
     /// <summary>
     /// Initializes the constraint.
