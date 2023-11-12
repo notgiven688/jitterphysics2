@@ -129,7 +129,7 @@ public static class ShapeHelper
         inertia = JMatrix.Zero;
         mass = 0;
 
-        float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+        const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         foreach (JTriangle triangle in MakeHull(support, subdivisions))
