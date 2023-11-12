@@ -123,7 +123,7 @@ public static class ShapeHelper
     /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
     /// <param name="mass">Output parameter for the calculated mass.</param>
     public static void CalculateMassInertia(ISupportMap support, out JMatrix inertia, out JVector centerOfMass,
-        out float mass)
+        out float mass, int subdivisions = 4)
     {
         centerOfMass = JVector.Zero;
         inertia = JMatrix.Zero;
@@ -132,7 +132,7 @@ public static class ShapeHelper
         float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
-        foreach (JTriangle triangle in MakeHull(support))
+        foreach (JTriangle triangle in MakeHull(support, subdivisions))
         {
             JVector column0 = triangle.V0;
             JVector column1 = triangle.V1;
