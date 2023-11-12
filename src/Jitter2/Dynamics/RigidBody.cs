@@ -131,8 +131,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     private readonly int hashCode;
 
-    private static uint hashCounter;
-
     /// <summary>
     /// Gets or sets the world assigned to this body.
     /// </summary>
@@ -504,10 +502,32 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         this.mass = mass;
         UpdateWorldInertia();
     }
+    
+    private static Stack<JTriangle>? debugTriangles;
 
+    /// <summary>
+    /// Generates a rough triangle approximation of the shapes of the body.
+    /// Since the generation is slow this should only be used for debugging
+    /// purposes.
+    /// </summary>
     public void DebugDraw(IDebugDrawer drawer)
     {
-        throw new NotImplementedException();
+        debugTriangles ??= new Stack<JTriangle>();
+
+        foreach (var shape in this.shapes)
+        {
+            ShapeHelper.MakeHull(shape, debugTriangles, 3);
+
+            while (debugTriangles.Count > 0)
+            {
+                var tri = debugTriangles.Pop();
+                
+                drawer.DrawTriangle(
+                    JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
+                    JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
+                    JVector.Transform(tri.V2, Data.Orientation) + Data.Position);
+            }
+        }
     }
 
     /// <summary>
