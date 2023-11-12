@@ -32,12 +32,74 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public static class ShapeHelper
 {
-    private struct ClipTriangle
+    private const float GoldenRatio = 1.6180339887498948482045f;
+
+    private static readonly JVector[] icosahedronVertices = new JVector[12]
     {
-        public JVector V1;
-        public JVector V2;
-        public JVector V3;
-        public int Division;
+        new(0, +1, +GoldenRatio), new(0, -1, +GoldenRatio), new(0, +1, -GoldenRatio), new(0, -1, -GoldenRatio),
+        new(+1, +GoldenRatio, 0), new(+1, -GoldenRatio, 0), new(-1, +GoldenRatio, 0), new(-1, -GoldenRatio, 0),
+        new(+GoldenRatio, 0, +1), new(+GoldenRatio, 0, -1), new(-GoldenRatio, 0, +1), new(-GoldenRatio, 0, -1)
+    };
+
+    private static readonly int[,] icosahedronIndices = new int[20, 3]
+    {
+        { 1, 0, 10 }, { 0, 1, 8 }, { 0, 4, 6 }, { 4, 0, 8 }, { 0, 6, 10 }, { 5, 1, 7 }, { 1, 5, 8 }, { 7, 1, 10 },
+        { 2, 3, 11 }, { 3, 2, 9 }, { 4, 2, 6 }, { 2, 4, 9 }, { 6, 2, 11 }, { 3, 5, 7 }, { 5, 3, 9 }, { 3, 7, 11 },
+        { 4, 8, 9 }, { 8, 5, 9 }, { 10, 6, 11 }, { 7, 10, 11 }
+    };
+
+    /// <summary>
+    /// Calculates the convex hull of an implicitly defined shape.
+    /// </summary>
+    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <param name="stack">A stack to which the triangles are pushed too.</param>
+    public static void MakeHull(ISupportMap support, Stack<JTriangle> stack, int subdivisions = 3)
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            JVector v1 = icosahedronVertices[icosahedronIndices[i, 0]];
+            JVector v2 = icosahedronVertices[icosahedronIndices[i, 1]];
+            JVector v3 = icosahedronVertices[icosahedronIndices[i, 2]];
+            
+            support.SupportMap(v1, out JVector sv1);
+            support.SupportMap(v2, out JVector sv2);
+            support.SupportMap(v3, out JVector sv3);
+
+            Subdivide(support, stack, v1, v2, v3, sv1, sv2, sv3, subdivisions);
+        }
+    }
+
+    private static void Subdivide(ISupportMap support, Stack<JTriangle> stack,
+        JVector v1, JVector v2, JVector v3, JVector p1, JVector p2, JVector p3,
+        int subdivisions = 3)
+    {
+        if (subdivisions <= 1)
+        {
+            JVector n = (p3 - p1) % (p2 - p1);
+           
+            if (n.LengthSquared() > 1e-16f)
+            {
+                stack.Push(new JTriangle(p1, p2, p3));
+            }
+
+            return;
+        }
+        
+        JVector h1 = (v1 + v2) * 0.5f;
+        JVector h2 = (v2 + v3) * 0.5f;
+        JVector h3 = (v3 + v1) * 0.5f;
+        
+        support.SupportMap(h1, out JVector sp1);
+        support.SupportMap(h2, out JVector sp2);
+        support.SupportMap(h3, out JVector sp3);
+
+        subdivisions -= 1;
+
+        Subdivide(support, stack, v1, h1, h3, p1, sp1, sp3, subdivisions);
+        Subdivide(support, stack, h1, v2, h2, sp1, p2, sp2, subdivisions);
+        Subdivide(support, stack, h3, h2, v3, sp3, sp2, p3, subdivisions);
+        Subdivide(support, stack, h2, h3, h1, sp2, sp3, sp1, subdivisions);
     }
 
     /// <summary>
@@ -48,86 +110,9 @@ public static class ShapeHelper
     /// <returns>An enumeration of triangles forming the convex hull.</returns>
     public static IEnumerable<JTriangle> MakeHull(ISupportMap support, int subdivisions = 3)
     {
-        Stack<ClipTriangle> sphereTesselation = new();
-        float gr = (1.0f + MathF.Sqrt(5.0f)) / 2.0f;
-
-        JVector[] vertices = new JVector[12]
-        {
-            new(0, +1, +gr), new(0, -1, +gr), new(0, +1, -gr), new(0, -1, -gr),
-            new(+1, +gr, 0), new(+1, -gr, 0), new(-1, +gr, 0), new(-1, -gr, 0),
-            new(+gr, 0, +1), new(+gr, 0, -1), new(-gr, 0, +1), new(-gr, 0, -1)
-        };
-
-        int[,] indices = new int[20, 3]
-        {
-            { 1, 0, 10 }, { 0, 1, 8 }, { 0, 4, 6 }, { 4, 0, 8 }, { 0, 6, 10 }, { 5, 1, 7 }, { 1, 5, 8 }, { 7, 1, 10 },
-            { 2, 3, 11 }, { 3, 2, 9 }, { 4, 2, 6 }, { 2, 4, 9 }, { 6, 2, 11 }, { 3, 5, 7 }, { 5, 3, 9 }, { 3, 7, 11 },
-            { 4, 8, 9 }, { 8, 5, 9 }, { 10, 6, 11 }, { 7, 10, 11 }
-        };
-
-        for (int i = 0; i < 20; i++)
-        {
-            ClipTriangle tri = new()
-            {
-                V1 = vertices[indices[i, 0]],
-                V2 = vertices[indices[i, 1]],
-                V3 = vertices[indices[i, 2]],
-                Division = 0
-            };
-            sphereTesselation.Push(tri);
-        }
-
-        while (sphereTesselation.Count > 0)
-        {
-            ClipTriangle tri = sphereTesselation.Pop();
-
-            if (tri.Division < subdivisions)
-            {
-                ClipTriangle tri1, tri2, tri3, tri4;
-                JVector n;
-
-                tri1.Division = tri.Division + 1;
-                tri2.Division = tri.Division + 1;
-                tri3.Division = tri.Division + 1;
-                tri4.Division = tri.Division + 1;
-
-                tri1.V1 = tri.V1;
-                tri2.V2 = tri.V2;
-                tri3.V3 = tri.V3;
-
-                n = (tri.V1 + tri.V2) * 0.5f;
-                tri1.V2 = n;
-                tri2.V1 = n;
-                tri4.V3 = n;
-
-                n = (tri.V2 + tri.V3) * 0.5f;
-                tri2.V3 = n;
-                tri3.V2 = n;
-                tri4.V1 = n;
-
-                n = (tri.V3 + tri.V1) * 0.5f;
-                tri1.V3 = n;
-                tri3.V1 = n;
-                tri4.V2 = n;
-
-                sphereTesselation.Push(tri1);
-                sphereTesselation.Push(tri2);
-                sphereTesselation.Push(tri3);
-                sphereTesselation.Push(tri4);
-            }
-            else
-            {
-                support.SupportMap(tri.V1, out JVector p1);
-                support.SupportMap(tri.V2, out JVector p2);
-                support.SupportMap(tri.V3, out JVector p3);
-                JVector n = (p3 - p1) % (p2 - p1);
-
-                if (n.LengthSquared() > 1e-24d)
-                {
-                    yield return new JTriangle(p1, p2, p3);
-                }
-            }
-        }
+        Stack<JTriangle> triangles = new();
+        MakeHull(support, triangles, subdivisions);
+        return triangles;
     }
 
     /// <summary>
