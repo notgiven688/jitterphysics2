@@ -136,7 +136,7 @@ public class TransformedShape : Shape
 
         com = JVector.Transform(com, transformation) + translation;
         inertia = transformation * JMatrix.Multiply(inertia, JMatrix.Transpose(transformation));
-        JMatrix pat = Mass * (JMatrix.Identity * translation.LengthSquared() - JVector.Outer(translation, translation));
+        JMatrix pat = mass * (JMatrix.Identity * translation.LengthSquared() - JVector.Outer(translation, translation));
         inertia += pat;
     }
 }

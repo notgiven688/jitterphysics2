@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, edited]
 
 permissions:
   id-token: write
