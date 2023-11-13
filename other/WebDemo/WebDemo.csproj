@@ -1,21 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WasmAllowUndefinedSymbols>True</WasmAllowUndefinedSymbols>
+    <WasmMainJSPath>main.js</WasmMainJSPath>
   </PropertyGroup>
 
   <Choose>
     <When Condition=" $(Configuration) == 'Debug' ">
       <PropertyGroup>
-        <EmccFlags>-s USE_GLFW=3</EmccFlags>
+        <WasmEmitSymbolMap>true</WasmEmitSymbolMap>
+        <EmccFlags>-sUSE_GLFW=3 -sASYNCIFY=1 -sVERBOSE=1 -Wbad-function-cast -Wcast-function-type -O2 -g3 -sVERBOSE=1 -sINITIAL_MEMORY=128MB -sMAXIMUM_MEMORY=2048MB -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY_STACK_SIZE=10000000</EmccFlags>
       </PropertyGroup>
     </When>
     <When Condition=" $(Configuration) == 'Release' ">
       <PropertyGroup>
-        <EmccFlags>-s USE_GLFW=3</EmccFlags>
+        <EmccFlags>-s USE_GLFW=3 -sASYNCIFY=1 -O3</EmccFlags>
       </PropertyGroup>
     </When>
   </Choose>
