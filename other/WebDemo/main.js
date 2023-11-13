@@ -1,25 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 import { dotnet } from './_framework/dotnet.js'
 
-const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
+await dotnet
+    .withDebugging(1)
     .withDiagnosticTracing(false)
     .withApplicationArgumentsFromQuery()
     .create();
 
-setModuleImports('main.js', {
-    window: {
-        location: {
-            href: () => globalThis.window.location.href
-        }
-    }
-});
+dotnet.instance.Module['canvas'] = document.getElementById('canvas');
 
-const config = getConfig();
-const exports = await getAssemblyExports(config.mainAssemblyName);
-const text = exports.MyClass.Greeting();
-console.log(text);
+// We're ready to dotnet.run, so let's remove the spinner
+const loading_div = document.getElementById('spinner');
+loading_div.remove();
 
-document.getElementById('out').innerHTML = text;
 await dotnet.run();
