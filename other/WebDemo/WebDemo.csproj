@@ -7,6 +7,18 @@
     <WasmAllowUndefinedSymbols>True</WasmAllowUndefinedSymbols>
   </PropertyGroup>
 
+  <Choose>
+    <When Condition=" $(Configuration) == 'Debug' ">
+      <PropertyGroup>
+        <EmccFlags>-s USE_GLFW=3</EmccFlags>
+      </PropertyGroup>
+    </When>
+    <When Condition=" $(Configuration) == 'Release' ">
+      <PropertyGroup>
+        <EmccFlags>-s USE_GLFW=3</EmccFlags>
+      </PropertyGroup>
+    </When>
+  </Choose>
 
   <ItemGroup>
     <WasmExtraFilesToDeploy Include="index.html" />
