@@ -14,6 +14,7 @@ namespace Raylib_cs
         /// <summary>Initialize window and OpenGL context</summary>
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void InitWindow(int width, int height, sbyte* title);
+        
 
         /// <summary>Check if KEY_ESCAPE pressed or Close icon pressed</summary>
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
@@ -29,7 +30,7 @@ namespace Raylib_cs
 
         /// <summary>Draw text (using default font)</summary>
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void DrawText(sbyte* text, int posX, int posY, int fontSize, Color color);
+        public static extern void DrawText(string text, int posX, int posY, int fontSize, Color color);
 
         /// <summary>End canvas drawing and swap buffers (double buffering)</summary>
         [DllImport(nativeLibName, CallingConvention = CallingConvention.Cdecl)]

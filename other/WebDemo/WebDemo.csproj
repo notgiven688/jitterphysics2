@@ -4,10 +4,13 @@
     <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WasmAllowUndefinedSymbols>True</WasmAllowUndefinedSymbols>
   </PropertyGroup>
+
 
   <ItemGroup>
     <WasmExtraFilesToDeploy Include="index.html" />
     <WasmExtraFilesToDeploy Include="main.js" />
+    <NativeFileReference Include="./runtimes/raylib.a" />
   </ItemGroup>
 </Project>
