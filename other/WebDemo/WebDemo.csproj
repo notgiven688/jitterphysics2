@@ -33,11 +33,13 @@
     <WasmExtraFilesToDeploy Include="index.html" />
     <WasmExtraFilesToDeploy Include="main.js" />
     <NativeFileReference Include="./runtimes/raylib.a" />
+    <WasmFilesToIncludeInFileSystem Include="./assets/**/*.*" TargetPath="assets\%(RecursiveDir)\%(Filename)%(Extension)" />
   </ItemGroup>
 
 
 
   <ItemGroup>
+    <PackageReference Include="Jitter2" Version="2.0.1" />
     <PackageReference Include="Raylib-cs" Version="5.0.0" />
   </ItemGroup>
 
