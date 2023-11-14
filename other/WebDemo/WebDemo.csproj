@@ -2,12 +2,19 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <WasmMainJSPath>main.js</WasmMainJSPath>
     <OutputType>Exe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <WasmAllowUndefinedSymbols>True</WasmAllowUndefinedSymbols>
-    <WasmMainJSPath>main.js</WasmMainJSPath>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <WasmBuildNative>true</WasmBuildNative>
+    <WasmNativeStrip>true</WasmNativeStrip>
+    <EnableAggressiveTrimming>true</EnableAggressiveTrimming>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <!-- This is to basically disable globalization to exclude icudt.dat (1.5MB) and reduce size of dotnet.wasm -->
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
-
+  
   <Choose>
     <When Condition=" $(Configuration) == 'Debug' ">
       <PropertyGroup>
@@ -27,4 +34,12 @@
     <WasmExtraFilesToDeploy Include="main.js" />
     <NativeFileReference Include="./runtimes/raylib.a" />
   </ItemGroup>
+
+
+
+  <ItemGroup>
+    <PackageReference Include="Raylib-cs" Version="5.0.0" />
+  </ItemGroup>
+
+
 </Project>
