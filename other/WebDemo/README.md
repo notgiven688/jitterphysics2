@@ -1,26 +1,38 @@
-## .NET WebAssembly Browser app
+## Jitter2 in the browser
 
-## Build
+**Credits for raylib-cs in the browser and this README go to: https://github.com/disketteman/DotnetRaylibWasm**
 
-You can build the app from Visual Studio or from the command-line:
+## Local setup
 
+Make sure you have the latest version of .NET 7 for example from [here](https://dotnet.microsoft.com/en-us/download/dotnet/7.0), the prototype was built with:
 ```
-dotnet build -c Debug/Release
-```
-
-After building the app, the result is in the `bin/$(Configuration)/net8.0/browser-wasm/AppBundle` directory.
-
-## Run
-
-You can build the app from Visual Studio or the command-line:
-
-```
-dotnet run -c Debug/Release
+dotnet --version
+7.0.100
 ```
 
-Or you can start any static file server from the AppBundle directory:
+Install the official wasm tooling:
 
 ```
-dotnet tool install dotnet-serve
-dotnet serve -d:bin/$(Configuration)/net8.0/browser-wasm/AppBundle
+dotnet workload install wasm-tools
+dotnet workload install wasm-experimental
+```
+
+Install a tool to create ad-hoc http server to serve `application/wasm`:
+
+```
+dotnet tool install --global dotnet-serve
+```
+
+## Run it
+
+`publish` the solution. Don't use `build`. Publishing may take a while.
+
+```
+dotnet publish -C Release
+```
+
+To serve the files use this command:
+
+```
+dotnet serve --mime .wasm=application/wasm --mime .js=text/javascript --mime .json=application/json --directory ./bin/Release/net7.0/browser-wasm/AppBundle
 ```
