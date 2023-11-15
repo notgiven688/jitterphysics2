@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <WasmMainJSPath>main.js</WasmMainJSPath>
+    <OutputType>Exe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <WasmBuildNative>true</WasmBuildNative>
+    <WasmNativeStrip>true</WasmNativeStrip>
+    <EnableAggressiveTrimming>true</EnableAggressiveTrimming>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <!-- This is to basically disable globalization to exclude icudt.dat (1.5MB) and reduce size of dotnet.wasm -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  
+  <Choose>
+    <When Condition=" $(Configuration) == 'Debug' ">
+      <PropertyGroup>
+        <WasmEmitSymbolMap>true</WasmEmitSymbolMap>
+        <EmccFlags>-sUSE_GLFW=3 -sASYNCIFY=1 -sVERBOSE=1 -Wbad-function-cast -Wcast-function-type -O2 -g3 -sVERBOSE=1 -sINITIAL_MEMORY=128MB -sMAXIMUM_MEMORY=2048MB -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY_STACK_SIZE=10000000</EmccFlags>
+      </PropertyGroup>
+    </When>
+    <When Condition=" $(Configuration) == 'Release' ">
+      <PropertyGroup>
+        <EmccFlags>-s USE_GLFW=3 -sASYNCIFY=1 -O3</EmccFlags>
+      </PropertyGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <WasmExtraFilesToDeploy Include="index.html" />
+    <WasmExtraFilesToDeploy Include="main.js" />
+    <NativeFileReference Include="./runtimes/raylib.a" />
+    <WasmFilesToIncludeInFileSystem Include="./assets/**/*.*" TargetPath="assets\%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Jitter2" Version="2.0.1" />
+    <PackageReference Include="Raylib-cs" Version="4.2.0" />
+  </ItemGroup>
+
+</Project>
