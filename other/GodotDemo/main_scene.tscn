@@ -1,0 +1,54 @@
+[gd_scene load_steps=10 format=3 uid="uid://coyqv4677vx2l"]
+
+[ext_resource type="Texture2D" uid="uid://bmalqw2x4nhkw" path="res://assets/floor.png" id="1_cx0yb"]
+[ext_resource type="Script" path="res://Main.cs" id="1_jbr6b"]
+[ext_resource type="Material" uid="uid://drmul300eph46" path="res://box.material" id="2_ht1to"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bdasd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6v48f"]
+albedo_color = Color(0.34902, 0.505882, 0.717647, 1)
+albedo_texture = ExtResource("1_cx0yb")
+metallic = 0.29
+metallic_specular = 0.54
+roughness = 0.65
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_hoxee"]
+ground_color = Color(0.729412, 0.627451, 0.52549, 1)
+energy_multiplier = 4.35
+
+[sub_resource type="Sky" id="Sky_u73ht"]
+sky_material = SubResource("PhysicalSkyMaterial_hoxee")
+
+[sub_resource type="Environment" id="Environment_ekotd"]
+background_mode = 2
+sky = SubResource("Sky_u73ht")
+ambient_light_energy = 2.86
+
+[sub_resource type="BoxMesh" id="BoxMesh_0u3bq"]
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_jbr6b")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_bdasd")
+surface_material_override/0 = SubResource("StandardMaterial3D_6v48f")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.966823, -0.0320158, 0.253432, 0, 0.992115, 0.125333, -0.255446, -0.121175, 0.9592, 2.65486, 4.6383, 9.92122)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ekotd")
+
+[node name="TestCube" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49664, 0)
+visible = false
+mesh = SubResource("BoxMesh_0u3bq")
+surface_material_override/0 = ExtResource("2_ht1to")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.574853, -0.657468, 0.487113, 0.0171256, 0.604843, 0.796161, -0.818077, -0.449333, 0.358955, 7.26371, 4.83944, 0)
+light_energy = 1.61
+shadow_enabled = true
