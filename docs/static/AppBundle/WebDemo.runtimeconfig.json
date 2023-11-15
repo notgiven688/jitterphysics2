@@ -1,0 +1,36 @@
+{
+  "runtimeOptions": {
+    "tfm": "net7.0",
+    "includedFrameworks": [
+      {
+        "name": "Microsoft.NETCore.App",
+        "version": "7.0.13"
+      }
+    ],
+    "wasmHostProperties": {
+      "perHostConfig": [
+        {
+          "name": "browser",
+          "html-path": "index.html",
+          "Host": "browser"
+        }
+      ],
+      "runtimeArgs": [],
+      "mainAssembly": "WebDemo.dll"
+    },
+    "configProperties": {
+      "Microsoft.Extensions.DependencyInjection.VerifyOpenGenericServiceTrimmability": true,
+      "System.ComponentModel.TypeConverter.EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization": false,
+      "System.Globalization.Invariant": true,
+      "System.Globalization.PredefinedCulturesOnly": true,
+      "System.Resources.ResourceManager.AllowCustomResourceTypes": false,
+      "System.Runtime.InteropServices.BuiltInComInterop.IsSupported": false,
+      "System.Runtime.InteropServices.EnableConsumingManagedCodeFromNativeHosting": false,
+      "System.Runtime.InteropServices.EnableCppCLIHostActivation": false,
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false,
+      "System.StartupHookProvider.IsSupported": false,
+      "System.Threading.Thread.EnableAutoreleasePool": false,
+      "System.Text.Encoding.EnableUnsafeUTF7Encoding": false
+    }
+  }
+}
