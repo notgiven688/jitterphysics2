@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "WebDemo.dll",
   "assemblyRootFolder": "managed",
-  "debugLevel": -1,
+  "debugLevel": 0,
   "assets": [
     {
       "behavior": "assembly",
@@ -36,10 +36,6 @@
       "name": "WebDemo.dll"
     },
     {
-      "behavior": "assembly",
-      "name": "WebDemo.pdb"
-    },
-    {
       "virtualPath": "assets/lighting.fs",
       "behavior": "vfs",
       "name": "supportFiles/0_lighting.fs"
@@ -63,11 +59,6 @@
       "virtualPath": "runtimeconfig.bin",
       "behavior": "vfs",
       "name": "supportFiles/4_runtimeconfig.bin"
-    },
-    {
-      "virtualPath": "dotnet.js.symbols",
-      "behavior": "vfs",
-      "name": "supportFiles/5_dotnet.js.symbols"
     },
     {
       "virtualPath": "/usr/share/zoneinfo/",

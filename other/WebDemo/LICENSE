@@ -1,6 +1,6 @@
 The WebDemo uses the outstanding code from
 
-https://github.com/disketteman/DotnetRaylibWasm/blob/main/LICENSE
+https://github.com/disketteman/DotnetRaylibWasm
 
 to setup a wasm demo in the browser. License below.
 
