@@ -4,6 +4,10 @@
 
 Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven688/jitterphysics), is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
 
+Run a small demo directly [in the browser](https://jitterphysics.com/AppBundle/index.html) !
+
+---
+
 <img src="./media/screenshots/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot1.png" alt="screenshot" width="400"/>
 
 <img src="./media/screenshots/jitter_screenshot2.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot4.png" alt="screenshot" width="400"/>
