@@ -6,9 +6,11 @@ Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven6
 
 Run a small demo directly [in the browser](https://jitterphysics.com/AppBundle/index.html)! 
 
-There is also a tiny demo available for the [Godot engine](other/GodotDemo).
+There is a tiny demo available for the [Godot engine](other/GodotDemo).
 
-A [NuGet package](https://www.nuget.org/packages/Jitter2) is available.
+A [quick start for raylib](https://jitterphysics.com/docs/quickstart/hello-world) is also available.
+
+The official **NuGet** package can be found [here](https://www.nuget.org/packages/Jitter2).
 
 See below for a fully-featured demo.
 

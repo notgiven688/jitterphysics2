@@ -56,7 +56,7 @@ public partial class JitterCubes : MultiMeshInstance3D
 	}
 }
 
-public partial class Main : Node3D
+public partial class Program : Node3D
 {
 	private World world = null!;
 	private JitterCubes jitterCubes = null!;

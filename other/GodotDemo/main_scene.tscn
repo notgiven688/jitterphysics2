@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://coyqv4677vx2l"]
 
 [ext_resource type="Texture2D" uid="uid://bmalqw2x4nhkw" path="res://assets/floor.png" id="1_cx0yb"]
-[ext_resource type="Script" path="res://Main.cs" id="1_jbr6b"]
+[ext_resource type="Script" path="res://Program.cs" id="1_q0tim"]
 [ext_resource type="Material" uid="uid://drmul300eph46" path="res://box.material" id="2_ht1to"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_bdasd"]
@@ -29,7 +29,7 @@ ambient_light_energy = 2.86
 [sub_resource type="BoxMesh" id="BoxMesh_0u3bq"]
 
 [node name="Node3D" type="Node3D"]
-script = ExtResource("1_jbr6b")
+script = ExtResource("1_q0tim")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
