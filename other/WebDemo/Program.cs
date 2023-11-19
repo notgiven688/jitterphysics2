@@ -74,7 +74,6 @@ Camera3D camera = new()
     Up = new Vector3(0.0f, 1.0f, 0.0f),
     FovY = 45.0f,
     Projection = CameraProjection.CAMERA_PERSPECTIVE
-    
 };
 
 // Load models and texture
@@ -85,10 +84,10 @@ Model modelSphere = LoadModelFromMesh(GenMeshSphere(0.5f, 32, 32));
 var img = LoadImage("assets/texel_checker.png");
 
 Texture2D texture = LoadTextureFromImage(img);
-Texture2D textureSmall = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 256, 256)));
+Texture2D textureQ = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 512, 512)));
 
 // Assign texture to default model material
-Raylib.SetMaterialTexture(ref modelCube, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref textureSmall);
+Raylib.SetMaterialTexture(ref modelCube, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref textureQ);
 Raylib.SetMaterialTexture(ref modelSphere, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref texture);
 Raylib.SetMaterialTexture(ref modelPlane, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref texture);
 
