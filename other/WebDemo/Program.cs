@@ -82,8 +82,10 @@ Model modelPlane = LoadModelFromMesh(GenMeshPlane(12, 12, 1, 1));
 Model modelCube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
 Model modelSphere = LoadModelFromMesh(GenMeshSphere(0.5f, 32, 32));
 
-Texture2D texture = LoadTexture("assets/texel_checker.png");
-Texture2D textureSmall = LoadTexture("assets/texel_checker_small.png");
+var img = LoadImage("assets/texel_checker.png");
+
+Texture2D texture = LoadTextureFromImage(img);
+Texture2D textureSmall = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 256, 256)));
 
 // Assign texture to default model material
 Raylib.SetMaterialTexture(ref modelCube, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref textureSmall);
