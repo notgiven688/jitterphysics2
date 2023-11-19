@@ -75,11 +75,11 @@ for(int i = 0; i < NumberOfBoxes; i++)
 // create a camera
 Camera3D camera = new ()
 {
-    position = new Vector3(-20.0f, 8.0f, 10.0f),
-    target = new Vector3(0.0f, 4.0f, 0.0f),
-    up = new Vector3(0.0f, 1.0f, 0.0f),
-    fovy = 45.0f,
-    projection = CameraProjection.CAMERA_PERSPECTIVE
+    Position = new Vector3(-20.0f, 8.0f, 10.0f),
+    Target = new Vector3(0.0f, 4.0f, 0.0f),
+    Up = new Vector3(0.0f, 1.0f, 0.0f),
+    FovY = 45.0f,
+    Projection = CameraProjection.CAMERA_PERSPECTIVE
 };
 
 // 100 fps target

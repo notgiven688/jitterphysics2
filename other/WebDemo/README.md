@@ -2,13 +2,9 @@
 
 **Credits for raylib-cs in the browser and this README go to: https://github.com/disketteman/DotnetRaylibWasm**
 
-## Local setup
+## Setup
 
-Make sure you have the latest version of .NET 7 for example from [here](https://dotnet.microsoft.com/en-us/download/dotnet/7.0), the prototype was built with:
-```
-dotnet --version
-7.0.100
-```
+Make sure you have the latest version of .NET 7.
 
 Install the official wasm tooling:
 
@@ -28,7 +24,7 @@ dotnet tool install --global dotnet-serve
 `publish` the solution. Don't use `build`. Publishing may take a while.
 
 ```
-dotnet publish -C Release
+dotnet publish -c Release
 ```
 
 To serve the files use this command:

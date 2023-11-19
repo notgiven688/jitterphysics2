@@ -22,12 +22,12 @@ First, create a new directory named "BoxDrop" and navigate into it:
 mkdir BoxDrop && cd BoxDrop
 ```
 
-Next, create a new console application in this directory and add Raylib# and Jitter2:
+Next, create a new console application in this directory and add Raylib-cs and Jitter2:
 
 ```sh
 dotnet new console
-dotnet add package Raylib-cs --version 4.5.0.4
-dotnet add package Jitter2 --version 2.0.0-alpha
+dotnet add package Raylib-cs --version 5.0.0
+dotnet add package Jitter2 --version 2.0.1
 ```
 
 You have completed the setup. If you now execute the following command:

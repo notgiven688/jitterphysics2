@@ -51,14 +51,9 @@
       "name": "supportFiles/2_texel_checker.png"
     },
     {
-      "virtualPath": "assets/texel_checker_small.png",
-      "behavior": "vfs",
-      "name": "supportFiles/3_texel_checker_small.png"
-    },
-    {
       "virtualPath": "runtimeconfig.bin",
       "behavior": "vfs",
-      "name": "supportFiles/4_runtimeconfig.bin"
+      "name": "supportFiles/3_runtimeconfig.bin"
     },
     {
       "virtualPath": "/usr/share/zoneinfo/",

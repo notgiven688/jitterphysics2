@@ -59,6 +59,8 @@ public static class Rlights
         return light;
     }
 
+    private static float[] colors = new float[4];
+
     public static void UpdateLightValues(Shader shader, Light light)
     {
         // Send to shader light enabled state and type
@@ -77,13 +79,11 @@ public static class Rlights
         Raylib.SetShaderValue(shader, light.TargetLoc, light.Target, ShaderUniformDataType.SHADER_UNIFORM_VEC3);
 
         // Send to shader light color values
-        float[] color = new[]
-        {
-                (float)light.Color.r / (float)255,
-                (float)light.Color.g / (float)255,
-                (float)light.Color.b / (float)255,
-                (float)light.Color.a / (float)255
-            };
-        Raylib.SetShaderValue(shader, light.ColorLoc, color, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
+        colors[0] = (float)light.Color.R / 255.0f;
+        colors[1] = (float)light.Color.G / 255.0f;
+        colors[2] = (float)light.Color.B / 255.0f;
+        colors[3] = (float)light.Color.A / 255.0f;
+
+        Raylib.SetShaderValue(shader, light.ColorLoc, colors, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
     }
 }
