@@ -79,10 +79,10 @@ public static class Rlights
         // Send to shader light color values
         float[] color = new[]
         {
-                (float)light.Color.r / (float)255,
-                (float)light.Color.g / (float)255,
-                (float)light.Color.b / (float)255,
-                (float)light.Color.a / (float)255
+                (float)light.Color.R / (float)255,
+                (float)light.Color.G / (float)255,
+                (float)light.Color.B / (float)255,
+                (float)light.Color.A / (float)255
             };
         Raylib.SetShaderValue(shader, light.ColorLoc, color, ShaderUniformDataType.SHADER_UNIFORM_VEC4);
     }

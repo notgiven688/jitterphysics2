@@ -69,11 +69,11 @@ InitWindow(screenWidth, screenHeight, "Jitter2 Demo");
 // Define the camera to look into our 3d world
 Camera3D camera = new()
 {
-    position = new Vector3(2.0f, 8.0f, -16.0f),
-    target = new Vector3(0.0f, 0.5f, 0.0f),
-    up = new Vector3(0.0f, 1.0f, 0.0f),
-    fovy = 45.0f,
-    projection = CameraProjection.CAMERA_PERSPECTIVE
+    Position = new Vector3(2.0f, 8.0f, -16.0f),
+    Target = new Vector3(0.0f, 0.5f, 0.0f),
+    Up = new Vector3(0.0f, 1.0f, 0.0f),
+    FovY = 45.0f,
+    Projection = CameraProjection.CAMERA_PERSPECTIVE
     
 };
 
@@ -95,8 +95,8 @@ Shader shader = LoadShader("assets/lighting.vs", "assets/lighting.fs");
 
 unsafe
 {
-    shader.locs[(int)ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL] = GetShaderLocation(shader, "matModel");
-    shader.locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
+    shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL] = GetShaderLocation(shader, "matModel");
+    shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
 }
 
 // Ambient light level
@@ -120,7 +120,7 @@ SetTargetFPS(60);
 
 InitWorld();
 
-SetCameraMode(camera, CameraMode.CAMERA_ORBITAL);
+//SetCamera(camera, CameraMode.CAMERA_ORBITAL);
 
 //--------------------------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ while (!WindowShouldClose())
     // Update
     //----------------------------------------------------------------------------------
 
-    UpdateCamera(ref camera);
+    UpdateCamera(ref camera, CameraMode.CAMERA_ORBITAL);
 
     // if (IsKeyPressed(KeyboardKey.KEY_SPACE))
     // {
@@ -148,8 +148,8 @@ while (!WindowShouldClose())
         // Update the light shader with the camera view position
         Raylib.SetShaderValue(
             shader,
-            shader.locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW],
-            camera.position,
+            shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW],
+            camera.Position,
             ShaderUniformDataType.SHADER_UNIFORM_VEC3
         );
     }
@@ -170,12 +170,12 @@ while (!WindowShouldClose())
 
         if (body.Shapes[0] is BoxShape)
         {
-            modelCube.transform = GetRayLibTransformMatrix(body);
+            modelCube.Transform = GetRayLibTransformMatrix(body);
             DrawModel(modelCube, Vector3.Zero, 1.0f, Color.WHITE);
         }
         else if (body.Shapes[0] is SphereShape)
         {
-            modelSphere.transform = GetRayLibTransformMatrix(body);
+            modelSphere.Transform = GetRayLibTransformMatrix(body);
             DrawModel(modelSphere, Vector3.Zero, 1.0f, Color.WHITE);
         }
     }
