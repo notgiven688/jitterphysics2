@@ -1,15 +1,8 @@
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
-using Jitter2.Dynamics;
-using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
-using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
-using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
@@ -17,10 +10,11 @@ public class Demo18 : IDemo
 {
     public void Draw()
     {
+        float time = (float)pg.Time;
         
-        JMatrix ori = JMatrix.CreateRotationX((float)pg.Time) * JMatrix.CreateRotationY(2.1f *(float)pg.Time)
-                                                              * JMatrix.CreateRotationZ(3.1f *(float)pg.Time);
-
+        JMatrix ori = JMatrix.CreateRotationX(1.1f * time) *
+                      JMatrix.CreateRotationY(2.1f * time) *
+                      JMatrix.CreateRotationZ(1.7f * time);
         
         for (int i = -15; i < 16; i++)
         {
@@ -37,15 +31,9 @@ public class Demo18 : IDemo
                         pg.DebugRenderer.PushPoint(DebugRenderer.Color.White,
                             Conversion.FromJitter(point), 0.01f);
                     }
-                    else
-                    {
-
-                    }
-
                 }
             }
         }
-
     }
 
     public string Name => "PointTest";
@@ -53,22 +41,14 @@ public class Demo18 : IDemo
     private Playground pg = null!;
     private World world = null!;
     
-
     private Shape testShape;
-
 
     public void Build()
     {
         pg = (Playground)RenderWindow.Instance;
         world = pg.World;
 
-        testShape = new ConeShape(1f, 1);
-        
-
+        testShape = new ConeShape(1f);
         pg.ResetScene(false);
-
     }
-    
-
-
 }
