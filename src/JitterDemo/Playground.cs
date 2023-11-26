@@ -46,7 +46,8 @@ public partial class Playground : RenderWindow
         new Demo14(),
         new Demo15(),
         new Demo16(),
-        new Demo17()
+        new Demo17(),
+        new Demo18()
     };
 
     private IDemo? currentDemo;

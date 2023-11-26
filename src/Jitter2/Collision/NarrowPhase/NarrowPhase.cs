@@ -40,49 +40,73 @@ public static class NarrowPhase
     {
         public MinkowskiDifference MKD;
         public ConvexPolytope ConvexPolytope;
-        
-        public bool Pointcast(in JVector point)
+
+        public bool PointTest(in JVector point)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
-            JVector r = point;
-
-            MKD.SupportA.SupportMap(-r, out JVector arbitraryPoint);
-            JVector.Subtract(r, arbitraryPoint, out JVector v);
+            JVector center = MKD.SupportA.GeometricCenter - point;
 
             ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
+            ConvexPolytope.InitTetrahedron(center);
 
-            int maxIter = MaxIter;
-            float distSq = v.LengthSquared();
+            int iter = 0;
 
-            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            Unsafe.SkipInit(out ConvexPolytope.Triangle ctri);
+
+            while (++iter < MaxIter)
             {
-                MKD.SupportA.SupportMap(v, out JVector p);
-                JVector.Subtract(r, p, out JVector w);
+                ctri = ConvexPolytope.GetClosestTriangle();
+                JVector searchDir = ctri.ClosestToOrigin;
 
-                float VdotW = JVector.Dot(v, w);
-
-                if (VdotW > 0.0f)
+                if (ConvexPolytope.OriginEnclosed)
                 {
-                    float VdotR = JVector.Dot(v, r);
-
-                    if (VdotR >= -NumericEpsilon)
-                    {
-                        return false;
-                    }
+                    // early out (1) - here we know that
+                    // the origin is inside the minkowski sum, even though
+                    // we did not fully expand the polytope. Since we are not interested
+                    // in the distance/normal we can exit here.
+                    return true;
                 }
 
-                ConvexPolytope.AddPoint(w);
-                ref var tri = ref ConvexPolytope.GetClosestTriangle();
-                v = tri.ClosestToOrigin;
-                distSq = VdotW / v.Length();
+                searchDir.Negate();
+
+                if (ctri.ClosestToOriginSq < NumericEpsilon)
+                {
+                    searchDir = ctri.Normal;
+                }
+
+                MKD.SupportA.SupportMap(searchDir, out JVector vertex);
+                vertex -= point;
+                
+                if (JVector.Dot(searchDir, vertex) < 0.0f)
+                {
+                    // early out (2) - here we know that
+                    // the origin must be outside of the minkowski sum, even though
+                    // we did not fully expand the polytope. Since we are not interested
+                    // in the distance/normal we can exit here.
+                    return false;
+                }
+
+                float deltaDist = ctri.ClosestToOriginSq - JVector.Dot(vertex, ctri.ClosestToOrigin);
+                
+                if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * ctri.ClosestToOriginSq)
+                {
+                    goto converged;
+                }
+
+                if (!ConvexPolytope.AddPoint(vertex))
+                {
+                    goto converged;
+                }
             }
 
-            return true;
+            Trace.WriteLine($"PointTest: Could not converge within {MaxIter} iterations.");
+
+            converged:
+
+            return ConvexPolytope.OriginEnclosed;
         }
-        
 
         public bool Raycast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
@@ -517,23 +541,21 @@ public static class NarrowPhase
         }
     }
 
-    // ------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------
     [ThreadStatic] private static Solver solver;
-    
+
     /// <summary>
     /// Check if a point is inside a shape.
     /// </summary>
     /// <param name="support">Support map representing the shape.</param>
     /// <param name="point">Point to check.</param>
-    /// <param name="distance">The closest distance of the point to the shape surface. Zero
-    /// when the point is contained within the shape.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool Pointcast(ISupportMap support, in JVector point)
+    public static bool PointTest(ISupportMap support, in JVector point)
     {
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
-        
-        return solver.Pointcast(point);
+
+        return solver.PointTest(point);
     }
 
     /// <summary>
@@ -543,18 +565,16 @@ public static class NarrowPhase
     /// <param name="orientation">Orientation of the shape.</param>
     /// <param name="position">Position of the shape.</param>
     /// <param name="point">Point to check.</param>
-    /// <param name="distance">The closest distance of the point to the shape surface. Zero
-    /// when the point is contained within the shape.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool Pointcast(ISupportMap support, in JMatrix orientation,
+    public static bool PointTest(ISupportMap support, in JMatrix orientation,
         in JVector position, in JVector point)
     {
-        JVector torigin = JVector.TransposedTransform(point - position, orientation);
+        JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
 
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
 
-        return solver.Pointcast(torigin);
+        return solver.PointTest(transformedOrigin);
     }
 
     /// <summary>
