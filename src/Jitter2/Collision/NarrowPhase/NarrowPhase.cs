@@ -40,6 +40,49 @@ public static class NarrowPhase
     {
         public MinkowskiDifference MKD;
         public ConvexPolytope ConvexPolytope;
+        
+        public bool Pointcast(in JVector point)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            JVector r = point;
+
+            MKD.SupportA.SupportMap(-r, out JVector arbitraryPoint);
+            JVector.Subtract(r, arbitraryPoint, out JVector v);
+
+            ConvexPolytope.InitHeap();
+            ConvexPolytope.InitTetrahedron(v);
+
+            int maxIter = MaxIter;
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                MKD.SupportA.SupportMap(v, out JVector p);
+                JVector.Subtract(r, p, out JVector w);
+
+                float VdotW = JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    float VdotR = JVector.Dot(v, r);
+
+                    if (VdotR >= -NumericEpsilon)
+                    {
+                        return false;
+                    }
+                }
+
+                ConvexPolytope.AddPoint(w);
+                ref var tri = ref ConvexPolytope.GetClosestTriangle();
+                v = tri.ClosestToOrigin;
+                distSq = VdotW / v.Length();
+            }
+
+            return true;
+        }
+        
 
         public bool Raycast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
@@ -476,6 +519,43 @@ public static class NarrowPhase
 
     // ------------------------------------------------------------------------------------------------------------
     [ThreadStatic] private static Solver solver;
+    
+    /// <summary>
+    /// Check if a point is inside a shape.
+    /// </summary>
+    /// <param name="support">Support map representing the shape.</param>
+    /// <param name="point">Point to check.</param>
+    /// <param name="distance">The closest distance of the point to the shape surface. Zero
+    /// when the point is contained within the shape.</param>
+    /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    public static bool Pointcast(ISupportMap support, in JVector point)
+    {
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+        
+        return solver.Pointcast(point);
+    }
+
+    /// <summary>
+    /// Check if a point is inside a shape.
+    /// </summary>
+    /// <param name="support">Support map representing the shape.</param>
+    /// <param name="orientation">Orientation of the shape.</param>
+    /// <param name="position">Position of the shape.</param>
+    /// <param name="point">Point to check.</param>
+    /// <param name="distance">The closest distance of the point to the shape surface. Zero
+    /// when the point is contained within the shape.</param>
+    /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    public static bool Pointcast(ISupportMap support, in JMatrix orientation,
+        in JVector position, in JVector point)
+    {
+        JVector torigin = JVector.TransposedTransform(point - position, orientation);
+
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+
+        return solver.Pointcast(torigin);
+    }
 
     /// <summary>
     /// Performs a raycast against a shape.
