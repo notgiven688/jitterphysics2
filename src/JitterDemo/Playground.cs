@@ -47,7 +47,7 @@ public partial class Playground : RenderWindow
         new Demo15(),
         new Demo16(),
         new Demo17(),
-        new Demo18()
+        // new Demo18() // point testing
     };
 
     private IDemo? currentDemo;
