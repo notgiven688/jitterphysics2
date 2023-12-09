@@ -119,7 +119,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal float angularDampingMultiplier = 0.995f;
 
     internal JMatrix inverseInertia = JMatrix.Identity;
-    internal float mass = 1.0f;
+    internal float inverseMass = 1.0f;
 
     /// <summary>
     /// Gets the list of shapes added to this rigid body.
@@ -291,7 +291,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         {
             JMatrix.Multiply(Data.Orientation, inverseInertia, out Data.InverseInertiaWorld);
             JMatrix.MultiplyTransposed(Data.InverseInertiaWorld, Data.Orientation, out Data.InverseInertiaWorld);
-            Data.InverseMass = 1.0f / mass;
+            Data.InverseMass = inverseMass;
         }
     }
 
@@ -493,7 +493,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
 
         JMatrix.Inverse(inertia, out inverseInertia);
-        this.mass = mass;
+        this.inverseMass = 1.0f / mass;
 
         UpdateWorldInertia();
     }
@@ -503,20 +503,51 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public void SetMassInertia(float mass)
     {
+        if (mass <= 0.0f)
+        {
+            // we do not protect against NaN here, since it is the users responsibility
+            // to not feed NaNs to the engine.
+            throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
+        }
+        
         SetMassInertia();
         inverseInertia = JMatrix.Multiply(inverseInertia, 1.0f / (Data.InverseMass * mass));
-        this.mass = mass;
+        this.inverseMass = 1.0f / mass;
         UpdateWorldInertia();
     }
 
     /// <summary>
     /// Sets the new mass properties of this body by specifying both inertia and mass directly.
     /// </summary>
-    public void SetMassInertia(in JMatrix inertia, float mass)
+    /// <param name="setAsInverse">Set the inverse values.</param>
+    /// <exception cref="ArgumentException"></exception>
+    public void SetMassInertia(in JMatrix inertia, float mass, bool setAsInverse = false)
     {
-        JMatrix.Inverse(inertia, out JMatrix invinertia);
-        inverseInertia = invinertia;
-        this.mass = mass;
+        if (setAsInverse)
+        {
+            if (float.IsInfinity(mass) || mass < 0.0f)
+            {
+                throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
+            }
+            
+            this.inverseInertia = inertia;
+            this.inverseMass = mass;
+        }
+        else
+        {
+            if (mass <= 0.0f)
+            {
+                throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
+            }
+            
+            if (!JMatrix.Inverse(inertia, out inverseInertia))
+            {
+                throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
+            }
+            
+            this.inverseMass = 1.0f / mass;
+        }
+
         UpdateWorldInertia();
     }
     
@@ -550,9 +581,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Gets the mass of the rigid body. To modify the mass, use 
     /// <see cref="RigidBody.SetMassInertia(float)"/> or 
-    /// <see cref="RigidBody.SetMassInertia(in JMatrix, float)"/>.
+    /// <see cref="RigidBody.SetMassInertia(in JMatrix, float, bool)"/>.
     /// </summary>
-    public float Mass => mass;
+    public float Mass => 1.0f / inverseMass;
 
     int IListIndex.ListIndex { get; set; } = -1;
 }

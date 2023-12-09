@@ -221,7 +221,6 @@ public partial class World
         RigidBodies = new ReadOnlyActiveList<RigidBody>(bodies);
 
         NullBody = CreateRigidBody();
-        NullBody.SetMassInertia(float.PositiveInfinity);
         NullBody.IsStatic = true;
 
         Shapes = new ReadOnlyActiveList<Shape>(shapes);
