@@ -32,33 +32,12 @@ public class Demo19 : IDemo
                 dr.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(origin + frac * dir), 0.2f);
             }
         }
-
-        JVector offset = new JVector(0.1f, 0.2f, 0.3f);
-
-        Raycast(new JVector(0, 0.5f, 0) + offset, box.Position - offset);
-    }
-
-    private void Raycast(JVector from, JVector to)
-    {
-        var dr = pg.DebugRenderer;
-        bool hit = world.Raycast(from, to - from, null, null, out Shape? shape,
-            out JVector normal, out float frac);
-
-        dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(from),
-            Conversion.FromJitter(to));
-
-        if (hit)
-        {
-            dr.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(from + frac * (to - from)), 0.2f);
-        }
     }
 
     public string Name => "RaycastTest";
 
     private Playground pg = null!;
     private World world = null!;
-
-    private Shape testShape;
 
     private RigidBody box = null!;
 
@@ -67,7 +46,6 @@ public class Demo19 : IDemo
         pg = (Playground)RenderWindow.Instance;
         world = pg.World;
 
-        testShape = new ConeShape(1f);
         pg.ResetScene();
 
         box = world.CreateRigidBody();
