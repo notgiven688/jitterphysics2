@@ -40,6 +40,47 @@ public static class NarrowPhase
     {
         public MinkowskiDifference MKD;
         public ConvexPolytope ConvexPolytope;
+        
+        public bool PointTest(in JVector origin)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            JVector x = origin;
+
+            var center = MKD.SupportA.GeometricCenter;
+            JVector v = x - center;
+
+            ConvexPolytope.InitHeap();
+            ConvexPolytope.InitTetrahedron(v);
+
+            int maxIter = MaxIter;
+
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                MKD.SupportA.SupportMap(v, out JVector p);
+                JVector.Subtract(x, p, out JVector w);
+
+                float vw = JVector.Dot(v, w);
+
+                if (vw >= 0.0f)
+                {
+                    return false;
+                }
+
+                if (!ConvexPolytope.AddPoint(w)) return false;
+
+                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+
+                if (ConvexPolytope.OriginEnclosed) return true;
+
+                distSq = v.LengthSquared();
+            }
+
+            return true;
+        }
 
         public bool Raycast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
@@ -53,10 +94,9 @@ public static class NarrowPhase
 
             JVector r = direction;
             JVector x = origin;
-
-            MKD.SupportA.SupportMap(r, out JVector arbitraryPoint);
-
-            JVector.Subtract(x, arbitraryPoint, out JVector v);
+            
+            var center = MKD.SupportA.GeometricCenter;
+            JVector v = x - center;
 
             ConvexPolytope.InitHeap();
             ConvexPolytope.InitTetrahedron(v);
@@ -99,8 +139,12 @@ public static class NarrowPhase
 
             fraction = lambda;
 
-            if (normal.LengthSquared() > NumericEpsilon)
-                normal.Normalize();
+            float nlen2 = normal.LengthSquared();
+            
+            if (nlen2 > NumericEpsilon)
+            {
+                normal *= 1.0f / MathF.Sqrt(nlen2);
+            }
 
             return true;
         }
@@ -476,6 +520,39 @@ public static class NarrowPhase
 
     // ------------------------------------------------------------------------------------------------------------
     [ThreadStatic] private static Solver solver;
+    
+    /// <summary>
+    /// Check if a point is inside a shape.
+    /// </summary>
+    /// <param name="support">Support map representing the shape.</param>
+    /// <param name="point">Point to check.</param>
+    /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    public static bool PointTest(ISupportMap support, in JVector point)
+    {
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+
+        return solver.PointTest(point);
+    }
+
+    /// <summary>
+    /// Check if a point is inside a shape.
+    /// </summary>
+    /// <param name="support">Support map representing the shape.</param>
+    /// <param name="orientation">Orientation of the shape.</param>
+    /// <param name="position">Position of the shape.</param>
+    /// <param name="point">Point to check.</param>
+    /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    public static bool PointTest(ISupportMap support, in JMatrix orientation,
+        in JVector position, in JVector point)
+    {
+        JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
+
+        solver.MKD.SupportA = support;
+        solver.MKD.SupportB = null!;
+        
+        return solver.PointTest(transformedOrigin);
+    }
 
     /// <summary>
     /// Performs a raycast against a shape.

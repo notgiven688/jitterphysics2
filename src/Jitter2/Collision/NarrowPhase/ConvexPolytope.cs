@@ -63,8 +63,8 @@ public unsafe struct ConvexPolytope
         public Vertex(JVector v)
         {
 #if NET6_0
-            System.Runtime.CompilerServices.Unsafe.SkipInit(out A);
-            System.Runtime.CompilerServices.Unsafe.SkipInit(out B);
+            A = new JVector();
+            B = new JVector();
 #endif
             V = v;
         }
