@@ -41,7 +41,7 @@ public class Demo18 : IDemo
     private Playground pg = null!;
     private World world = null!;
 
-    private Shape testShape;
+    private Shape testShape = null!;
 
     public void Build()
     {
