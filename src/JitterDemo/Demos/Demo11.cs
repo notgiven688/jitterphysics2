@@ -43,8 +43,8 @@ public class Demo11 : IDemo
         world.NumberSubsteps = 10;
         world.SolverIterations = 4;
 
-        b0.Damping = (1, 1);
-        b1.Damping = (1, 1);
+        b0.Damping = (0, 0);
+        b1.Damping = (0, 0);
     }
 
     public void Draw()

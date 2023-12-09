@@ -269,8 +269,8 @@ public partial class World
 
             if (!rigidBody.IsStatic && rigidBody.IsActive)
             {
-                rigidBody.AngularVelocity *= body.angularDamping;
-                rigidBody.Velocity *= body.linearDamping;
+                rigidBody.AngularVelocity *= body.angularDampingMultiplier;
+                rigidBody.Velocity *= body.linearDampingMultiplier;
 
                 rigidBody.DeltaVelocity = body.Force * rigidBody.InverseMass * substep_dt;
                 rigidBody.DeltaAngularVelocity = JVector.Transform(body.Torque, rigidBody.InverseInertiaWorld) * substep_dt;

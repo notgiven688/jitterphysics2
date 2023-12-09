@@ -53,7 +53,7 @@ public static class Helper
             //body.AddShape(new BoxShape(1));
             last.Position = new JVector(0, 0.5f + i * 0.99f, 0);
             last.AddShape(new BoxShape(1));
-            last.Damping = (0.998f, 0.998f);
+            last.Damping = (0.002f, 0.002f);
 
             if (i == 0) last.IsStatic = true;
         }

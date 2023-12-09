@@ -32,7 +32,7 @@ public class Demo09 : IDemo
             body.AddShape(new BoxShape(0.5f));
             body.Position = new JVector(-10 + i * 1, 4, -10);
             body.Restitution = i * 0.1f;
-            body.Damping = (0.999f, 0.999f);
+            body.Damping = (0.001f, 0.001f);
         }
 
         for (int i = 0; i < 11; i++)
@@ -42,7 +42,7 @@ public class Demo09 : IDemo
             body.Position = new JVector(2 + i, 0.25f, 0);
             body.Friction = 1.0f - i * 0.1f;
             body.Velocity = new JVector(0, 0, -10);
-            body.Damping = (0.999f, 0.999f);
+            body.Damping = (0.001f, 0.001f);
         }
     }
 
