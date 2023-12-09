@@ -112,7 +112,7 @@ public class RaycastCar
         Body.Position = new JVector(0, 0.5f, -4);
         Body.SetMassInertia(inertia, mass);
 
-        Body.Damping = (0.9999f, 0.9999f);
+        Body.Damping = (0.0001f, 0.0001f);
 
         // create default wheels
         Wheels[0] = new Wheel(world, Body, new JVector(-1.3f, 0.1f, -2.5f), 0.60f);

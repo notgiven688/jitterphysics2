@@ -25,7 +25,7 @@ public class Player
         Body.Position = position;
         
         // disable velocity damping
-        Body.Damping = (1, 1);
+        Body.Damping = (0, 0);
 
         this.capsuleHalfHeight = cs.Radius + cs.Length * 0.5f;
 

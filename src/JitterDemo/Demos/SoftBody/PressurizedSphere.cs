@@ -49,7 +49,7 @@ public class SoftBodySphere : SoftBodyCloth
         foreach (var rb in Vertices)
         {
             rb.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
-            rb.Damping = (1, 0.99f);
+            rb.Damping = (0.001f, 0);
         }
 
         foreach (var spring in Springs)

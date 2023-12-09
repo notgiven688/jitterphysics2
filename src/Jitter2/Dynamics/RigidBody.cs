@@ -115,8 +115,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal float inactiveThresholdAngularSq = 0.1f;
     internal float deactivationTimeThreshold = 1.0f;
 
-    internal float linearDamping = 0.995f;
-    internal float angularDamping = 0.995f;
+    internal float linearDampingMultiplier = 0.995f;
+    internal float angularDampingMultiplier = 0.995f;
 
     internal JMatrix inverseInertia = JMatrix.Identity;
     internal float mass = 1.0f;
@@ -187,14 +187,31 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Specifies the damping factors. The angular and linear velocities are multiplied by these values at each step. 
-    /// Note that these values are not scaled by time; a smaller time-step in <see cref="World.Step(float, bool)"/> 
-    /// results in increased damping.
+    /// Gets or sets the damping factors for linear and angular motion.
+    /// A damping factor of 0 means the body is not damped, while 1 brings
+    /// the body to a halt immediately. Damping is applied when calling 
+    /// <see cref="World.Step(float, bool)"/>. Jitter multiplies the respective
+    /// velocity each step by 1 minus the damping factor. Note that the values
+    /// are not scaled by time; a smaller time-step in 
+    /// <see cref="World.Step(float, bool)"/> results in increased damping.
     /// </summary>
-    public (float angular, float linear) Damping
+    /// <remarks>
+    /// The damping factors should be within the range [0, 1].
+    /// </remarks>
+    public (float linear, float angular) Damping
     {
-        get => (linearDamping, angularDamping);
-        set => (linearDamping, angularDamping) = value;
+        get => (1.0f - linearDampingMultiplier, 1.0f - angularDampingMultiplier);
+        set
+        {
+            if (value.linear < 0.0f || value.linear > 1.0f || value.angular < 0.0f || value.angular > 1.0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), 
+                    "Damping multiplier has to be within [0, 1].");
+            }
+        
+            linearDampingMultiplier = 1.0f - value.linear;
+            angularDampingMultiplier = 1.0f - value.angular;
+        }
     }
 
     public override int GetHashCode()
