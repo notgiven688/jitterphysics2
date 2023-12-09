@@ -24,8 +24,7 @@ public static class Common
 
             if (b < a) (a, b) = (b, a);
 
-            bool contains = ignore.Contains(new ValueTuple<ulong, ulong>(a, b));
-            return contains;
+            return !ignore.Contains(new ValueTuple<ulong, ulong>(a, b));
         }
 
         public void IgnoreCollisionBetween(Shape shapeA, Shape shapeB)
