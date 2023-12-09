@@ -38,7 +38,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
     public bool Filter(Shape shapeA, Shape shapeB)
     {
-        if (!world.Shapes.IsActive(shapeA) && !world.Shapes.IsActive(shapeB)) return true;
+        if (!world.Shapes.IsActive(shapeA) && !world.Shapes.IsActive(shapeB)) return false;
 
         ISoftBodyShape? i1 = shapeA as ISoftBodyShape;
         ISoftBodyShape? i2 = shapeB as ISoftBodyShape;
@@ -49,7 +49,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
                 JMatrix.Identity, JVector.Zero,
                 out JVector pA, out JVector pB, out JVector normal, out float penetration);
 
-            if (!colliding) return true;
+            if (!colliding) return false;
 
             var closestA = i1.GetClosest(pA);
             var closestB = i2.GetClosest(pB);
@@ -57,7 +57,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             world.RegisterContact(closestA.RigidBodyId, closestB.RigidBodyId, closestA, closestB,
                 pA, pB, normal, penetration);
 
-            return true;
+            return false;
         }
 
         if (i1 != null)
@@ -65,14 +65,14 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             bool colliding = NarrowPhase.MPREPA(shapeA, shapeB, shapeB.RigidBody!.Orientation, shapeB.RigidBody.Position,
                 out JVector pA, out JVector pB, out JVector normal, out float penetration);
 
-            if (!colliding) return true;
+            if (!colliding) return false;
 
             var closest = i1.GetClosest(pA);
 
             world.RegisterContact(closest.RigidBodyId, shapeB.RigidBody.RigidBodyId, closest, shapeB.RigidBody,
                 pA, pB, normal, penetration);
 
-            return true;
+            return false;
         }
 
         if (i2 != null)
@@ -80,16 +80,16 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             bool colliding = NarrowPhase.MPREPA(shapeB, shapeA, shapeA.RigidBody!.Orientation, shapeA.RigidBody.Position,
                 out JVector pA, out JVector pB, out JVector normal, out float penetration);
 
-            if (!colliding) return true;
+            if (!colliding) return false;
 
             var closest = i2.GetClosest(pA);
 
             world.RegisterContact(closest.RigidBodyId, shapeA.RigidBody.RigidBodyId, closest, shapeA.RigidBody,
                 pA, pB, normal, penetration);
 
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 }
