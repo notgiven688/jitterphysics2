@@ -45,7 +45,7 @@ public class TeamFilter : IBroadPhaseFilter
         }
 
         // There is no collision between team red and team blue.
-        return shapeA.RigidBody.Tag == shapeB.RigidBody.Tag;
+        return shapeA.RigidBody.Tag != shapeB.RigidBody.Tag;
     }
 }
 ```

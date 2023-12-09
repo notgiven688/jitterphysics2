@@ -269,7 +269,7 @@ public partial class World
 
         if (BroadPhaseFilter != null)
         {
-            if (BroadPhaseFilter.Filter(sA, sB))
+            if (!BroadPhaseFilter.Filter(sA, sB))
             {
                 return;
             }
