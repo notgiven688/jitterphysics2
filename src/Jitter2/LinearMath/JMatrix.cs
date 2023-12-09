@@ -320,14 +320,15 @@ public struct JMatrix
                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
     }
 
-    public static void Inverse(in JMatrix matrix, out JMatrix result)
+    public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
-        float det = matrix.M11 * matrix.M22 * matrix.M33 -
-                    matrix.M11 * matrix.M23 * matrix.M32 -
-                    matrix.M12 * matrix.M21 * matrix.M33 +
-                    matrix.M12 * matrix.M23 * matrix.M31 +
-                    matrix.M13 * matrix.M21 * matrix.M32 -
-                    matrix.M13 * matrix.M22 * matrix.M31;
+        float det = matrix.Determinant();
+
+        if (float.IsNaN(det) || float.IsInfinity(det))
+        {
+            result = new JMatrix();
+            return false;
+        }
 
         float num11 = matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32;
         float num12 = matrix.M13 * matrix.M32 - matrix.M12 * matrix.M33;
@@ -352,6 +353,8 @@ public struct JMatrix
         result.M31 = num31 * idet;
         result.M32 = num32 * idet;
         result.M33 = num33 * idet;
+
+        return true;
     }
 
     public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)

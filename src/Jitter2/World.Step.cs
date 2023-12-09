@@ -286,7 +286,7 @@ public partial class World
                 JMatrix.Multiply(rigidBody.Orientation, body.inverseInertia, out rigidBody.InverseInertiaWorld);
                 JMatrix.MultiplyTransposed(rigidBody.InverseInertiaWorld, rigidBody.Orientation, out rigidBody.InverseInertiaWorld);
 
-                rigidBody.InverseMass = 1.0f / body.mass;
+                rigidBody.InverseMass = body.inverseMass;
             }
         }
     }
