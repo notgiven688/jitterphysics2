@@ -4,6 +4,17 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.1.0 (12-10-2023)
+
+- Added debug drawing for rigid bodies (`RigidBody.DebugDraw`).
+- Fixed a bug in `CalculateMassInertia` within `TransformedShape.cs`.
+- Improved raycasting performance and introduced `NarrowPhase.PointTest`.
+- **Breaking Change:** Inverted behavior of `BroadPhaseCollisionFilter`.
+- **Breaking Change:** Inverted definition of damping factors in `RigidBody.Damping` (0 = no damping, 1 = immediate halt).
+- Added `RigidBody.SetMassInertia` overload to enable setting the inverse inertia to zero.
+- An exception is now thrown when a body's mass is set to zero.
+- Fixed a bug in the friction handling in `Contact.cs`.
+
 ### Jitter 2.0.1 (10-28-2023)
 
 - Fixed a bug in contact initialization which affected soft body physics.
