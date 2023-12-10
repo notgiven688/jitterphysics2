@@ -631,7 +631,7 @@ public struct ContactData
 
             float maxTangentImpulse = Friction * AccumulatedNormalImpulse;
             float tangentImpulse1 = MassTangent1 * -vt1;
-            float tangentImpulse2 = MassTangent1 * -vt2;
+            float tangentImpulse2 = MassTangent2 * -vt2;
 
             float oldTangentImpulse = AccumulatedTangentImpulse1;
             AccumulatedTangentImpulse1 = oldTangentImpulse + tangentImpulse1;
