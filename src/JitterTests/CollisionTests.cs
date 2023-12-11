@@ -8,6 +8,27 @@ public class CollisionTests
     }
 
     [TestCase]
+    public void RayCast()
+    {
+        const float radius = 4;
+
+        JVector sp = new JVector(10, 11, 12);
+        JVector op = new JVector(1, 2, 3);
+
+        SphereShape s1 = new(radius);
+
+        bool hit = NarrowPhase.Raycast(s1, JMatrix.CreateRotationX(0.32f), sp, 
+            op, sp - op, out float fraction, out JVector normal);
+
+        JVector cn = JVector.Normalize(op - sp);   // analytical normal
+        JVector hp = op + (sp - op) * fraction;    // hit point
+
+        Assert.That(hit);
+        Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
+        Assert.That(MathF.Abs((hp - sp).Length() - radius) < 1e-6f);
+    }
+
+    [TestCase]
     public void NormalDirection()
     {
         SphereShape s1 = new(0.5f);
