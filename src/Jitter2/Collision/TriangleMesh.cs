@@ -62,6 +62,11 @@ public class TriangleMesh
             IndexA = indexA;
             IndexB = indexB;
         }
+
+        public override int GetHashCode()
+        {
+            return IndexA + 228771 * IndexB;
+        }
     }
 
     /// <summary>
