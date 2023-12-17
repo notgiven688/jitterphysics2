@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.1.1 (12-17-2023)
+- Fixed O(n^2) problem in `TriangleMesh` due to hash collisions.
+- `WorldBoundingBox` of `Shape` is now updated even if no `RigidBody` is attached.
+
 ### Jitter 2.1.0 (12-10-2023)
 
 - Added debug drawing for rigid bodies (`RigidBody.DebugDraw`).
