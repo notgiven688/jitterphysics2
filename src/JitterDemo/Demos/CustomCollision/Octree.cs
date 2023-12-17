@@ -165,7 +165,7 @@ public class Octree
         }
     }
 
-    private int TestSubdivisions(in JBBox parent, uint triangle)
+    private int TestSubdivision(in JBBox parent, uint triangle)
     {
         JBBox objBox = triangleBoxes[triangle];
         JVector center = parent.Center;
@@ -216,7 +216,7 @@ public class Octree
 
             ref var nn = ref nodes[node];
 
-            int index = TestSubdivisions(nn.Box, triangle);
+            int index = TestSubdivision(nn.Box, triangle);
 
             if (index == -1)
             {
@@ -226,7 +226,7 @@ public class Octree
                     numLeafs++;
                 }
 
-                nn.Triangles!.Add(triangle);
+                nn.Triangles.Add(triangle);
             }
             else
             {
