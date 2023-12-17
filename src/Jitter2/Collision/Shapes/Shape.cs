@@ -137,9 +137,16 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// </summary>
     public virtual void UpdateWorldBoundingBox()
     {
-        if (RigidBody == null) return;
-        CalculateBoundingBox(RigidBody.Data.Orientation, RigidBody.Data.Position, out JBBox box);
-        WorldBoundingBox = box;
+        if (RigidBody == null)
+        {
+            CalculateBoundingBox(JMatrix.Identity, JVector.Zero, out JBBox box);
+            WorldBoundingBox = box;
+        }
+        else
+        {
+            CalculateBoundingBox(RigidBody.Data.Orientation, RigidBody.Data.Position, out JBBox box);
+            WorldBoundingBox = box;
+        }
     }
 
     /// <summary>
