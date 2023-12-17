@@ -46,7 +46,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 
     public Shape()
     {
-        ShapeId = World.IdCounter++;
+        ShapeId = World.RequestId();
     }
 
     internal bool AttachRigidBody(RigidBody? body)

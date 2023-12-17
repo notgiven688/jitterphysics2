@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
@@ -95,7 +96,30 @@ public partial class World
     private readonly ActiveList<RigidBody> bodies = new();
     private readonly ActiveList<Shape> shapes = new();
 
-    internal static ulong IdCounter;
+    private static ulong _idCounter;
+
+    /// <summary>
+    /// Generates a unique ID.
+    /// </summary>
+    public static ulong RequestId()
+    {
+        return Interlocked.Increment(ref _idCounter);
+    }
+
+    /// <summary>
+    /// Generates a range of unique IDs.
+    /// </summary>
+    /// <param name="count">The number of IDs to generate.</param>
+    /// <returns>A tuple containing the minimum and maximum request IDs in the generated range. The upper
+    /// bound is exclusive.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when count is less than 1.</exception>
+    public static (ulong min, ulong max) RequestId(int count)
+    {
+        if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater zero.");
+        ulong count64 = (ulong)count;
+        ulong max = Interlocked.Add(ref _idCounter, count64) + 1;
+        return (max - count64, max);
+    }
 
     /// <summary>
     /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker

@@ -146,7 +146,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         Data.Orientation = JMatrix.Identity;
         SetDefaultMassInertia();
 
-        RigidBodyId = World.IdCounter++;
+        RigidBodyId = World.RequestId();
         uint h = (uint)RigidBodyId;
 
         // The rigid body is used in hash-based data structures, provide a
