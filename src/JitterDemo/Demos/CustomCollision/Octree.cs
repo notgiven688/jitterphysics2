@@ -59,6 +59,8 @@ public class Octree
     private Node[] nodes;
     private uint nodeCount;
 
+    private int numLeafs = 0;
+
     public JBBox Dimensions
     {
         get => nodes[0].Box;
@@ -73,7 +75,13 @@ public class Octree
         this.vertices = vertices;
         this.nodes = new Node[1024];
         this.triangleBoxes = new JBBox[indices.Length];
+
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        
         Build();
+
+        Console.WriteLine($"Build octree ({indices.Length} triangles, {numLeafs} leafs)" +
+                          $" in {sw.ElapsedMilliseconds} ms.");
     }
 
     private uint AllocateNode(in JBBox size)
@@ -102,8 +110,7 @@ public class Octree
             JVector.Add(result[i].Min, box.Min, out result[i].Min);
             JVector.Add(result[i].Min, dims, out result[i].Max);
 
-            // expand boxes by a tiny amount
-            const float margin = 0.00001f;
+            const float margin = 1e-6f; // expand boxes by a tiny amount
             JVector.Multiply(dims, margin, out var temp);
             JVector.Subtract(result[i].Min, temp, out result[i].Min);
             JVector.Add(result[i].Max, temp, out result[i].Max);
@@ -213,8 +220,16 @@ public class Octree
 
             if (index == -1)
             {
-                nodes[node].Triangles ??= new List<uint>(2);
-                nodes[node].Triangles!.Add(triangle);
+                ref var nn = ref nodes[node];
+                
+                if (nn.Triangles == null)
+                {
+                    nn.Triangles = new List<uint>(8);
+                    numLeafs++;
+                }
+                
+                
+                nn.Triangles!.Add(triangle);
             }
             else
             {
