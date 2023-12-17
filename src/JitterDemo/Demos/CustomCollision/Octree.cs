@@ -80,7 +80,7 @@ public class Octree
         
         Build();
 
-        Console.WriteLine($"Build octree ({indices.Length} triangles, {numLeafs} leafs)" +
+        Console.WriteLine($"Build octree ({indices.Length} triangles, {nodeCount} nodes, {numLeafs} leafs)" +
                           $" in {sw.ElapsedMilliseconds} ms.");
     }
 
