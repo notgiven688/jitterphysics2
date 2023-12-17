@@ -6,6 +6,15 @@ public class CollisionTests
     public void Setup()
     {
     }
+    
+    [TestCase]
+    public void NoBodyWorldBoundingBox()
+    {
+        const float boxSize = 10.0f;
+        BoxShape shape = new BoxShape(boxSize);
+        Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Max - shape.Size * 0.5f));
+        Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Min + shape.Size * 0.5f));
+    }
 
     [TestCase]
     public void Raycast()
