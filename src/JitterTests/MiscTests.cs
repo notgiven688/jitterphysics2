@@ -12,12 +12,13 @@ public class MiscTests
     [TestCase]
     public static void RequestId()
     {
-        Assert.That(World.RequestId() == 1);
-        Assert.That(World.RequestId(1) == (2,3));
-        Assert.That(World.RequestId() == 3);
-        Assert.That(World.RequestId(2) == (4,6));
-        Assert.That(World.RequestId() == 6);
-        Assert.That(World.RequestId(3) == (7,10));
-        Assert.That(World.RequestId(3) == (10,13));
+        ulong id0 = World.RequestId();
+        Assert.That(World.RequestId() == id0 + 1);
+        Assert.That(World.RequestId(1) == (id0 + 2, id0 + 3));
+        Assert.That(World.RequestId() == id0 + 3);
+        Assert.That(World.RequestId(2) == (id0 + 4, id0 + 6));
+        Assert.That(World.RequestId() == id0 + 6);
+        Assert.That(World.RequestId(3) == (id0 + 7, id0 + 10));
+        Assert.That(World.RequestId(3) == (id0 + 10, id0 + 13));
     }
 }
