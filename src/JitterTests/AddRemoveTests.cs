@@ -10,6 +10,56 @@ public class AddRemoveTests
         world = new World(100, 100, 100);
     }
 
+    class FilterOut : IBroadPhaseFilter
+    {
+        private readonly Shape shape;
+        public FilterOut(Shape shape)
+        {
+            this.shape = shape;
+        }
+
+        public bool Filter(Shape shapeA, Shape shapeB)
+        {
+            return shapeA != shape && shapeB != shape;
+        }
+    }
+
+    [TestCase]
+    public void RemoveStaticShape1()
+    {
+        Shape staticShape = new BoxShape(1000);
+        world.AddShape(staticShape);
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+
+        world.BroadPhaseFilter = new FilterOut(staticShape);
+
+        world.Step(0.01f);
+        Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
+
+        world.Clear();
+        Assert.That(world.DynamicTree.PotentialPairs.Count == 0);
+    }
+
+    [TestCase]
+    public void RemoveStaticShape0()
+    {
+        Shape staticShape = new BoxShape(1000);
+        world.AddShape(staticShape);
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+
+        world.BroadPhaseFilter = new FilterOut(staticShape);
+
+        world.Step(0.01f);
+        Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
+
+        world.Remove(body);
+        Assert.That(world.DynamicTree.PotentialPairs.Count == 0);
+    }
+
     [TestCase]
     public void AddRemoveShapes()
     {
