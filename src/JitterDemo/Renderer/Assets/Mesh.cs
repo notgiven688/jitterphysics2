@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using JitterDemo.Renderer.OpenGL;
 
@@ -35,6 +36,21 @@ public class Mesh
         }
     }
 
+    private static IEnumerable<string> ReadFromZip(string filename)
+    {
+        using var zip = new ZipArchive(File.OpenRead(filename));
+        if (zip.Entries.Count != 1)
+        {
+            throw new InvalidOperationException("Invalid zip file. There should be exactly one entry.");
+        }
+
+        using var sr = new StreamReader(zip.Entries[0].Open(), System.Text.Encoding.UTF8);
+        while (!sr.EndOfStream)
+        {
+            yield return sr.ReadLine()!;
+        }
+    }
+
     public static Mesh LoadMesh(string filename, bool revertWinding = false)
     {
         var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
@@ -49,7 +65,8 @@ public class Mesh
             return int.Parse(str) - 1;
         } // Parse int minus 1
 
-        var lines = File.ReadAllLines(filename).Select(s => s.Trim()).Where(s => s != string.Empty);
+        string[] content = filename.EndsWith(".zip") ? ReadFromZip(filename).ToArray() : File.ReadAllLines(filename);
+        var lines = content.Select(s => s.Trim()).Where(s => s != string.Empty);
 
         List<Vector3> v = new();
         List<Vector3> vn = new();

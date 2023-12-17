@@ -62,9 +62,12 @@ public partial class Playground : RenderWindow
         else
         {
             grepBody = null;
-            bool result = World.Raycast(origin, jdir, null, null,
-                out Shape? grepShape, out JVector rayn, out hitDistance);
 
+            // Raycast against the world, ignore any shapes not associated
+            // with a rigid body.
+            bool result = World.Raycast(origin, jdir, 
+                (shape) => shape is ISoftBodyShape || shape.RigidBody != null, null,
+                out Shape? grepShape, out JVector _, out hitDistance);
 
             if (grepShape != null)
             {
@@ -76,22 +79,19 @@ public partial class Playground : RenderWindow
                 }
             }
 
+            if (!result || grepBody == null || grepBody.IsStatic) return;
+            grepping = true;
 
-            if (result && grepBody != null && !grepBody.IsStatic)
-            {
-                grepping = true;
+            hitWheelPosition = (float)Mouse.ScrollWheel.Y;
 
-                hitWheelPosition = (float)Mouse.ScrollWheel.Y;
+            if (grepConstraint != null) World.Remove(grepConstraint);
 
-                if (grepConstraint != null) World.Remove(grepConstraint);
+            JVector anchor = origin + hitDistance * jdir;
 
-                JVector anchor = origin + hitDistance * jdir;
-
-                grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
-                grepConstraint.Initialize(anchor, anchor);
-                grepConstraint.Softness = 0.01f;
-                grepConstraint.Bias = 0.1f;
-            }
+            grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
+            grepConstraint.Initialize(anchor, anchor);
+            grepConstraint.Softness = 0.01f;
+            grepConstraint.Bias = 0.1f;
         }
     }
 }
