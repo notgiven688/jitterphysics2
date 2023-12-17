@@ -221,14 +221,13 @@ public class Octree
             if (index == -1)
             {
                 ref var nn = ref nodes[node];
-                
+
                 if (nn.Triangles == null)
                 {
                     nn.Triangles = new List<uint>(8);
                     numLeafs++;
                 }
-                
-                
+
                 nn.Triangles!.Add(triangle);
             }
             else
