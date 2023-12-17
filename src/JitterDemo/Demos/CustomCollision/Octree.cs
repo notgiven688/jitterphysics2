@@ -54,10 +54,12 @@ public class Octree
 
     private readonly TriangleIndices[] indices;
     private readonly JVector[] vertices;
-    
+
     private readonly JBBox[] triangleBoxes;
     private Node[] nodes;
     private uint nodeCount;
+
+    private int numLeafs = 0;
 
     public JBBox Dimensions
     {
@@ -73,7 +75,13 @@ public class Octree
         this.vertices = vertices;
         this.nodes = new Node[1024];
         this.triangleBoxes = new JBBox[indices.Length];
+
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
         Build();
+
+        Console.WriteLine($"Build octree ({indices.Length} triangles, {numLeafs} leafs)" +
+                          $" in {sw.ElapsedMilliseconds} ms.");
     }
 
     private uint AllocateNode(in JBBox size)
@@ -87,37 +95,14 @@ public class Octree
         return nodeCount++;
     }
 
-    private static JBBox[] Subdivide(in JBBox box)
-    {
-        JBBox[] result = new JBBox[8];
-
-        for (uint i = 0; i < 8; i++)
-        {
-            JVector.Subtract(box.Max, box.Min, out var dims);
-            JVector.Multiply(dims, 0.5f, out dims);
-
-            JVector offset = new JVector((i & (1 << 0)) >> 0, (i & (1 << 1)) >> 1, (i & (1 << 2)) >> 2);
-
-            result[i].Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z);
-            JVector.Add(result[i].Min, box.Min, out result[i].Min);
-            JVector.Add(result[i].Min, dims, out result[i].Max);
-
-            // expand boxes by a tiny amount
-            const float margin = 0.00001f;
-            JVector.Multiply(dims, margin, out var temp);
-            JVector.Subtract(result[i].Min, temp, out result[i].Min);
-            JVector.Add(result[i].Max, temp, out result[i].Max);
-        }
-
-        return result;
-    }
-
     private void InternalQuery(Stack<uint> triangles, in JBBox box, uint nodeIndex)
     {
         ref var node = ref nodes[nodeIndex];
 
         if (node.Box.Contains(box) == JBBox.ContainmentType.Disjoint)
+        {
             return;
+        }
 
         var tris = node.Triangles;
 
@@ -162,7 +147,7 @@ public class Octree
         }
 
         JBBox box = JBBox.CreateFromPoints(vertices);
-        
+
         JVector delta = box.Max - box.Min;
         JVector center = box.Center;
 
@@ -180,26 +165,47 @@ public class Octree
         }
     }
 
-    private int TestSubdivisions(JBBox[] box, uint triangle)
+    private int TestSubdivision(in JBBox parent, uint triangle)
     {
         JBBox objBox = triangleBoxes[triangle];
+        JVector center = parent.Center;
 
-        for (int i = 0; i < 8; i++)
-        {
-            if (box[i].Contains(objBox) == JBBox.ContainmentType.Contains)
-            {
-                return i;
-            }
-        }
+        int bits = 0;
 
-        return -1;
+        if (objBox.Min.X > center.X) bits |= 1;
+        else if (objBox.Max.X > center.X) return -1;
+
+        if (objBox.Min.Y > center.Y) bits |= 2;
+        else if (objBox.Max.Y > center.Y) return -1;
+
+        if (objBox.Min.Z > center.Z) bits |= 4;
+        else if (objBox.Max.Z > center.Z) return -1;
+
+        return bits;
+    }
+
+    private void GetSubdivison(in JBBox parent, int index, out JBBox result)
+    {
+        JVector.Subtract(parent.Max, parent.Min, out var dims);
+        JVector.Multiply(dims, 0.5f, out dims);
+
+        JVector offset = new JVector((index & (1 << 0)) >> 0, (index & (1 << 1)) >> 1, (index & (1 << 2)) >> 2);
+
+        result.Min = new JVector(offset.X * dims.X, offset.Y * dims.Y, offset.Z * dims.Z);
+        JVector.Add(result.Min, parent.Min, out result.Min);
+        JVector.Add(result.Min, dims, out result.Max);
+
+        const float margin = 1e-6f; // expand boxes by a tiny amount
+        JVector.Multiply(dims, margin, out var temp);
+        JVector.Subtract(result.Min, temp, out result.Min);
+        JVector.Add(result.Max, temp, out result.Max);
     }
 
     private void AddNode(uint node, uint triangle)
     {
         const int maxDepth = 64;
         int depth = 0;
-        
+
         while (true)
         {
             if (depth++ > maxDepth)
@@ -208,21 +214,28 @@ public class Octree
                                                     "Check you model for small or degenerate triangles.");
             }
 
-            var subdivision = Subdivide(nodes[node].Box);
-            int index = TestSubdivisions(subdivision, triangle);
+            ref var nn = ref nodes[node];
+
+            int index = TestSubdivision(nn.Box, triangle);
 
             if (index == -1)
             {
-                nodes[node].Triangles ??= new List<uint>(2);
-                nodes[node].Triangles!.Add(triangle);
+                if (nn.Triangles == null)
+                {
+                    nn.Triangles = new List<uint>(8);
+                    numLeafs++;
+                }
+
+                nn.Triangles.Add(triangle);
             }
             else
             {
-                uint newNode = nodes[node].Neighbors[index];
+                uint newNode = nn.Neighbors[index];
 
                 if (newNode == 0)
                 {
-                    newNode = AllocateNode(subdivision[index]);
+                    GetSubdivison(nn.Box, index, out JBBox newBox);
+                    newNode = AllocateNode(newBox);
                     nodes[node].Neighbors[index] = newNode;
                 }
 
