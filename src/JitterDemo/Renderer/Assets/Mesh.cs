@@ -36,7 +36,7 @@ public class Mesh
         }
     }
 
-    private static IEnumerable<string?> ReadFromZip(string filename)
+    private static IEnumerable<string> ReadFromZip(string filename)
     {
         using var zip = new ZipArchive(File.OpenRead(filename));
         if (zip.Entries.Count != 1)
@@ -47,7 +47,7 @@ public class Mesh
         using var sr = new StreamReader(zip.Entries[0].Open(), System.Text.Encoding.UTF8);
         while (!sr.EndOfStream)
         {
-            yield return sr.ReadLine();
+            yield return sr.ReadLine()!;
         }
     }
 
@@ -65,7 +65,7 @@ public class Mesh
             return int.Parse(str) - 1;
         } // Parse int minus 1
 
-        string?[] content = filename.EndsWith(".zip") ? ReadFromZip(filename).ToArray() : File.ReadAllLines(filename);
+        string[] content = filename.EndsWith(".zip") ? ReadFromZip(filename).ToArray() : File.ReadAllLines(filename);
         var lines = content.Select(s => s.Trim()).Where(s => s != string.Empty);
 
         List<Vector3> v = new();

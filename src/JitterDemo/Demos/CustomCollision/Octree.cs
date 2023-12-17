@@ -214,7 +214,7 @@ public class Octree
             if (index == -1)
             {
                 nodes[node].Triangles ??= new List<uint>(2);
-                nodes[node].Triangles.Add(triangle);
+                nodes[node].Triangles!.Add(triangle);
             }
             else
             {
