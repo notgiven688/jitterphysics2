@@ -273,8 +273,9 @@ public partial class World
 
         foreach (var shape in body.Shapes)
         {
+            DynamicTree.RemoveProxy(shape);
+            shapes.Remove(shape);
             shape.DetachRigidBody();
-            Remove(shape);
         }
 
         foreach (var contact in body.Contacts)
@@ -335,6 +336,11 @@ public partial class World
         Arbiter.Pool.Push(arbiter);
 
         arbiter.Handle = JHandle<ContactData>.Zero;
+    }
+
+    internal void InternalRemoveShape(Shape shape)
+    {
+        shapes.Remove(shape);
     }
 
     internal void UpdateShape(Shape shape)

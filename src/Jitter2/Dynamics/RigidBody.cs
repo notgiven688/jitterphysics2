@@ -453,8 +453,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             World.Remove(tr);
         }
 
+        World.DynamicTree.RemoveProxy(shape);
         shape.DetachRigidBody();
-        World.Remove(shape);
+        World.InternalRemoveShape(shape);
 
         if (setMassInertia) SetMassInertia();
     }
