@@ -37,18 +37,19 @@ public partial class Playground : RenderWindow
         new Demo05(),
         new Demo06(),
         new Demo07(),
-        //new Demo08(),  // contact manifold test
+        //new Demo08(),   // contact manifold test
         new Demo09(),
         new Demo10(),
-        // new Demo11(), // double pendulum
+        // new Demo11(),  // double pendulum
         new Demo12(),
         new Demo13(),
         new Demo14(),
         new Demo15(),
         new Demo16(),
         new Demo17(),
-        // new Demo18(),
-        // new Demo19()
+        // new Demo18(),  // point test
+        // new Demo19(),  // raycast test
+        new Demo20()
     };
 
     private IDemo? currentDemo;
