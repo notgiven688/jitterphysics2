@@ -72,9 +72,10 @@ public class DebugRenderer
 {
     public enum Color
     {
-        White,
-        Red,
-        Green
+        White = 0,
+        Red = 1,
+        Green = 2,
+        NumColor = 3
     }
 
     private readonly Vector4[] colors =
@@ -136,7 +137,7 @@ public class DebugRenderer
         }
     }
 
-    private Dictionary<Color, LineBuffer> buffer = null!;
+    private List<LineBuffer> buffer = null!;
 
     private VertexArrayObject Vao = null!;
     private LineShader shader = null!;
@@ -158,16 +159,16 @@ public class DebugRenderer
 
         Vao.Bind();
 
-        foreach (var col in buffer.Keys)
+        for (int i = 0; i < (int)Color.NumColor; i++)
         {
-            var lines = buffer[col];
+            var lines = buffer[i];
 
             if (lines.IndexCount == 0) continue;
 
             eab.SetData(lines.indices, lines.IndexCount);
             ab.SetData(lines.vertices, lines.VertexCount);
 
-            shader.Color.Set(colors[(int)col]);
+            shader.Color.Set(colors[i]);
             GLDevice.DrawElements(DrawMode.Lines, lines.IndexCount * 2, IndexType.UnsignedInt, 0);
 
             lines.Clear();
@@ -180,7 +181,7 @@ public class DebugRenderer
 
     public void PushLine(Color color, in Vector3 pointA, in Vector3 pointB)
     {
-        var list = buffer[color];
+        var list = buffer[(int)color];
         uint offset = (uint)list.VertexCount;
 
         list.Add(pointA.X, pointA.Y, pointA.Z);
@@ -190,7 +191,7 @@ public class DebugRenderer
 
     public void PushBox(Color color, in Vector3 min, in Vector3 max)
     {
-        var list = buffer[color];
+        var list = buffer[(int)color];
 
         uint offset = (uint)list.VertexCount;
 
@@ -219,7 +220,7 @@ public class DebugRenderer
 
     public void PushPoint(Color color, in Vector3 pos, float halfSize = 1.0f)
     {
-        var list = buffer[color];
+        var list = buffer[(int)color];
         uint offset = (uint)list.VertexCount;
 
         list.Add(pos.X - halfSize, pos.Y, pos.Z);
@@ -236,12 +237,11 @@ public class DebugRenderer
 
     public void Load()
     {
-        // init the buffer monster
-        buffer = new Dictionary<Color, LineBuffer>();
+        buffer = new List<LineBuffer>();
 
-        foreach (Color color in Enum.GetValues(typeof(Color)))
+        for (int i = 0; i < (int)Color.NumColor; i++)
         {
-            buffer.Add(color, new LineBuffer());
+            buffer.Add(new LineBuffer());
         }
 
         shader = new LineShader();
@@ -250,29 +250,10 @@ public class DebugRenderer
 
         ab = new ArrayBuffer();
         eab = new ElementArrayBuffer();
-        //ab.SetData<Vertex>(vertices);
 
         int sof = sizeof(float);
 
         Vao.VertexAttributes[0].Set(ab, 3, VertexAttributeType.Float, false, 3 * sof, 0 * sof); // position
         Vao.ElementArrayBuffer = eab;
-        //Vao.ElementArrayBuffer.SetData<LineVertexIndex>(indices);
-
-        /*
-        worldMatrices = new ArrayBuffer();
-
-        Vao.VertexAttributes[0].Set(worldMatrices, 4, VertexAttributeType.Float, false, 16 * sof, 0 * sof);
-        Vao.VertexAttributes[1].Set(worldMatrices, 4, VertexAttributeType.Float, false, 16 * sof, 4 * sof);
-        Vao.VertexAttributes[2].Set(worldMatrices, 4, VertexAttributeType.Float, false, 16 * sof, 8 * sof);
-        Vao.VertexAttributes[3].Set(worldMatrices, 4, VertexAttributeType.Float, false, 16 * sof, 12 * sof);
-
-        Vao.VertexAttributes[0].Divisor = 1;
-        Vao.VertexAttributes[1].Divisor = 1;
-        Vao.VertexAttributes[2].Divisor = 1;
-        Vao.VertexAttributes[3].Divisor = 1;
-
-        Vao.ElementArrayBuffer = new ElementArrayBuffer();
-        Vao.ElementArrayBuffer.SetData<LineVertexIndex>(indices);
-        */
     }
 }
