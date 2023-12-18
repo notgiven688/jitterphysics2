@@ -52,7 +52,7 @@ public class DegenerateTriangleException : Exception
 /// </summary>
 public class TriangleMesh
 {
-    private struct Edge
+    private struct Edge : IEquatable<Edge>
     {
         public int IndexA;
         public int IndexB;
@@ -63,14 +63,24 @@ public class TriangleMesh
             IndexB = indexB;
         }
 
+        public override bool Equals(object? obj)
+        {
+            return obj is Edge other && Equals(other);
+        }
+
         public override int GetHashCode()
         {
             return IndexA + 228771 * IndexB;
         }
+
+        public bool Equals(Edge other)
+        {
+            return IndexA == other.IndexA && IndexB == other.IndexB;
+        }
     }
 
     /// <summary>
-    /// This structure encapsulates vertex indices along with indices pointing to 
+    /// This structure encapsulates vertex indices along with indices pointing to
     /// neighboring triangles.
     /// </summary>
     public struct Triangle
@@ -113,9 +123,9 @@ public class TriangleMesh
     /// <summary>
     /// Initializes a new instance of the triangle mesh.
     /// </summary>
-    /// <param name="triangles">The triangles to be added. The reference to the list can be 
+    /// <param name="triangles">The triangles to be added. The reference to the list can be
     /// modified/deleted after invoking this constructor.</param>
-    /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or 
+    /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or
     /// more degenerate triangles.</exception>
     public TriangleMesh(List<JTriangle> triangles)
     {
