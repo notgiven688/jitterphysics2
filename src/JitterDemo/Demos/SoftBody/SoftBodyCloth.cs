@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Jitter2;
@@ -10,7 +11,7 @@ namespace JitterDemo;
 
 public class SoftBodyCloth : SoftBody
 {
-    private struct Edge : IEqualityComparer<Edge>
+    private readonly struct Edge : IEquatable<Edge>
     {
         public readonly ushort IndexA;
         public readonly ushort IndexB;
@@ -21,18 +22,12 @@ public class SoftBodyCloth : SoftBody
             IndexB = u1;
         }
 
-        public bool Equals(Edge x, Edge y)
-        {
-            return (x.IndexA == y.IndexA && x.IndexB == y.IndexB) ||
-                   (x.IndexB == y.IndexA && x.IndexA == y.IndexB);
-        }
+        public bool Equals(Edge other) => other.IndexA == IndexA && other.IndexB == IndexB;
 
-        public int GetHashCode(Edge obj)
-        {
-            return IndexA ^ IndexB;
-        }
+        public override bool Equals(object? obj) => obj is Edge other && Equals(other);
+
+        public override int GetHashCode() => IndexA * 24712 + IndexB;
     }
-
 
     private List<JVector> vertices = null!;
     private List<TriangleVertexIndex> triangles = null!;

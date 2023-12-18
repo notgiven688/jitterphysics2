@@ -90,7 +90,7 @@ public partial class World
     /// </summary>
     public SpanData RawData => new(this);
 
-    private readonly Dictionary<ArbiterKey, Arbiter> arbiters = new(new ArbiterKeyComparer());
+    private readonly Dictionary<ArbiterKey, Arbiter> arbiters = new();
 
     private readonly ActiveList<Island> islands = new();
     private readonly ActiveList<RigidBody> bodies = new();

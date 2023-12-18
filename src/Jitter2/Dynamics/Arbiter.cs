@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using Jitter2.UnmanagedMemory;
 
@@ -40,26 +41,9 @@ public class Arbiter
 }
 
 /// <summary>
-/// Implementation of the IEqualityComparer for arbiter look-up.
-/// </summary>
-internal class ArbiterKeyComparer : IEqualityComparer<ArbiterKey>
-{
-    public bool Equals(ArbiterKey x, ArbiterKey y)
-    {
-        bool result = x.Key1.Equals(y.Key1) && x.Key2.Equals(y.Key2);
-        return result;
-    }
-
-    public int GetHashCode(ArbiterKey obj)
-    {
-        return (int)obj.Key1 + 2281 * (int)obj.Key2;
-    }
-}
-
-/// <summary>
 /// Look-up key for stored <see cref="Arbiter"/>.
 /// </summary>
-public struct ArbiterKey
+public struct ArbiterKey : IEquatable<ArbiterKey>
 {
     public ulong Key1;
     public ulong Key2;
@@ -68,5 +52,20 @@ public struct ArbiterKey
     {
         Key1 = key1;
         Key2 = key2;
+    }
+
+    public bool Equals(ArbiterKey other)
+    {
+        return Key1 == other.Key1 && Key2 == other.Key2;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is ArbiterKey other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return (int)Key1 + 2281 * (int)Key2;
     }
 }

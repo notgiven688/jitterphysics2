@@ -42,6 +42,11 @@ public class ConvexHullShape : Shape
             Vertex = vertex;
             Neighbors = null!;
         }
+
+        public override int GetHashCode()
+        {
+            return Vertex.GetHashCode();
+        }
     }
 
     private readonly struct CHullTriangle
