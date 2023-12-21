@@ -46,13 +46,17 @@ public class ConvexHullShape : Shape
             NeighborMinIndex = 0;
         }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj is not CHullVector vector) return false;
+            return Vertex.Equals(vector.Vertex);
+        }
+
         public override int GetHashCode()
         {
             return Vertex.GetHashCode();
         }
     }
-
-    private List<ushort> NeighborList;
 
     private readonly struct CHullTriangle
     {
@@ -70,8 +74,7 @@ public class ConvexHullShape : Shape
 
     private CHullVector[] vertices;
     private CHullTriangle[] indices;
-
-
+    private List<ushort> neighborList;
 
     private JVector shifted;
 
@@ -84,42 +87,33 @@ public class ConvexHullShape : Shape
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = new();
 
-        indices = new CHullTriangle[triangles.Count];
-
         ushort PushVector(CHullVector v)
         {
-            if (!tmpIndices.TryGetValue(v, out ushort result))
-            {
-                result = (ushort)tmpVertices.Count;
-                tmpIndices.Add(v, result);
-                tmpVertices.Add(v);
-            }
+            if (tmpIndices.TryGetValue(v, out ushort result)) return result;
+            result = (ushort)tmpVertices.Count;
+            tmpIndices.Add(v, result);
+            tmpVertices.Add(v);
 
             return result;
         }
 
-        for (int i = 0; i < triangles.Count; i++)
+        foreach (var tti in triangles)
         {
-            JTriangle tti = triangles[i];
-
-            PushVector(new(tti.V0));
-            PushVector(new(tti.V1));
-            PushVector(new(tti.V2));
+            PushVector(new CHullVector(tti.V0));
+            PushVector(new CHullVector(tti.V1));
+            PushVector(new CHullVector(tti.V2));
         }
 
         var tmpNeighbors = new List<ushort>[tmpVertices.Count];
+        indices = new CHullTriangle[triangles.Count];
 
         for (int i = 0; i < triangles.Count; i++)
         {
             JTriangle tti = triangles[i];
 
-            CHullVector cha = new(tti.V0);
-            CHullVector chb = new(tti.V1);
-            CHullVector chc = new(tti.V2);
-
-            ushort a = PushVector(cha);
-            ushort b = PushVector(chb);
-            ushort c = PushVector(chc);
+            ushort a = PushVector(new CHullVector(tti.V0));
+            ushort b = PushVector(new CHullVector(tti.V1));
+            ushort c = PushVector(new CHullVector(tti.V2));
 
             indices[i] = new CHullTriangle(a, b, c);
 
@@ -135,19 +129,23 @@ public class ConvexHullShape : Shape
             tmpNeighbors[c].Add(b);
         }
 
-        NeighborList = new List<ushort>();
+        neighborList = new List<ushort>();
 
         var tmpVerticesSpan = CollectionsMarshal.AsSpan(tmpVertices);
 
-        for(int i = 0;i<tmpVerticesSpan.Length;i++)
+        for (int i = 0; i < tmpVerticesSpan.Length; i++)
         {
             ref var element = ref tmpVerticesSpan[i];
-            element.NeighborMinIndex = (ushort)NeighborList.Count;
-            this.NeighborList.AddRange(tmpNeighbors[i].Distinct().ToArray());
-            element.NeighborMaxIndex = (ushort)NeighborList.Count;
+            element.NeighborMinIndex = (ushort)neighborList.Count;
+            neighborList.AddRange(tmpNeighbors[i].Distinct().ToArray());
+            element.NeighborMaxIndex = (ushort)neighborList.Count;
+            tmpNeighbors[i].Clear();
         }
 
         vertices = tmpVertices.ToArray();
+
+        tmpIndices.Clear();
+        tmpVertices.Clear();
 
         CalcInitBox();
         UpdateShape();
@@ -167,7 +165,7 @@ public class ConvexHullShape : Shape
     {
         ConvexHullShape result = new()
         {
-            NeighborList = NeighborList,
+            neighborList = neighborList,
             vertices = vertices,
             indices = indices,
             initBox = initBox,
@@ -196,7 +194,8 @@ public class ConvexHullShape : Shape
         inertia = JMatrix.Zero;
         mass = 0;
 
-        float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+        const float a = 1.0f / 60.0f;
+        const float b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         JVector pointWithin = JVector.Zero;
@@ -300,7 +299,7 @@ public class ConvexHullShape : Shape
 
         for (int i = min; i < max; i++)
         {
-            ushort nb = NeighborList[i];
+            ushort nb = neighborList[i];
             float nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
             if (nbProduct > dotProduct)
@@ -319,7 +318,6 @@ public class ConvexHullShape : Shape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        // if(current >= vertices.Length) current = (ushort) vertices.Length;
         InternalSupportMap(direction, out result);
     }
 }
