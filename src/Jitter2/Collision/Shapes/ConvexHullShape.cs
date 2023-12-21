@@ -21,8 +21,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -35,12 +37,20 @@ public class ConvexHullShape : Shape
     private struct CHullVector
     {
         public readonly JVector Vertex;
-        public List<ushort> Neighbors;
+        public ushort NeighborMinIndex;
+        public ushort NeighborMaxIndex;
 
         public CHullVector(in JVector vertex)
         {
             Vertex = vertex;
-            Neighbors = null!;
+            NeighborMaxIndex = 0;
+            NeighborMinIndex = 0;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not CHullVector vector) return false;
+            return Vertex.Equals(vector.Vertex);
         }
 
         public override int GetHashCode()
@@ -65,6 +75,7 @@ public class ConvexHullShape : Shape
 
     private CHullVector[] vertices;
     private CHullTriangle[] indices;
+    private List<ushort> neighborList;
 
     private JVector shifted;
 
@@ -77,53 +88,72 @@ public class ConvexHullShape : Shape
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = new();
 
-        indices = new CHullTriangle[triangles.Count];
-
         ushort PushVector(CHullVector v)
         {
-            if (!tmpIndices.TryGetValue(v, out ushort result))
-            {
-                result = (ushort)tmpVertices.Count;
-                tmpIndices.Add(v, result);
+            if (tmpIndices.TryGetValue(v, out ushort result)) return result;
 
-                v.Neighbors = new List<ushort>();
-                tmpVertices.Add(v);
+            if (tmpVertices.Count > ushort.MaxValue)
+            {
+                throw new InvalidOperationException(
+                    $"The convex hull consists of too many triangles (>{ushort.MaxValue})");
             }
+
+            result = (ushort)tmpVertices.Count;
+            tmpIndices.Add(v, result);
+            tmpVertices.Add(v);
 
             return result;
         }
+
+        foreach (var tti in triangles)
+        {
+            PushVector(new CHullVector(tti.V0));
+            PushVector(new CHullVector(tti.V1));
+            PushVector(new CHullVector(tti.V2));
+        }
+
+        var tmpNeighbors = new List<ushort>[tmpVertices.Count];
+        indices = new CHullTriangle[triangles.Count];
 
         for (int i = 0; i < triangles.Count; i++)
         {
             JTriangle tti = triangles[i];
 
-            CHullVector cha = new(tti.V0);
-            CHullVector chb = new(tti.V1);
-            CHullVector chc = new(tti.V2);
-
-            ushort a = PushVector(cha);
-            ushort b = PushVector(chb);
-            ushort c = PushVector(chc);
+            ushort a = PushVector(new CHullVector(tti.V0));
+            ushort b = PushVector(new CHullVector(tti.V1));
+            ushort c = PushVector(new CHullVector(tti.V2));
 
             indices[i] = new CHullTriangle(a, b, c);
 
-            tmpVertices[a].Neighbors.Add(b);
-            tmpVertices[a].Neighbors.Add(c);
-            tmpVertices[b].Neighbors.Add(a);
-            tmpVertices[b].Neighbors.Add(c);
-            tmpVertices[c].Neighbors.Add(a);
-            tmpVertices[c].Neighbors.Add(b);
+            tmpNeighbors[a] ??= new List<ushort>();
+            tmpNeighbors[b] ??= new List<ushort>();
+            tmpNeighbors[c] ??= new List<ushort>();
+
+            tmpNeighbors[a].Add(b);
+            tmpNeighbors[a].Add(c);
+            tmpNeighbors[b].Add(a);
+            tmpNeighbors[b].Add(c);
+            tmpNeighbors[c].Add(a);
+            tmpNeighbors[c].Add(b);
+        }
+
+        neighborList = new List<ushort>();
+
+        var tmpVerticesSpan = CollectionsMarshal.AsSpan(tmpVertices);
+
+        for (int i = 0; i < tmpVerticesSpan.Length; i++)
+        {
+            ref var element = ref tmpVerticesSpan[i];
+            element.NeighborMinIndex = (ushort)neighborList.Count;
+            neighborList.AddRange(tmpNeighbors[i].Distinct());
+            element.NeighborMaxIndex = (ushort)neighborList.Count;
+            tmpNeighbors[i].Clear();
         }
 
         vertices = tmpVertices.ToArray();
 
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            List<ushort> nb = vertices[i].Neighbors;
-            var dist = nb.Distinct().ToArray();
-            nb.Clear();
-            nb.AddRange(dist);
-        }
+        tmpIndices.Clear();
+        tmpVertices.Clear();
 
         CalcInitBox();
         UpdateShape();
@@ -133,6 +163,7 @@ public class ConvexHullShape : Shape
     {
         vertices = null!;
         indices = null!;
+        neighborList = null!;
     }
 
     /// <summary>
@@ -143,6 +174,7 @@ public class ConvexHullShape : Shape
     {
         ConvexHullShape result = new()
         {
+            neighborList = neighborList,
             vertices = vertices,
             indices = indices,
             initBox = initBox,
@@ -171,7 +203,8 @@ public class ConvexHullShape : Shape
         inertia = JMatrix.Zero;
         mass = 0;
 
-        float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+        const float a = 1.0f / 60.0f;
+        const float b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         JVector pointWithin = JVector.Zero;
@@ -207,11 +240,11 @@ public class ConvexHullShape : Shape
 
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCOM = 1.0f / 4.0f * (column0 + column1 + column2);
+            JVector tetrahedronCom = 1.0f / 4.0f * (column0 + column1 + column2);
             float tetrahedronMass = 1.0f / 6.0f * detA;
 
             inertia += tetrahedronInertia;
-            com += tetrahedronMass * tetrahedronCOM;
+            com += tetrahedronMass * tetrahedronCom;
             mass += tetrahedronMass;
         }
 
@@ -270,11 +303,12 @@ public class ConvexHullShape : Shape
         float dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
         again:
-        var neighbors = vertices[current].Neighbors;
+        var min = vertices[current].NeighborMinIndex;
+        var max = vertices[current].NeighborMaxIndex;
 
-        for (int i = 0; i < neighbors.Count; i++)
+        for (int i = min; i < max; i++)
         {
-            ushort nb = neighbors[i];
+            ushort nb = neighborList[i];
             float nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
             if (nbProduct > dotProduct)
@@ -293,7 +327,6 @@ public class ConvexHullShape : Shape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        // if(current >= vertices.Length) current = (ushort) vertices.Length;
         InternalSupportMap(direction, out result);
     }
 }
