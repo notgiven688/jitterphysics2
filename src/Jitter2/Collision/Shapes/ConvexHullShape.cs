@@ -137,7 +137,7 @@ public class ConvexHullShape : Shape
         {
             ref var element = ref tmpVerticesSpan[i];
             element.NeighborMinIndex = (ushort)neighborList.Count;
-            neighborList.AddRange(tmpNeighbors[i].Distinct().ToArray());
+            neighborList.AddRange(tmpNeighbors[i].Distinct());
             element.NeighborMaxIndex = (ushort)neighborList.Count;
             tmpNeighbors[i].Clear();
         }
