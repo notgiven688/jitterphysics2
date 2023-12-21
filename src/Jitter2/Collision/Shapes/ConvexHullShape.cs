@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -35,12 +36,14 @@ public class ConvexHullShape : Shape
     private struct CHullVector
     {
         public readonly JVector Vertex;
-        public List<ushort> Neighbors;
+        public ushort NeighborMinIndex;
+        public ushort NeighborMaxIndex;
 
         public CHullVector(in JVector vertex)
         {
             Vertex = vertex;
-            Neighbors = null!;
+            NeighborMaxIndex = 0;
+            NeighborMinIndex = 0;
         }
 
         public override int GetHashCode()
@@ -48,6 +51,8 @@ public class ConvexHullShape : Shape
             return Vertex.GetHashCode();
         }
     }
+
+    private List<ushort> NeighborList;
 
     private readonly struct CHullTriangle
     {
@@ -65,6 +70,8 @@ public class ConvexHullShape : Shape
 
     private CHullVector[] vertices;
     private CHullTriangle[] indices;
+
+
 
     private JVector shifted;
 
@@ -85,13 +92,22 @@ public class ConvexHullShape : Shape
             {
                 result = (ushort)tmpVertices.Count;
                 tmpIndices.Add(v, result);
-
-                v.Neighbors = new List<ushort>();
                 tmpVertices.Add(v);
             }
 
             return result;
         }
+
+        for (int i = 0; i < triangles.Count; i++)
+        {
+            JTriangle tti = triangles[i];
+
+            PushVector(new(tti.V0));
+            PushVector(new(tti.V1));
+            PushVector(new(tti.V2));
+        }
+
+        var tmpNeighbors = new List<ushort>[tmpVertices.Count];
 
         for (int i = 0; i < triangles.Count; i++)
         {
@@ -107,23 +123,31 @@ public class ConvexHullShape : Shape
 
             indices[i] = new CHullTriangle(a, b, c);
 
-            tmpVertices[a].Neighbors.Add(b);
-            tmpVertices[a].Neighbors.Add(c);
-            tmpVertices[b].Neighbors.Add(a);
-            tmpVertices[b].Neighbors.Add(c);
-            tmpVertices[c].Neighbors.Add(a);
-            tmpVertices[c].Neighbors.Add(b);
+            tmpNeighbors[a] ??= new List<ushort>();
+            tmpNeighbors[b] ??= new List<ushort>();
+            tmpNeighbors[c] ??= new List<ushort>();
+
+            tmpNeighbors[a].Add(b);
+            tmpNeighbors[a].Add(c);
+            tmpNeighbors[b].Add(a);
+            tmpNeighbors[b].Add(c);
+            tmpNeighbors[c].Add(a);
+            tmpNeighbors[c].Add(b);
+        }
+
+        NeighborList = new List<ushort>();
+
+        var tmpVerticesSpan = CollectionsMarshal.AsSpan(tmpVertices);
+
+        for(int i = 0;i<tmpVerticesSpan.Length;i++)
+        {
+            ref var element = ref tmpVerticesSpan[i];
+            element.NeighborMinIndex = (ushort)NeighborList.Count;
+            this.NeighborList.AddRange(tmpNeighbors[i].Distinct().ToArray());
+            element.NeighborMaxIndex = (ushort)NeighborList.Count;
         }
 
         vertices = tmpVertices.ToArray();
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            List<ushort> nb = vertices[i].Neighbors;
-            var dist = nb.Distinct().ToArray();
-            nb.Clear();
-            nb.AddRange(dist);
-        }
 
         CalcInitBox();
         UpdateShape();
@@ -143,6 +167,7 @@ public class ConvexHullShape : Shape
     {
         ConvexHullShape result = new()
         {
+            NeighborList = NeighborList,
             vertices = vertices,
             indices = indices,
             initBox = initBox,
@@ -270,11 +295,12 @@ public class ConvexHullShape : Shape
         float dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
         again:
-        var neighbors = vertices[current].Neighbors;
+        var min = vertices[current].NeighborMinIndex;
+        var max = vertices[current].NeighborMaxIndex;
 
-        for (int i = 0; i < neighbors.Count; i++)
+        for (int i = min; i < max; i++)
         {
-            ushort nb = neighbors[i];
+            ushort nb = NeighborList[i];
             float nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
             if (nbProduct > dotProduct)
