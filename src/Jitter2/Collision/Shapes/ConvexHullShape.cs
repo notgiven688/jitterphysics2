@@ -163,6 +163,7 @@ public class ConvexHullShape : Shape
     {
         vertices = null!;
         indices = null!;
+        neighborList = null!;
     }
 
     /// <summary>
