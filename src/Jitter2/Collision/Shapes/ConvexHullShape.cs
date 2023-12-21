@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -90,6 +91,13 @@ public class ConvexHullShape : Shape
         ushort PushVector(CHullVector v)
         {
             if (tmpIndices.TryGetValue(v, out ushort result)) return result;
+
+            if (tmpVertices.Count > ushort.MaxValue)
+            {
+                throw new InvalidOperationException(
+                    $"The convex hull consists of too many triangles (>{ushort.MaxValue})");
+            }
+
             result = (ushort)tmpVertices.Count;
             tmpIndices.Add(v, result);
             tmpVertices.Add(v);
@@ -231,11 +239,11 @@ public class ConvexHullShape : Shape
 
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCOM = 1.0f / 4.0f * (column0 + column1 + column2);
+            JVector tetrahedronCom = 1.0f / 4.0f * (column0 + column1 + column2);
             float tetrahedronMass = 1.0f / 6.0f * detA;
 
             inertia += tetrahedronInertia;
-            com += tetrahedronMass * tetrahedronCOM;
+            com += tetrahedronMass * tetrahedronCom;
             mass += tetrahedronMass;
         }
 
