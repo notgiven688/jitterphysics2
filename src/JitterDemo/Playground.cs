@@ -101,6 +101,8 @@ public partial class Playground : RenderWindow
 
     public void ShootPrimitive()
     {
+        const float primitiveVelocity = 20.0f;
+
         var pos = Camera.Position;
         var dir = Camera.Direction;
 

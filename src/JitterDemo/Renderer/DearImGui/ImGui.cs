@@ -163,6 +163,18 @@ public static unsafe class ImGui
         value = cb == 0b1;
     }
 
+    public static float GetWindowWidth()
+    {
+        return ImGuiNative.igGetWindowWidth();
+    }
+
+    public static bool Button(string label, Vector2 size)
+    {
+        PushStr(label, 0);
+        var result = ImGuiNative.igButton(strPtr[0], size);
+        return Convert.ToBoolean(result);
+    }
+
     public static void InputText(string label, ref string text, ImGuiInputTextFlags flags)
     {
         PushStr(label, 0);
