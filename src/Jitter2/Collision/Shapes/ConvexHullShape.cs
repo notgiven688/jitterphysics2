@@ -73,9 +73,9 @@ public class ConvexHullShape : Shape
         }
     }
 
-    private CHullVector[] vertices;
-    private CHullTriangle[] indices;
-    private List<ushort> neighborList;
+    private CHullVector[] vertices = null!;
+    private CHullTriangle[] indices = null!;
+    private List<ushort> neighborList = null!;
 
     private JVector shifted;
 
@@ -84,6 +84,11 @@ public class ConvexHullShape : Shape
     /// </summary>
     /// <param name="triangles">A list containing all vertices defining the convex hull. The vertices must strictly lie on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm. Note that the passed triangle list is not referenced and can be modified after calling the constructor without side effects.</param>
     public ConvexHullShape(List<JTriangle> triangles)
+    {
+        Build(triangles);
+    }
+
+    private void Build(List<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = new();
@@ -161,9 +166,6 @@ public class ConvexHullShape : Shape
 
     private ConvexHullShape()
     {
-        vertices = null!;
-        indices = null!;
-        neighborList = null!;
     }
 
     /// <summary>
