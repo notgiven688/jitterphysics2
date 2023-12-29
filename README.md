@@ -31,7 +31,7 @@ Jitter is cross-platform. The `src` directory contains four projects:
 
 To run the demo scenes:
 
-- Install [.NET 7.0](https://dotnet.microsoft.com/download/dotnet/7.0)
+- Install [.NET 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
 - `git clone https://github.com/notgiven688/jitterphysics2.git`
 - `cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release`
 
