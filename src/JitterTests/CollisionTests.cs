@@ -17,7 +17,7 @@ public class CollisionTests
     }
 
     [TestCase]
-    public void Raycast()
+    public void RayCast()
     {
         const float radius = 4;
 
