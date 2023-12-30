@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// Represents a three-dimensional vector using three floating-point numbers. 
+/// Represents a three-dimensional vector using three floating-point numbers.
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Size = 12)]
 public struct JVector

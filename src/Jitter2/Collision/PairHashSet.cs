@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -29,8 +29,8 @@ using System.Runtime.InteropServices;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores pairs of (int, int) values. Utilized in Jitter to monitor 
-/// all potential overlapping pairs of shapes. The implementation is based 
+/// Stores pairs of (int, int) values. Utilized in Jitter to monitor
+/// all potential overlapping pairs of shapes. The implementation is based
 /// on open addressing.
 /// </summary>
 public class PairHashSet

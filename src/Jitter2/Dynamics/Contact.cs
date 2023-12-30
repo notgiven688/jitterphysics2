@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -29,8 +29,8 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics;
 
 /// <summary>
-/// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/> 
-/// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed 
+/// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/>
+/// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
 /// by one of these structs.
 /// </summary>
 public struct ContactData

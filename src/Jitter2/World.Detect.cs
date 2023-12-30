@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -230,7 +230,7 @@ public partial class World
     /// A speculative contact slows a body down such that it does not penetrate or tunnel through
     /// an obstacle within one frame. The <see cref="SpeculativeRelaxationFactor"/> scales the
     /// slowdown, ranging from 0 (where the body stops immediately during this frame) to 1 (where the body and the
-    /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity 
+    /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
     /// might be sufficient to trigger another speculative contact in the next frame.
     /// </summary>
     public float SpeculativeRelaxationFactor { get; set; } = 0.9f;

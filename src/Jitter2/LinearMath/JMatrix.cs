@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -236,7 +236,7 @@ public struct JMatrix
 
         return result;
     }
-    
+
     /// <summary>
     /// Create a scaling matrix.
     /// </summary>
@@ -244,14 +244,14 @@ public struct JMatrix
     public static JMatrix CreateScale(in JVector scale)
     {
         JMatrix result = Zero;
-        
+
         result.M11 = scale.X;
         result.M22 = scale.Y;
         result.M33 = scale.Z;
 
         return result;
     }
-    
+
     /// <summary>
     /// Create a scaling matrix.
     /// </summary>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -86,7 +86,7 @@ public abstract class Constraint : IDebugDrawable
     protected unsafe delegate*<ref ConstraintData, float, void> prepareForIteration = null;
 
     /// <summary>
-    /// Enables or disables this constraint temporarily. For a complete removal of the constraint, 
+    /// Enables or disables this constraint temporarily. For a complete removal of the constraint,
     /// use <see cref="World.Remove(Constraint)"/>.
     /// </summary>
     public unsafe bool IsEnabled

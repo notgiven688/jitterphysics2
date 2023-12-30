@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -110,7 +110,7 @@ public unsafe struct ConvexPolytope
     public readonly bool OriginEnclosed => originEnclosed;
 
     /// <summary>
-    /// Computes the barycentric coordinates of the origin projected onto a given triangle. 
+    /// Computes the barycentric coordinates of the origin projected onto a given triangle.
     /// These coordinates are used to retrieve points in A- and B-space.
     /// </summary>
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
@@ -274,7 +274,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Iterates through all triangles of the convex polytope and returns the one closest 
+    /// Iterates through all triangles of the convex polytope and returns the one closest
     /// to the origin (0, 0, 0), based on the minimum distance.
     /// </summary>
     public ref Triangle GetClosestTriangle()
@@ -352,7 +352,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Incorporates a single point into the polyhedron, disregarding A- and B-space. 
+    /// Incorporates a single point into the polyhedron, disregarding A- and B-space.
     /// This operation contrasts with <see cref="AddVertex"/>.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new point.</returns>
@@ -364,8 +364,8 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference 
-    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of 
+    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference
+    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of
     /// the return value of this method.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>

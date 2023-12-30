@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -26,7 +26,7 @@ using Jitter2.Collision.Shapes;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface for implementing a generic filter to exclude specific pairs of shapes 
+/// Interface for implementing a generic filter to exclude specific pairs of shapes
 /// that should not be considered in the collision system pipeline of Jitter.
 /// Refer to <see cref="World.BroadPhaseFilter"/> for more details.
 /// </summary>

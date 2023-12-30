@@ -1,5 +1,5 @@
 /*
- * Copyright (constraint) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains the relative twist of two bodies. This constraint removes one angular 
+/// Constrains the relative twist of two bodies. This constraint removes one angular
 /// degree of freedom when the limit is enforced.
 /// </summary>
 public unsafe class TwistAngle : Constraint

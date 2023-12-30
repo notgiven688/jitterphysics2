@@ -1,5 +1,5 @@
 /*
- * Copyright (constraint) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -30,8 +30,8 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements the BallSocket constraint. This constraint anchors a fixed point in the reference frame of 
-/// one body to a fixed point in the reference frame of another body, eliminating three translational 
+/// Implements the BallSocket constraint. This constraint anchors a fixed point in the reference frame of
+/// one body to a fixed point in the reference frame of another body, eliminating three translational
 /// degrees of freedom.
 /// </summary>
 public unsafe class BallSocket : Constraint

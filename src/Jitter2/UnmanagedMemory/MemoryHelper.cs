@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -68,7 +68,7 @@ public static unsafe class MemoryHelper
     {
         Free((void*)ptr);
     }
-    
+
     public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);
     public static void Free(void* ptr) => NativeMemory.Free(ptr);
 
