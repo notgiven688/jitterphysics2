@@ -199,7 +199,7 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            ConvexPolytope.CalculatePoints(out point1, out point2);
 
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
@@ -509,7 +509,7 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            ConvexPolytope.CalculatePoints(out point1, out point2);
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
 

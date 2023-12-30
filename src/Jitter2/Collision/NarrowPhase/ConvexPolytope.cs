@@ -98,32 +98,31 @@ public unsafe struct ConvexPolytope
     private short tCount;
     private short vPointer;
 
+    private Triangle closestTriangle;
     private bool originEnclosed;
-    private int closestIndex;
 
     private JVector center;
 
     /// <summary>
     /// Indicates whether the origin is enclosed within the polyhedron.
-    /// The return value may be invalidated by subsequent calls to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
+    /// Only returns a valid result if <see cref="AddVertex"/> or <see cref="AddPoint"/> calls returned true.
     /// </summary>
-    public readonly bool OriginEnclosed => originEnclosed;
+    public bool OriginEnclosed => originEnclosed;
 
     /// <summary>
-    /// Returns the closest triangle. Note that the reference may be invalidated by subsequent calls
-    /// to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
+    /// Returns the closest triangle.
     /// </summary>
-    public ref Triangle ClosestTriangle => ref Triangles[closestIndex];
+    public Triangle ClosestTriangle => closestTriangle;
 
     /// <summary>
     /// Computes the barycentric coordinates of the origin projected onto a given triangle.
     /// These coordinates are used to retrieve points in A- and B-space.
     /// </summary>
-    public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
+    public void CalculatePoints(out JVector pA, out JVector pB)
     {
-        CalcBarycentric(ctri, out JVector bc, !originEnclosed);
-        pA = bc.X * Vertices[ctri.A].A + bc.Y * Vertices[ctri.B].A + bc.Z * Vertices[ctri.C].A;
-        pB = bc.X * Vertices[ctri.A].B + bc.Y * Vertices[ctri.B].B + bc.Z * Vertices[ctri.C].B;
+        CalcBarycentric(closestTriangle, out JVector bc, !originEnclosed);
+        pA = bc.X * Vertices[closestTriangle.A].A + bc.Y * Vertices[closestTriangle.B].A + bc.Z * Vertices[closestTriangle.C].A;
+        pB = bc.X * Vertices[closestTriangle.A].B + bc.Y * Vertices[closestTriangle.B].B + bc.Z * Vertices[closestTriangle.C].B;
     }
 
     private bool CalcBarycentric(in Triangle tri, out JVector result, bool clamp = false)
@@ -283,6 +282,7 @@ public unsafe struct ConvexPolytope
     {
         float currentMin = float.MaxValue;
         originEnclosed = true;
+        int closestIndex = -1;
 
         for (int i = 0; i < tCount; i++)
         {
@@ -294,6 +294,8 @@ public unsafe struct ConvexPolytope
 
             if (!Triangles[i].FacingOrigin) originEnclosed = false;
         }
+
+        closestTriangle = Triangles[closestIndex];
     }
 
     /// <summary>
@@ -304,7 +306,6 @@ public unsafe struct ConvexPolytope
         originEnclosed = false;
         vPointer = 3;
         tCount = 0;
-        closestIndex = -1;
 
         center = 0.25f * (Vertices[0].V + Vertices[1].V + Vertices[2].V + Vertices[3].V);
 
@@ -325,7 +326,6 @@ public unsafe struct ConvexPolytope
         vPointer = 3;
         tCount = 0;
         center = point;
-        closestIndex = -1;
 
         const float scale = 1e-2f; // minkowski sums not allowed to be thinner
         Vertices[0] = new Vertex(center + scale * new JVector(MathF.Sqrt(8.0f / 9.0f), 0.0f, -1.0f / 3.0f));
