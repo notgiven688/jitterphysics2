@@ -24,7 +24,7 @@ public class Demo19 : IDemo
             dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(origin),
                 Conversion.FromJitter(origin + dir));
 
-            bool hit = world.Raycast(origin, dir, null, null, out Shape? shape,
+            bool hit = world.RayCast(origin, dir, null, null, out Shape? shape,
                 out JVector normal, out float frac);
 
             if (hit)
@@ -34,7 +34,7 @@ public class Demo19 : IDemo
         }
     }
 
-    public string Name => "RaycastTest";
+    public string Name => "RayCastTest";
 
     private Playground pg = null!;
     private World world = null!;

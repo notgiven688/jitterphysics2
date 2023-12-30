@@ -64,7 +64,7 @@ public class Player
         AngularMovement.TargetVelocity = rotate;
     }
 
-    private World.RaycastFilterPre? preFilter = null;
+    private World.RayCastFilterPre? preFilter = null;
     public bool FilterShape(Shape shape)
     {
         if (shape.RigidBody != null)
@@ -78,7 +78,7 @@ public class Player
     {
         preFilter ??= FilterShape;
 
-        bool hit = world.Raycast(Body.Position, -JVector.UnitY, preFilter, null,
+        bool hit = world.RayCast(Body.Position, -JVector.UnitY, preFilter, null,
             out floor, out JVector normal, out float fraction);
 
         float delta = fraction - capsuleHalfHeight;

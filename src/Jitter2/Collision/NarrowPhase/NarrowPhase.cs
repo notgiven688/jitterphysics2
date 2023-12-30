@@ -82,7 +82,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool Raycast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        public bool RayCast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -555,7 +555,7 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Performs a raycast against a shape.
+    /// Performs a ray cast against a shape.
     /// </summary>
     /// <param name="support">The support function of the shape.</param>
     /// <param name="orientation">The orientation of the shape in world space.</param>
@@ -568,7 +568,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool Raycast(ISupportMap support, in JMatrix orientation,
+    public static bool RayCast(ISupportMap support, in JMatrix orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         solver.MKD.SupportA = support;
@@ -578,7 +578,7 @@ public static class NarrowPhase
         JVector tdirection = JVector.TransposedTransform(direction, orientation);
         JVector torigin = JVector.TransposedTransform(origin - position, orientation);
 
-        bool result = solver.Raycast(torigin, tdirection, out fraction, out normal);
+        bool result = solver.RayCast(torigin, tdirection, out fraction, out normal);
 
         // ..rotate back.
         JVector.Transform(normal, orientation, out normal);
@@ -587,7 +587,7 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Performs a raycast against a shape.
+    /// Performs a ray cast against a shape.
     /// </summary>
     /// <param name="support">The support function of the shape.</param>
     /// <param name="origin">The origin of the ray.</param>
@@ -598,12 +598,12 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool Raycast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+    public static bool RayCast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
 
-        bool result = solver.Raycast(origin, direction, out fraction, out normal);
+        bool result = solver.RayCast(origin, direction, out fraction, out normal);
 
         return result;
     }

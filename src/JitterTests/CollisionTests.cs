@@ -26,7 +26,7 @@ public class CollisionTests
 
         SphereShape s1 = new(radius);
 
-        bool hit = NarrowPhase.Raycast(s1, JMatrix.CreateRotationX(0.32f), sp, 
+        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp, 
             op, sp - op, out float fraction, out JVector normal);
 
         JVector cn = JVector.Normalize(op - sp);   // analytical normal

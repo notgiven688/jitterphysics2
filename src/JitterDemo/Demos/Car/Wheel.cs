@@ -1,4 +1,4 @@
-// NOTE: The raycast car demo is a copied and slightly modified version
+// NOTE: The ray cast car demo is a copied and slightly modified version
 //       of the vehicle example from the great JigLib. License follows.
 
 /*
@@ -55,7 +55,7 @@ public class Wheel
 
     private float torque;
 
-    private readonly World.RaycastFilterPre raycast;
+    private readonly World.RayCastFilterPre rayCast;
 
     /// <summary>
     /// Sets or gets the current steering angle of
@@ -140,7 +140,7 @@ public class Wheel
         this.car = car;
         Position = position;
 
-        raycast = RaycastCallback;
+        rayCast = RayCastCallback;
 
         // set some default values.
         SideFriction = 3.2f;
@@ -251,8 +251,8 @@ public class Wheel
 
             RigidBody body;
 
-            bool result = world.Raycast(newOrigin, wheelRayDelta,
-                raycast, null, out Shape? shape, out JVector normal, out float frac);
+            bool result = world.RayCast(newOrigin, wheelRayDelta,
+                rayCast, null, out Shape? shape, out JVector normal, out float frac);
 
             // Debug Rendering
             // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2f);
@@ -408,7 +408,7 @@ public class Wheel
         }
     }
 
-    private bool RaycastCallback(Shape shape)
+    private bool RayCastCallback(Shape shape)
     {
         return shape.RigidBody != car;
     }
