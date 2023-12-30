@@ -99,15 +99,21 @@ public unsafe struct ConvexPolytope
     private short vPointer;
 
     private bool originEnclosed;
+    private int closestIndex;
 
     private JVector center;
 
     /// <summary>
     /// Indicates whether the origin is enclosed within the polyhedron.
-    /// Important: For accurate results, call this method only after invoking <see cref="GetClosestTriangle"/>.
     /// The return value may be invalidated by subsequent calls to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
     /// </summary>
     public readonly bool OriginEnclosed => originEnclosed;
+
+    /// <summary>
+    /// Returns the closest triangle. Note that the reference may be invalidated by subsequent calls
+    /// to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
+    /// </summary>
+    public ref Triangle ClosestTriangle => ref Triangles[closestIndex];
 
     /// <summary>
     /// Computes the barycentric coordinates of the origin projected onto a given triangle.
@@ -273,15 +279,9 @@ public unsafe struct ConvexPolytope
         return true;
     }
 
-    /// <summary>
-    /// Iterates through all triangles of the convex polytope and returns the one closest
-    /// to the origin (0, 0, 0), based on the minimum distance.
-    /// </summary>
-    public ref Triangle GetClosestTriangle()
+    private void Update()
     {
-        int closestIndex = -1;
         float currentMin = float.MaxValue;
-
         originEnclosed = true;
 
         for (int i = 0; i < tCount; i++)
@@ -294,8 +294,6 @@ public unsafe struct ConvexPolytope
 
             if (!Triangles[i].FacingOrigin) originEnclosed = false;
         }
-
-        return ref Triangles[closestIndex];
     }
 
     /// <summary>
@@ -306,6 +304,7 @@ public unsafe struct ConvexPolytope
         originEnclosed = false;
         vPointer = 3;
         tCount = 0;
+        closestIndex = -1;
 
         center = 0.25f * (Vertices[0].V + Vertices[1].V + Vertices[2].V + Vertices[3].V);
 
@@ -313,6 +312,8 @@ public unsafe struct ConvexPolytope
         CreateTriangle(0, 1, 3);
         CreateTriangle(0, 3, 2);
         CreateTriangle(1, 2, 3);
+
+        Update();
     }
 
     /// <summary>
@@ -324,6 +325,7 @@ public unsafe struct ConvexPolytope
         vPointer = 3;
         tCount = 0;
         center = point;
+        closestIndex = -1;
 
         const float scale = 1e-2f; // minkowski sums not allowed to be thinner
         Vertices[0] = new Vertex(center + scale * new JVector(MathF.Sqrt(8.0f / 9.0f), 0.0f, -1.0f / 3.0f));
@@ -335,6 +337,8 @@ public unsafe struct ConvexPolytope
         CreateTriangle(1, 0, 3);
         CreateTriangle(3, 0, 2);
         CreateTriangle(2, 1, 3);
+
+        Update();
     }
 
     /// <summary>
@@ -364,9 +368,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference
-    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of
-    /// the return value of this method.
+    /// Adds a vertex to the polyhedron.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
     public bool AddVertex(in Vertex vertex)
@@ -380,13 +382,11 @@ public unsafe struct ConvexPolytope
         for (int index = tCount; index-- > 0;)
         {
             if (!IsLit(index, vPointer)) continue;
-            Edge edge;
-            bool added;
 
             for (int k = 0; k < 3; k++)
             {
-                edge = new Edge(Triangles[index][(k + 0) % 3], Triangles[index][(k + 1) % 3]);
-                added = true;
+                var edge = new Edge(Triangles[index][(k + 0) % 3], Triangles[index][(k + 1) % 3]);
+                var added = true;
                 for (int e = ePointer; e-- > 0;)
                 {
                     if (Edge.Equals(edges[e], edge))
@@ -408,6 +408,9 @@ public unsafe struct ConvexPolytope
                 return false;
         }
 
-        return ePointer > 0;
+        if (ePointer <= 0) return false;
+
+        Update();
+        return true;
     }
 }

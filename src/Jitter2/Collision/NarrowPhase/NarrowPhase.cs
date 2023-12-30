@@ -54,6 +54,8 @@ public static class NarrowPhase
             ConvexPolytope.InitHeap();
             ConvexPolytope.InitTetrahedron(v);
 
+            v = ConvexPolytope.ClosestTriangle.ClosestToOrigin;
+
             int maxIter = MaxIter;
 
             float distSq = v.LengthSquared();
@@ -72,7 +74,7 @@ public static class NarrowPhase
 
                 if (!ConvexPolytope.AddPoint(w)) return false;
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = ConvexPolytope.ClosestTriangle.ClosestToOrigin;
 
                 if (ConvexPolytope.OriginEnclosed) return true;
 
@@ -100,6 +102,8 @@ public static class NarrowPhase
 
             ConvexPolytope.InitHeap();
             ConvexPolytope.InitTetrahedron(v);
+
+            v = ConvexPolytope.ClosestTriangle.ClosestToOrigin;
 
             int maxIter = MaxIter;
 
@@ -132,7 +136,7 @@ public static class NarrowPhase
 
                 ConvexPolytope.AddPoint(w);
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = ConvexPolytope.ClosestTriangle.ClosestToOrigin;
 
                 distSq = v.LengthSquared();
             }
@@ -162,7 +166,7 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = ConvexPolytope.ClosestTriangle;
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
@@ -461,7 +465,7 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = ConvexPolytope.ClosestTriangle;
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
