@@ -68,7 +68,7 @@ public static unsafe class MemoryHelper
     {
         Free((void*)ptr);
     }
-    
+
     public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);
     public static void Free(void* ptr) => NativeMemory.Free(ptr);
 

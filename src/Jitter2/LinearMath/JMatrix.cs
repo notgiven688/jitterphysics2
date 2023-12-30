@@ -236,7 +236,7 @@ public struct JMatrix
 
         return result;
     }
-    
+
     /// <summary>
     /// Create a scaling matrix.
     /// </summary>
@@ -244,14 +244,14 @@ public struct JMatrix
     public static JMatrix CreateScale(in JVector scale)
     {
         JMatrix result = Zero;
-        
+
         result.M11 = scale.X;
         result.M22 = scale.Y;
         result.M33 = scale.Z;
 
         return result;
     }
-    
+
     /// <summary>
     /// Create a scaling matrix.
     /// </summary>

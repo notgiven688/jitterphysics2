@@ -189,10 +189,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Gets or sets the damping factors for linear and angular motion.
     /// A damping factor of 0 means the body is not damped, while 1 brings
-    /// the body to a halt immediately. Damping is applied when calling 
+    /// the body to a halt immediately. Damping is applied when calling
     /// <see cref="World.Step(float, bool)"/>. Jitter multiplies the respective
     /// velocity each step by 1 minus the damping factor. Note that the values
-    /// are not scaled by time; a smaller time-step in 
+    /// are not scaled by time; a smaller time-step in
     /// <see cref="World.Step(float, bool)"/> results in increased damping.
     /// </summary>
     /// <remarks>
@@ -205,10 +205,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         {
             if (value.linear < 0.0f || value.linear > 1.0f || value.angular < 0.0f || value.angular > 1.0f)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), 
+                throw new ArgumentOutOfRangeException(nameof(value),
                     "Damping multiplier has to be within [0, 1].");
             }
-        
+
             linearDampingMultiplier = 1.0f - value.linear;
             angularDampingMultiplier = 1.0f - value.angular;
         }
@@ -349,12 +349,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Adds several shapes to the rigid body at once. Mass properties are 
+    /// Adds several shapes to the rigid body at once. Mass properties are
     /// recalculated only once, if requested.
     /// </summary>
     /// <param name="shapes">The Shapes to add.</param>
-    /// <param name="setMassInertia">If true, uses the mass properties of the Shapes to determine the 
-    /// body's mass properties, assuming unit density for the Shapes. If false, the inertia and mass remain 
+    /// <param name="setMassInertia">If true, uses the mass properties of the Shapes to determine the
+    /// body's mass properties, assuming unit density for the Shapes. If false, the inertia and mass remain
     /// unchanged.</param>
     public void AddShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
     {
@@ -371,7 +371,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// Adds a shape to the body.
     /// </summary>
     /// <param name="shape">The shape to be added.</param>
-    /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's 
+    /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's
     /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
     public void AddShape(Shape shape, bool setMassInertia = true)
     {
@@ -386,13 +386,13 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>. 
+    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>.
     /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Force { get; set; }
 
     /// <summary>
-    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>. 
+    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>.
     /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Torque { get; set; }
@@ -510,7 +510,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             // to not feed NaNs to the engine.
             throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
         }
-        
+
         SetMassInertia();
         inverseInertia = JMatrix.Multiply(inverseInertia, 1.0f / (Data.InverseMass * mass));
         this.inverseMass = 1.0f / mass;
@@ -530,7 +530,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             {
                 throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
             }
-            
+
             this.inverseInertia = inertia;
             this.inverseMass = mass;
         }
@@ -540,18 +540,18 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             {
                 throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
             }
-            
+
             if (!JMatrix.Inverse(inertia, out inverseInertia))
             {
                 throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
             }
-            
+
             this.inverseMass = 1.0f / mass;
         }
 
         UpdateWorldInertia();
     }
-    
+
     private static Stack<JTriangle>? debugTriangles;
 
     /// <summary>
@@ -570,7 +570,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             while (debugTriangles.Count > 0)
             {
                 var tri = debugTriangles.Pop();
-                
+
                 drawer.DrawTriangle(
                     JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
                     JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
@@ -580,8 +580,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets the mass of the rigid body. To modify the mass, use 
-    /// <see cref="RigidBody.SetMassInertia(float)"/> or 
+    /// Gets the mass of the rigid body. To modify the mass, use
+    /// <see cref="RigidBody.SetMassInertia(float)"/> or
     /// <see cref="RigidBody.SetMassInertia(in JMatrix, float, bool)"/>.
     /// </summary>
     public float Mass => 1.0f / inverseMass;

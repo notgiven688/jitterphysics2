@@ -29,8 +29,8 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics;
 
 /// <summary>
-/// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/> 
-/// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed 
+/// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/>
+/// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
 /// by one of these structs.
 /// </summary>
 public struct ContactData

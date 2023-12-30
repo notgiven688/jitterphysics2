@@ -214,7 +214,7 @@ public static class MathHelper
     /// Determines whether the length of the given vector is zero or close to zero.
     /// </summary>
     /// <param name="v">The vector to evaluate.</param>
-    /// <param name="epsilonSq">A threshold value below which the squared magnitude of the vector 
+    /// <param name="epsilonSq">A threshold value below which the squared magnitude of the vector
     /// is considered to be zero or close to zero.</param>
     /// <returns>True if the vector is close to zero; otherwise, false.</returns>
     public static bool CloseToZero(in JVector v, float epsilonSq = 1e-16f)
