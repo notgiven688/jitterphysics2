@@ -40,7 +40,7 @@ public static class NarrowPhase
     {
         public MinkowskiDifference MKD;
         public ConvexPolytope ConvexPolytope;
-
+        
         public bool PointTest(in JVector origin)
         {
             const float CollideEpsilon = 1e-4f;
@@ -94,7 +94,7 @@ public static class NarrowPhase
 
             JVector r = direction;
             JVector x = origin;
-
+            
             var center = MKD.SupportA.GeometricCenter;
             JVector v = x - center;
 
@@ -140,7 +140,7 @@ public static class NarrowPhase
             fraction = lambda;
 
             float nlen2 = normal.LengthSquared();
-
+            
             if (nlen2 > NumericEpsilon)
             {
                 normal *= 1.0f / MathF.Sqrt(nlen2);
@@ -170,7 +170,7 @@ public static class NarrowPhase
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
-                    goto converged;
+                    searchDir = ctri.Normal;
                 }
 
                 MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
@@ -468,7 +468,7 @@ public static class NarrowPhase
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
-                    goto converged;
+                    searchDir = ctri.Normal;
                 }
 
                 MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
@@ -520,7 +520,7 @@ public static class NarrowPhase
 
     // ------------------------------------------------------------------------------------------------------------
     [ThreadStatic] private static Solver solver;
-
+    
     /// <summary>
     /// Check if a point is inside a shape.
     /// </summary>
@@ -550,7 +550,7 @@ public static class NarrowPhase
 
         solver.MKD.SupportA = support;
         solver.MKD.SupportB = null!;
-
+        
         return solver.PointTest(transformedOrigin);
     }
 
@@ -714,9 +714,9 @@ public static class NarrowPhase
     /// <summary>
     /// Detects whether two convex shapes overlap and provides detailed collision information.
     /// It assumes that support shape A is at position zero and not rotated.
-    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the
+    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the 
     /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth
-    /// a predefined threshold, the results are further refined using the Expanding Polytope
+    /// a predefined threshold, the results are further refined using the Expanding Polytope 
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
