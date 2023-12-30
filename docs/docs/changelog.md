@@ -12,7 +12,7 @@ sidebar_position: 5
 
 - Added debug drawing for rigid bodies (`RigidBody.DebugDraw`).
 - Fixed a bug in `CalculateMassInertia` within `TransformedShape.cs`.
-- Improved raycasting performance and introduced `NarrowPhase.PointTest`.
+- Improved ray casting performance and introduced `NarrowPhase.PointTest`.
 - **Breaking Change:** Inverted behavior of `BroadPhaseCollisionFilter`.
 - **Breaking Change:** Inverted definition of damping factors in `RigidBody.Damping` (0 = no damping, 1 = immediate halt).
 - Added `RigidBody.SetMassInertia` overload to enable setting the inverse inertia to zero.

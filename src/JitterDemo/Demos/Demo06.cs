@@ -102,9 +102,9 @@ public class CarMesh : MultiMesh
 
 public class Demo06 : IDemo
 {
-    public string Name => "Raycast Car";
+    public string Name => "Ray-cast Car";
 
-    private RaycastCar defaultCar = null!;
+    private RayCastCar defaultCar = null!;
 
     public void Build()
     {
@@ -113,7 +113,7 @@ public class Demo06 : IDemo
 
         pg.ResetScene();
 
-        defaultCar = new RaycastCar(world);
+        defaultCar = new RayCastCar(world);
         defaultCar.Body.Position = new JVector(0, 2, 0);
         defaultCar.Body.DeactivationTime = TimeSpan.MaxValue;
         defaultCar.Body.Tag = new RigidBodyTag();

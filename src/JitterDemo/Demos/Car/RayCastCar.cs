@@ -1,4 +1,4 @@
-// NOTE: The raycast car demo is a copied and slightly modified version
+// NOTE: The ray cast car demo is a copied and slightly modified version
 //       of the vehicle example from the great JigLib. License follows.
 
 /*
@@ -37,7 +37,7 @@ namespace JitterDemo;
 /// Creates the Jitter default car with 4 wheels. To create a custom car
 /// use the Wheel class and add it to a body.
 /// </summary>
-public class RaycastCar
+public class RayCastCar
 {
     // the default car has 4 wheels
     private readonly World world;
@@ -80,7 +80,7 @@ public class RaycastCar
     /// </summary>
     /// <param name="world">The world the car should be in.</param>
     /// <param name="shape">The shape of the car. Recommend is a box shape.</param>
-    public RaycastCar(World world)
+    public RayCastCar(World world)
     {
         this.world = world;
 

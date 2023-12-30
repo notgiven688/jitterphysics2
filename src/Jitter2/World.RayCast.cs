@@ -33,9 +33,9 @@ namespace Jitter2;
 public partial class World
 {
     /// <summary>
-    /// Preliminary result of the raycast.
+    /// Preliminary result of the ray cast.
     /// </summary>
-    public struct RaycastResult
+    public struct RayCastResult
     {
         public Shape Entity;
         public float Fraction;
@@ -47,21 +47,21 @@ public partial class World
     /// Post-filter delegate.
     /// </summary>
     /// <returns>False if the hit should be filtered out.</returns>
-    public delegate bool RaycastFilterPost(RaycastResult result);
+    public delegate bool RayCastFilterPost(RayCastResult result);
 
     /// <summary>
     /// Pre-filter delegate.
     /// </summary>
     /// <returns>False if the hit should be filtered out.</returns>
-    public delegate bool RaycastFilterPre(Shape result);
+    public delegate bool RayCastFilterPre(Shape result);
 
     private struct Ray
     {
         public readonly JVector Origin;
         public readonly JVector Direction;
 
-        public RaycastFilterPost? FilterPost;
-        public RaycastFilterPre? FilterPre;
+        public RayCastFilterPost? FilterPost;
+        public RayCastFilterPre? FilterPre;
 
         public readonly float Lambda;
 
@@ -78,8 +78,8 @@ public partial class World
     [ThreadStatic] private static Stack<int>? stack;
 
     /// <summary>
-    /// Raycast against a single shape. See <see cref="World.Raycast(JVector, JVector, RaycastFilterPre?, RaycastFilterPost?, out Shape, out JVector, out float)"/>
-    /// for a raycast against the world.
+    /// Ray cast against a single shape. See <see cref="World.RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out Shape, out JVector, out float)"/>
+    /// for a ray cast against the world.
     /// </summary>
     /// <param name="shape">Shape to test.</param>
     /// <param name="origin">Origin of the ray.</param>
@@ -87,11 +87,11 @@ public partial class World
     /// <param name="normal">The normal of the surface where the ray hits. Zero if ray does not hit.</param>
     /// <param name="fraction">Distance from the origin to the ray hit point in units of the ray's direction.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
-    public bool Raycast(Shape shape, JVector origin, JVector direction, out JVector normal, out float fraction)
+    public bool RayCast(Shape shape, JVector origin, JVector direction, out JVector normal, out float fraction)
     {
         if (shape.RigidBody == null)
         {
-            return NarrowPhase.Raycast(shape, origin, direction, out fraction, out normal);
+            return NarrowPhase.RayCast(shape, origin, direction, out fraction, out normal);
         }
 
         ref RigidBodyData body = ref shape.RigidBody.Data;
@@ -104,12 +104,12 @@ public partial class World
             return result;
         }
 
-        return NarrowPhase.Raycast(shape, body.Orientation, body.Position,
+        return NarrowPhase.RayCast(shape, body.Orientation, body.Position,
             origin, direction, out fraction, out normal);
     }
 
     /// <summary>
-    /// Raycast against the world.
+    /// Ray cast against the world.
     /// </summary>
     /// <param name="origin">Origin of the ray.</param>
     /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
@@ -119,7 +119,7 @@ public partial class World
     /// <param name="normal">The normal of the surface where the ray hits. Zero if ray does not hit.</param>
     /// <param name="fraction">Distance from the origin to the ray hit point in units of the ray's directin.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
-    public bool Raycast(JVector origin, JVector direction, RaycastFilterPre? pre, RaycastFilterPost? post,
+    public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
         out Shape? shape, out JVector normal, out float fraction)
     {
         Ray ray = new(origin, direction)
@@ -134,15 +134,15 @@ public partial class World
         return result.Hit;
     }
 
-    private RaycastResult QueryRay(in Ray ray)
+    private RayCastResult QueryRay(in Ray ray)
     {
-        if (DynamicTree.Root == -1) return new RaycastResult();
+        if (DynamicTree.Root == -1) return new RayCastResult();
 
         stack ??= new Stack<int>(256);
 
         stack.Push(DynamicTree.Root);
 
-        RaycastResult result = new();
+        RayCastResult result = new();
         result.Fraction = ray.Lambda;
 
         while (stack.Count > 0)
@@ -155,7 +155,7 @@ public partial class World
             {
                 if (ray.FilterPre != null && !ray.FilterPre(node.Proxy)) continue;
 
-                RaycastResult res = Raycast(node.Proxy, ray);
+                RayCastResult res = RayCast(node.Proxy, ray);
                 if (res.Hit && res.Fraction < result.Fraction)
                 {
                     if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
@@ -197,10 +197,10 @@ public partial class World
         return result;
     }
 
-    private RaycastResult Raycast(Shape entity, in Ray ray)
+    private RayCastResult RayCast(Shape entity, in Ray ray)
     {
-        RaycastResult result;
-        result.Hit = Raycast(entity, ray.Origin, ray.Direction, out result.Normal, out result.Fraction);
+        RayCastResult result;
+        result.Hit = RayCast(entity, ray.Origin, ray.Direction, out result.Normal, out result.Fraction);
         result.Entity = entity;
 
         return result;
