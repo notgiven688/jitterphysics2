@@ -1,5 +1,5 @@
 /*
- * Copyright (constraint) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) 2009-2024 Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements the ConeLimit constraint, which restricts the tilt of one body relative to 
+/// Implements the ConeLimit constraint, which restricts the tilt of one body relative to
 /// another body.
 /// </summary>
 public unsafe class ConeLimit : Constraint

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) 2009-2024 Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>) 
+/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>)
 /// maintains a record of potential overlapping pairs.
 /// </summary>
 /// <typeparam name="T">The type of elements stored in the dynamic tree.</typeparam>
@@ -50,13 +50,13 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     public const int InitialSize = 1024;
 
     /// <summary>
-    /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as 
+    /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
     /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * alpha, where alpha is a pseudo-random number in the range [1,2].
     /// </summary>
     public const float ExpandFactor = 0.1f;
 
     /// <summary>
-    /// Specifies a small additional expansion of the bounding box in the AABB tree structure to prevent 
+    /// Specifies a small additional expansion of the bounding box in the AABB tree structure to prevent
     /// the creation of bounding boxes with zero volume.
     /// </summary>
     public const float ExpandEps = 0.01f;

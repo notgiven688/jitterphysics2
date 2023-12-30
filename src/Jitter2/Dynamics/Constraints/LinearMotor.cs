@@ -1,5 +1,5 @@
 /*
- * Copyright (constraint) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) 2009-2024 Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ using Jitter2.UnmanagedMemory;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A motor constraint that drives relative translational movement along two axes fixed 
+/// A motor constraint that drives relative translational movement along two axes fixed
 /// in the reference frames of the bodies.
 /// </summary>
 public unsafe class LinearMotor : Constraint

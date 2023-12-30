@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009-2023 Thorben Linneweber and others
+ * Copyright (c) 2009-2024 Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,8 +28,8 @@ using System.Diagnostics;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// A data structure based on an array, without a fixed order. Removing an element at position n 
-/// results in the last element of the array being moved to position n, with the <see cref="Count"/> 
+/// A data structure based on an array, without a fixed order. Removing an element at position n
+/// results in the last element of the array being moved to position n, with the <see cref="Count"/>
 /// decrementing by one.
 /// </summary>
 internal class SlimBag<T>
