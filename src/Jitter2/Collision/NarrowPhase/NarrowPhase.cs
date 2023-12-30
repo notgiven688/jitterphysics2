@@ -164,21 +164,21 @@ public static class NarrowPhase
             {
                 ctri = ConvexPolytope.GetClosestTriangle();
 
-                //Debug.Assert(ConvexPolytope.OriginEnclosed);
-
                 JVector searchDir = ctri.ClosestToOrigin;
+                float searchDirSq = ctri.ClosestToOriginSq;
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
                     searchDir = ctri.Normal;
+                    searchDirSq = ctri.NormalSq;
                 }
 
                 MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
 
-                float deltaDist = ctri.ClosestToOriginSq - JVector.Dot(vertex.V, ctri.ClosestToOrigin);
-
                 // compare with the corresponding code in SolveGJKEPA.
-                if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * ctri.ClosestToOriginSq)
+                float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
+
+                if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * searchDirSq)
                 {
                     goto converged;
                 }
@@ -462,30 +462,30 @@ public static class NarrowPhase
             while (++iter < MaxIter)
             {
                 ctri = ConvexPolytope.GetClosestTriangle();
+
                 JVector searchDir = ctri.ClosestToOrigin;
+                float searchDirSq = ctri.ClosestToOriginSq;
 
                 if (!ConvexPolytope.OriginEnclosed) searchDir.Negate();
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
                     searchDir = ctri.Normal;
+                    searchDirSq = ctri.NormalSq;
                 }
 
                 MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
 
-                float deltaDist = ctri.ClosestToOriginSq - JVector.Dot(vertex.V, ctri.ClosestToOrigin);
-
                 // Can we further "extend" the convex hull by adding the new vertex?
                 //
-                //     c = Triangles[Head].ClosestToOrigin (closest point on the polytope)
-                //     v = Vertices[vPointer] (support point)
-                //     e = CollideEpsilon
+                // v = Vertices[vPointer] (support point)
+                // c = Triangles[Head].ClosestToOrigin
+                // s = searchDir
                 //
-                // The condition reads:
-                //     abs(dot(normalize(c), v - c)) < e
-                //     <=>  abs(dot(c, v - c))/len(c) < e <=> abs((dot(c, v) - dot(c,c)))/len(c) < e
-                //     <=>  (dot(c, v) - dot(c,c))^2 < e^2*c^2 <=> (dot(c, v) - c^2)^2 < e^2*c^2
-                if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * ctri.ClosestToOriginSq)
+                // abs(dot(c - v, s)) / len(s) < e <=> [dot(c - v, s)]^2 = e*e*s^2
+                float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
+
+                if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * searchDirSq)
                 {
                     goto converged;
                 }
