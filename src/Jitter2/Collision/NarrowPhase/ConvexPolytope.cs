@@ -110,7 +110,7 @@ public unsafe struct ConvexPolytope
     public readonly bool OriginEnclosed => originEnclosed;
 
     /// <summary>
-    /// Computes the barycentric coordinates of the origin projected onto a given triangle. 
+    /// Computes the barycentric coordinates of the origin projected onto a given triangle.
     /// These coordinates are used to retrieve points in A- and B-space.
     /// </summary>
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
@@ -274,7 +274,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Iterates through all triangles of the convex polytope and returns the one closest 
+    /// Iterates through all triangles of the convex polytope and returns the one closest
     /// to the origin (0, 0, 0), based on the minimum distance.
     /// </summary>
     public ref Triangle GetClosestTriangle()
@@ -352,7 +352,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Incorporates a single point into the polyhedron, disregarding A- and B-space. 
+    /// Incorporates a single point into the polyhedron, disregarding A- and B-space.
     /// This operation contrasts with <see cref="AddVertex"/>.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new point.</returns>
@@ -364,8 +364,8 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference 
-    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of 
+    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference
+    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of
     /// the return value of this method.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
@@ -380,13 +380,11 @@ public unsafe struct ConvexPolytope
         for (int index = tCount; index-- > 0;)
         {
             if (!IsLit(index, vPointer)) continue;
-            Edge edge;
-            bool added;
 
             for (int k = 0; k < 3; k++)
             {
-                edge = new Edge(Triangles[index][(k + 0) % 3], Triangles[index][(k + 1) % 3]);
-                added = true;
+                var edge = new Edge(Triangles[index][(k + 0) % 3], Triangles[index][(k + 1) % 3]);
+                var added = true;
                 for (int e = ePointer; e-- > 0;)
                 {
                     if (Edge.Equals(edges[e], edge))
