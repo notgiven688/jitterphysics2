@@ -288,7 +288,6 @@ public partial class World
         // No need to copy the hashset content first. Removing while iterating does not invalidate
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
         // This comes in very handy for us.
-        if (body == NullBody) return;
 
         foreach (var constraint in body.Constraints)
         {
@@ -306,6 +305,8 @@ public partial class World
         {
             Remove(contact);
         }
+
+        if (body == NullBody) return;
 
         memRigidBodies.Free(body.handle);
 
@@ -383,7 +384,14 @@ public partial class World
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
 
-        shapes.Add(shape, true);
+        bool activate = true;
+
+        if (shape.RigidBody != null)
+        {
+            activate = shape.RigidBody.IsActive;
+        }
+
+        shapes.Add(shape, activate);
         shape.UpdateWorldBoundingBox();
         DynamicTree.AddProxy(shape);
     }
