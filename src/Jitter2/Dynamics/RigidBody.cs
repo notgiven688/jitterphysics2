@@ -345,7 +345,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
 
         shape.UpdateWorldBoundingBox();
-        World.AddShape(shape);
+        World.AddShape(shape, this.IsActive);
     }
 
     /// <summary>
