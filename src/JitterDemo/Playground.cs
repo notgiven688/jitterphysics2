@@ -64,6 +64,7 @@ public partial class Playground : RenderWindow
     public Playground()
     {
         world = new World(64_000, 64_000, 32_000);
+        world.NullBody.Tag = new RigidBodyTag(true);
         drawBox = DrawBox;
     }
 
