@@ -377,14 +377,14 @@ public partial class World
     /// <summary>
     /// Add a shape not associated with a rigid body to the world.
     /// </summary>
-    public void AddShape(Shape shape, bool activate = true)
+    public void AddShape(Shape shape, bool active = true)
     {
         if (shape.IsRegistered)
         {
             throw new ArgumentException("Shape can not be added. Is the shape already registered?");
         }
 
-        shapes.Add(shape, activate);
+        shapes.Add(shape, active);
         shape.UpdateWorldBoundingBox();
         DynamicTree.AddProxy(shape);
     }
