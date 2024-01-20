@@ -40,12 +40,15 @@ public class CollisionTests
     [TestCase]
     public void SweepTest()
     {
-        BoxShape s1 = new BoxShape(1);
-        BoxShape s2 = new BoxShape(1);
+        var s1 = new SphereShape(0.5f);
+        var s2 = new BoxShape(1);
 
-        NarrowPhase.SweepTest(s1, s2, JMatrix.Identity, JMatrix.Identity,
-            new JVector(-10, 0, 0), new JVector(0, 0, 0),
-            new JVector(1, 0, 0), new JVector(-1, 0, 0),
+        var rot = JMatrix.CreateRotationX(MathF.PI / 4.0f);
+        var vec2 = JVector.Normalize(new JVector(1, 1, 0));
+
+        NarrowPhase.SweepTest(s1, s2, rot, rot,
+            new JVector(0, 0, 0), new JVector(10, 10, 0),
+            vec2, -vec2,
             out JVector pA, out JVector pB, out JVector normal, out float fraction);
     }
 

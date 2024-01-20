@@ -82,8 +82,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool TimeOfImpact(in JVector sweep,
-            out JVector p1, out JVector p2, out JVector normal, out float fraction)
+        public bool SweepTest(in JVector sweep, out JVector p1, out JVector p2, out JVector normal, out float fraction)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -128,8 +127,7 @@ public static class NarrowPhase
                     }
 
                     fraction -= VdotW / VdotR;
-                    //MKD.PositionB += lambda * r;
-                    //posB += lambda * r;
+
                     MKD.PositionB = posB + fraction * r;
                     normal = v;
                 }
@@ -156,9 +154,6 @@ public static class NarrowPhase
             {
                 normal *= 1.0f / MathF.Sqrt(nlen2);
             }
-
-            //p1 += fraction * r;
-            //p2 += fraction * r;
 
             return true;
         }
@@ -843,18 +838,14 @@ public static class NarrowPhase
         JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
         JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
 
-        JVector.TransposedTransform(sweepA, orientationA, out JVector sweepATransformed);
-        JVector.TransposedTransform(sweepB, orientationA, out JVector sweepBTransformed);
-
-        // we also transform in the "velocity" frame of body A..
-        JVector sweep = sweepBTransformed - sweepATransformed;
+        // we also transform into the "velocity frame" of body A..
+        JVector sweep = sweepB - sweepA;
+        JVector.TransposedTransform(sweep, orientationA, out sweep);
 
         // ..perform toi calculation
-        bool res = solver.TimeOfImpact(sweep, out pointA, out pointB, out normal, out fraction);
+        bool res = solver.SweepTest(sweep, out pointA, out pointB, out normal, out fraction);
 
-        // transform back from the "velocity" frame of body A..
-        pointA += fraction * sweepATransformed;
-        pointB += fraction * sweepATransformed;
+        if (!res) return false;
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
         JVector.Transform(pointA, orientationA, out pointA);
@@ -863,6 +854,10 @@ public static class NarrowPhase
         JVector.Add(pointB, positionA, out pointB);
         JVector.Transform(normal, orientationA, out normal);
 
-        return res;
+        // transform back from the "velocity" frame of body A..
+        pointA += fraction * sweepA;
+        pointB += fraction * sweepA;
+
+        return true;
     }
 }
