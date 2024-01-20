@@ -852,7 +852,8 @@ public static class NarrowPhase
 
         if (!res) return false;
 
-        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is
+        // called multiple times.
         JVector.Transform(pointA, orientationA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
         JVector.Transform(pointB, orientationA, out pointB);
@@ -864,5 +865,24 @@ public static class NarrowPhase
         pointB += fraction * sweepA;
 
         return true;
+    }
+
+    /// <summary>
+    /// Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
+    /// direction.
+    /// </summary>
+    /// <returns>True if the shapes hit, false otherwise.</returns>
+    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationB, in JVector positionB, in JVector sweepB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
+    {
+        solver.MKD.SupportA = supportA;
+        solver.MKD.SupportB = supportB;
+        solver.MKD.PositionB = positionB;
+
+        // ..perform toi calculation
+        bool res = solver.SweepTest(sweepB, out pointA, out pointB, out normal, out fraction);
+
+        return res;
     }
 }
