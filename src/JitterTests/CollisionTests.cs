@@ -6,7 +6,7 @@ public class CollisionTests
     public void Setup()
     {
     }
-    
+
     [TestCase]
     public void NoBodyWorldBoundingBox()
     {
@@ -26,7 +26,7 @@ public class CollisionTests
 
         SphereShape s1 = new(radius);
 
-        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp, 
+        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp,
             op, sp - op, out float fraction, out JVector normal);
 
         JVector cn = JVector.Normalize(op - sp);   // analytical normal
@@ -40,13 +40,13 @@ public class CollisionTests
     [TestCase]
     public void SweepTest()
     {
-        SphereShape s1 = new SphereShape(1);
-        SphereShape s2 = new SphereShape(1);
+        BoxShape s1 = new BoxShape(1);
+        BoxShape s2 = new BoxShape(1);
 
         NarrowPhase.SweepTest(s1, s2, JMatrix.Identity, JMatrix.Identity,
             new JVector(-10, 0, 0), new JVector(0, 0, 0),
-            new JVector(1, 0, 0), new JVector(0, 0, 0),
-            out JVector pA, out JVector pB, out JVector normal);
+            new JVector(1, 0, 0), new JVector(-1, 0, 0),
+            out JVector pA, out JVector pB, out JVector normal, out float fraction);
     }
 
     [TestCase]

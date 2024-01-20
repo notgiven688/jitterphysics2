@@ -82,102 +82,87 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool TimeOfImpact(in JMatrix orientation1, in JMatrix orientation2, in JVector position1, in JVector position2,
-            in JVector sweptA, in JVector sweptB,
-            out JVector p1, out JVector p2, out JVector normal)
+        public bool TimeOfImpact(in JVector sweep,
+            out JVector p1, out JVector p2, out JVector normal, out float fraction)
         {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
 
             ConvexPolytope.InitHeap();
 
-            float lambda = 0.0f;
+            MKD.GeometricCenter(out var center);
+            ConvexPolytope.InitTetrahedron(center.V);
+
+            JVector posB = MKD.PositionB;
+
+            fraction = 0.0f;
 
             p1 = p2 = JVector.Zero;
 
-            JVector x1 = position1;
-            JVector x2 = position2;
+            JVector r = sweep;
 
-            JVector r = sweptA - sweptB;
-            JVector w, v;
+            ConvexPolytope.Triangle ctri = ConvexPolytope.GetClosestTriangle();
 
-            JVector supVertexA;
-            JVector rn = JVector.Negate(r);
-            
-            MKD.Support(r, out ConvexPolytope.Vertex vertex);
-            v = vertex.V;
-            
-            bool hasResult = false;
+            JVector v = -ctri.ClosestToOrigin;
+
             normal = JVector.Zero;
-            
-            float lastLambda = lambda;
 
-            int maxIter = 64;
+            int iter = MaxIter;
 
             float distSq = v.LengthSquared();
-            float epsilon = 0.00001f;
 
-            float VdotR;
-
-            while ((distSq > epsilon) && (maxIter-- != 0))
+            while ((distSq > CollideEpsilon * CollideEpsilon) && (iter-- != 0))
             {
-                //            JVector vn = JVector.Negate(v);
-                //            SupportMapTransformed(support1, ref orientation1, ref x1, ref vn, out supVertexA);
-                //            SupportMapTransformed(support2, ref orientation2, ref x2, ref v, out supVertexB);
-                //            w = supVertexA - supVertexB;
-                MKD.Support(v, out ConvexPolytope.Vertex vertex_w);
-                w = vertex_w.V;
-                
+                MKD.Support(v, out ConvexPolytope.Vertex vertex);
+                var w = vertex.V;
+
                 float VdotW = -JVector.Dot(v, w);
 
                 if (VdotW > 0.0f)
                 {
-                    VdotR = -JVector.Dot(v, r);
+                    float VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -1e-12f)
                     {
                         return false;
                     }
-                    else
-                    {
-                        lambda = lambda - VdotW / VdotR;
-                        
-                        x1 = position1 + lambda * sweptA;
-                        x2 = position2 + lambda * sweptB;
 
-                        // w = supVertexA - supVertexB;
-
-                        normal = v;
-                        hasResult = true;
-                    }
+                    fraction -= VdotW / VdotR;
+                    //MKD.PositionB += lambda * r;
+                    //posB += lambda * r;
+                    MKD.PositionB = posB + fraction * r;
+                    normal = v;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex_w))
+                if (!ConvexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
-                
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+
+                ctri = ConvexPolytope.GetClosestTriangle();
+
+                v = -ctri.ClosestToOrigin;
 
                 distSq = v.LengthSquared();
-                
             }
-            
+
             converged:
-            
-            ConvexPolytope.CalculatePoints(ConvexPolytope.GetClosestTriangle(), out p1, out p2);
 
-            if (normal.LengthSquared() > 1e-12f)
+            ConvexPolytope.CalculatePoints(ctri, out p1, out p2);
+
+            float nlen2 = normal.LengthSquared();
+
+            if (nlen2 > NumericEpsilon)
             {
-                normal.Normalize();
+                normal *= 1.0f / MathF.Sqrt(nlen2);
             }
 
-            p1 -= lambda * sweptA;
-            p2 -= lambda * sweptB;
+            //p1 += fraction * r;
+            //p2 += fraction * r;
 
             return true;
-            
         }
 
-        
 
         public bool RayCast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
@@ -212,7 +197,7 @@ public static class NarrowPhase
 
                 if (VdotW > 0.0f)
                 {
-                    float VdotR = JVector.Dot(v, r);
+                    float VdotR = -JVector.Dot(v, r);
 
                     if (VdotR >= -NumericEpsilon)
                     {
@@ -843,26 +828,41 @@ public static class NarrowPhase
 
         return res;
     }
-    
+
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationA, in JMatrix orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
-        out JVector pointA, out JVector pointB, out JVector normal)
+        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
     {
         solver.MKD.SupportA = supportA;
         solver.MKD.SupportB = supportB;
 
-        solver.MKD.OrientationB = orientationB;
-        solver.MKD.PositionB = positionB;
+        // rotate into the reference frame of bodyA..
+        JMatrix.TransposedMultiply(orientationA, orientationB, out solver.MKD.OrientationB);
+        JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
+        JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
 
-        // ..perform collision detection..
-        bool res = solver.TimeOfImpact(orientationA, orientationB, positionA, positionB,
-            sweepA, sweepB,  out pointA, out pointB, out normal);
-        
-        
+        JVector.TransposedTransform(sweepA, orientationA, out JVector sweepATransformed);
+        JVector.TransposedTransform(sweepB, orientationA, out JVector sweepBTransformed);
+
+        // we also transform in the "velocity" frame of body A..
+        JVector sweep = sweepBTransformed - sweepATransformed;
+
+        // ..perform toi calculation
+        bool res = solver.TimeOfImpact(sweep, out pointA, out pointB, out normal, out fraction);
+
+        // transform back from the "velocity" frame of body A..
+        pointA += fraction * sweepATransformed;
+        pointB += fraction * sweepATransformed;
+
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
+        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Add(pointA, positionA, out pointA);
+        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
 
         return res;
     }
-    
 }
