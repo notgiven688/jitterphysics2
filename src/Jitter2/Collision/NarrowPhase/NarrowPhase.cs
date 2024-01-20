@@ -82,6 +82,103 @@ public static class NarrowPhase
             return true;
         }
 
+        public bool TimeOfImpact(in JMatrix orientation1, in JMatrix orientation2, in JVector position1, in JVector position2,
+            in JVector sweptA, in JVector sweptB,
+            out JVector p1, out JVector p2, out JVector normal)
+        {
+
+            ConvexPolytope.InitHeap();
+
+            float lambda = 0.0f;
+
+            p1 = p2 = JVector.Zero;
+
+            JVector x1 = position1;
+            JVector x2 = position2;
+
+            JVector r = sweptA - sweptB;
+            JVector w, v;
+
+            JVector supVertexA;
+            JVector rn = JVector.Negate(r);
+            
+            MKD.Support(r, out ConvexPolytope.Vertex vertex);
+            v = vertex.V;
+            
+            bool hasResult = false;
+            normal = JVector.Zero;
+            
+            float lastLambda = lambda;
+
+            int maxIter = 64;
+
+            float distSq = v.LengthSquared();
+            float epsilon = 0.00001f;
+
+            float VdotR;
+
+            while ((distSq > epsilon) && (maxIter-- != 0))
+            {
+                //            JVector vn = JVector.Negate(v);
+                //            SupportMapTransformed(support1, ref orientation1, ref x1, ref vn, out supVertexA);
+                //            SupportMapTransformed(support2, ref orientation2, ref x2, ref v, out supVertexB);
+                //            w = supVertexA - supVertexB;
+                MKD.Support(v, out ConvexPolytope.Vertex vertex_w);
+                w = vertex_w.V;
+                
+                float VdotW = -JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    VdotR = -JVector.Dot(v, r);
+
+                    if (VdotR >= -1e-12f)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        lambda = lambda - VdotW / VdotR;
+                        
+                        x1 = position1 + lambda * sweptA;
+                        x2 = position2 + lambda * sweptB;
+
+                        // w = supVertexA - supVertexB;
+
+                        normal = v;
+                        hasResult = true;
+                    }
+                }
+
+                if (!ConvexPolytope.AddVertex(vertex_w))
+                {
+                    goto converged;
+                }
+                
+                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+
+                distSq = v.LengthSquared();
+                
+            }
+            
+            converged:
+            
+            ConvexPolytope.CalculatePoints(ConvexPolytope.GetClosestTriangle(), out p1, out p2);
+
+            if (normal.LengthSquared() > 1e-12f)
+            {
+                normal.Normalize();
+            }
+
+            p1 -= lambda * sweptA;
+            p2 -= lambda * sweptB;
+
+            return true;
+            
+        }
+
+        
+
         public bool RayCast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
@@ -746,4 +843,26 @@ public static class NarrowPhase
 
         return res;
     }
+    
+    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationA, in JMatrix orientationB,
+        in JVector positionA, in JVector positionB,
+        in JVector sweepA, in JVector sweepB,
+        out JVector pointA, out JVector pointB, out JVector normal)
+    {
+        solver.MKD.SupportA = supportA;
+        solver.MKD.SupportB = supportB;
+
+        solver.MKD.OrientationB = orientationB;
+        solver.MKD.PositionB = positionB;
+
+        // ..perform collision detection..
+        bool res = solver.TimeOfImpact(orientationA, orientationB, positionA, positionB,
+            sweepA, sweepB,  out pointA, out pointB, out normal);
+        
+        
+
+        return res;
+    }
+    
 }

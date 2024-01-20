@@ -38,6 +38,18 @@ public class CollisionTests
     }
 
     [TestCase]
+    public void SweepTest()
+    {
+        SphereShape s1 = new SphereShape(1);
+        SphereShape s2 = new SphereShape(1);
+
+        NarrowPhase.SweepTest(s1, s2, JMatrix.Identity, JMatrix.Identity,
+            new JVector(-10, 0, 0), new JVector(0, 0, 0),
+            new JVector(1, 0, 0), new JVector(0, 0, 0),
+            out JVector pA, out JVector pB, out JVector normal);
+    }
+
+    [TestCase]
     public void NormalDirection()
     {
         SphereShape s1 = new(0.5f);
