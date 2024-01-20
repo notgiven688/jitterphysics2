@@ -81,6 +81,73 @@ public static class NarrowPhase
             return true;
         }
 
+        public bool RayCast(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            normal = JVector.Zero;
+            fraction = float.MaxValue;
+
+            float lambda = 0.0f;
+
+            JVector r = direction;
+            JVector x = origin;
+
+            var center = supportA.GeometricCenter;
+            JVector v = x - center;
+
+            ConvexPolytope.InitHeap();
+            ConvexPolytope.InitTetrahedron(v);
+
+            int maxIter = MaxIter;
+
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                supportA.SupportMap(v, out JVector p);
+
+                JVector.Subtract(x, p, out JVector w);
+
+                float VdotW = JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    float VdotR = JVector.Dot(v, r);
+
+                    if (VdotR >= -NumericEpsilon)
+                    {
+                        return false;
+                    }
+
+                    lambda -= VdotW / VdotR;
+
+                    JVector.Multiply(r, lambda, out x);
+                    JVector.Add(origin, x, out x);
+                    JVector.Subtract(x, p, out w);
+                    normal = v;
+                }
+
+                ConvexPolytope.AddPoint(w);
+
+                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+
+                distSq = v.LengthSquared();
+            }
+
+            fraction = lambda;
+
+            float nlen2 = normal.LengthSquared();
+
+            if (nlen2 > NumericEpsilon)
+            {
+                normal *= 1.0f / MathF.Sqrt(nlen2);
+            }
+
+            return true;
+        }
+
         public bool SweepTest(ref MinkowskiDifference mkd, in JVector sweep,
             out JVector p1, out JVector p2, out JVector normal, out float fraction)
         {
@@ -147,74 +214,6 @@ public static class NarrowPhase
             converged:
 
             ConvexPolytope.CalculatePoints(ctri, out p1, out p2);
-
-            float nlen2 = normal.LengthSquared();
-
-            if (nlen2 > NumericEpsilon)
-            {
-                normal *= 1.0f / MathF.Sqrt(nlen2);
-            }
-
-            return true;
-        }
-
-
-        public bool RayCast(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
-        {
-            const float CollideEpsilon = 1e-4f;
-            const int MaxIter = 34;
-
-            normal = JVector.Zero;
-            fraction = float.MaxValue;
-
-            float lambda = 0.0f;
-
-            JVector r = direction;
-            JVector x = origin;
-
-            var center = supportA.GeometricCenter;
-            JVector v = x - center;
-
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
-
-            int maxIter = MaxIter;
-
-            float distSq = v.LengthSquared();
-
-            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
-            {
-                supportA.SupportMap(v, out JVector p);
-
-                JVector.Subtract(x, p, out JVector w);
-
-                float VdotW = JVector.Dot(v, w);
-
-                if (VdotW > 0.0f)
-                {
-                    float VdotR = JVector.Dot(v, r);
-
-                    if (VdotR >= -NumericEpsilon)
-                    {
-                        return false;
-                    }
-
-                    lambda -= VdotW / VdotR;
-
-                    JVector.Multiply(r, lambda, out x);
-                    JVector.Add(origin, x, out x);
-                    JVector.Subtract(x, p, out w);
-                    normal = v;
-                }
-
-                ConvexPolytope.AddPoint(w);
-
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
-
-                distSq = v.LengthSquared();
-            }
-
-            fraction = lambda;
 
             float nlen2 = normal.LengthSquared();
 
