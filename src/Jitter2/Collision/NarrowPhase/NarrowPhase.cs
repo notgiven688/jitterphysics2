@@ -825,8 +825,8 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Calculates the time of impact and the collisions points in world space
-    /// for two shapes with velocities sweepA and sweepB.
+    /// Calculates the time of impact and the collision points in world space for two shapes with velocities
+    /// sweepA and sweepB.
     /// </summary>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
