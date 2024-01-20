@@ -192,7 +192,7 @@ public static class NarrowPhase
 
                 if (VdotW > 0.0f)
                 {
-                    float VdotR = -JVector.Dot(v, r);
+                    float VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -NumericEpsilon)
                     {
