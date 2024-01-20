@@ -29,8 +29,8 @@ public class CollisionTests
         bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp,
             op, sp - op, out float fraction, out JVector normal);
 
-        JVector cn = JVector.Normalize(op - sp);   // analytical normal
-        JVector hp = op + (sp - op) * fraction;    // hit point
+        JVector cn = JVector.Normalize(op - sp); // analytical normal
+        JVector hp = op + (sp - op) * fraction; // hit point
 
         Assert.That(hit);
         Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
@@ -43,12 +43,12 @@ public class CollisionTests
         var s1 = new SphereShape(0.5f);
         var s2 = new BoxShape(1);
 
-        var rot = JMatrix.CreateRotationX(MathF.PI / 4.0f);
+        var rot = JMatrix.CreateRotationZ(MathF.PI / 4.0f);
         var vec2 = JVector.Normalize(new JVector(1, 1, 0));
 
         NarrowPhase.SweepTest(s1, s2, rot, rot,
-            new JVector(0, 0, 0), new JVector(10, 10, 0),
-            vec2, -vec2,
+            new JVector(1, 1, 3), new JVector(11, 11, 3),
+            vec2, -2.0f * vec2,
             out JVector pA, out JVector pB, out JVector normal, out float fraction);
     }
 

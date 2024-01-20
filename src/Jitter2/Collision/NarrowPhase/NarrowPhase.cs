@@ -824,6 +824,11 @@ public static class NarrowPhase
         return res;
     }
 
+    /// <summary>
+    /// Calculates the time of impact and the collisions points in world space
+    /// for two shapes with velocities sweepA and sweepB.
+    /// </summary>
+    /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationA, in JMatrix orientationB,
         in JVector positionA, in JVector positionB,
