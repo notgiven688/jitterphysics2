@@ -38,7 +38,7 @@ public static class NarrowPhase
 
     private unsafe struct Solver
     {
-        public ConvexPolytope ConvexPolytope;
+        private ConvexPolytope convexPolytope;
 
         public bool PointTest(ISupportMap supportA, in JVector origin)
         {
@@ -50,8 +50,8 @@ public static class NarrowPhase
             var center = supportA.GeometricCenter;
             JVector v = x - center;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(v);
 
             int maxIter = MaxIter;
 
@@ -69,11 +69,11 @@ public static class NarrowPhase
                     return false;
                 }
 
-                if (!ConvexPolytope.AddPoint(w)) return false;
+                if (!convexPolytope.AddPoint(w)) return false;
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
-                if (ConvexPolytope.OriginEnclosed) return true;
+                if (convexPolytope.OriginEnclosed) return true;
 
                 distSq = v.LengthSquared();
             }
@@ -97,8 +97,8 @@ public static class NarrowPhase
             var center = supportA.GeometricCenter;
             JVector v = x - center;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(v);
 
             int maxIter = MaxIter;
 
@@ -129,9 +129,9 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                ConvexPolytope.AddPoint(w);
+                convexPolytope.AddPoint(w);
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
                 distSq = v.LengthSquared();
             }
@@ -154,10 +154,10 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
-            ConvexPolytope.InitHeap();
+            convexPolytope.InitHeap();
 
             mkd.GeometricCenter(out var center);
-            ConvexPolytope.InitTetrahedron(center.V);
+            convexPolytope.InitTetrahedron(center.V);
 
             JVector posB = mkd.PositionB;
 
@@ -167,7 +167,7 @@ public static class NarrowPhase
 
             JVector r = sweep;
 
-            ConvexPolytope.Triangle ctri = ConvexPolytope.GetClosestTriangle();
+            ConvexPolytope.Triangle ctri = convexPolytope.GetClosestTriangle();
 
             JVector v = -ctri.ClosestToOrigin;
 
@@ -199,12 +199,12 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex))
+                if (!convexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
 
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = convexPolytope.GetClosestTriangle();
 
                 v = -ctri.ClosestToOrigin;
 
@@ -213,7 +213,7 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out p1, out p2);
+            convexPolytope.CalculatePoints(ctri, out p1, out p2);
 
             float nlen2 = normal.LengthSquared();
 
@@ -230,7 +230,7 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            ConvexPolytope.InitTetrahedron();
+            convexPolytope.InitTetrahedron();
 
             int iter = 0;
 
@@ -238,7 +238,7 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
@@ -259,7 +259,7 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex))
+                if (!convexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
@@ -271,7 +271,7 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            convexPolytope.CalculatePoints(ctri, out point1, out point2);
 
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
@@ -310,13 +310,13 @@ public static class NarrowPhase
             // MPR to have found the global minimum and perform an EPA run.
             const float EPAPenetrationThreshold = 0.02f;
 
-            ConvexPolytope.InitHeap();
+            convexPolytope.InitHeap();
 
-            ref ConvexPolytope.Vertex v0 = ref ConvexPolytope.Vertices[0];
-            ref ConvexPolytope.Vertex v1 = ref ConvexPolytope.Vertices[1];
-            ref ConvexPolytope.Vertex v2 = ref ConvexPolytope.Vertices[2];
-            ref ConvexPolytope.Vertex v3 = ref ConvexPolytope.Vertices[3];
-            ref ConvexPolytope.Vertex v4 = ref ConvexPolytope.Vertices[4];
+            ref ConvexPolytope.Vertex v0 = ref convexPolytope.Vertices[0];
+            ref ConvexPolytope.Vertex v1 = ref convexPolytope.Vertices[1];
+            ref ConvexPolytope.Vertex v2 = ref convexPolytope.Vertices[2];
+            ref ConvexPolytope.Vertex v3 = ref convexPolytope.Vertices[3];
+            ref ConvexPolytope.Vertex v4 = ref convexPolytope.Vertices[4];
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -530,8 +530,8 @@ public static class NarrowPhase
             mkd.GeometricCenter(out ConvexPolytope.Vertex centerVertex);
             JVector center = centerVertex.V;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(center);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(center);
 
             int iter = 0;
 
@@ -539,12 +539,12 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
 
-                if (!ConvexPolytope.OriginEnclosed) searchDir.Negate();
+                if (!convexPolytope.OriginEnclosed) searchDir.Negate();
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
@@ -568,7 +568,7 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex))
+                if (!convexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
@@ -583,14 +583,14 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            convexPolytope.CalculatePoints(ctri, out point1, out point2);
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
 
             // origin not enclosed: we basically did a pure GJK run
             // without ever enclosing the origin, i.e. the shapes do not overlap
             // and the penetration is negative.
-            if (!ConvexPolytope.OriginEnclosed) penetration *= -1.0f;
+            if (!convexPolytope.OriginEnclosed) penetration *= -1.0f;
 
             return true;
         }
@@ -668,9 +668,7 @@ public static class NarrowPhase
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     public static bool RayCast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
-        bool result = solver.RayCast(support, origin, direction, out fraction, out normal);
-
-        return result;
+        return solver.RayCast(support, origin, direction, out fraction, out normal);
     }
 
     /// <summary>
@@ -708,7 +706,6 @@ public static class NarrowPhase
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
-
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
 
@@ -758,7 +755,6 @@ public static class NarrowPhase
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
-
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
 
@@ -805,7 +801,6 @@ public static class NarrowPhase
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
-
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
         mkd.PositionB = positionB;
@@ -838,7 +833,7 @@ public static class NarrowPhase
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
         JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
-        // we also transform into the "velocity frame" of body A..
+        // we also transform the relative velocities
         JVector sweep = sweepB - sweepA;
         JVector.TransposedTransform(sweep, orientationA, out sweep);
 
@@ -855,9 +850,9 @@ public static class NarrowPhase
         JVector.Add(pointB, positionA, out pointB);
         JVector.Transform(normal, orientationA, out normal);
 
-        // transform back from the "velocity" frame of body A..
+        // transform back from the relative velocities
         pointA += fraction * sweepA;
-        pointB += fraction * sweepA;
+        pointB += fraction * sweepA; // sweepA is not a typo
 
         return true;
     }

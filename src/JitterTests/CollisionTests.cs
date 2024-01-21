@@ -44,12 +44,21 @@ public class CollisionTests
         var s2 = new BoxShape(1);
 
         var rot = JMatrix.CreateRotationZ(MathF.PI / 4.0f);
-        var vec2 = JVector.Normalize(new JVector(1, 1, 0));
+        var sweep = JVector.Normalize(new JVector(1, 1, 0));
 
         NarrowPhase.SweepTest(s1, s2, rot, rot,
             new JVector(1, 1, 3), new JVector(11, 11, 3),
-            vec2, -2.0f * vec2,
+            sweep, -2.0f * sweep,
             out JVector pA, out JVector pB, out JVector normal, out float fraction);
+
+        float expectedFraction = (MathF.Sqrt(200.0f) - 1.0f) * (1.0f / 3.0f);
+        JVector expectedNormal = JVector.Normalize(new JVector(1, 1, 0));
+        JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * (0.5f + expectedFraction);
+
+        Assert.That((normal - expectedNormal).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pA - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pB - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That(MathF.Abs(fraction - expectedFraction), Is.LessThan(1e-4f));
     }
 
     [TestCase]
