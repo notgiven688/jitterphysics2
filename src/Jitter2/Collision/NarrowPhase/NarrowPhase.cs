@@ -38,21 +38,20 @@ public static class NarrowPhase
 
     private unsafe struct Solver
     {
-        public MinkowskiDifference MKD;
-        public ConvexPolytope ConvexPolytope;
+        private ConvexPolytope convexPolytope;
 
-        public bool PointTest(in JVector origin)
+        public bool PointTest(ISupportMap supportA, in JVector origin)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
             JVector x = origin;
 
-            var center = MKD.SupportA.GeometricCenter;
+            var center = supportA.GeometricCenter;
             JVector v = x - center;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(v);
 
             int maxIter = MaxIter;
 
@@ -60,7 +59,7 @@ public static class NarrowPhase
 
             while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
             {
-                MKD.SupportA.SupportMap(v, out JVector p);
+                supportA.SupportMap(v, out JVector p);
                 JVector.Subtract(x, p, out JVector w);
 
                 float vw = JVector.Dot(v, w);
@@ -70,11 +69,11 @@ public static class NarrowPhase
                     return false;
                 }
 
-                if (!ConvexPolytope.AddPoint(w)) return false;
+                if (!convexPolytope.AddPoint(w)) return false;
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
-                if (ConvexPolytope.OriginEnclosed) return true;
+                if (convexPolytope.OriginEnclosed) return true;
 
                 distSq = v.LengthSquared();
             }
@@ -82,7 +81,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool RayCast(in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        public bool RayCast(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -95,11 +94,11 @@ public static class NarrowPhase
             JVector r = direction;
             JVector x = origin;
 
-            var center = MKD.SupportA.GeometricCenter;
+            var center = supportA.GeometricCenter;
             JVector v = x - center;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(v);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(v);
 
             int maxIter = MaxIter;
 
@@ -107,7 +106,7 @@ public static class NarrowPhase
 
             while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
             {
-                MKD.SupportA.SupportMap(v, out JVector p);
+                supportA.SupportMap(v, out JVector p);
 
                 JVector.Subtract(x, p, out JVector w);
 
@@ -130,9 +129,9 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                ConvexPolytope.AddPoint(w);
+                convexPolytope.AddPoint(w);
 
-                v = ConvexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
                 distSq = v.LengthSquared();
             }
@@ -149,12 +148,89 @@ public static class NarrowPhase
             return true;
         }
 
-        private bool SolveMPREPA(ref JVector point1, ref JVector point2, ref JVector normal, ref float penetration)
+        public bool SweepTest(ref MinkowskiDifference mkd, in JVector sweep,
+            out JVector p1, out JVector p2, out JVector normal, out float fraction)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            convexPolytope.InitHeap();
+
+            mkd.GeometricCenter(out var center);
+            convexPolytope.InitTetrahedron(center.V);
+
+            JVector posB = mkd.PositionB;
+
+            fraction = 0.0f;
+
+            p1 = p2 = JVector.Zero;
+
+            JVector r = sweep;
+
+            ConvexPolytope.Triangle ctri = convexPolytope.GetClosestTriangle();
+
+            JVector v = -ctri.ClosestToOrigin;
+
+            normal = JVector.Zero;
+
+            int iter = MaxIter;
+
+            float distSq = v.LengthSquared();
+
+            while ((distSq > CollideEpsilon * CollideEpsilon) && (iter-- != 0))
+            {
+                mkd.Support(v, out ConvexPolytope.Vertex vertex);
+                var w = vertex.V;
+
+                float VdotW = -JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    float VdotR = JVector.Dot(v, r);
+
+                    if (VdotR >= -1e-12f)
+                    {
+                        return false;
+                    }
+
+                    fraction -= VdotW / VdotR;
+
+                    mkd.PositionB = posB + fraction * r;
+                    normal = v;
+                }
+
+                if (!convexPolytope.AddVertex(vertex))
+                {
+                    goto converged;
+                }
+
+                ctri = convexPolytope.GetClosestTriangle();
+
+                v = -ctri.ClosestToOrigin;
+
+                distSq = v.LengthSquared();
+            }
+
+            converged:
+
+            convexPolytope.CalculatePoints(ctri, out p1, out p2);
+
+            float nlen2 = normal.LengthSquared();
+
+            if (nlen2 > NumericEpsilon)
+            {
+                normal *= 1.0f / MathF.Sqrt(nlen2);
+            }
+
+            return true;
+        }
+
+        private bool SolveMPREPA(in MinkowskiDifference mkd, ref JVector point1, ref JVector point2, ref JVector normal, ref float penetration)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            ConvexPolytope.InitTetrahedron();
+            convexPolytope.InitTetrahedron();
 
             int iter = 0;
 
@@ -162,7 +238,7 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
@@ -173,7 +249,7 @@ public static class NarrowPhase
                     searchDirSq = ctri.NormalSq;
                 }
 
-                MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
+                mkd.Support(searchDir, out ConvexPolytope.Vertex vertex);
 
                 // compare with the corresponding code in SolveGJKEPA.
                 float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
@@ -183,7 +259,7 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex))
+                if (!convexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
@@ -195,7 +271,7 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            convexPolytope.CalculatePoints(ctri, out point1, out point2);
 
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
@@ -203,7 +279,8 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool SolveMPR(out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        public bool SolveMPR(in MinkowskiDifference mkd,
+            out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
         {
             /*
             XenoCollide is available under the zlib license:
@@ -233,13 +310,13 @@ public static class NarrowPhase
             // MPR to have found the global minimum and perform an EPA run.
             const float EPAPenetrationThreshold = 0.02f;
 
-            ConvexPolytope.InitHeap();
+            convexPolytope.InitHeap();
 
-            ref ConvexPolytope.Vertex v0 = ref ConvexPolytope.Vertices[0];
-            ref ConvexPolytope.Vertex v1 = ref ConvexPolytope.Vertices[1];
-            ref ConvexPolytope.Vertex v2 = ref ConvexPolytope.Vertices[2];
-            ref ConvexPolytope.Vertex v3 = ref ConvexPolytope.Vertices[3];
-            ref ConvexPolytope.Vertex v4 = ref ConvexPolytope.Vertices[4];
+            ref ConvexPolytope.Vertex v0 = ref convexPolytope.Vertices[0];
+            ref ConvexPolytope.Vertex v1 = ref convexPolytope.Vertices[1];
+            ref ConvexPolytope.Vertex v2 = ref convexPolytope.Vertices[2];
+            ref ConvexPolytope.Vertex v3 = ref convexPolytope.Vertices[3];
+            ref ConvexPolytope.Vertex v4 = ref convexPolytope.Vertices[4];
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -247,7 +324,7 @@ public static class NarrowPhase
 
             penetration = 0.0f;
 
-            MKD.GeometricCenter(out v0);
+            mkd.GeometricCenter(out v0);
 
             if (Math.Abs(v0.V.X) < NumericEpsilon &&
                 Math.Abs(v0.V.Y) < NumericEpsilon &&
@@ -259,7 +336,7 @@ public static class NarrowPhase
 
             JVector.Negate(v0.V, out normal);
 
-            MKD.Support(normal, out v1);
+            mkd.Support(normal, out v1);
 
             pointA = v1.A;
             pointB = v1.B;
@@ -279,7 +356,7 @@ public static class NarrowPhase
                 return true;
             }
 
-            MKD.Support(normal, out v2);
+            mkd.Support(normal, out v2);
 
             if (JVector.Dot(v2.V, normal) <= 0.0f) return false;
 
@@ -310,7 +387,7 @@ public static class NarrowPhase
 
                 phase1++;
 
-                MKD.Support(normal, out v3);
+                mkd.Support(normal, out v3);
 
                 if (JVector.Dot(v3.V, normal) <= 0.0f)
                 {
@@ -373,7 +450,7 @@ public static class NarrowPhase
                     hit = d >= 0;
                 }
 
-                MKD.Support(normal, out v4);
+                mkd.Support(normal, out v4);
 
                 JVector.Subtract(v4.V, v3.V, out temp3);
                 float delta = JVector.Dot(temp3, normal);
@@ -392,7 +469,7 @@ public static class NarrowPhase
                         if (penetration > EPAPenetrationThreshold)
                         {
                             // If epa fails it does not set any result data. We continue with the mpr data.
-                            if (SolveMPREPA(ref pointA, ref pointB, ref normal, ref penetration)) return true;
+                            if (SolveMPREPA(mkd, ref pointA, ref pointB, ref normal, ref penetration)) return true;
                         }
 
                         normal *= invnormal;
@@ -444,16 +521,17 @@ public static class NarrowPhase
             }
         }
 
-        public bool SolveGJKEPA(out JVector point1, out JVector point2, out JVector normal, out float penetration)
+        public bool SolveGJKEPA(in MinkowskiDifference mkd,
+            out JVector point1, out JVector point2, out JVector normal, out float penetration)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            MKD.GeometricCenter(out ConvexPolytope.Vertex centerVertex);
+            mkd.GeometricCenter(out ConvexPolytope.Vertex centerVertex);
             JVector center = centerVertex.V;
 
-            ConvexPolytope.InitHeap();
-            ConvexPolytope.InitTetrahedron(center);
+            convexPolytope.InitHeap();
+            convexPolytope.InitTetrahedron(center);
 
             int iter = 0;
 
@@ -461,12 +539,12 @@ public static class NarrowPhase
 
             while (++iter < MaxIter)
             {
-                ctri = ConvexPolytope.GetClosestTriangle();
+                ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
                 float searchDirSq = ctri.ClosestToOriginSq;
 
-                if (!ConvexPolytope.OriginEnclosed) searchDir.Negate();
+                if (!convexPolytope.OriginEnclosed) searchDir.Negate();
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
@@ -474,7 +552,7 @@ public static class NarrowPhase
                     searchDirSq = ctri.NormalSq;
                 }
 
-                MKD.Support(searchDir, out ConvexPolytope.Vertex vertex);
+                mkd.Support(searchDir, out ConvexPolytope.Vertex vertex);
 
                 // Can we further "extend" the convex hull by adding the new vertex?
                 //
@@ -490,7 +568,7 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!ConvexPolytope.AddVertex(vertex))
+                if (!convexPolytope.AddVertex(vertex))
                 {
                     goto converged;
                 }
@@ -505,14 +583,14 @@ public static class NarrowPhase
 
             converged:
 
-            ConvexPolytope.CalculatePoints(ctri, out point1, out point2);
+            convexPolytope.CalculatePoints(ctri, out point1, out point2);
             normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
             penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
 
             // origin not enclosed: we basically did a pure GJK run
             // without ever enclosing the origin, i.e. the shapes do not overlap
             // and the penetration is negative.
-            if (!ConvexPolytope.OriginEnclosed) penetration *= -1.0f;
+            if (!convexPolytope.OriginEnclosed) penetration *= -1.0f;
 
             return true;
         }
@@ -529,10 +607,7 @@ public static class NarrowPhase
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
     public static bool PointTest(ISupportMap support, in JVector point)
     {
-        solver.MKD.SupportA = support;
-        solver.MKD.SupportB = null!;
-
-        return solver.PointTest(point);
+        return solver.PointTest(support, point);
     }
 
     /// <summary>
@@ -547,11 +622,7 @@ public static class NarrowPhase
         in JVector position, in JVector point)
     {
         JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
-
-        solver.MKD.SupportA = support;
-        solver.MKD.SupportB = null!;
-
-        return solver.PointTest(transformedOrigin);
+        return solver.PointTest(support, transformedOrigin);
     }
 
     /// <summary>
@@ -571,14 +642,11 @@ public static class NarrowPhase
     public static bool RayCast(ISupportMap support, in JMatrix orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
-        solver.MKD.SupportA = support;
-        solver.MKD.SupportB = null!;
-
         // rotate the ray into the reference frame of bodyA..
         JVector tdirection = JVector.TransposedTransform(direction, orientation);
         JVector torigin = JVector.TransposedTransform(origin - position, orientation);
 
-        bool result = solver.RayCast(torigin, tdirection, out fraction, out normal);
+        bool result = solver.RayCast(support, torigin, tdirection, out fraction, out normal);
 
         // ..rotate back.
         JVector.Transform(normal, orientation, out normal);
@@ -600,12 +668,7 @@ public static class NarrowPhase
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     public static bool RayCast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
-        solver.MKD.SupportA = support;
-        solver.MKD.SupportB = null!;
-
-        bool result = solver.RayCast(origin, direction, out fraction, out normal);
-
-        return result;
+        return solver.RayCast(support, origin, direction, out fraction, out normal);
     }
 
     /// <summary>
@@ -642,16 +705,17 @@ public static class NarrowPhase
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
-        solver.MKD.SupportA = supportA;
-        solver.MKD.SupportB = supportB;
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
 
         // rotate into the reference frame of bodyA..
-        JMatrix.TransposedMultiply(orientationA, orientationB, out solver.MKD.OrientationB);
-        JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
-        JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
+        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JVector.Subtract(positionB, positionA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
-        bool success = solver.SolveGJKEPA(out pointA, out pointB, out normal, out penetration);
+        bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
 
         // ..rotate back. this hopefully saves some matrix vector multiplication
         // when calling the support function multiple times.
@@ -690,16 +754,17 @@ public static class NarrowPhase
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
-        solver.MKD.SupportA = supportA;
-        solver.MKD.SupportB = supportB;
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
 
         // rotate into the reference frame of bodyA..
-        JMatrix.TransposedMultiply(orientationA, orientationB, out solver.MKD.OrientationB);
-        JVector.Subtract(positionB, positionA, out solver.MKD.PositionB);
-        JVector.TransposedTransform(solver.MKD.PositionB, orientationA, out solver.MKD.PositionB);
+        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JVector.Subtract(positionB, positionA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
-        bool res = solver.SolveMPR(out pointA, out pointB, out normal, out penetration);
+        bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
         JVector.Transform(pointA, orientationA, out pointA);
@@ -735,15 +800,80 @@ public static class NarrowPhase
         in JMatrix orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
-        solver.MKD.SupportA = supportA;
-        solver.MKD.SupportB = supportB;
-
-        solver.MKD.OrientationB = orientationB;
-        solver.MKD.PositionB = positionB;
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
 
         // ..perform collision detection..
-        bool res = solver.SolveMPR(out pointA, out pointB, out normal, out penetration);
+        bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
 
         return res;
+    }
+
+    /// <summary>
+    /// Calculates the time of impact and the collision points in world space for two shapes with velocities
+    /// sweepA and sweepB.
+    /// </summary>
+    /// <returns>True if the shapes hit, false otherwise.</returns>
+    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationA, in JMatrix orientationB,
+        in JVector positionA, in JVector positionB,
+        in JVector sweepA, in JVector sweepB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+
+        // rotate into the reference frame of bodyA..
+        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JVector.Subtract(positionB, positionA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+
+        // we also transform the relative velocities
+        JVector sweep = sweepB - sweepA;
+        JVector.TransposedTransform(sweep, orientationA, out sweep);
+
+        // ..perform toi calculation
+        bool res = solver.SweepTest(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
+
+        if (!res) return false;
+
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is
+        // called multiple times.
+        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Add(pointA, positionA, out pointA);
+        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
+
+        // transform back from the relative velocities
+        pointA += fraction * sweepA;
+        pointB += fraction * sweepA; // sweepA is not a typo
+
+        return true;
+    }
+
+    /// <summary>
+    /// Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
+    /// direction.
+    /// </summary>
+    /// <returns>True if the shapes hit, false otherwise.</returns>
+    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+        in JMatrix orientationB, in JVector positionB, in JVector sweepB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
+
+        // ..perform toi calculation
+        return solver.SweepTest(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
     }
 }

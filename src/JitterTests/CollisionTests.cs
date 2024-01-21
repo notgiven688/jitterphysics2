@@ -6,7 +6,7 @@ public class CollisionTests
     public void Setup()
     {
     }
-    
+
     [TestCase]
     public void NoBodyWorldBoundingBox()
     {
@@ -26,15 +26,41 @@ public class CollisionTests
 
         SphereShape s1 = new(radius);
 
-        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp, 
+        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp,
             op, sp - op, out float fraction, out JVector normal);
 
-        JVector cn = JVector.Normalize(op - sp);   // analytical normal
-        JVector hp = op + (sp - op) * fraction;    // hit point
+        JVector cn = JVector.Normalize(op - sp); // analytical normal
+        JVector hp = op + (sp - op) * fraction; // hit point
 
         Assert.That(hit);
         Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
         Assert.That(MathF.Abs((hp - sp).Length() - radius) < 1e-6f);
+    }
+
+    [TestCase]
+    public void SweepTest()
+    {
+        var s1 = new SphereShape(0.5f);
+        var s2 = new BoxShape(1);
+
+        var rot = JMatrix.CreateRotationZ(MathF.PI / 4.0f);
+        var sweep = JVector.Normalize(new JVector(1, 1, 0));
+
+        bool hit = NarrowPhase.SweepTest(s1, s2, rot, rot,
+            new JVector(1, 1, 3), new JVector(11, 11, 3),
+            sweep, -2.0f * sweep,
+            out JVector pA, out JVector pB, out JVector normal, out float fraction);
+
+        Assert.That(hit);
+
+        float expectedFraction = (MathF.Sqrt(200.0f) - 1.0f) * (1.0f / 3.0f);
+        JVector expectedNormal = JVector.Normalize(new JVector(1, 1, 0));
+        JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * (0.5f + expectedFraction);
+
+        Assert.That((normal - expectedNormal).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pA - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pB - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That(MathF.Abs(fraction - expectedFraction), Is.LessThan(1e-4f));
     }
 
     [TestCase]
