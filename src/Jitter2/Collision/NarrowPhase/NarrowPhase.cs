@@ -874,8 +874,6 @@ public static class NarrowPhase
         mkd.OrientationB = orientationB;
 
         // ..perform toi calculation
-        bool res = solver.SweepTest(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
-
-        return res;
+        return solver.SweepTest(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
     }
 }
