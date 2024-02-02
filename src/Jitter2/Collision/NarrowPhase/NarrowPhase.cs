@@ -87,7 +87,7 @@ public static class NarrowPhase
             const int MaxIter = 34;
 
             normal = JVector.Zero;
-            fraction = float.MaxValue;
+            fraction = float.PositiveInfinity;
 
             float lambda = 0.0f;
 
@@ -190,6 +190,7 @@ public static class NarrowPhase
 
                     if (VdotR >= -1e-12f)
                     {
+                        fraction = float.PositiveInfinity;
                         return false;
                     }
 
@@ -312,11 +313,11 @@ public static class NarrowPhase
 
             convexPolytope.InitHeap();
 
-            ref ConvexPolytope.Vertex v0 = ref convexPolytope.Vertices[0];
-            ref ConvexPolytope.Vertex v1 = ref convexPolytope.Vertices[1];
-            ref ConvexPolytope.Vertex v2 = ref convexPolytope.Vertices[2];
-            ref ConvexPolytope.Vertex v3 = ref convexPolytope.Vertices[3];
-            ref ConvexPolytope.Vertex v4 = ref convexPolytope.Vertices[4];
+            ref ConvexPolytope.Vertex v0 = ref convexPolytope.GetVertex(0);
+            ref ConvexPolytope.Vertex v1 = ref convexPolytope.GetVertex(1);
+            ref ConvexPolytope.Vertex v2 = ref convexPolytope.GetVertex(2);
+            ref ConvexPolytope.Vertex v3 = ref convexPolytope.GetVertex(3);
+            ref ConvexPolytope.Vertex v4 = ref convexPolytope.GetVertex(4);
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -816,6 +817,9 @@ public static class NarrowPhase
     /// Calculates the time of impact and the collision points in world space for two shapes with velocities
     /// sweepA and sweepB.
     /// </summary>
+    /// <param name="pointA">Collision point on shapeA in world space. Zero if no hit is detected.</param>
+    /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
+    /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationA, in JMatrix orientationB,
@@ -861,6 +865,9 @@ public static class NarrowPhase
     /// Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
     /// direction.
     /// </summary>
+    /// <param name="pointA">Collision point on shapeA in world space. Zero if no hit is detected.</param>
+    /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
+    /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
         in JMatrix orientationB, in JVector positionB, in JVector sweepB,
