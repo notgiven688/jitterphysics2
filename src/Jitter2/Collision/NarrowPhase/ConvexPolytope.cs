@@ -92,8 +92,8 @@ public unsafe struct ConvexPolytope
     private const int MaxVertices = 100;
     private const int MaxTriangles = 3 * MaxVertices;
 
-    public Triangle* Triangles;
-    public Vertex* Vertices;
+    private Triangle* triangles;
+    private Vertex* vertices;
 
     private short tCount;
     private short vPointer;
@@ -102,10 +102,18 @@ public unsafe struct ConvexPolytope
 
     private JVector center;
 
+    public Span<Triangle> HullTriangles => new Span<Triangle>(triangles, tCount);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ref ConvexPolytope.Vertex GetVertex(int index)
+    {
+        System.Diagnostics.Debug.Assert(index < MaxTriangles, "Out of bounds.");
+        return ref vertices[index];
+    }
+
     /// <summary>
     /// Indicates whether the origin is enclosed within the polyhedron.
-    /// Important: For accurate results, call this method only after invoking <see cref="GetClosestTriangle"/>.
-    /// The return value may be invalidated by subsequent calls to <see cref="AddVertex"/> or <see cref="AddPoint"/>.
+    /// Important: This property returns correct values after invoking <see cref="GetClosestTriangle"/>.
     /// </summary>
     public readonly bool OriginEnclosed => originEnclosed;
 
@@ -116,17 +124,17 @@ public unsafe struct ConvexPolytope
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
     {
         CalcBarycentric(ctri, out JVector bc, !originEnclosed);
-        pA = bc.X * Vertices[ctri.A].A + bc.Y * Vertices[ctri.B].A + bc.Z * Vertices[ctri.C].A;
-        pB = bc.X * Vertices[ctri.A].B + bc.Y * Vertices[ctri.B].B + bc.Z * Vertices[ctri.C].B;
+        pA = bc.X * vertices[ctri.A].A + bc.Y * vertices[ctri.B].A + bc.Z * vertices[ctri.C].A;
+        pB = bc.X * vertices[ctri.A].B + bc.Y * vertices[ctri.B].B + bc.Z * vertices[ctri.C].B;
     }
 
     private bool CalcBarycentric(in Triangle tri, out JVector result, bool clamp = false)
     {
         bool clamped = false;
 
-        JVector a = Vertices[tri.A].V;
-        JVector b = Vertices[tri.B].V;
-        JVector c = Vertices[tri.C].V;
+        JVector a = vertices[tri.A].V;
+        JVector b = vertices[tri.B].V;
+        JVector c = vertices[tri.C].V;
 
         // Calculate the barycentric coordinates of the origin (0,0,0) projected
         // onto the plane of the triangle.
@@ -222,20 +230,20 @@ public unsafe struct ConvexPolytope
     {
         // Checks if the triangle would be lit, if there would
         // be a light at the origin.
-        ref Triangle tr = ref Triangles[candidate];
-        JVector deltaA = Vertices[w].V - Vertices[tr.A].V;
+        ref Triangle tr = ref triangles[candidate];
+        JVector deltaA = vertices[w].V - vertices[tr.A].V;
         return JVector.Dot(deltaA, tr.Normal) > 0;
     }
 
     private bool CreateTriangle(short a, short b, short c)
     {
-        ref Triangle triangle = ref Triangles[tCount];
+        ref Triangle triangle = ref triangles[tCount];
         triangle.A = a;
         triangle.B = b;
         triangle.C = c;
 
-        JVector.Subtract(Vertices[a].V, Vertices[b].V, out JVector u);
-        JVector.Subtract(Vertices[a].V, Vertices[c].V, out JVector v);
+        JVector.Subtract(vertices[a].V, vertices[b].V, out JVector u);
+        JVector.Subtract(vertices[a].V, vertices[c].V, out JVector v);
         JVector.Cross(u, v, out triangle.Normal);
         triangle.NormalSq = triangle.Normal.LengthSquared();
 
@@ -246,7 +254,7 @@ public unsafe struct ConvexPolytope
         }
 
         // do we need to flip the triangle? (the origin of the md has to be enclosed)
-        float delta = JVector.Dot(triangle.Normal, Vertices[a].V - center);
+        float delta = JVector.Dot(triangle.Normal, vertices[a].V - center);
 
         if (delta < 0)
         {
@@ -254,13 +262,13 @@ public unsafe struct ConvexPolytope
             triangle.Normal.Negate();
         }
 
-        delta = JVector.Dot(triangle.Normal, Vertices[a].V);
+        delta = JVector.Dot(triangle.Normal, vertices[a].V);
         triangle.FacingOrigin = delta >= 0.0f;
 
         if (!originEnclosed && CalcBarycentric(triangle, out JVector bc, true))
         {
-            triangle.ClosestToOrigin = bc.X * Vertices[triangle.A].V + bc.Y * Vertices[triangle.B].V +
-                                       bc.Z * Vertices[triangle.C].V;
+            triangle.ClosestToOrigin = bc.X * vertices[triangle.A].V + bc.Y * vertices[triangle.B].V +
+                                       bc.Z * vertices[triangle.C].V;
             triangle.ClosestToOriginSq = triangle.ClosestToOrigin.LengthSquared();
         }
         else
@@ -286,28 +294,28 @@ public unsafe struct ConvexPolytope
 
         for (int i = 0; i < tCount; i++)
         {
-            if (Triangles[i].ClosestToOriginSq < currentMin)
+            if (triangles[i].ClosestToOriginSq < currentMin)
             {
-                currentMin = Triangles[i].ClosestToOriginSq;
+                currentMin = triangles[i].ClosestToOriginSq;
                 closestIndex = i;
             }
 
-            if (!Triangles[i].FacingOrigin) originEnclosed = false;
+            if (!triangles[i].FacingOrigin) originEnclosed = false;
         }
 
-        return ref Triangles[closestIndex];
+        return ref triangles[closestIndex];
     }
 
     /// <summary>
-    /// Initializes the structure with a tetrahedron formed using the first four vertices in the <see cref="Vertices"/> array.
+    /// Initializes the structure with a tetrahedron formed using the first four vertices in the <see cref="vertices"/> array.
     /// </summary>
     public void InitTetrahedron()
     {
         originEnclosed = false;
-        vPointer = 3;
+        vPointer = 4;
         tCount = 0;
 
-        center = 0.25f * (Vertices[0].V + Vertices[1].V + Vertices[2].V + Vertices[3].V);
+        center = 0.25f * (vertices[0].V + vertices[1].V + vertices[2].V + vertices[3].V);
 
         CreateTriangle(0, 2, 1);
         CreateTriangle(0, 1, 3);
@@ -321,15 +329,15 @@ public unsafe struct ConvexPolytope
     public void InitTetrahedron(in JVector point)
     {
         originEnclosed = false;
-        vPointer = 3;
+        vPointer = 4;
         tCount = 0;
         center = point;
 
         const float scale = 1e-2f; // minkowski sums not allowed to be thinner
-        Vertices[0] = new Vertex(center + scale * new JVector(MathF.Sqrt(8.0f / 9.0f), 0.0f, -1.0f / 3.0f));
-        Vertices[1] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
-        Vertices[2] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), -MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
-        Vertices[3] = new Vertex(center + scale * new JVector(0.0f, 0.0f, 1.0f));
+        vertices[0] = new Vertex(center + scale * new JVector(MathF.Sqrt(8.0f / 9.0f), 0.0f, -1.0f / 3.0f));
+        vertices[1] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
+        vertices[2] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), -MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
+        vertices[3] = new Vertex(center + scale * new JVector(0.0f, 0.0f, 1.0f));
 
         CreateTriangle(2, 0, 1);
         CreateTriangle(1, 0, 3);
@@ -338,16 +346,16 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Initializes the memory for <see cref="Vertices"/> and <see cref="Triangles"/>.
+    /// Initializes the memory for <see cref="vertices"/> and <see cref="triangles"/>.
     /// Must be invoked prior to calling any other method in this struct.
     /// Note: Can be called multiple times; however, initialization occurs only once.
     /// </summary>
     public void InitHeap()
     {
-        if (Vertices == (void*)0)
+        if (vertices == (void*)0)
         {
-            Vertices = MemoryHelper.AllocateHeap<Vertex>(MaxVertices);
-            Triangles = MemoryHelper.AllocateHeap<Triangle>(MaxTriangles);
+            vertices = MemoryHelper.AllocateHeap<Vertex>(MaxVertices);
+            triangles = MemoryHelper.AllocateHeap<Triangle>(MaxTriangles);
         }
     }
 
@@ -373,8 +381,7 @@ public unsafe struct ConvexPolytope
     {
         Edge* edges = stackalloc Edge[256];
 
-        vPointer++;
-        Vertices[vPointer] = vertex;
+        vertices[vPointer] = vertex;
 
         int ePointer = 0;
         for (int index = tCount; index-- > 0;)
@@ -385,7 +392,7 @@ public unsafe struct ConvexPolytope
 
             for (int k = 0; k < 3; k++)
             {
-                edge = new Edge(Triangles[index][(k + 0) % 3], Triangles[index][(k + 1) % 3]);
+                edge = new Edge(triangles[index][(k + 0) % 3], triangles[index][(k + 1) % 3]);
                 added = true;
                 for (int e = ePointer; e-- > 0;)
                 {
@@ -399,8 +406,10 @@ public unsafe struct ConvexPolytope
                 if (added) edges[ePointer++] = edge;
             }
 
-            Triangles[index] = Triangles[--tCount];
+            triangles[index] = triangles[--tCount];
         }
+
+        if (ePointer == 0) return false;
 
         for (int i = 0; i < ePointer; i++)
         {
@@ -408,6 +417,8 @@ public unsafe struct ConvexPolytope
                 return false;
         }
 
-        return ePointer > 0;
+        vPointer++;
+
+        return true;
     }
 }

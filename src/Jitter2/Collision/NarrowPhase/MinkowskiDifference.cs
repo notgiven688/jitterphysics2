@@ -27,7 +27,9 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores data representing the Minkowski Difference, also known as the Configuration Space Object (CSO), between two support functions: SupportA and SupportB. SupportB is transformed according to the specified OrientationB and PositionB.
+/// Stores data representing the Minkowski Difference, also known as the Configuration Space Object (CSO),
+/// between two support functions: SupportA and SupportB. SupportB is transformed according to the specified
+/// OrientationB and PositionB.
 /// </summary>
 public struct MinkowskiDifference
 {
