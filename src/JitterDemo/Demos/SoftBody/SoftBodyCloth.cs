@@ -35,8 +35,6 @@ public class SoftBodyCloth : SoftBody
 
     public List<TriangleVertexIndex> Triangles => triangles;
 
-    private List<SpringConstraint> MatchConstraints = new();
-
     public SoftBodyCloth(World world, IEnumerable<JTriangle> triangles) : base(world)
     {
         this.world = world;
@@ -85,7 +83,7 @@ public class SoftBodyCloth : SoftBody
         foreach (var vertex in vertices)
         {
             RigidBody body = world.CreateRigidBody();
-            body.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
+            body.SetMassInertia(JMatrix.Zero, 100.0f, true);
             body.Position = vertex;
             Vertices.Add(body);
         }

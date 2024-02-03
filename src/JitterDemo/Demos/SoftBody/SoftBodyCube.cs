@@ -33,7 +33,7 @@ public class SoftBodyCube : SoftBody
         for (int i = 0; i < 8; i++)
         {
             var rb = world.CreateRigidBody();
-            rb.SetMassInertia(JMatrix.Identity * 100000, 0.2f);
+            rb.SetMassInertia(JMatrix.Zero, 5.0f, true);
             rb.Position = vertices[i] + offset;
             Vertices.Add(rb);
         }

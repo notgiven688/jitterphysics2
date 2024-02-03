@@ -28,7 +28,7 @@ public class SoftBodySphere : SoftBodyCloth
 
     private static IEnumerable<JTriangle> GenSphereTriangles(JVector offset)
     {
-        return ShapeHelper.MakeHull(new UnitSphere())
+        return ShapeHelper.MakeHull(new UnitSphere(), subdivisions: 4)
             .Select(t => new JTriangle(t.V0 + offset, t.V1 + offset, t.V2 + offset));
     }
 
@@ -48,7 +48,7 @@ public class SoftBodySphere : SoftBodyCloth
     {
         foreach (var rb in Vertices)
         {
-            rb.SetMassInertia(JMatrix.Identity * 1000, 0.01f);
+            rb.SetMassInertia(JMatrix.Zero, 100.0f, true);
             rb.Damping = (0.001f, 0);
         }
 

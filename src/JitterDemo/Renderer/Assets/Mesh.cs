@@ -14,7 +14,7 @@ public class Mesh
     {
         public string Name;
         public int FromInclusive;
-        public int ToExlusive;
+        public int ToExclusive;
     }
 
     public readonly Vertex[] Vertices;
@@ -55,44 +55,45 @@ public class Mesh
     {
         var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
-        float PF(string str)
-        {
-            return float.Parse(str, format);
-        } // Parse float
-
-        int PIm1(string str)
-        {
-            return int.Parse(str) - 1;
-        } // Parse int minus 1
+        float ParseFloat(string str) => float.Parse(str, format);
+        int ParseIndex(string str) => int.Parse(str) - 1;
 
         string[] content = filename.EndsWith(".zip") ? ReadFromZip(filename).ToArray() : File.ReadAllLines(filename);
         var lines = content.Select(s => s.Trim()).Where(s => s != string.Empty);
 
-        List<Vector3> v = new();
-        List<Vector3> vn = new();
-        List<Vector2> vt = new();
+        List<Vector3> v = [], vn = [];
+        List<Vector2> vt = [];
 
         foreach (string line in lines)
         {
             var s = line.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-            if (s[0] == "v") v.Add(new Vector3(PF(s[1]), PF(s[2]), PF(s[3])));
-            if (s[0] == "vn") vn.Add(new Vector3(PF(s[1]), PF(s[2]), PF(s[3])));
-            if (s[0] == "vt") vt.Add(new Vector2(PF(s[1]), PF(s[2])));
+            switch (s[0])
+            {
+                case "v":
+                    v.Add(new Vector3(ParseFloat(s[1]), ParseFloat(s[2]), ParseFloat(s[3])));
+                    break;
+                case "vn":
+                    vn.Add(new Vector3(ParseFloat(s[1]), ParseFloat(s[2]), ParseFloat(s[3])));
+                    break;
+                case "vt":
+                    vt.Add(new Vector2(ParseFloat(s[1]), ParseFloat(s[2])));
+                    break;
+            }
         }
 
         bool hasTexture = vt.Count > 0;
         bool hasNormals = vn.Count > 0;
 
         Dictionary<string, int> dict = new();
-        List<Vertex> vertices = new();
-        List<TriangleVertexIndex> indices = new();
+        List<Vertex> vertices = [];
+        List<TriangleVertexIndex> indices = [];
 
         int AddVertex(string s)
         {
             var a = s.Split("/");
-            if (hasTexture && hasNormals) vertices.Add(new Vertex(v[PIm1(a[0])], vn[PIm1(a[2])], vt[PIm1(a[1])]));
-            else if (hasNormals) vertices.Add(new Vertex(v[PIm1(a[0])], vn[PIm1(a[2])]));
-            else vertices.Add(new Vertex(v[PIm1(a[0])]));
+            if (hasTexture && hasNormals) vertices.Add(new Vertex(v[ParseIndex(a[0])], vn[ParseIndex(a[2])], vt[ParseIndex(a[1])]));
+            else if (hasNormals) vertices.Add(new Vertex(v[ParseIndex(a[0])], vn[ParseIndex(a[2])]));
+            else vertices.Add(new Vertex(v[ParseIndex(a[0])]));
 
             return vertices.Count - 1;
         }
@@ -112,41 +113,46 @@ public class Mesh
             }
         }
 
-        List<Group> groups = new();
-        Group glast = new();
-        bool firstg = true;
+        List<Group> groups = [];
+        Group groupLast = new();
+        bool firstGroup = true;
 
         foreach (string line in lines)
         {
-            var s = line.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            var s = line.Split(' ', StringSplitOptions.TrimEntries |
+                                    StringSplitOptions.RemoveEmptyEntries);
 
-            if (s[0] == "o")
+            switch (s[0])
             {
-                if (!firstg)
+                case "o":
                 {
-                    glast.ToExlusive = indices.Count;
-                    groups.Add(glast);
+                    if (!firstGroup)
+                    {
+                        groupLast.ToExclusive = indices.Count;
+                        groups.Add(groupLast);
+                    }
+
+                    firstGroup = false;
+                    groupLast.FromInclusive = indices.Count;
+                    groupLast.Name = s.Length > 1 ? s[1] : string.Empty;
+                    break;
                 }
+                case "f":
+                {
+                    int i0 = dict[s[1]];
+                    int i1 = dict[s[2]];
+                    int i2 = dict[s[3]];
 
-                firstg = false;
-                glast.FromInclusive = indices.Count;
-                glast.Name = s.Length > 1 ? s[1] : string.Empty;
-            }
-            else if (s[0] == "f")
-            {
-                int i0 = dict[s[1]];
-                int i1 = dict[s[2]];
-                int i2 = dict[s[3]];
-
-                if (revertWinding) indices.Add(new TriangleVertexIndex(i1, i0, i2));
-                else indices.Add(new TriangleVertexIndex(i0, i1, i2));
+                    indices.Add(revertWinding ? new TriangleVertexIndex(i1, i0, i2) : new TriangleVertexIndex(i0, i1, i2));
+                    break;
+                }
             }
         }
 
-        if (!firstg)
+        if (!firstGroup)
         {
-            glast.ToExlusive = indices.Count;
-            groups.Add(glast);
+            groupLast.ToExclusive = indices.Count;
+            groups.Add(groupLast);
         }
 
         return new Mesh(vertices.ToArray(), indices.ToArray(), groups.ToArray());

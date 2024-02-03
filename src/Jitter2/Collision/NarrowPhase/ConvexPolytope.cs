@@ -89,25 +89,28 @@ public unsafe struct ConvexPolytope
 
     private const float NumericEpsilon = 1e-16f;
 
-    private const int MaxVertices = 100;
-    private const int MaxTriangles = 3 * MaxVertices;
+    // (*) Euler-characteristic: V (vertices) - E (edges) + F (faces) = 2
+    // We have triangles T instead of faces: F = T
+    // and every edge shares two triangles -> T = 2*V - 4
+    private const int MaxVertices = 128;
+    private const int MaxTriangles = 2 * MaxVertices;
 
     private Triangle* triangles;
     private Vertex* vertices;
 
-    private short tCount;
+    private short tPointer;
     private short vPointer;
 
     private bool originEnclosed;
 
     private JVector center;
 
-    public Span<Triangle> HullTriangles => new Span<Triangle>(triangles, tCount);
+    public Span<Triangle> HullTriangles => new Span<Triangle>(triangles, tPointer);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref ConvexPolytope.Vertex GetVertex(int index)
     {
-        System.Diagnostics.Debug.Assert(index < MaxTriangles, "Out of bounds.");
+        System.Diagnostics.Debug.Assert(index < MaxVertices, "Out of bounds.");
         return ref vertices[index];
     }
 
@@ -237,7 +240,7 @@ public unsafe struct ConvexPolytope
 
     private bool CreateTriangle(short a, short b, short c)
     {
-        ref Triangle triangle = ref triangles[tCount];
+        ref Triangle triangle = ref triangles[tPointer];
         triangle.A = a;
         triangle.B = b;
         triangle.C = c;
@@ -277,7 +280,7 @@ public unsafe struct ConvexPolytope
             triangle.ClosestToOriginSq = triangle.ClosestToOrigin.LengthSquared();
         }
 
-        tCount++;
+        tPointer++;
         return true;
     }
 
@@ -292,7 +295,7 @@ public unsafe struct ConvexPolytope
 
         originEnclosed = true;
 
-        for (int i = 0; i < tCount; i++)
+        for (int i = 0; i < tPointer; i++)
         {
             if (triangles[i].ClosestToOriginSq < currentMin)
             {
@@ -313,7 +316,7 @@ public unsafe struct ConvexPolytope
     {
         originEnclosed = false;
         vPointer = 4;
-        tCount = 0;
+        tPointer = 0;
 
         center = 0.25f * (vertices[0].V + vertices[1].V + vertices[2].V + vertices[3].V);
 
@@ -330,7 +333,7 @@ public unsafe struct ConvexPolytope
     {
         originEnclosed = false;
         vPointer = 4;
-        tCount = 0;
+        tPointer = 0;
         center = point;
 
         const float scale = 1e-2f; // minkowski sums not allowed to be thinner
@@ -379,21 +382,22 @@ public unsafe struct ConvexPolytope
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
     public bool AddVertex(in Vertex vertex)
     {
-        Edge* edges = stackalloc Edge[256];
+        System.Diagnostics.Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");
+
+        // see (*) above
+        Edge* edges = stackalloc Edge[MaxVertices * 3 / 2];
 
         vertices[vPointer] = vertex;
 
         int ePointer = 0;
-        for (int index = tCount; index-- > 0;)
+        for (int index = tPointer; index-- > 0;)
         {
             if (!IsLit(index, vPointer)) continue;
-            Edge edge;
-            bool added;
 
             for (int k = 0; k < 3; k++)
             {
-                edge = new Edge(triangles[index][(k + 0) % 3], triangles[index][(k + 1) % 3]);
-                added = true;
+                Edge edge = new Edge(triangles[index][(k + 0) % 3], triangles[index][(k + 1) % 3]);
+                bool added = true;
                 for (int e = ePointer; e-- > 0;)
                 {
                     if (Edge.Equals(edges[e], edge))
@@ -406,7 +410,7 @@ public unsafe struct ConvexPolytope
                 if (added) edges[ePointer++] = edge;
             }
 
-            triangles[index] = triangles[--tCount];
+            triangles[index] = triangles[--tPointer];
         }
 
         if (ePointer == 0) return false;
@@ -418,7 +422,6 @@ public unsafe struct ConvexPolytope
         }
 
         vPointer++;
-
         return true;
     }
 }
