@@ -32,7 +32,7 @@ public class Image
 
     private readonly byte[] argbData;
 
-    public Image(byte[] argbData, int width, int height)
+    private Image(byte[] argbData, int width, int height)
     {
         this.argbData = argbData;
         Width = width;
@@ -40,12 +40,12 @@ public class Image
     }
 
     /// <summary>
-    /// Minimimal  *.tga (Truevision TGA) loader for true color images with runtime
+    /// Minimal  *.tga (Truevision TGA) loader for true color images with runtime
     /// length encoding support.
     /// </summary>
     public static Image LoadImage(string filename)
     {
-        const int DataOffset = 18;
+        const int dataOffset = 18;
 
         var data = File.ReadAllBytes(filename).AsSpan();
 
@@ -56,18 +56,18 @@ public class Image
         int descriptor = data[17];
 
         // Image type 2 and 10: The image data is a direct representation of the pixel color.
-        // For a Pixel Depth of 15 and 16 bit, each pixel is stored with 5 bits per color. 
+        // For a Pixel Depth of 15 and 16 bit, each pixel is stored with 5 bits per color.
         // If the pixel depth is 16 bits, the topmost bit is reserved for transparency. For
         // a pixel depth of 24 bits, each pixel is stored with 8 bits per color. A 32-bit pixel
         // depth defines an additional 8-bit alpha channel.
         // [https://en.wikipedia.org/wiki/Truevision_TGA]
 
-        if (!((imageType == 2 || imageType == 10) && (bitPerPixel == 24 || bitPerPixel == 32)))
+        if (!(imageType is 2 or 10 && bitPerPixel is 24 or 32))
         {
             throw new Exception("Only 24bit and 32bit encoded *.tga-files supported!");
         }
 
-        var colorData = data[DataOffset..data.Length];
+        var colorData = data[dataOffset..data.Length];
 
         int bytesPerPixel = bitPerPixel / 8;
 

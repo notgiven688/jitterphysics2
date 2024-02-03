@@ -31,7 +31,7 @@ public class MultiMesh : CSMInstance
 
 
             GLDevice.DrawElementsInstanced(DrawMode.Triangles,
-                3 * (mesh.Groups[i].ToExlusive - mesh.Groups[i].FromInclusive), IndexType.UnsignedInt,
+                3 * (mesh.Groups[i].ToExclusive - mesh.Groups[i].FromInclusive), IndexType.UnsignedInt,
                 mesh.Groups[i].FromInclusive * sof * 3, Count);
         }
 

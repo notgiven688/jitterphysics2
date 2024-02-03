@@ -79,7 +79,7 @@ public class CarMesh : MultiMesh
         shader.MaterialProperties.ColorMixing.Set(0.1f, 0, 1.2f);
         shader.MaterialProperties.Shininess.Set(1000);
         shader.MaterialProperties.Specular.Set(1, 1, 1);
-        GLDevice.DrawElementsInstanced(DrawMode.Triangles, 3 * (mg.ToExlusive - mg.FromInclusive),
+        GLDevice.DrawElementsInstanced(DrawMode.Triangles, 3 * (mg.ToExclusive - mg.FromInclusive),
             IndexType.UnsignedInt, mg.FromInclusive * sof * 3, Count);
 
         // glass
@@ -88,7 +88,7 @@ public class CarMesh : MultiMesh
         shader.MaterialProperties.Color.Set(0.6f, 0.6f, 0.6f);
         shader.MaterialProperties.Alpha.Set(0.6f);
         shader.MaterialProperties.Shininess.Set(1000.0f);
-        GLDevice.DrawElementsInstanced(DrawMode.Triangles, 3 * (mg.ToExlusive - mg.FromInclusive),
+        GLDevice.DrawElementsInstanced(DrawMode.Triangles, 3 * (mg.ToExclusive - mg.FromInclusive),
             IndexType.UnsignedInt, mg.FromInclusive * sof * 3, Count);
         shader.MaterialProperties.Alpha.Set(1.0f);
     }

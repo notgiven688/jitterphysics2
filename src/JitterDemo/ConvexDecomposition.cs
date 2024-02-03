@@ -48,7 +48,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
         {
             List<JTriangle> hullTriangles = new();
 
-            for (int i = group.FromInclusive; i < group.ToExlusive; i++)
+            for (int i = group.FromInclusive; i < group.ToExclusive; i++)
             {
                 ref TriangleVertexIndex tvi = ref mesh.Indices[i];
 
