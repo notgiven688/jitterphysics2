@@ -24,11 +24,6 @@ window/size/viewport_height=1200
 
 project/assembly_name="JitterGodot"
 
-[editor]
-
-movie_writer/mjpeg_quality=1.0
-movie_writer/movie_file="/home/thorben/Desktop/jitterphysics2/other/GodotDemo/out.avi"
-
 [rendering]
 
 lights_and_shadows/directional_shadow/size=8192
