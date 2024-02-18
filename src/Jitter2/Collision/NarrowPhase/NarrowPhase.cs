@@ -69,7 +69,10 @@ public static class NarrowPhase
                     return false;
                 }
 
-                if (!convexPolytope.AddPoint(w)) return false;
+                if (!convexPolytope.AddPoint(w))
+                {
+                    goto converged;
+                }
 
                 v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
@@ -77,6 +80,8 @@ public static class NarrowPhase
 
                 distSq = v.LengthSquared();
             }
+
+            converged:
 
             return true;
         }
@@ -129,12 +134,17 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                convexPolytope.AddPoint(w);
+                if (!convexPolytope.AddPoint(w))
+                {
+                    goto converged;
+                }
 
                 v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
                 distSq = v.LengthSquared();
             }
+
+            converged:
 
             fraction = lambda;
 
