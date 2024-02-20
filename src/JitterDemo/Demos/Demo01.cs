@@ -87,8 +87,7 @@ public class Demo01 : IDemo
             var h = hinges[i];
             if (h.BallSocket.Impulse.Length() > 0.5f)
             {
-                world.Remove(h.BallSocket);
-                world.Remove(h.HingeAngle);
+                h.Remove();
                 hinges.RemoveAt(i);
             }
         }
