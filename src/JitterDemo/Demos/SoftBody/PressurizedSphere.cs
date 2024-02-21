@@ -87,6 +87,16 @@ public class SoftBodySphere : SoftBodyCloth
             JVector normal = (p1 - p0) % (p2 - p0);
             JVector force = normal * Pressure * invVol;
 
+            // Limit the maximum force
+            const float maxForce = 10.0f;
+
+            float fl2 = force.LengthSquared();
+
+            if (fl2 > maxForce * maxForce)
+            {
+                force *= 1.0f / fl2 * maxForce;
+            }
+
             sbt.Vertex1.AddForce(force);
             sbt.Vertex2.AddForce(force);
             sbt.Vertex3.AddForce(force);
