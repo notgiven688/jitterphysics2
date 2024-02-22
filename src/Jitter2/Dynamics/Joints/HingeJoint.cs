@@ -28,7 +28,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// <summary>
 /// Constructs a hinge joint utilizing a <see cref="HingeAngle"/>, a <see cref="BallSocket"/>, and an optional <see cref="AngularMotor"/>.
 /// </summary>
-public class HingeJoint
+public class HingeJoint : Joint
 {
     public RigidBody Body1 { get; private set; }
     public RigidBody Body2 { get; private set; }
@@ -47,14 +47,17 @@ public class HingeJoint
 
         HingeAngle = world.CreateConstraint<HingeAngle>(body1, body2);
         HingeAngle.Initialize(hingeAxis, angle);
+        Register(HingeAngle);
 
         BallSocket = world.CreateConstraint<BallSocket>(body1, body2);
         BallSocket.Initialize(hingeCenter);
+        Register(BallSocket);
 
         if (hasMotor)
         {
             Motor = world.CreateConstraint<AngularMotor>(body1, body2);
             Motor.Initialize(hingeAxis);
+            Register(Motor);
         }
     }
 

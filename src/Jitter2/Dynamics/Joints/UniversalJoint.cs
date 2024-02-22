@@ -29,7 +29,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// Creates a universal joint utilizing a <see cref="TwistAngle"/>, <see cref="BallSocket"/>, and an optional <see cref="AngularMotor"/>
 /// constraint.
 /// </summary>
-public class UniversalJoint
+public class UniversalJoint : Joint
 {
     public RigidBody Body1 { get; private set; }
     public RigidBody Body2 { get; private set; }
@@ -48,14 +48,17 @@ public class UniversalJoint
 
         TwistAngle = world.CreateConstraint<TwistAngle>(body1, body2);
         TwistAngle.Initialize(rotateAxis1, rotateAxis2);
+        Register(TwistAngle);
 
         BallSocket = world.CreateConstraint<BallSocket>(body1, body2);
         BallSocket.Initialize(center);
+        Register(TwistAngle);
 
         if (hasMotor)
         {
             Motor = world.CreateConstraint<AngularMotor>(body1, body2);
             Motor.Initialize(rotateAxis1, rotateAxis2);
+            Register(Motor);
         }
     }
 }

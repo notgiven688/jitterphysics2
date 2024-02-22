@@ -29,7 +29,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// Constructs a prismatic joint utilizing a <see cref="PointOnLine"/> constraint in conjunction with
 /// <see cref="FixedAngle"/>, <see cref="HingeAngle"/>, and <see cref="LinearMotor"/> constraints.
 /// </summary>
-public class PrismaticJoint
+public class PrismaticJoint : Joint
 {
     public RigidBody Body1 { get; private set; }
     public RigidBody Body2 { get; private set; }
@@ -56,22 +56,26 @@ public class PrismaticJoint
 
         Slider = world.CreateConstraint<PointOnLine>(body1, body2);
         Slider.Initialize(axis, center, center, limit);
+        Register(Slider);
 
         if (pinned)
         {
             FixedAngle = world.CreateConstraint<FixedAngle>(body1, body2);
             FixedAngle.Initialize();
+            Register(FixedAngle);
         }
         else
         {
             HingeAngle = world.CreateConstraint<HingeAngle>(body1, body2);
             HingeAngle.Initialize(axis, AngularLimit.Full);
+            Register(HingeAngle);
         }
 
         if (hasMotor)
         {
             Motor = world.CreateConstraint<LinearMotor>(body1, body2);
             Motor.Initialize(axis, axis);
+            Register(Motor);
         }
     }
 

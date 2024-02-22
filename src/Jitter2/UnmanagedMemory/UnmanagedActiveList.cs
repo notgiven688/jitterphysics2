@@ -45,6 +45,8 @@ public unsafe struct JHandle<T> where T : unmanaged
         Pointer = ptr;
     }
 
+    public bool IsZero => Pointer == (T**)null;
+
     internal static JHandle<K> AsHandle<K>(JHandle<T> handle) where K : unmanaged
     {
         return new JHandle<K>((K**)handle.Pointer);
