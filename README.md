@@ -12,6 +12,8 @@ The official **NuGet** package can be found [here](https://www.nuget.org/package
 
 See below for a fully-featured demo.
 
+![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)
+
 ---
 
 <img src="./media/screenshots/jitter_screenshot0.png" alt="screenshot" width="400"/> <img src="./media/screenshots/jitter_screenshot1.png" alt="screenshot" width="400"/>
