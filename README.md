@@ -1,4 +1,5 @@
 [![JitterTests](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml/badge.svg)](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml)
+![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)
 
 # Jitter Physics 2
 
@@ -11,8 +12,6 @@ There is a tiny demo available for the [Godot engine](other/GodotDemo).
 The official **NuGet** package can be found [here](https://www.nuget.org/packages/Jitter2).
 
 See below for a fully-featured demo.
-
-![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)
 
 ---
 
