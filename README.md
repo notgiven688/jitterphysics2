@@ -1,5 +1,5 @@
 [![JitterTests](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml/badge.svg)](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml)
-![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)
+[![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)](https://discord.gg/k2xhTnKs)
 
 # Jitter Physics 2
 
