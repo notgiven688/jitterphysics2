@@ -376,6 +376,8 @@ public struct ContactData
         public Flags Flag;
 
         public float Bias;
+
+        public float Gamma;
         public float MassNormal;
 
         public float AccumulatedTangentImpulse1;
@@ -577,12 +579,19 @@ public struct ContactData
             JVector.Cross(M_n2, RelativePos2, out rbntrb);
             kNormal += JVector.Dot(rbntrb, Normal);
 
-            MassTangent1 = 1.0f / kTangent1;
-            MassTangent2 = 1.0f / kTangent2;
-            MassNormal = 1.0f / kNormal;
-
             Bias = RestitutionBias;
             RestitutionBias = 0;
+
+            float omega = 10.0f * MathF.PI * 2.0f;
+            float h = 1.0f / 100.0f;
+            float m = 1.0f / (b1.InverseMass + b2.InverseMass);
+            float k = omega * omega * m;
+            float c = 2 * m * omega;
+            float gamma = 1.0f / (c + h * k);
+            float beta = h * k / (c + h * k);
+
+
+            this.Gamma = idt * gamma;
 
             // Speculative Contacts!
             if (Penetration < -BreakThreshold)
@@ -594,9 +603,16 @@ public struct ContactData
             if (Penetration > AllowedPenetration)
             {
                 Bias = Math.Max(Bias,
-                    BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
+                    beta * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
                 Bias = Math.Clamp(Bias, 0.0f, MaximumBias);
             }
+
+
+
+            MassTangent1 = 1.0f / kTangent1;
+            MassTangent2 = 1.0f / kTangent2;
+            MassNormal = 1.0f / (kNormal + gamma);
+
 
             // warmstarting
             JVector impulse = Normal * AccumulatedNormalImpulse + Tangent1 * AccumulatedTangentImpulse1 +
@@ -622,7 +638,7 @@ public struct ContactData
             float vt1 = JVector.Dot(Tangent1, dv);
             float vt2 = JVector.Dot(Tangent2, dv);
 
-            float normalImpulse = Bias - vn;
+            float normalImpulse = -AccumulatedNormalImpulse * Gamma + Bias - vn;
             normalImpulse *= MassNormal;
 
             float oldNormalImpulse = AccumulatedNormalImpulse;
