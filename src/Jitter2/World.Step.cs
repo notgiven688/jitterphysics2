@@ -110,7 +110,7 @@ public partial class World
             throw new ArgumentException("Time step cannot be negative.", nameof(dt));
         }
 
-        if(dt == 0.0f) return;
+        if(dt == 0.0f) return; // nothing to do
 
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
