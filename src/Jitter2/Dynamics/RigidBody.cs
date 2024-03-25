@@ -337,13 +337,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             throw new ArgumentException("Shape has already been added to another body.", nameof(shape));
         }
 
-        if (shape.Mass == 0)
-        {
-            throw new ArgumentException("Tried to add a shape with zero mass to a rigid body. " +
-                                        $"If you are using custom shapes make sure to call {nameof(Shape.UpdateShape)}.",
-                nameof(shape));
-        }
-
         shape.UpdateWorldBoundingBox();
         World.AddShape(shape, this.IsActive);
     }
