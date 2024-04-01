@@ -293,6 +293,10 @@ public unsafe struct ConvexPolytope
         int closestIndex = -1;
         float currentMin = float.MaxValue;
 
+        // We can skip the test for enclosed origin if the origin was
+        // already enclosed once.
+        bool skipTest = originEnclosed;
+
         originEnclosed = true;
 
         for (int i = 0; i < tPointer; i++)
@@ -303,7 +307,7 @@ public unsafe struct ConvexPolytope
                 closestIndex = i;
             }
 
-            if (!triangles[i].FacingOrigin) originEnclosed = false;
+            if (!triangles[i].FacingOrigin) originEnclosed = skipTest;
         }
 
         return ref triangles[closestIndex];
