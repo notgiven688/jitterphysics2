@@ -39,6 +39,7 @@ public static class NarrowPhase
     private unsafe struct Solver
     {
         private ConvexPolytope convexPolytope;
+        private SimplexSolver simplexSolver;
 
         public bool PointTest(ISupportMap supportA, in JVector origin)
         {
@@ -50,8 +51,7 @@ public static class NarrowPhase
             var center = supportA.GeometricCenter;
             JVector v = x - center;
 
-            convexPolytope.InitHeap();
-            convexPolytope.InitTetrahedron(v);
+            simplexSolver.Reset();
 
             int maxIter = MaxIter;
 
@@ -69,12 +69,12 @@ public static class NarrowPhase
                     return false;
                 }
 
-                if (!convexPolytope.AddPoint(w))
+                if (!simplexSolver.AddPoint(w))
                 {
                     goto converged;
                 }
 
-                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
+                v = simplexSolver.Closest.V;
 
                 if (convexPolytope.OriginEnclosed) return true;
 
@@ -87,6 +87,77 @@ public static class NarrowPhase
         }
 
         public bool RayCast(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            normal = JVector.Zero;
+            fraction = float.PositiveInfinity;
+
+            float lambda = 0.0f;
+
+            JVector r = direction;
+            JVector x = origin;
+
+            var center = supportA.GeometricCenter;
+            JVector v = x - center;
+
+            simplexSolver.Reset();
+
+            int maxIter = MaxIter;
+
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                supportA.SupportMap(v, out JVector p);
+
+                JVector.Subtract(x, p, out JVector w);
+
+                float VdotW = JVector.Dot(v, w);
+
+                if (VdotW > 0.0f)
+                {
+                    float VdotR = JVector.Dot(v, r);
+
+                    if (VdotR >= -NumericEpsilon)
+                    {
+                        return false;
+                    }
+
+                    lambda -= VdotW / VdotR;
+
+                    JVector.Multiply(r, lambda, out x);
+                    JVector.Add(origin, x, out x);
+                    JVector.Subtract(x, p, out w);
+                    normal = v;
+                }
+
+                if (!simplexSolver.AddPoint(w))
+                {
+                    goto converged;
+                }
+
+                v = simplexSolver.Closest.V;
+
+                distSq = v.LengthSquared();
+            }
+
+            converged:
+
+            fraction = lambda;
+
+            float nlen2 = normal.LengthSquared();
+
+            if (nlen2 > NumericEpsilon)
+            {
+                normal *= 1.0f / MathF.Sqrt(nlen2);
+            }
+
+            return true;
+        }
+
+        public bool RayCastEx(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -164,10 +235,9 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
-            convexPolytope.InitHeap();
+            simplexSolver.Reset();
 
             mkd.GeometricCenter(out var center);
-            convexPolytope.InitTetrahedron(center.V);
 
             JVector posB = mkd.PositionB;
 
@@ -176,10 +246,7 @@ public static class NarrowPhase
             p1 = p2 = JVector.Zero;
 
             JVector r = sweep;
-
-            ConvexPolytope.Triangle ctri = convexPolytope.GetClosestTriangle();
-
-            JVector v = -ctri.ClosestToOrigin;
+            JVector v = -center.V;
 
             normal = JVector.Zero;
 
@@ -210,21 +277,20 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                if (!convexPolytope.AddVertex(vertex))
+                if (!simplexSolver.AddVertex(vertex))
                 {
                     goto converged;
                 }
 
-                ctri = convexPolytope.GetClosestTriangle();
-
-                v = -ctri.ClosestToOrigin;
+                v = -simplexSolver.Closest.V;
 
                 distSq = v.LengthSquared();
             }
 
             converged:
 
-            convexPolytope.CalculatePoints(ctri, out p1, out p2);
+            p1 = simplexSolver.Closest.A;
+            p2 = simplexSolver.Closest.B;
 
             float nlen2 = normal.LengthSquared();
 

@@ -68,6 +68,33 @@ public unsafe struct ConvexPolytope
 #endif
             V = v;
         }
+
+        public static Vertex operator -(in Vertex value1, in Vertex value2)
+        {
+            Vertex result;
+            result.V = value1.V - value2.V;
+            result.A = value1.A - value2.A;
+            result.B = value1.B - value2.B;
+            return result;
+        }
+
+        public static Vertex operator +(in Vertex value1, in Vertex value2)
+        {
+            Vertex result;
+            result.V = value1.V + value2.V;
+            result.A = value1.A + value2.A;
+            result.B = value1.B + value2.B;
+            return result;
+        }
+
+        public static Vertex operator *(float value1, in Vertex value2)
+        {
+            Vertex result;
+            result.V = value2.V * value1;
+            result.A = value2.A * value1;
+            result.B = value2.B * value1;
+            return result;
+        }
     }
 
     private struct Edge
