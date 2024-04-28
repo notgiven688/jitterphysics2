@@ -126,12 +126,12 @@ public unsafe struct ConvexPolytope
     /// </summary>
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
     {
-        CalcBarycentric(ctri, out JVector bc, !originEnclosed);
+        CalcBarycentric(ctri, out JVector bc);
         pA = bc.X * vertices[ctri.A].A + bc.Y * vertices[ctri.B].A + bc.Z * vertices[ctri.C].A;
         pB = bc.X * vertices[ctri.A].B + bc.Y * vertices[ctri.B].B + bc.Z * vertices[ctri.C].B;
     }
 
-    private bool CalcBarycentric(in Triangle tri, out JVector result, bool clamp = false)
+    private bool CalcBarycentric(in Triangle tri, out JVector result)
     {
         bool clamped = false;
 
@@ -150,76 +150,73 @@ public unsafe struct ConvexPolytope
         JVector.Subtract(a, b, out u);
         JVector.Subtract(a, c, out v);
 
-        float t = tri.NormalSq;
+        float t = 1.0f / tri.NormalSq;
 
         JVector.Cross(u, a, out tmp);
-        float gamma = JVector.Dot(tmp, tri.Normal) / t;
+        float gamma = JVector.Dot(tmp, tri.Normal) * t;
         JVector.Cross(a, v, out tmp);
-        float beta = JVector.Dot(tmp, tri.Normal) / t;
+        float beta = JVector.Dot(tmp, tri.Normal) * t;
         float alpha = 1.0f - gamma - beta;
 
-        if (clamp)
+        // Clamp the projected barycentric coordinates to lie within the triangle,
+        // such that the clamped coordinates are closest (euclidean) to the original point.
+        //
+        // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
+        if (alpha >= 0.0f && beta < 0.0f)
         {
-            // Clamp the projected barycentric coordinates to lie within the triangle,
-            // such that the clamped coordinates are closest (euclidean) to the original point.
-            //
-            // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
-            if (alpha >= 0.0f && beta < 0.0f)
+            t = JVector.Dot(a, u);
+            if (gamma < 0.0f && t > 0.0f)
             {
-                t = JVector.Dot(a, u);
-                if (gamma < 0.0f && t > 0.0f)
-                {
-                    beta = MathF.Min(1.0f, t / u.LengthSquared());
-                    alpha = 1.0f - beta;
-                    gamma = 0.0f;
-                }
-                else
-                {
-                    gamma = MathF.Min(1.0f, MathF.Max(0.0f, JVector.Dot(a, v) / v.LengthSquared()));
-                    alpha = 1.0f - gamma;
-                    beta = 0.0f;
-                }
-
-                clamped = true;
+                beta = MathF.Min(1.0f, t / u.LengthSquared());
+                alpha = 1.0f - beta;
+                gamma = 0.0f;
             }
-            else if (beta >= 0.0f && gamma < 0.0f)
+            else
             {
-                JVector.Subtract(b, c, out w);
-                t = JVector.Dot(b, w);
-                if (alpha < 0.0f && t > 0.0f)
-                {
-                    gamma = MathF.Min(1.0f, t / w.LengthSquared());
-                    beta = 1.0f - gamma;
-                    alpha = 0.0f;
-                }
-                else
-                {
-                    alpha = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(b, u) / u.LengthSquared()));
-                    beta = 1.0f - alpha;
-                    gamma = 0.0f;
-                }
-
-                clamped = true;
+                gamma = MathF.Min(1.0f, MathF.Max(0.0f, JVector.Dot(a, v) / v.LengthSquared()));
+                alpha = 1.0f - gamma;
+                beta = 0.0f;
             }
-            else if (gamma >= 0.0f && alpha < 0.0f)
+
+            clamped = true;
+        }
+        else if (beta >= 0.0f && gamma < 0.0f)
+        {
+            JVector.Subtract(b, c, out w);
+            t = JVector.Dot(b, w);
+            if (alpha < 0.0f && t > 0.0f)
             {
-                JVector.Subtract(b, c, out w);
-                t = -JVector.Dot(c, v);
-                if (beta < 0.0f && t > 0.0f)
-                {
-                    alpha = MathF.Min(1.0f, t / v.LengthSquared());
-                    gamma = 1.0f - alpha;
-                    beta = 0.0f;
-                }
-                else
-                {
-                    beta = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(c, w) / w.LengthSquared()));
-                    gamma = 1.0f - beta;
-                    alpha = 0.0f;
-                }
-
-                clamped = true;
+                gamma = MathF.Min(1.0f, t / w.LengthSquared());
+                beta = 1.0f - gamma;
+                alpha = 0.0f;
             }
+            else
+            {
+                alpha = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(b, u) / u.LengthSquared()));
+                beta = 1.0f - alpha;
+                gamma = 0.0f;
+            }
+
+            clamped = true;
+        }
+        else if (gamma >= 0.0f && alpha < 0.0f)
+        {
+            JVector.Subtract(b, c, out w);
+            t = -JVector.Dot(c, v);
+            if (beta < 0.0f && t > 0.0f)
+            {
+                alpha = MathF.Min(1.0f, t / v.LengthSquared());
+                gamma = 1.0f - alpha;
+                beta = 0.0f;
+            }
+            else
+            {
+                beta = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(c, w) / w.LengthSquared()));
+                gamma = 1.0f - beta;
+                alpha = 0.0f;
+            }
+
+            clamped = true;
         }
 
         result.X = alpha;
@@ -268,7 +265,7 @@ public unsafe struct ConvexPolytope
         delta = JVector.Dot(triangle.Normal, vertices[a].V);
         triangle.FacingOrigin = delta >= 0.0f;
 
-        if (!originEnclosed && CalcBarycentric(triangle, out JVector bc, true))
+        if (CalcBarycentric(triangle, out JVector bc))
         {
             triangle.ClosestToOrigin = bc.X * vertices[triangle.A].V + bc.Y * vertices[triangle.B].V +
                                        bc.Z * vertices[triangle.C].V;
@@ -276,6 +273,7 @@ public unsafe struct ConvexPolytope
         }
         else
         {
+            // prefer direct point-plane distance calculations if possible
             JVector.Multiply(triangle.Normal, delta / triangle.NormalSq, out triangle.ClosestToOrigin);
             triangle.ClosestToOriginSq = triangle.ClosestToOrigin.LengthSquared();
         }
