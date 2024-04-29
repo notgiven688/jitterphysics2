@@ -4,7 +4,16 @@ sidebar_position: 5
 
 # Changelog
 
-### Jitter 2.2.0 (01-02-2023)
+### Jitter 2.2.1 (04-29-2024)
+- Add optional activate parameter to world.AddShape.
+- Add NarrowPhase.SweepTest.
+- EPA collision detection: various improvements.
+- Improve exit condition for RayCast and PointTest.
+- Remove redundant ArgumentException for zero mass shapes.
+- Handle zero time steps. Throw ArgumentException for negative time steps.
+- Add joint base class to joint classes.
+
+### Jitter 2.2.0 (01-02-2024)
 - **Breaking Change:** Renamed `Raycast` to `RayCast`.
 - `world.Remove(world.NullBody)` does now remove all shapes, constraints and contacts associated with NullBody.
 - `world.AddShape(shape)` respects the activation state of the associated rigid body. Most notable: performance improvement when directly adding `TriangleShape`s to world.NullBody for static geometry.
