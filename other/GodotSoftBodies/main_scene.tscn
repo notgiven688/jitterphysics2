@@ -6,6 +6,7 @@
 [sub_resource type="PlaneMesh" id="PlaneMesh_bdasd"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6v48f"]
+albedo_color = Color(0.694118, 0.756863, 0.976471, 1)
 uv1_scale = Vector3(10, 10, 10)
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_hoxee"]
