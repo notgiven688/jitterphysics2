@@ -131,4 +131,13 @@ public class TriangleShape : Shape
             result = C;
         }
     }
+
+    /// <summary>
+    /// Clones this shape, <i>keeping</i> the mesh reference.
+    /// </summary>
+    /// <inheritdoc/>
+    public override TriangleShape Clone()
+    {
+        return new TriangleShape(Mesh, Index);
+    }
 }

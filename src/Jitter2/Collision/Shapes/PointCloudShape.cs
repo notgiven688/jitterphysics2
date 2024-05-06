@@ -59,7 +59,7 @@ public class PointCloudShape : Shape
     /// Creates a copy of this shape. The underlying data structure is shared
     /// among the instances.
     /// </summary>
-    public PointCloudShape Clone()
+    public override PointCloudShape Clone()
     {
         PointCloudShape result = new()
         {

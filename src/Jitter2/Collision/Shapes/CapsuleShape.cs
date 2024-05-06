@@ -89,6 +89,11 @@ public class CapsuleShape : Shape
         result.Y += MathF.Sign(direction.Y) * halfLength;
     }
 
+    public override CapsuleShape Clone()
+    {
+        return new CapsuleShape(radius, Length);
+    }
+
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         JVector delta = halfLength * orientation.GetColumn(1);

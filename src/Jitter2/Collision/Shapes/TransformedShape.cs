@@ -116,6 +116,15 @@ public class TransformedShape : Shape
         }
     }
 
+    /// <summary>
+    /// Clones the transformed shape, also creating a clone of its enclosed shape(s). 
+    /// </summary>
+    /// <inheritdoc />
+    public override TransformedShape Clone()
+    {
+        return new TransformedShape(OriginalShape.Clone(), translation, transformation);
+    }
+
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         if (type == TransformationType.General)

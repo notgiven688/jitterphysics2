@@ -85,6 +85,11 @@ public class BoxShape : Shape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
+    public override BoxShape Clone()
+    {
+        return new BoxShape(Size);
+    }
+
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         JMatrix.Absolute(in orientation, out JMatrix abs);

@@ -172,7 +172,7 @@ public class ConvexHullShape : Shape
     /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
     /// </summary>
     /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the original instance.</returns>
-    public ConvexHullShape Clone()
+    public override ConvexHullShape Clone()
     {
         ConvexHullShape result = new()
         {

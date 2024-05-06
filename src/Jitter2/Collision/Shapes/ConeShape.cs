@@ -100,6 +100,11 @@ public class ConeShape : Shape
         }
     }
 
+    public override ConeShape Clone()
+    {
+        return new ConeShape(radius, height);
+    }
+
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         const float ZeroEpsilon = 1e-12f;

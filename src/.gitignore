@@ -1,4 +1,5 @@
 .vscode
+.idea
 imgui.ini
 [Bb]in/
 [Oo]bj/

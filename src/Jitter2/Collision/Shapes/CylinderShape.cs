@@ -90,6 +90,11 @@ public class CylinderShape : Shape
         }
     }
 
+    public override CylinderShape Clone()
+    {
+        return new CylinderShape(height, radius);
+    }
+
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
         const float ZeroEpsilon = 1e-12f;

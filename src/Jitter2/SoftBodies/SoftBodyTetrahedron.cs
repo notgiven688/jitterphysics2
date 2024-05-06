@@ -132,4 +132,9 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         result = Vertices[furthest].Position;
     }
+
+    public override SoftBodyTetrahedron Clone()
+    {
+        return new SoftBodyTetrahedron(SoftBody, Vertices[0], Vertices[1], Vertices[2], Vertices[3]);
+    }
 }

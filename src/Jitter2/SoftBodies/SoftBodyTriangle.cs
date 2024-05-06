@@ -129,4 +129,9 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
 
         result += JVector.Normalize(direction) * halfThickness;
     }
+
+    public override SoftBodyTriangle Clone()
+    {
+        return new SoftBodyTriangle(SoftBody, v1, v2, v3);
+    }
 }
