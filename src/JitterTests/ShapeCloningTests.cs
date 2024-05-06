@@ -1,6 +1,6 @@
 ﻿namespace JitterTests;
 
-public class ShapeTests
+public class ShapeCloningTests
 {
     [TestCase]
     public void GenericShape_Clone_Is_Equal_and_Covariant()
