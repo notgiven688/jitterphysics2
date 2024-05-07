@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -28,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Wraps any shape and allows to orientate and translate it.
 /// </summary>
-public class TransformedShape : Shape
+public class TransformedShape : Shape, ICloneableShape<TransformedShape>
 {
     private enum TransformationType
     {
@@ -120,9 +121,18 @@ public class TransformedShape : Shape
     /// Clones the transformed shape, also creating a clone of its enclosed shape(s). 
     /// </summary>
     /// <inheritdoc />
-    public override TransformedShape Clone()
+    public TransformedShape Clone()
     {
-        return new TransformedShape(OriginalShape.Clone(), translation, transformation);
+        if (OriginalShape is ICloneableShape cloneable)
+        {
+            return new TransformedShape(cloneable.Clone(), translation, transformation);
+        }
+        throw new InvalidOperationException($"{nameof(TransformedShape)}: Original shape is not cloneable.");
+    }
+
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

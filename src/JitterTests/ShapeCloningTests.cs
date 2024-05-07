@@ -5,7 +5,7 @@ public class ShapeCloningTests
     [TestCase]
     public void GenericShape_Clone_Is_Equal_and_Covariant()
     {
-        Shape shape = new SphereShape();
+        ICloneableShape shape = new SphereShape();
         var clone = shape.Clone();
         Assert.That(clone.GetType(), Is.EqualTo(shape.GetType()));
         Assert.That(clone.GetType(), Is.EqualTo(typeof(SphereShape)));

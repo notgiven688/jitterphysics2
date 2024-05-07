@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a three-dimensional box shape.
 /// </summary>
-public class BoxShape : Shape
+public class BoxShape : Shape, ICloneableShape<BoxShape>
 {
     private JVector halfSize;
 
@@ -85,10 +85,16 @@ public class BoxShape : Shape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
-    public override BoxShape Clone()
+    public BoxShape Clone()
     {
         return new BoxShape(Size);
     }
+
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
+    }
+
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {

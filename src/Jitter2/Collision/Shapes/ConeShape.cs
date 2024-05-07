@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a cone shape.
 /// </summary>
-public class ConeShape : Shape
+public class ConeShape : Shape, ICloneableShape<ConeShape>
 {
     private float radius;
     private float height;
@@ -100,9 +100,14 @@ public class ConeShape : Shape
         }
     }
 
-    public override ConeShape Clone()
+    public ConeShape Clone()
     {
         return new ConeShape(radius, height);
+    }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

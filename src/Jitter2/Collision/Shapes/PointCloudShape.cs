@@ -32,7 +32,7 @@ namespace Jitter2.Collision.Shapes;
 /// For performance optimization, this shape should ideally be used for a small number of points (maximum
 /// of 20-30).
 /// </summary>
-public class PointCloudShape : Shape
+public class PointCloudShape : Shape, ICloneableShape<PointCloudShape>
 {
     private List<JVector> vertices;
     private JVector shifted;
@@ -59,7 +59,7 @@ public class PointCloudShape : Shape
     /// Creates a copy of this shape. The underlying data structure is shared
     /// among the instances.
     /// </summary>
-    public override PointCloudShape Clone()
+    public PointCloudShape Clone()
     {
         PointCloudShape result = new()
         {
@@ -70,6 +70,11 @@ public class PointCloudShape : Shape
             shifted = shifted
         };
         return result;
+    }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a sphere.
 /// </summary>
-public class SphereShape : Shape
+public class SphereShape : Shape, ICloneableShape<SphereShape>
 {
     private float radius;
 
@@ -64,9 +64,14 @@ public class SphereShape : Shape
         JVector.Multiply(result, radius, out result);
     }
 
-    public override SphereShape Clone()
+    public SphereShape Clone()
     {
         return new SphereShape(radius);
+    }
+
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

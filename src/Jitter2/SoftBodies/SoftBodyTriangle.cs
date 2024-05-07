@@ -28,7 +28,7 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTriangle : Shape, ISoftBodyShape
+public class SoftBodyTriangle : Shape, ISoftBodyShape, ICloneableShape<SoftBodyTriangle>
 {
     private readonly RigidBody v2;
     private readonly RigidBody v3;
@@ -130,8 +130,13 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
         result += JVector.Normalize(direction) * halfThickness;
     }
 
-    public override SoftBodyTriangle Clone()
+    public SoftBodyTriangle Clone()
     {
         return new SoftBodyTriangle(SoftBody, v1, v2, v3);
+    }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 }

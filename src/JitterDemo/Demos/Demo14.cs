@@ -61,11 +61,6 @@ public class EllipsoidShape : Shape
         result.Y *= 1.2f;
         result.Z *= 0.4f;
     }
-
-    public override EllipsoidShape Clone()
-    {
-        return new EllipsoidShape();
-    }
 }
 
 public class DoubleSphereShape : Shape
@@ -90,11 +85,6 @@ public class DoubleSphereShape : Shape
         {
             result = sphere2 * 0.5f;
         }
-    }
-
-    public override DoubleSphereShape Clone()
-    {
-        return new DoubleSphereShape();
     }
 }
 
@@ -135,11 +125,6 @@ public class Icosahedron : Shape
         }
 
         result = vertices[largestIndex] * 0.5f;
-    }
-
-    public override Icosahedron Clone()
-    {
-        return new Icosahedron();
     }
 }
 

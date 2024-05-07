@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a cylinder shape.
 /// </summary>
-public class CylinderShape : Shape
+public class CylinderShape : Shape, ICloneableShape<CylinderShape>
 {
     private float radius;
     private float height;
@@ -90,9 +90,14 @@ public class CylinderShape : Shape
         }
     }
 
-    public override CylinderShape Clone()
+    public CylinderShape Clone()
     {
         return new CylinderShape(height, radius);
+    }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

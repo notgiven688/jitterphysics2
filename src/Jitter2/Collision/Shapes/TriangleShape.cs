@@ -28,7 +28,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a single triangle within a mesh.
 /// </summary>
-public class TriangleShape : Shape
+public class TriangleShape : Shape, ICloneableShape<TriangleShape>
 {
     public readonly TriangleMesh Mesh;
     public int Index;
@@ -136,8 +136,13 @@ public class TriangleShape : Shape
     /// Clones this shape, <i>keeping</i> the mesh reference.
     /// </summary>
     /// <inheritdoc/>
-    public override TriangleShape Clone()
+    public TriangleShape Clone()
     {
         return new TriangleShape(Mesh, Index);
+    }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 }

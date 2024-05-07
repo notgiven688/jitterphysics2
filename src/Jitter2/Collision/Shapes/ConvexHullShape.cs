@@ -32,7 +32,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a generic convex shape.
 /// </summary>
-public class ConvexHullShape : Shape
+public class ConvexHullShape : Shape, ICloneableShape<ConvexHullShape>
 {
     private struct CHullVector
     {
@@ -172,7 +172,7 @@ public class ConvexHullShape : Shape
     /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
     /// </summary>
     /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the original instance.</returns>
-    public override ConvexHullShape Clone()
+    public ConvexHullShape Clone()
     {
         ConvexHullShape result = new()
         {
@@ -187,6 +187,13 @@ public class ConvexHullShape : Shape
         };
         return result;
     }
+    
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
+    }
+
+
 
     public JVector Shift
     {

@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a shape in the form of a capsule.
 /// </summary>
-public class CapsuleShape : Shape
+public class CapsuleShape : Shape, ICloneableShape<CapsuleShape>
 {
     private float radius;
     private float halfLength;
@@ -89,10 +89,16 @@ public class CapsuleShape : Shape
         result.Y += MathF.Sign(direction.Y) * halfLength;
     }
 
-    public override CapsuleShape Clone()
+    public CapsuleShape Clone()
     {
         return new CapsuleShape(radius, Length);
     }
+
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
+    }
+
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {

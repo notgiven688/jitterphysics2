@@ -27,7 +27,7 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTetrahedron : Shape, ISoftBodyShape
+public class SoftBodyTetrahedron : Shape, ISoftBodyShape, ICloneableShape<SoftBodyTetrahedron>
 {
     public SoftBodyTetrahedron(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3, RigidBody v4)
     {
@@ -133,8 +133,13 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
         result = Vertices[furthest].Position;
     }
 
-    public override SoftBodyTetrahedron Clone()
+    public SoftBodyTetrahedron Clone()
     {
         return new SoftBodyTetrahedron(SoftBody, Vertices[0], Vertices[1], Vertices[2], Vertices[3]);
+    }
+
+    Shape ICloneableShape.Clone()
+    {
+        return Clone();
     }
 }
