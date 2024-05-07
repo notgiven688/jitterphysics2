@@ -68,25 +68,6 @@ public class ShapeCloningTests
     }
 
     [TestCase]
-    public void TransformedShape_Clone_Is_Equal_and_Covariant()
-    {
-        var shape = new TransformedShape(new BoxShape(9, 8, 7), JVector.UnitX, JMatrix.CreateScale(4, 2, 0));
-        var clone = shape.Clone();
-        Assert.That(clone.Transformation, Is.EqualTo(shape.Transformation));
-        Assert.That(clone.Translation, Is.EqualTo(shape.Translation));
-        Assert.That(clone.OriginalShape.GetType(), Is.EqualTo(shape.OriginalShape.GetType()));
-        Assert.That(clone.GetType(), Is.EqualTo(shape.GetType()));
-    }
-
-    [TestCase]
-    public void TransformedShape_Clone_Clones_Original_Shape()
-    {
-        var shape = new TransformedShape(new SphereShape(3.1415f), JVector.UnitX, JMatrix.CreateScale(9000, 9001, 9002));
-        var clone = shape.Clone();
-        Assert.That(clone.OriginalShape, Is.Not.EqualTo(shape.OriginalShape));
-    }
-    
-    [TestCase]
     public void PointCloudShape_Clone_Is_Equal_and_Covariant()
     {
         var shape = new PointCloudShape([
@@ -121,5 +102,43 @@ public class ShapeCloningTests
         Assert.That(clone.Mesh, Is.EqualTo(shape.Mesh));
         Assert.That(clone.Index, Is.EqualTo(shape.Index));
         Assert.That(clone.GetType(), Is.EqualTo(shape.GetType()));
+    }
+    
+    [TestCase]
+    public void TransformedShape_Clone_Is_Equal_and_Covariant()
+    {
+        var shape = new TransformedShape(new BoxShape(9, 8, 7), JVector.UnitX, JMatrix.CreateScale(4, 2, 0));
+        var clone = shape.Clone();
+        Assert.That(clone.Transformation, Is.EqualTo(shape.Transformation));
+        Assert.That(clone.Translation, Is.EqualTo(shape.Translation));
+        Assert.That(clone.OriginalShape.GetType(), Is.EqualTo(shape.OriginalShape.GetType()));
+        Assert.That(clone.GetType(), Is.EqualTo(shape.GetType()));
+    }
+
+    [TestCase]
+    public void TransformedShape_Clone_Clones_Original_Shape()
+    {
+        var shape = new TransformedShape(new SphereShape(3.1415f), JVector.UnitX, JMatrix.CreateScale(9000, 9001, 9002));
+        var clone = shape.Clone();
+        Assert.That(clone.OriginalShape, Is.Not.EqualTo(shape.OriginalShape));
+    }
+    
+    [TestCase]
+    public void TransformedShape_Clone_Cannot_Clone_Plain_Shape()
+    {
+        var shape = new TransformedShape(new NonCloneableShape(), JVector.UnitX, JMatrix.CreateScale(1999, 2000, 2001));
+        // Expect InvalidOperationException
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            shape.Clone();
+        });
+    }
+}
+
+internal class NonCloneableShape : Shape
+{
+    public override void SupportMap(in JVector direction, out JVector result)
+    {
+        result = JVector.Zero;
     }
 }
