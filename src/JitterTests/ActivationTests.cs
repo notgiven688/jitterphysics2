@@ -40,6 +40,32 @@ public class ActivationTests
     }
 
     [TestCase]
+    public void Bodies_Can_Fall_Asleep_On_Time()
+    {
+        var body = world.CreateRigidBody(true);
+        body.deactivationTimeThreshold = 123f;
+
+        world.Step(123f);
+        world.Step(float.Epsilon);
+        Assert.That(!body.IsActive);
+    }
+
+    [TestCase]
+    public void Bodies_Do_Not_Fall_Asleep_Early()
+    {
+        var body = world.CreateRigidBody(true);
+        body.deactivationTimeThreshold = 4f;
+
+        body.sleepTime = 0;
+        world.Step(1);
+        Assert.That(body.IsActive);
+
+        body.sleepTime = 0;
+        world.Step(4);
+        Assert.That(body.IsActive);
+    }
+
+    [TestCase]
     public void Sleeping_Body_Stays_Asleep()
     {
         var body = world.CreateRigidBody(false);
@@ -59,12 +85,12 @@ public class ActivationTests
         //and snow-white slept for 300 years...
         world.Step(TimeSpan.FromDays(300 * 365).Seconds);
         Assert.That(!body.IsActive);
-        
+
         //until the end of time
         world.Step(float.MaxValue);
         Assert.That(!body.IsActive);
     }
-    
+
     [TestCase]
     public void NullBody_is_Asleep()
     {
@@ -86,7 +112,16 @@ public class ActivationTests
         world.Step(1);
         Assert.That(!body.IsActive);
     }
-    
+
+    [TestCase]
+    public void Static_Bodies_Retain_Activation_State()
+    {
+        var body = world.CreateRigidBody(true);
+        body.IsStatic = true;
+        world.Step(1);
+        Assert.That(body.IsActive);
+    }
+
     [TestCase]
     public void Sleeping_Body_Can_Be_Activated_After_Epsilon_Time()
     {
@@ -96,7 +131,7 @@ public class ActivationTests
         world.Step(float.Epsilon);
         Assert.That(body.IsActive);
     }
-    
+
     [TestCase]
     public void Sleeping_Body_Can_Be_Activated_After_Max_Time()
     {
@@ -106,7 +141,7 @@ public class ActivationTests
         world.Step(float.MaxValue);
         Assert.That(body.IsActive);
     }
-    
+
     /* This doesn't work yet because World.Step() is idempotent at zero timestep
     [TestCase]
     public void Sleeping_Body_Can_Be_Activated_Immediately()
