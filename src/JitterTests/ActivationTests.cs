@@ -84,6 +84,15 @@ public class ActivationTests
         world.Step(float.MaxValue);
         Assert.That(body.IsActive);
     }
+
+
+    [TestCase]
+    public void NullBody_is_Asleep()
+    {
+        Assert.That(!world.NullBody.IsActive);
+        world.Step(1);
+        Assert.That(!world.NullBody.IsActive);
+    }
     
     /* This doesn't work yet because World.Step() is idempotent at zero timestep
     [TestCase]

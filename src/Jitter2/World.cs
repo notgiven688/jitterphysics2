@@ -244,7 +244,7 @@ public partial class World
         Islands = new ReadOnlyActiveList<Island>(islands);
         RigidBodies = new ReadOnlyActiveList<RigidBody>(bodies);
 
-        NullBody = CreateRigidBody();
+        NullBody = CreateRigidBody(false);
         NullBody.IsStatic = true;
 
         Shapes = new ReadOnlyActiveList<Shape>(shapes);
