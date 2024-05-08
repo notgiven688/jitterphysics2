@@ -92,7 +92,7 @@ internal static class IslandHelper
     public static void BodyAdded(IslandList islands, RigidBody body)
     {
         body.island = GetFromPool();
-        islands.Add(body.island, true);
+        islands.Add(body.island, body.IsActive);
         body.island.bodies.Add(body);
     }
 
