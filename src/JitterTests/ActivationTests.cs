@@ -64,4 +64,25 @@ public class ActivationTests
         world.Step(float.MaxValue);
         Assert.That(!body.IsActive);
     }
+
+    [TestCase]
+    public void Sleeping_Body_Can_Be_Activated_After_Time()
+    {
+        var body = world.CreateRigidBody(false);
+
+        body.SetActivationState(true);
+        world.Step(0.1f);
+        Assert.That(body.IsActive);
+    }
+    
+    /* This doesn't work yet because World.Step() is idempotent at zero timestep
+    [TestCase]
+    public void Sleeping_Body_Can_Be_Activated_Immediately()
+    {
+        var body = world.CreateRigidBody(false);
+        body.SetActivationState(true);
+        world.Step(0);
+        Assert.That(body.IsActive);
+    }
+    */
 }
