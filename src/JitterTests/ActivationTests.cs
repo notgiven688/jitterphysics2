@@ -40,7 +40,7 @@ public class ActivationTests
     }
 
     [TestCase]
-    public void Bodies_Can_Fall_Asleep_On_Time()
+    public void Bodies_Fall_Asleep_On_Time()
     {
         var body = world.CreateRigidBody(true);
         body.deactivationTimeThreshold = 123f;
@@ -117,7 +117,11 @@ public class ActivationTests
     public void Static_Bodies_Retain_Activation_State()
     {
         var body = world.CreateRigidBody(true);
+        body.deactivationTimeThreshold = 9000;
         body.IsStatic = true;
+        world.Step(1);
+        Assert.That(body.IsActive);
+        body.IsStatic = false;
         world.Step(1);
         Assert.That(body.IsActive);
     }
