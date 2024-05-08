@@ -121,8 +121,13 @@ public class ActivationTests
         body.IsStatic = true;
         world.Step(1);
         Assert.That(body.IsActive);
+
         body.IsStatic = false;
         world.Step(1);
+        Assert.That(body.IsActive);
+        
+        body.IsStatic = true;
+        world.Step(float.MaxValue);
         Assert.That(body.IsActive);
     }
 
