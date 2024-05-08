@@ -1,4 +1,7 @@
 .vscode
+.idea
+*.DotSettings.user
+
 imgui.ini
 [Bb]in/
 [Oo]bj/

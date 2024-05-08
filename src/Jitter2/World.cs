@@ -436,7 +436,7 @@ public partial class World
 
     internal void DeactivateBodyNextStep(RigidBody body)
     {
-        body.sleepTime = float.MaxValue / 2.0f;
+        body.sleepTime = float.PositiveInfinity;
     }
 
     /// <summary>
@@ -477,17 +477,19 @@ public partial class World
     /// <summary>
     /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
+    /// <param name="active">initial activation state of the body.</param>
     /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
-    public RigidBody CreateRigidBody()
+    public RigidBody CreateRigidBody(bool active = true)
     {
-        RigidBody body = new(memRigidBodies.Allocate(true, true), this);
-        body.Data.IsActive = true;
+        RigidBody body = new(memRigidBodies.Allocate(active, true), this);
+        body.Data.IsActive = active;
+        body.sleepTime = active ? 0 : float.PositiveInfinity;
 
-        bodies.Add(body, true);
+        bodies.Add(body, active);
 
         IslandHelper.BodyAdded(islands, body);
 
-        AddToActiveList(body.island);
+        if (active) AddToActiveList(body.island);
 
         return body;
     }
