@@ -64,7 +64,29 @@ public class ActivationTests
         world.Step(float.MaxValue);
         Assert.That(!body.IsActive);
     }
+    
+    [TestCase]
+    public void NullBody_is_Asleep()
+    {
+        Assert.That(!world.NullBody.IsActive);
+        world.Step(1);
+        Assert.That(!world.NullBody.IsActive);
+    }
 
+    [TestCase]
+    public void Static_Bodies_Do_Not_Wake_Up()
+    {
+        world.NullBody.SetActivationState(true);
+        world.Step(1);
+        Assert.That(!world.NullBody.IsActive);
+
+        var body = world.CreateRigidBody(false);
+        body.IsStatic = true;
+        body.SetActivationState(true);
+        world.Step(1);
+        Assert.That(!body.IsActive);
+    }
+    
     [TestCase]
     public void Sleeping_Body_Can_Be_Activated_After_Epsilon_Time()
     {
@@ -83,15 +105,6 @@ public class ActivationTests
         body.SetActivationState(true);
         world.Step(float.MaxValue);
         Assert.That(body.IsActive);
-    }
-
-
-    [TestCase]
-    public void NullBody_is_Asleep()
-    {
-        Assert.That(!world.NullBody.IsActive);
-        world.Step(1);
-        Assert.That(!world.NullBody.IsActive);
     }
     
     /* This doesn't work yet because World.Step() is idempotent at zero timestep
