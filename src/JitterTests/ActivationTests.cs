@@ -66,12 +66,22 @@ public class ActivationTests
     }
 
     [TestCase]
-    public void Sleeping_Body_Can_Be_Activated_After_Time()
+    public void Sleeping_Body_Can_Be_Activated_After_Epsilon_Time()
     {
         var body = world.CreateRigidBody(false);
 
         body.SetActivationState(true);
-        world.Step(0.1f);
+        world.Step(float.Epsilon);
+        Assert.That(body.IsActive);
+    }
+    
+    [TestCase]
+    public void Sleeping_Body_Can_Be_Activated_After_Max_Time()
+    {
+        var body = world.CreateRigidBody(false);
+
+        body.SetActivationState(true);
+        world.Step(float.MaxValue);
         Assert.That(body.IsActive);
     }
     
