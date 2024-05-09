@@ -28,6 +28,7 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         }
 
         float trsh = Threshold;
+        uint nb = vshape.Neighbours;
 
         JVector cnormal = normal;
         if (c2) cnormal.Negate();
@@ -38,29 +39,29 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
 
         if(cnormal.X > trsh)
         {
-            if((vshape.neighbours & 1) != 0) return false;
+            if((nb & 1) != 0) return false;
         }
         else if(cnormal.X < -trsh)
         {
-            if((vshape.neighbours & 2) != 0) return false;
+            if((nb & 2) != 0) return false;
         }
 
         if(cnormal.Y > trsh)
         {
-            if((vshape.neighbours & 4) != 0) return false;
+            if((nb & 4) != 0) return false;
         }
         else if(cnormal.Y < -trsh)
         {
-            if((vshape.neighbours & 8) != 0) return false;
+            if((nb & 8) != 0) return false;
         }
 
         if(cnormal.Z > trsh)
         {
-            if((vshape.neighbours & 16) != 0) return false;
+            if((nb & 16) != 0) return false;
         }
         else if(cnormal.Z < -trsh)
         {
-            if((vshape.neighbours & 32) != 0) return false;
+            if((nb & 32) != 0) return false;
         }
 
         return true;
