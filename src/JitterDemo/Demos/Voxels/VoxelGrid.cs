@@ -48,7 +48,7 @@ public class VoxelGrid
 
     public bool AddVoxel(int x, int y, int z)
     {
-        if (x < 0 || x > Size || y < 0 || y > Size || z < 0 || z > Size) 
+        if (x < 0 || x >= Size || y < 0 || y >= Size || z < 0 || z >= Size) 
         {
             throw new ArgumentOutOfRangeException();
         }
