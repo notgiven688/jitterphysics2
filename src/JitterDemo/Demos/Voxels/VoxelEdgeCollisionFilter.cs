@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
@@ -31,35 +32,58 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         uint nb = vshape.Neighbours;
 
         JVector cnormal = normal;
-        if (c2) cnormal.Negate();
+        JVector relPos = pAA;
+
+        if (c2) 
+        {
+            relPos = pBB;
+            cnormal.Negate();
+        }
+
+        relPos -= vshape.Position;
 
         // Check if collision normal points into a specific direction.
         // If yes, check if there is a neighbouring voxel. If yes,
         // discard the collision.
+        //
+        // equivalent, but harder to debug:
+        
+        /*
+        return  !((relPos.X > 0.0f && cnormal.X > trsh && (nb & 1) != 0) ||
+                (relPos.X < 0.0f && cnormal.X < -trsh && (nb & 2) != 0) ||
+                (relPos.Y > 0.0f && cnormal.Y > trsh && (nb & 4) != 0) ||
+                (relPos.Y < 0.0f && cnormal.Y < -trsh && (nb & 8) != 0) ||
+                (relPos.Z > 0.0f && cnormal.Z > trsh && (nb & 16) != 0) ||
+                (relPos.Z < 0.0f && cnormal.Z < -trsh && (nb & 32) != 0)) {
+                return false;
+        */
 
-        if(cnormal.X > trsh)
+        if(relPos.X > 0.0f && cnormal.X > trsh)
         {
             if((nb & 1) != 0) return false;
         }
-        else if(cnormal.X < -trsh)
+
+        if(relPos.X < 0.0f && cnormal.X < -trsh)
         {
             if((nb & 2) != 0) return false;
         }
 
-        if(cnormal.Y > trsh)
+        if(relPos.Y > 0.0f && cnormal.Y > trsh)
         {
             if((nb & 4) != 0) return false;
         }
-        else if(cnormal.Y < -trsh)
+
+        if(relPos.Y < 0.0f && cnormal.Y < -trsh)
         {
             if((nb & 8) != 0) return false;
         }
 
-        if(cnormal.Z > trsh)
+        if(relPos.Z > 0.0f && cnormal.Z > trsh)
         {
             if((nb & 16) != 0) return false;
         }
-        else if(cnormal.Z < -trsh)
+
+        if(relPos.Z < 0.0f && cnormal.Z < -trsh)
         {
             if((nb & 32) != 0) return false;
         }
