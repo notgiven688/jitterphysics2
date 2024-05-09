@@ -326,7 +326,6 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
     private Random? optimizeRandom = null;
 
-
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
     /// </summary>
