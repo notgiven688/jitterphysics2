@@ -56,6 +56,8 @@ public class Demo21 : IDemo
         body.SetMassInertia(JMatrix.Identity, 1.0f);
         body.SetActivationState(false);
 
+        body.Tag = new RigidBodyTag(doNotDraw: true);
+
         world.NarrowPhaseFilter = new VoxelEdgeCollisionFilter();
 
         Console.WriteLine("Optimizing tree..");
