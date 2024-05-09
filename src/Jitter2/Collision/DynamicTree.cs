@@ -324,6 +324,8 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         stack.Clear();
     }
 
+    private Random? optimizeRandom = null;
+
 
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
@@ -331,7 +333,8 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     /// <param name="sweeps">The number of optimization iterations to perform. The default value is 100.</param>
     public void Optimize(int sweeps = 100)
     {
-        Random random = new(0);
+        optimizeRandom ??= new Random(0);
+
         Stack<T> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
@@ -339,7 +342,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
             {
                 T proxy = activeList[i];
 
-                if (random.NextDouble() > 0.05d) continue;
+                if (optimizeRandom.NextDouble() > 0.05d) continue;
 
                 temp.Push(proxy);
                 InternalRemoveProxy(proxy);
