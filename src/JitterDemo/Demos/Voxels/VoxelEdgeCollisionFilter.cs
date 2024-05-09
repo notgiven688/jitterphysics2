@@ -34,7 +34,6 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         JVector cnormal = normal;
         JVector relPos = pAA;
 
-
         if (c2) 
         {
             relPos = pBB;
