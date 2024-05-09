@@ -54,8 +54,7 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
                 (relPos.Y > 0.0f && cnormal.Y > trsh && (nb & 4) != 0) ||
                 (relPos.Y < 0.0f && cnormal.Y < -trsh && (nb & 8) != 0) ||
                 (relPos.Z > 0.0f && cnormal.Z > trsh && (nb & 16) != 0) ||
-                (relPos.Z < 0.0f && cnormal.Z < -trsh && (nb & 32) != 0)) {
-                return false;
+                (relPos.Z < 0.0f && cnormal.Z < -trsh && (nb & 32) != 0));
         */
 
         if(relPos.X > 0.0f && cnormal.X > trsh)
