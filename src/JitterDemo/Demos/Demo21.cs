@@ -1,5 +1,6 @@
 using System;
 using Jitter2;
+using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
@@ -8,9 +9,10 @@ namespace JitterDemo;
 public class Demo21 : IDemo
 {
     public string Name => "Voxel Demo";
-    VoxelGrid voxelGrid = null!;
-    Playground pg = null!;
-    World world = null!;
+    private VoxelGrid voxelGrid = null!;
+    private Playground pg = null!;
+    private World world = null!;
+    private Player player = null!;
 
     public void Build()
     {
@@ -55,6 +57,8 @@ public class Demo21 : IDemo
         }
 
         Console.WriteLine("Done.");
+
+        player = new Player(world, new JVector(50, 40, 50));
     }
 
     public void Draw()
@@ -67,5 +71,17 @@ public class Demo21 : IDemo
             cd.PushMatrix(MatrixHelper.CreateTranslation(pos.X, pos.Y, pos.Z), 
                           ColorGenerator.GetColor(Math.Abs(voxel * voxel + voxel)));
         }
+
+        Keyboard kb = Keyboard.Instance;
+
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
+        else player.SetAngularInput(0.0f);
+
+        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);
+        else player.SetLinearInput(JVector.Zero);
+
+        if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();
     }
 }
