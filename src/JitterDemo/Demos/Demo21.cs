@@ -45,7 +45,17 @@ public class Demo21 : IDemo
             }
         }
 
-        voxelGrid.BuildJitterBoxes();
+        var body = world.CreateRigidBody();
+        body.IsStatic = true;
+
+        foreach(var voxel in voxelGrid.Voxels)
+        {
+            body.AddShape(new VoxelShape(voxelGrid, voxel), false);
+        }
+
+        body.SetMassInertia(JMatrix.Identity, 1.0f);
+        body.SetActivationState(false);
+
         world.NarrowPhaseFilter = new VoxelEdgeCollisionFilter();
 
         Console.WriteLine("Optimizing tree..");

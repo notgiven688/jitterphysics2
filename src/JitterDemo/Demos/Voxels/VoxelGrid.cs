@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Jitter2;
-using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
-using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 
 namespace JitterDemo;
@@ -35,6 +33,11 @@ public class VoxelGrid
 
     public JVector PositionFromIndex(int index)
     {
+        if(index < 0 || index >= Size * Size * Size) 
+        {
+            throw new ArgumentOutOfRangeException();
+        }
+
         int z = index / (Size * Size);
         int y = (index - z * (Size * Size)) / Size;
         int x = index - z * (Size * Size) - y * Size;
@@ -45,21 +48,11 @@ public class VoxelGrid
 
     public bool AddVoxel(int x, int y, int z)
     {
-        if (x < 0 || x > Size || y < 0 || y > Size || z < 0 || z > Size) throw new ArgumentOutOfRangeException();
-        return Voxels.Add(x + y * Size + z * Size * Size);
-    }
-
-    public void BuildJitterBoxes()
-    {
-        Body = world.CreateRigidBody();
-        Body.IsStatic = true;
-
-        foreach(var voxel in Voxels)
+        if (x < 0 || x > Size || y < 0 || y > Size || z < 0 || z > Size) 
         {
-            Body.AddShape(new VoxelShape(this, voxel), false);
+            throw new ArgumentOutOfRangeException();
         }
 
-        Body.SetMassInertia(JMatrix.Identity, 1.0f);
-        Body.SetActivationState(false);
+        return Voxels.Add(x + y * Size + z * Size * Size);
     }
 }
