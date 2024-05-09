@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Jitter2;
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -84,6 +85,7 @@ public partial class Playground : RenderWindow
 
         world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
         world.BroadPhaseFilter = null;
+        world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter();
         world.Gravity = new JVector(0, -9.81f, 0);
         world.NumberSubsteps = 1;
         world.SolverIterations = 12;
