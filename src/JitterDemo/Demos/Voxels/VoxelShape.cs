@@ -10,12 +10,12 @@ public class VoxelShape : Shape
     public int VoxelIndex { private set; get; }
     public VoxelGrid VoxelGrid { private set; get; }
 
-    public uint neighbours = 0;
+    public uint Neighbours { private set; get; } = 0;
 
     public VoxelShape(VoxelGrid grid, int index)
     {
         this.Position = grid.PositionFromIndex(index);
-        this.neighbours = grid.GetNeighbours(index);
+        this.Neighbours = grid.GetNeighbours(index);
         this.VoxelIndex = index;
         this.VoxelGrid = grid;
         UpdateShape();
