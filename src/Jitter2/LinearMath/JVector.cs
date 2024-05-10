@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -30,14 +31,22 @@ namespace Jitter2.LinearMath;
 /// <summary>
 /// Represents a three-dimensional vector using three floating-point numbers.
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Size = 12)]
+[StructLayout(LayoutKind.Explicit, Size = 16)]
 public struct JVector
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;
 
+    [FieldOffset(0)]
+    Vector4 vector;
+
+    [FieldOffset(0)]
     public float X;
+
+    [FieldOffset(4)]
     public float Y;
+
+    [FieldOffset(8)]
     public float Z;
 
     public static readonly JVector Zero;
@@ -142,6 +151,7 @@ public struct JVector
 
     public static void Min(in JVector value1, in JVector value2, out JVector result)
     {
+        Unsafe.SkipInit(out result);
         result.X = value1.X < value2.X ? value1.X : value2.X;
         result.Y = value1.Y < value2.Y ? value1.Y : value2.Y;
         result.Z = value1.Z < value2.Z ? value1.Z : value2.Z;
@@ -166,6 +176,7 @@ public struct JVector
 
     public static void Max(in JVector value1, in JVector value2, out JVector result)
     {
+        Unsafe.SkipInit(out result);
         result.X = value1.X > value2.X ? value1.X : value2.X;
         result.Y = value1.Y > value2.Y ? value1.Y : value2.Y;
         result.Z = value1.Z > value2.Z ? value1.Z : value2.Z;
@@ -202,6 +213,8 @@ public struct JVector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Transform(in JVector vector, in JMatrix matrix, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = vector.X * matrix.M11 + vector.Y * matrix.M12 + vector.Z * matrix.M13;
         float num1 = vector.X * matrix.M21 + vector.Y * matrix.M22 + vector.Z * matrix.M23;
         float num2 = vector.X * matrix.M31 + vector.Y * matrix.M32 + vector.Z * matrix.M33;
@@ -217,6 +230,8 @@ public struct JVector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void TransposedTransform(in JVector vector, in JMatrix matrix, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31;
         float num1 = vector.X * matrix.M12 + vector.Y * matrix.M22 + vector.Z * matrix.M32;
         float num2 = vector.X * matrix.M13 + vector.Y * matrix.M23 + vector.Z * matrix.M33;
@@ -231,7 +246,7 @@ public struct JVector
     /// </summary>
     public static JMatrix Outer(in JVector u, in JVector v)
     {
-        JMatrix result;
+        Unsafe.SkipInit(out JMatrix result);
         result.M11 = u.X * v.X;
         result.M12 = u.X * v.Y;
         result.M13 = u.X * v.Z;
@@ -259,6 +274,8 @@ public struct JVector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Add(in JVector value1, in JVector value2, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         result.X = value1.X + value2.X;
         result.Y = value1.Y + value2.Y;
         result.Z = value1.Z + value2.Z;
@@ -273,6 +290,8 @@ public struct JVector
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Subtract(in JVector value1, in JVector value2, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = value1.X - value2.X;
         float num1 = value1.Y - value2.Y;
         float num2 = value1.Z - value2.Z;
@@ -284,12 +303,15 @@ public struct JVector
 
     public static JVector Cross(in JVector vector1, in JVector vector2)
     {
+        
         Cross(vector1, vector2, out JVector result);
         return result;
     }
 
     public static void Cross(in JVector vector1, in JVector vector2, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
         float num1 = vector1.Z * vector2.X - vector1.X * vector2.Z;
         float num2 = vector1.X * vector2.Y - vector1.Y * vector2.X;
@@ -319,6 +341,8 @@ public struct JVector
 
     public static void Negate(in JVector value, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = -value.X;
         float num1 = -value.Y;
         float num2 = -value.Z;
@@ -345,6 +369,8 @@ public struct JVector
 
     public static void Normalize(in JVector value, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float num2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
         float num = 1f / (float)Math.Sqrt(num2);
         result.X = value.X * num;
@@ -382,6 +408,8 @@ public struct JVector
 
     public static void Multiply(in JVector value1, float scaleFactor, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         result.X = value1.X * scaleFactor;
         result.Y = value1.Y * scaleFactor;
         result.Z = value1.Z * scaleFactor;
@@ -392,7 +420,7 @@ public struct JVector
     /// </summary>
     public static JVector operator %(in JVector vector1, in JVector vector2)
     {
-        JVector result;
+        Unsafe.SkipInit(out JVector result);
         result.X = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
         result.Y = vector1.Z * vector2.X - vector1.X * vector2.Z;
         result.Z = vector1.X * vector2.Y - vector1.Y * vector2.X;
@@ -406,7 +434,7 @@ public struct JVector
 
     public static JVector operator *(in JVector value1, float value2)
     {
-        JVector result;
+        Unsafe.SkipInit(out JVector result);
         result.X = value1.X * value2;
         result.Y = value1.Y * value2;
         result.Z = value1.Z * value2;
@@ -415,7 +443,7 @@ public struct JVector
 
     public static JVector operator *(float value1, in JVector value2)
     {
-        JVector result;
+        Unsafe.SkipInit(out JVector result);
         result.X = value2.X * value1;
         result.Y = value2.Y * value1;
         result.Z = value2.Z * value1;
@@ -424,7 +452,7 @@ public struct JVector
 
     public static JVector operator -(in JVector value1, in JVector value2)
     {
-        JVector result;
+        Unsafe.SkipInit(out JVector result);
         result.X = value1.X - value2.X;
         result.Y = value1.Y - value2.Y;
         result.Z = value1.Z - value2.Z;
@@ -438,7 +466,7 @@ public struct JVector
 
     public static JVector operator +(in JVector value1, in JVector value2)
     {
-        JVector result;
+        Unsafe.SkipInit(out JVector result);
         result.X = value1.X + value2.X;
         result.Y = value1.Y + value2.Y;
         result.Z = value1.Z + value2.Z;

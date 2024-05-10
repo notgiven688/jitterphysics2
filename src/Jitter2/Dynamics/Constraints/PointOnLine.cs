@@ -313,7 +313,7 @@ public unsafe class PointOnLine : Constraint
         jacobian[10] = aw;
         jacobian[11] = R2 % aw;
 
-        JVector jv;
+        Unsafe.SkipInit(out JVector jv);
         jv.X = jacobian[0] * body1.Velocity + jacobian[1] * body1.AngularVelocity + jacobian[2] * body2.Velocity +
                jacobian[3] * body2.AngularVelocity;
 

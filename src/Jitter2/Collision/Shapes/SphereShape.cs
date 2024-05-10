@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -66,6 +67,9 @@ public class SphereShape : Shape
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
+        Unsafe.SkipInit(out box.Min);
+        Unsafe.SkipInit(out box.Max);
+
         box.Min.X = -radius;
         box.Min.Y = -radius;
         box.Min.Z = -radius;

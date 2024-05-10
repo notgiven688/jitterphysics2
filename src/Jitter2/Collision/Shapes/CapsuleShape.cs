@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -91,6 +92,9 @@ public class CapsuleShape : Shape
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
     {
+        Unsafe.SkipInit(out box.Min);
+        Unsafe.SkipInit(out box.Max);
+
         JVector delta = halfLength * orientation.GetColumn(1);
 
         box.Min.X = -radius - MathF.Abs(delta.X);

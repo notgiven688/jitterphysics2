@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
@@ -23,6 +24,8 @@ public class VoxelShape : Shape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         // this is the support function of a box with size 1.
         result.X = Math.Sign(direction.X) * 0.5f;
         result.Y = Math.Sign(direction.Y) * 0.5f;

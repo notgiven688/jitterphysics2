@@ -114,7 +114,7 @@ public partial class Playground : RenderWindow
         sb.Position = Conversion.ToJitterVector(pos);
         sb.Velocity = Conversion.ToJitterVector(dir * primitiveVelocity);
 
-        var ss = new BoxShape(1);
+        var ss = new SphereShape(0.3f);
         sb.AddShape(ss);
     }
 
@@ -224,7 +224,7 @@ public partial class Playground : RenderWindow
             multiThread = !multiThread;
         }
 
-        if (!GuiRenderer.WantsCaptureKeyboard && Keyboard.KeyPressBegin(Keyboard.Key.Space))
+        if (!GuiRenderer.WantsCaptureKeyboard && Keyboard.IsKeyDown(Keyboard.Key.Space))
         {
             ShootPrimitive();
         }

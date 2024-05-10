@@ -127,7 +127,7 @@ public unsafe class HingeAngle : Constraint
 
         JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
 
-        JVector error;
+        Unsafe.SkipInit(out JVector error);
         error.X = JVector.Dot(p0, new JVector(quat0.X, quat0.Y, quat0.Z));
         error.Y = JVector.Dot(p1, new JVector(quat0.X, quat0.Y, quat0.Z));
         error.Z = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));

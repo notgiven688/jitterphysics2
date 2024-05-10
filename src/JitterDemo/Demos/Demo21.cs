@@ -1,5 +1,6 @@
 using System;
 using Jitter2;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -13,6 +14,7 @@ public class Demo21 : IDemo
     private Playground pg = null!;
     private World world = null!;
     private Player player = null!;
+    RigidBody body;
 
     public void Build()
     {
@@ -45,7 +47,7 @@ public class Demo21 : IDemo
             }
         }
 
-        var body = world.CreateRigidBody();
+        body = world.CreateRigidBody();
         body.IsStatic = true;
 
         foreach(var voxel in voxelGrid.Voxels)
@@ -95,5 +97,10 @@ public class Demo21 : IDemo
         else player.SetLinearInput(JVector.Zero);
 
         if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();
+
+        if (kb.IsKeyDown(Keyboard.Key.R))
+        {
+            body.RemoveShape(world.Shapes);
+        }
     }
 }

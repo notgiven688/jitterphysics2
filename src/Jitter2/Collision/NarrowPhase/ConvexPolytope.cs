@@ -133,6 +133,8 @@ public unsafe struct ConvexPolytope
 
     private bool CalcBarycentric(in Triangle tri, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         bool clamped = false;
 
         JVector a = vertices[tri.A].V;

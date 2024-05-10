@@ -80,6 +80,8 @@ public static class MathHelper
 
     public static void UnsafeDecomposeMatrix(in JMatrix matrix, out JMatrix orientation, out JVector scale)
     {
+        Unsafe.SkipInit(out scale);
+
         orientation = matrix;
 
         scale.X = orientation.UnsafeGet(0).Length();

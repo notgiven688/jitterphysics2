@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -30,18 +31,21 @@ namespace Jitter2.LinearMath;
 /// <summary>
 /// 3x3 matrix of 32 bit float values in column major format.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 36)]
+[StructLayout(LayoutKind.Explicit, Size = 64)]
 public struct JMatrix
 {
+    [FieldOffset(0)]
+    Matrix4x4 matrix;
+
     [FieldOffset(0)] public float M11;
     [FieldOffset(4)] public float M21;
     [FieldOffset(8)] public float M31;
-    [FieldOffset(12)] public float M12;
-    [FieldOffset(16)] public float M22;
-    [FieldOffset(20)] public float M32;
-    [FieldOffset(24)] public float M13;
-    [FieldOffset(28)] public float M23;
-    [FieldOffset(32)] public float M33;
+    [FieldOffset(16)] public float M12;
+    [FieldOffset(20)] public float M22;
+    [FieldOffset(24)] public float M32;
+    [FieldOffset(32)] public float M13;
+    [FieldOffset(36)] public float M23;
+    [FieldOffset(40)] public float M33;
 
     public static readonly JMatrix Identity;
     public static readonly JMatrix Zero;
@@ -126,6 +130,8 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
         float num1 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
         float num2 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;
@@ -159,6 +165,8 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M12 + matrix1.M13 * matrix2.M13;
         float num1 = matrix1.M11 * matrix2.M21 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M23;
         float num2 = matrix1.M11 * matrix2.M31 + matrix1.M12 * matrix2.M32 + matrix1.M13 * matrix2.M33;
@@ -267,6 +275,8 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float num0 = matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M21 + matrix1.M31 * matrix2.M31;
         float num1 = matrix1.M11 * matrix2.M12 + matrix1.M21 * matrix2.M22 + matrix1.M31 * matrix2.M32;
         float num2 = matrix1.M11 * matrix2.M13 + matrix1.M21 * matrix2.M23 + matrix1.M31 * matrix2.M33;
@@ -290,6 +300,8 @@ public struct JMatrix
 
     public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         result.M11 = matrix1.M11 + matrix2.M11;
         result.M12 = matrix1.M12 + matrix2.M12;
         result.M13 = matrix1.M13 + matrix2.M13;
@@ -303,6 +315,8 @@ public struct JMatrix
 
     public static void Subtract(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         result.M11 = matrix1.M11 - matrix2.M11;
         result.M12 = matrix1.M12 - matrix2.M12;
         result.M13 = matrix1.M13 - matrix2.M13;
@@ -322,6 +336,8 @@ public struct JMatrix
 
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float det = matrix.Determinant();
 
         if (float.IsNaN(det) || float.IsInfinity(det))
@@ -365,6 +381,8 @@ public struct JMatrix
 
     public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float num = scaleFactor;
         result.M11 = matrix1.M11 * num;
         result.M12 = matrix1.M12 * num;
@@ -385,6 +403,8 @@ public struct JMatrix
 
     public static void Absolute(in JMatrix matrix, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         result.M11 = Math.Abs(matrix.M11);
         result.M12 = Math.Abs(matrix.M12);
         result.M13 = Math.Abs(matrix.M13);
@@ -398,6 +418,8 @@ public struct JMatrix
 
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
+
         float r = quaternion.W;
         float i = quaternion.X;
         float j = quaternion.Y;
@@ -430,6 +452,7 @@ public struct JMatrix
 
     private static void Transpose(in JMatrix matrix, out JMatrix result)
     {
+        Unsafe.SkipInit(out result);
         result.M11 = matrix.M11;
         result.M12 = matrix.M21;
         result.M13 = matrix.M31;
@@ -443,7 +466,7 @@ public struct JMatrix
 
     public static JMatrix operator *(in JMatrix matrix1, in JMatrix matrix2)
     {
-        JMatrix result;
+        Unsafe.SkipInit(out JMatrix result);
         result.M11 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
         result.M12 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
         result.M13 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;

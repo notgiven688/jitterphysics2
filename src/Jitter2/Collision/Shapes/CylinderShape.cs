@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -74,6 +75,8 @@ public class CylinderShape : Shape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
+        Unsafe.SkipInit(out result);
+
         float sigma = (float)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
 
         if (sigma > 0.0f)

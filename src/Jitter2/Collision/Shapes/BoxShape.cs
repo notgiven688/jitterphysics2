@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -80,6 +81,7 @@ public class BoxShape : Shape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
+        Unsafe.SkipInit(out result);
         result.X = Math.Sign(direction.X) * halfSize.X;
         result.Y = Math.Sign(direction.Y) * halfSize.Y;
         result.Z = Math.Sign(direction.Z) * halfSize.Z;

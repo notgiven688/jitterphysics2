@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -207,6 +208,9 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     {
         JMatrix oriT = JMatrix.Transpose(orientation);
 
+        Unsafe.SkipInit(out box.Min);
+        Unsafe.SkipInit(out box.Max);
+
         SupportMap(oriT.GetColumn(0), out JVector res);
         box.Max.X = JVector.Dot(oriT.GetColumn(0), res);
 
@@ -224,6 +228,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 
         SupportMap(-oriT.GetColumn(2), out res);
         box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
+
+        
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);
