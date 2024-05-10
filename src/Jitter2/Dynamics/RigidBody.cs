@@ -420,7 +420,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Removes a specified shape from the rigid body.
     /// </summary>
-    /// <remarks>This operation is O(n), where n is the number of shapes attached to the body.</remarks>
+    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shape">The shape to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
     public void RemoveShape(Shape shape, bool setMassInertia = true)
@@ -451,7 +451,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Removes several shapes from the body.
     /// </summary>
-    /// <remarks>This operation is O(n), where n is the number of shapes attached to the body.</remarks>
+    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shapes">The shapes to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
     public void RemoveShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
