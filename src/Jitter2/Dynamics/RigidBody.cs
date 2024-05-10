@@ -477,11 +477,11 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             }
         }
 
-        foreach (var s in shapes)
+        foreach (var shape in shapes)
         {
-            World.DynamicTree.RemoveProxy(s);
-            s.DetachRigidBody();
-            World.InternalRemoveShape(s);
+            World.DynamicTree.RemoveProxy(shape);
+            shape.DetachRigidBody();
+            World.InternalRemoveShape(shape);
         }
 
         if (setMassInertia) SetMassInertia();
