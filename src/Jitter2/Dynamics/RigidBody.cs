@@ -430,20 +430,14 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                 "Shape is not part of this body.");
         }
 
-        Stack<Arbiter> toRemoveArbiter = new();
-
-        foreach (var contact in Contacts)
+        foreach (var arbiter in Contacts)
         {
-            if (contact.Handle.Data.Key.Key1 == shape.ShapeId || contact.Handle.Data.Key.Key2 == shape.ShapeId)
+            if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
             {
-                toRemoveArbiter.Push(contact);
+                // Removes the current element we are iterating over from Contacts, i.e. the HashSet 
+                // we are iterating over is altered. This is allowed.
+                World.Remove(arbiter);
             }
-        }
-
-        while (toRemoveArbiter.Count > 0)
-        {
-            var tr = toRemoveArbiter.Pop();
-            World.Remove(tr);
         }
 
         World.DynamicTree.RemoveProxy(shape);
