@@ -494,6 +494,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="setMassInertia">If set to false, the mass properties of the rigid body remain unchanged.</param>
+    [Obsolete($"{nameof(ClearShapes)} is deprecated, please use {nameof(RemoveShape)} instead.")]
     public void ClearShapes(bool setMassInertia = true)
     {
         RemoveShape(this.shapes, setMassInertia);
