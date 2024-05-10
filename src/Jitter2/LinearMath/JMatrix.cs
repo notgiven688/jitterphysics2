@@ -297,23 +297,10 @@ public struct JMatrix
     public static void Absolute(in JMatrix matrix, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        result.M11 = Math.Abs(matrix.M11);
-        result.M12 = Math.Abs(matrix.M12);
-        result.M13 = Math.Abs(matrix.M13);
-        result.M14 = Math.Abs(matrix.M14);
-        result.M21 = Math.Abs(matrix.M21);
-        result.M22 = Math.Abs(matrix.M22);
-        result.M23 = Math.Abs(matrix.M23);
-        result.M24 = Math.Abs(matrix.M24);
-        result.M31 = Math.Abs(matrix.M31);
-        result.M32 = Math.Abs(matrix.M32);
-        result.M33 = Math.Abs(matrix.M33);
-        result.M34 = Math.Abs(matrix.M34);
-        result.M41 = Math.Abs(matrix.M41);
-        result.M42 = Math.Abs(matrix.M42);
-        result.M43 = Math.Abs(matrix.M43);
-        result.M44 = Math.Abs(matrix.M44);
+        result.UnsafeGet(0).vector = Vector4.Abs(matrix.UnsafeGet(0).vector);
+        result.UnsafeGet(1).vector = Vector4.Abs(matrix.UnsafeGet(1).vector);
+        result.UnsafeGet(2).vector = Vector4.Abs(matrix.UnsafeGet(2).vector);
+        result.UnsafeGet(3).vector = Vector4.Abs(matrix.UnsafeGet(3).vector);
     }
 
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)

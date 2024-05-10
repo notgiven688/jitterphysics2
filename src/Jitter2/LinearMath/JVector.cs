@@ -38,7 +38,7 @@ public struct JVector
     internal static JVector Arbitrary;
 
     [FieldOffset(0)]
-    Vector4 vector;
+    public Vector4 vector;
 
     [FieldOffset(0)]
     public float X;
@@ -157,9 +157,7 @@ public struct JVector
     public static void Min(in JVector value1, in JVector value2, out JVector result)
     {
         Unsafe.SkipInit(out result);
-        result.X = value1.X < value2.X ? value1.X : value2.X;
-        result.Y = value1.Y < value2.Y ? value1.Y : value2.Y;
-        result.Z = value1.Z < value2.Z ? value1.Z : value2.Z;
+        result.vector = Vector4.Min(value1.vector, value2.vector);
     }
 
     public static JVector Max(in JVector value1, in JVector value2)
@@ -182,9 +180,7 @@ public struct JVector
     public static void Max(in JVector value1, in JVector value2, out JVector result)
     {
         Unsafe.SkipInit(out result);
-        result.X = value1.X > value2.X ? value1.X : value2.X;
-        result.Y = value1.Y > value2.Y ? value1.Y : value2.Y;
-        result.Z = value1.Z > value2.Z ? value1.Z : value2.Z;
+        result.vector = Vector4.Max(value1.vector, value2.vector);
     }
 
     public void MakeZero()
@@ -303,11 +299,12 @@ public struct JVector
         result.X = num0;
         result.Y = num1;
         result.Z = num2;
+        result.W = vector1.W * vector2.W;
     }
 
     public readonly override int GetHashCode()
     {
-        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
     }
 
     public void Negate()
@@ -327,15 +324,7 @@ public struct JVector
     public static void Negate(in JVector value, out JVector result)
     {
         Unsafe.SkipInit(out result);
-
-        float num0 = -value.X;
-        float num1 = -value.Y;
-        float num2 = -value.Z;
-
-        result.X = num0;
-        result.Y = num1;
-        result.Z = num2;
-        result.W = -result.W;
+        result.vector = Vector4.Negate(value.vector);
     }
 
     public static JVector Normalize(in JVector value)
@@ -379,9 +368,7 @@ public struct JVector
 
     public void Multiply(float factor)
     {
-        X *= factor;
-        Y *= factor;
-        Z *= factor;
+        vector = Vector4.Multiply(vector, factor);
     }
 
     public static void Multiply(in JVector value1, float scaleFactor, out JVector result)
@@ -399,7 +386,7 @@ public struct JVector
         result.X = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
         result.Y = vector1.Z * vector2.X - vector1.X * vector2.Z;
         result.Z = vector1.X * vector2.Y - vector1.Y * vector2.X;
-        result.W = 0;
+        result.W = vector1.W * vector2.W;
         return result;
     }
 
