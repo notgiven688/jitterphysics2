@@ -459,14 +459,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         HashSet<ulong> sids = new HashSet<ulong>();
         foreach(var s in shapes) sids.Add(s.ShapeId);
 
-        for (int i = this.shapes.Count; i-- > 0;)
-        {
-            if(sids.Contains(this.shapes[i].ShapeId))
-            {
-                this.shapes.RemoveAt(i);
-            }
-        }
-
         foreach (var arbiter in Contacts)
         {
             if(sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
@@ -484,6 +476,14 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             World.InternalRemoveShape(shape);
         }
 
+        for (int i = this.shapes.Count; i-- > 0;)
+        {
+            if (sids.Contains(this.shapes[i].ShapeId))
+            {
+                this.shapes.RemoveAt(i);
+            }
+        }
+
         if (setMassInertia) SetMassInertia();
 
         sids.Clear();
@@ -492,13 +492,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Removes all shapes associated with the rigid body.
     /// </summary>
+    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="setMassInertia">If set to false, the mass properties of the rigid body remain unchanged.</param>
+    [Obsolete($"{nameof(ClearShapes)} is deprecated, please use {nameof(RemoveShape)} instead.")]
     public void ClearShapes(bool setMassInertia = true)
     {
-        foreach (Shape shape in shapes)
-            shape.DetachRigidBody();
-        shapes.Clear();
-        if (setMassInertia) SetMassInertia();
+        RemoveShape(this.shapes, setMassInertia);
     }
 
     /// <summary>
