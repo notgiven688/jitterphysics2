@@ -460,6 +460,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         foreach(var shape in shapes)
         {
+            if(shape.RigidBody != this)
+            {
+                throw new ArgumentException($"Shape {shape} is not attached to this body.", nameof(shapes));
+            }
             sids.Add(shape.ShapeId);
         }
 
@@ -477,7 +481,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         {
             var shape = this.shapes[i];
 
-            if (sids.Remove(shape.ShapeId))
+            if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
                 shape.DetachRigidBody();
@@ -485,11 +489,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
                 this.shapes.RemoveAt(i);
             }
-        }
-
-        if(sids.Count != 0)
-        {
-            throw new ArgumentException($"At least one shape is not attached to this body.", nameof(shapes));
         }
 
         if (setMassInertia) SetMassInertia();
