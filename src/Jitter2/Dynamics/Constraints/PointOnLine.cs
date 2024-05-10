@@ -323,6 +323,8 @@ public unsafe class PointOnLine : Constraint
         jv.Z = jacobian[8] * body1.Velocity + jacobian[9] * body1.AngularVelocity + jacobian[10] * body2.Velocity +
                jacobian[11] * body2.AngularVelocity;
 
+        jv.W = 0;
+
         JVector softnessVector = data.AccumulatedImpulse * idt;
         softnessVector.X *= data.Softness;
         softnessVector.Y *= data.Softness;

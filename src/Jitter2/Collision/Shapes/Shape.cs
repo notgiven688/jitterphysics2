@@ -229,7 +229,8 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
         SupportMap(-oriT.GetColumn(2), out res);
         box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
 
-        
+        box.Min.W = 0;
+        box.Max.W = 0;
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);

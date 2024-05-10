@@ -338,7 +338,6 @@ public struct JVector
         this.vector = Vector4.Normalize(vector);
     }
 
-
     public static void Normalize(in JVector value, out JVector result)
     {
         Unsafe.SkipInit(out result);

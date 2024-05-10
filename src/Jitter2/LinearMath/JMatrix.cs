@@ -40,7 +40,6 @@ public struct JMatrix
     [FieldOffset(0)] public float M11;
     [FieldOffset(4)] public float M21;
     [FieldOffset(8)] public float M31;
-
     [FieldOffset(12)] public float M41;
     [FieldOffset(16)] public float M12;
     [FieldOffset(20)] public float M22;

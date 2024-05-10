@@ -76,6 +76,9 @@ public class SphereShape : Shape
         box.Max.X = +radius;
         box.Max.Y = +radius;
         box.Max.Z = +radius;
+        
+        box.Min.W = 0;
+        box.Max.W = 0;
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);

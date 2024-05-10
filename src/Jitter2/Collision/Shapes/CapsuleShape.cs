@@ -100,10 +100,12 @@ public class CapsuleShape : Shape
         box.Min.X = -radius - MathF.Abs(delta.X);
         box.Min.Y = -radius - MathF.Abs(delta.Y);
         box.Min.Z = -radius - MathF.Abs(delta.Z);
+        box.Min.W = 0;
 
         box.Max.X = +radius + MathF.Abs(delta.X);
         box.Max.Y = +radius + MathF.Abs(delta.Y);
         box.Max.Z = +radius + MathF.Abs(delta.Z);
+        box.Max.W = 0;
 
         box.Min += position;
         box.Max += position;

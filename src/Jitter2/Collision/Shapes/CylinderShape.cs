@@ -91,6 +91,8 @@ public class CylinderShape : Shape
             result.Y = Math.Sign(direction.Y) * height * 0.5f;
             result.Z = 0.0f;
         }
+
+        result.W = 0;
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

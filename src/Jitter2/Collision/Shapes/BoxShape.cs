@@ -85,6 +85,7 @@ public class BoxShape : Shape
         result.X = Math.Sign(direction.X) * halfSize.X;
         result.Y = Math.Sign(direction.Y) * halfSize.Y;
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
+        result.W = 0;
     }
 
     public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)

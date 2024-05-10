@@ -131,6 +131,7 @@ public unsafe class HingeAngle : Constraint
         error.X = JVector.Dot(p0, new JVector(quat0.X, quat0.Y, quat0.Z));
         error.Y = JVector.Dot(p1, new JVector(quat0.X, quat0.Y, quat0.Z));
         error.Z = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
+        error.W = 0;
 
         data.Clamp = 0;
 

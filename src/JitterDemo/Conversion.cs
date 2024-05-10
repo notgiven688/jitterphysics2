@@ -9,7 +9,8 @@ public class Conversion
 {
     public static JMatrix ToJitterMatrix(Matrix4 im)
     {
-        Unsafe.SkipInit(out JMatrix mat);
+        JMatrix mat = JMatrix.Identity;
+        
         mat.M11 = im.M11;
         mat.M12 = im.M12;
         mat.M13 = im.M13;

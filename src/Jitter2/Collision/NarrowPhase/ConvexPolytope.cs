@@ -224,6 +224,8 @@ public unsafe struct ConvexPolytope
         result.X = alpha;
         result.Y = beta;
         result.Z = gamma;
+        result.W = 0;
+
         return clamped;
     }
 

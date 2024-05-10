@@ -30,6 +30,7 @@ public class VoxelShape : Shape
         result.X = Math.Sign(direction.X) * 0.5f;
         result.Y = Math.Sign(direction.Y) * 0.5f;
         result.Z = Math.Sign(direction.Z) * 0.5f;
+        result.W = 0;
 
         result += Position;
     }
