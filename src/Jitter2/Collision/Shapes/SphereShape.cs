@@ -82,7 +82,7 @@ public class SphereShape : Shape
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
-    {
+    { 
         mass = 4.0f / 3.0f * MathF.PI * radius * radius * radius;
 
         // (0,0,0) is the center of mass

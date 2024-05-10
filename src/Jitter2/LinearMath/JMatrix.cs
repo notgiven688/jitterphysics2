@@ -35,17 +35,25 @@ namespace Jitter2.LinearMath;
 public struct JMatrix
 {
     [FieldOffset(0)]
-    Matrix4x4 matrix;
+    public Matrix4x4 matrix;
 
     [FieldOffset(0)] public float M11;
     [FieldOffset(4)] public float M21;
     [FieldOffset(8)] public float M31;
+
+    [FieldOffset(12)] public float M41;
     [FieldOffset(16)] public float M12;
     [FieldOffset(20)] public float M22;
     [FieldOffset(24)] public float M32;
+    [FieldOffset(28)] public float M42;
     [FieldOffset(32)] public float M13;
     [FieldOffset(36)] public float M23;
     [FieldOffset(40)] public float M33;
+    [FieldOffset(44)] public float M43;
+    [FieldOffset(48)] public float M14;
+    [FieldOffset(52)] public float M24;
+    [FieldOffset(56)] public float M34;
+    [FieldOffset(60)] public float M44;
 
     public static readonly JMatrix Identity;
     public static readonly JMatrix Zero;
@@ -58,7 +66,8 @@ public struct JMatrix
         {
             M11 = 1.0f,
             M22 = 1.0f,
-            M33 = 1.0f
+            M33 = 1.0f,
+            M44 = 1.0f
         };
     }
 
@@ -73,6 +82,7 @@ public struct JMatrix
         M31 = m31;
         M32 = m32;
         M33 = m33;
+        M44 = 1;
     }
 
     public static JMatrix FromColumns(in JVector col1, in JVector col2, in JVector col3)
@@ -81,6 +91,8 @@ public struct JMatrix
         res.UnsafeGet(0) = col1;
         res.UnsafeGet(1) = col2;
         res.UnsafeGet(2) = col3;
+        res.UnsafeGet(4) = JVector.UnitW;
+
         return res;
     }
 
@@ -131,26 +143,7 @@ public struct JMatrix
     public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
-        float num1 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
-        float num2 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;
-        float num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M23 * matrix2.M31;
-        float num4 = matrix1.M21 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M32;
-        float num5 = matrix1.M21 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M23 * matrix2.M33;
-        float num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M21 + matrix1.M33 * matrix2.M31;
-        float num7 = matrix1.M31 * matrix2.M12 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M32;
-        float num8 = matrix1.M31 * matrix2.M13 + matrix1.M32 * matrix2.M23 + matrix1.M33 * matrix2.M33;
-
-        result.M11 = num0;
-        result.M12 = num1;
-        result.M13 = num2;
-        result.M21 = num3;
-        result.M22 = num4;
-        result.M23 = num5;
-        result.M31 = num6;
-        result.M32 = num7;
-        result.M33 = num8;
+        result.matrix = Matrix4x4.Multiply(matrix1.matrix, matrix2.matrix);
     }
 
     public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)
@@ -166,26 +159,7 @@ public struct JMatrix
     public static void MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M12 + matrix1.M13 * matrix2.M13;
-        float num1 = matrix1.M11 * matrix2.M21 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M23;
-        float num2 = matrix1.M11 * matrix2.M31 + matrix1.M12 * matrix2.M32 + matrix1.M13 * matrix2.M33;
-        float num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M12 + matrix1.M23 * matrix2.M13;
-        float num4 = matrix1.M21 * matrix2.M21 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M23;
-        float num5 = matrix1.M21 * matrix2.M31 + matrix1.M22 * matrix2.M32 + matrix1.M23 * matrix2.M33;
-        float num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M12 + matrix1.M33 * matrix2.M13;
-        float num7 = matrix1.M31 * matrix2.M21 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M23;
-        float num8 = matrix1.M31 * matrix2.M31 + matrix1.M32 * matrix2.M32 + matrix1.M33 * matrix2.M33;
-
-        result.M11 = num0;
-        result.M12 = num1;
-        result.M13 = num2;
-        result.M21 = num3;
-        result.M22 = num4;
-        result.M23 = num5;
-        result.M31 = num6;
-        result.M32 = num7;
-        result.M33 = num8;
+        result.matrix = Matrix4x4.Multiply(matrix1.matrix, Matrix4x4.Transpose(matrix2.matrix));
     }
 
     public static JMatrix CreateRotationX(float radians)
@@ -256,6 +230,7 @@ public struct JMatrix
         result.M11 = scale.X;
         result.M22 = scale.Y;
         result.M33 = scale.Z;
+        result.M44 = 1;
 
         return result;
     }
@@ -276,101 +251,29 @@ public struct JMatrix
     public static void TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M21 + matrix1.M31 * matrix2.M31;
-        float num1 = matrix1.M11 * matrix2.M12 + matrix1.M21 * matrix2.M22 + matrix1.M31 * matrix2.M32;
-        float num2 = matrix1.M11 * matrix2.M13 + matrix1.M21 * matrix2.M23 + matrix1.M31 * matrix2.M33;
-        float num3 = matrix1.M12 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M32 * matrix2.M31;
-        float num4 = matrix1.M12 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M32 * matrix2.M32;
-        float num5 = matrix1.M12 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M32 * matrix2.M33;
-        float num6 = matrix1.M13 * matrix2.M11 + matrix1.M23 * matrix2.M21 + matrix1.M33 * matrix2.M31;
-        float num7 = matrix1.M13 * matrix2.M12 + matrix1.M23 * matrix2.M22 + matrix1.M33 * matrix2.M32;
-        float num8 = matrix1.M13 * matrix2.M13 + matrix1.M23 * matrix2.M23 + matrix1.M33 * matrix2.M33;
-
-        result.M11 = num0;
-        result.M12 = num1;
-        result.M13 = num2;
-        result.M21 = num3;
-        result.M22 = num4;
-        result.M23 = num5;
-        result.M31 = num6;
-        result.M32 = num7;
-        result.M33 = num8;
+        result.matrix = Matrix4x4.Multiply(Matrix4x4.Transpose(matrix1.matrix), matrix2.matrix);
     }
 
     public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        result.M11 = matrix1.M11 + matrix2.M11;
-        result.M12 = matrix1.M12 + matrix2.M12;
-        result.M13 = matrix1.M13 + matrix2.M13;
-        result.M21 = matrix1.M21 + matrix2.M21;
-        result.M22 = matrix1.M22 + matrix2.M22;
-        result.M23 = matrix1.M23 + matrix2.M23;
-        result.M31 = matrix1.M31 + matrix2.M31;
-        result.M32 = matrix1.M32 + matrix2.M32;
-        result.M33 = matrix1.M33 + matrix2.M33;
+        result.matrix = Matrix4x4.Add(matrix1.matrix, matrix2.matrix);
     }
 
     public static void Subtract(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        result.M11 = matrix1.M11 - matrix2.M11;
-        result.M12 = matrix1.M12 - matrix2.M12;
-        result.M13 = matrix1.M13 - matrix2.M13;
-        result.M21 = matrix1.M21 - matrix2.M21;
-        result.M22 = matrix1.M22 - matrix2.M22;
-        result.M23 = matrix1.M23 - matrix2.M23;
-        result.M31 = matrix1.M31 - matrix2.M31;
-        result.M32 = matrix1.M32 - matrix2.M32;
-        result.M33 = matrix1.M33 - matrix2.M33;
+        result.matrix = Matrix4x4.Subtract(matrix1.matrix, matrix2.matrix);
     }
-
     public readonly float Determinant()
     {
-        return M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
-               M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
+        return matrix.GetDeterminant();
     }
 
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        float det = matrix.Determinant();
-
-        if (float.IsNaN(det) || float.IsInfinity(det))
-        {
-            result = new JMatrix();
-            return false;
-        }
-
-        float num11 = matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32;
-        float num12 = matrix.M13 * matrix.M32 - matrix.M12 * matrix.M33;
-        float num13 = matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13;
-
-        float num21 = matrix.M23 * matrix.M31 - matrix.M33 * matrix.M21;
-        float num22 = matrix.M11 * matrix.M33 - matrix.M31 * matrix.M13;
-        float num23 = matrix.M13 * matrix.M21 - matrix.M23 * matrix.M11;
-
-        float num31 = matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22;
-        float num32 = matrix.M12 * matrix.M31 - matrix.M32 * matrix.M11;
-        float num33 = matrix.M11 * matrix.M22 - matrix.M21 * matrix.M12;
-
-        float idet = 1.0f / det;
-
-        result.M11 = num11 * idet;
-        result.M12 = num12 * idet;
-        result.M13 = num13 * idet;
-        result.M21 = num21 * idet;
-        result.M22 = num22 * idet;
-        result.M23 = num23 * idet;
-        result.M31 = num31 * idet;
-        result.M32 = num32 * idet;
-        result.M33 = num33 * idet;
-
-        return true;
+        return Matrix4x4.Invert(matrix.matrix, out result.matrix);
     }
 
     public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)
@@ -382,17 +285,7 @@ public struct JMatrix
     public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-
-        float num = scaleFactor;
-        result.M11 = matrix1.M11 * num;
-        result.M12 = matrix1.M12 * num;
-        result.M13 = matrix1.M13 * num;
-        result.M21 = matrix1.M21 * num;
-        result.M22 = matrix1.M22 * num;
-        result.M23 = matrix1.M23 * num;
-        result.M31 = matrix1.M31 * num;
-        result.M32 = matrix1.M32 * num;
-        result.M33 = matrix1.M33 * num;
+        result.matrix = Matrix4x4.Multiply(matrix1.matrix, scaleFactor);
     }
 
     public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
@@ -408,12 +301,19 @@ public struct JMatrix
         result.M11 = Math.Abs(matrix.M11);
         result.M12 = Math.Abs(matrix.M12);
         result.M13 = Math.Abs(matrix.M13);
+        result.M14 = Math.Abs(matrix.M14);
         result.M21 = Math.Abs(matrix.M21);
         result.M22 = Math.Abs(matrix.M22);
         result.M23 = Math.Abs(matrix.M23);
+        result.M24 = Math.Abs(matrix.M24);
         result.M31 = Math.Abs(matrix.M31);
         result.M32 = Math.Abs(matrix.M32);
         result.M33 = Math.Abs(matrix.M33);
+        result.M34 = Math.Abs(matrix.M34);
+        result.M41 = Math.Abs(matrix.M41);
+        result.M42 = Math.Abs(matrix.M42);
+        result.M43 = Math.Abs(matrix.M43);
+        result.M44 = Math.Abs(matrix.M44);
     }
 
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
@@ -434,6 +334,14 @@ public struct JMatrix
         result.M31 = 2.0f * (i * k - j * r);
         result.M32 = 2.0f * (j * k + i * r);
         result.M33 = 1.0f - 2.0f * (i * i + j * j);
+
+        result.M14 = 0;
+        result.M24 = 0;
+        result.M34 = 0;
+        result.M41 = 0;
+        result.M42 = 0;
+        result.M43 = 0;
+        result.M44 = 1;
     }
 
     public static JMatrix Transpose(in JMatrix matrix)
@@ -453,29 +361,13 @@ public struct JMatrix
     private static void Transpose(in JMatrix matrix, out JMatrix result)
     {
         Unsafe.SkipInit(out result);
-        result.M11 = matrix.M11;
-        result.M12 = matrix.M21;
-        result.M13 = matrix.M31;
-        result.M21 = matrix.M12;
-        result.M22 = matrix.M22;
-        result.M23 = matrix.M32;
-        result.M31 = matrix.M13;
-        result.M32 = matrix.M23;
-        result.M33 = matrix.M33;
+        result.matrix = Matrix4x4.Transpose(matrix.matrix);
     }
 
     public static JMatrix operator *(in JMatrix matrix1, in JMatrix matrix2)
     {
         Unsafe.SkipInit(out JMatrix result);
-        result.M11 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
-        result.M12 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
-        result.M13 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;
-        result.M21 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M23 * matrix2.M31;
-        result.M22 = matrix1.M21 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M32;
-        result.M23 = matrix1.M21 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M23 * matrix2.M33;
-        result.M31 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M21 + matrix1.M33 * matrix2.M31;
-        result.M32 = matrix1.M31 * matrix2.M12 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M32;
-        result.M33 = matrix1.M31 * matrix2.M13 + matrix1.M32 * matrix2.M23 + matrix1.M33 * matrix2.M33;
+        result.matrix = Matrix4x4.Multiply(matrix1.matrix, matrix2.matrix);
         return result;
     }
 
