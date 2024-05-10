@@ -495,9 +495,20 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <param name="setMassInertia">If set to false, the mass properties of the rigid body remain unchanged.</param>
     public void ClearShapes(bool setMassInertia = true)
     {
-        foreach (Shape shape in shapes)
+        foreach (var shape in shapes)
+        {
+            World.DynamicTree.RemoveProxy(shape);
             shape.DetachRigidBody();
+            World.InternalRemoveShape(shape);
+        }
+
+        foreach (var arbiter in Contacts)
+        {
+            World.Remove(arbiter);
+        }
+
         shapes.Clear();
+
         if (setMassInertia) SetMassInertia();
     }
 
