@@ -61,7 +61,7 @@ public unsafe class DistanceLimit : Constraint
         public float AccumulatedImpulse;
         public float Bias;
 
-        public MemoryHelper.MemBlock48 J0;
+        public MemoryHelper.MemBlock64 J0;
 
         public short Clamp;
     }

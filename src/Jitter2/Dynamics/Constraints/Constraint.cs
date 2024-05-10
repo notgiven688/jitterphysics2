@@ -30,7 +30,7 @@ namespace Jitter2.Dynamics.Constraints;
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct SmallConstraintData
 {
-    public const int ConstraintSize = 128;
+    public const int ConstraintSize = 256;
 
     internal int _internal;
     public delegate*<ref SmallConstraintData, float, void> Iterate;
@@ -43,7 +43,7 @@ public unsafe struct SmallConstraintData
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct ConstraintData
 {
-    public const int ConstraintSize = 256;
+    public const int ConstraintSize = 512;
 
     internal int _internal;
     public delegate*<ref ConstraintData, float, void> Iterate;
