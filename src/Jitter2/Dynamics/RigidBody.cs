@@ -420,6 +420,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Removes a specified shape from the rigid body.
     /// </summary>
+    /// <remarks>This operation is O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shape">The shape to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
     public void RemoveShape(Shape shape, bool setMassInertia = true)
@@ -445,6 +446,47 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         World.InternalRemoveShape(shape);
 
         if (setMassInertia) SetMassInertia();
+    }
+
+    /// <summary>
+    /// Removes several shapes from the body.
+    /// </summary>
+    /// <remarks>This operation is O(n), where n is the number of shapes attached to the body.</remarks>
+    /// <param name="shapes">The shapes to remove from the rigid body.</param>
+    /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
+    public void RemoveShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
+    {
+        HashSet<ulong> sids = new HashSet<ulong>();
+        foreach(var s in shapes) sids.Add(s.ShapeId);
+
+        for (int i = this.shapes.Count; i-- > 0;)
+        {
+            if(sids.Contains(this.shapes[i].ShapeId))
+            {
+                this.shapes.RemoveAt(i);
+            }
+        }
+
+        foreach (var arbiter in Contacts)
+        {
+            if(sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
+            {
+                // Removes the current element we are iterating over from Contacts, i.e. the HashSet 
+                // we are iterating over is altered. This is allowed.
+                World.Remove(arbiter);
+            }
+        }
+
+        foreach (var s in shapes)
+        {
+            World.DynamicTree.RemoveProxy(s);
+            s.DetachRigidBody();
+            World.InternalRemoveShape(s);
+        }
+
+        if (setMassInertia) SetMassInertia();
+
+        sids.Clear();
     }
 
     /// <summary>
