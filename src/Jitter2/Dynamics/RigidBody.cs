@@ -457,7 +457,11 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     public void RemoveShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
     {
         HashSet<ulong> sids = new HashSet<ulong>();
-        foreach(var s in shapes) sids.Add(s.ShapeId);
+
+        foreach(var shape in shapes)
+        {
+            sids.Add(shape.ShapeId);
+        }
 
         foreach (var arbiter in Contacts)
         {
@@ -469,19 +473,23 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             }
         }
 
-        foreach (var shape in shapes)
-        {
-            World.DynamicTree.RemoveProxy(shape);
-            shape.DetachRigidBody();
-            World.InternalRemoveShape(shape);
-        }
-
         for (int i = this.shapes.Count; i-- > 0;)
         {
-            if (sids.Contains(this.shapes[i].ShapeId))
+            var shape = this.shapes[i];
+
+            if (sids.Remove(shape.ShapeId))
             {
+                World.DynamicTree.RemoveProxy(shape);
+                shape.DetachRigidBody();
+                World.InternalRemoveShape(shape);
+
                 this.shapes.RemoveAt(i);
             }
+        }
+
+        if(sids.Count != 0)
+        {
+            throw new ArgumentException($"At least one shape is not attached to this body.", nameof(shapes));
         }
 
         if (setMassInertia) SetMassInertia();
