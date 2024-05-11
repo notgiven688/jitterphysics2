@@ -23,6 +23,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace Jitter2.LinearMath;
@@ -195,6 +196,40 @@ public static class MathHelper
 
         return result;
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector4 CreateOrthonormal(in Vector4 vec)
+    {
+        Vector4 result = vec;
+
+        //Debug.Assert(!CloseToZero(vec));
+
+        float xa = Math.Abs(vec.X);
+        float ya = Math.Abs(vec.Y);
+        float za = Math.Abs(vec.Z);
+
+        if ((xa > ya && xa > za) || (ya > xa && ya > za))
+        {
+            result.X = vec.Y;
+            result.Y = -vec.X;
+            result.Z = 0;
+        }
+        else
+        {
+            result.Y = vec.Z;
+            result.Z = -vec.Y;
+            result.X = 0;
+        }
+
+        result.W = 0;
+
+        result = Vector4.Normalize(result);
+
+        //Debug.Assert(MathF.Abs(JVector.Dot(result, vec)) < 1e-6f);
+
+        return result;
+    }
+
 
 
     /// <summary>

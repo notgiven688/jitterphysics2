@@ -288,6 +288,36 @@ public struct JVector
         return result;
     }
 
+    public static void Cross(in Vector4 vector1, in Vector4 vector2, out Vector4 result)
+    {
+        Unsafe.SkipInit(out result);
+
+        float num0 = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
+        float num1 = vector1.Z * vector2.X - vector1.X * vector2.Z;
+        float num2 = vector1.X * vector2.Y - vector1.Y * vector2.X;
+
+        result.X = num0;
+        result.Y = num1;
+        result.Z = num2;
+        result.W = vector1.W * vector2.W;
+    }
+
+    public static Vector4 Cross(in Vector4 vector1, in Vector4 vector2)
+    {
+        Unsafe.SkipInit(out Vector4 result);
+
+        float num0 = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
+        float num1 = vector1.Z * vector2.X - vector1.X * vector2.Z;
+        float num2 = vector1.X * vector2.Y - vector1.Y * vector2.X;
+
+        result.X = num0;
+        result.Y = num1;
+        result.Z = num2;
+        result.W = vector1.W * vector2.W;
+
+        return result;
+    }
+
     public static void Cross(in JVector vector1, in JVector vector2, out JVector result)
     {
         Unsafe.SkipInit(out result);

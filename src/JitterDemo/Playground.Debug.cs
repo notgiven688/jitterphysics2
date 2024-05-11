@@ -74,7 +74,7 @@ public partial class Playground : RenderWindow
 
         if (debugDrawContacts)
         {
-            var contacts = World.RawData.ActiveContacts;
+/*             var contacts = World.RawData.ActiveContacts;
 
             for (int i = 0; i < contacts.Length; i++)
             {
@@ -93,7 +93,7 @@ public partial class Playground : RenderWindow
                 if ((cq.UsageMask & 0b0010) != 0) DrawContact(cq, cq.Contact1);
                 if ((cq.UsageMask & 0b0100) != 0) DrawContact(cq, cq.Contact2);
                 if ((cq.UsageMask & 0b1000) != 0) DrawContact(cq, cq.Contact3);
-            }
+            } */
         }
     }
 }
