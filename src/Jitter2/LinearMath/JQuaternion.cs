@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace Jitter2.LinearMath;
 
@@ -30,35 +31,37 @@ namespace Jitter2.LinearMath;
 /// </summary>
 public struct JQuaternion
 {
-    public float W;
     public float X;
     public float Y;
     public float Z;
+    public float W;
 
     public static JQuaternion Identity => new(0, 0, 0, 1);
 
     public JQuaternion(float x, float y, float z, float w)
     {
-        W = w;
         X = x;
         Y = y;
         Z = z;
+        W = w;
     }
 
     public JQuaternion(float w, in JVector v)
     {
-        W = w;
         X = v.X;
         Y = v.Y;
         Z = v.Z;
+        W = w;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
     {
         Add(in quaternion1, in quaternion2, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Add(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
         result.X = quaternion1.X + quaternion2.X;
@@ -67,6 +70,7 @@ public struct JQuaternion
         result.W = quaternion1.W + quaternion2.W;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Conjugate(in JQuaternion value)
     {
         JQuaternion quaternion;
@@ -77,6 +81,7 @@ public struct JQuaternion
         return quaternion;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly JQuaternion Conj()
     {
         JQuaternion quaternion;
@@ -92,12 +97,14 @@ public struct JQuaternion
         return $"{W:F6} {X:F6} {Y:F6} {Z:F6}";
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
         Subtract(quaternion1, quaternion2, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
         result.X = quaternion1.X - quaternion2.X;
@@ -106,12 +113,77 @@ public struct JQuaternion
         result.W = quaternion1.W - quaternion2.W;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
         Multiply(quaternion1, quaternion2, out JQuaternion result);
         return result;
     }
 
+    /// <summary>
+    /// Calculates the transformation of (1,0,0)^\mathrm{T} by the quaternion.
+    /// </summary>
+    public readonly JVector GetBasisX()
+    {
+        Unsafe.SkipInit(out JVector result);
+
+        result.X = 1.0f - 2.0f * (Y * Y + Z * Z);
+        result.Y = 2.0f * (X * Y + Z * W);
+        result.Z = 2.0f * (X * Z - Y * W);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Calculates the transformation of (0,1,0)^\mathrm{T} by the quaternion.
+    /// </summary>
+    public readonly JVector GetBasisY()
+    {
+        Unsafe.SkipInit(out JVector result);
+
+        result.X = 2.0f * (X * Y - Z * W);
+        result.Y = 1.0f - 2.0f * (X * X + Z * Z);
+        result.Z = 2.0f * (Y * Z + X * W);
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Calculates the transformation of (0,0,1)^\mathrm{T} by the quaternion.
+    /// </summary>
+    public readonly JVector GetBasisZ()
+    {
+        Unsafe.SkipInit(out JVector result);
+
+        result.X = 2.0f * (X * Z + Y * W);
+        result.Y = 2.0f * (Y * Z - X * W);
+        result.Z = 1.0f - 2.0f * (X * X + Y * Y);
+        
+        return result;
+    }
+
+    public static JQuaternion CreateRotationX(float radians)
+    {
+        float halfAngle = radians * 0.5f;
+        (float sha, float cha) = MathF.SinCos(halfAngle);
+        return new JQuaternion(sha, 0, 0, cha);
+    }
+
+    public static JQuaternion CreateRotationY(float radians)
+    {
+        float halfAngle = radians * 0.5f;
+        (float sha, float cha) = MathF.SinCos(halfAngle);
+        return new JQuaternion(0, sha, 0, cha);
+    }
+
+    public static JQuaternion CreateRotationZ(float radians)
+    {
+        float halfAngle = radians * 0.5f;
+        (float sha, float cha) = MathF.SinCos(halfAngle);
+        return new JQuaternion(0, 0, sha, cha);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
         float r1 = quaternion1.W;
@@ -130,12 +202,58 @@ public struct JQuaternion
         result.Z = r1 * k2 + r2 * k1 + i1 * j2 - j1 * i2;
     }
 
+    /// <summary>
+    /// Calculates quaternion1^\mathrm{*} \times quaternion2.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
+    {
+        float r1 = quaternion1.W;
+        float i1 = -quaternion1.X;
+        float j1 = -quaternion1.Y;
+        float k1 = -quaternion1.Z;
+
+        float r2 = quaternion2.W;
+        float i2 = quaternion2.X;
+        float j2 = quaternion2.Y;
+        float k2 = quaternion2.Z;
+
+        result.W = r1 * r2 - (i1 * i2 + j1 * j2 + k1 * k2);
+        result.X = r1 * i2 + r2 * i1 + j1 * k2 - k1 * j2;
+        result.Y = r1 * j2 + r2 * j1 + k1 * i2 - i1 * k2;
+        result.Z = r1 * k2 + r2 * k1 + i1 * j2 - j1 * i2;
+    }
+
+    /// <summary>
+    /// Calculates quaternion1 \times quaternion2^\mathrm{*}.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
+    {
+        float r1 = quaternion1.W;
+        float i1 = quaternion1.X;
+        float j1 = quaternion1.Y;
+        float k1 = quaternion1.Z;
+
+        float r2 = quaternion2.W;
+        float i2 = -quaternion2.X;
+        float j2 = -quaternion2.Y;
+        float k2 = -quaternion2.Z;
+
+        result.W = r1 * r2 - (i1 * i2 + j1 * j2 + k1 * k2);
+        result.X = r1 * i2 + r2 * i1 + j1 * k2 - k1 * j2;
+        result.Y = r1 * j2 + r2 * j1 + k1 * i2 - i1 * k2;
+        result.Z = r1 * k2 + r2 * k1 + i1 * j2 - j1 * i2;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Multiply(in JQuaternion quaternion1, float scaleFactor)
     {
         Multiply(in quaternion1, scaleFactor, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
     {
         result.W = quaternion1.W * scaleFactor;
@@ -144,11 +262,13 @@ public struct JQuaternion
         result.Z = quaternion1.Z * scaleFactor;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly float Length()
     {
         return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
         float num2 = X * X + Y * Y + Z * Z + W * W;
@@ -159,6 +279,7 @@ public struct JQuaternion
         W *= num;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion CreateFromMatrix(in JMatrix matrix)
     {
         CreateFromMatrix(matrix, out JQuaternion result);
@@ -203,30 +324,35 @@ public struct JQuaternion
         result.W *= t;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(in JQuaternion value1, in JQuaternion value2)
     {
         Multiply(value1, value2, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(float value1, in JQuaternion value2)
     {
         Multiply(value2, value1, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(in JQuaternion value1, float value2)
     {
         Multiply(value1, value2, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator +(in JQuaternion value1, in JQuaternion value2)
     {
         Add(value1, value2, out JQuaternion result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator -(in JQuaternion value1, in JQuaternion value2)
     {
         Subtract(value1, value2, out JQuaternion result);

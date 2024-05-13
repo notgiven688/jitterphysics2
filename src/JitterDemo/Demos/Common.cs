@@ -96,10 +96,10 @@ public static class Common
         parts[(int)RagdollParts.LowerLegLeft].Position = new JVector(0.11f, -1.2f, 0);
         parts[(int)RagdollParts.LowerLegRight].Position = new JVector(-0.11f, -1.2f, 0);
 
-        parts[(int)RagdollParts.UpperArmLeft].Orientation = JMatrix.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.UpperArmRight].Orientation = JMatrix.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.LowerArmLeft].Orientation = JMatrix.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.LowerArmRight].Orientation = JMatrix.CreateRotationZ(MathF.PI / 2.0f);
+        parts[(int)RagdollParts.UpperArmLeft].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        parts[(int)RagdollParts.UpperArmRight].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        parts[(int)RagdollParts.LowerArmLeft].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        parts[(int)RagdollParts.LowerArmRight].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
 
         parts[(int)RagdollParts.UpperArmLeft].Position = new JVector(0.30f, -0.2f, 0);
         parts[(int)RagdollParts.UpperArmRight].Position = new JVector(-0.30f, -0.2f, 0);
@@ -217,14 +217,14 @@ public static class Common
         }
     }
 
-    public static void BuildTower(Vector3 pos, int height = 40, Action<RigidBody>? action = null)
+    public static void BuildTower(JVector pos, int height = 40, Action<RigidBody>? action = null)
     {
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
 
-        Matrix4 halfRotationStep = MatrixHelper.CreateRotationY(MathF.PI * 2.0f / 64.0f);
-        Matrix4 fullRotationStep = halfRotationStep * halfRotationStep;
-        Matrix4 orientation = Matrix4.Identity;
+        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * 2.0f / 64.0f);
+        JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
+        JQuaternion orientation = JQuaternion.Identity;
 
         for (int e = 0; e < height; e++)
         {
@@ -232,13 +232,13 @@ public static class Common
 
             for (int i = 0; i < 32; i++)
             {
-                Vector3 position = pos + Vector3.Transform(
-                    new Vector3(0, 0.5f + e, 19.5f), orientation);
+                JVector position = pos + JVector.Transform(
+                    new JVector(0, 0.5f + e, 19.5f), orientation);
 
                 Shape shape = new BoxShape(3f, 1, 0.2f);
                 var body = world.CreateRigidBody();
 
-                body.Orientation = Conversion.ToJitterMatrix(orientation);
+                body.Orientation = orientation;
                 body.Position = new JVector(position.X, position.Y, position.Z);
 
                 body.AddShape(shape);

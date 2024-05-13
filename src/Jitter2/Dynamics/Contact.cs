@@ -23,6 +23,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
@@ -416,8 +417,8 @@ public struct ContactData
 
             JVector.Subtract(point1, b1.Position, out RelativePos1);
             JVector.Subtract(point2, b2.Position, out RelativePos2);
-            JVector.TransposedTransform(RelativePos1, b1.Orientation, out RealRelPos1);
-            JVector.TransposedTransform(RelativePos2, b2.Orientation, out RealRelPos2);
+            JVector.ConjugatedTransform(RelativePos1, b1.Orientation, out RealRelPos1);
+            JVector.ConjugatedTransform(RelativePos2, b2.Orientation, out RealRelPos2);
 
             Penetration = penetration;
 

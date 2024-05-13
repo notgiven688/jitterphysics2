@@ -71,6 +71,7 @@ public struct JMatrix
         M33 = m33;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix FromColumns(in JVector col1, in JVector col2, in JVector col3)
     {
         Unsafe.SkipInit(out JMatrix res);
@@ -80,12 +81,14 @@ public struct JMatrix
         return res;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe ref JVector UnsafeGet(int index)
     {
         JVector* ptr = (JVector*)Unsafe.AsPointer(ref this);
         return ref ptr[index];
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe JVector GetColumn(int index)
     {
         fixed (float* ptr = &M11)
@@ -95,18 +98,21 @@ public struct JMatrix
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Multiply(in JMatrix matrix1, in JMatrix matrix2)
     {
         Multiply(matrix1, matrix2, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2)
     {
         MultiplyTransposed(matrix1, matrix2, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2)
     {
         TransposedMultiply(matrix1, matrix2, out JMatrix result);
@@ -147,6 +153,7 @@ public struct JMatrix
         result.M33 = num8;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)
     {
         Add(matrix1, matrix2, out JMatrix result);
@@ -288,6 +295,7 @@ public struct JMatrix
         result.M33 = num8;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         result.M11 = matrix1.M11 + matrix2.M11;
@@ -301,6 +309,7 @@ public struct JMatrix
         result.M33 = matrix1.M33 + matrix2.M33;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Subtract(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
         result.M11 = matrix1.M11 - matrix2.M11;
@@ -314,12 +323,14 @@ public struct JMatrix
         result.M33 = matrix1.M33 - matrix2.M33;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly float Determinant()
     {
         return M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
         float det = matrix.Determinant();
@@ -357,12 +368,14 @@ public struct JMatrix
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)
     {
         Multiply(in matrix1, scaleFactor, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)
     {
         float num = scaleFactor;
@@ -377,12 +390,14 @@ public struct JMatrix
         result.M33 = matrix1.M33 * num;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
     {
         CreateFromQuaternion(quaternion, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Absolute(in JMatrix matrix, out JMatrix result)
     {
         result.M11 = Math.Abs(matrix.M11);
@@ -396,6 +411,7 @@ public struct JMatrix
         result.M33 = Math.Abs(matrix.M33);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
     {
         float r = quaternion.W;
@@ -414,6 +430,7 @@ public struct JMatrix
         result.M33 = 1.0f - 2.0f * (i * i + j * j);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Transpose(in JMatrix matrix)
     {
         Transpose(in matrix, out JMatrix result);
@@ -423,11 +440,13 @@ public struct JMatrix
     /// <summary>
     /// Returns JMatrix(0, -vec.Z, vec.Y, vec.Z, 0, -vec.X, -vec.Y, vec.X, 0)-
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix CreateCrossProduct(in JVector vec)
     {
         return new JMatrix(0, -vec.Z, vec.Y, vec.Z, 0, -vec.X, -vec.Y, vec.X, 0);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void Transpose(in JMatrix matrix, out JMatrix result)
     {
         result.M11 = matrix.M11;
@@ -441,6 +460,7 @@ public struct JMatrix
         result.M33 = matrix.M33;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(in JMatrix matrix1, in JMatrix matrix2)
     {
         JMatrix result;
@@ -456,29 +476,34 @@ public struct JMatrix
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public float Trace()
     {
         return M11 + M22 + M33;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(float factor, in JMatrix matrix)
     {
         Multiply(matrix, factor, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(in JMatrix matrix, float factor)
     {
         Multiply(matrix, factor, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator +(in JMatrix value1, in JMatrix value2)
     {
         Add(value1, value2, out JMatrix result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator -(in JMatrix value1, in JMatrix value2)
     {
         Subtract(value1, value2, out JMatrix result);

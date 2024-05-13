@@ -66,12 +66,12 @@ public class Demo17 : IDemo, ICleanDemo
         var b0 = world.CreateRigidBody();
         b0.Position = new JVector(-1, 10, 0);
         b0.AddShape(new BoxShape(1));
-        b0.Orientation = JMatrix.CreateRotationX(0.4f);
+        b0.Orientation = JQuaternion.CreateRotationX(0.4f);
 
         var b1 = world.CreateRigidBody();
         b1.Position = new JVector(0, 10, 0);
         b1.AddShape(new CapsuleShape(0.4f));
-        b1.Orientation = JMatrix.CreateRotationX(1f);
+        b1.Orientation = JQuaternion.CreateRotationX(1f);
 
         var b2 = world.CreateRigidBody();
         b2.Position = new JVector(1, 11, 0);

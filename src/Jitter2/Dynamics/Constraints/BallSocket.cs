@@ -86,8 +86,8 @@ public unsafe class BallSocket : Constraint
         JVector.Subtract(anchor, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor, body2.Position, out data.LocalAnchor2);
 
-        JVector.TransposedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
-        JVector.TransposedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
+        JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
+        JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
         data.BiasFactor = 0.2f;
         data.Softness = 0.00f;

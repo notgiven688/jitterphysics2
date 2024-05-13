@@ -100,11 +100,11 @@ public class ConeShape : Shape
         }
     }
 
-    public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         const float ZeroEpsilon = 1e-12f;
 
-        JVector upa = orientation.GetColumn(1);
+        JVector upa = orientation.GetBasisY();
 
         float xx = upa.X * upa.X;
         float yy = upa.Y * upa.Y;

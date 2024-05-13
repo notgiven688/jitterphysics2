@@ -1,4 +1,5 @@
 using Jitter2;
+using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
@@ -15,7 +16,7 @@ public class Demo02 : IDemo
 
         pg.ResetScene();
 
-        Common.BuildTower(Vector3.Zero);
+        Common.BuildTower(JVector.Zero);
 
         world.SolverIterations = 18;
     }

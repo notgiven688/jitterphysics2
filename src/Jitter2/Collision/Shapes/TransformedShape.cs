@@ -116,7 +116,7 @@ public class TransformedShape : Shape
         }
     }
 
-    public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         if (type == TransformationType.General)
         {
@@ -125,7 +125,8 @@ public class TransformedShape : Shape
         }
         else
         {
-            OriginalShape.CalculateBoundingBox(orientation * this.transformation,
+            JQuaternion quat = JQuaternion.CreateFromMatrix(this.transformation);
+            OriginalShape.CalculateBoundingBox(orientation * quat,
                 JVector.Transform(translation, orientation) + position, out box);
         }
     }

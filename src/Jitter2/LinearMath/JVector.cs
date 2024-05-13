@@ -82,6 +82,7 @@ public struct JVector
         Z = xyz;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe ref float UnsafeGet(int index)
     {
         float* ptr = (float*)Unsafe.AsPointer(ref this);
@@ -105,7 +106,6 @@ public struct JVector
             }
         }
     }
-
     public readonly override string ToString()
     {
         return $"{X:F6} {Y:F6} {Z:F6}";
@@ -134,12 +134,14 @@ public struct JVector
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Min(in JVector value1, in JVector value2)
     {
         Min(value1, value2, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Min(in JVector value1, in JVector value2, out JVector result)
     {
         result.X = value1.X < value2.X ? value1.X : value2.X;
@@ -147,23 +149,28 @@ public struct JVector
         result.Z = value1.Z < value2.Z ? value1.Z : value2.Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Max(in JVector value1, in JVector value2)
     {
         Max(value1, value2, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Abs(in JVector value1)
     {
         return new JVector(MathF.Abs(value1.X), MathF.Abs(value1.Y), MathF.Abs(value1.Z));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float MaxAbs(in JVector value1)
     {
         JVector abs = Abs(value1);
         return MathF.Max(MathF.Max(abs.X, abs.Y), abs.Z);
+    
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Max(in JVector value1, in JVector value2, out JVector result)
     {
         result.X = value1.X > value2.X ? value1.X : value2.X;
@@ -171,6 +178,7 @@ public struct JVector
         result.Z = value1.Z > value2.Z ? value1.Z : value2.Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void MakeZero()
     {
         X = 0.0f;
@@ -181,18 +189,34 @@ public struct JVector
     /// <summary>
     /// Calculates matrix \times vector, where vector is a column vector.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Transform(in JVector vector, in JMatrix matrix)
     {
         Transform(vector, matrix, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector Transform(in JVector vector, in JQuaternion quat)
+    {
+        Transform(vector, quat, out JVector result);
+        return result;
+    }
+
     /// <summary>
     /// Calculates matrix^\mathrf{T} \times vector, where vector is a column vector.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector TransposedTransform(in JVector vector, in JMatrix matrix)
     {
         TransposedTransform(vector, matrix, out JVector result);
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector TransposedTransform(in JVector vector, in JQuaternion quat)
+    {
+        ConjugatedTransform(vector, quat, out JVector result);
         return result;
     }
 
@@ -227,8 +251,57 @@ public struct JVector
     }
 
     /// <summary>
+    /// Transforms the vector by a quaternion.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Transform(in JVector vector, in JQuaternion quaternion, out JVector result)
+    {
+        float x = vector.X;
+        float y = vector.Y;
+        float z = vector.Z;
+        float qx = quaternion.X;
+        float qy = quaternion.Y;
+        float qz = quaternion.Z;
+        float qw = quaternion.W;
+
+        float num0 = qw * x + qy * z - qz * y;
+        float num1 = qw * y + qz * x - qx * z;
+        float num2 = qw * z + qx * y - qy * x;
+        float num3 = -qx * x - qy * y - qz * z;
+
+        result.X = num0 * qw - num3 * qx - num1 * qz + num2 * qy;
+        result.Y = num1 * qw - num3 * qy - num2 * qx + num0 * qz;
+        result.Z = num2 * qw - num3 * qz - num0 * qy + num1 * qx;
+    }
+
+    /// <summary>
+    /// Transforms the vector by a conjugated quaternion.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void ConjugatedTransform(in JVector vector, in JQuaternion quaternion, out JVector result)
+    {
+        float x = vector.X;
+        float y = vector.Y;
+        float z = vector.Z;
+        float qx = quaternion.X;
+        float qy = quaternion.Y;
+        float qz = quaternion.Z;
+        float qw = quaternion.W;
+
+        float num0 = qw * x - qy * z + qz * y;
+        float num1 = qw * y - qz * x + qx * z;
+        float num2 = qw * z - qx * y + qy * x;
+        float num3 = qx * x + qy * y + qz * z;
+
+        result.X = num0 * qw + num3 * qx + num1 * qz - num2 * qy;
+        result.Y = num1 * qw + num3 * qy + num2 * qx - num0 * qz;
+        result.Z = num2 * qw + num3 * qz + num0 * qy - num1 * qx;
+    }
+
+    /// <summary>
     /// Calculates the outer product.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Outer(in JVector u, in JVector v)
     {
         JMatrix result;
@@ -250,6 +323,7 @@ public struct JVector
         return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Add(in JVector value1, in JVector value2)
     {
         Add(value1, value2, out JVector result);
@@ -264,6 +338,7 @@ public struct JVector
         result.Z = value1.Z + value2.Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Subtract(JVector value1, JVector value2)
     {
         Subtract(value1, value2, out JVector result);
@@ -282,12 +357,14 @@ public struct JVector
         result.Z = num2;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Cross(in JVector vector1, in JVector vector2)
     {
         Cross(vector1, vector2, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Cross(in JVector vector1, in JVector vector2, out JVector result)
     {
         float num0 = vector1.Y * vector2.Z - vector1.Z * vector2.Y;
@@ -299,11 +376,13 @@ public struct JVector
         result.Z = num2;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly override int GetHashCode()
     {
         return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Negate()
     {
         X = -X;
@@ -311,12 +390,14 @@ public struct JVector
         Z = -Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Negate(in JVector value)
     {
         Negate(value, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Negate(in JVector value, out JVector result)
     {
         float num0 = -value.X;
@@ -328,12 +409,14 @@ public struct JVector
         result.Z = num2;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Normalize(in JVector value)
     {
         Normalize(value, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
         float num2 = X * X + Y * Y + Z * Z;
@@ -343,6 +426,7 @@ public struct JVector
         Z *= num;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Normalize(in JVector value, out JVector result)
     {
         float num2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
@@ -352,27 +436,32 @@ public struct JVector
         result.Z = value.Z * num;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly float LengthSquared()
     {
         return X * X + Y * Y + Z * Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly float Length()
     {
         return MathF.Sqrt(X * X + Y * Y + Z * Z);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Swap(ref JVector vector1, ref JVector vector2)
     {
         (vector2, vector1) = (vector1, vector2);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Multiply(in JVector value1, float scaleFactor)
     {
         Multiply(value1, scaleFactor, out JVector result);
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Multiply(float factor)
     {
         X *= factor;
@@ -380,6 +469,7 @@ public struct JVector
         Z *= factor;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JVector value1, float scaleFactor, out JVector result)
     {
         result.X = value1.X * scaleFactor;
@@ -390,6 +480,7 @@ public struct JVector
     /// <summary>
     /// Calculates the cross product.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator %(in JVector vector1, in JVector vector2)
     {
         JVector result;
@@ -399,11 +490,13 @@ public struct JVector
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static float operator *(in JVector vector1, in JVector vector2)
     {
         return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator *(in JVector value1, float value2)
     {
         JVector result;
@@ -413,6 +506,7 @@ public struct JVector
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator *(float value1, in JVector value2)
     {
         JVector result;
@@ -422,6 +516,7 @@ public struct JVector
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator -(in JVector value1, in JVector value2)
     {
         JVector result;
@@ -431,11 +526,13 @@ public struct JVector
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator -(JVector left)
     {
         return Multiply(left, -1.0f);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator +(in JVector value1, in JVector value2)
     {
         JVector result;

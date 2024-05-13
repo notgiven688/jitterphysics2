@@ -96,8 +96,8 @@ public unsafe class HingeAngle : Constraint
 
         data.Axis = JVector.TransposedTransform(axis, body2.Orientation);
 
-        JQuaternion q1 = JQuaternion.CreateFromMatrix(body1.Orientation);
-        JQuaternion q2 = JQuaternion.CreateFromMatrix(body2.Orientation);
+        JQuaternion q1 = body1.Orientation;
+        JQuaternion q2 = body2.Orientation;
 
         data.Q0 = q2.Conj() * q1;
     }
@@ -119,8 +119,8 @@ public unsafe class HingeAngle : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        JQuaternion q1 = JQuaternion.CreateFromMatrix(body1.Orientation);
-        JQuaternion q2 = JQuaternion.CreateFromMatrix(body2.Orientation);
+        JQuaternion q1 = body1.Orientation;
+        JQuaternion q2 = body2.Orientation;
 
         JVector p0 = MathHelper.CreateOrthonormal(data.Axis);
         JVector p1 = data.Axis % p0;
@@ -193,8 +193,8 @@ public unsafe class HingeAngle : Constraint
         get
         {
             ref HingeAngleData data = ref handle.Data;
-            JQuaternion q1 = JQuaternion.CreateFromMatrix(data.Body1.Data.Orientation);
-            JQuaternion q2 = JQuaternion.CreateFromMatrix(data.Body2.Data.Orientation);
+            JQuaternion q1 = data.Body1.Data.Orientation;
+            JQuaternion q2 = data.Body2.Data.Orientation;
 
             JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
 

@@ -85,16 +85,13 @@ public class BoxShape : Shape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
-    public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        JMatrix.Absolute(in orientation, out JMatrix abs);
-        JVector.Transform(halfSize, abs, out JVector temp);
+        JMatrix.Absolute(JMatrix.CreateFromQuaternion(orientation), out JMatrix absm);
+        var ths = JVector.Transform(halfSize, absm);
 
-        box.Max = temp;
-        JVector.Negate(temp, out box.Min);
-
-        JVector.Add(box.Min, position, out box.Min);
-        JVector.Add(box.Max, position, out box.Max);
+        box.Min = position - ths;
+        box.Max = position + ths;
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)

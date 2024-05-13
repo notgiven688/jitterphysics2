@@ -1,4 +1,5 @@
 ﻿using System;
+using Jitter2.Dynamics;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;

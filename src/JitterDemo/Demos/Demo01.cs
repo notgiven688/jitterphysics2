@@ -66,7 +66,7 @@ public class Demo01 : IDemo
         {
             // Add a car made out of constraints
             JVector carPos = new JVector(10, 9, -20);
-            JMatrix rot = JMatrix.CreateRotationY(MathF.PI / 2.0f);
+            JQuaternion rot = JQuaternion.CreateRotationY(MathF.PI / 2.0f);
 
             car.BuildCar(world, carPos, body =>
                 {

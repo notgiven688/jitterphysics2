@@ -173,7 +173,7 @@ public partial class Playground : RenderWindow
         {
             if (body.Tag is RigidBodyTag { DoNotDraw: true }) continue;
 
-            Conversion.FromJitterOpt(body, ref mat);
+            mat = Conversion.FromJitter(body);
 
             foreach (Shape shape in body.Shapes)
             {
