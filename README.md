@@ -1,7 +1,7 @@
+#  <img src="./media/logo/jitterstringsmallsmall.png" alt="screenshot" width="240"/> Jitter Physics 2
+
 [![JitterTests](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml/badge.svg)](https://github.com/notgiven688/jitterphysics2/actions/workflows/jitter-tests.yml)
 [![Discord Shield](https://discordapp.com/api/guilds/1213790465225138197/widget.png?style=shield)](https://discord.gg/7jr3f4edmV)
-
-# Jitter Physics 2
 
 Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven688/jitterphysics), is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
 
