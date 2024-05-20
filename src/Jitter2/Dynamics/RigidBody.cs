@@ -89,8 +89,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public Island Island => island;
 
-    internal readonly List<RigidBody> connections = new();
-    internal readonly HashSet<Arbiter> contacts = new(4);
+    internal readonly List<RigidBody> connections = new(0);
+    internal readonly HashSet<Arbiter> contacts = new(0);
     internal readonly HashSet<Constraint> constraints = new(0);
 
     /// <summary>
