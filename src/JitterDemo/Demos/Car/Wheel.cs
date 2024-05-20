@@ -218,7 +218,9 @@ public class Wheel
         JVector worldPos = car.Position + JVector.Transform(Position, car.Orientation);
         JVector worldAxis = JVector.Transform(Up, car.Orientation);
 
-        JVector forward = -car.Orientation.GetColumn(2);
+
+
+        JVector forward = JVector.Transform(-JVector.UnitZ, car.Orientation); //-car.Orientation.GetColumn(2);
         JVector wheelFwd = JVector.Transform(forward, JMatrix.CreateRotationMatrix(worldAxis, SteerAngle));
 
         JVector wheelLeft = JVector.Cross(worldAxis, wheelFwd);

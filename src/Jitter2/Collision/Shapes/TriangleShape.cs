@@ -78,7 +78,7 @@ public class TriangleShape : Shape
 
         if (RigidBody == null) return;
 
-        ref JMatrix orientation = ref RigidBody.Data.Orientation;
+        ref JQuaternion orientation = ref RigidBody.Data.Orientation;
         ref JVector position = ref RigidBody.Data.Position;
 
         JVector.Transform(a, orientation, out a);
@@ -90,7 +90,7 @@ public class TriangleShape : Shape
         c += position;
     }
 
-    public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         const float extraMargin = 0.01f;
 

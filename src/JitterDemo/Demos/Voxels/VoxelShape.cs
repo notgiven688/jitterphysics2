@@ -31,13 +31,11 @@ public class VoxelShape : Shape
         result += Position;
     }
 
-    public override void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         // NOTE: We do not support any transformation of the body here.
-        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(orientation.GetColumn(0) - JVector.UnitX));
-        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(orientation.GetColumn(1) - JVector.UnitY));
-        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(orientation.GetColumn(2) - JVector.UnitZ));
-        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(position));
+        System.Diagnostics.Debug.Assert(orientation.W > 0.999f, "Voxel shape can not be attached to a transformed body.");
+        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(position), "Voxel shape can not be attached to a transformed body.");
 
         box.Min = Position - JVector.One * 0.5f;
         box.Max = Position + JVector.One * 0.5f;

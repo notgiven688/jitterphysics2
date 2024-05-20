@@ -139,7 +139,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     {
         if (RigidBody == null)
         {
-            CalculateBoundingBox(JMatrix.Identity, JVector.Zero, out JBBox box);
+            CalculateBoundingBox(JQuaternion.Identity, JVector.Zero, out JBBox box);
             WorldBoundingBox = box;
         }
         else
@@ -203,9 +203,10 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// <see cref="SupportMap"/> function. Child classes should override this implementation to improve
     /// performance.
     /// </summary>
-    public virtual void CalculateBoundingBox(in JMatrix orientation, in JVector position, out JBBox box)
+    public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        JMatrix oriT = JMatrix.Transpose(orientation);
+        // TODO: Can this be done smarter?
+        JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
 
         SupportMap(oriT.GetColumn(0), out JVector res);
         box.Max.X = JVector.Dot(oriT.GetColumn(0), res);

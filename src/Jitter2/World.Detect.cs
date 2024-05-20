@@ -368,7 +368,7 @@ public partial class World
         {
             static void Support(Shape shape, in JVector direction, out JVector v)
             {
-                JVector.TransposedTransform(direction, shape.RigidBody!.Data.Orientation, out JVector tmp);
+                JVector.ConjugatedTransform(direction, shape.RigidBody!.Data.Orientation, out JVector tmp);
                 shape.SupportMap(tmp, out v);
                 JVector.Transform(v, shape.RigidBody.Data.Orientation, out v);
                 JVector.Add(v, shape.RigidBody.Data.Position, out v);

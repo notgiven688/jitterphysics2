@@ -94,8 +94,8 @@ public unsafe class LinearMotor : Constraint
         axis1.Normalize();
         axis2.Normalize();
 
-        JVector.TransposedTransform(axis1, body1.Orientation, out data.LocalAxis1);
-        JVector.TransposedTransform(axis2, body2.Orientation, out data.LocalAxis2);
+        JVector.ConjugatedTransform(axis1, body1.Orientation, out data.LocalAxis1);
+        JVector.ConjugatedTransform(axis2, body2.Orientation, out data.LocalAxis2);
 
         data.MaxForce = 0;
         data.Velocity = 0;

@@ -102,10 +102,10 @@ public unsafe class PointOnPlane : Constraint
         JVector.Subtract(anchor1, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor2, body2.Position, out data.LocalAnchor2);
 
-        JVector.TransposedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
-        JVector.TransposedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
+        JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
+        JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
-        JVector.TransposedTransform(axis, body1.Orientation, out data.LocalAxis);
+        JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis);
 
         data.BiasFactor = 0.01f;
         data.Softness = 0.00001f;

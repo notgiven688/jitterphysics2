@@ -46,7 +46,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
         if (i1 != null && i2 != null)
         {
             bool colliding = NarrowPhase.MPREPA(shapeA, shapeB,
-                JMatrix.Identity, JVector.Zero,
+                JQuaternion.Identity, JVector.Zero,
                 out JVector pA, out JVector pB, out JVector normal, out float penetration);
 
             if (!colliding) return false;

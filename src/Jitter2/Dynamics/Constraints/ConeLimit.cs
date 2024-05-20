@@ -85,8 +85,8 @@ public unsafe class ConeLimit : Constraint
 
         axis.Normalize();
 
-        JVector.TransposedTransform(axis, body1.Orientation, out data.LocalAxis1);
-        JVector.TransposedTransform(axis, body2.Orientation, out data.LocalAxis2);
+        JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis1);
+        JVector.ConjugatedTransform(axis, body2.Orientation, out data.LocalAxis2);
 
         data.Softness = 0.001f;
         data.BiasFactor = 0.2f;

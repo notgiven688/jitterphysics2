@@ -96,8 +96,8 @@ public unsafe class DistanceLimit : Constraint
         JVector.Subtract(anchor1, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor2, body2.Position, out data.LocalAnchor2);
 
-        JVector.TransposedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
-        JVector.TransposedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
+        JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
+        JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
         data.Softness = 0.001f;
         data.BiasFactor = 0.2f;
@@ -113,7 +113,7 @@ public unsafe class DistanceLimit : Constraint
             ref DistanceLimitData data = ref handle.Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
-            JVector.TransposedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
+            JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         }
         get
         {
@@ -132,7 +132,7 @@ public unsafe class DistanceLimit : Constraint
             ref DistanceLimitData data = ref handle.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
-            JVector.TransposedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
+            JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
         }
         get
         {

@@ -650,7 +650,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool RayCast(ISupportMap support, in JMatrix orientation,
+    public static bool RayCast(ISupportMap support, in JQuaternion orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         // rotate the ray into the reference frame of bodyA..
@@ -712,7 +712,7 @@ public static class NarrowPhase
     /// failure, collision information reverts to the type's default values.
     /// </returns>
     public static bool GJKEPA(ISupportMap supportA, ISupportMap supportB,
-        in JMatrix orientationA, in JMatrix orientationB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
@@ -721,9 +721,9 @@ public static class NarrowPhase
         mkd.SupportB = supportB;
 
         // rotate into the reference frame of bodyA..
-        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
         bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
@@ -761,7 +761,7 @@ public static class NarrowPhase
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
-        in JMatrix orientationA, in JMatrix orientationB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
@@ -770,9 +770,9 @@ public static class NarrowPhase
         mkd.SupportB = supportB;
 
         // rotate into the reference frame of bodyA..
-        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
         bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
@@ -808,7 +808,7 @@ public static class NarrowPhase
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
-        in JMatrix orientationB, in JVector positionB,
+        in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
@@ -832,7 +832,7 @@ public static class NarrowPhase
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
-        in JMatrix orientationA, in JMatrix orientationB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
@@ -843,13 +843,13 @@ public static class NarrowPhase
         mkd.SupportB = supportB;
 
         // rotate into the reference frame of bodyA..
-        JMatrix.TransposedMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.TransposedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // we also transform the relative velocities
         JVector sweep = sweepB - sweepA;
-        JVector.TransposedTransform(sweep, orientationA, out sweep);
+        JVector.ConjugatedTransform(sweep, orientationA, out sweep);
 
         // ..perform toi calculation
         bool res = solver.SweepTest(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
@@ -880,7 +880,7 @@ public static class NarrowPhase
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
-        in JMatrix orientationB, in JVector positionB, in JVector sweepB,
+        in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);

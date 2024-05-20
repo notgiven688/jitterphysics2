@@ -34,13 +34,13 @@ namespace Jitter2.Collision;
 public struct MinkowskiDifference
 {
     public ISupportMap SupportA, SupportB;
-    public JMatrix OrientationB;
+    public JQuaternion OrientationB;
     public JVector PositionB;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private readonly void SupportMapTransformedRelative(in JVector direction, out JVector result)
     {
-        JVector.TransposedTransform(direction, OrientationB, out JVector tmp);
+        JVector.ConjugatedTransform(direction, OrientationB, out JVector tmp);
         SupportB.SupportMap(tmp, out result);
         JVector.Transform(result, OrientationB, out result);
         JVector.Add(result, PositionB, out result);

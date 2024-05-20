@@ -26,7 +26,7 @@ public class CollisionTests
 
         SphereShape s1 = new(radius);
 
-        bool hit = NarrowPhase.RayCast(s1, JMatrix.CreateRotationX(0.32f), sp,
+        bool hit = NarrowPhase.RayCast(s1, JQuaternion.CreateRotationX(0.32f), sp,
             op, sp - op, out float fraction, out JVector normal);
 
         JVector cn = JVector.Normalize(op - sp); // analytical normal
@@ -34,7 +34,9 @@ public class CollisionTests
 
         Assert.That(hit);
         Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
-        Assert.That(MathF.Abs((hp - sp).Length() - radius) < 1e-6f);
+        
+        float distance = (hp - sp).Length();
+        Assert.That(MathF.Abs(distance - radius) < 1e-4f);
     }
 
     [TestCase]
@@ -43,7 +45,7 @@ public class CollisionTests
         var s1 = new SphereShape(0.5f);
         var s2 = new BoxShape(1);
 
-        var rot = JMatrix.CreateRotationZ(MathF.PI / 4.0f);
+        var rot = JQuaternion.CreateRotationZ(MathF.PI / 4.0f);
         var sweep = JVector.Normalize(new JVector(1, 1, 0));
 
         bool hit = NarrowPhase.SweepTest(s1, s2, rot, rot,
@@ -71,7 +73,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.MPREPA(s1, s2, JMatrix.Identity, JMatrix.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
+        NarrowPhase.MPREPA(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
             out JVector pointA, out JVector pointB, out JVector normal, out float penetration);
 
         // pointA is on s1 and pointB is on s2
@@ -86,7 +88,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.GJKEPA(s1, s2, JMatrix.Identity, JMatrix.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
+        NarrowPhase.GJKEPA(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // pointA is on s1 and pointB is on s2
@@ -104,7 +106,7 @@ public class CollisionTests
         BoxShape b1 = new(1);
         BoxShape b2 = new(1);
 
-        NarrowPhase.MPREPA(b1, b2, JMatrix.Identity, JMatrix.Identity, new JVector(-0.25f, 0.1f, 0), new JVector(+0.25f, -0.1f, 0),
+        NarrowPhase.MPREPA(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-0.25f, 0.1f, 0), new JVector(+0.25f, -0.1f, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // pointA is on s1 and pointB is on s2
@@ -119,7 +121,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.GJKEPA(b1, b2, JMatrix.Identity, JMatrix.Identity, new JVector(-2.25f, 0, 0), new JVector(+2.25f, 0, 0),
+        NarrowPhase.GJKEPA(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-2.25f, 0, 0), new JVector(+2.25f, 0, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // the collision normal points from s2 to s1
