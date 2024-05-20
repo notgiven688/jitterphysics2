@@ -39,7 +39,7 @@ public sealed class Island : IListIndex
     /// <summary>
     /// Gets a collection of all the bodies present in this island.
     /// </summary>
-    public ReadOnlyHashSet<RigidBody> Bodies { get; private set; }
+    public ReadOnlyHashSet<RigidBody> Bodies => new ReadOnlyHashSet<RigidBody>(bodies);
 
     int IListIndex.ListIndex { get; set; } = -1;
 
@@ -48,7 +48,6 @@ public sealed class Island : IListIndex
     /// </summary>
     public Island()
     {
-        Bodies = new ReadOnlyHashSet<RigidBody>(bodies);
     }
 
     /// <summary>

@@ -29,12 +29,7 @@ namespace Jitter2.Dynamics.Constraints;
 public class Joint
 {
     private readonly List<Constraint> constraints = new(4);
-    public ReadOnlyList<Constraint> Constraints { get; }
-
-    private protected Joint()
-    {
-        Constraints = new ReadOnlyList<Constraint>(constraints);
-    }
+    public ReadOnlyList<Constraint> Constraints => new ReadOnlyList<Constraint>(constraints);
 
     /// <summary>
     /// Add a constraint to the internal book keeping

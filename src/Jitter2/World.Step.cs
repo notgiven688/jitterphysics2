@@ -798,12 +798,12 @@ public partial class World
 
                     if (!body.Data.IsStatic)
                     {
-                        foreach (var c in body.Contacts)
+                        foreach (var c in body.contacts)
                         {
                             memContacts.MoveToInactive(c.Handle);
                         }
 
-                        foreach (var c in body.Constraints)
+                        foreach (var c in body.constraints)
                         {
                             if (c.IsSmallConstraint)
                             {
@@ -832,12 +832,12 @@ public partial class World
                     memRigidBodies.MoveToActive(body.handle);
                     bodies.MoveToActive(body);
 
-                    foreach (var c in body.Contacts)
+                    foreach (var c in body.contacts)
                     {
                         memContacts.MoveToActive(c.Handle);
                     }
 
-                    foreach (var c in body.Constraints)
+                    foreach (var c in body.constraints)
                     {
                         if (c.IsSmallConstraint)
                         {

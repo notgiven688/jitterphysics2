@@ -55,8 +55,8 @@ internal static class IslandHelper
     {
         RigidBody b1 = arbiter.Body1;
         RigidBody b2 = arbiter.Body2;
-        b1.Contacts.Add(arbiter);
-        b2.Contacts.Add(arbiter);
+        b1.contacts.Add(arbiter);
+        b2.contacts.Add(arbiter);
 
         if (b1.Data.IsStatic || b2.Data.IsStatic) return;
 
@@ -65,16 +65,16 @@ internal static class IslandHelper
 
     public static void ArbiterRemoved(IslandList islands, Arbiter arbiter)
     {
-        arbiter.Body1.Contacts.Remove(arbiter);
-        arbiter.Body2.Contacts.Remove(arbiter);
+        arbiter.Body1.contacts.Remove(arbiter);
+        arbiter.Body2.contacts.Remove(arbiter);
 
         RemoveConnection(islands, arbiter.Body1, arbiter.Body2);
     }
 
     public static void ConstraintCreated(IslandList islands, Constraint constraint)
     {
-        constraint.Body1.Constraints.Add(constraint);
-        constraint.Body2.Constraints.Add(constraint);
+        constraint.Body1.constraints.Add(constraint);
+        constraint.Body2.constraints.Add(constraint);
 
         if (constraint.Body1.Data.IsStatic || constraint.Body2.Data.IsStatic) return;
 
@@ -83,8 +83,8 @@ internal static class IslandHelper
 
     public static void ConstraintRemoved(IslandList islands, Constraint constraint)
     {
-        constraint.Body1.Constraints.Remove(constraint);
-        constraint.Body2.Constraints.Remove(constraint);
+        constraint.Body1.constraints.Remove(constraint);
+        constraint.Body2.constraints.Remove(constraint);
 
         RemoveConnection(islands, constraint.Body1, constraint.Body2);
     }
@@ -107,14 +107,14 @@ internal static class IslandHelper
     {
         MergeIslands(islands, body1, body2);
 
-        body1.Connections.Add(body2);
-        body2.Connections.Add(body1);
+        body1.connections.Add(body2);
+        body2.connections.Add(body1);
     }
 
     private static void RemoveConnection(IslandList islands, RigidBody body1, RigidBody body2)
     {
-        body1.Connections.Remove(body2);
-        body2.Connections.Remove(body1);
+        body1.connections.Remove(body2);
+        body2.connections.Remove(body1);
 
         if (body1.island == body2.island)
             SplitIslands(islands, body1, body2);
@@ -148,9 +148,9 @@ internal static class IslandHelper
             RigidBody currentNode = leftSearchQueue.Dequeue();
             if (!currentNode.Data.IsStatic)
             {
-                for (int i = 0; i < currentNode.Connections.Count; i++)
+                for (int i = 0; i < currentNode.connections.Count; i++)
                 {
-                    RigidBody connectedNode = currentNode.Connections[i];
+                    RigidBody connectedNode = currentNode.connections[i];
 
                     if (connectedNode.islandMarker == 0)
                     {
@@ -170,9 +170,9 @@ internal static class IslandHelper
             currentNode = rightSearchQueue.Dequeue();
             if (!currentNode.Data.IsStatic)
             {
-                for (int i = 0; i < currentNode.Connections.Count; i++)
+                for (int i = 0; i < currentNode.connections.Count; i++)
                 {
-                    RigidBody connectedNode = currentNode.Connections[i];
+                    RigidBody connectedNode = currentNode.connections[i];
 
                     if (connectedNode.islandMarker == 0)
                     {
