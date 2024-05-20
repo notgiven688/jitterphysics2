@@ -40,10 +40,11 @@ public partial class JitterCubes : MultiMeshInstance3D
 
 		for (int i = 0; i < cubes.Count; i++)
 		{
-			ref JMatrix mat = ref cubes[i].Data.Orientation;
-			ref JVector pos = ref cubes[i].Data.Position;
+			JMatrix mat = JMatrix.CreateFromQuaternion(cubes[i].Data.Orientation);
+			JVector pos = cubes[i].Data.Position;
 
 			Transform3D trans = Transform3D.Identity;
+
 			trans[0] = Conversion.FromJitter(mat.GetColumn(0));
 			trans[1] = Conversion.FromJitter(mat.GetColumn(1));
 			trans[2] = Conversion.FromJitter(mat.GetColumn(2));
