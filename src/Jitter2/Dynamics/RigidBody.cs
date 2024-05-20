@@ -94,8 +94,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal readonly HashSet<Constraint> constraints = new(0);
 
     /// <summary>
-    /// Contains all bodies this body is in contact with. This should only
-    /// be modified within Jitter.
+    /// Contains all bodies this body is in contact with.
     /// </summary>
     public ReadOnlyList<RigidBody> Connections => new ReadOnlyList<RigidBody>(connections);
 
@@ -105,10 +104,14 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     public ReadOnlyHashSet<Arbiter> Contacts => new ReadOnlyHashSet<Arbiter>(contacts);
 
     /// <summary>
-    /// Contains all constraints connected to this body. This should only
-    /// be modified within Jitter.
+    /// Contains all constraints connected to this body.
     /// </summary>
     public ReadOnlyHashSet<Constraint> Constraints => new ReadOnlyHashSet<Constraint>(constraints);
+
+    /// <summary>
+    /// Gets the list of shapes added to this rigid body.
+    /// </summary>
+    public ReadOnlyList<Shape> Shapes => new ReadOnlyList<Shape>(shapes);
 
     internal int islandMarker;
 
@@ -123,11 +126,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     internal JMatrix inverseInertia = JMatrix.Identity;
     internal float inverseMass = 1.0f;
-
-    /// <summary>
-    /// Gets the list of shapes added to this rigid body.
-    /// </summary>
-    public ReadOnlyList<Shape> Shapes => new ReadOnlyList<Shape>(shapes);
 
     public float Friction { get; set; } = 0.2f;
     public float Restitution { get; set; } = 0.0f;
