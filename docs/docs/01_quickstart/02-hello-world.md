@@ -8,7 +8,7 @@ We will now add physics to the scene. We do this by creating a new instance of t
 
 Replace the content of `Program.cs` with the following code (marked lines indicate the additions to the source code):
 
-```cs Program.cs {3-6,9-18,28,41-62,87-93} showLineNumbers
+```cs Program.cs {3-6,9-18,28,41-63,88-94} showLineNumbers
 using System.Numerics;
 using Raylib_cs;
 using Jitter2;
@@ -19,7 +19,7 @@ using static Raylib_cs.Raylib;
 
 static Matrix4x4 GetRayLibTransformMatrix(RigidBody body)
 {
-    JMatrix ori = body.Orientation;
+    JMatrix ori = JMatrix.CreateFromQuaternion(body.Orientation);
     JVector pos = body.Position;
 
     return new Matrix4x4(ori.M11, ori.M12, ori.M13, pos.X,
@@ -57,6 +57,7 @@ SetMaterialTexture(ref boxMat, MaterialMapIndex.MATERIAL_MAP_DIFFUSE, texture);
 
 // initialize the Jitter physics world
 World world = new ();
+world.NumberSubsteps = 4;
 
 // add a body representing the plane
 RigidBody planeBody = world.CreateRigidBody();
