@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.3.0 (05-20-2024)
+- Added RigidBody.RemoveShape overload to remove multiple shapes at once.
+- Marked Rigid.ClearShapes deprecated.
+- **Breaking Change:** Use JQuaternion for orientations. Sorry for the API break.
+
 ### Jitter 2.2.1 (04-29-2024)
 - Add optional activate parameter to world.AddShape.
 - Add NarrowPhase.SweepTest.
