@@ -89,23 +89,29 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public Island Island => island;
 
-    /// <summary>
-    /// Contains all bodies this body is in contact with. This should only
-    /// be modified within Jitter.
-    /// </summary>
-    public readonly List<RigidBody> Connections = new();
+    internal readonly List<RigidBody> connections = new(0);
+    internal readonly HashSet<Arbiter> contacts = new(0);
+    internal readonly HashSet<Constraint> constraints = new(0);
 
     /// <summary>
-    /// Contains all contacts in which this body is involved. This should only
-    /// be modified within Jitter.
+    /// Contains all bodies this body is in contact with.
     /// </summary>
-    public readonly HashSet<Arbiter> Contacts = new(5);
+    public ReadOnlyList<RigidBody> Connections => new ReadOnlyList<RigidBody>(connections);
 
     /// <summary>
-    /// Contains all constraints connected to this body. This should only
-    /// be modified within Jitter.
+    /// Contains all contacts in which this body is involved.
     /// </summary>
-    public readonly HashSet<Constraint> Constraints = new(5);
+    public ReadOnlyHashSet<Arbiter> Contacts => new ReadOnlyHashSet<Arbiter>(contacts);
+
+    /// <summary>
+    /// Contains all constraints connected to this body.
+    /// </summary>
+    public ReadOnlyHashSet<Constraint> Constraints => new ReadOnlyHashSet<Constraint>(constraints);
+
+    /// <summary>
+    /// Gets the list of shapes added to this rigid body.
+    /// </summary>
+    public ReadOnlyList<Shape> Shapes => new ReadOnlyList<Shape>(shapes);
 
     internal int islandMarker;
 
@@ -121,11 +127,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal JMatrix inverseInertia = JMatrix.Identity;
     internal float inverseMass = 1.0f;
 
-    /// <summary>
-    /// Gets the list of shapes added to this rigid body.
-    /// </summary>
-    public ReadOnlyList<Shape> Shapes { get; }
-
     public float Friction { get; set; } = 0.2f;
     public float Restitution { get; set; } = 0.0f;
 
@@ -140,8 +141,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     {
         this.handle = handle;
         World = world;
-
-        Shapes = new ReadOnlyList<Shape>(shapes);
 
         Data.Orientation = JQuaternion.Identity;
         SetDefaultMassInertia();
@@ -432,7 +431,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                 "Shape is not part of this body.");
         }
 
-        foreach (var arbiter in Contacts)
+        foreach (var arbiter in contacts)
         {
             if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
             {
@@ -468,7 +467,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             sids.Add(shape.ShapeId);
         }
 
-        foreach (var arbiter in Contacts)
+        foreach (var arbiter in contacts)
         {
             if(sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
             {

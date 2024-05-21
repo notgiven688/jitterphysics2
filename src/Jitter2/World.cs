@@ -289,7 +289,7 @@ public partial class World
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
         // This comes in very handy for us.
 
-        foreach (var constraint in body.Constraints)
+        foreach (var constraint in body.constraints)
         {
             Remove(constraint);
         }
@@ -301,7 +301,7 @@ public partial class World
             shape.DetachRigidBody();
         }
 
-        foreach (var contact in body.Contacts)
+        foreach (var contact in body.contacts)
         {
             Remove(contact);
         }
