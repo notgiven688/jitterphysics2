@@ -28,6 +28,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
+using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
@@ -39,8 +40,10 @@ namespace Jitter2;
 
 public partial class World
 {
-    private readonly Stack<Arbiter> deferredArbiters = new();
-    private readonly List<JHandle<ContactData>> brokenArbiters = new();
+    // Note: A SlimBag of the reference type 'Arbiter' does not introduce GC problems (not setting
+    // all elements to null when clearing) since the references for Arbiters are pooled anyway.
+    private readonly SlimBag<Arbiter> deferredArbiters = new();
+    private readonly SlimBag<JHandle<ContactData>> brokenArbiters = new();
 
     private Action<Parallel.Batch> integrate;
     private Action<Parallel.Batch> integrateForces;
@@ -517,6 +520,10 @@ public partial class World
                 memContacts.Free(handle);
                 IslandHelper.ArbiterRemoved(islands, arb);
                 arbiters.Remove(handle.Data.Key);
+
+                arb.Body1.RaiseEndCollide(arb);
+                arb.Body2.RaiseEndCollide(arb);
+
                 Arbiter.Pool.Push(arb);
                 arb.Handle = JHandle<ContactData>.Zero;
             }
@@ -548,14 +555,19 @@ public partial class World
 
     private void HandleDeferredArbiters()
     {
-        while (deferredArbiters.Count > 0)
+        for (int i = 0; i < deferredArbiters.Count; i++)
         {
-            Arbiter arb = deferredArbiters.Pop();
+            Arbiter arb = deferredArbiters[i];
             IslandHelper.ArbiterCreated(islands, arb);
 
             AddToActiveList(arb.Body1.island);
             AddToActiveList(arb.Body2.island);
+
+            arb.Body1.RaiseBeginCollide(arb);
+            arb.Body2.RaiseBeginCollide(arb);
         }
+
+        deferredArbiters.Clear();
     }
 
     /// <summary>

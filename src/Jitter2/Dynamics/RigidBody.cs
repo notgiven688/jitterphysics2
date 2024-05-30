@@ -94,6 +94,28 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal readonly HashSet<Constraint> constraints = new(0);
 
     /// <summary>
+    /// Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.
+    /// </summary>
+    /// <remarks>
+    /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
+    /// Use this event to handle logic that should occur at the start of a collision between two bodies.
+    /// </remarks>
+    public event Action<Arbiter>? BeginCollide;
+
+    /// <summary>
+    /// Event triggered when an arbiter is destroyed, indicating that two bodies have stopped colliding.
+    /// The reference to this arbiter becomes invalid after this call.
+    /// </summary>
+    /// <remarks>
+    /// This event provides an <see cref="Arbiter"/> object which contains details about the collision that has ended.
+    /// Use this event to handle logic that should occur when the collision between two bodies ends.
+    /// </remarks>
+    public event Action<Arbiter>? EndCollide;
+
+    internal void RaiseBeginCollide(Arbiter arbiter) => BeginCollide?.Invoke(arbiter);
+    internal void RaiseEndCollide(Arbiter arbiter) => EndCollide?.Invoke(arbiter);
+
+    /// <summary>
     /// Contains all bodies this body is in contact with.
     /// </summary>
     public ReadOnlyList<RigidBody> Connections => new ReadOnlyList<RigidBody>(connections);

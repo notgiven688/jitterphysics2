@@ -439,7 +439,7 @@ public partial class World
                     arb = new Arbiter();
                 }
 
-                deferredArbiters.Push(arb);
+                deferredArbiters.Add(arb);
 
                 var h = memContacts.Allocate(true, false);
                 arb.Handle = h;
