@@ -334,8 +334,9 @@ public struct JMatrix
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
         float det = matrix.Determinant();
+        float idet = 1.0f / det;
 
-        if (float.IsNaN(det) || float.IsInfinity(det))
+        if (float.IsNaN(det) || float.IsInfinity(det) || float.IsNaN(idet) || float.IsInfinity(idet))
         {
             result = new JMatrix();
             return false;
@@ -352,8 +353,6 @@ public struct JMatrix
         float num31 = matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22;
         float num32 = matrix.M12 * matrix.M31 - matrix.M32 * matrix.M11;
         float num33 = matrix.M11 * matrix.M22 - matrix.M21 * matrix.M12;
-
-        float idet = 1.0f / det;
 
         result.M11 = num11 * idet;
         result.M12 = num12 * idet;
