@@ -528,7 +528,11 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             mass += shapes[i].Mass;
         }
 
-        JMatrix.Inverse(inertia, out inverseInertia);
+        if (!JMatrix.Inverse(inertia, out inverseInertia))
+        {
+            throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
+        }
+
         this.inverseMass = 1.0f / mass;
 
         UpdateWorldInertia();
