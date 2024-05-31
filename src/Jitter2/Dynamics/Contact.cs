@@ -155,7 +155,6 @@ public struct ContactData
     /// </summary>
     public void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
-        // if (GetCacheEntry(point1, point2, normal, penetration)) return;
         if (UsageMask == 0b1111)
         {
             // All four contacts are in use. Find one candidate to be replaced by the new one.
@@ -169,26 +168,22 @@ public struct ContactData
         // Neither of the above.
         if ((UsageMask & 0b0001) == 0)
         {
-            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution,
-                Friction);
+            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
             UsageMask |= 1 << 0;
         }
         else if ((UsageMask & 0b0010) == 0)
         {
-            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution,
-                Friction);
+            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
             UsageMask |= 1 << 1;
         }
         else if ((UsageMask & 0b0100) == 0)
         {
-            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution,
-                Friction);
+            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
             UsageMask |= 1 << 2;
         }
         else if ((UsageMask & 0b1000) == 0)
         {
-            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution,
-                Friction);
+            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
             UsageMask |= 1 << 3;
         }
     }
@@ -225,138 +220,57 @@ public struct ContactData
         ref Contact cref = ref Contact0;
         int index = -1;
 
-        // if (maxPenetrationIndex != 0)
-        {
-            float clsq = CalcArea4Points(rp1,
-                Contact1.RelativePos1,
-                Contact2.RelativePos1,
-                Contact3.RelativePos1);
+        float clsq = CalcArea4Points(rp1,
+            Contact1.RelativePos1,
+            Contact2.RelativePos1,
+            Contact3.RelativePos1);
 
-            if (clsq > biggestArea + epsilon)
-            {
-                biggestArea = clsq;
-                cref = ref Contact0;
-                index = 0;
-            }
+        if (clsq > biggestArea + epsilon)
+        {
+            biggestArea = clsq;
+            cref = ref Contact0;
+            index = 0;
         }
 
-        // if (maxPenetrationIndex != 1)
-        {
-            float clsq = CalcArea4Points(rp1,
-                Contact0.RelativePos1,
-                Contact2.RelativePos1,
-                Contact3.RelativePos1);
+        clsq = CalcArea4Points(rp1,
+            Contact0.RelativePos1,
+            Contact2.RelativePos1,
+            Contact3.RelativePos1);
 
-            if (clsq > biggestArea + epsilon)
-            {
-                biggestArea = clsq;
-                cref = ref Contact1;
-                index = 1;
-            }
+        if (clsq > biggestArea + epsilon)
+        {
+            biggestArea = clsq;
+            cref = ref Contact1;
+            index = 1;
         }
 
-        // if (maxPenetrationIndex != 2)
-        {
-            float clsq = CalcArea4Points(rp1,
-                Contact0.RelativePos1,
-                Contact1.RelativePos1,
-                Contact3.RelativePos1);
+        clsq = CalcArea4Points(rp1,
+            Contact0.RelativePos1,
+            Contact1.RelativePos1,
+            Contact3.RelativePos1);
 
-            if (clsq > biggestArea + epsilon)
-            {
-                biggestArea = clsq;
-                cref = ref Contact2;
-                index = 2;
-            }
+        if (clsq > biggestArea + epsilon)
+        {
+            biggestArea = clsq;
+            cref = ref Contact2;
+            index = 2;
         }
 
-        // if (maxPenetrationIndex != 3)
-        {
-            float clsq = CalcArea4Points(rp1,
-                Contact0.RelativePos1,
-                Contact1.RelativePos1,
-                Contact2.RelativePos1);
+        clsq = CalcArea4Points(rp1,
+            Contact0.RelativePos1,
+            Contact1.RelativePos1,
+            Contact2.RelativePos1);
 
-            if (clsq > biggestArea + epsilon)
-            {
-                // not necessary: biggestArea = clsq;
-                cref = ref Contact3;
-                index = 3;
-            }
+        if (clsq > biggestArea + epsilon)
+        {
+            // not necessary: biggestArea = clsq;
+            cref = ref Contact3;
+            index = 3;
         }
 
-        if (index != -1)
-        {
-            cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution,
-                Friction);
-            UsageMask |= 1 << index;
-        }
+        cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution, Friction);
+        UsageMask |= 1 << index;
     }
-
-    /*
-    private bool GetCacheEntry(in JVector point1, in JVector point2, in JVector normal, float penetration)
-    {
-        JVector.Subtract(point1, Key1.Data.position, out JVector realRelPos1);
-
-        float shortestDist = Contact.BreakThreshold * Contact.BreakThreshold;
-
-        ref Contact cref = ref Contact0;
-        int index = -1;
-
-        if ((UsageMask & 0b0001) != 0)
-        {
-            float distToManiPoint = (Contact0.relativePos1 - realRelPos1).LengthSquared();
-            if (distToManiPoint < shortestDist)
-            {
-                shortestDist = distToManiPoint;
-                cref = ref Contact0;
-                index = 0;
-            }
-        }
-
-        if ((UsageMask & 0b0010) != 0)
-        {
-            float distToManiPoint = (Contact1.relativePos1 - realRelPos1).LengthSquared();
-            if (distToManiPoint < shortestDist)
-            {
-                shortestDist = distToManiPoint;
-                cref = ref Contact1;
-                index = 1;
-            }
-        }
-
-        if ((UsageMask & 0b0100) != 0)
-        {
-            float distToManiPoint = (Contact2.relativePos1 - realRelPos1).LengthSquared();
-            if (distToManiPoint < shortestDist)
-            {
-                shortestDist = distToManiPoint;
-                cref = ref Contact2;
-                index = 2;
-            }
-        }
-
-        if ((UsageMask & 0b1000) != 0)
-        {
-            float distToManiPoint = (Contact3.relativePos1 - realRelPos1).LengthSquared();
-            if (distToManiPoint < shortestDist)
-            {
-                shortestDist = distToManiPoint;
-                cref = ref Contact3;
-                index = 3;
-            }
-        }
-
-        if (index != -1)
-        {
-            cref.Initialize(ref Key1.Data, ref Key2.Data, point1, point2, normal, penetration, false, Restitution,
-                Friction);
-            return true;
-        }
-
-        return false;
-    }
-    */
 
     // ---------------------------------------------------------------------------------------------------------
     public struct Contact
@@ -515,6 +429,7 @@ public struct ContactData
             JVector.Add(RelativePos1, b1.Position, out JVector p1);
             JVector.Add(RelativePos2, b2.Position, out JVector p2);
             JVector.Subtract(p1, p2, out JVector dist);
+
             // If this is a speculative contact we should not
             // tinker with the penetration which got scaled
             // by the speculative relaxation factor before.
