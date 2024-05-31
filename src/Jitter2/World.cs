@@ -436,7 +436,7 @@ public partial class World
 
     internal void DeactivateBodyNextStep(RigidBody body)
     {
-        body.sleepTime = float.MaxValue / 2.0f;
+        body.sleepTime = float.PositiveInfinity;
     }
 
     /// <summary>
