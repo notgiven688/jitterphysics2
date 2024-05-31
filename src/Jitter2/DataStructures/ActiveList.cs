@@ -129,6 +129,7 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public void Clear()
     {
+        Array.Clear(elements, 0, Count);
         Count = 0;
         Active = 0;
     }
