@@ -23,7 +23,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
@@ -68,10 +70,10 @@ public struct ContactData
 
     public void Iterate()
     {
-        if ((UsageMask & 0b0001) != 0) Contact0.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b0010) != 0) Contact1.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b0100) != 0) Contact2.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b1000) != 0) Contact3.Iterate(ref Body1.Data, ref Body2.Data);
+        if ((UsageMask & 0b0001) != 0) Contact0.Iterate(ref Body1.Data, ref Body2.Data, IsSpeculative);
+        if ((UsageMask & 0b0010) != 0) Contact1.Iterate(ref Body1.Data, ref Body2.Data, IsSpeculative);
+        if ((UsageMask & 0b0100) != 0) Contact2.Iterate(ref Body1.Data, ref Body2.Data, IsSpeculative);
+        if ((UsageMask & 0b1000) != 0) Contact3.Iterate(ref Body1.Data, ref Body2.Data, IsSpeculative);
     }
 
     public int UpdatePosition()
@@ -288,34 +290,16 @@ public struct ContactData
             Body2Static = 1 << 3
         }
 
-        public Flags Flag;
-
-        public float Bias;
-        public float MassNormal;
-
-        public float AccumulatedTangentImpulse1;
-        public float AccumulatedTangentImpulse2;
-        public float AccumulatedNormalImpulse;
-
-        public float MassTangent1;
-        public float MassTangent2;
-        public float MaxTangentImpulse;
-
         public float Friction;
         public float Penetration;
         public float RestitutionBias;
+        public float Bias;
 
-        internal JVector Normal;
-        internal JVector Tangent1;
-        internal JVector Tangent2;
-
-        private JVector M_n1;
-        private JVector M_t1;
-        private JVector M_tt1;
-
-        private JVector M_n2;
-        private JVector M_t2;
-        private JVector M_tt2;
+        internal Vector128<float> NormalTangentX;
+        internal Vector128<float> NormalTangentY;
+        internal Vector128<float> NormalTangentZ;
+        internal Vector128<float> MassNormalTangent;
+        internal Vector128<float> Accumulated;
 
         internal JVector RealRelPos1;
         internal JVector RealRelPos2;
@@ -323,10 +307,19 @@ public struct ContactData
         public JVector RelativePos1;
         public JVector RelativePos2;
 
+        public Flags Flag;
+
+        public JVector Normal => new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
+        public JVector Tangent1 => new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
+        public JVector Tangent2 => new JVector(NormalTangentX.GetElement(2), NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
+
+        public float AccumulatedNormalImpulse => Accumulated.GetElement(0);
+        public float AccumulatedTangent1Impulse => Accumulated.GetElement(1);
+        public float AccumulatedTangent2Impulse => Accumulated.GetElement(2);
+
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2, in JVector n,
             float penetration, bool newContact, float restitution, float friction)
         {
-            Normal = n;
             Debug.Assert(Math.Abs(n.LengthSquared() - 1.0f) < 1e-3);
 
             JVector.Subtract(point1, b1.Position, out RelativePos1);
@@ -343,14 +336,12 @@ public struct ContactData
                 if (b1.IsStatic || !b1.IsActive) Flag |= Flags.Body1Static;
                 if (b2.IsStatic || !b2.IsActive) Flag |= Flags.Body2Static;
 
-                AccumulatedNormalImpulse = 0;
-                AccumulatedTangentImpulse1 = 0;
-                AccumulatedTangentImpulse2 = 0;
+                Accumulated = Vector128.Create(0.0f);
 
                 JVector dv = b2.Velocity + b2.AngularVelocity % RelativePos2;
                 dv -= b1.Velocity + b1.AngularVelocity % RelativePos1;
 
-                float relNormalVel = JVector.Dot(dv, Normal);
+                float relNormalVel = JVector.Dot(dv, n);
 
                 // Fake restitution
                 if (relNormalVel < -1.0f && (Flag & Flags.NewContact) != 0)
@@ -358,7 +349,7 @@ public struct ContactData
                     Bias = Math.Max(-restitution * relNormalVel, Bias);
                 }
 
-                Tangent1 = dv - Normal * relNormalVel;
+                var Tangent1 = dv - n * relNormalVel;
 
                 float num = Tangent1.LengthSquared();
 
@@ -369,10 +360,14 @@ public struct ContactData
                 }
                 else
                 {
-                    Tangent1 = MathHelper.CreateOrthonormal(Normal);
+                    Tangent1 = MathHelper.CreateOrthonormal(n);
                 }
 
-                Tangent2 = Tangent1 % Normal;
+                var Tangent2 = Tangent1 % n;
+
+                NormalTangentX = Vector128.Create(n.X, Tangent1.X, Tangent2.X, 0);
+                NormalTangentY = Vector128.Create(n.Y, Tangent1.Y, Tangent2.Z, 0);
+                NormalTangentZ = Vector128.Create(n.Z, Tangent1.Z, Tangent2.Z, 0);
 
                 RestitutionBias = 0.0f;
 
@@ -396,14 +391,16 @@ public struct ContactData
 
             JVector.Subtract(p1, p2, out JVector dist);
 
-            Penetration = JVector.Dot(dist, Normal);
+            JVector n = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
+
+            Penetration = JVector.Dot(dist, n);
 
             if (Penetration < -BreakThreshold * 0.1f)
             {
                 return false;
             }
 
-            dist -= Penetration * Normal;
+            dist -= Penetration * n;
             float tangentialOffsetSq = dist.LengthSquared();
 
             if (tangentialOffsetSq > BreakThreshold * BreakThreshold)
@@ -430,143 +427,159 @@ public struct ContactData
             JVector.Add(RelativePos2, b2.Position, out JVector p2);
             JVector.Subtract(p1, p2, out JVector dist);
 
-            // If this is a speculative contact we should not
-            // tinker with the penetration which got scaled
-            // by the speculative relaxation factor before.
+            JVector n = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
+
+            if (!speculative) Penetration = JVector.Dot(dist, n);
+
+            Vector128<float> e1, e2, e3;
+            Vector128<float> f1, f2, f3;
+
             if (!speculative)
-                Penetration = JVector.Dot(dist, Normal);
-
-            // prepare
-            JVector.Cross(RelativePos1, Normal, out JVector tt);
-            JVector.Transform(tt, b1.InverseInertiaWorld, out M_n1);
-
-            JVector.Cross(RelativePos2, Normal, out tt);
-            JVector.Transform(tt, b2.InverseInertiaWorld, out M_n2);
-
-            // --- tangent
-            JVector.Cross(RelativePos1, Tangent1, out tt);
-            JVector.Transform(tt, b1.InverseInertiaWorld, out M_t1);
-
-            JVector.Cross(RelativePos2, Tangent1, out tt);
-            JVector.Transform(tt, b2.InverseInertiaWorld, out M_t2);
-
-            JVector.Cross(RelativePos1, Tangent2, out tt);
-            JVector.Transform(tt, b1.InverseInertiaWorld, out M_tt1);
-
-            JVector.Cross(RelativePos2, Tangent2, out tt);
-            JVector.Transform(tt, b2.InverseInertiaWorld, out M_tt2);
-
-            if (speculative)
             {
-                M_n1 = M_n2 = JVector.Zero;
-                M_t1 = M_t2 = JVector.Zero;
-                M_tt1 = M_tt2 = JVector.Zero;
+                var rrx = Vector128.Subtract(Vector128.Multiply(RelativePos1.Y, NormalTangentZ), Vector128.Multiply(RelativePos1.Z, NormalTangentY));
+                var rry = Vector128.Subtract(Vector128.Multiply(RelativePos1.Z, NormalTangentX), Vector128.Multiply(RelativePos1.X, NormalTangentZ));
+                var rrz = Vector128.Subtract(Vector128.Multiply(RelativePos1.X, NormalTangentY), Vector128.Multiply(RelativePos1.Y, NormalTangentX));
+
+                e1 = b1.InverseInertiaWorld.M11 * rrx + b1.InverseInertiaWorld.M12 * rry + b1.InverseInertiaWorld.M13 * rrz;
+                e2 = b1.InverseInertiaWorld.M21 * rrx + b1.InverseInertiaWorld.M22 * rry + b1.InverseInertiaWorld.M23 * rrz;
+                e3 = b1.InverseInertiaWorld.M31 * rrx + b1.InverseInertiaWorld.M32 * rry + b1.InverseInertiaWorld.M33 * rrz;
+
+                rrx = Vector128.Subtract(Vector128.Multiply(RelativePos2.Y, NormalTangentZ), Vector128.Multiply(RelativePos2.Z, NormalTangentY));
+                rry = Vector128.Subtract(Vector128.Multiply(RelativePos2.Z, NormalTangentX), Vector128.Multiply(RelativePos2.X, NormalTangentZ));
+                rrz = Vector128.Subtract(Vector128.Multiply(RelativePos2.X, NormalTangentY), Vector128.Multiply(RelativePos2.Y, NormalTangentX));
+
+                f1 = b2.InverseInertiaWorld.M11 * rrx + b2.InverseInertiaWorld.M12 * rry + b2.InverseInertiaWorld.M13 * rrz;
+                f2 = b2.InverseInertiaWorld.M21 * rrx + b2.InverseInertiaWorld.M22 * rry + b2.InverseInertiaWorld.M23 * rrz;
+                f3 = b2.InverseInertiaWorld.M31 * rrx + b2.InverseInertiaWorld.M32 * rry + b2.InverseInertiaWorld.M33 * rrz;
+            }
+            else
+            {
+                e1 = Vector128.Create(0.0f);
+                e2 = Vector128.Create(0.0f);
+                e3 = Vector128.Create(0.0f);
+                f1 = Vector128.Create(0.0f);
+                f2 = Vector128.Create(0.0f);
+                f3 = Vector128.Create(0.0f);
             }
 
-            float kTangent1 = 0.0f;
-            float kTangent2 = 0.0f;
-            float kNormal = 0.0f;
+            Vector128<float> kNormalTangent = Vector128.Create(b1.InverseMass + b2.InverseMass);
 
-            kTangent1 += b1.InverseMass;
-            kTangent2 += b1.InverseMass;
-            kNormal += b1.InverseMass;
+            var ktnx = e2 * RelativePos1.Z - e3 * RelativePos1.Y + f2 * RelativePos2.Z - f3 * RelativePos2.Y;
+            var knty = e3 * RelativePos1.X - e1 * RelativePos1.Z + f3 * RelativePos2.X - f1 * RelativePos2.Z;
+            var kntz = e1 * RelativePos1.Y - e2 * RelativePos1.X + f1 * RelativePos2.Y - f2 * RelativePos2.X;
 
-            JVector.Cross(M_t1, RelativePos1, out JVector rantra);
-            kTangent1 += JVector.Dot(rantra, Tangent1);
+            var kres = NormalTangentX * ktnx + NormalTangentY * knty + NormalTangentZ * kntz;
+            kNormalTangent += kres;
 
-            JVector.Cross(M_tt1, RelativePos1, out rantra);
-            kTangent2 += JVector.Dot(rantra, Tangent2);
-
-            JVector.Cross(M_n1, RelativePos1, out rantra);
-            kNormal += JVector.Dot(rantra, Normal);
-
-            kTangent1 += b2.InverseMass;
-            kTangent2 += b2.InverseMass;
-            kNormal += b2.InverseMass;
-
-            JVector.Cross(M_t2, RelativePos2, out JVector rbntrb);
-            kTangent1 += JVector.Dot(rbntrb, Tangent1);
-
-            JVector.Cross(M_tt2, RelativePos2, out rbntrb);
-            kTangent2 += JVector.Dot(rbntrb, Tangent2);
-
-            JVector.Cross(M_n2, RelativePos2, out rbntrb);
-            kNormal += JVector.Dot(rbntrb, Normal);
-
-            MassTangent1 = 1.0f / kTangent1;
-            MassTangent2 = 1.0f / kTangent2;
-            MassNormal = 1.0f / kNormal;
+            MassNormalTangent = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
 
             Bias = RestitutionBias;
             RestitutionBias = 0;
 
-            // Speculative Contacts!
-            if (Penetration < -BreakThreshold)
-            {
-                // no restitution for speculative contacts
-                Bias = Penetration * idt;
-            }
-
             if (Penetration > AllowedPenetration)
             {
-                Bias = Math.Max(Bias,
-                    BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
+                Bias = Math.Max(Bias, BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
                 Bias = Math.Clamp(Bias, 0.0f, MaximumBias);
             }
 
             // warmstarting
-            JVector impulse = Normal * AccumulatedNormalImpulse + Tangent1 * AccumulatedTangentImpulse1 +
-                              Tangent2 * AccumulatedTangentImpulse2;
+            Unsafe.SkipInit(out JVector fimpulse);
+            fimpulse.X = Vector128.Sum(Vector128.Multiply(Accumulated, NormalTangentX));
+            fimpulse.Y = Vector128.Sum(Vector128.Multiply(Accumulated, NormalTangentY));
+            fimpulse.Z = Vector128.Sum(Vector128.Multiply(Accumulated, NormalTangentZ));
 
-            b1.Velocity -= impulse * b1.InverseMass;
-            b1.AngularVelocity -= AccumulatedNormalImpulse * M_n1 + AccumulatedTangentImpulse1 * M_t1 +
-                                  AccumulatedTangentImpulse2 * M_tt1;
+            Unsafe.SkipInit(out JVector aimpulse1);
+            aimpulse1.X = Vector128.Sum(Vector128.Multiply(Accumulated, e1));
+            aimpulse1.Y = Vector128.Sum(Vector128.Multiply(Accumulated, e2));
+            aimpulse1.Z = Vector128.Sum(Vector128.Multiply(Accumulated, e3));
 
-            b2.Velocity += impulse * b2.InverseMass;
-            b2.AngularVelocity += AccumulatedNormalImpulse * M_n2 + AccumulatedTangentImpulse1 * M_t2 +
-                                  AccumulatedTangentImpulse2 * M_tt2;
+            Unsafe.SkipInit(out JVector aimpulse2);
+            aimpulse2.X = Vector128.Sum(Vector128.Multiply(Accumulated, f1));
+            aimpulse2.Y = Vector128.Sum(Vector128.Multiply(Accumulated, f2));
+            aimpulse2.Z = Vector128.Sum(Vector128.Multiply(Accumulated, f3));
+
+            b1.Velocity -= fimpulse * b1.InverseMass;
+            b1.AngularVelocity -= aimpulse1;
+
+            b2.Velocity += fimpulse * b2.InverseMass;
+            b2.AngularVelocity += aimpulse2;
 
             Flag &= ~Flags.NewContact;
         }
 
-        public void Iterate(ref RigidBodyData b1, ref RigidBodyData b2)
+        public void Iterate(ref RigidBodyData b1, ref RigidBodyData b2, bool speculative)
         {
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePos2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePos1;
 
-            float vn = JVector.Dot(Normal, dv);
-            float vt1 = JVector.Dot(Tangent1, dv);
-            float vt2 = JVector.Dot(Tangent2, dv);
+            Vector128<float> e1, e2, e3;
+            Vector128<float> f1, f2, f3;
 
-            float normalImpulse = Bias - vn;
-            normalImpulse *= MassNormal;
+            if (!speculative)
+            {
+                var rrx = Vector128.Subtract(Vector128.Multiply(RelativePos1.Y, NormalTangentZ), Vector128.Multiply(RelativePos1.Z, NormalTangentY));
+                var rry = Vector128.Subtract(Vector128.Multiply(RelativePos1.Z, NormalTangentX), Vector128.Multiply(RelativePos1.X, NormalTangentZ));
+                var rrz = Vector128.Subtract(Vector128.Multiply(RelativePos1.X, NormalTangentY), Vector128.Multiply(RelativePos1.Y, NormalTangentX));
 
-            float oldNormalImpulse = AccumulatedNormalImpulse;
-            AccumulatedNormalImpulse = MathF.Max(oldNormalImpulse + normalImpulse, 0.0f);
-            normalImpulse = AccumulatedNormalImpulse - oldNormalImpulse;
+                e1 = b1.InverseInertiaWorld.M11 * rrx + b1.InverseInertiaWorld.M12 * rry + b1.InverseInertiaWorld.M13 * rrz;
+                e2 = b1.InverseInertiaWorld.M21 * rrx + b1.InverseInertiaWorld.M22 * rry + b1.InverseInertiaWorld.M23 * rrz;
+                e3 = b1.InverseInertiaWorld.M31 * rrx + b1.InverseInertiaWorld.M32 * rry + b1.InverseInertiaWorld.M33 * rrz;
 
-            float maxTangentImpulse = Friction * AccumulatedNormalImpulse;
-            float tangentImpulse1 = MassTangent1 * -vt1;
-            float tangentImpulse2 = MassTangent2 * -vt2;
+                rrx = Vector128.Subtract(Vector128.Multiply(RelativePos2.Y, NormalTangentZ), Vector128.Multiply(RelativePos2.Z, NormalTangentY));
+                rry = Vector128.Subtract(Vector128.Multiply(RelativePos2.Z, NormalTangentX), Vector128.Multiply(RelativePos2.X, NormalTangentZ));
+                rrz = Vector128.Subtract(Vector128.Multiply(RelativePos2.X, NormalTangentY), Vector128.Multiply(RelativePos2.Y, NormalTangentX));
 
-            float oldTangentImpulse = AccumulatedTangentImpulse1;
-            AccumulatedTangentImpulse1 = oldTangentImpulse + tangentImpulse1;
-            AccumulatedTangentImpulse1 = Math.Clamp(AccumulatedTangentImpulse1, -maxTangentImpulse, maxTangentImpulse);
-            tangentImpulse1 = AccumulatedTangentImpulse1 - oldTangentImpulse;
+                f1 = b2.InverseInertiaWorld.M11 * rrx + b2.InverseInertiaWorld.M12 * rry + b2.InverseInertiaWorld.M13 * rrz;
+                f2 = b2.InverseInertiaWorld.M21 * rrx + b2.InverseInertiaWorld.M22 * rry + b2.InverseInertiaWorld.M23 * rrz;
+                f3 = b2.InverseInertiaWorld.M31 * rrx + b2.InverseInertiaWorld.M32 * rry + b2.InverseInertiaWorld.M33 * rrz;
+            }
+            else
+            {
+                e1 = Vector128.Create(0.0f);
+                e2 = Vector128.Create(0.0f);
+                e3 = Vector128.Create(0.0f);
+                f1 = Vector128.Create(0.0f);
+                f2 = Vector128.Create(0.0f);
+                f3 = Vector128.Create(0.0f);
+            }
 
-            float oldTangentImpulse2 = AccumulatedTangentImpulse2;
-            AccumulatedTangentImpulse2 = oldTangentImpulse2 + tangentImpulse2;
-            AccumulatedTangentImpulse2 = Math.Clamp(AccumulatedTangentImpulse2, -maxTangentImpulse, maxTangentImpulse);
-            tangentImpulse2 = AccumulatedTangentImpulse2 - oldTangentImpulse2;
+            var vdots = NormalTangentX * dv.X + NormalTangentY * dv.Y + NormalTangentZ * dv.Z;
 
-            // Apply contact impulse
-            JVector impulse = normalImpulse * Normal + tangentImpulse1 * Tangent1 + tangentImpulse2 * Tangent2;
+            Vector128<float> biasMinusvdots = Vector128.Create(Bias, 0, 0, 0) - vdots;
 
-            b1.Velocity -= b1.InverseMass * impulse;
-            b1.AngularVelocity -= normalImpulse * M_n1 + tangentImpulse1 * M_t1 + tangentImpulse2 * M_tt1;
+            var impulse = MassNormalTangent * biasMinusvdots;
+            var oldImpulse = Accumulated;
 
-            b2.Velocity += b2.InverseMass * impulse;
-            b2.AngularVelocity += normalImpulse * M_n2 + tangentImpulse1 * M_t2 + tangentImpulse2 * M_tt2;
+            float maxTangentImpulse = Friction * Accumulated.GetElement(0);
+
+            Accumulated = oldImpulse + impulse;
+
+            var minImpulse = Vector128.Create(0, -maxTangentImpulse, -maxTangentImpulse, 0);
+            var maxImpulse = Vector128.Create(float.MaxValue, maxTangentImpulse, maxTangentImpulse, 0);
+
+            Accumulated = Vector128.Min(Vector128.Max(Accumulated, minImpulse), maxImpulse);
+            impulse = Accumulated - oldImpulse;
+
+            Unsafe.SkipInit(out JVector fimpulse);
+            fimpulse.X = Vector128.Sum(Vector128.Multiply(impulse, NormalTangentX));
+            fimpulse.Y = Vector128.Sum(Vector128.Multiply(impulse, NormalTangentY));
+            fimpulse.Z = Vector128.Sum(Vector128.Multiply(impulse, NormalTangentZ));
+
+            Unsafe.SkipInit(out JVector aimpulse1);
+            aimpulse1.X = Vector128.Sum(Vector128.Multiply(impulse, e1));
+            aimpulse1.Y = Vector128.Sum(Vector128.Multiply(impulse, e2));
+            aimpulse1.Z = Vector128.Sum(Vector128.Multiply(impulse, e3));
+
+            Unsafe.SkipInit(out JVector aimpulse2);
+            aimpulse2.X = Vector128.Sum(Vector128.Multiply(impulse, f1));
+            aimpulse2.Y = Vector128.Sum(Vector128.Multiply(impulse, f2));
+            aimpulse2.Z = Vector128.Sum(Vector128.Multiply(impulse, f3));
+
+            b1.Velocity -= b1.InverseMass * fimpulse;
+            b1.AngularVelocity -= aimpulse1;
+
+            b2.Velocity += b2.InverseMass * fimpulse;
+            b2.AngularVelocity += aimpulse2;
         }
     }
 }
