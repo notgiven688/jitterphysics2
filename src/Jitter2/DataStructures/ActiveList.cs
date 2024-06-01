@@ -129,7 +129,12 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public void Clear()
     {
-        Array.Clear(elements, 0, Count);
+        for (int i = 0; i < Count; i++) 
+        {
+            elements[i].ListIndex = -1;
+            elements[i] = null!;
+        }
+        
         Count = 0;
         Active = 0;
     }
@@ -188,8 +193,15 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         Debug.Assert(element.ListIndex != -1);
 
         MoveToInactive(element);
+
+        int li = element.ListIndex;
+        
         Count -= 1;
-        Swap(Count, element.ListIndex);
+
+        elements[li] = elements[Count];
+        elements[li].ListIndex = li;
+        elements[Count] = null!;
+
         element.ListIndex = -1;
     }
 
