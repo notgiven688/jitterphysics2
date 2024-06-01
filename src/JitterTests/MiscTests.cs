@@ -14,49 +14,36 @@ public class MiscTests
     public static void SlimBagTest()
     {
         var bag= new SlimBag<object>();
-
         bag.Add(new object());
         bag.Add(new object());
         bag.Add(new object());
-
         bag.Clear();
         Assert.That(bag[0], Is.Not.EqualTo(null));
-
         bag.NullOut();
         Assert.That(bag[0], Is.EqualTo(null));
-
         bag.Add(new object());
         bag.Add(new object());
-
         bag.RemoveAt(1);
         Assert.That(bag[0], Is.Not.EqualTo(null));
         Assert.That(bag[1], Is.Not.EqualTo(null));
-
         bag.NullOut();
         Assert.That(bag[0], Is.Not.EqualTo(null));
         Assert.That(bag[1], Is.EqualTo(null));
-
         bag.Clear();
         bag.NullOut();
-
         bag.Add(new object());
         bag.Add(new object());
         bag.Add(new object());
-
         bag.NullOutOne();
-
         Assert.That(bag[0], Is.Not.EqualTo(null));
         Assert.That(bag[1], Is.Not.EqualTo(null));
         Assert.That(bag[2], Is.Not.EqualTo(null));
-
         bag.NullOutOne();
+        bag.RemoveAt(1);
         Assert.That(bag[2], Is.Not.EqualTo(null));
-
         bag.NullOutOne();
         Assert.That(bag[2], Is.EqualTo(null));
-
         bag.NullOutOne();
-
         Assert.That(bag[0], Is.Not.EqualTo(null));
         Assert.That(bag[1], Is.Not.EqualTo(null));
         Assert.That(bag[2], Is.EqualTo(null));
