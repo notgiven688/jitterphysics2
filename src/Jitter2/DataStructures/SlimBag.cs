@@ -160,4 +160,13 @@ internal class SlimBag<T>
         Array.Clear(array, counter, nullOut - counter);
         nullOut = counter;
     }
+
+    /// <summary>
+    /// Null out a single position in the internal array.
+    /// </summary>
+    public void NullOutOne()
+    {
+        if(nullOut <= counter) return;
+        array[--nullOut] = default!;
+    }
 }

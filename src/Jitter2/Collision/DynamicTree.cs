@@ -37,7 +37,7 @@ namespace Jitter2.Collision;
 /// <typeparam name="T">The type of elements stored in the dynamic tree.</typeparam>
 public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 {
-    private SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
+    private volatile SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
 
     private readonly ActiveList<T> activeList;
 
@@ -466,6 +466,11 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
             // else proxy is well contained within the nodes expanded Box:
         }
+
+        // Make sure we do not hold too many dangling references
+        // in the internal array of the SlimBag<T> data structure which might
+        // prevent GC. But do only free them one-by-one to prevent overhead.
+        list.NullOutOne();
     }
 
     private void ScanForOverlaps(int fraction, bool add)
