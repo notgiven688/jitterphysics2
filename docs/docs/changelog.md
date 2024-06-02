@@ -5,7 +5,7 @@ sidebar_position: 5
 # Changelog
 
 ### Jitter 2.3.1 (06-02-2024)
-- ReadOnly data structures (ReadOnlyList, ReadOnlyHashset) are now structs.
+- ReadOnly wrappers (ReadOnlyList, ReadOnlyHashset) are now structs.
 - Shapes with very small dimensions might have close to zero or zero mass/inertia. Creating rigid bodies from them now throws an exception (use body.AddShape(shape, setMassInertia: false) to not use the shape's mass properties).
 - BeginCollide and EndCollide events per body.
 
