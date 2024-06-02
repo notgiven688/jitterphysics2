@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.3.1 (06-02-2024)
+- ReadOnly wrappers (ReadOnlyList, ReadOnlyHashset) are now structs.
+- Shapes with very small dimensions might have close to zero or zero mass/inertia. Creating rigid bodies from them now throws an exception (use body.AddShape(shape, setMassInertia: false) to not use the shape's mass properties).
+- BeginCollide and EndCollide events per body.
+
 ### Jitter 2.3.0 (05-20-2024)
 - Added RigidBody.RemoveShape overload to remove multiple shapes at once.
 - Marked Rigid.ClearShapes deprecated.
