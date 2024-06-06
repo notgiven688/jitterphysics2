@@ -224,7 +224,7 @@ public partial class World
 
         for (int i = 0; i < phs.Slots.Length / divisions; i++)
         {
-            int t = i * stepper % phs.Slots.Length;
+            int t = (int)((i * divisions + stepper) % phs.Slots.Length);
 
             var n = phs.Slots[t];
             if (n.ID == 0) continue;
