@@ -58,7 +58,7 @@ public partial class World
     private Action<Parallel.Batch> updateShapes;
     private Action<Parallel.Batch> detectCollisions;
 
-    private int stepper;
+    private uint stepper;
 
     private void InitParallelCallbacks()
     {
