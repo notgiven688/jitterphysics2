@@ -16,9 +16,12 @@ public static class Program
         Console.WriteLine(ex.Message);
     }
 
-    public static void Main()
+    public unsafe static void Main()
     {
         CreationSettings cs = new(1200, 800, "JitterDemo");
+
+        Console.WriteLine(sizeof(Jitter2.Dynamics.ContactData.Contact));
+        Console.WriteLine(sizeof(Jitter2.Dynamics.ContactData));
 
         try
         {

@@ -34,6 +34,7 @@ namespace Jitter2.Dynamics;
 /// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
 /// by one of these structs.
 /// </summary>
+[StructLayout(LayoutKind.Sequential)]
 public struct ContactData
 {
 #pragma warning disable CS0649
@@ -48,15 +49,15 @@ public struct ContactData
 
     public ArbiterKey Key;
 
-    private float Friction;
-    private float Restitution;
-
-    public bool IsSpeculative;
-
     public Contact Contact0;
     public Contact Contact1;
     public Contact Contact2;
     public Contact Contact3;
+
+    private float Friction;
+    private float Restitution;
+
+    public bool IsSpeculative;
 
     public void PrepareForIteration(float dt)
     {
