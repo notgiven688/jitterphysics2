@@ -184,7 +184,7 @@ public struct JQuaternion
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisX()
     {
-        Unsafe.SkipInit(out JVector result);
+        JVector result;
 
         result.X = 1.0f - 2.0f * (Y * Y + Z * Z);
         result.Y = 2.0f * (X * Y + Z * W);
@@ -199,7 +199,7 @@ public struct JQuaternion
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisY()
     {
-        Unsafe.SkipInit(out JVector result);
+        JVector result;
 
         result.X = 2.0f * (X * Y - Z * W);
         result.Y = 1.0f - 2.0f * (X * X + Z * Z);
@@ -214,7 +214,7 @@ public struct JQuaternion
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisZ()
     {
-        Unsafe.SkipInit(out JVector result);
+        JVector result;
 
         result.X = 2.0f * (X * Z + Y * W);
         result.Y = 2.0f * (Y * Z - X * W);
@@ -317,8 +317,7 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
-        Unsafe.SkipInit(out JQuaternion result);
-        ConjugateMultiply(quaternion1, quaternion2, out result);
+        ConjugateMultiply(quaternion1, quaternion2, out JQuaternion result);
         return result;
     }
 
@@ -355,8 +354,7 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
-        Unsafe.SkipInit(out JQuaternion result);
-        MultiplyConjugate(quaternion1, quaternion2, out result);
+        MultiplyConjugate(quaternion1, quaternion2, out JQuaternion result);
         return result;
     }
 
