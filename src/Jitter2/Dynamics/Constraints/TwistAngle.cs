@@ -99,7 +99,7 @@ public unsafe class TwistAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        data.Q0 = q2.Conj() * q1;
+        data.Q0 = q2.Conjugate() * q1;
     }
 
     /// <summary>
@@ -122,9 +122,9 @@ public unsafe class TwistAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JMatrix m = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conj(), q2);
+        JMatrix m = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
-        JQuaternion q = data.Q0 * q1.Conj() * q2;
+        JQuaternion q = data.Q0 * q1.Conjugate() * q2;
 
         data.Jacobian = JVector.TransposedTransform(data.B, m);
 
@@ -174,7 +174,7 @@ public unsafe class TwistAngle : Constraint
             JQuaternion q1 = data.Body1.Data.Orientation;
             JQuaternion q2 = data.Body2.Data.Orientation;
 
-            JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
+            JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
             if (quat0.W < 0.0f)
             {
