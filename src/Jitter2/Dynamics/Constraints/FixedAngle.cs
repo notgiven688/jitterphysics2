@@ -84,7 +84,7 @@ public unsafe class FixedAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        data.Q0 = q2.Conj() * q1;
+        data.Q0 = q2.Conjugate() * q1;
     }
 
     public static void PrepareForIteration(ref ConstraintData constraint, float idt)
@@ -97,13 +97,13 @@ public unsafe class FixedAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
+        JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
         JVector error = new(quat0.X, quat0.Y, quat0.Z);
 
         data.Clamp = 1024;
 
-        data.Jacobian = QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conj(), q2);
+        data.Jacobian = QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
         if (quat0.W < 0.0f)
         {

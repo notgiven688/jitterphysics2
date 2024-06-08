@@ -99,7 +99,7 @@ public unsafe class HingeAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        data.Q0 = q2.Conj() * q1;
+        data.Q0 = q2.Conjugate() * q1;
     }
 
     public AngularLimit Limit
@@ -125,7 +125,7 @@ public unsafe class HingeAngle : Constraint
         JVector p0 = MathHelper.CreateOrthonormal(data.Axis);
         JVector p1 = data.Axis % p0;
 
-        JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
+        JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
         JVector error;
         error.X = JVector.Dot(p0, new JVector(quat0.X, quat0.Y, quat0.Z));
@@ -134,7 +134,7 @@ public unsafe class HingeAngle : Constraint
 
         data.Clamp = 0;
 
-        JMatrix m0 = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conj(), q2);
+        JMatrix m0 = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
         if (quat0.W < 0.0f)
         {
@@ -196,7 +196,7 @@ public unsafe class HingeAngle : Constraint
             JQuaternion q1 = data.Body1.Data.Orientation;
             JQuaternion q2 = data.Body2.Data.Orientation;
 
-            JQuaternion quat0 = data.Q0 * q1.Conj() * q2;
+            JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
             if (quat0.W < 0.0f)
             {
