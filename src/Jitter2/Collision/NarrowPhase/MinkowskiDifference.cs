@@ -31,7 +31,7 @@ namespace Jitter2.Collision;
 /// between two support functions: SupportA and SupportB. SupportB is transformed according to the specified
 /// OrientationB and PositionB.
 /// </summary>
-public struct MinkowskiDifference
+internal struct MinkowskiDifference
 {
     public ISupportMap SupportA, SupportB;
     public JMatrix OrientationB;
