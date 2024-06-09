@@ -417,15 +417,25 @@ public struct JMatrix
         float j = quaternion.Y;
         float k = quaternion.Z;
 
-        result.M11 = 1.0f - 2.0f * (j * j + k * k);
-        result.M12 = 2.0f * (i * j - k * r);
-        result.M13 = 2.0f * (i * k + j * r);
-        result.M21 = 2.0f * (i * j + k * r);
-        result.M22 = 1.0f - 2.0f * (i * i + k * k);
-        result.M23 = 2.0f * (j * k - i * r);
-        result.M31 = 2.0f * (i * k - j * r);
-        result.M32 = 2.0f * (j * k + i * r);
-        result.M33 = 1.0f - 2.0f * (i * i + j * j);
+        float ii = i * i;
+        float jj = j * j;
+        float kk = k * k;
+        float ij = i * j;
+        float ik = i * k;
+        float ir = i * r;
+        float jk = j * k;
+        float jr = j * r;
+        float kr = k * r;
+
+        result.M11 = 1.0f - 2.0f * (jj + kk);
+        result.M12 = 2.0f * (ij - kr);
+        result.M13 = 2.0f * (ik + jr);
+        result.M21 = 2.0f * (ij + kr);
+        result.M22 = 1.0f - 2.0f * (ii + kk);
+        result.M23 = 2.0f * (jk - ir);
+        result.M31 = 2.0f * (ik - jr);
+        result.M32 = 2.0f * (jk + ir);
+        result.M33 = 1.0f - 2.0f * (ii + jj);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

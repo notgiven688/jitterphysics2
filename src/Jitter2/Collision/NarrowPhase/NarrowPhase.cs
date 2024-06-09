@@ -720,21 +720,24 @@ public static class NarrowPhase
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
 
-        // rotate into the reference frame of bodyA..
-        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
+        // Switch to matrix representation, since matrix-vector multiplication is fast,
+        // also rotate into the reference frame of bodyA..
+        JMatrix moA = JMatrix.CreateFromQuaternion(orientationA);
+        mkd.OrientationB = JMatrix.CreateFromQuaternion(JQuaternion.ConjugateMultiply(orientationA, orientationB));
+
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, moA, out mkd.PositionB);
 
         // ..perform collision detection..
         bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
 
         // ..rotate back. this hopefully saves some matrix vector multiplication
         // when calling the support function multiple times.
-        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Transform(pointA, moA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
-        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Transform(pointB, moA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
-        JVector.Transform(normal, orientationA, out normal);
+        JVector.Transform(normal, moA, out normal);
 
         return success;
     }
@@ -769,20 +772,24 @@ public static class NarrowPhase
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
 
-        // rotate into the reference frame of bodyA..
-        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
+        // Switch to matrix representation, since matrix-vector multiplication is fast,
+        // also rotate into the reference frame of bodyA..
+        JMatrix moA = JMatrix.CreateFromQuaternion(orientationA);
+        mkd.OrientationB = JMatrix.CreateFromQuaternion(JQuaternion.ConjugateMultiply(orientationA, orientationB));
+
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, moA, out mkd.PositionB);
 
         // ..perform collision detection..
         bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
 
-        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
-        JVector.Transform(pointA, orientationA, out pointA);
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication
+        // when the support function is called multiple times.
+        JVector.Transform(pointA, moA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
-        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Transform(pointB, moA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
-        JVector.Transform(normal, orientationA, out normal);
+        JVector.Transform(normal, moA, out normal);
 
         return res;
     }
@@ -815,7 +822,7 @@ public static class NarrowPhase
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
         mkd.PositionB = positionB;
-        mkd.OrientationB = orientationB;
+        mkd.OrientationB = JMatrix.CreateFromQuaternion(orientationB);
 
         // ..perform collision detection..
         bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
@@ -842,14 +849,17 @@ public static class NarrowPhase
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
 
-        // rotate into the reference frame of bodyA..
-        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
+        // Switch to matrix representation, since matrix-vector multiplication is fast,
+        // also rotate into the reference frame of bodyA..
+        JMatrix moA = JMatrix.CreateFromQuaternion(orientationA);
+        mkd.OrientationB = JMatrix.CreateFromQuaternion(JQuaternion.ConjugateMultiply(orientationA, orientationB));
+
         JVector.Subtract(positionB, positionA, out mkd.PositionB);
-        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+        JVector.TransposedTransform(mkd.PositionB, moA, out mkd.PositionB);
 
         // we also transform the relative velocities
         JVector sweep = sweepB - sweepA;
-        JVector.ConjugatedTransform(sweep, orientationA, out sweep);
+        JVector.TransposedTransform(sweep, moA, out sweep);
 
         // ..perform toi calculation
         bool res = solver.SweepTest(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
@@ -858,11 +868,11 @@ public static class NarrowPhase
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is
         // called multiple times.
-        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Transform(pointA, moA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
-        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Transform(pointB, moA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
-        JVector.Transform(normal, orientationA, out normal);
+        JVector.Transform(normal, moA, out normal);
 
         // transform back from the relative velocities
         pointA += fraction * sweepA;
@@ -888,7 +898,7 @@ public static class NarrowPhase
         mkd.SupportA = supportA;
         mkd.SupportB = supportB;
         mkd.PositionB = positionB;
-        mkd.OrientationB = orientationB;
+        mkd.OrientationB = JMatrix.CreateFromQuaternion(orientationB);
 
         // ..perform toi calculation
         return solver.SweepTest(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
