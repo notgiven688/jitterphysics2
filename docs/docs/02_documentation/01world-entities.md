@@ -17,7 +17,7 @@ It is not valid to add the same instance of a shape to multiple bodies.
 
 :::info Order of Initialization
 When calling `body.AddShape(shape)`, the shape is registered in the collision system of the engine and added to the spatial tree structure (AABB-tree) for efficient broad-phase collision detection. Make sure to not accidentally register many objects at (0, 0, 0). This may happen by repeatedly calling `body.AddShape`, before specifying the positions of the associated rigid bodies.
-:::info
+:::
 
 Constraints are another type of entities that can be explicitly added to the world using `world.CreateConstraint<T>(body1, body2)`, where T is a constraint. In the following example, two constraints (a HingeAngle and a BallSocket constraint) are added:
 
@@ -33,7 +33,7 @@ ballSocket.Initialize(hingeCenter);
 
 :::caution Constraint Initialization
 For all default constraints available in Jitter, `constraint.Initialize` must be called once after `world.CreateConstraint`.
-:::caution
+:::
 
 ### Accessing Entities
 
@@ -82,4 +82,4 @@ Removing a rigid body also removes all constraints and contacts in which the bod
 
 :::caution Accessing Removed Entities
 Instances of `RigidBody`, `Arbiter`, and `Constraint` store some of their data in unmanaged memory, which is automatically freed once the entities are removed from the world. Do not use these entities any longer, i.e., do not call functions or use their properties, otherwise, a NullReferenceException may be thrown.
-:::caution
+:::
