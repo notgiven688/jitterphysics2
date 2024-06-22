@@ -105,10 +105,6 @@ public static class GL
 
     private static glBufferDataDelegate glBufferData;
 
-    private delegate void glReadPixelsDelegate(int x, int y, int width, int height, uint format, uint type, IntPtr data);
-
-    private static glReadPixelsDelegate glReadPixels;
-
     private delegate void glEnableVertexAttribArrayDelegate(uint index);
 
     private static glEnableVertexAttribArrayDelegate glEnableVertexAttribArray;
@@ -385,7 +381,6 @@ public static class GL
         glUniform4fv = GetDelegate<glUniform4fvDelegate>();
         glUniformMatrix4fv = GetDelegate<glUniformMatrix4fvDelegate>();
         glBufferData = GetDelegate<glBufferDataDelegate>();
-        glReadPixels = GetDelegate<glReadPixelsDelegate>();
         glVertexAttribPointer = GetDelegate<glVertexAttribPointerDelegate>();
         glTexParameterfv = GetDelegate<glTexParameterfvDelegate>();
         glPolygonMode = GetDelegate<glPolygonModeDelegate>();
@@ -710,11 +705,6 @@ public static class GL
     public static void BufferData(uint target, int size, IntPtr data, uint usage)
     {
         glBufferData(target, size, data, usage);
-    }
-
-    public static void ReadPixels(int x, int y, int width, int height, uint format, uint type, IntPtr data)
-    {
-        glReadPixels(x, y, width, height, format, type, data);
     }
 
     public static void VertexAttribPointer(uint index, int size, uint type, bool normalized, int stride, IntPtr pointer)
