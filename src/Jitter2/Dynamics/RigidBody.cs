@@ -272,9 +272,27 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     private void Move()
     {
         UpdateWorldInertia();
+
         foreach (Shape shape in shapes)
         {
             World.UpdateShape(shape);
+        }
+
+        if(IsStatic)
+        {
+            // also activate contacts/constraints we are connected with
+
+            foreach(var constraint in constraints)
+            {
+                World.ActivateBodyNextStep(constraint.Body1);
+                World.ActivateBodyNextStep(constraint.Body2);
+            }
+
+            foreach(var contact in contacts)
+            {
+                World.ActivateBodyNextStep(contact.Body1);
+                World.ActivateBodyNextStep(contact.Body2);
+            }
         }
 
         World.ActivateBodyNextStep(this);
