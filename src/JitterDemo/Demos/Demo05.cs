@@ -30,6 +30,8 @@ public class Demo05 : IDemo
 
     private Player player = null!;
 
+    private RigidBody level = null!;
+
     public List<Shape> CreateShapes()
     {
         var indices = tm.mesh.Indices;
@@ -67,10 +69,10 @@ public class Demo05 : IDemo
         
         pg.ResetScene();
 
-        RigidBody body = world.CreateRigidBody();
-        body.AddShape(CreateShapes());
-        body.Position = new JVector(0, 0, 0);
-        body.IsStatic = true;
+        level = world.CreateRigidBody();
+        level.AddShape(CreateShapes());
+        level.Position = new JVector(0, 0, 0);
+        level.IsStatic = true;
 
         Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
 
@@ -79,7 +81,7 @@ public class Demo05 : IDemo
 
     public void Draw()
     {
-        tm.PushMatrix(Matrix4.Identity, new Vector3(0.35f, 0.35f, 0.35f));
+        tm.PushMatrix(Conversion.FromJitter(level), new Vector3(0.35f, 0.35f, 0.35f));
 
         Keyboard kb = Keyboard.Instance;
 
