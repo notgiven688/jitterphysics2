@@ -32,6 +32,6 @@ public static class ColorGenerator
 
     public static Vector3 GetColor(int seed)
     {
-        return buffer[seed % NumColors];
+        return buffer[(uint)seed % NumColors];
     }
 }

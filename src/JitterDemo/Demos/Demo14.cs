@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Jitter2;
 using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -138,6 +139,8 @@ public class Demo14 : IDemo
     private DoubleSphereShape doublesSphere = null!;
     private Icosahedron icosahedron = null!;
 
+    List<RigidBody> demoBodies = null!;
+
     public void Build()
     {
         pg = (Playground)RenderWindow.Instance;
@@ -145,32 +148,56 @@ public class Demo14 : IDemo
 
         pg.ResetScene();
 
-        ellipsoid = new EllipsoidShape();
-        doublesSphere = new DoubleSphereShape();
-        icosahedron = new Icosahedron();
+        demoBodies = new List<RigidBody>();
 
-        var body1 = world.CreateRigidBody();
-        body1.AddShape(ellipsoid);
-        body1.Position = new JVector(-3, 3, 0);
+        for (int i = 0; i < 100; i++)
+        {
+            ellipsoid = new EllipsoidShape();
+            doublesSphere = new DoubleSphereShape();
+            icosahedron = new Icosahedron();
 
-        var body2 = world.CreateRigidBody();
-        body2.AddShape(doublesSphere);
-        body2.Position = new JVector(0, 3, 0);
+            var body1 = world.CreateRigidBody();
+            body1.AddShape(ellipsoid);
+            body1.Position = new JVector(-3, 3 + i * 5, 0);
+            demoBodies.Add(body1);
 
-        var body3 = world.CreateRigidBody();
-        body3.AddShape(icosahedron);
-        body3.Position = new JVector(3, 3, 0);
+            var body2 = world.CreateRigidBody();
+            body2.AddShape(doublesSphere);
+            body2.Position = new JVector(0, 3 + i * 5, 0);
+            demoBodies.Add(body2);
+
+            var body3 = world.CreateRigidBody();
+            body3.AddShape(icosahedron);
+            body3.Position = new JVector(3, 3 + i * 5, 0);
+            demoBodies.Add(body3);
+        }
+
     }
 
     public void Draw()
     {
         var cesd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<EllipsoidShape>>();
-        cesd.PushMatrix(Conversion.FromJitter(ellipsoid.RigidBody!), Vector3.UnitX);
-
         var rbsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<DoubleSphereShape>>();
-        rbsd.PushMatrix(Conversion.FromJitter(doublesSphere.RigidBody!), Vector3.UnitY);
-
         var icsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<Icosahedron>>();
-        icsd.PushMatrix(Conversion.FromJitter(icosahedron.RigidBody!), Vector3.UnitZ);
+
+        foreach(var body in demoBodies)
+        {
+            var color = ColorGenerator.GetColor(body.GetHashCode());
+            if (!body.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
+
+            switch (body.Shapes[0])
+            {
+                case EllipsoidShape:
+                    cesd.PushMatrix(Conversion.FromJitter(body), color);
+                    break;
+                case DoubleSphereShape:
+                    rbsd.PushMatrix(Conversion.FromJitter(body), color);
+                    break;
+                case Icosahedron:
+                    icsd.PushMatrix(Conversion.FromJitter(body), color);
+                    break;
+            }
+        }
+
     }
 }
