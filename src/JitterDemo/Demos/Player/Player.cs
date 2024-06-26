@@ -78,18 +78,13 @@ public class Player
     {
         preFilter ??= FilterShape;
 
-        // looks complicated but isn't
-
         foreach(var contact in Body.Contacts)
         {
-            // go through all contacts the player is involved with
+            // go through all contacts of the player
 
             var cd = contact.Handle.Data;
-
             int numContacts = 0;
-
             hitPoint = JVector.Zero;
-            JVector force = JVector.Zero;
 
             // a contact may contain up to four contact points,
             // see which one are active and sum the relative positions up
@@ -100,7 +95,6 @@ public class Player
                 if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos1; numContacts++; }
                 if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos1; numContacts++; }
                 if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos1; numContacts++; }
-
                 floor = contact.Body2;
             }
             else
@@ -109,7 +103,6 @@ public class Player
                 if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos2; numContacts++; }
                 if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos2; numContacts++; }
                 if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos2; numContacts++; }
-
                 floor = contact.Body1;
             }
 
