@@ -74,9 +74,61 @@ public class Player
         return true;
     }
     
-    private bool IsOnFloor(out Shape? floor, out JVector hitPoint)
+    private bool CanJump(out RigidBody? floor, out JVector hitPoint)
     {
         preFilter ??= FilterShape;
+
+        // looks complicated but isn't
+
+        foreach(var contact in Body.Contacts)
+        {
+            // go through all contacts the player is involved with
+
+            var cd = contact.Handle.Data;
+
+            int numContacts = 0;
+
+            hitPoint = JVector.Zero;
+            JVector force = JVector.Zero;
+
+            // a contact may contain up to four contact points,
+            // see which one are active and sum the relative positions up
+
+            if  (contact.Body1 == Body)
+            {
+                if ((cd.UsageMask & 0b0001) != 0) { hitPoint += cd.Contact0.RelativePos1; numContacts++; }
+                if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos1; numContacts++; }
+                if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos1; numContacts++; }
+                if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos1; numContacts++; }
+
+                floor = contact.Body2;
+            }
+            else
+            {
+                if ((cd.UsageMask & 0b0001) != 0) { hitPoint += cd.Contact0.RelativePos2; numContacts++; }
+                if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos2; numContacts++; }
+                if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos2; numContacts++; }
+                if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos2; numContacts++; }
+
+                floor = contact.Body1;
+            }
+
+            if(numContacts == 0) continue;
+
+            // divide the result by the number of contact points to get the "center" of the contact
+            hitPoint *= (1.0f / (float)numContacts);
+
+            // check if the hitpoint is on the players base
+            if(hitPoint.Y <= -0.9f) return true;
+        }
+
+        hitPoint = JVector.Zero;
+        floor = null;
+
+        return false;
+
+        /*
+        // ...or the more traditional way of using a raycast
 
         bool hit = world.RayCast(Body.Position, -JVector.UnitY, preFilter, null,
             out floor, out JVector normal, out float fraction);
@@ -85,35 +137,36 @@ public class Player
 
         hitPoint = Body.Position - JVector.UnitY * fraction;
         return (hit && delta < 0.04f && floor != null);
+        */
     }
 
     public void Jump()
     {
-        if (IsOnFloor(out Shape? result, out JVector hitPoint))
+        if (CanJump(out RigidBody? floorBody, out JVector hitPoint))
         {
             float newYVel = 5.0f;
 
-            if (result != null && result.RigidBody != null)
+            if (floorBody != null && floorBody != null)
             {
-                newYVel += result.Velocity.Y;
+                newYVel += floorBody.Velocity.Y;
             }
 
             float deltaVel = Body.Velocity.Y - newYVel;
 
             Body.Velocity = new JVector(Body.Velocity.X, newYVel, Body.Velocity.Z);
 
-            if (result!.RigidBody != null && !result.RigidBody.IsStatic)
+            if (floorBody != null && floorBody.IsStatic)
             {
                 float force = Body.Mass * deltaVel * 100.0f;
-                result.RigidBody.SetActivationState(true);
-                result.RigidBody.AddForce(JVector.UnitY * force, hitPoint);
+                floorBody.SetActivationState(true);
+                floorBody.AddForce(JVector.UnitY * force, hitPoint);
             }
         }
     }
 
     public void SetLinearInput(JVector deltaMove)
     {
-        if (!IsOnFloor(out _, out _))
+        if (!CanJump(out _, out _))
         {
             FrictionMotor.IsEnabled = false;
             return;
