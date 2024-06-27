@@ -23,7 +23,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
