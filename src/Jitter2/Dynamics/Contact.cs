@@ -35,9 +35,6 @@ namespace Jitter2.Dynamics;
 /// </summary>
 public struct ContactData
 {
-
-#pragma warning disable CS0649
-
     public const uint MaskContact0 = 0b0001;
     public const uint MaskContact1 = 0b0010;
     public const uint MaskContact2 = 0b0100;
@@ -45,6 +42,7 @@ public struct ContactData
     public const uint MaskContactAll = 0b1111;
 
     // Accessed in unsafe code.
+#pragma warning disable CS0649
     internal int _internal;
 #pragma warning restore CS0649
 
