@@ -510,7 +510,7 @@ public partial class World
         for (int i = 0; i < brokenArbiters.Count; i++)
         {
             var handle = brokenArbiters[i];
-            if (handle.Data.UsageMask == 0)
+            if ((handle.Data.UsageMask & ContactData.MaskContactAll) == 0)
             {
                 Arbiter arb = arbiters[handle.Data.Key];
 
@@ -542,7 +542,7 @@ public partial class World
             ref ContactData cq = ref span[i];
             cq.UpdatePosition();
 
-            if (cq.UsageMask == 0)
+            if ((cq.UsageMask & ContactData.MaskContactAll) == 0)
             {
                 var h = memContacts.GetHandle(ref cq);
                 lock (brokenArbiters)

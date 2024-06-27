@@ -23,7 +23,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
@@ -36,12 +35,29 @@ namespace Jitter2.Dynamics;
 /// </summary>
 public struct ContactData
 {
-#pragma warning disable CS0649
+    public const uint MaskContact0 = 0b0001;
+    public const uint MaskContact1 = 0b0010;
+    public const uint MaskContact2 = 0b0100;
+    public const uint MaskContact3 = 0b1000;
+    public const uint MaskContactAll = 0b1111;
+
     // Accessed in unsafe code.
+#pragma warning disable CS0649
     internal int _internal;
 #pragma warning restore CS0649
 
-    public int UsageMask;
+    /// <summary>
+    /// The least four significant bits indicate which contacts are considered intact (bit set), broken (bit unset).
+    /// Bits 5-8 indicate which contacts were intact/broken during the solving-phase.
+    /// </summary>
+    /// <example>
+    /// A sphere may slide down a ramp. Within one timestep Jitter may detect the collision, create the contact,
+    /// solve the contact, integrate velocities and positions and then consider the contact as broken, since the
+    /// movement orthogonal to the contact normal exceeds a threshold. This results in no intact contact before calling
+    /// <see cref="World.Step(float, bool)"/> and no intact contact after the call. However, the correspondig bit for the
+    /// solver-phase will be set in this scenario.
+    /// </example>
+    public uint UsageMask;
 
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
@@ -60,60 +76,44 @@ public struct ContactData
 
     public void PrepareForIteration(float dt)
     {
-        if ((UsageMask & 0b0001) != 0) Contact0.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & 0b0010) != 0) Contact1.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & 0b0100) != 0) Contact2.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & 0b1000) != 0) Contact3.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
     }
 
     public void Iterate()
     {
-        if ((UsageMask & 0b0001) != 0) Contact0.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b0010) != 0) Contact1.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b0100) != 0) Contact2.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & 0b1000) != 0) Contact3.Iterate(ref Body1.Data, ref Body2.Data);
+        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ref Body1.Data, ref Body2.Data);
+        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ref Body1.Data, ref Body2.Data);
+        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ref Body1.Data, ref Body2.Data);
+        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ref Body1.Data, ref Body2.Data);
     }
 
-    public int UpdatePosition()
+    public void UpdatePosition()
     {
-        int delc = 0;
-        if ((UsageMask & 0b0001) != 0)
+        UsageMask &= MaskContactAll;
+        UsageMask |= UsageMask << 4;
+
+        if ((UsageMask & MaskContact0) != 0)
         {
-            if (!Contact0.UpdatePosition(ref Body1.Data, ref Body2.Data))
-            {
-                delc++;
-                UsageMask &= ~(1 << 0);
-            }
+            if (!Contact0.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact0;
         }
 
-        if ((UsageMask & 0b0010) != 0)
+        if ((UsageMask & MaskContact1) != 0)
         {
-            if (!Contact1.UpdatePosition(ref Body1.Data, ref Body2.Data))
-            {
-                delc++;
-                UsageMask &= ~(1 << 1);
-            }
+            if (!Contact1.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact1;
         }
 
-        if ((UsageMask & 0b0100) != 0)
+        if ((UsageMask & MaskContact2) != 0)
         {
-            if (!Contact2.UpdatePosition(ref Body1.Data, ref Body2.Data))
-            {
-                delc++;
-                UsageMask &= ~(1 << 2);
-            }
+            if (!Contact2.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact2;
         }
 
-        if ((UsageMask & 0b1000) != 0)
+        if ((UsageMask & MaskContact3) != 0)
         {
-            if (!Contact3.UpdatePosition(ref Body1.Data, ref Body2.Data))
-            {
-                delc++;
-                UsageMask &= ~(1 << 3);
-            }
+            if (!Contact3.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact3;
         }
-
-        return delc;
     }
 
     public void Init(RigidBody body1, RigidBody body2)
@@ -155,7 +155,7 @@ public struct ContactData
     /// </summary>
     public void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
-        if (UsageMask == 0b1111)
+        if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
             // All four contacts are in use. Find one candidate to be replaced by the new one.
             SortCachedPoints(point1, point2, normal, penetration);
@@ -165,26 +165,25 @@ public struct ContactData
         // Not all contacts are in use, but the new contact point is close enough
         // to an already existing point. Replace this point by the new one.
 
-        // Neither of the above.
-        if ((UsageMask & 0b0001) == 0)
+        if ((UsageMask & MaskContact0) == 0)
         {
             Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
-            UsageMask |= 1 << 0;
+            UsageMask |= MaskContact0;
         }
-        else if ((UsageMask & 0b0010) == 0)
+        else if ((UsageMask & MaskContact1) == 0)
         {
             Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
-            UsageMask |= 1 << 1;
+            UsageMask |= MaskContact1;
         }
-        else if ((UsageMask & 0b0100) == 0)
+        else if ((UsageMask & MaskContact2) == 0)
         {
             Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
-            UsageMask |= 1 << 2;
+            UsageMask |= MaskContact2;
         }
-        else if ((UsageMask & 0b1000) == 0)
+        else if ((UsageMask & MaskContact3) == 0)
         {
             Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
-            UsageMask |= 1 << 3;
+            UsageMask |= MaskContact3;
         }
     }
 
@@ -218,7 +217,7 @@ public struct ContactData
         float biggestArea = 0;
 
         ref Contact cref = ref Contact0;
-        int index = -1;
+        uint index = 0;
 
         float clsq = CalcArea4Points(rp1,
             Contact1.RelativePos1,
@@ -229,7 +228,7 @@ public struct ContactData
         {
             biggestArea = clsq;
             cref = ref Contact0;
-            index = 0;
+            index = MaskContact0;
         }
 
         clsq = CalcArea4Points(rp1,
@@ -241,7 +240,7 @@ public struct ContactData
         {
             biggestArea = clsq;
             cref = ref Contact1;
-            index = 1;
+            index = MaskContact1;
         }
 
         clsq = CalcArea4Points(rp1,
@@ -253,7 +252,7 @@ public struct ContactData
         {
             biggestArea = clsq;
             cref = ref Contact2;
-            index = 2;
+            index = MaskContact2;
         }
 
         clsq = CalcArea4Points(rp1,
@@ -265,11 +264,11 @@ public struct ContactData
         {
             // not necessary: biggestArea = clsq;
             cref = ref Contact3;
-            index = 3;
+            index = MaskContact3;
         }
 
         cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution, Friction);
-        UsageMask |= 1 << index;
+        UsageMask |= index;
     }
 
     // ---------------------------------------------------------------------------------------------------------
@@ -305,9 +304,9 @@ public struct ContactData
         public float Penetration;
         public float RestitutionBias;
 
-        internal JVector Normal;
-        internal JVector Tangent1;
-        internal JVector Tangent2;
+        public JVector Normal;
+        public JVector Tangent1;
+        public JVector Tangent2;
 
         private JVector M_n1;
         private JVector M_t1;

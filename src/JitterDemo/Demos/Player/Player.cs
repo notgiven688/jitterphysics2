@@ -80,29 +80,30 @@ public class Player
 
         foreach(var contact in Body.Contacts)
         {
-            // go through all contacts of the player
+            // go through all contacts of the capsule (player)
 
             var cd = contact.Handle.Data;
             int numContacts = 0;
             hitPoint = JVector.Zero;
 
             // a contact may contain up to four contact points,
-            // see which one are active and sum the relative positions up
+            // see which ones were used during the last step.
+            uint mask = cd.UsageMask >> 4;
 
             if  (contact.Body1 == Body)
             {
-                if ((cd.UsageMask & 0b0001) != 0) { hitPoint += cd.Contact0.RelativePos1; numContacts++; }
-                if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos1; numContacts++; }
-                if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos1; numContacts++; }
-                if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos1; numContacts++; }
+                if ((mask & ContactData.MaskContact0) != 0) { hitPoint += cd.Contact0.RelativePos1; numContacts++; }
+                if ((mask & ContactData.MaskContact1) != 0) { hitPoint += cd.Contact1.RelativePos1; numContacts++; }
+                if ((mask & ContactData.MaskContact2) != 0) { hitPoint += cd.Contact2.RelativePos1; numContacts++; }
+                if ((mask & ContactData.MaskContact3) != 0) { hitPoint += cd.Contact3.RelativePos1; numContacts++; }
                 floor = contact.Body2;
             }
             else
             {
-                if ((cd.UsageMask & 0b0001) != 0) { hitPoint += cd.Contact0.RelativePos2; numContacts++; }
-                if ((cd.UsageMask & 0b0010) != 0) { hitPoint += cd.Contact1.RelativePos2; numContacts++; }
-                if ((cd.UsageMask & 0b0100) != 0) { hitPoint += cd.Contact2.RelativePos2; numContacts++; }
-                if ((cd.UsageMask & 0b1000) != 0) { hitPoint += cd.Contact3.RelativePos2; numContacts++; }
+                if ((mask & ContactData.MaskContact0) != 0) { hitPoint += cd.Contact0.RelativePos2; numContacts++; }
+                if ((mask & ContactData.MaskContact1) != 0) { hitPoint += cd.Contact1.RelativePos2; numContacts++; }
+                if ((mask & ContactData.MaskContact2) != 0) { hitPoint += cd.Contact2.RelativePos2; numContacts++; }
+                if ((mask & ContactData.MaskContact3) != 0) { hitPoint += cd.Contact3.RelativePos2; numContacts++; }
                 floor = contact.Body1;
             }
 
@@ -112,7 +113,7 @@ public class Player
             hitPoint *= (1.0f / (float)numContacts);
 
             // check if the hitpoint is on the players base
-            if(hitPoint.Y <= -0.9f) return true;
+            if(hitPoint.Y <= -0.8f) return true;
         }
 
         hitPoint = JVector.Zero;
