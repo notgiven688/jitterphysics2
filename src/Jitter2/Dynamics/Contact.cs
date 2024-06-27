@@ -307,9 +307,9 @@ public struct ContactData
         public float Penetration;
         public float RestitutionBias;
 
-        internal JVector Normal;
-        internal JVector Tangent1;
-        internal JVector Tangent2;
+        public JVector Normal;
+        public JVector Tangent1;
+        public JVector Tangent2;
 
         private JVector M_n1;
         private JVector M_t1;
