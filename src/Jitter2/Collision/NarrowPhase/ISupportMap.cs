@@ -37,7 +37,7 @@ public interface ISupportMap
     void SupportMap(in JVector direction, out JVector result);
 
     /// <summary>
-    /// Returns a point within the shape. This is used in algorithms which work with the implicit
+    /// Returns a point deep within the shape. This is used in algorithms which work with the implicit
     /// definition of the support map function. The center of mass is a good choice.
     /// </summary>
     void PointWithin(out JVector point);
