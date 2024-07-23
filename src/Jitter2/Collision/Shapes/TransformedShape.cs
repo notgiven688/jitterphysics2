@@ -131,6 +131,12 @@ public class TransformedShape : Shape
         }
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        OriginalShape.PointWithin(out point);
+        point = JVector.Transform(point, transformation) + translation;
+    }
+
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
         OriginalShape.CalculateMassInertia(out JMatrix oinertia, out JVector ocom, out mass);
