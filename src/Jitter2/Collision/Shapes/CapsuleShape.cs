@@ -89,6 +89,11 @@ public class CapsuleShape : Shape
         result.Y += MathF.Sign(direction.Y) * halfLength;
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         JVector delta = halfLength * orientation.GetBasisY();

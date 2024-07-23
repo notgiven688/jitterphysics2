@@ -62,6 +62,11 @@ public class EllipsoidShape : Shape
         result.Y *= 1.2f;
         result.Z *= 0.4f;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
 }
 
 public class DoubleSphereShape : Shape
@@ -87,6 +92,12 @@ public class DoubleSphereShape : Shape
             result = sphere2 * 0.5f;
         }
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
 }
 
 public class Icosahedron : Shape
@@ -127,6 +138,12 @@ public class Icosahedron : Shape
 
         result = vertices[largestIndex] * 0.5f;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
 }
 
 public class Demo14 : IDemo

@@ -72,6 +72,11 @@ public class CylinderShape : Shape
         UpdateShape();
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void SupportMap(in JVector direction, out JVector result)
     {
         float sigma = (float)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);

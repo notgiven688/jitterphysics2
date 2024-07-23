@@ -174,4 +174,10 @@ public class PointCloudShape : Shape
 
         result = vertices[maxIndex] + shifted;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = cachedCenter;
+    }
+
 }

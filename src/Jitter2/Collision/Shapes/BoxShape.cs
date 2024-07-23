@@ -85,6 +85,11 @@ public class BoxShape : Shape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         JMatrix.Absolute(JMatrix.CreateFromQuaternion(orientation), out JMatrix absm);

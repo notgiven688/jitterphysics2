@@ -100,6 +100,11 @@ public class ConeShape : Shape
         }
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         const float ZeroEpsilon = 1e-12f;

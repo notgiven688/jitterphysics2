@@ -31,6 +31,11 @@ public class VoxelShape : Shape
         result += Position;
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = this.Position;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         // NOTE: We do not support any transformation of the body here.

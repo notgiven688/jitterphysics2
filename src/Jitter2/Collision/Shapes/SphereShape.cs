@@ -64,6 +64,11 @@ public class SphereShape : Shape
         JVector.Multiply(result, radius, out result);
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         box.Min.X = -radius;

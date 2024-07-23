@@ -165,8 +165,5 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     public abstract void SupportMap(in JVector direction, out JVector result);
 
     /// <inheritdoc/>
-    public virtual void PointWithin(out JVector point)
-    {
-        point = JVector.Zero;
-    }
+    public abstract void PointWithin(out JVector point);
 }
