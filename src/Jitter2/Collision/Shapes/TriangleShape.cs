@@ -33,7 +33,7 @@ public class TriangleShape : Shape
     public readonly TriangleMesh Mesh;
     public int Index;
 
-    private readonly JVector geomCen;
+    private JVector center;
 
     /// <summary>
     /// Initializes a new instance of the TriangleShape class.
@@ -45,14 +45,6 @@ public class TriangleShape : Shape
         Mesh = mesh;
         Index = index;
 
-        ref var triangle = ref mesh.Indices[index];
-
-        JVector A = mesh.Vertices[triangle.IndexA];
-        JVector B = mesh.Vertices[triangle.IndexB];
-        JVector C = mesh.Vertices[triangle.IndexC];
-
-        geomCen = 1.0f / 3.0f * (A + B + C);
-
         UpdateShape();
     }
 
@@ -60,7 +52,20 @@ public class TriangleShape : Shape
     {
         inertia = JMatrix.Identity;
         mass = 1;
-        com = geomCen;
+        com = center;
+    }
+
+    public override void UpdateShape()
+    {
+        ref var triangle = ref Mesh.Indices[Index];
+
+        JVector a = Mesh.Vertices[triangle.IndexA];
+        JVector b = Mesh.Vertices[triangle.IndexB];
+        JVector c = Mesh.Vertices[triangle.IndexC];
+
+        center = 1.0f / 3.0f * (a + b + c);
+
+        base.UpdateShape();
     }
 
     /// <summary>
@@ -103,6 +108,11 @@ public class TriangleShape : Shape
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;
+    }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = center;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
