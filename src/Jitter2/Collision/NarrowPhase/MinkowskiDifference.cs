@@ -59,13 +59,13 @@ public struct MinkowskiDifference
     }
 
     /// <summary>
-    /// Retrieves the geometric center of the Minkowski Difference. This point is guaranteed to be within the confines of the Minkowski Difference.
+    /// Retrieves a point within the Minkowski Difference.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void GeometricCenter(out ConvexPolytope.Vertex center)
+    public readonly void PointWithin(out ConvexPolytope.Vertex center)
     {
-        center.A = SupportA.GeometricCenter;
-        center.B = SupportB.GeometricCenter;
+        SupportA.PointWithin(out center.A);
+        SupportB.PointWithin(out center.B);
         JVector.Transform(center.B, OrientationB, out center.B);
         JVector.Add(PositionB, center.B, out center.B);
         JVector.Subtract(center.A, center.B, out center.V);

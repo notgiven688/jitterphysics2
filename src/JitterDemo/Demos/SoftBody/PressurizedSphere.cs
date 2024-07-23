@@ -23,7 +23,7 @@ public class SoftBodySphere : SoftBodyCloth
             result = JVector.Normalize(direction);
         }
 
-        public JVector GeometricCenter => throw new NotImplementedException();
+        public void PointWithin(out JVector point) => throw new NotImplementedException();
     }
 
     private static IEnumerable<JTriangle> GenSphereTriangles(JVector offset)

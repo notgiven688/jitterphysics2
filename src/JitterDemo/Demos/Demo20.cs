@@ -38,9 +38,9 @@ public class CollisionTriangle : ISupportMap
         if (dot > min) { result = C; }
     }
 
-    public JVector GeometricCenter
+    public void PointWithin(out JVector point)
     {
-        get => (1.0f / 3.0f) * (A + B + C);
+        point = (1.0f / 3.0f) * (A + B + C);
     }
 }
 

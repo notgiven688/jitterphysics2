@@ -86,21 +86,17 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
 
     public SoftBody SoftBody { get; }
 
-    public override void UpdateWorldBoundingBox()
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        float extraMargin = MathF.Max(halfThickness, 0.01f);
+        const float extraMargin = 0.01f;
 
-        var box = JBBox.SmallBox;
-        box.AddPoint(v1.Position);
-        box.AddPoint(v2.Position);
-        box.AddPoint(v3.Position);
+        box = JBBox.SmallBox;
+        box.AddPoint(Vertex1.Position);
+        box.AddPoint(Vertex2.Position);
+        box.AddPoint(Vertex3.Position);
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;
-
-        WorldBoundingBox = box;
-
-        GeometricCenter = 1.0f / 3.0f * (v1.Position + v2.Position + v3.Position);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -129,4 +125,10 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
 
         result += JVector.Normalize(direction) * halfThickness;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = (1.0f / 3.0f) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
+    }
+
 }

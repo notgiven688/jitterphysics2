@@ -78,47 +78,17 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// </summary>
     public JBBox WorldBoundingBox { get; protected set; }
 
-    /// <summary>
-    /// The inertia of the shape, assuming a homogeneous unit-mass density.
-    /// The inertia is calculated with respect to the origin, not necessarily the center of mass.
-    /// </summary>
-    public JMatrix Inertia { get; protected set; }
-
-    /// <summary>
-    /// The geometric center of the shape, equivalent to the center of mass when assuming a
-    /// homogeneous unit-mass density.
-    /// </summary>
-    public JVector GeometricCenter { get; protected set; }
-
-    /// <summary>
-    /// The mass of the shape, assuming a homogeneous unit-mass density.
-    /// </summary>
-    public float Mass { get; protected set; }
-
     int IDynamicTreeProxy.NodePtr { get; set; }
 
     public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
 
     /// <summary>
-    /// Updates the mass and inertia properties, as well as the world bounding box. This method should be
+    /// Base class implementation updates the shape's bounding box. This method should be
     /// called by child classes whenever a property of the shape changes, such as the radius of a sphere.
     /// </summary>
-    public void UpdateShape()
+    public virtual void UpdateShape()
     {
-        UpdateMassInertia();
         UpdateWorldBoundingBox();
-    }
-
-    /// <summary>
-    /// Calls <see cref="CalculateMassInertia"/> to set the values of <see cref="Inertia"/>, 
-    /// <see cref="Mass"/>, and <see cref="GeometricCenter"/>.
-    /// </summary>
-    public void UpdateMassInertia()
-    {
-        CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass);
-        Inertia = inertia;
-        Mass = mass;
-        GeometricCenter = com;
     }
 
     /// <summary>
@@ -135,7 +105,7 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// Calls <see cref="CalculateBoundingBox"/> to set the <see cref="WorldBoundingBox"/> in the frame
     /// of the <see cref="RigidBody"/> instance connected to this shape.
     /// </summary>
-    public virtual void UpdateWorldBoundingBox()
+    public void UpdateWorldBoundingBox()
     {
         if (RigidBody == null)
         {
@@ -232,4 +202,10 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
 
     /// <inheritdoc/>
     public abstract void SupportMap(in JVector direction, out JVector result);
+
+    /// <inheritdoc/>
+    public virtual void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
 }

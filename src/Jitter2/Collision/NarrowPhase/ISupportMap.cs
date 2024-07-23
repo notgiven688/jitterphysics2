@@ -37,7 +37,8 @@ public interface ISupportMap
     void SupportMap(in JVector direction, out JVector result);
 
     /// <summary>
-    /// Gets the geometric center of the shape. For a shape with a constant mass density, this represents the center of mass.
+    /// Returns a point within the shape. This is used in algorithms which work with the implicit
+    /// definition of the support map function.
     /// </summary>
-    JVector GeometricCenter { get; }
+    void PointWithin(out JVector point);
 }

@@ -546,8 +546,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         for (int i = 0; i < shapes.Count; i++)
         {
-            inertia += shapes[i].Inertia;
-            mass += shapes[i].Mass;
+            shapes[i].CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
+
+            inertia += shapeInertia;
+            mass += shapeMass;
         }
 
         if (!JMatrix.Inverse(inertia, out inverseInertia))

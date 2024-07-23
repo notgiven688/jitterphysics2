@@ -5,15 +5,17 @@ public class InertiaTests
 {
     private static void Check(Shape shape, JMatrix inertia, JVector com, float mass)
     {
-        JMatrix dInertia = shape.Inertia - inertia;
+        shape.CalculateMassInertia(out JMatrix shapeInertia, out JVector shapeCom, out float shapeMass);
+
+        JMatrix dInertia = shapeInertia - inertia;
         Assert.That(MathHelper.IsZero(dInertia.UnsafeGet(0), 1e-3f));
         Assert.That(MathHelper.IsZero(dInertia.UnsafeGet(1), 1e-3f));
         Assert.That(MathHelper.IsZero(dInertia.UnsafeGet(2), 1e-3f));
 
-        float dmass = shape.Mass - mass;
+        float dmass = shapeMass - mass;
         Assert.That(MathF.Abs(dmass), Is.LessThan(1e-3f));
 
-        JVector dcom = shape.GeometricCenter - com;
+        JVector dcom = shapeCom - com;
         Assert.That(MathHelper.IsZero(dcom, 1e-3f));
     }
 

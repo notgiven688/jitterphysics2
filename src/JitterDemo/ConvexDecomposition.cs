@@ -63,8 +63,10 @@ public class ConvexDecomposition<T> where T : MultiMesh
             }
 
             ConvexHullShape chs = new(hullTriangles);
-            com += chs.GeometricCenter * chs.Mass;
-            totalMass += chs.Mass;
+            chs.CalculateMassInertia(out var cvhInertia, out var cvhCom, out var cvhMass);
+
+            com += cvhCom * cvhMass;
+            totalMass += cvhMass;
             shapesToAdd.Add(chs);
         }
 

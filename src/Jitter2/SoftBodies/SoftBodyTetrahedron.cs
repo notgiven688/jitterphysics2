@@ -94,25 +94,18 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
     public SoftBody SoftBody { get; }
 
-    public override void UpdateWorldBoundingBox()
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         const float extraMargin = 0.01f;
 
-        var box = JBBox.SmallBox;
-        GeometricCenter = JVector.Zero;
-
-        for (int i = 0; i < 4; i++)
-        {
-            box.AddPoint(Vertices[i].Position);
-            GeometricCenter += Vertices[i].Position;
-        }
-
-        GeometricCenter *= 0.25f;
+        box = JBBox.SmallBox;
+        box.AddPoint(Vertices[0].Position);
+        box.AddPoint(Vertices[1].Position);
+        box.AddPoint(Vertices[2].Position);
+        box.AddPoint(Vertices[3].Position);
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;
-
-        WorldBoundingBox = box;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -131,5 +124,11 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
         }
 
         result = Vertices[furthest].Position;
+    }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = 0.25f * (Vertices[0].Position + Vertices[1].Position +
+                        Vertices[1].Position + Vertices[2].Position);
     }
 }
