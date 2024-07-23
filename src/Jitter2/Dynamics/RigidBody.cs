@@ -354,11 +354,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     private void AttachToShape(Shape shape)
     {
-        if (!shape.AttachRigidBody(this))
+        if (shape.RigidBody != null)
         {
-            throw new ArgumentException("Shape has already been added to another body.", nameof(shape));
+            throw new ArgumentException("Shape has already been added to a body.", nameof(shape));
         }
 
+        shape.RigidBody = this;
         shape.UpdateWorldBoundingBox();
         World.AddShape(shape, this.IsActive);
     }
@@ -464,7 +465,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
 
         World.DynamicTree.RemoveProxy(shape);
-        shape.DetachRigidBody();
+        shape.RigidBody = null;
         World.InternalRemoveShape(shape);
 
         if (setMassInertia) SetMassInertia();
@@ -506,7 +507,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
-                shape.DetachRigidBody();
+                shape.RigidBody = null;
                 World.InternalRemoveShape(shape);
 
                 this.shapes.RemoveAt(i);

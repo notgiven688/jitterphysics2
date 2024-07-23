@@ -44,33 +44,10 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// </summary>
     public readonly ulong ShapeId;
 
-    public Shape()
-    {
-        ShapeId = World.RequestId();
-    }
-
-    internal bool AttachRigidBody(RigidBody? body)
-    {
-        if (RigidBody == null)
-        {
-            RigidBody = body;
-            return true;
-        }
-
-        return false;
-    }
-
-    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
-
-    internal void DetachRigidBody()
-    {
-        RigidBody = null!;
-    }
-
     /// <summary>
     /// The instance of <see cref="RigidBody"/> to which this shape is attached.
     /// </summary>
-    public RigidBody? RigidBody { get; private set; }
+    public RigidBody? RigidBody { get; internal set; }
 
     /// <summary>
     /// The bounding box of the shape in world space. It is automatically updated when the position or
@@ -79,6 +56,13 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     public JBBox WorldBoundingBox { get; protected set; }
 
     int IDynamicTreeProxy.NodePtr { get; set; }
+
+    public Shape()
+    {
+        ShapeId = World.RequestId();
+    }
+
+    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
 
     public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
 
@@ -127,42 +111,20 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     {
         JBBox box = WorldBoundingBox;
 
-        float max;
-
         float sxa = MathF.Abs(sweptDirection.X);
         float sya = MathF.Abs(sweptDirection.Y);
         float sza = MathF.Abs(sweptDirection.Z);
 
-        if (sxa > sya && sxa > sza) max = sxa;
-        else if (sya >= sxa && sya > sza) max = sya;
-        else max = sza;
+        float max = MathF.Max(MathF.Max(sxa, sya), sza);
 
-        if (sweptDirection.X < 0.0f)
-        {
-            box.Min.X -= max;
-        }
-        else
-        {
-            box.Max.X += max;
-        }
+        if (sweptDirection.X < 0.0f) box.Min.X -= max;
+        else box.Max.X += max;
 
-        if (sweptDirection.Y < 0.0f)
-        {
-            box.Min.Y -= max;
-        }
-        else
-        {
-            box.Max.Y += max;
-        }
+        if (sweptDirection.Y < 0.0f) box.Min.Y -= max;
+        else box.Max.Y += max;
 
-        if (sweptDirection.Z < 0.0f)
-        {
-            box.Min.Z -= max;
-        }
-        else
-        {
-            box.Max.Z += max;
-        }
+        if (sweptDirection.Z < 0.0f) box.Min.Z -= max;
+        else box.Max.Z += max;
 
         WorldBoundingBox = box;
     }
@@ -175,7 +137,6 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// </summary>
     public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        // TODO: Can this be done smarter?
         JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
 
         SupportMap(oriT.GetColumn(0), out JVector res);
