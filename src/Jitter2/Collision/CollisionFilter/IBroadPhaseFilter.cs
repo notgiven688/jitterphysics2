@@ -21,8 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using Jitter2.Collision.Shapes;
-
 namespace Jitter2.Collision;
 
 /// <summary>
@@ -36,5 +34,5 @@ public interface IBroadPhaseFilter
     /// Filters out pairs of shapes that should not generate contacts.
     /// </summary>
     /// <returns>False if the collision should be filtered out; true otherwise.</returns>
-    bool Filter(Shape shapeA, Shape shapeB);
+    bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB);
 }

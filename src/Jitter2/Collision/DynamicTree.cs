@@ -35,11 +35,13 @@ namespace Jitter2.Collision;
 /// maintains a record of potential overlapping pairs.
 /// </summary>
 /// <typeparam name="T">The type of elements stored in the dynamic tree.</typeparam>
-public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
+public class DynamicTree
 {
-    private volatile SlimBag<T>[] lists = Array.Empty<SlimBag<T>>();
+    private volatile SlimBag<IDynamicTreeProxy>[] lists = Array.Empty<SlimBag<IDynamicTreeProxy>>();
 
-    private readonly ActiveList<T> activeList;
+    private readonly ActiveList<IDynamicTreeProxy> activeList = new();
+
+    public readonly ReadOnlyActiveList<IDynamicTreeProxy> ActiveList;
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
@@ -71,7 +73,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         public int Height;
 
         public JBBox ExpandedBox;
-        public T Proxy;
+        public IDynamicTreeProxy Proxy;
 
         public bool ForceUpdate;
 
@@ -95,26 +97,25 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     private readonly Action<Parallel.Batch> scanOverlapsPre;
     private readonly Action<Parallel.Batch> scanOverlapsPost;
 
-    public Func<T, T, bool> Filter { get; set; }
+    public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DynamicTree{T}"/> class.
+    /// Initializes a new instance of the <see cref="DynamicTree"/> class.
     /// </summary>
-    /// <param name="activeList">Active entities that are considered for updates during <see cref="Update(bool)"/>.</param>
     /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
-    public DynamicTree(ActiveList<T> activeList, Func<T, T, bool> filter)
+    public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
-        this.activeList = activeList;
-
         scanOverlapsPre = batch =>
         {
             ScanForMovedProxies(batch);
             ScanForOverlaps(batch.BatchIndex, false);
         };
 
+        ActiveList = new ReadOnlyActiveList<IDynamicTreeProxy>(activeList);
+
         scanOverlapsPost = batch => { ScanForOverlaps(batch.BatchIndex, true); };
 
-        this.Filter = filter;
+        Filter = filter;
     }
 
     public enum Timings
@@ -133,7 +134,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     /// Updates the state of the specified entity within the dynamic tree structure.
     /// </summary>
     /// <param name="shape">The entity to update.</param>
-    public void Update(T shape)
+    public void Update(IDynamicTreeProxy shape)
     {
         OverlapCheck(shape, false);
         InternalRemoveProxy(shape);
@@ -169,8 +170,8 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
         if (multiThread)
         {
-            const int TaskThreshold = 24;
-            int numTasks = Math.Clamp(activeList.Active / TaskThreshold, 1, ThreadPool.Instance.ThreadCount);
+            const int taskThreshold = 24;
+            int numTasks = Math.Clamp(activeList.Active / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
             Parallel.ForBatch(0, activeList.Active, numTasks, scanOverlapsPre);
 
             SetTime(Timings.ScanOverlapsPre);
@@ -184,7 +185,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
                 for (int i = 0; i < sl.Count; i++)
                 {
-                    T proxy = sl[i];
+                    var proxy = sl[i];
                     InternalRemoveProxy(proxy);
                     InternalAddProxy(proxy);
                 }
@@ -204,7 +205,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
             var sl = lists[0];
             for (int i = 0; i < sl.Count; i++)
             {
-                T proxy = sl[i];
+                IDynamicTreeProxy proxy = sl[i];
                 InternalRemoveProxy(proxy);
                 InternalAddProxy(proxy);
             }
@@ -219,20 +220,38 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     /// <summary>
     /// Add an entity to the tree.
     /// </summary>
-    public void AddProxy(T proxy)
+    public void AddProxy(IDynamicTreeProxy proxy, bool active = true)
     {
         InternalAddProxy(proxy);
         OverlapCheck(root, proxy.NodePtr, true);
+        activeList.Add(proxy, active);
+    }
+
+    public bool IsActive(IDynamicTreeProxy proxy)
+    {
+        return activeList.IsActive(proxy);
+    }
+
+    public void Activate(IDynamicTreeProxy proxy)
+    {
+        activeList.MoveToActive(proxy);
+        Nodes[proxy.NodePtr].ForceUpdate = true;
+    }
+
+    public void Deactivate(IDynamicTreeProxy proxy)
+    {
+        activeList.MoveToInactive(proxy);
     }
 
     /// <summary>
     /// Removes an entity from the tree.
     /// </summary>
-    public void RemoveProxy(T proxy)
+    public void RemoveProxy(IDynamicTreeProxy proxy)
     {
         OverlapCheck(root, proxy.NodePtr, false);
         InternalRemoveProxy(proxy);
         proxy.NodePtr = NullNode;
+        activeList.Remove(proxy);
     }
 
     /// <summary>
@@ -276,23 +295,88 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         EnumerateAll(ref Nodes[root], action);
     }
 
-    /// <summary>
-    /// Forces an update for the specified proxy during the next tree update. This update process identifies all overlaps with the current extended box and removes all detections from the <see cref="PairHashSet"/>, followed by an update of the extended box and overlap detection, adding new overlaps back to the <see cref="PairHashSet"/>. Essentially, this resets the state of the entity within the <see cref="PairHashSet"/>. Jitter utilizes this method to reintegrate entities into the hashset that were previously pruned due to inactivity.
-    /// </summary>
-    /// <param name="proxy">The proxy to update.</param>
-    public void ForceUpdate(T proxy)
+    [ThreadStatic] private static Stack<int>? stack;
+
+    public void Query(JVector origin, JVector direction, Func<IDynamicTreeProxy, bool> dtp)
     {
-        Nodes[proxy.NodePtr].ForceUpdate = true;
+        if (root == -1) return;
+
+        stack ??= new Stack<int>(256);
+
+        stack.Push(root);
+
+        while (stack.Count > 0)
+        {
+            int pop = stack.Pop();
+
+            ref Node node = ref Nodes[pop];
+
+            if (node.IsLeaf)
+            {
+                if (!dtp(node.Proxy)) break;
+                continue;
+            }
+
+            ref Node lnode = ref Nodes[node.Left];
+            ref Node rnode = ref Nodes[node.Right];
+
+            bool lres = lnode.ExpandedBox.RayIntersect(origin, direction, out float enterl);
+            bool rres = rnode.ExpandedBox.RayIntersect(origin, direction, out float enterr);
+
+            if (lres && rres)
+            {
+                if (enterl < enterr)
+                {
+                    stack.Push(node.Right);
+                    stack.Push(node.Left);
+                }
+                else
+                {
+                    stack.Push(node.Left);
+                    stack.Push(node.Right);
+                }
+            }
+            else
+            {
+                if (lres) stack.Push(node.Left);
+                if (rres) stack.Push(node.Right);
+            }
+        }
     }
 
-    [ThreadStatic] private static Stack<int>? stack;
+    private uint stepper;
+
+    public void TrimInactivePairs()
+    {
+        // We actually only search 1/100 of the whole potentialPairs Hashset for
+        // potentially prunable contacts. No need to sweep through the whole hashset
+        // every step.
+        const int divisions = 100;
+        stepper += 1;
+
+        for (int i = 0; i < PotentialPairs.Slots.Length / divisions; i++)
+        {
+            int t = (int)((i * divisions + stepper) % PotentialPairs.Slots.Length);
+
+            var n = PotentialPairs.Slots[t];
+            if (n.ID == 0) continue;
+
+            var proxyA = Nodes[n.ID1].Proxy;
+            var proxyB = Nodes[n.ID2].Proxy;
+
+            if (IsActive(proxyA) || IsActive(proxyB)) continue;
+
+            PotentialPairs.Remove(t);
+            i -= 1;
+        }
+    }
 
     /// <summary>
     /// Queries the tree to find entities within the specified axis-aligned bounding box.
     /// </summary>
     /// <param name="hits">A list to store the entities found within the bounding box.</param>
     /// <param name="aabb">The axis-aligned bounding box used for the query.</param>
-    public void Query(List<T> hits, in JBBox aabb)
+    public void Query(List<IDynamicTreeProxy> hits, in JBBox aabb)
     {
         stack ??= new Stack<int>(256);
 
@@ -324,7 +408,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         stack.Clear();
     }
 
-    private Random? optimizeRandom = null;
+    private Random? optimizeRandom;
 
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
@@ -334,12 +418,12 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
     {
         optimizeRandom ??= new Random(0);
 
-        Stack<T> temp = new();
+        Stack<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
             for (int i = 0; i < activeList.Count; i++)
             {
-                T proxy = activeList[i];
+                var proxy = activeList[i];
 
                 if (optimizeRandom.NextDouble() > 0.05d) continue;
 
@@ -349,7 +433,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
             while (temp.Count > 0)
             {
-                T proxy = temp.Pop();
+                var proxy = temp.Pop();
                 InternalAddProxy(proxy);
             }
         }
@@ -382,10 +466,10 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         int numThreads = ThreadPool.Instance.ThreadCount;
         if (lists.Length != numThreads)
         {
-            lists = new SlimBag<T>[numThreads];
+            lists = new SlimBag<IDynamicTreeProxy>[numThreads];
             for (int i = 0; i < numThreads; i++)
             {
-                lists[i] = new SlimBag<T>();
+                lists[i] = new SlimBag<IDynamicTreeProxy>();
             }
         }
     }
@@ -407,7 +491,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         return 1 + Math.Max(Height(ref Nodes[node.Left]), Height(ref Nodes[node.Right]));
     }
 
-    private void OverlapCheck(T shape, bool add)
+    private void OverlapCheck(IDynamicTreeProxy shape, bool add)
     {
         OverlapCheck(root, shape.NodePtr, add);
     }
@@ -457,10 +541,12 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         {
             var proxy = activeList[i];
 
-            if (Nodes[proxy.NodePtr].ForceUpdate || Nodes[proxy.NodePtr].ExpandedBox.Contains(proxy.WorldBoundingBox) !=
+            ref var node = ref Nodes[proxy.NodePtr];
+
+            if (node.ForceUpdate || node.ExpandedBox.Contains(proxy.WorldBoundingBox) !=
                 JBBox.ContainmentType.Contains)
             {
-                Nodes[proxy.NodePtr].ForceUpdate = false;
+                node.ForceUpdate = false;
                 list.Add(proxy);
             }
 
@@ -484,32 +570,14 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
 
     private static void ExpandBoundingBox(ref JBBox box, in JVector direction)
     {
-        if (direction.X < 0.0f)
-        {
-            box.Min.X += direction.X;
-        }
-        else
-        {
-            box.Max.X += direction.X;
-        }
+        if (direction.X < 0.0f) box.Min.X += direction.X;
+        else box.Max.X += direction.X;
 
-        if (direction.Y < 0.0f)
-        {
-            box.Min.Y += direction.Y;
-        }
-        else
-        {
-            box.Max.Y += direction.Y;
-        }
+        if (direction.Y < 0.0f) box.Min.Y += direction.Y;
+        else box.Max.Y += direction.Y;
 
-        if (direction.Z < 0.0f)
-        {
-            box.Min.Z += direction.Z;
-        }
-        else
-        {
-            box.Max.Z += direction.Z;
-        }
+        if (direction.Z < 0.0f) box.Min.Z += direction.Z;
+        else box.Max.Z += direction.Z;
 
         box.Min.X -= ExpandEps;
         box.Min.Y -= ExpandEps;
@@ -533,7 +601,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         return MathF.Abs((float)randomBits / uint.MaxValue);
     }
 
-    private void InternalAddProxy(T proxy)
+    private void InternalAddProxy(IDynamicTreeProxy proxy)
     {
         JBBox b = proxy.WorldBoundingBox;
 
@@ -552,7 +620,7 @@ public class DynamicTree<T> where T : class, IDynamicTreeProxy, IListIndex
         AddLeaf(index);
     }
 
-    private void InternalRemoveProxy(T proxy)
+    private void InternalRemoveProxy(IDynamicTreeProxy proxy)
     {
         Debug.Assert(Nodes[proxy.NodePtr].IsLeaf);
 

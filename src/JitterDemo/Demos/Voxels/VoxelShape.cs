@@ -1,24 +1,25 @@
 using System;
+using System.Diagnostics;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
 namespace JitterDemo;
 
-public class VoxelShape : Shape
+public class VoxelShape : RigidBodyShape
 {
-    public JVector Position { private set; get; }
+    public JVector Position { get; }
     public int VoxelIndex { private set; get; }
     public VoxelGrid VoxelGrid { private set; get; }
 
-    public uint Neighbours { private set; get; } = 0;
+    public uint Neighbours { private set; get; }
 
     public VoxelShape(VoxelGrid grid, int index)
     {
-        this.Position = grid.PositionFromIndex(index);
-        this.Neighbours = grid.GetNeighbours(index);
-        this.VoxelIndex = index;
-        this.VoxelGrid = grid;
-        UpdateShape();
+        Position = grid.PositionFromIndex(index);
+        Neighbours = grid.GetNeighbours(index);
+        VoxelIndex = index;
+        VoxelGrid = grid;
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -31,11 +32,16 @@ public class VoxelShape : Shape
         result += Position;
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = Position;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         // NOTE: We do not support any transformation of the body here.
-        System.Diagnostics.Debug.Assert(orientation.W > 0.999f, "Voxel shape can not be attached to a transformed body.");
-        System.Diagnostics.Debug.Assert(MathHelper.CloseToZero(position), "Voxel shape can not be attached to a transformed body.");
+        Debug.Assert(orientation.W > 0.999f, "Voxel shape can not be attached to a transformed body.");
+        Debug.Assert(MathHelper.CloseToZero(position), "Voxel shape can not be attached to a transformed body.");
 
         box.Min = Position - JVector.One * 0.5f;
         box.Max = Position + JVector.One * 0.5f;

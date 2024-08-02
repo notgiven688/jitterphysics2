@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using Jitter2;
 using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.DearImGui;
 using JitterDemo.Renderer.OpenGL;
@@ -123,7 +122,7 @@ public partial class Playground : RenderWindow
             AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
             AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
             AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
-            AddRow("Shapes", $"{World.Shapes.Count}", $"{World.Shapes.Active}");
+            AddRow("Shapes", $"{World.DynamicTree.ActiveList.Count}", $"{World.DynamicTree.ActiveList.Active}");
 
             ImGui.EndTable();
             ImGui.TreePop();
@@ -182,9 +181,9 @@ public partial class Playground : RenderWindow
             AddRow("PairHashSet Count", World.DynamicTree.PotentialPairs.Count.ToString());
             AddRow("Proxies updated", World.DynamicTree.UpdatedProxies.ToString());
 
-            for (int i = 0; i < (int)DynamicTree<Shape>.Timings.Last; i++)
+            for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)
             {
-                AddRow($"{(DynamicTree<Shape>.Timings)i} (ms)",
+                AddRow($"{(DynamicTree.Timings)i} (ms)",
                     $"{World.DynamicTree.DebugTimings[i],0:N2}");
             }
 

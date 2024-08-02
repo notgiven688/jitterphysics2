@@ -23,9 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
-using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2;
@@ -37,7 +36,7 @@ public partial class World
     /// </summary>
     public struct RayCastResult
     {
-        public Shape Entity;
+        public IDynamicTreeProxy Entity;
         public float Fraction;
         public JVector Normal;
         public bool Hit;
@@ -53,7 +52,7 @@ public partial class World
     /// Pre-filter delegate.
     /// </summary>
     /// <returns>False if the hit should be filtered out.</returns>
-    public delegate bool RayCastFilterPre(Shape result);
+    public delegate bool RayCastFilterPre(IDynamicTreeProxy result);
 
     private struct Ray
     {
@@ -78,37 +77,6 @@ public partial class World
     [ThreadStatic] private static Stack<int>? stack;
 
     /// <summary>
-    /// Ray cast against a single shape. See <see cref="World.RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out Shape, out JVector, out float)"/>
-    /// for a ray cast against the world.
-    /// </summary>
-    /// <param name="shape">Shape to test.</param>
-    /// <param name="origin">Origin of the ray.</param>
-    /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
-    /// <param name="normal">The normal of the surface where the ray hits. Zero if ray does not hit.</param>
-    /// <param name="fraction">Distance from the origin to the ray hit point in units of the ray's direction.</param>
-    /// <returns>True if the ray hits, false otherwise.</returns>
-    public bool RayCast(Shape shape, JVector origin, JVector direction, out JVector normal, out float fraction)
-    {
-        if (shape.RigidBody == null)
-        {
-            return NarrowPhase.RayCast(shape, origin, direction, out fraction, out normal);
-        }
-
-        ref RigidBodyData body = ref shape.RigidBody.Data;
-
-        if (shape is TriangleShape tms)
-        {
-            // special case: ray-triangle, use linear algebra.
-            tms.GetWorldVertices(out JVector a, out JVector b, out JVector c);
-            bool result = CollisionHelper.RayTriangle(a, b, c, origin, direction, out fraction, out normal);
-            return result;
-        }
-
-        return NarrowPhase.RayCast(shape, body.Orientation, body.Position,
-            origin, direction, out fraction, out normal);
-    }
-
-    /// <summary>
     /// Ray cast against the world.
     /// </summary>
     /// <param name="origin">Origin of the ray.</param>
@@ -120,7 +88,7 @@ public partial class World
     /// <param name="fraction">Distance from the origin to the ray hit point in units of the ray's directin.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
-        out Shape? shape, out JVector normal, out float fraction)
+        out IDynamicTreeProxy? shape, out JVector normal, out float fraction)
     {
         Ray ray = new(origin, direction)
         {
@@ -149,13 +117,18 @@ public partial class World
         {
             int pop = stack.Pop();
 
-            ref DynamicTree<Shape>.Node node = ref DynamicTree.Nodes[pop];
+            ref DynamicTree.Node node = ref DynamicTree.Nodes[pop];
 
             if (node.IsLeaf)
             {
+                if (node.Proxy is not IRayCastable irc) continue;
+
                 if (ray.FilterPre != null && !ray.FilterPre(node.Proxy)) continue;
 
-                RayCastResult res = RayCast(node.Proxy, ray);
+                Unsafe.SkipInit(out RayCastResult res);
+                res.Hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Fraction);
+                res.Entity = node.Proxy;
+
                 if (res.Hit && res.Fraction < result.Fraction)
                 {
                     if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
@@ -165,8 +138,8 @@ public partial class World
                 continue;
             }
 
-            ref DynamicTree<Shape>.Node lnode = ref DynamicTree.Nodes[node.Left];
-            ref DynamicTree<Shape>.Node rnode = ref DynamicTree.Nodes[node.Right];
+            ref DynamicTree.Node lnode = ref DynamicTree.Nodes[node.Left];
+            ref DynamicTree.Node rnode = ref DynamicTree.Nodes[node.Right];
 
             bool lres = lnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterl);
             bool rres = rnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterr);
@@ -193,15 +166,6 @@ public partial class World
                 if (rres) stack.Push(node.Right);
             }
         }
-
-        return result;
-    }
-
-    private RayCastResult RayCast(Shape entity, in Ray ray)
-    {
-        RayCastResult result;
-        result.Hit = RayCast(entity, ray.Origin, ray.Direction, out result.Normal, out result.Fraction);
-        result.Entity = entity;
 
         return result;
     }

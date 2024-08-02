@@ -21,23 +21,37 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using Jitter2.LinearMath;
 
-namespace Jitter2.Collision;
+using System;
+
+namespace Jitter2;
 
 /// <summary>
-/// Defines an interface for a generic convex shape, which is characterized by its support function.
+/// Enum representing reference frames.
 /// </summary>
-public interface ISupportMap
+public enum ReferenceFrame
+{
+    Local,
+    World
+}
+
+/// <summary>
+/// Attribute to specify the reference frame of a member.
+/// </summary>
+[AttributeUsage(AttributeTargets.All)]
+public class ReferenceFrameAttribute : Attribute
 {
     /// <summary>
-    /// Identifies the point on the shape that is furthest in the specified direction.
+    /// Gets or sets the reference frame.
     /// </summary>
-    /// <param name="direction">The direction in which to search for the furthest point. It does not need to be normalized.</param>
-    void SupportMap(in JVector direction, out JVector result);
+    public ReferenceFrame Frame { get; set; }
 
     /// <summary>
-    /// Gets the geometric center of the shape. For a shape with a constant mass density, this represents the center of mass.
+    /// Initializes a new instance of the <see cref="ReferenceFrameAttribute"/> class.
     /// </summary>
-    JVector GeometricCenter { get; }
+    /// <param name="frame">The reference frame.</param>
+    public ReferenceFrameAttribute(ReferenceFrame frame)
+    {
+        Frame = frame;
+    }
 }

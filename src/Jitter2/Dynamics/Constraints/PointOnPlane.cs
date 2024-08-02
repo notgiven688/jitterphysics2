@@ -188,6 +188,8 @@ public unsafe class PointOnPlane : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public float Impulse => handle.Data.AccumulatedImpulse;
+
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));

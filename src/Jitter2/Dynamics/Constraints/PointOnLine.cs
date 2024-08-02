@@ -263,6 +263,8 @@ public unsafe class PointOnLine : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public JVector Impulse => handle.Data.AccumulatedImpulse;
+
     public float LimitSoftness
     {
         get => handle.Data.LimitSoftness;

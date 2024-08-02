@@ -18,7 +18,7 @@ public static unsafe class ImGui
 
         for (int i = 0; i < 3; i++)
         {
-            strPtr[i] = (byte*)NativeMemory.Alloc((nuint)(strPtrSize));
+            strPtr[i] = (byte*)NativeMemory.Alloc(strPtrSize);
         }
     }
 

@@ -26,7 +26,7 @@ public static class Helper
                 JVector position = pos + JVector.Transform(
                     new JVector(0, 0.5f + e, 19.5f), orientation);
 
-                Shape shape = new BoxShape(3f, 1, 0.5f);
+                var shape = new BoxShape(3f, 1, 0.5f);
 
                 last = world.CreateRigidBody();
 

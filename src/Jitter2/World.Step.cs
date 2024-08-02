@@ -27,7 +27,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
@@ -58,8 +57,6 @@ public partial class World
     private Action<Parallel.Batch> updateShapes;
     private Action<Parallel.Batch> detectCollisions;
 
-    private uint stepper;
-
     private void InitParallelCallbacks()
     {
         integrate = IntegrateCallback;
@@ -85,7 +82,6 @@ public partial class World
         AddArbiter,
         SolveContacts,
         UpdateContacts,
-        IntegrateForces,
         Integrate,
         TrimPotentialPairs,
         CheckDeactivation,
@@ -113,7 +109,7 @@ public partial class World
             throw new ArgumentException("Time step cannot be negative.", nameof(dt));
         }
 
-        if(dt == 0.0f) return; // nothing to do
+        if (dt == 0.0f) return; // nothing to do
 
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -160,7 +156,8 @@ public partial class World
         // Go through potential pairs in the collision system and remove
         // pairs which are inactive. This speeds up the enumeration of all
         // collisions of interest.
-        TrimPotentialPairs();
+        DynamicTree.TrimInactivePairs();
+
         SetTime(Timings.TrimPotentialPairs);
 
         // Sub-stepping
@@ -203,7 +200,7 @@ public partial class World
 
         PostStep?.Invoke(dt);
 
-        // Signal the threadpool that threads can go into a wait state. If threadModel is set to
+        // Signal the thread pool that threads can go into a wait state. If threadModel is set to
         // aggressive this will not happen. Also make sure that a switch from (aggressive, multiThreaded)
         // to (aggressive, sequential) triggers a signalReset here.
         if (ThreadModel == ThreadModelType.Regular || !multiThread)
@@ -212,46 +209,12 @@ public partial class World
         }
     }
 
-    private void TrimPotentialPairs()
-    {
-        PairHashSet phs = DynamicTree.PotentialPairs;
-
-        // We actually only search 1/100 of the whole potentialPairs Hashset for
-        // potentially prunable contacts. No need to sweep through the whole hashset
-        // every step.
-        const int divisions = 100;
-        stepper += 1;
-
-        for (int i = 0; i < phs.Slots.Length / divisions; i++)
-        {
-            int t = (int)((i * divisions + stepper) % phs.Slots.Length);
-
-            var n = phs.Slots[t];
-            if (n.ID == 0) continue;
-
-            Shape shapeA = DynamicTree.Nodes[n.ID1].Proxy;
-            Shape shapeB = DynamicTree.Nodes[n.ID2].Proxy;
-
-            if (!shapes.IsActive(shapeA) && !shapes.IsActive(shapeB))
-            {
-                phs.Remove(t);
-                i -= 1;
-            }
-        }
-    }
-
     private void UpdateShapesCallback(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            Shape shape = shapes[i];
-
-            shape.UpdateWorldBoundingBox();
-
-            if (shape.RigidBody != null && shape.RigidBody.EnableSpeculativeContacts)
-            {
-                shape.SweptExpandBoundingBox(shape.RigidBody.Velocity * step_dt);
-            }
+            var shape = DynamicTree.ActiveList[i];
+            if (shape is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
         }
     }
 
@@ -444,8 +407,8 @@ public partial class World
             var node = phs.Slots[e];
             if (node.ID == 0) continue;
 
-            Shape shapeA = DynamicTree.Nodes[node.ID1].Proxy;
-            Shape shapeB = DynamicTree.Nodes[node.ID2].Proxy;
+            var shapeA = DynamicTree.Nodes[node.ID1].Proxy;
+            var shapeB = DynamicTree.Nodes[node.ID2].Proxy;
 
             if (!shapeA.WorldBoundingBox.Disjoint(shapeB.WorldBoundingBox))
             {
@@ -483,11 +446,11 @@ public partial class World
     {
         if (multiThread)
         {
-            shapes.ParallelForBatch(256, updateShapes);
+            DynamicTree.ActiveList.ParallelForBatch(256, updateShapes);
         }
         else
         {
-            Parallel.Batch batch = new(0, shapes.Active);
+            Parallel.Batch batch = new(0, DynamicTree.ActiveList.Active);
             UpdateShapesCallback(batch);
         }
     }
@@ -830,7 +793,7 @@ public partial class World
 
                     foreach (var s in body.shapes)
                     {
-                        shapes.MoveToInactive(s);
+                        DynamicTree.Deactivate(s);
                     }
                 }
                 else
@@ -863,8 +826,7 @@ public partial class World
 
                     foreach (var s in body.shapes)
                     {
-                        shapes.MoveToActive(s);
-                        DynamicTree.ForceUpdate(s);
+                        DynamicTree.Activate(s);
                     }
                 }
             }

@@ -21,13 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
-namespace Jitter2.SoftBodies;
+namespace Jitter2.Collision;
 
-public interface ISoftBodyShape
+/// <summary>
+/// Defines an interface for a generic convex shape, which is characterized by its support function.
+/// </summary>
+public interface ISupportMappable
 {
-    public RigidBody GetClosest(in JVector pos);
-    public SoftBody SoftBody { get; }
+    /// <summary>
+    /// Identifies the point on the shape that is furthest in the specified direction.
+    /// </summary>
+    /// <param name="direction">The direction in which to search for the furthest point. It does not need to be normalized.</param>
+    void SupportMap(in JVector direction, out JVector result);
+
+    /// <summary>
+    /// Returns a point deep within the shape. This is used in algorithms which work with the implicit
+    /// definition of the support map function. The center of mass is a good choice.
+    /// </summary>
+    void PointWithin(out JVector point);
 }

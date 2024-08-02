@@ -21,13 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTetrahedron : Shape, ISoftBodyShape
+public class SoftBodyTetrahedron : SoftBodyShape
 {
     public SoftBodyTetrahedron(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3, RigidBody v4)
     {
@@ -38,7 +37,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
 
         SoftBody = body;
 
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public RigidBody[] Vertices { get; } = new RigidBody[4];
@@ -60,21 +59,7 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
         }
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
-    {
-        inertia = JMatrix.Identity;
-        mass = 1;
-        com = JVector.Zero;
-
-        for (int i = 0; i < 4; i++)
-        {
-            com += Vertices[i].Position;
-        }
-
-        com *= 0.25f;
-    }
-
-    public RigidBody GetClosest(in JVector pos)
+    public override RigidBody GetClosest(in JVector pos)
     {
         float dist = float.MaxValue;
         int closest = 0;
@@ -90,29 +75,6 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
         }
 
         return Vertices[closest];
-    }
-
-    public SoftBody SoftBody { get; }
-
-    public override void UpdateWorldBoundingBox()
-    {
-        const float extraMargin = 0.01f;
-
-        var box = JBBox.SmallBox;
-        GeometricCenter = JVector.Zero;
-
-        for (int i = 0; i < 4; i++)
-        {
-            box.AddPoint(Vertices[i].Position);
-            GeometricCenter += Vertices[i].Position;
-        }
-
-        GeometricCenter *= 0.25f;
-
-        box.Min -= JVector.One * extraMargin;
-        box.Max += JVector.One * extraMargin;
-
-        WorldBoundingBox = box;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -131,5 +93,27 @@ public class SoftBodyTetrahedron : Shape, ISoftBodyShape
         }
 
         result = Vertices[furthest].Position;
+    }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = 0.25f * (Vertices[0].Position + Vertices[1].Position +
+                         Vertices[1].Position + Vertices[2].Position);
+    }
+
+    public override void UpdateWorldBoundingBox(float dt = 0.0f)
+    {
+        const float extraMargin = 0.01f;
+
+        JBBox box = JBBox.SmallBox;
+        box.AddPoint(Vertices[0].Position);
+        box.AddPoint(Vertices[1].Position);
+        box.AddPoint(Vertices[2].Position);
+        box.AddPoint(Vertices[3].Position);
+
+        box.Min -= JVector.One * extraMargin;
+        box.Max += JVector.One * extraMargin;
+
+        WorldBoundingBox = box;
     }
 }

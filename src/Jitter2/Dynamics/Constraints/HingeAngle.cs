@@ -232,6 +232,8 @@ public unsafe class HingeAngle : Constraint
         set => handle.Data.LimitBias = value;
     }
 
+    public JVector Impulse => handle.Data.AccumulatedImpulse;
+
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));

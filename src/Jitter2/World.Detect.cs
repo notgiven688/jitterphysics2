@@ -260,19 +260,24 @@ public partial class World
     [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Detect(Shape sA, Shape sB)
+    private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        if (sB.ShapeId < sA.ShapeId)
-        {
-            (sA, sB) = (sB, sA);
-        }
-
         if (BroadPhaseFilter != null)
         {
-            if (!BroadPhaseFilter.Filter(sA, sB))
+            if (!BroadPhaseFilter.Filter(proxyA, proxyB))
             {
                 return;
             }
+        }
+
+        if (proxyA is not RigidBodyShape sA || proxyB is not RigidBodyShape sB)
+        {
+            throw new InvalidCollisionTypeException(proxyA.GetType(), proxyB.GetType());
+        }
+
+        if (sB.ShapeId < sA.ShapeId)
+        {
+            (sA, sB) = (sB, sA);
         }
 
         bool colliding;
@@ -282,12 +287,8 @@ public partial class World
         float penetration;
 
         Debug.Assert(sA.RigidBody != sB.RigidBody);
-
-        if (sA.RigidBody == null || sB.RigidBody == null)
-        {
-            throw new InvalidOperationException(
-                "Shapes passed to default narrow phase collision handler are not associated with a rigid body.");
-        }
+        Debug.Assert(sA.RigidBody != null);
+        Debug.Assert(sB.RigidBody != null);
 
         if (!sA.RigidBody.Data.IsActive && !sB.RigidBody.Data.IsActive) return;
         if (sA.RigidBody.Data.IsStatic && sB.RigidBody.Data.IsStatic) return;
@@ -316,33 +317,32 @@ public partial class World
 
         if (!colliding)
         {
-            if (speculative)
+            if (!speculative) return;
+
+            JVector dv = sB.RigidBody.Velocity - sA.RigidBody.Velocity;
+            penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
+
+            if (NarrowPhaseFilter != null)
             {
-                JVector dv = sB.RigidBody.Velocity - sA.RigidBody.Velocity;
-                penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
-
-                if (NarrowPhaseFilter != null)
+                if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
                 {
-                    if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
-                    {
-                        return;
-                    }
+                    return;
                 }
+            }
 
-                float dvn = -normal * dv;
+            float dvn = -normal * dv;
 
-                if (dvn > SpeculativeVelocityThreshold)
+            if (dvn > SpeculativeVelocityThreshold)
+            {
+                GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
+
+                lock (arbiter2)
                 {
-                    GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
-
-                    lock (arbiter2)
-                    {
-                        // (see. 1)
-                        arbiter2.Handle.Data.IsSpeculative = true;
-                        memContacts.ResizeLock.EnterReadLock();
-                        arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
-                        memContacts.ResizeLock.ExitReadLock();
-                    }
+                    // (see. 1)
+                    arbiter2.Handle.Data.IsSpeculative = true;
+                    memContacts.ResizeLock.EnterReadLock();
+                    arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
+                    memContacts.ResizeLock.ExitReadLock();
                 }
             }
 
@@ -366,7 +366,7 @@ public partial class World
 
         if (EnableAuxiliaryContactPoints)
         {
-            static void Support(Shape shape, in JVector direction, out JVector v)
+            static void Support(RigidBodyShape shape, in JVector direction, out JVector v)
             {
                 JVector.ConjugatedTransform(direction, shape.RigidBody!.Data.Orientation, out JVector tmp);
                 shape.SupportMap(tmp, out v);
@@ -441,7 +441,7 @@ public partial class World
 
                 deferredArbiters.Add(arb);
 
-                var h = memContacts.Allocate(true, false);
+                var h = memContacts.Allocate(true);
                 arb.Handle = h;
                 h.Data.Init(b0, b1);
                 h.Data.Key = arbiterKey;

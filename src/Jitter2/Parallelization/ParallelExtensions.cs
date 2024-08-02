@@ -52,6 +52,24 @@ public static class ParallelExtensions
     }
 
     /// <summary>
+    /// Loop in batches over the active elements of the <see cref="ReadOnlyActiveList{T}"/>.
+    /// </summary>
+    /// <param name="taskThreshold">If the number of elements is less than this value, only
+    /// one batch is generated.</param>
+    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
+    /// <returns>The number of batches(/tasks) generated.</returns>
+    public static int ParallelForBatch<T>(this ReadOnlyActiveList<T> list, int taskThreshold,
+        Action<Parallel.Batch> action, bool execute = true) where T : class, IListIndex
+    {
+        int numTasks = list.Active / taskThreshold + 1;
+        numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
+
+        Parallel.ForBatch(0, list.Active, numTasks, action, execute);
+
+        return numTasks;
+    }
+
+    /// <summary>
     /// Loop in batches over the active elements of the <see cref="ActiveList{T}"/>.
     /// </summary>
     /// <param name="taskThreshold">If the number of elements is less than this value, only

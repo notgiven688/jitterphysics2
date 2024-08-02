@@ -38,7 +38,7 @@ namespace Jitter2.Collision;
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
     /// <summary>
-    /// A tweakable parameter. Collision points that are closer than this value to a triangle edge 
+    /// A tweakable parameter. Collision points that are closer than this value to a triangle edge
     /// are considered as edge collisions and might be modified or discarded entirely.
     /// </summary>
     public float EdgeThreshold { get; set; } = 0.05f;
@@ -46,7 +46,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     private float cosAT = 0.99f;
 
     /// <summary>
-    /// A tweakable parameter that defines the threshold to determine when two normals 
+    /// A tweakable parameter that defines the threshold to determine when two normals
     /// are considered identical.
     /// </summary>
     public JAngle AngleThreshold
@@ -56,8 +56,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     }
 
     /// <inheritdoc />
-    public bool Filter(Shape shapeA, Shape shapeB, ref JVector pAA, ref JVector pBB, ref JVector normal,
-        ref float penetration)
+    public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
+        ref JVector pointA, ref JVector pointB, ref JVector normal, ref float penetration)
     {
         TriangleShape? ts1 = shapeA as TriangleShape;
         TriangleShape? ts2 = shapeB as TriangleShape;
@@ -74,17 +74,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         if (c1)
         {
             tshape = ts1!;
-            collP = pAA;
+            collP = pointA;
         }
         else
         {
             tshape = ts2!;
-            collP = pBB;
-        }
-
-        if (shapeA.RigidBody == null || shapeB.RigidBody == null)
-        {
-            return true;
+            collP = pointB;
         }
 
         ref var triangle = ref tshape.Mesh.Indices[tshape.Index];

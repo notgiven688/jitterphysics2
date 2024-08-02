@@ -21,14 +21,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface for entities which should be added to the <see cref="DynamicTree{T}"/>.
+/// Interface for entities which should be added to the <see cref="DynamicTree"/>.
 /// </summary>
-public interface IDynamicTreeProxy
+public interface IDynamicTreeProxy : IListIndex
 {
     /// <summary>
     /// A pointer value which should only by internally modified by the tree.
@@ -36,12 +37,12 @@ public interface IDynamicTreeProxy
     int NodePtr { get; set; }
 
     /// <summary>
-    /// The world bounding box of the entity.
-    /// </summary>
-    JBBox WorldBoundingBox { get; }
-
-    /// <summary>
     /// The velocity of the entity.
     /// </summary>
     JVector Velocity { get; }
+
+    /// <summary>
+    /// The world bounding box of the entity.
+    /// </summary>
+    JBBox WorldBoundingBox { get; }
 }

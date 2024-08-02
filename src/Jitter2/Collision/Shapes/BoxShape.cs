@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a three-dimensional box shape.
 /// </summary>
-public class BoxShape : Shape
+public class BoxShape : RigidBodyShape
 {
     private JVector halfSize;
 
@@ -42,7 +42,7 @@ public class BoxShape : Shape
         set
         {
             halfSize = value * 0.5f;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -53,7 +53,7 @@ public class BoxShape : Shape
     public BoxShape(JVector size)
     {
         halfSize = 0.5f * size;
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class BoxShape : Shape
     public BoxShape(float size)
     {
         halfSize = new JVector(size * 0.5f);
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     /// <summary>
@@ -75,7 +75,7 @@ public class BoxShape : Shape
     public BoxShape(float length, float height, float width)
     {
         halfSize = 0.5f * new JVector(length, height, width);
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -85,11 +85,15 @@ public class BoxShape : Shape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         JMatrix.Absolute(JMatrix.CreateFromQuaternion(orientation), out JMatrix absm);
         var ths = JVector.Transform(halfSize, absm);
-
         box.Min = position - ths;
         box.Max = position + ths;
     }

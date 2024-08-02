@@ -21,7 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using Jitter2.LinearMath;
 
@@ -54,14 +53,14 @@ public static class ShapeHelper
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
     /// <param name="stack">A stack to which the triangles are pushed too.</param>
-    public static void MakeHull(ISupportMap support, Stack<JTriangle> stack, int subdivisions = 3)
+    public static void MakeHull(ISupportMappable support, Stack<JTriangle> stack, int subdivisions = 3)
     {
         for (int i = 0; i < 20; i++)
         {
             JVector v1 = icosahedronVertices[icosahedronIndices[i, 0]];
             JVector v2 = icosahedronVertices[icosahedronIndices[i, 1]];
             JVector v3 = icosahedronVertices[icosahedronIndices[i, 2]];
-            
+
             support.SupportMap(v1, out JVector sv1);
             support.SupportMap(v2, out JVector sv2);
             support.SupportMap(v3, out JVector sv3);
@@ -70,14 +69,14 @@ public static class ShapeHelper
         }
     }
 
-    private static void Subdivide(ISupportMap support, Stack<JTriangle> stack,
+    private static void Subdivide(ISupportMappable support, Stack<JTriangle> stack,
         JVector v1, JVector v2, JVector v3, JVector p1, JVector p2, JVector p3,
         int subdivisions = 3)
     {
         if (subdivisions <= 1)
         {
             JVector n = (p3 - p1) % (p2 - p1);
-           
+
             if (n.LengthSquared() > 1e-16f)
             {
                 stack.Push(new JTriangle(p1, p2, p3));
@@ -85,11 +84,11 @@ public static class ShapeHelper
 
             return;
         }
-        
+
         JVector h1 = (v1 + v2) * 0.5f;
         JVector h2 = (v2 + v3) * 0.5f;
         JVector h3 = (v3 + v1) * 0.5f;
-        
+
         support.SupportMap(h1, out JVector sp1);
         support.SupportMap(h2, out JVector sp2);
         support.SupportMap(h3, out JVector sp3);
@@ -108,11 +107,38 @@ public static class ShapeHelper
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
     /// <returns>An enumeration of triangles forming the convex hull.</returns>
-    public static IEnumerable<JTriangle> MakeHull(ISupportMap support, int subdivisions = 3)
+    public static IEnumerable<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
     {
         Stack<JTriangle> triangles = new();
         MakeHull(support, triangles, subdivisions);
         return triangles;
+    }
+
+    public static void CalculateBoundingBox(ISupportMappable support,
+        in JQuaternion orientation, in JVector position, out JBBox box)
+    {
+        JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
+
+        support.SupportMap(oriT.GetColumn(0), out JVector res);
+        box.Max.X = JVector.Dot(oriT.GetColumn(0), res);
+
+        support.SupportMap(oriT.GetColumn(1), out res);
+        box.Max.Y = JVector.Dot(oriT.GetColumn(1), res);
+
+        support.SupportMap(oriT.GetColumn(2), out res);
+        box.Max.Z = JVector.Dot(oriT.GetColumn(2), res);
+
+        support.SupportMap(-oriT.GetColumn(0), out res);
+        box.Min.X = JVector.Dot(oriT.GetColumn(0), res);
+
+        support.SupportMap(-oriT.GetColumn(1), out res);
+        box.Min.Y = JVector.Dot(oriT.GetColumn(1), res);
+
+        support.SupportMap(-oriT.GetColumn(2), out res);
+        box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
+
+        JVector.Add(box.Min, position, out box.Min);
+        JVector.Add(box.Max, position, out box.Max);
     }
 
     /// <summary>
@@ -122,7 +148,7 @@ public static class ShapeHelper
     /// <param name="inertia">Output parameter for the calculated inertia matrix.</param>
     /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
     /// <param name="mass">Output parameter for the calculated mass.</param>
-    public static void CalculateMassInertia(ISupportMap support, out JMatrix inertia, out JVector centerOfMass,
+    public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass,
         out float mass, int subdivisions = 4)
     {
         centerOfMass = JVector.Zero;

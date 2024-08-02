@@ -1,4 +1,3 @@
-using System;
 using System.Runtime.CompilerServices;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;

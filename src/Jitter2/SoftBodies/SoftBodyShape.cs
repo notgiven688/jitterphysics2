@@ -21,40 +21,19 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Collections.Generic;
-using Jitter2.DataStructures;
+using Jitter2.Collision;
 using Jitter2.Dynamics;
+using Jitter2.LinearMath;
 
-namespace Jitter2.Collision;
+namespace Jitter2.SoftBodies;
 
-/// <summary>
-/// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
-/// </summary>
-public sealed class Island : IListIndex
+public abstract class SoftBodyShape : Shape
 {
-    internal readonly HashSet<RigidBody> bodies = new();
-    internal bool MarkedAsActive;
-    internal bool NeedsUpdate;
+    public abstract RigidBody GetClosest(in JVector pos);
+    public SoftBody SoftBody { get; internal init; } = null!;
 
-    /// <summary>
-    /// Gets a collection of all the bodies present in this island.
-    /// </summary>
-    public ReadOnlyHashSet<RigidBody> Bodies => new(bodies);
-
-    int IListIndex.ListIndex { get; set; } = -1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Island"/> class.
-    /// </summary>
-    public Island()
+    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
-    }
-
-    /// <summary>
-    /// Clears all the bodies from the lists within this island.
-    /// </summary>
-    internal void ClearLists()
-    {
-        bodies.Clear();
+        return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
     }
 }

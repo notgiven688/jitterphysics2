@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a cylinder shape.
 /// </summary>
-public class CylinderShape : Shape
+public class CylinderShape : RigidBodyShape
 {
     private float radius;
     private float height;
@@ -43,7 +43,7 @@ public class CylinderShape : Shape
         set
         {
             radius = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -56,7 +56,7 @@ public class CylinderShape : Shape
         set
         {
             height = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -69,7 +69,12 @@ public class CylinderShape : Shape
     {
         this.radius = radius;
         this.height = height;
-        UpdateShape();
+        UpdateWorldBoundingBox();
+    }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -138,6 +143,7 @@ public class CylinderShape : Shape
         mass = MathF.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
+
         inertia.M11 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;
         inertia.M22 = 1.0f / 2.0f * mass * radius * radius;
         inertia.M33 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;

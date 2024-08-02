@@ -1,4 +1,5 @@
 using Jitter2;
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -24,7 +25,7 @@ public class Demo19 : IDemo
             dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(origin),
                 Conversion.FromJitter(origin + dir));
 
-            bool hit = world.RayCast(origin, dir, null, null, out Shape? shape,
+            bool hit = world.RayCast(origin, dir, null, null, out IDynamicTreeProxy? shape,
                 out JVector normal, out float frac);
 
             if (hit)

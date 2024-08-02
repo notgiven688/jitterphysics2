@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Jitter2;
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -43,11 +44,11 @@ public class CustomSupportMapInstance<T> : CSMInstance where T : Shape, new()
     }
 }
 
-public class EllipsoidShape : Shape
+public class EllipsoidShape : RigidBodyShape
 {
     public EllipsoidShape()
     {
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -62,13 +63,18 @@ public class EllipsoidShape : Shape
         result.Y *= 1.2f;
         result.Z *= 0.4f;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
 }
 
-public class DoubleSphereShape : Shape
+public class DoubleSphereShape : RigidBodyShape
 {
     public DoubleSphereShape()
     {
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -87,13 +93,18 @@ public class DoubleSphereShape : Shape
             result = sphere2 * 0.5f;
         }
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
 }
 
-public class Icosahedron : Shape
+public class Icosahedron : RigidBodyShape
 {
     public Icosahedron()
     {
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -127,6 +138,11 @@ public class Icosahedron : Shape
 
         result = vertices[largestIndex] * 0.5f;
     }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = JVector.Zero;
+    }
 }
 
 public class Demo14 : IDemo
@@ -139,7 +155,7 @@ public class Demo14 : IDemo
     private DoubleSphereShape doublesSphere = null!;
     private Icosahedron icosahedron = null!;
 
-    List<RigidBody> demoBodies = null!;
+    private List<RigidBody> demoBodies = null!;
 
     public void Build()
     {
@@ -171,7 +187,6 @@ public class Demo14 : IDemo
             body3.Position = new JVector(3, 3 + i * 5, 0);
             demoBodies.Add(body3);
         }
-
     }
 
     public void Draw()
@@ -180,7 +195,7 @@ public class Demo14 : IDemo
         var rbsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<DoubleSphereShape>>();
         var icsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<Icosahedron>>();
 
-        foreach(var body in demoBodies)
+        foreach (var body in demoBodies)
         {
             var color = ColorGenerator.GetColor(body.GetHashCode());
             if (!body.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
@@ -198,6 +213,5 @@ public class Demo14 : IDemo
                     break;
             }
         }
-
     }
 }

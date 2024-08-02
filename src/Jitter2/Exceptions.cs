@@ -21,40 +21,34 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Collections.Generic;
-using Jitter2.DataStructures;
-using Jitter2.Dynamics;
 
-namespace Jitter2.Collision;
+using System;
+
+namespace Jitter2;
+
+public class InvalidCollisionTypeException : Exception
+{
+    public InvalidCollisionTypeException(Type proxyA, Type proxyB)
+        : base($"Don't know how to handle collision between {proxyA} and {proxyB}." +
+               $" Register a BroadPhaseFilter to handle and/or filter out these collision types.")
+    {
+    }
+}
 
 /// <summary>
-/// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
+/// Represents an exception thrown when a degenerate triangle is detected.
 /// </summary>
-public sealed class Island : IListIndex
+public class DegenerateTriangleException : Exception
 {
-    internal readonly HashSet<RigidBody> bodies = new();
-    internal bool MarkedAsActive;
-    internal bool NeedsUpdate;
-
-    /// <summary>
-    /// Gets a collection of all the bodies present in this island.
-    /// </summary>
-    public ReadOnlyHashSet<RigidBody> Bodies => new(bodies);
-
-    int IListIndex.ListIndex { get; set; } = -1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Island"/> class.
-    /// </summary>
-    public Island()
+    public DegenerateTriangleException()
     {
     }
 
-    /// <summary>
-    /// Clears all the bodies from the lists within this island.
-    /// </summary>
-    internal void ClearLists()
+    public DegenerateTriangleException(string message) : base(message)
     {
-        bodies.Clear();
+    }
+
+    public DegenerateTriangleException(string message, Exception inner) : base(message, inner)
+    {
     }
 }

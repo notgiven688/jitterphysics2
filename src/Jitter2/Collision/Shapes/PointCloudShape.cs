@@ -32,8 +32,13 @@ namespace Jitter2.Collision.Shapes;
 /// For performance optimization, this shape should ideally be used for a small number of points (maximum
 /// of 20-30).
 /// </summary>
-public class PointCloudShape : Shape
+public class PointCloudShape : RigidBodyShape
 {
+    private JBBox cachedBoundingBox;
+    private JMatrix cachedInertia;
+    private float cachedMass;
+    private JVector cachedCenter;
+
     private List<JVector> vertices;
     private JVector shifted;
 
@@ -64,9 +69,10 @@ public class PointCloudShape : Shape
         PointCloudShape result = new()
         {
             vertices = vertices,
-            Inertia = Inertia,
-            GeometricCenter = GeometricCenter,
-            Mass = Mass,
+            cachedBoundingBox = cachedBoundingBox,
+            cachedCenter = cachedCenter,
+            cachedInertia = cachedInertia,
+            cachedMass = cachedMass,
             shifted = shifted
         };
         return result;
@@ -86,6 +92,68 @@ public class PointCloudShape : Shape
         }
     }
 
+    public void UpdateShape()
+    {
+        CalculateMassInertia();
+        CalcInitBox();
+    }
+
+    public void CalculateMassInertia()
+    {
+        ShapeHelper.CalculateMassInertia(this, out cachedInertia, out cachedCenter, out cachedMass);
+    }
+
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    {
+        inertia = cachedInertia;
+        com = cachedCenter;
+        mass = cachedMass;
+    }
+
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    {
+        JVector halfSize = 0.5f * (cachedBoundingBox.Max - cachedBoundingBox.Min);
+        JVector center = 0.5f * (cachedBoundingBox.Max + cachedBoundingBox.Min);
+
+        JMatrix ori = JMatrix.CreateFromQuaternion(orientation);
+        JMatrix.Absolute(in ori, out JMatrix abs);
+        JVector.Transform(halfSize, abs, out JVector temp);
+        JVector.Transform(center, orientation, out JVector temp2);
+
+        box.Max = temp;
+        JVector.Negate(temp, out box.Min);
+
+        JVector.Add(box.Min, position + temp2, out box.Min);
+        JVector.Add(box.Max, position + temp2, out box.Max);
+    }
+
+    private void CalcInitBox()
+    {
+        JVector vec = JVector.UnitX;
+        SupportMap(vec, out JVector res);
+        cachedBoundingBox.Max.X = res.X;
+
+        vec = JVector.UnitY;
+        SupportMap(vec, out res);
+        cachedBoundingBox.Max.Y = res.Y;
+
+        vec = JVector.UnitZ;
+        SupportMap(vec, out res);
+        cachedBoundingBox.Max.Z = res.Z;
+
+        vec = -JVector.UnitX;
+        SupportMap(vec, out res);
+        cachedBoundingBox.Min.X = res.X;
+
+        vec = -JVector.UnitY;
+        SupportMap(vec, out res);
+        cachedBoundingBox.Min.Y = res.Y;
+
+        vec = -JVector.UnitZ;
+        SupportMap(vec, out res);
+        cachedBoundingBox.Min.Z = res.Z;
+    }
+
     public override void SupportMap(in JVector direction, out JVector result)
     {
         float maxDotProduct = float.MinValue;
@@ -103,5 +171,10 @@ public class PointCloudShape : Shape
         }
 
         result = vertices[maxIndex] + shifted;
+    }
+
+    public override void PointWithin(out JVector point)
+    {
+        point = cachedCenter;
     }
 }

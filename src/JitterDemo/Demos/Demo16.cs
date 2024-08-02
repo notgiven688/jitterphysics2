@@ -36,10 +36,10 @@ public class Demo16 : IDemo, ICleanDemo
 
             JVector[] offset =
             {
-                new JVector(-0.5f, -1.5f, -0.5f),
-                new JVector(-0.5f, -1.5f, +0.5f),
-                new JVector(+0.5f, -1.5f, -0.5f),
-                new JVector(+0.5f, -1.5f, +0.5f)
+                new(-0.5f, -1.5f, -0.5f),
+                new(-0.5f, -1.5f, +0.5f),
+                new(+0.5f, -1.5f, -0.5f),
+                new(+0.5f, -1.5f, +0.5f)
             };
 
             for (int e = 0; e < 4; e++)

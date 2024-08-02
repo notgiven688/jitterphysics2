@@ -23,28 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
-namespace Jitter2.Collision;
-
-/// <summary>
-/// Represents an exception thrown when a degenerate triangle is detected.
-/// </summary>
-public class DegenerateTriangleException : Exception
-{
-    public DegenerateTriangleException()
-    {
-    }
-
-    public DegenerateTriangleException(string message) : base(message)
-    {
-    }
-
-    public DegenerateTriangleException(string message, Exception inner) : base(message, inner)
-    {
-    }
-}
+namespace Jitter2.Collision.Shapes;
 
 /// <summary>
 /// Encapsulates the data of a triangle mesh. An instance of this can be supplied to the <see cref="Jitter2.Collision.Shapes.TriangleShape"/>.
@@ -54,8 +35,8 @@ public class TriangleMesh
 {
     private struct Edge : IEquatable<Edge>
     {
-        public int IndexA;
-        public int IndexB;
+        public readonly int IndexA;
+        public readonly int IndexB;
 
         public Edge(int indexA, int indexB)
         {

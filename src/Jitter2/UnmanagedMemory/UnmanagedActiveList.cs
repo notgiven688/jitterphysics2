@@ -24,7 +24,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Jitter2.Parallelization;
 
 namespace Jitter2.UnmanagedMemory;
@@ -45,7 +44,7 @@ public unsafe struct JHandle<T> where T : unmanaged
         Pointer = ptr;
     }
 
-    public bool IsZero => Pointer == (T**)null;
+    public bool IsZero => Pointer == null;
 
     internal static JHandle<K> AsHandle<K>(JHandle<T> handle) where K : unmanaged
     {

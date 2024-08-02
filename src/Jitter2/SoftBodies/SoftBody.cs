@@ -22,7 +22,6 @@
  */
 
 using System.Collections.Generic;
-using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 
@@ -32,7 +31,7 @@ public class SoftBody
 {
     public List<RigidBody> Vertices { get; } = new();
     public List<Constraint> Springs { get; } = new();
-    public List<Shape> Shapes { get; } = new();
+    public List<SoftBodyShape> Shapes { get; } = new();
 
     protected World world;
 
@@ -50,7 +49,7 @@ public class SoftBody
 
         foreach (var shape in Shapes)
         {
-            world.Remove(shape);
+            world.DynamicTree.RemoveProxy(shape);
         }
 
         foreach (var spring in Springs)
@@ -75,11 +74,11 @@ public class SoftBody
         {
             if (active)
             {
-                world.ActivateShape(shape);
+                world.DynamicTree.Activate(shape);
             }
             else
             {
-                world.DeactivateShape(shape);
+                world.DynamicTree.Deactivate(shape);
             }
         }
     }

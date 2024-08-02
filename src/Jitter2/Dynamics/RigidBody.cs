@@ -78,7 +78,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public JHandle<RigidBodyData> Handle => handle;
 
-    internal readonly List<Shape> shapes = new(1);
+    internal readonly List<RigidBodyShape> shapes = new(1);
 
     // There is only one way to create a body: world.CreateRigidBody. There, we add an island
     // to the new body. This should never be null.
@@ -112,28 +112,35 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </remarks>
     public event Action<Arbiter>? EndCollide;
 
-    internal void RaiseBeginCollide(Arbiter arbiter) => BeginCollide?.Invoke(arbiter);
-    internal void RaiseEndCollide(Arbiter arbiter) => EndCollide?.Invoke(arbiter);
+    internal void RaiseBeginCollide(Arbiter arbiter)
+    {
+        BeginCollide?.Invoke(arbiter);
+    }
+
+    internal void RaiseEndCollide(Arbiter arbiter)
+    {
+        EndCollide?.Invoke(arbiter);
+    }
 
     /// <summary>
     /// Contains all bodies this body is in contact with.
     /// </summary>
-    public ReadOnlyList<RigidBody> Connections => new ReadOnlyList<RigidBody>(connections);
+    public ReadOnlyList<RigidBody> Connections => new(connections);
 
     /// <summary>
     /// Contains all contacts in which this body is involved.
     /// </summary>
-    public ReadOnlyHashSet<Arbiter> Contacts => new ReadOnlyHashSet<Arbiter>(contacts);
+    public ReadOnlyHashSet<Arbiter> Contacts => new(contacts);
 
     /// <summary>
     /// Contains all constraints connected to this body.
     /// </summary>
-    public ReadOnlyHashSet<Constraint> Constraints => new ReadOnlyHashSet<Constraint>(constraints);
+    public ReadOnlyHashSet<Constraint> Constraints => new(constraints);
 
     /// <summary>
     /// Gets the list of shapes added to this rigid body.
     /// </summary>
-    public ReadOnlyList<Shape> Shapes => new ReadOnlyList<Shape>(shapes);
+    public ReadOnlyList<RigidBodyShape> Shapes => new(shapes);
 
     internal int islandMarker;
 
@@ -272,7 +279,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     private void Move()
     {
         UpdateWorldInertia();
-        foreach (Shape shape in shapes)
+        foreach (RigidBodyShape shape in shapes)
         {
             World.UpdateShape(shape);
         }
@@ -352,15 +359,16 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         else World.DeactivateBodyNextStep(this);
     }
 
-    private void AttachToShape(Shape shape)
+    private void AttachToShape(RigidBodyShape shape)
     {
-        if (!shape.AttachRigidBody(this))
+        if (shape.RigidBody != null)
         {
-            throw new ArgumentException("Shape has already been added to another body.", nameof(shape));
+            throw new ArgumentException("Shape has already been added to a body.", nameof(shape));
         }
 
+        shape.RigidBody = this;
         shape.UpdateWorldBoundingBox();
-        World.AddShape(shape, this.IsActive);
+        World.DynamicTree.AddProxy(shape, IsActive);
     }
 
     /// <summary>
@@ -371,9 +379,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <param name="setMassInertia">If true, uses the mass properties of the Shapes to determine the
     /// body's mass properties, assuming unit density for the Shapes. If false, the inertia and mass remain
     /// unchanged.</param>
-    public void AddShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
+    public void AddShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
     {
-        foreach (Shape shape in shapes)
+        foreach (RigidBodyShape shape in shapes)
         {
             AttachToShape(shape);
         }
@@ -388,7 +396,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <param name="shape">The shape to be added.</param>
     /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's
     /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
-    public void AddShape(Shape shape, bool setMassInertia = true)
+    public void AddShape(RigidBodyShape shape, bool setMassInertia = true)
     {
         if (shape.IsRegistered)
         {
@@ -445,7 +453,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shape">The shape to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
-    public void RemoveShape(Shape shape, bool setMassInertia = true)
+    public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
     {
         if (!shapes.Remove(shape))
         {
@@ -457,15 +465,14 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         {
             if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
             {
-                // Removes the current element we are iterating over from Contacts, i.e. the HashSet 
+                // Removes the current element we are iterating over from Contacts, i.e. the HashSet
                 // we are iterating over is altered. This is allowed.
                 World.Remove(arbiter);
             }
         }
 
         World.DynamicTree.RemoveProxy(shape);
-        shape.DetachRigidBody();
-        World.InternalRemoveShape(shape);
+        shape.RigidBody = null!;
 
         if (setMassInertia) SetMassInertia();
     }
@@ -476,24 +483,25 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shapes">The shapes to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
-    public void RemoveShape(IEnumerable<Shape> shapes, bool setMassInertia = true)
+    public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
     {
         HashSet<ulong> sids = new HashSet<ulong>();
 
-        foreach(var shape in shapes)
+        foreach (var shape in shapes)
         {
-            if(shape.RigidBody != this)
+            if (shape.RigidBody != this)
             {
                 throw new ArgumentException($"Shape {shape} is not attached to this body.", nameof(shapes));
             }
+
             sids.Add(shape.ShapeId);
         }
 
         foreach (var arbiter in contacts)
         {
-            if(sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
+            if (sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
             {
-                // Removes the current element we are iterating over from Contacts, i.e. the HashSet 
+                // Removes the current element we are iterating over from Contacts, i.e. the HashSet
                 // we are iterating over is altered. This is allowed.
                 World.Remove(arbiter);
             }
@@ -506,9 +514,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
-                shape.DetachRigidBody();
-                World.InternalRemoveShape(shape);
-
+                shape.RigidBody = null;
                 this.shapes.RemoveAt(i);
             }
         }
@@ -526,7 +532,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     [Obsolete($"{nameof(ClearShapes)} is deprecated, please use {nameof(RemoveShape)} instead.")]
     public void ClearShapes(bool setMassInertia = true)
     {
-        RemoveShape(this.shapes, setMassInertia);
+        RemoveShape(shapes, setMassInertia);
     }
 
     /// <summary>
@@ -546,8 +552,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         for (int i = 0; i < shapes.Count; i++)
         {
-            inertia += shapes[i].Inertia;
-            mass += shapes[i].Mass;
+            shapes[i].CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
+
+            inertia += shapeInertia;
+            mass += shapeMass;
         }
 
         if (!JMatrix.Inverse(inertia, out inverseInertia))
@@ -555,7 +563,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
         }
 
-        this.inverseMass = 1.0f / mass;
+        inverseMass = 1.0f / mass;
 
         UpdateWorldInertia();
     }
@@ -574,7 +582,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         SetMassInertia();
         inverseInertia = JMatrix.Multiply(inverseInertia, 1.0f / (Data.InverseMass * mass));
-        this.inverseMass = 1.0f / mass;
+        inverseMass = 1.0f / mass;
         UpdateWorldInertia();
     }
 
@@ -592,8 +600,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                 throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
             }
 
-            this.inverseInertia = inertia;
-            this.inverseMass = mass;
+            inverseInertia = inertia;
+            inverseMass = mass;
         }
         else
         {
@@ -607,7 +615,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                 throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
             }
 
-            this.inverseMass = 1.0f / mass;
+            inverseMass = 1.0f / mass;
         }
 
         UpdateWorldInertia();
@@ -624,9 +632,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     {
         debugTriangles ??= new Stack<JTriangle>();
 
-        foreach (var shape in this.shapes)
+        foreach (var shape in shapes)
         {
-            ShapeHelper.MakeHull(shape, debugTriangles, 3);
+            ShapeHelper.MakeHull(shape, debugTriangles);
 
             while (debugTriangles.Count > 0)
             {

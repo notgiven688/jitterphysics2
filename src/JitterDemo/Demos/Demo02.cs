@@ -1,7 +1,6 @@
 using Jitter2;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
-using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 

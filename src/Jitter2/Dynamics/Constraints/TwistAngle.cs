@@ -198,6 +198,8 @@ public unsafe class TwistAngle : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public float Impulse => handle.Data.AccumulatedImpulse;
+
     public override void DebugDraw(IDebugDrawer drawer)
     {
         ref var data = ref handle.Data;

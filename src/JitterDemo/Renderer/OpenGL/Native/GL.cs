@@ -22,16 +22,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using GLenum = System.UInt32;
-using GLuint = System.UInt32;
-using GLint = System.Int32;
-using GLsizei = System.Int32;
-using GLchar = System.Byte;
-using GLubyte = System.Byte;
-using GLfloat = System.Single;
-using GLboolean = System.Boolean;
-using GLclampf = System.Single;
-using GLbitfield = System.UInt32;
 
 #pragma warning disable CS8618
 

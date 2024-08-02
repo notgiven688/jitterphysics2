@@ -49,10 +49,7 @@ public class PhongShader : BasicShader
 
         public bool FlipNormal
         {
-            set
-            {
-                NormalMultiply.Set(value ? -1.0f : 1.0f);
-            }
+            set => NormalMultiply.Set(value ? -1.0f : 1.0f);
         }
 
         /// <summary>
