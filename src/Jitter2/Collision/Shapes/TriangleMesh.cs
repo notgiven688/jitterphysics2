@@ -148,12 +148,7 @@ public class TriangleMesh
 
         int GetEdge(Edge e)
         {
-            if (!tmpEdges.TryGetValue(e, out int res))
-            {
-                return -1;
-            }
-
-            return res;
+            return tmpEdges.GetValueOrDefault(e, -1);
         }
 
         for (int i = 0; i < Indices.Length; i++)
