@@ -23,12 +23,15 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
+using Jitter2.UnmanagedMemory;
 
 namespace Jitter2;
 
@@ -36,89 +39,117 @@ public partial class World
 {
     private struct ConvexHullIntersection
     {
-        public JVector[] Left;
-        public JVector[] Right;
-        public JVector[] ManifoldA;
-        public JVector[] ManifoldB;
-        public int Lcount;
-        public int Rcount;
-        public int Mcount;
+        private JVector[] manifoldData;
 
-        public void Init()
+        private int leftCount;
+        private int rightCount;
+        private int manifoldCount;
+
+        public Span<JVector> ManifoldA => manifoldData.AsSpan(0, manifoldCount);
+        public Span<JVector> ManifoldB => manifoldData.AsSpan(6, manifoldCount);
+
+        public int Count => manifoldCount;
+
+        private void PushLeft(Span<JVector> left, in JVector v)
         {
-            if (Left == null)
+            const float epsilon = 0.001f;
+
+            if (leftCount > 0)
             {
-                Left = new JVector[6];
-                Right = new JVector[6];
-                ManifoldA = new JVector[6];
-                ManifoldB = new JVector[6];
+                if ((left[0] - v).LengthSquared() < epsilon) return;
             }
 
-            Lcount = 0;
-            Rcount = 0;
-            Mcount = 0;
+            if (leftCount > 1)
+            {
+                if ((left[leftCount - 1] - v).LengthSquared() < epsilon) return;
+            }
+
+            left[leftCount++] = v;
         }
 
-        public void PushLeft(in JVector v)
+        private void PushRight(Span<JVector> right, in JVector v)
         {
-            // for(int i = 0;i< lcount;i++)
-            // {
-            //     if((left[i] - v).LengthSquared() < 0.001f) return;
-            // }
-            const float Epsilon = 0.001f;
+            const float epsilon = 0.001f;
 
-            if (Lcount > 0)
+            if (rightCount > 0)
             {
-                if ((Left[0] - v).LengthSquared() < Epsilon) return;
+                if ((right[0] - v).LengthSquared() < epsilon) return;
             }
 
-            if (Lcount > 1)
+            if (rightCount > 1)
             {
-                if ((Left[Lcount - 1] - v).LengthSquared() < Epsilon) return;
+                if ((right[rightCount - 1] - v).LengthSquared() < epsilon) return;
             }
 
-            Left[Lcount++] = v;
+            right[rightCount++] = v;
         }
 
-        public void PushRight(in JVector v)
+        public void Reset()
         {
-            // for(int i = 0;i< rcount;i++)
-            // {
-            //     if((right[i] - v).LengthSquared() < 0.001f) return;
-            // }
-            const float Epsilon = 0.001f;
-
-            if (Rcount > 0)
-            {
-                if ((Right[0] - v).LengthSquared() < Epsilon) return;
-            }
-
-            if (Rcount > 1)
-            {
-                if ((Right[Rcount - 1] - v).LengthSquared() < Epsilon) return;
-            }
-
-            Right[Rcount++] = v;
+            leftCount = 0;
+            rightCount = 0;
+            manifoldCount = 0;
         }
 
-        public void BuildManifold(in JVector pA, in JVector pB, in JVector normal, float pen)
+        public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
+            in JVector pA, in JVector pB, in JVector normal, float penetration)
         {
-            if (Lcount > 2)
+            manifoldData ??= new JVector[12];
+            Reset();
+
+            static void Support(RigidBodyShape shape, in JVector direction, out JVector v)
             {
-                for (int e = 0; e < Rcount; e++)
+                JVector.ConjugatedTransform(direction, shape.RigidBody.Data.Orientation, out JVector tmp);
+                shape.SupportMap(tmp, out v);
+                JVector.Transform(v, shape.RigidBody.Data.Orientation, out v);
+                JVector.Add(v, shape.RigidBody.Data.Position, out v);
+            }
+
+            JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
+            JVector crossVector2 = normal % crossVector1;
+
+            Span<JVector> left = stackalloc JVector[6];
+            Span<JVector> right = stackalloc JVector[6];
+
+            const float sqrt3Over2 = 0.8660254f;
+
+            Span<float> hexagonVertices = stackalloc float[]
+                { 1f, 0f, 0.5f, sqrt3Over2, -0.5f, sqrt3Over2, -1f, 0f, -0.5f, -sqrt3Over2, 0.5f, -sqrt3Over2 };
+
+            for (int e = 0; e < 6; e++)
+            {
+                JVector ptNormal = normal + hexagonVertices[2 * e + 0] * 0.01f * crossVector1 +
+                                   hexagonVertices[2 * e + 1] * 0.01f * crossVector2;
+
+                Support(shapeA, ptNormal, out JVector np1);
+                cvh.PushLeft(left, np1);
+
+                ptNormal.Negate();
+                Support(shapeB, ptNormal, out JVector np2);
+                cvh.PushRight(right, np2);
+            }
+
+            Span<JVector> mA = this.manifoldData.AsSpan(0);
+            Span<JVector> mB = this.manifoldData.AsSpan(6);
+
+            // ---
+
+            if (leftCount > 2)
+            {
+                for (int e = 0; e < rightCount; e++)
                 {
-                    JVector p = Right[e];
-                    JVector a = Left[Lcount - 1];
-                    JVector b = Left[0];
+                    JVector p = right[e];
+                    JVector a = left[leftCount - 1];
+                    JVector b = left[0];
 
                     JVector cr = (b - a) % (p - a);
 
                     bool sameSign = true;
 
-                    for (int i = 0; i < Lcount - 1; i++)
+                    for (int i = 0; i < leftCount - 1; i++)
                     {
-                        a = Left[i];
-                        b = Left[i + 1];
+                        a = left[i];
+                        b = left[i + 1];
 
                         JVector cr2 = (b - a) % (p - a);
 
@@ -129,29 +160,29 @@ public partial class World
                     if (sameSign)
                     {
                         float diff = JVector.Dot(p - pB, normal);
-                        ManifoldB[Mcount] = p;
-                        ManifoldA[Mcount++] = p - (diff - pen) * normal;
+                        mB[manifoldCount] = p;
+                        mA[manifoldCount++] = p - (diff - penetration) * normal;
                     }
                 }
             }
 
             // ---
-            if (Rcount > 2)
+            if (rightCount > 2)
             {
-                for (int e = 0; e < Lcount; e++)
+                for (int e = 0; e < leftCount; e++)
                 {
-                    JVector p = Left[e];
-                    JVector a = Right[Rcount - 1];
-                    JVector b = Right[0];
+                    JVector p = left[e];
+                    JVector a = right[rightCount - 1];
+                    JVector b = right[0];
 
                     JVector cr = (b - a) % (p - a);
 
                     bool sameSign = true;
 
-                    for (int i = 0; i < Rcount - 1; i++)
+                    for (int i = 0; i < rightCount - 1; i++)
                     {
-                        a = Right[i];
-                        b = Right[i + 1];
+                        a = right[i];
+                        b = right[i + 1];
 
                         JVector cr2 = (b - a) % (p - a);
 
@@ -162,42 +193,15 @@ public partial class World
                     if (sameSign)
                     {
                         float diff = -JVector.Dot(p - pA, normal);
-                        ManifoldA[Mcount] = p;
-                        ManifoldB[Mcount++] = p - (diff - pen) * normal;
+                        mA[manifoldCount] = p;
+                        mB[manifoldCount++] = p - (diff - penetration) * normal;
                     }
                 }
             }
+        } // BuildManifold
 
-            /*
-            if(lcount > 2 && rcount > 2)
-            {
-                for (int e = 0; e < rcount - 1; e++)
-                {
-                    JVector a = right[e];
-                    JVector b = right[e + 1];
-
-                    for (int i = 0; i < lcount - 1; i++)
-                    {
-                        JVector c = left[i];
-                        JVector d = left[i + 1];
-
-                        bool result = MathHelper.LineLineIntersect(a, b, c, d, 0.01f, out JVector ra, out JVector rb, out float mua, out float mub);
-
-                        if(result)
-                        {
-                            if ((mua > 0 && mua < 1) && (mub > 0 && mub < 1))
-                            {
-                                manifoldA[mcount] = ra;
-                                manifoldB[mcount++] = rb;
-                            }
-                        }
-                    }
-
-                }
-            }
-            */
-        }
     }
+
 
     /// <summary>
     /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
@@ -210,13 +214,6 @@ public partial class World
     /// The default value is null.
     /// </summary>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
-
-    private const float Sqrt3Over2 = 0.8660254f;
-
-    private readonly (float X, float Y)[] hexagonVertices =
-    {
-        (1f, 0f), (0.5f, Sqrt3Over2), (-0.5f, Sqrt3Over2), (-1f, 0f), (-0.5f, -Sqrt3Over2), (0.5f, -Sqrt3Over2)
-    };
 
     /// <summary>
     /// Enables the generation of additional contacts for flat surfaces that are in contact.
@@ -243,11 +240,10 @@ public partial class World
     /// </summary>
     public float SpeculativeVelocityThreshold { get; set; } = 10f;
 
-    public void RegisterContact(ulong id0, ulong id1, RigidBody body0, RigidBody body1,
-        in JVector point1, in JVector point2, in JVector normal, float penetration, bool speculative = false)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
+        in JVector normal, float penetration, bool speculative = false)
     {
-        GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
-
         lock (arbiter)
         {
             memContacts.ResizeLock.EnterReadLock();
@@ -257,7 +253,15 @@ public partial class World
         }
     }
 
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body0, RigidBody body1,
+        in JVector point1, in JVector point2, in JVector normal, float penetration, bool speculative = false)
+    {
+        GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
+        RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
+    }
+
     [ThreadStatic] private static ConvexHullIntersection cvh;
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -362,53 +366,21 @@ public partial class World
         // Auxiliary Flat Surface Contact Points
         //
 
-        cvh.Init();
+        cvh.Reset();
 
         if (EnableAuxiliaryContactPoints)
         {
-            static void Support(RigidBodyShape shape, in JVector direction, out JVector v)
-            {
-                JVector.ConjugatedTransform(direction, shape.RigidBody!.Data.Orientation, out JVector tmp);
-                shape.SupportMap(tmp, out v);
-                JVector.Transform(v, shape.RigidBody.Data.Orientation, out v);
-                JVector.Add(v, shape.RigidBody.Data.Position, out v);
-            }
-
-            JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
-            JVector crossVector2 = normal % crossVector1;
-
-            for (int e = 0; e < 6; e++)
-            {
-                JVector ptNormal = normal + hexagonVertices[e].X * 0.01f * crossVector1 +
-                                   hexagonVertices[e].Y * 0.01f * crossVector2;
-
-                Support(sA, ptNormal, out JVector np1);
-                cvh.PushLeft(np1);
-
-                ptNormal.Negate();
-                Support(sB, ptNormal, out JVector np2);
-                cvh.PushRight(np2);
-            }
-
-            cvh.BuildManifold(pA, pB, normal, penetration);
+            cvh.BuildManifold(sA, sB, pA, pB, normal, penetration);
         }
 
         lock (arbiter)
         {
-            // Using memContacts.Allocate and arbiter.Handle.Data.AddContact in parallel:
-            //
-            // 1. GetArbiter may trigger a resize in memContacts, invalidating memory which
-            //    might be in use in AddContact. Protect from this by entering the critical
-            //    section as a reader using memContacts.ResizeLock.
-            //
-            // 2. Apart from point (1), memContacts.Allocate(active: true, clear: false) does
-            //    not move the memory position of an already existing active element.
-            //
+            // Do no add contacts while contacts may be resized
             memContacts.ResizeLock.EnterReadLock();
 
             arbiter.Handle.Data.IsSpeculative = false;
 
-            for (int e = 0; e < cvh.Mcount; e++)
+            for (int e = 0; e < cvh.Count; e++)
             {
                 JVector mfA = cvh.ManifoldA[e];
                 JVector mfB = cvh.ManifoldB[e];

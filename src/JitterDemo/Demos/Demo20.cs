@@ -25,7 +25,7 @@ public class Dragon : TriangleMesh
     }
 }
 
-public class CollisionTriangle : ISupportMappable
+public struct CollisionTriangle : ISupportMappable
 {
     public JVector A, B, C;
 
@@ -70,7 +70,6 @@ public class CustomCollisionDetection : IBroadPhaseFilter
         (minIndex, _) = World.RequestId(octree.Indices.Length);
     }
 
-    [ThreadStatic] private static CollisionTriangle? ts;
     [ThreadStatic] private static Stack<uint>? candidates;
 
     public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)
@@ -82,7 +81,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
         if (collider is not RigidBodyShape rbs || rbs.RigidBody.Data.IsStaticOrInactive) return false;
 
         candidates ??= new Stack<uint>();
-        ts ??= new CollisionTriangle();
+        CollisionTriangle ts = new CollisionTriangle();
 
         octree.Query(candidates, collider.WorldBoundingBox);
 

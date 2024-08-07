@@ -40,7 +40,7 @@ public static class NarrowPhase
     {
         private ConvexPolytope convexPolytope;
 
-        public bool PointTest(ISupportMappable supportA, in JVector origin)
+        public bool PointTest(in ISupportMappable supportA, in JVector origin)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -86,7 +86,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool RayCast(ISupportMappable supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -616,7 +616,7 @@ public static class NarrowPhase
     /// <param name="support">Support map representing the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool PointTest(ISupportMappable support, in JVector point)
+    public static bool PointTest(in ISupportMappable support, in JVector point)
     {
         return solver.PointTest(support, point);
     }
@@ -629,7 +629,7 @@ public static class NarrowPhase
     /// <param name="position">Position of the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool PointTest(ISupportMappable support, in JMatrix orientation,
+    public static bool PointTest(in ISupportMappable support, in JMatrix orientation,
         in JVector position, in JVector point)
     {
         JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
@@ -650,7 +650,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool RayCast(ISupportMappable support, in JQuaternion orientation,
+    public static bool RayCast(in ISupportMappable support, in JQuaternion orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         // rotate the ray into the reference frame of bodyA..
@@ -677,7 +677,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool RayCast(ISupportMappable support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         return solver.RayCast(support, origin, direction, out fraction, out normal);
     }
@@ -711,7 +711,7 @@ public static class NarrowPhase
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.
     /// </returns>
-    public static bool GJKEPA(ISupportMappable supportA, ISupportMappable supportB,
+    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -760,7 +760,7 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
-    public static bool MPREPA(ISupportMappable supportA, ISupportMappable supportB,
+    public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -807,7 +807,7 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
-    public static bool MPREPA(ISupportMappable supportA, ISupportMappable supportB,
+    public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
@@ -831,7 +831,7 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
-    public static bool SweepTest(ISupportMappable supportA, ISupportMappable supportB,
+    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
@@ -879,7 +879,7 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
-    public static bool SweepTest(ISupportMappable supportA, ISupportMappable supportB,
+    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
     {
