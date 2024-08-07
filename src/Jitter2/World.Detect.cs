@@ -23,21 +23,18 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
-using Jitter2.UnmanagedMemory;
 
 namespace Jitter2;
 
 public partial class World
 {
-    private struct ConvexHullIntersection
+    public struct ConvexHullIntersection
     {
         private JVector[] manifoldData;
 
@@ -122,11 +119,11 @@ public partial class World
                                    hexagonVertices[2 * e + 1] * 0.01f * crossVector2;
 
                 Support(shapeA, ptNormal, out JVector np1);
-                cvh.PushLeft(left, np1);
+                PushLeft(left, np1);
 
                 ptNormal.Negate();
                 Support(shapeB, ptNormal, out JVector np2);
-                cvh.PushRight(right, np2);
+                PushRight(right, np2);
             }
 
             Span<JVector> mA = this.manifoldData.AsSpan(0);
@@ -199,9 +196,16 @@ public partial class World
                 }
             }
         } // BuildManifold
-
     }
 
+    public class InvalidCollisionTypeException : Exception
+    {
+        public InvalidCollisionTypeException(Type proxyA, Type proxyB)
+            : base($"Don't know how to handle collision between {proxyA} and {proxyB}." +
+                   $" Register a BroadPhaseFilter to handle and/or filter out these collision types.")
+        {
+        }
+    }
 
     /// <summary>
     /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
@@ -261,7 +265,6 @@ public partial class World
     }
 
     [ThreadStatic] private static ConvexHullIntersection cvh;
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)

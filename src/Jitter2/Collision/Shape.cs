@@ -88,10 +88,13 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     public bool IsRegistered => (this as IListIndex).ListIndex != -1;
 
-    [ReferenceFrame(ReferenceFrame.World)] public abstract JVector Velocity { get; }
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract JVector Velocity { get; }
 
+    [ReferenceFrame(ReferenceFrame.World)]
     public abstract void UpdateWorldBoundingBox(float dt = 0.0f);
 
+    [ReferenceFrame(ReferenceFrame.World)]
     public abstract bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
 
     /// <inheritdoc/>
