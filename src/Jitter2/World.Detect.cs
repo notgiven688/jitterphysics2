@@ -34,7 +34,7 @@ namespace Jitter2;
 
 public partial class World
 {
-    public struct ConvexHullIntersection
+    private struct ConvexHullIntersection
     {
         private JVector[] manifoldData;
 
@@ -378,7 +378,7 @@ public partial class World
 
         lock (arbiter)
         {
-            // Do no add contacts while contacts may be resized
+            // Do no add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
 
             arbiter.Handle.Data.IsSpeculative = false;

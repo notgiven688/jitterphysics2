@@ -28,6 +28,9 @@ public class Demo17 : IDemo, ICleanDemo
 
         pg.ResetScene();
 
+        world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
+        world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
+
         const int len = 40;
         const float scale = 0.2f;
         const int leno2 = len / 2;
@@ -77,9 +80,6 @@ public class Demo17 : IDemo, ICleanDemo
         var b2 = world.CreateRigidBody();
         b2.Position = new JVector(1, 11, 0);
         b2.AddShape(new SphereShape(0.5f));
-
-        world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
-        //world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
 
         RigidBody fb0 = cloth.Vertices.OrderByDescending(item => +item.Position.X + item.Position.Z).First();
         var c0 = world.CreateConstraint<BallSocket>(fb0, world.NullBody);

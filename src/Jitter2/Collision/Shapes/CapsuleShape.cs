@@ -98,13 +98,11 @@ public class CapsuleShape : RigidBodyShape
     {
         JVector delta = halfLength * orientation.GetBasisY();
 
-        box.Min.X = -radius - MathF.Abs(delta.X);
-        box.Min.Y = -radius - MathF.Abs(delta.Y);
-        box.Min.Z = -radius - MathF.Abs(delta.Z);
-
         box.Max.X = +radius + MathF.Abs(delta.X);
         box.Max.Y = +radius + MathF.Abs(delta.Y);
         box.Max.Z = +radius + MathF.Abs(delta.Z);
+
+        box.Min = -box.Max;
 
         box.Min += position;
         box.Max += position;

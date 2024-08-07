@@ -68,6 +68,7 @@ public abstract class RigidBodyShape : Shape
         ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
     }
 
+    [ReferenceFrame(ReferenceFrame.Local)]
     public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
         return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
