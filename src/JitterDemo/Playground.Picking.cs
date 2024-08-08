@@ -64,10 +64,7 @@ public partial class Playground : RenderWindow
         {
             grepBody = null;
 
-            // Ray cast against the world, ignore any shapes not associated
-            // with a rigid body.
-            bool result = World.RayCast(origin, jdir,
-                shape => shape is SoftBodyShape || (shape as RigidBodyShape).RigidBody != null, null,
+            bool result = World.RayCast(origin, jdir, null, null,
                 out IDynamicTreeProxy? grepShape, out JVector _, out hitDistance);
 
             if (grepShape != null)
