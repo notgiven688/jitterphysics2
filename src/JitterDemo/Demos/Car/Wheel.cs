@@ -267,6 +267,7 @@ public class Wheel
 
             if (result && frac <= 1.0f)
             {
+                // shape must be RigidBodyShape since we filter out other ray tests
                 body = (shape as RigidBodyShape)!.RigidBody;
 
                 if (frac < deepestFrac)
@@ -412,6 +413,7 @@ public class Wheel
 
     private bool RayCastCallback(IDynamicTreeProxy shape)
     {
-        return (shape as RigidBodyShape)!.RigidBody != car;
+        if (shape is not RigidBodyShape rbs) return false;
+        return rbs.RigidBody != car;
     }
 }
