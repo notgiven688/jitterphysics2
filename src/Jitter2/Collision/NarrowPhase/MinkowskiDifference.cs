@@ -62,7 +62,7 @@ public struct MinkowskiDifference
     /// Retrieves a point within the Minkowski Difference.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void PointWithin(out ConvexPolytope.Vertex center)
+    public readonly void GetCenter(out ConvexPolytope.Vertex center)
     {
         SupportA.GetCenter(out center.A);
         SupportB.GetCenter(out center.B);

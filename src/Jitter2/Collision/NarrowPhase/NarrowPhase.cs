@@ -166,7 +166,7 @@ public static class NarrowPhase
 
             convexPolytope.InitHeap();
 
-            mkd.PointWithin(out var center);
+            mkd.GetCenter(out var center);
             convexPolytope.InitTetrahedron(center.V);
 
             JVector posB = mkd.PositionB;
@@ -335,7 +335,7 @@ public static class NarrowPhase
 
             penetration = 0.0f;
 
-            mkd.PointWithin(out v0);
+            mkd.GetCenter(out v0);
 
             if (Math.Abs(v0.V.X) < NumericEpsilon &&
                 Math.Abs(v0.V.Y) < NumericEpsilon &&
@@ -538,7 +538,7 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            mkd.PointWithin(out ConvexPolytope.Vertex centerVertex);
+            mkd.GetCenter(out ConvexPolytope.Vertex centerVertex);
             JVector center = centerVertex.V;
 
             convexPolytope.InitHeap();
