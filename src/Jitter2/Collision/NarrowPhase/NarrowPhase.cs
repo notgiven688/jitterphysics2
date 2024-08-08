@@ -616,6 +616,7 @@ public static class NarrowPhase
     /// <param name="support">Support map representing the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool PointTest(in ISupportMappable support, in JVector point)
     {
         return solver.PointTest(support, point);
@@ -629,6 +630,7 @@ public static class NarrowPhase
     /// <param name="position">Position of the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool PointTest(in ISupportMappable support, in JMatrix orientation,
         in JVector position, in JVector point)
     {
@@ -650,6 +652,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool RayCast(in ISupportMappable support, in JQuaternion orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
@@ -677,6 +680,7 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         return solver.RayCast(support, origin, direction, out fraction, out normal);
@@ -710,6 +714,7 @@ public static class NarrowPhase
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.
     /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -755,6 +760,7 @@ public static class NarrowPhase
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.
     /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
@@ -804,6 +810,7 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
@@ -851,6 +858,7 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -875,6 +883,7 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
@@ -923,6 +932,7 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
