@@ -412,6 +412,6 @@ public class Wheel
 
     private bool RayCastCallback(IDynamicTreeProxy shape)
     {
-        return (shape as RigidBodyShape).RigidBody != car;
+        return (shape as RigidBodyShape)!.RigidBody != car;
     }
 }
