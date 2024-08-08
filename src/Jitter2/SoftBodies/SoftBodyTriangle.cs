@@ -28,9 +28,9 @@ namespace Jitter2.SoftBodies;
 
 public class SoftBodyTriangle : SoftBodyShape
 {
+    private readonly RigidBody v1;
     private readonly RigidBody v2;
     private readonly RigidBody v3;
-    private readonly RigidBody v1;
 
     public RigidBody Vertex1 => v1;
     public RigidBody Vertex2 => v2;
@@ -80,12 +80,15 @@ public class SoftBodyTriangle : SoftBodyShape
         const float extraMargin = 0.01f;
 
         JBBox box = JBBox.SmallBox;
+
         box.AddPoint(Vertex1.Position);
         box.AddPoint(Vertex2.Position);
         box.AddPoint(Vertex3.Position);
 
-        box.Min -= JVector.One * extraMargin;
-        box.Max += JVector.One * extraMargin;
+        // prevent a degenerate bounding box
+        JVector extra = new JVector(extraMargin);
+        box.Min -= extra;
+        box.Max += extra;
 
         WorldBoundingBox = box;
     }

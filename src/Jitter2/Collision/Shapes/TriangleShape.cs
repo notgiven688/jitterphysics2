@@ -97,15 +97,18 @@ public class TriangleShape : RigidBodyShape
     {
         const float extraMargin = 0.01f;
 
-        GetWorldVertices(out JVector aworld, out JVector bworld, out JVector cworld);
+        GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
         box = JBBox.SmallBox;
-        box.AddPoint(aworld);
-        box.AddPoint(bworld);
-        box.AddPoint(cworld);
 
-        box.Min -= JVector.One * extraMargin;
-        box.Max += JVector.One * extraMargin;
+        box.AddPoint(a);
+        box.AddPoint(b);
+        box.AddPoint(c);
+
+        // prevent a degenerate bounding box
+        JVector extra = new JVector(extraMargin);
+        box.Min -= extra;
+        box.Max += extra;
     }
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)

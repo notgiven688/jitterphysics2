@@ -98,7 +98,7 @@ public class SoftBodyTetrahedron : SoftBodyShape
     public override void PointWithin(out JVector point)
     {
         point = 0.25f * (Vertices[0].Position + Vertices[1].Position +
-                         Vertices[1].Position + Vertices[2].Position);
+                         Vertices[2].Position + Vertices[3].Position);
     }
 
     public override void UpdateWorldBoundingBox(float dt = 0.0f)
