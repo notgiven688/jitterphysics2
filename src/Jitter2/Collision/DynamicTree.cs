@@ -255,17 +255,6 @@ public class DynamicTree
     }
 
     /// <summary>
-    /// Clears all entities from the tree.
-    /// </summary>
-    public void Clear()
-    {
-        nodePointer = -1;
-        root = NullNode;
-        activeList.Clear();
-        PotentialPairs.Clear();
-    }
-
-    /// <summary>
     /// Calculates the cost function of the tree.
     /// </summary>
     /// <returns>The calculated cost.</returns>

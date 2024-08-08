@@ -788,11 +788,10 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Detects whether two convex shapes overlap and provides detailed collision information.
-    /// It assumes that support shape A is at position zero and not rotated.
-    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the
-    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth
-    /// a predefined threshold, the results are further refined using the Expanding Polytope
+    /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
+    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
+    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
+    /// a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>

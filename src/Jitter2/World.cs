@@ -260,22 +260,11 @@ public partial class World
     {
         // create a copy, since we are going to modify the list
         Stack<RigidBody> bodyStack = new(bodies);
-
-        while (bodyStack.Count > 0)
-        {
-            Remove(bodyStack.Pop());
-        }
-
-        // TODO: implement this
+        while (bodyStack.Count > 0) Remove(bodyStack.Pop());
 
         // Left-over shapes not associated with a rigid body.
-        //Stack<Shape> shapeStack = new Stack<Shape>(shapes);
-
-        //while (shapeStack.Count > 0)
-        //{
-        //    Shape s = shapeStack.Pop();
-        //    if(s is SoftBodyShape sbs) Remove(sbs);
-        //}
+        Stack<IDynamicTreeProxy> proxies = new(DynamicTree.ActiveList);
+        while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
     }
 
     /// <summary>
