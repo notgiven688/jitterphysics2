@@ -1,8 +1,5 @@
 using System.IO;
-using Jitter2.Collision;
-using Jitter2.LinearMath;
 using JitterDemo.Renderer.OpenGL;
-using JitterDemo.Renderer.OpenGL.Native;
 
 namespace JitterDemo.Renderer;
 
@@ -40,7 +37,7 @@ public class Cloth : CSMInstance
             if (indices[i].T3 > largest) largest = indices[i].T3;
         }
 
-        this.vertices = new Vertex[largest + 1];
+        vertices = new Vertex[largest + 1];
         this.indices = indices;
     }
 
@@ -56,7 +53,7 @@ public class Cloth : CSMInstance
             ref var v1 = ref vertices[indices[i].T1];
             ref var v2 = ref vertices[indices[i].T2];
             ref var v3 = ref vertices[indices[i].T3];
-            
+
             var p0 = v1.Position;
             var p1 = v2.Position;
             var p2 = v3.Position;
@@ -66,8 +63,8 @@ public class Cloth : CSMInstance
             v2.Normal += n;
             v3.Normal += n;
         }
-        
-        this.ab.SetData(vertices);
+
+        ab.SetData(vertices);
     }
 
     public override void Load()
@@ -77,7 +74,7 @@ public class Cloth : CSMInstance
 
         Texture.SetWrap(OpenGL.Texture.Wrap.Repeat);
         Texture.SetAnisotropicFiltering(OpenGL.Texture.Anisotropy.Filter_8x);
-        
+
         base.Load();
     }
 
@@ -96,7 +93,7 @@ public class Cloth : CSMInstance
     public override void LightPass(PhongShader shader)
     {
         shader.MaterialProperties.SetDefaultMaterial();
-        shader.MaterialProperties.ColorMixing.Set(0.1f,0.0f,0.9f);
+        shader.MaterialProperties.ColorMixing.Set(0.1f, 0.0f, 0.9f);
         shader.MaterialProperties.FlipNormal = true;
         GLDevice.SetCullFaceMode(CullMode.Back);
         base.LightPass(shader);

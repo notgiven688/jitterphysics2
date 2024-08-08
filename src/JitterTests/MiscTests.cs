@@ -1,5 +1,4 @@
 using Jitter2.DataStructures;
-using Jitter2.Dynamics.Constraints;
 
 namespace JitterTests;
 
@@ -13,7 +12,7 @@ public class MiscTests
     [TestCase]
     public static void SlimBagTest()
     {
-        var bag= new SlimBag<object>();
+        var bag = new SlimBag<object>();
         bag.Add(new object());
         bag.Add(new object());
         bag.Add(new object());

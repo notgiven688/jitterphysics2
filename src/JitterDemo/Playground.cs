@@ -26,7 +26,7 @@ public partial class Playground : RenderWindow
 
     private bool multiThread;
     private bool persistentThreadModel = true;
-    private Shape? floorShape;
+    private RigidBodyShape? floorShape;
 
     private readonly List<IDemo> demos = new()
     {
@@ -66,7 +66,7 @@ public partial class Playground : RenderWindow
     public Playground()
     {
         world = new World(64_000, 64_000, 32_000);
-        world.NullBody.Tag = new RigidBodyTag(true);
+        world.NullBody.Tag = new RigidBodyTag();
         drawBox = DrawBox;
     }
 
@@ -99,7 +99,7 @@ public partial class Playground : RenderWindow
         VerticalSync = false;
     }
 
-    public Shape? FloorShape => floorShape;
+    public RigidBodyShape? FloorShape => floorShape;
 
     public World World => world;
 
@@ -121,7 +121,6 @@ public partial class Playground : RenderWindow
     public override void Draw()
     {
         // if (Keyboard.KeyPressBegin(Keyboard.Key.P))
-
         world.Step(1.0f / 100.0f, multiThread);
 
         UpdateDisplayText();
@@ -175,7 +174,7 @@ public partial class Playground : RenderWindow
 
             mat = Conversion.FromJitter(body);
 
-            foreach (Shape shape in body.Shapes)
+            foreach (var shape in body.Shapes)
             {
                 var color = ColorGenerator.GetColor(shape.GetHashCode());
 

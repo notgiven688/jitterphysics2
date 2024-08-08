@@ -248,6 +248,8 @@ public unsafe class DistanceLimit : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public float Impulse => handle.Data.AccumulatedImpulse;
+
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));

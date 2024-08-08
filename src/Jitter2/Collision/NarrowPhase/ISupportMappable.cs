@@ -21,40 +21,24 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Collections.Generic;
-using Jitter2.DataStructures;
-using Jitter2.Dynamics;
+using Jitter2.LinearMath;
 
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
+/// Defines an interface for a generic convex shape, which is characterized by its support function.
 /// </summary>
-public sealed class Island : IListIndex
+public interface ISupportMappable
 {
-    internal readonly HashSet<RigidBody> bodies = new();
-    internal bool MarkedAsActive;
-    internal bool NeedsUpdate;
+    /// <summary>
+    /// Identifies the point on the shape that is furthest in the specified direction.
+    /// </summary>
+    /// <param name="direction">The direction in which to search for the furthest point. It does not need to be normalized.</param>
+    void SupportMap(in JVector direction, out JVector result);
 
     /// <summary>
-    /// Gets a collection of all the bodies present in this island.
+    /// Returns a point deep within the shape. This is used in algorithms which work with the implicit
+    /// definition of the support map function. The center of mass is a good choice.
     /// </summary>
-    public ReadOnlyHashSet<RigidBody> Bodies => new(bodies);
-
-    int IListIndex.ListIndex { get; set; } = -1;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Island"/> class.
-    /// </summary>
-    public Island()
-    {
-    }
-
-    /// <summary>
-    /// Clears all the bodies from the lists within this island.
-    /// </summary>
-    internal void ClearLists()
-    {
-        bodies.Clear();
-    }
+    void GetCenter(out JVector point);
 }

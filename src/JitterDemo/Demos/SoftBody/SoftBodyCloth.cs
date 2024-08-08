@@ -22,11 +22,20 @@ public class SoftBodyCloth : SoftBody
             IndexB = u1;
         }
 
-        public bool Equals(Edge other) => other.IndexA == IndexA && other.IndexB == IndexB;
+        public bool Equals(Edge other)
+        {
+            return other.IndexA == IndexA && other.IndexB == IndexB;
+        }
 
-        public override bool Equals(object? obj) => obj is Edge other && Equals(other);
+        public override bool Equals(object? obj)
+        {
+            return obj is Edge other && Equals(other);
+        }
 
-        public override int GetHashCode() => IndexA * 24712 + IndexB;
+        public override int GetHashCode()
+        {
+            return IndexA * 24712 + IndexB;
+        }
     }
 
     private List<JVector> vertices = null!;
@@ -100,7 +109,7 @@ public class SoftBodyCloth : SoftBody
         {
             var tri = new SoftBodyTriangle(this, Vertices[(int)triangle.T1], Vertices[(int)triangle.T2], Vertices[(int)triangle.T3]);
             tri.UpdateWorldBoundingBox();
-            world.AddShape(tri);
+            world.DynamicTree.AddProxy(tri);
             Shapes.Add(tri);
         }
     }

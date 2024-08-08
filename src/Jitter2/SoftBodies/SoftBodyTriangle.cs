@@ -21,18 +21,16 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
-using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTriangle : Shape, ISoftBodyShape
+public class SoftBodyTriangle : SoftBodyShape
 {
+    private readonly RigidBody v1;
     private readonly RigidBody v2;
     private readonly RigidBody v3;
-    private readonly RigidBody v1;
 
     public RigidBody Vertex1 => v1;
     public RigidBody Vertex2 => v2;
@@ -53,19 +51,12 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
         this.v3 = v3;
 
         SoftBody = body;
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override JVector Velocity => 1.0f / 3.0f * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
-    {
-        inertia = JMatrix.Identity;
-        mass = 1;
-        com = 1.0f / 3.0f * (v1.Position + v2.Position + v3.Position);
-    }
-
-    public RigidBody GetClosest(in JVector pos)
+    public override RigidBody GetClosest(in JVector pos)
     {
         float len1 = (pos - v1.Position).LengthSquared();
         float len2 = (pos - v2.Position).LengthSquared();
@@ -84,23 +75,22 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
         return v3;
     }
 
-    public SoftBody SoftBody { get; }
-
-    public override void UpdateWorldBoundingBox()
+    public override void UpdateWorldBoundingBox(float dt = 0.0f)
     {
-        float extraMargin = MathF.Max(halfThickness, 0.01f);
+        const float extraMargin = 0.01f;
 
-        var box = JBBox.SmallBox;
-        box.AddPoint(v1.Position);
-        box.AddPoint(v2.Position);
-        box.AddPoint(v3.Position);
+        JBBox box = JBBox.SmallBox;
 
-        box.Min -= JVector.One * extraMargin;
-        box.Max += JVector.One * extraMargin;
+        box.AddPoint(Vertex1.Position);
+        box.AddPoint(Vertex2.Position);
+        box.AddPoint(Vertex3.Position);
+
+        // prevent a degenerate bounding box
+        JVector extra = new JVector(extraMargin);
+        box.Min -= extra;
+        box.Max += extra;
 
         WorldBoundingBox = box;
-
-        GeometricCenter = 1.0f / 3.0f * (v1.Position + v2.Position + v3.Position);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -128,5 +118,10 @@ public class SoftBodyTriangle : Shape, ISoftBodyShape
         }
 
         result += JVector.Normalize(direction) * halfThickness;
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = (1.0f / 3.0f) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
     }
 }

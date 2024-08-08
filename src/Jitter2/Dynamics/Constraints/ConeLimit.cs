@@ -177,6 +177,8 @@ public unsafe class ConeLimit : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public float Impulse => handle.Data.AccumulatedImpulse;
+
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));

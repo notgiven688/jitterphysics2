@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -59,12 +60,9 @@ public class Octree
     private Node[] nodes;
     private uint nodeCount;
 
-    private int numLeafs = 0;
+    private int numLeafs;
 
-    public JBBox Dimensions
-    {
-        get => nodes[0].Box;
-    }
+    public JBBox Dimensions => nodes[0].Box;
 
     public JVector[] Vertices => vertices;
     public TriangleIndices[] Indices => indices;
@@ -73,10 +71,10 @@ public class Octree
     {
         this.indices = indices;
         this.vertices = vertices;
-        this.nodes = new Node[1024];
-        this.triangleBoxes = new JBBox[indices.Length];
+        nodes = new Node[1024];
+        triangleBoxes = new JBBox[indices.Length];
 
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
 
         Build();
 

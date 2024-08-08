@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a cylinder shape.
 /// </summary>
-public class CylinderShape : Shape
+public class CylinderShape : RigidBodyShape
 {
     private float radius;
     private float height;
@@ -43,7 +43,7 @@ public class CylinderShape : Shape
         set
         {
             radius = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -56,7 +56,7 @@ public class CylinderShape : Shape
         set
         {
             height = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -69,7 +69,12 @@ public class CylinderShape : Shape
     {
         this.radius = radius;
         this.height = height;
-        UpdateShape();
+        UpdateWorldBoundingBox();
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = JVector.Zero;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -92,7 +97,7 @@ public class CylinderShape : Shape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const float ZeroEpsilon = 1e-12f;
+        const float zeroEpsilon = 1e-12f;
 
         JVector upa = orientation.GetBasisY();
 
@@ -106,19 +111,19 @@ public class CylinderShape : Shape
 
         float xext = 0, yext = 0, zext = 0;
 
-        if (l1 > ZeroEpsilon)
+        if (l1 > zeroEpsilon)
         {
             float sl = 1.0f / MathF.Sqrt(l1);
             xext = (yy + zz) * sl * radius;
         }
 
-        if (l2 > ZeroEpsilon)
+        if (l2 > zeroEpsilon)
         {
             float sl = 1.0f / MathF.Sqrt(l2);
             yext = (xx + zz) * sl * radius;
         }
 
-        if (l3 > ZeroEpsilon)
+        if (l3 > zeroEpsilon)
         {
             float sl = 1.0f / MathF.Sqrt(l3);
             zext = (xx + yy) * sl * radius;
@@ -138,6 +143,7 @@ public class CylinderShape : Shape
         mass = MathF.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
+
         inertia.M11 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;
         inertia.M22 = 1.0f / 2.0f * mass * radius * radius;
         inertia.M33 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;

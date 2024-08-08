@@ -137,6 +137,8 @@ public unsafe class FixedAngle : Constraint
         set => handle.Data.BiasFactor = value;
     }
 
+    public JVector Impulse => handle.Data.AccumulatedImpulse;
+
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));

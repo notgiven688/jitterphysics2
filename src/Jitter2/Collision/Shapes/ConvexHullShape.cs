@@ -32,7 +32,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a generic convex shape.
 /// </summary>
-public class ConvexHullShape : Shape
+public class ConvexHullShape : RigidBodyShape
 {
     private struct CHullVector
     {
@@ -72,6 +72,11 @@ public class ConvexHullShape : Shape
             IndexC = c;
         }
     }
+
+    private JBBox cachedBoundingBox;
+    private JMatrix cachedInertia;
+    private float cachedMass;
+    private JVector cachedCenter;
 
     private CHullVector[] vertices = null!;
     private CHullTriangle[] indices = null!;
@@ -160,7 +165,6 @@ public class ConvexHullShape : Shape
         tmpIndices.Clear();
         tmpVertices.Clear();
 
-        CalcInitBox();
         UpdateShape();
     }
 
@@ -179,10 +183,10 @@ public class ConvexHullShape : Shape
             neighborList = neighborList,
             vertices = vertices,
             indices = indices,
-            initBox = initBox,
-            Inertia = Inertia,
-            GeometricCenter = GeometricCenter,
-            Mass = Mass,
+            cachedBoundingBox = cachedBoundingBox,
+            cachedCenter = cachedCenter,
+            cachedInertia = cachedInertia,
+            cachedMass = cachedMass,
             shifted = shifted
         };
         return result;
@@ -194,22 +198,35 @@ public class ConvexHullShape : Shape
         set
         {
             shifted = value;
-            CalcInitBox();
             UpdateShape();
         }
     }
 
+    public void UpdateShape()
+    {
+        CalculateMassInertia();
+        CalcInitBox();
+    }
+
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        com = JVector.Zero;
-        inertia = JMatrix.Zero;
-        mass = 0;
+        inertia = cachedInertia;
+        com = cachedCenter;
+        mass = cachedMass;
+    }
+
+    public void CalculateMassInertia()
+    {
+        cachedCenter = JVector.Zero;
+        cachedInertia = JMatrix.Zero;
+        cachedMass = 0;
 
         const float a = 1.0f / 60.0f;
         const float b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         JVector pointWithin = JVector.Zero;
+
         for (int i = 0; i < vertices.Length; i++)
         {
             pointWithin += vertices[i].Vertex;
@@ -245,19 +262,19 @@ public class ConvexHullShape : Shape
             JVector tetrahedronCom = 1.0f / 4.0f * (column0 + column1 + column2);
             float tetrahedronMass = 1.0f / 6.0f * detA;
 
-            inertia += tetrahedronInertia;
-            com += tetrahedronMass * tetrahedronCom;
-            mass += tetrahedronMass;
+            cachedInertia += tetrahedronInertia;
+            cachedCenter += tetrahedronMass * tetrahedronCom;
+            cachedMass += tetrahedronMass;
         }
 
-        inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
-        com *= 1.0f / mass;
+        cachedInertia = JMatrix.Multiply(JMatrix.Identity, cachedInertia.Trace()) - cachedInertia;
+        cachedCenter *= 1.0f / cachedMass;
     }
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        JVector halfSize = 0.5f * (initBox.Max - initBox.Min);
-        JVector center = 0.5f * (initBox.Max + initBox.Min);
+        JVector halfSize = 0.5f * (cachedBoundingBox.Max - cachedBoundingBox.Min);
+        JVector center = 0.5f * (cachedBoundingBox.Max + cachedBoundingBox.Min);
 
         JMatrix ori = JMatrix.CreateFromQuaternion(orientation);
         JMatrix.Absolute(in ori, out JMatrix abs);
@@ -271,33 +288,31 @@ public class ConvexHullShape : Shape
         JVector.Add(box.Max, position + temp2, out box.Max);
     }
 
-    private JBBox initBox;
-
-    public void CalcInitBox()
+    private void CalcInitBox()
     {
         JVector vec = JVector.UnitX;
         InternalSupportMap(vec, out JVector res);
-        initBox.Max.X = res.X;
+        cachedBoundingBox.Max.X = res.X;
 
         vec = JVector.UnitY;
         InternalSupportMap(vec, out res);
-        initBox.Max.Y = res.Y;
+        cachedBoundingBox.Max.Y = res.Y;
 
         vec = JVector.UnitZ;
         InternalSupportMap(vec, out res);
-        initBox.Max.Z = res.Z;
+        cachedBoundingBox.Max.Z = res.Z;
 
         vec = -JVector.UnitX;
         InternalSupportMap(vec, out res);
-        initBox.Min.X = res.X;
+        cachedBoundingBox.Min.X = res.X;
 
         vec = -JVector.UnitY;
         InternalSupportMap(vec, out res);
-        initBox.Min.Y = res.Y;
+        cachedBoundingBox.Min.Y = res.Y;
 
         vec = -JVector.UnitZ;
         InternalSupportMap(vec, out res);
-        initBox.Min.Z = res.Z;
+        cachedBoundingBox.Min.Z = res.Z;
     }
 
     private ushort InternalSupportMap(in JVector direction, out JVector result)
@@ -331,5 +346,10 @@ public class ConvexHullShape : Shape
     public override void SupportMap(in JVector direction, out JVector result)
     {
         InternalSupportMap(direction, out result);
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = cachedCenter;
     }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;
@@ -44,7 +45,7 @@ public class Mesh
             throw new InvalidOperationException("Invalid zip file. There should be exactly one entry.");
         }
 
-        using var sr = new StreamReader(zip.Entries[0].Open(), System.Text.Encoding.UTF8);
+        using var sr = new StreamReader(zip.Entries[0].Open(), Encoding.UTF8);
         while (!sr.EndOfStream)
         {
             yield return sr.ReadLine()!;
@@ -55,8 +56,15 @@ public class Mesh
     {
         var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
 
-        float ParseFloat(string str) => float.Parse(str, format);
-        int ParseIndex(string str) => int.Parse(str) - 1;
+        float ParseFloat(string str)
+        {
+            return float.Parse(str, format);
+        }
+
+        int ParseIndex(string str)
+        {
+            return int.Parse(str) - 1;
+        }
 
         string[] content = filename.EndsWith(".zip") ? ReadFromZip(filename).ToArray() : File.ReadAllLines(filename);
         var lines = content.Select(s => s.Trim()).Where(s => s != string.Empty);

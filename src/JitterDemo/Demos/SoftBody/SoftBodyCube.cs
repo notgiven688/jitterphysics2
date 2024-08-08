@@ -9,7 +9,8 @@ namespace JitterDemo;
 
 public class SoftBodyCube : SoftBody
 {
-    public static readonly ValueTuple<int, int>[] Edges = {
+    public static readonly ValueTuple<int, int>[] Edges =
+    {
         (0, 1), (1, 2), (2, 3), (3, 0),
         (4, 5), (5, 6), (6, 7), (7, 4),
         (0, 4), (1, 5), (2, 6), (3, 7)
@@ -48,7 +49,7 @@ public class SoftBodyCube : SoftBody
         for (int i = 0; i < 5; i++)
         {
             tetrahedra[i].UpdateWorldBoundingBox();
-            world.AddShape(tetrahedra[i]);
+            world.DynamicTree.AddProxy(tetrahedra[i]);
             Shapes.Add(tetrahedra[i]);
         }
 

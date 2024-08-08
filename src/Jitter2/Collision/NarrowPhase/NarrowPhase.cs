@@ -30,24 +30,24 @@ namespace Jitter2.Collision;
 
 /// <summary>
 /// Provides efficient and accurate collision detection algorithms for general convex objects
-/// implicitly defined by a support function, see <see cref="ISupportMap"/>.
+/// implicitly defined by a support function, see <see cref="ISupportMappable"/>.
 /// </summary>
 public static class NarrowPhase
 {
     private const float NumericEpsilon = 1e-16f;
 
-    private unsafe struct Solver
+    private struct Solver
     {
         private ConvexPolytope convexPolytope;
 
-        public bool PointTest(ISupportMap supportA, in JVector origin)
+        public bool PointTest(in ISupportMappable supportA, in JVector origin)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
             JVector x = origin;
 
-            var center = supportA.GeometricCenter;
+            supportA.GetCenter(out var center);
             JVector v = x - center;
 
             convexPolytope.InitHeap();
@@ -86,7 +86,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool RayCast(ISupportMap supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -99,7 +99,7 @@ public static class NarrowPhase
             JVector r = direction;
             JVector x = origin;
 
-            var center = supportA.GeometricCenter;
+            supportA.GetCenter(out var center);
             JVector v = x - center;
 
             convexPolytope.InitHeap();
@@ -166,7 +166,7 @@ public static class NarrowPhase
 
             convexPolytope.InitHeap();
 
-            mkd.GeometricCenter(out var center);
+            mkd.GetCenter(out var center);
             convexPolytope.InitTetrahedron(center.V);
 
             JVector posB = mkd.PositionB;
@@ -321,13 +321,12 @@ public static class NarrowPhase
             // MPR to have found the global minimum and perform an EPA run.
             const float EPAPenetrationThreshold = 0.02f;
 
-            convexPolytope.InitHeap();
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v0);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v1);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v2);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v3);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v4);
 
-            ref ConvexPolytope.Vertex v0 = ref convexPolytope.GetVertex(0);
-            ref ConvexPolytope.Vertex v1 = ref convexPolytope.GetVertex(1);
-            ref ConvexPolytope.Vertex v2 = ref convexPolytope.GetVertex(2);
-            ref ConvexPolytope.Vertex v3 = ref convexPolytope.GetVertex(3);
-            ref ConvexPolytope.Vertex v4 = ref convexPolytope.GetVertex(4);
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -335,7 +334,7 @@ public static class NarrowPhase
 
             penetration = 0.0f;
 
-            mkd.GeometricCenter(out v0);
+            mkd.GetCenter(out v0);
 
             if (Math.Abs(v0.V.X) < NumericEpsilon &&
                 Math.Abs(v0.V.Y) < NumericEpsilon &&
@@ -479,6 +478,13 @@ public static class NarrowPhase
 
                         if (penetration > EPAPenetrationThreshold)
                         {
+
+                            convexPolytope.InitHeap();
+                            convexPolytope.GetVertex(0) = v0;
+                            convexPolytope.GetVertex(1) = v1;
+                            convexPolytope.GetVertex(2) = v2;
+                            convexPolytope.GetVertex(3) = v3;
+
                             // If epa fails it does not set any result data. We continue with the mpr data.
                             if (SolveMPREPA(mkd, ref pointA, ref pointB, ref normal, ref penetration)) return true;
                         }
@@ -538,7 +544,7 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            mkd.GeometricCenter(out ConvexPolytope.Vertex centerVertex);
+            mkd.GetCenter(out ConvexPolytope.Vertex centerVertex);
             JVector center = centerVertex.V;
 
             convexPolytope.InitHeap();
@@ -616,7 +622,8 @@ public static class NarrowPhase
     /// <param name="support">Support map representing the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool PointTest(ISupportMap support, in JVector point)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool PointTest(in ISupportMappable support, in JVector point)
     {
         return solver.PointTest(support, point);
     }
@@ -629,7 +636,8 @@ public static class NarrowPhase
     /// <param name="position">Position of the shape.</param>
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
-    public static bool PointTest(ISupportMap support, in JMatrix orientation,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool PointTest(in ISupportMappable support, in JMatrix orientation,
         in JVector position, in JVector point)
     {
         JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
@@ -650,7 +658,8 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool RayCast(ISupportMap support, in JQuaternion orientation,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool RayCast(in ISupportMappable support, in JQuaternion orientation,
         in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         // rotate the ray into the reference frame of bodyA..
@@ -677,9 +686,55 @@ public static class NarrowPhase
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
-    public static bool RayCast(ISupportMap support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
     {
         return solver.RayCast(support, origin, direction, out fraction, out normal);
+    }
+
+    /// <summary>
+    /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
+    /// cases. It assumes that support shape A is at position zero and not rotated.
+    /// Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
+    /// <param name="pointA">
+    /// For the overlapping case: the deepest point on shape A inside shape B; for the separated case: the
+    /// closest point on shape A to shape B.
+    /// </param>
+    /// <param name="pointB">
+    /// For the overlapping case: the deepest point on shape B inside shape A; for the separated case: the
+    /// closest point on shape B to shape A.
+    /// </param>
+    /// <param name="normal">
+    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+    /// if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
+    /// (defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
+    /// the separated case.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns>
+    /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
+    /// failure, collision information reverts to the type's default values.
+    /// </returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationB, in JVector positionB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
+
+        // ..perform collision detection..
+        bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
+
+        return success;
     }
 
     /// <summary>
@@ -711,7 +766,8 @@ public static class NarrowPhase
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.
     /// </returns>
-    public static bool GJKEPA(ISupportMap supportA, ISupportMap supportB,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -760,7 +816,8 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
-    public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -788,16 +845,16 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Detects whether two convex shapes overlap and provides detailed collision information.
+    /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
     /// It assumes that support shape A is at position zero and not rotated.
-    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the
-    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth
-    /// a predefined threshold, the results are further refined using the Expanding Polytope
+    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
+    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
+    /// a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
-    /// <param name="orientationB">The orientation of shape B in world space.</param>
-    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
@@ -807,7 +864,8 @@ public static class NarrowPhase
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
-    public static bool MPREPA(ISupportMap supportA, ISupportMap supportB,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
@@ -831,7 +889,8 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
-    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
@@ -879,7 +938,8 @@ public static class NarrowPhase
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
-    public static bool SweepTest(ISupportMap supportA, ISupportMap supportB,
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
     {

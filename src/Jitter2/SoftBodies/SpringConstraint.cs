@@ -93,6 +93,15 @@ public unsafe class SpringConstraint : Constraint
         data.Distance = (anchor2 - anchor1).Length();
     }
 
+    public float Impulse
+    {
+        get
+        {
+            ref SpringData data = ref handle.Data;
+            return data.AccumulatedImpulse;
+        }
+    }
+
     public JVector Anchor1
     {
         set

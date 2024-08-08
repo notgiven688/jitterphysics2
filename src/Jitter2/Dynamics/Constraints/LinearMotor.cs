@@ -121,6 +121,8 @@ public unsafe class LinearMotor : Constraint
         }
     }
 
+    public float Impulse => handle.Data.AccumulatedImpulse;
+
     public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));

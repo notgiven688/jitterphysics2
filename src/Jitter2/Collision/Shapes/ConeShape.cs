@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a cone shape.
 /// </summary>
-public class ConeShape : Shape
+public class ConeShape : RigidBodyShape
 {
     private float radius;
     private float height;
@@ -43,7 +43,7 @@ public class ConeShape : Shape
         set
         {
             radius = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -56,7 +56,7 @@ public class ConeShape : Shape
         set
         {
             height = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -69,7 +69,7 @@ public class ConeShape : Shape
     {
         this.radius = radius;
         this.height = height;
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -98,6 +98,11 @@ public class ConeShape : Shape
         {
             result = new JVector(0, 0.75f * height, 0);
         }
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = JVector.Zero;
     }
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)

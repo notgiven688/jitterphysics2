@@ -94,7 +94,6 @@ public partial class World
 
     private readonly ActiveList<Island> islands = new();
     private readonly ActiveList<RigidBody> bodies = new();
-    private readonly ActiveList<Shape> shapes = new();
 
     private static ulong _idCounter;
 
@@ -133,7 +132,7 @@ public partial class World
     /// <summary>
     /// All collision islands in this world.
     /// </summary>
-    public ReadOnlyActiveList<Island> Islands { get; private set; }
+    public ReadOnlyActiveList<Island> Islands => new(islands);
 
     /// <summary>
     /// All rigid bodies in this world.
@@ -141,15 +140,10 @@ public partial class World
     public ReadOnlyActiveList<RigidBody> RigidBodies { get; private set; }
 
     /// <summary>
-    /// All shapes in this world.
-    /// </summary>
-    public ReadOnlyActiveList<Shape> Shapes { get; private set; }
-
-    /// <summary>
     /// Access to the <see cref="DynamicTree"/> instance. The instance
     /// should only be modified by Jitter.
     /// </summary>
-    public readonly DynamicTree<Shape> DynamicTree;
+    public readonly DynamicTree DynamicTree;
 
     /// <summary>
     /// A fixed body, pinned to the world. Can be used to create constraints with.
@@ -241,20 +235,22 @@ public partial class World
 
         InitParallelCallbacks();
 
-        Islands = new ReadOnlyActiveList<Island>(islands);
         RigidBodies = new ReadOnlyActiveList<RigidBody>(bodies);
 
         NullBody = CreateRigidBody();
         NullBody.IsStatic = true;
 
-        Shapes = new ReadOnlyActiveList<Shape>(shapes);
-
-        DynamicTree = new DynamicTree<Shape>(shapes, DefaultDynamicTreeFilter);
+        DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
     }
 
-    public static bool DefaultDynamicTreeFilter(Shape shapeA, Shape shapeB)
+    public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        return shapeA.RigidBody != shapeB.RigidBody;
+        if (proxyA is RigidBodyShape rbsA && proxyB is RigidBodyShape rbsB)
+        {
+            return rbsA.RigidBody != rbsB.RigidBody;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -264,19 +260,11 @@ public partial class World
     {
         // create a copy, since we are going to modify the list
         Stack<RigidBody> bodyStack = new(bodies);
-
-        while (bodyStack.Count > 0)
-        {
-            Remove(bodyStack.Pop());
-        }
+        while (bodyStack.Count > 0) Remove(bodyStack.Pop());
 
         // Left-over shapes not associated with a rigid body.
-        Stack<Shape> shapeStack = new Stack<Shape>(shapes);
-
-        while (shapeStack.Count > 0)
-        {
-            Remove(shapeStack.Pop());
-        }
+        Stack<IDynamicTreeProxy> proxies = new(DynamicTree.ActiveList);
+        while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
     }
 
     /// <summary>
@@ -297,8 +285,7 @@ public partial class World
         foreach (var shape in body.Shapes)
         {
             DynamicTree.RemoveProxy(shape);
-            shapes.Remove(shape);
-            shape.DetachRigidBody();
+            shape.RigidBody = null!;
         }
 
         foreach (var contact in body.contacts)
@@ -363,69 +350,10 @@ public partial class World
         arbiter.Handle = JHandle<ContactData>.Zero;
     }
 
-    internal void InternalRemoveShape(Shape shape)
-    {
-        shapes.Remove(shape);
-    }
-
-    internal void UpdateShape(Shape shape)
+    internal void UpdateShape(RigidBodyShape shape)
     {
         shape.UpdateWorldBoundingBox();
         DynamicTree.Update(shape);
-    }
-
-    /// <summary>
-    /// Add a shape not associated with a rigid body to the world.
-    /// </summary>
-    public void AddShape(Shape shape, bool active = true)
-    {
-        if (shape.IsRegistered)
-        {
-            throw new ArgumentException("Shape can not be added. Is the shape already registered?");
-        }
-
-        shapes.Add(shape, active);
-        shape.UpdateWorldBoundingBox();
-        DynamicTree.AddProxy(shape);
-    }
-
-    public void Remove(Shape shape)
-    {
-        if (shape.RigidBody != null)
-        {
-            throw new ArgumentException("Shape can not be removed because it is attached to a rigid body.");
-        }
-
-        if ((shape as IListIndex).ListIndex == -1)
-        {
-            throw new ArgumentException("Shape can not be removed because it is not registered.");
-        }
-
-        DynamicTree.RemoveProxy(shape);
-        shapes.Remove(shape);
-    }
-
-    public void DeactivateShape(Shape shape)
-    {
-        if (shape.RigidBody != null)
-        {
-            throw new InvalidOperationException(
-                "Can not modify activation state if a shape which is attached to a rigid body.");
-        }
-
-        shapes.MoveToInactive(shape);
-    }
-
-    public void ActivateShape(Shape shape)
-    {
-        if (shape.RigidBody != null)
-        {
-            throw new InvalidOperationException(
-                "Can not modify activation state of a shape which is attached to a rigid body.");
-        }
-
-        shapes.MoveToActive(shape);
-        DynamicTree.ForceUpdate(shape);
     }
 
     internal void ActivateBodyNextStep(RigidBody body)

@@ -37,7 +37,7 @@ public interface INarrowPhaseFilter
     /// Refer to the corresponding <see cref="NarrowPhase"/> methods for details on the parameters.
     /// </summary>
     /// <returns>False if the collision should be filtered out, true otherwise.</returns>
-    bool Filter(Shape shapeA, Shape shapeB,
-        ref JVector pAA, ref JVector pBB,
+    bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
+        ref JVector pointA, ref JVector pointB,
         ref JVector normal, ref float penetration);
 }

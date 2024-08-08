@@ -21,23 +21,20 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using Jitter2.Collision;
+using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
-namespace Jitter2.Collision;
+namespace Jitter2.SoftBodies;
 
-/// <summary>
-/// Defines an interface for a generic convex shape, which is characterized by its support function.
-/// </summary>
-public interface ISupportMap
+public abstract class SoftBodyShape : Shape
 {
-    /// <summary>
-    /// Identifies the point on the shape that is furthest in the specified direction.
-    /// </summary>
-    /// <param name="direction">The direction in which to search for the furthest point. It does not need to be normalized.</param>
-    void SupportMap(in JVector direction, out JVector result);
+    public abstract RigidBody GetClosest(in JVector pos);
+    public SoftBody SoftBody { get; internal init; } = null!;
 
-    /// <summary>
-    /// Gets the geometric center of the shape. For a shape with a constant mass density, this represents the center of mass.
-    /// </summary>
-    JVector GeometricCenter { get; }
+    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    {
+        return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
+    }
 }

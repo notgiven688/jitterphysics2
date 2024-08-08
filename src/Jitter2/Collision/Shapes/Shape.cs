@@ -28,49 +28,53 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
 
+public interface IUpdatableBoundingBox
+{
+    public void UpdateWorldBoundingBox(float dt);
+}
+
 /// <summary>
-/// The main entity of the collision system. Implements <see cref="ISupportMap"/> for
+/// Represents an object that can be intersected by a ray.
+/// </summary>
+public interface IRayCastable
+{
+    /// <summary>
+    /// Performs a ray cast against the object, checking if a ray originating from a specified point
+    /// and traveling in a specified direction intersects with the object.
+    /// </summary>
+    /// <param name="origin">The starting point of the ray.</param>
+    /// <param name="direction">
+    /// The direction of the ray. This vector does not need to be normalized.
+    /// </param>
+    /// <param name="normal">
+    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
+    /// </param>
+    /// <param name="lambda">
+    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
+    /// <c>origin + lambda * direction</c>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
+    /// </returns>
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
+}
+
+/// <summary>
+/// The main entity of the collision system. Implements <see cref="ISupportMappable"/> for
 /// narrow-phase and <see cref="IDynamicTreeProxy"/> for broad-phase collision detection.
-/// The shape itself does not have a position or orientation. Shapes can be associated with 
+/// The shape itself does not have a position or orientation. Shapes can be associated with
 /// instances of <see cref="RigidBody"/>.
 /// </summary>
-public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
+public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable
 {
     int IListIndex.ListIndex { get; set; } = -1;
 
     /// <summary>
-    /// A 64-bit integer representing the shape ID. This is used by algorithms that require 
+    /// A 64-bit integer representing the shape ID. This is used by algorithms that require
     /// arranging shapes in a well-defined order.
     /// </summary>
-    public readonly ulong ShapeId;
-
-    public Shape()
-    {
-        ShapeId = World.RequestId();
-    }
-
-    internal bool AttachRigidBody(RigidBody? body)
-    {
-        if (RigidBody == null)
-        {
-            RigidBody = body;
-            return true;
-        }
-
-        return false;
-    }
-
-    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
-
-    internal void DetachRigidBody()
-    {
-        RigidBody = null!;
-    }
-
-    /// <summary>
-    /// The instance of <see cref="RigidBody"/> to which this shape is attached.
-    /// </summary>
-    public RigidBody? RigidBody { get; private set; }
+    public readonly ulong ShapeId = World.RequestId();
 
     /// <summary>
     /// The bounding box of the shape in world space. It is automatically updated when the position or
@@ -78,158 +82,48 @@ public abstract class Shape : ISupportMap, IListIndex, IDynamicTreeProxy
     /// </summary>
     public JBBox WorldBoundingBox { get; protected set; }
 
-    /// <summary>
-    /// The inertia of the shape, assuming a homogeneous unit-mass density.
-    /// The inertia is calculated with respect to the origin, not necessarily the center of mass.
-    /// </summary>
-    public JMatrix Inertia { get; protected set; }
-
-    /// <summary>
-    /// The geometric center of the shape, equivalent to the center of mass when assuming a
-    /// homogeneous unit-mass density.
-    /// </summary>
-    public JVector GeometricCenter { get; protected set; }
-
-    /// <summary>
-    /// The mass of the shape, assuming a homogeneous unit-mass density.
-    /// </summary>
-    public float Mass { get; protected set; }
-
     int IDynamicTreeProxy.NodePtr { get; set; }
 
-    public virtual JVector Velocity => RigidBody != null ? RigidBody.Velocity : JVector.Zero;
-
-    /// <summary>
-    /// Updates the mass and inertia properties, as well as the world bounding box. This method should be
-    /// called by child classes whenever a property of the shape changes, such as the radius of a sphere.
-    /// </summary>
-    public void UpdateShape()
+    protected void SweptExpandBoundingBox(float dt)
     {
-        UpdateMassInertia();
-        UpdateWorldBoundingBox();
-    }
+        JVector sweptDirection = dt * Velocity;
 
-    /// <summary>
-    /// Calls <see cref="CalculateMassInertia"/> to set the values of <see cref="Inertia"/>, 
-    /// <see cref="Mass"/>, and <see cref="GeometricCenter"/>.
-    /// </summary>
-    public void UpdateMassInertia()
-    {
-        CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass);
-        Inertia = inertia;
-        Mass = mass;
-        GeometricCenter = com;
-    }
-
-    /// <summary>
-    /// Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-    /// performance or accuracy. The default implementation relies on an approximation of the shape 
-    /// constructed using the <see cref="SupportMap"/> function.
-    /// </summary>
-    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
-    {
-        ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
-    }
-
-    /// <summary>
-    /// Calls <see cref="CalculateBoundingBox"/> to set the <see cref="WorldBoundingBox"/> in the frame
-    /// of the <see cref="RigidBody"/> instance connected to this shape.
-    /// </summary>
-    public virtual void UpdateWorldBoundingBox()
-    {
-        if (RigidBody == null)
-        {
-            CalculateBoundingBox(JQuaternion.Identity, JVector.Zero, out JBBox box);
-            WorldBoundingBox = box;
-        }
-        else
-        {
-            CalculateBoundingBox(RigidBody.Data.Orientation, RigidBody.Data.Position, out JBBox box);
-            WorldBoundingBox = box;
-        }
-    }
-
-    /// <summary>
-    /// Expands the world bounding box of the shape.
-    /// </summary>
-    /// <param name="sweptDirection">The direction in which to expand.</param>
-    public void SweptExpandBoundingBox(in JVector sweptDirection)
-    {
         JBBox box = WorldBoundingBox;
-
-        float max;
 
         float sxa = MathF.Abs(sweptDirection.X);
         float sya = MathF.Abs(sweptDirection.Y);
         float sza = MathF.Abs(sweptDirection.Z);
 
-        if (sxa > sya && sxa > sza) max = sxa;
-        else if (sya >= sxa && sya > sza) max = sya;
-        else max = sza;
+        float max = MathF.Max(MathF.Max(sxa, sya), sza);
 
-        if (sweptDirection.X < 0.0f)
-        {
-            box.Min.X -= max;
-        }
-        else
-        {
-            box.Max.X += max;
-        }
+        if (sweptDirection.X < 0.0f) box.Min.X -= max;
+        else box.Max.X += max;
 
-        if (sweptDirection.Y < 0.0f)
-        {
-            box.Min.Y -= max;
-        }
-        else
-        {
-            box.Max.Y += max;
-        }
+        if (sweptDirection.Y < 0.0f) box.Min.Y -= max;
+        else box.Max.Y += max;
 
-        if (sweptDirection.Z < 0.0f)
-        {
-            box.Min.Z -= max;
-        }
-        else
-        {
-            box.Max.Z += max;
-        }
+        if (sweptDirection.Z < 0.0f) box.Min.Z -= max;
+        else box.Max.Z += max;
 
         WorldBoundingBox = box;
     }
 
-    /// <summary>
-    /// Calculates the bounding box of the shape in a reference frame defined by the orientation and
-    /// position parameters. This bounding box should enclose the shape, which is implicitly defined by the
-    /// <see cref="SupportMap"/> function. Child classes should override this implementation to improve
-    /// performance.
-    /// </summary>
-    public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
-    {
-        // TODO: Can this be done smarter?
-        JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
+    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
 
-        SupportMap(oriT.GetColumn(0), out JVector res);
-        box.Max.X = JVector.Dot(oriT.GetColumn(0), res);
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract JVector Velocity { get; }
 
-        SupportMap(oriT.GetColumn(1), out res);
-        box.Max.Y = JVector.Dot(oriT.GetColumn(1), res);
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract void UpdateWorldBoundingBox(float dt = 0.0f);
 
-        SupportMap(oriT.GetColumn(2), out res);
-        box.Max.Z = JVector.Dot(oriT.GetColumn(2), res);
-
-        SupportMap(-oriT.GetColumn(0), out res);
-        box.Min.X = JVector.Dot(oriT.GetColumn(0), res);
-
-        SupportMap(-oriT.GetColumn(1), out res);
-        box.Min.Y = JVector.Dot(oriT.GetColumn(1), res);
-
-        SupportMap(-oriT.GetColumn(2), out res);
-        box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
-
-        JVector.Add(box.Min, position, out box.Min);
-        JVector.Add(box.Max, position, out box.Max);
-    }
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
 
     /// <inheritdoc/>
+    [ReferenceFrame(ReferenceFrame.Local)]
     public abstract void SupportMap(in JVector direction, out JVector result);
+
+    /// <inheritdoc/>
+    [ReferenceFrame(ReferenceFrame.Local)]
+    public abstract void GetCenter(out JVector point);
 }

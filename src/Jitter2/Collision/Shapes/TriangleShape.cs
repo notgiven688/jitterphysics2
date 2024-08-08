@@ -28,12 +28,12 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a single triangle within a mesh.
 /// </summary>
-public class TriangleShape : Shape
+public class TriangleShape : RigidBodyShape
 {
     public readonly TriangleMesh Mesh;
     public int Index;
 
-    private readonly JVector geomCen;
+    private JVector center;
 
     /// <summary>
     /// Initializes a new instance of the TriangleShape class.
@@ -45,14 +45,6 @@ public class TriangleShape : Shape
         Mesh = mesh;
         Index = index;
 
-        ref var triangle = ref mesh.Indices[index];
-
-        JVector A = mesh.Vertices[triangle.IndexA];
-        JVector B = mesh.Vertices[triangle.IndexB];
-        JVector C = mesh.Vertices[triangle.IndexC];
-
-        geomCen = 1.0f / 3.0f * (A + B + C);
-
         UpdateShape();
     }
 
@@ -60,7 +52,18 @@ public class TriangleShape : Shape
     {
         inertia = JMatrix.Identity;
         mass = 1;
-        com = geomCen;
+        com = center;
+    }
+
+    public void UpdateShape()
+    {
+        ref var triangle = ref Mesh.Indices[Index];
+
+        JVector a = Mesh.Vertices[triangle.IndexA];
+        JVector b = Mesh.Vertices[triangle.IndexB];
+        JVector c = Mesh.Vertices[triangle.IndexC];
+
+        center = 1.0f / 3.0f * (a + b + c);
     }
 
     /// <summary>
@@ -94,15 +97,32 @@ public class TriangleShape : Shape
     {
         const float extraMargin = 0.01f;
 
-        GetWorldVertices(out JVector aworld, out JVector bworld, out JVector cworld);
+        GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
         box = JBBox.SmallBox;
-        box.AddPoint(aworld);
-        box.AddPoint(bworld);
-        box.AddPoint(cworld);
 
-        box.Min -= JVector.One * extraMargin;
-        box.Max += JVector.One * extraMargin;
+        box.AddPoint(a);
+        box.AddPoint(b);
+        box.AddPoint(c);
+
+        // prevent a degenerate bounding box
+        JVector extra = new JVector(extraMargin);
+        box.Min -= extra;
+        box.Max += extra;
+    }
+
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    {
+        ref var triangle = ref Mesh.Indices[Index];
+        var a = Mesh.Vertices[triangle.IndexA];
+        var b = Mesh.Vertices[triangle.IndexB];
+        var c = Mesh.Vertices[triangle.IndexC];
+        return CollisionHelper.RayTriangle(a, b, c, origin, direction, out lambda, out normal);
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = center;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)

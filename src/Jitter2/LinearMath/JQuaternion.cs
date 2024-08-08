@@ -39,7 +39,7 @@ public struct JQuaternion
     /// <summary>
     /// Gets the identity quaternion (0, 0, 0, 1).
     /// </summary>
-    public static JQuaternion Identity => new JQuaternion(0, 0, 0, 1);
+    public static JQuaternion Identity => new(0, 0, 0, 1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JQuaternion"/> struct.

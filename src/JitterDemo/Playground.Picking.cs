@@ -1,3 +1,4 @@
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
@@ -63,19 +64,18 @@ public partial class Playground : RenderWindow
         {
             grepBody = null;
 
-            // Ray cast against the world, ignore any shapes not associated
-            // with a rigid body.
-            bool result = World.RayCast(origin, jdir, 
-                (shape) => shape is ISoftBodyShape || shape.RigidBody != null, null,
-                out Shape? grepShape, out JVector _, out hitDistance);
+            bool result = World.RayCast(origin, jdir, null, null,
+                out IDynamicTreeProxy? grepShape, out JVector _, out hitDistance);
 
             if (grepShape != null)
             {
-                grepBody = grepShape.RigidBody;
-
-                if (grepShape is ISoftBodyShape gs)
+                if (grepShape is SoftBodyShape gs)
                 {
                     grepBody = gs.GetClosest(origin + jdir * hitDistance);
+                }
+                else if (grepShape is RigidBodyShape rbs)
+                {
+                    grepBody = rbs.RigidBody;
                 }
             }
 

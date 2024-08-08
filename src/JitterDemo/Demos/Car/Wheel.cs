@@ -27,6 +27,7 @@ distribution.
 
 using System;
 using Jitter2;
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -219,7 +220,6 @@ public class Wheel
         JVector worldAxis = JVector.Transform(Up, car.Orientation);
 
 
-
         JVector forward = JVector.Transform(-JVector.UnitZ, car.Orientation); //-car.Orientation.GetColumn(2);
         JVector wheelFwd = JVector.Transform(forward, JMatrix.CreateRotationMatrix(worldAxis, SteerAngle));
 
@@ -254,7 +254,7 @@ public class Wheel
             RigidBody body;
 
             bool result = world.RayCast(newOrigin, wheelRayDelta,
-                rayCast, null, out Shape? shape, out JVector normal, out float frac);
+                rayCast, null, out IDynamicTreeProxy? shape, out JVector normal, out float frac);
 
             // Debug Rendering
             // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2f);
@@ -267,7 +267,8 @@ public class Wheel
 
             if (result && frac <= 1.0f)
             {
-                body = shape!.RigidBody!;
+                // shape must be RigidBodyShape since we filter out other ray tests
+                body = (shape as RigidBodyShape)!.RigidBody;
 
                 if (frac < deepestFrac)
                 {
@@ -410,8 +411,9 @@ public class Wheel
         }
     }
 
-    private bool RayCastCallback(Shape shape)
+    private bool RayCastCallback(IDynamicTreeProxy shape)
     {
-        return shape.RigidBody != car;
+        if (shape is not RigidBodyShape rbs) return false;
+        return rbs.RigidBody != car;
     }
 }

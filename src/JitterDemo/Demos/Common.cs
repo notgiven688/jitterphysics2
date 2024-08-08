@@ -7,7 +7,6 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
-using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
@@ -17,36 +16,43 @@ public static class Common
     {
         private readonly struct Pair : IEquatable<Pair>
         {
-            private readonly Shape shapeA, shapeB;
+            private readonly RigidBodyShape shapeA, shapeB;
 
-            public Pair(Shape shapeA, Shape shapeB)
+            public Pair(RigidBodyShape shapeA, RigidBodyShape shapeB)
             {
                 this.shapeA = shapeA;
                 this.shapeB = shapeB;
             }
 
-            public bool Equals(Pair other) => shapeA.Equals(other.shapeA) && shapeB.Equals(other.shapeB);
-            public override bool Equals(object? obj) => obj is Pair other && Equals(other);
-            public override int GetHashCode() => HashCode.Combine(shapeA, shapeB);
+            public bool Equals(Pair other)
+            {
+                return shapeA.Equals(other.shapeA) && shapeB.Equals(other.shapeB);
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is Pair other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(shapeA, shapeB);
+            }
         }
 
         private readonly HashSet<Pair> ignore = new();
 
-        public bool Filter(Shape shapeA, Shape shapeB)
+        public bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
         {
-            ulong a = shapeA.ShapeId;
-            ulong b = shapeB.ShapeId;
+            if (proxyA is not RigidBodyShape shapeA || proxyB is not RigidBodyShape shapeB) return false;
 
-            if (b < a) (shapeA, shapeB) = (shapeB, shapeA);
+            if (shapeB.ShapeId < shapeA.ShapeId) (shapeA, shapeB) = (shapeB, shapeA);
             return !ignore.Contains(new Pair(shapeA, shapeB));
         }
 
-        public void IgnoreCollisionBetween(Shape shapeA, Shape shapeB)
+        public void IgnoreCollisionBetween(RigidBodyShape shapeA, RigidBodyShape shapeB)
         {
-            ulong a = shapeA.ShapeId;
-            ulong b = shapeB.ShapeId;
-
-            if (b < a) (shapeA, shapeB) = (shapeB, shapeA);
+            if (shapeB.ShapeId < shapeA.ShapeId) (shapeA, shapeB) = (shapeB, shapeA);
             ignore.Add(new Pair(shapeA, shapeB));
         }
     }
@@ -235,7 +241,7 @@ public static class Common
                 JVector position = pos + JVector.Transform(
                     new JVector(0, 0.5f + e, 19.5f), orientation);
 
-                Shape shape = new BoxShape(3f, 1, 0.2f);
+                var shape = new BoxShape(3f, 1, 0.2f);
                 var body = world.CreateRigidBody();
 
                 body.Orientation = orientation;

@@ -5,6 +5,7 @@ using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
+using TriangleMesh = JitterDemo.Renderer.TriangleMesh;
 
 namespace JitterDemo;
 
@@ -32,12 +33,12 @@ public class Demo05 : IDemo
 
     private RigidBody level = null!;
 
-    public List<Shape> CreateShapes()
+    public List<RigidBodyShape> CreateShapes()
     {
         var indices = tm.mesh.Indices;
         var vertices = tm.mesh.Vertices;
 
-        List<Shape> shapesToAdd = new();
+        List<RigidBodyShape> shapesToAdd = new();
         List<JTriangle> triangles = new();
 
         foreach (var tvi in indices)
@@ -49,7 +50,7 @@ public class Demo05 : IDemo
             triangles.Add(new JTriangle(v1, v2, v3));
         }
 
-        var jtm = new Jitter2.Collision.TriangleMesh(triangles);
+        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles);
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
@@ -66,7 +67,7 @@ public class Demo05 : IDemo
 
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
-        
+
         pg.ResetScene();
 
         level = world.CreateRigidBody();
@@ -85,14 +86,14 @@ public class Demo05 : IDemo
 
         Keyboard kb = Keyboard.Instance;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left))  player.SetAngularInput(-1.0f);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
         else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
         else player.SetAngularInput(0.0f);
 
         if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
         else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);
         else player.SetLinearInput(JVector.Zero);
-        
+
         if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();
     }
 }

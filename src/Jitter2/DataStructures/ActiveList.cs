@@ -33,7 +33,7 @@ public interface IListIndex
     int ListIndex { get; set; }
 }
 
-public class ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
+public readonly struct ReadOnlyActiveList<T> : IEnumerable<T> where T : class, IListIndex
 {
     private readonly ActiveList<T> list;
 
@@ -129,12 +129,12 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public void Clear()
     {
-        for (int i = 0; i < Count; i++) 
+        for (int i = 0; i < Count; i++)
         {
             elements[i].ListIndex = -1;
             elements[i] = null!;
         }
-        
+
         Count = 0;
         Active = 0;
     }
@@ -195,7 +195,7 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         MoveToInactive(element);
 
         int li = element.ListIndex;
-        
+
         Count -= 1;
 
         elements[li] = elements[Count];

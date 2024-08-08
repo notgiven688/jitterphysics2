@@ -106,6 +106,7 @@ public struct JVector
             }
         }
     }
+
     public readonly override string ToString()
     {
         return $"{X:F6} {Y:F6} {Z:F6}";
@@ -167,7 +168,6 @@ public struct JVector
     {
         JVector abs = Abs(value1);
         return MathF.Max(MathF.Max(abs.X, abs.Y), abs.Z);
-    
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

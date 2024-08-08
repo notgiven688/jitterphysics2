@@ -21,24 +21,27 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 
 namespace Jitter2.SoftBodies;
 
 public static class DynamicTreeCollisionFilter
 {
-    public static bool Filter(Shape shapeA, Shape shapeB)
+    public static bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        if (shapeA.RigidBody != shapeB.RigidBody) return true;
-
-        if (shapeA is ISoftBodyShape softBodyShapeA &&
-            shapeB is ISoftBodyShape softBodyShapeB)
+        if (proxyA is RigidBodyShape rbsA && proxyB is RigidBodyShape rbsB)
+        {
+            if (rbsA.RigidBody == rbsB.RigidBody) return false;
+        }
+        else if (proxyA is SoftBodyShape softBodyShapeA &&
+                 proxyB is SoftBodyShape softBodyShapeB)
         {
             SoftBody ta = softBodyShapeA.SoftBody;
             SoftBody tb = softBodyShapeB.SoftBody;
             return ta != tb;
         }
 
-        return false;
+        return true;
     }
 }

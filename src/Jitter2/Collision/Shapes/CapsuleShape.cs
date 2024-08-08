@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a shape in the form of a capsule.
 /// </summary>
-public class CapsuleShape : Shape
+public class CapsuleShape : RigidBodyShape
 {
     private float radius;
     private float halfLength;
@@ -43,7 +43,7 @@ public class CapsuleShape : Shape
         set
         {
             radius = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -56,7 +56,7 @@ public class CapsuleShape : Shape
         set
         {
             halfLength = value / 2.0f;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -69,7 +69,7 @@ public class CapsuleShape : Shape
     {
         this.radius = radius;
         halfLength = 0.5f * length;
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -89,17 +89,20 @@ public class CapsuleShape : Shape
         result.Y += MathF.Sign(direction.Y) * halfLength;
     }
 
+    public override void GetCenter(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         JVector delta = halfLength * orientation.GetBasisY();
 
-        box.Min.X = -radius - MathF.Abs(delta.X);
-        box.Min.Y = -radius - MathF.Abs(delta.Y);
-        box.Min.Z = -radius - MathF.Abs(delta.Z);
-
         box.Max.X = +radius + MathF.Abs(delta.X);
         box.Max.Y = +radius + MathF.Abs(delta.Y);
         box.Max.Z = +radius + MathF.Abs(delta.Z);
+
+        box.Min = -box.Max;
 
         box.Min += position;
         box.Max += position;

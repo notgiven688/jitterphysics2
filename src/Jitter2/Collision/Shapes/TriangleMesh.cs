@@ -23,10 +23,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
-namespace Jitter2.Collision;
+namespace Jitter2.Collision.Shapes;
 
 /// <summary>
 /// Represents an exception thrown when a degenerate triangle is detected.
@@ -54,8 +53,8 @@ public class TriangleMesh
 {
     private struct Edge : IEquatable<Edge>
     {
-        public int IndexA;
-        public int IndexB;
+        public readonly int IndexA;
+        public readonly int IndexB;
 
         public Edge(int indexA, int indexB)
         {
@@ -167,12 +166,7 @@ public class TriangleMesh
 
         int GetEdge(Edge e)
         {
-            if (!tmpEdges.TryGetValue(e, out int res))
-            {
-                return -1;
-            }
-
-            return res;
+            return tmpEdges.GetValueOrDefault(e, -1);
         }
 
         for (int i = 0; i < Indices.Length; i++)

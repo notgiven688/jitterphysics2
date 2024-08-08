@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -105,12 +106,12 @@ public unsafe struct ConvexPolytope
 
     private JVector center;
 
-    public Span<Triangle> HullTriangles => new Span<Triangle>(triangles, tPointer);
+    public Span<Triangle> HullTriangles => new(triangles, tPointer);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ref ConvexPolytope.Vertex GetVertex(int index)
+    public ref Vertex GetVertex(int index)
     {
-        System.Diagnostics.Debug.Assert(index < MaxVertices, "Out of bounds.");
+        Debug.Assert(index < MaxVertices, "Out of bounds.");
         return ref vertices[index];
     }
 
@@ -312,7 +313,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Initializes the structure with a tetrahedron formed using the first four vertices in the <see cref="vertices"/> array.
+    /// Initializes the structure with a tetrahedron formed using the first four vertices.
     /// </summary>
     public void InitTetrahedron()
     {
@@ -384,7 +385,7 @@ public unsafe struct ConvexPolytope
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
     public bool AddVertex(in Vertex vertex)
     {
-        System.Diagnostics.Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");
+        Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");
 
         // see (*) above
         Edge* edges = stackalloc Edge[MaxVertices * 3 / 2];

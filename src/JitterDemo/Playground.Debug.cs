@@ -1,6 +1,5 @@
 using System;
 using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
@@ -38,7 +37,7 @@ public partial class Playground : RenderWindow
 
         if (debugDrawShapes)
         {
-            foreach (var shape in World.Shapes)
+            foreach (var shape in World.DynamicTree.ActiveList)
             {
                 var bb = shape.WorldBoundingBox;
                 DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(bb.Min),
@@ -63,8 +62,8 @@ public partial class Playground : RenderWindow
                     }
                     else
                     {
-                        foreach (Shape s in body.Shapes)
-                            JBBox.CreateMerged(box, s.WorldBoundingBox, out box);
+                        foreach (var shape in body.Shapes)
+                            JBBox.CreateMerged(box, shape.WorldBoundingBox, out box);
                     }
 
                     active = body.IsActive;

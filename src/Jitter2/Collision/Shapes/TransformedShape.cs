@@ -28,7 +28,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Wraps any shape and allows to orientate and translate it.
 /// </summary>
-public class TransformedShape : Shape
+public class TransformedShape : RigidBodyShape
 {
     private enum TransformationType
     {
@@ -36,7 +36,7 @@ public class TransformedShape : Shape
         Rotation,
         General
     }
-    
+
     private JVector translation;
     private JMatrix transformation;
     private TransformationType type;
@@ -48,23 +48,22 @@ public class TransformedShape : Shape
     /// <param name="shape">The original shape which should be transformed.</param>
     /// <param name="translation">Shape is translated by this vector.</param>
     /// <param name="transform">A linear map (may include sheer and scale) of the transformation.</param>
-    public TransformedShape(Shape shape, in JVector translation, in JMatrix transform)
+    public TransformedShape(RigidBodyShape shape, in JVector translation, in JMatrix transform)
     {
         OriginalShape = shape;
         this.translation = translation;
-        this.transformation = transform;
+        transformation = transform;
 
         AnalyzeTransformation();
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
-    public TransformedShape(Shape shape, JVector translation) :
+    public TransformedShape(RigidBodyShape shape, JVector translation) :
         this(shape, translation, JMatrix.Identity)
     {
-        
     }
 
-    public Shape OriginalShape { get; }
+    public RigidBodyShape OriginalShape { get; }
 
     public JVector Translation
     {
@@ -72,7 +71,7 @@ public class TransformedShape : Shape
         set
         {
             translation = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -80,8 +79,7 @@ public class TransformedShape : Shape
     {
         if (MathHelper.IsRotationMatrix(transformation))
         {
-            type = MathHelper.UnsafeIsZero(transformation - JMatrix.Identity) ? 
-                TransformationType.Identity : TransformationType.Rotation;
+            type = MathHelper.UnsafeIsZero(transformation - JMatrix.Identity) ? TransformationType.Identity : TransformationType.Rotation;
         }
         else
         {
@@ -94,9 +92,9 @@ public class TransformedShape : Shape
         get => transformation;
         set
         {
-            this.transformation = value;
+            transformation = value;
             AnalyzeTransformation();
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -125,18 +123,24 @@ public class TransformedShape : Shape
         }
         else
         {
-            JQuaternion quat = JQuaternion.CreateFromMatrix(this.transformation);
+            JQuaternion quat = JQuaternion.CreateFromMatrix(transformation);
             OriginalShape.CalculateBoundingBox(orientation * quat,
                 JVector.Transform(translation, orientation) + position, out box);
         }
     }
 
+    public override void GetCenter(out JVector point)
+    {
+        OriginalShape.GetCenter(out point);
+        point = JVector.Transform(point, transformation) + translation;
+    }
+
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        mass = OriginalShape.Mass;
+        OriginalShape.CalculateMassInertia(out JMatrix oinertia, out JVector ocom, out mass);
 
-        com = JVector.Transform(OriginalShape.GeometricCenter, transformation) + translation;
-        inertia = transformation * JMatrix.Multiply(OriginalShape.Inertia, JMatrix.Transpose(transformation));
+        com = JVector.Transform(ocom, transformation) + translation;
+        inertia = transformation * JMatrix.Multiply(oinertia, JMatrix.Transpose(transformation));
         JMatrix pat = mass * (JMatrix.Identity * translation.LengthSquared() - JVector.Outer(translation, translation));
         inertia += pat;
     }

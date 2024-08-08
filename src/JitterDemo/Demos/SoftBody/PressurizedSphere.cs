@@ -16,19 +16,22 @@ public class SoftBodySphere : SoftBodyCloth
 {
     public float Pressure { get; set; } = 400.0f;
 
-    private class UnitSphere : ISupportMap
+    private class UnitSphere : ISupportMappable
     {
         public void SupportMap(in JVector direction, out JVector result)
         {
             result = JVector.Normalize(direction);
         }
 
-        public JVector GeometricCenter => throw new NotImplementedException();
+        public void GetCenter(out JVector point)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private static IEnumerable<JTriangle> GenSphereTriangles(JVector offset)
     {
-        return ShapeHelper.MakeHull(new UnitSphere(), subdivisions: 4)
+        return ShapeHelper.MakeHull(new UnitSphere(), 4)
             .Select(t => new JTriangle(t.V0 + offset, t.V1 + offset, t.V2 + offset));
     }
 

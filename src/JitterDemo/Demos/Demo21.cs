@@ -48,7 +48,7 @@ public class Demo21 : IDemo
         var body = world.CreateRigidBody();
         body.IsStatic = true;
 
-        foreach(var voxel in voxelGrid.Voxels)
+        foreach (var voxel in voxelGrid.Voxels)
         {
             body.AddShape(new VoxelShape(voxelGrid, voxel), false);
         }
@@ -56,7 +56,7 @@ public class Demo21 : IDemo
         body.SetMassInertia(JMatrix.Identity, 1.0f);
         body.SetActivationState(false);
 
-        body.Tag = new RigidBodyTag(doNotDraw: true);
+        body.Tag = new RigidBodyTag(true);
 
         world.NarrowPhaseFilter = new VoxelEdgeCollisionFilter();
 
@@ -64,7 +64,7 @@ public class Demo21 : IDemo
 
         for (int i = 0; i < 3; i++)
         {
-            Console.WriteLine($"({i+1}/3) Current cost: {(long)world.DynamicTree.CalculateCost()}");
+            Console.WriteLine($"({i + 1}/3) Current cost: {(long)world.DynamicTree.CalculateCost()}");
             world.DynamicTree.Optimize(40);
         }
 
@@ -77,11 +77,11 @@ public class Demo21 : IDemo
     {
         var cd = RenderWindow.Instance.CSMRenderer.GetInstance<Cube>();
 
-        foreach(var voxel in voxelGrid.Voxels)
+        foreach (var voxel in voxelGrid.Voxels)
         {
             var pos = voxelGrid.PositionFromIndex(voxel);
-            cd.PushMatrix(MatrixHelper.CreateTranslation(pos.X, pos.Y, pos.Z), 
-                          ColorGenerator.GetColor(Math.Abs(voxel * voxel + voxel)));
+            cd.PushMatrix(MatrixHelper.CreateTranslation(pos.X, pos.Y, pos.Z),
+                ColorGenerator.GetColor(Math.Abs(voxel * voxel + voxel)));
         }
 
         Keyboard kb = Keyboard.Instance;

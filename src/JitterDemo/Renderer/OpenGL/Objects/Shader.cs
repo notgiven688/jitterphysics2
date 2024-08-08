@@ -23,7 +23,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using JitterDemo.Renderer.OpenGL.Native;
 
 namespace JitterDemo.Renderer.OpenGL;
@@ -152,7 +151,7 @@ public class ShaderProgram : GLObject
         {
             GL.GetProgramInfoLog(Handle, 1024, out int _, out string infoLog);
 #if DEBUG
-            Debug.Fail(infoLog);
+            System.Diagnostics.Debug.Fail(infoLog);
 #endif
             throw new ShaderLinkException(infoLog);
         }

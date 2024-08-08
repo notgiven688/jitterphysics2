@@ -54,10 +54,7 @@ internal class SlimBag<T>
     /// Gets the length of the internal array.
     /// </summary>
     /// <returns>The length of the internal array.</returns>
-    public int InternalSize
-    {
-        get => array.Length;
-    }
+    public int InternalSize => array.Length;
 
     /// <summary>
     /// Returns a span representing the valid portion of the internal array.
@@ -139,10 +136,7 @@ internal class SlimBag<T>
     /// </summary>
     /// <param name="i">The zero-based index of the element to get.</param>
     /// <returns>The element at the specified index.</returns>
-    public T this[int i]
-    {
-        get => array[i];
-    }
+    public T this[int i] => array[i];
 
     /// <summary>
     /// Removes all elements from the <see cref="SlimBag{T}"/>.
@@ -166,7 +160,7 @@ internal class SlimBag<T>
     /// </summary>
     public void NullOutOne()
     {
-        if(nullOut <= counter) return;
+        if (nullOut <= counter) return;
         array[--nullOut] = default!;
     }
 }

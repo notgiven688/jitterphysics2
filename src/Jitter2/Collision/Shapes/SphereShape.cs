@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a sphere.
 /// </summary>
-public class SphereShape : Shape
+public class SphereShape : RigidBodyShape
 {
     private float radius;
 
@@ -42,7 +42,7 @@ public class SphereShape : Shape
         set
         {
             radius = value;
-            UpdateShape();
+            UpdateWorldBoundingBox();
         }
     }
 
@@ -54,7 +54,7 @@ public class SphereShape : Shape
     public SphereShape(float radius = 1.0f)
     {
         this.radius = radius;
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -62,6 +62,11 @@ public class SphereShape : Shape
         result = direction;
         result.Normalize();
         JVector.Multiply(result, radius, out result);
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = JVector.Zero;
     }
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)

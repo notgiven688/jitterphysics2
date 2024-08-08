@@ -1,5 +1,6 @@
 using System;
 using Jitter2;
+using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
@@ -20,14 +21,14 @@ public class Player
     public Player(World world, JVector position)
     {
         Body = world.CreateRigidBody();
-        var cs = new CapsuleShape(0.5f, 1.0f);
+        var cs = new CapsuleShape();
         Body.AddShape(cs);
         Body.Position = position;
-        
+
         // disable velocity damping
         Body.Damping = (0, 0);
 
-        this.capsuleHalfHeight = cs.Radius + cs.Length * 0.5f;
+        capsuleHalfHeight = cs.Radius + cs.Length * 0.5f;
 
         this.world = world;
 
@@ -64,21 +65,23 @@ public class Player
         AngularMovement.TargetVelocity = rotate;
     }
 
-    private World.RayCastFilterPre? preFilter = null;
-    public bool FilterShape(Shape shape)
+    private World.RayCastFilterPre? preFilter;
+
+    public bool FilterShape(IDynamicTreeProxy shape)
     {
-        if (shape.RigidBody != null)
+        if (shape is RigidBodyShape rbs)
         {
-            if (shape.RigidBody == Body) return false;
+            if (rbs.RigidBody == Body) return false;
         }
+
         return true;
     }
-    
+
     private bool CanJump(out RigidBody? floor, out JVector hitPoint)
     {
         preFilter ??= FilterShape;
 
-        foreach(var contact in Body.Contacts)
+        foreach (var contact in Body.Contacts)
         {
             // go through all contacts of the capsule (player)
 
@@ -90,30 +93,70 @@ public class Player
             // see which ones were used during the last step.
             uint mask = cd.UsageMask >> 4;
 
-            if  (contact.Body1 == Body)
+            if (contact.Body1 == Body)
             {
-                if ((mask & ContactData.MaskContact0) != 0) { hitPoint += cd.Contact0.RelativePos1; numContacts++; }
-                if ((mask & ContactData.MaskContact1) != 0) { hitPoint += cd.Contact1.RelativePos1; numContacts++; }
-                if ((mask & ContactData.MaskContact2) != 0) { hitPoint += cd.Contact2.RelativePos1; numContacts++; }
-                if ((mask & ContactData.MaskContact3) != 0) { hitPoint += cd.Contact3.RelativePos1; numContacts++; }
+                if ((mask & ContactData.MaskContact0) != 0)
+                {
+                    hitPoint += cd.Contact0.RelativePos1;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact1) != 0)
+                {
+                    hitPoint += cd.Contact1.RelativePos1;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact2) != 0)
+                {
+                    hitPoint += cd.Contact2.RelativePos1;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact3) != 0)
+                {
+                    hitPoint += cd.Contact3.RelativePos1;
+                    numContacts++;
+                }
+
                 floor = contact.Body2;
             }
             else
             {
-                if ((mask & ContactData.MaskContact0) != 0) { hitPoint += cd.Contact0.RelativePos2; numContacts++; }
-                if ((mask & ContactData.MaskContact1) != 0) { hitPoint += cd.Contact1.RelativePos2; numContacts++; }
-                if ((mask & ContactData.MaskContact2) != 0) { hitPoint += cd.Contact2.RelativePos2; numContacts++; }
-                if ((mask & ContactData.MaskContact3) != 0) { hitPoint += cd.Contact3.RelativePos2; numContacts++; }
+                if ((mask & ContactData.MaskContact0) != 0)
+                {
+                    hitPoint += cd.Contact0.RelativePos2;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact1) != 0)
+                {
+                    hitPoint += cd.Contact1.RelativePos2;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact2) != 0)
+                {
+                    hitPoint += cd.Contact2.RelativePos2;
+                    numContacts++;
+                }
+
+                if ((mask & ContactData.MaskContact3) != 0)
+                {
+                    hitPoint += cd.Contact3.RelativePos2;
+                    numContacts++;
+                }
+
                 floor = contact.Body1;
             }
 
-            if(numContacts == 0) continue;
+            if (numContacts == 0) continue;
 
             // divide the result by the number of contact points to get the "center" of the contact
-            hitPoint *= (1.0f / (float)numContacts);
+            hitPoint *= (1.0f / numContacts);
 
             // check if the hitpoint is on the players base
-            if(hitPoint.Y <= -0.8f) return true;
+            if (hitPoint.Y <= -0.8f) return true;
         }
 
         hitPoint = JVector.Zero;
@@ -165,7 +208,7 @@ public class Player
             FrictionMotor.IsEnabled = false;
             return;
         }
-        
+
         deltaMove *= 3.0f;
 
         float deltaMoveLen = deltaMove.Length();
