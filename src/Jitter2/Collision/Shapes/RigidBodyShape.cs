@@ -68,6 +68,26 @@ public abstract class RigidBodyShape : Shape
         ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
     }
 
+    /// <summary>
+    /// Performs a local ray cast against the shape, checking if a ray originating from a specified point
+    /// and traveling in a specified direction intersects with the object. It does not take into account the
+    /// transformation of the associated rigid body.
+    /// </summary>
+    /// <param name="origin">The starting point of the ray.</param>
+    /// <param name="direction">
+    /// The direction of the ray. This vector does not need to be normalized.
+    /// </param>
+    /// <param name="normal">
+    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
+    /// </param>
+    /// <param name="lambda">
+    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
+    /// <c>origin + lambda * direction</c>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
+    /// </returns>
     [ReferenceFrame(ReferenceFrame.Local)]
     public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
