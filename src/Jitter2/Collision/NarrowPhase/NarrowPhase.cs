@@ -321,13 +321,12 @@ public static class NarrowPhase
             // MPR to have found the global minimum and perform an EPA run.
             const float EPAPenetrationThreshold = 0.02f;
 
-            convexPolytope.InitHeap();
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v0);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v1);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v2);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v3);
+            Unsafe.SkipInit(out ConvexPolytope.Vertex v4);
 
-            ref ConvexPolytope.Vertex v0 = ref convexPolytope.GetVertex(0);
-            ref ConvexPolytope.Vertex v1 = ref convexPolytope.GetVertex(1);
-            ref ConvexPolytope.Vertex v2 = ref convexPolytope.GetVertex(2);
-            ref ConvexPolytope.Vertex v3 = ref convexPolytope.GetVertex(3);
-            ref ConvexPolytope.Vertex v4 = ref convexPolytope.GetVertex(4);
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -479,6 +478,13 @@ public static class NarrowPhase
 
                         if (penetration > EPAPenetrationThreshold)
                         {
+
+                            convexPolytope.InitHeap();
+                            convexPolytope.GetVertex(0) = v0;
+                            convexPolytope.GetVertex(1) = v1;
+                            convexPolytope.GetVertex(2) = v2;
+                            convexPolytope.GetVertex(3) = v3;
+
                             // If epa fails it does not set any result data. We continue with the mpr data.
                             if (SolveMPREPA(mkd, ref pointA, ref pointB, ref normal, ref penetration)) return true;
                         }

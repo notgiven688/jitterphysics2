@@ -313,7 +313,7 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Initializes the structure with a tetrahedron formed using the first four vertices in the <see cref="vertices"/> array.
+    /// Initializes the structure with a tetrahedron formed using the first four vertices.
     /// </summary>
     public void InitTetrahedron()
     {
