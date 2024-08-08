@@ -348,7 +348,7 @@ public class ConvexHullShape : RigidBodyShape
         InternalSupportMap(direction, out result);
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = cachedCenter;
     }

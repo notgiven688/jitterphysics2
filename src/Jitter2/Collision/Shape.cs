@@ -103,5 +103,5 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     /// <inheritdoc/>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public abstract void PointWithin(out JVector point);
+    public abstract void GetCenter(out JVector point);
 }

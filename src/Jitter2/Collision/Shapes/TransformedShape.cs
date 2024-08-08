@@ -129,9 +129,9 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
-        OriginalShape.PointWithin(out point);
+        OriginalShape.GetCenter(out point);
         point = JVector.Transform(point, transformation) + translation;
     }
 

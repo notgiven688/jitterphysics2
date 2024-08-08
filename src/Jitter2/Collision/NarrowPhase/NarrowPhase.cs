@@ -47,7 +47,7 @@ public static class NarrowPhase
 
             JVector x = origin;
 
-            supportA.PointWithin(out var center);
+            supportA.GetCenter(out var center);
             JVector v = x - center;
 
             convexPolytope.InitHeap();
@@ -99,7 +99,7 @@ public static class NarrowPhase
             JVector r = direction;
             JVector x = origin;
 
-            supportA.PointWithin(out var center);
+            supportA.GetCenter(out var center);
             JVector v = x - center;
 
             convexPolytope.InitHeap();

@@ -120,7 +120,7 @@ public class TriangleShape : RigidBodyShape
         return CollisionHelper.RayTriangle(a, b, c, origin, direction, out lambda, out normal);
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = center;
     }

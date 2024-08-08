@@ -120,7 +120,7 @@ public class SoftBodyTriangle : SoftBodyShape
         result += JVector.Normalize(direction) * halfThickness;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = (1.0f / 3.0f) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
     }

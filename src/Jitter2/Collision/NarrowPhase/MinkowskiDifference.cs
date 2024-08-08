@@ -64,8 +64,8 @@ public struct MinkowskiDifference
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void PointWithin(out ConvexPolytope.Vertex center)
     {
-        SupportA.PointWithin(out center.A);
-        SupportB.PointWithin(out center.B);
+        SupportA.GetCenter(out center.A);
+        SupportB.GetCenter(out center.B);
         JVector.Transform(center.B, OrientationB, out center.B);
         JVector.Add(PositionB, center.B, out center.B);
         JVector.Subtract(center.A, center.B, out center.V);

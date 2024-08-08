@@ -72,7 +72,7 @@ public class CylinderShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }

@@ -173,7 +173,7 @@ public class PointCloudShape : RigidBodyShape
         result = vertices[maxIndex] + shifted;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = cachedCenter;
     }

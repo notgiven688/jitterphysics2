@@ -95,7 +95,7 @@ public class SoftBodyTetrahedron : SoftBodyShape
         result = Vertices[furthest].Position;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = 0.25f * (Vertices[0].Position + Vertices[1].Position +
                          Vertices[2].Position + Vertices[3].Position);

@@ -85,7 +85,7 @@ public class BoxShape : RigidBodyShape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
