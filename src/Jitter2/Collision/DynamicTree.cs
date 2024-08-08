@@ -283,55 +283,6 @@ public class DynamicTree
         EnumerateAll(ref Nodes[root], action);
     }
 
-    [ThreadStatic] private static Stack<int>? stack;
-
-    public void Query(JVector origin, JVector direction, Func<IDynamicTreeProxy, bool> dtp)
-    {
-        if (root == -1) return;
-
-        stack ??= new Stack<int>(256);
-
-        stack.Push(root);
-
-        while (stack.Count > 0)
-        {
-            int pop = stack.Pop();
-
-            ref Node node = ref Nodes[pop];
-
-            if (node.IsLeaf)
-            {
-                if (!dtp(node.Proxy)) break;
-                continue;
-            }
-
-            ref Node lnode = ref Nodes[node.Left];
-            ref Node rnode = ref Nodes[node.Right];
-
-            bool lres = lnode.ExpandedBox.RayIntersect(origin, direction, out float enterl);
-            bool rres = rnode.ExpandedBox.RayIntersect(origin, direction, out float enterr);
-
-            if (lres && rres)
-            {
-                if (enterl < enterr)
-                {
-                    stack.Push(node.Right);
-                    stack.Push(node.Left);
-                }
-                else
-                {
-                    stack.Push(node.Left);
-                    stack.Push(node.Right);
-                }
-            }
-            else
-            {
-                if (lres) stack.Push(node.Left);
-                if (rres) stack.Push(node.Right);
-            }
-        }
-    }
-
     private uint stepper;
 
     public void TrimInactivePairs()
@@ -358,6 +309,8 @@ public class DynamicTree
             i -= 1;
         }
     }
+
+    [ThreadStatic] private static Stack<int>? stack;
 
     /// <summary>
     /// Queries the tree to find entities within the specified axis-aligned bounding box.
