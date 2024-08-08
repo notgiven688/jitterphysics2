@@ -126,8 +126,8 @@ public partial class World
                 PushRight(right, np2);
             }
 
-            Span<JVector> mA = this.manifoldData.AsSpan(0);
-            Span<JVector> mB = this.manifoldData.AsSpan(6);
+            Span<JVector> mA = manifoldData.AsSpan(0);
+            Span<JVector> mB = manifoldData.AsSpan(6);
 
             // ---
 
