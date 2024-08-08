@@ -684,6 +684,50 @@ public static class NarrowPhase
 
     /// <summary>
     /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
+    /// cases. It assumes that support shape A is at position zero and not rotated.
+    /// Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
+    /// <param name="pointA">
+    /// For the overlapping case: the deepest point on shape A inside shape B; for the separated case: the
+    /// closest point on shape A to shape B.
+    /// </param>
+    /// <param name="pointB">
+    /// For the overlapping case: the deepest point on shape B inside shape A; for the separated case: the
+    /// closest point on shape B to shape A.
+    /// </param>
+    /// <param name="normal">
+    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+    /// if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
+    /// (defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
+    /// the separated case.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns>
+    /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
+    /// failure, collision information reverts to the type's default values.
+    /// </returns>
+    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationB, in JVector positionB,
+        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
+
+        // ..perform collision detection..
+        bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
+
+        return success;
+    }
+
+    /// <summary>
+    /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
     /// cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
@@ -789,14 +833,15 @@ public static class NarrowPhase
 
     /// <summary>
     /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
+    /// It assumes that support shape A is at position zero and not rotated.
     /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
     /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
     /// a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
-    /// <param name="orientationB">The orientation of shape B in world space.</param>
-    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">

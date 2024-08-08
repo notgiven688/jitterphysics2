@@ -32,7 +32,7 @@ public class VoxelShape : RigidBodyShape
         result += Position;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = Position;
     }

@@ -23,7 +23,7 @@ public class SoftBodySphere : SoftBodyCloth
             result = JVector.Normalize(direction);
         }
 
-        public void PointWithin(out JVector point)
+        public void GetCenter(out JVector point)
         {
             throw new NotImplementedException();
         }

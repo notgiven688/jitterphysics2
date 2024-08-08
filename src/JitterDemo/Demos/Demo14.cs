@@ -64,7 +64,7 @@ public class EllipsoidShape : RigidBodyShape
         result.Z *= 0.4f;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
@@ -94,7 +94,7 @@ public class DoubleSphereShape : RigidBodyShape
         }
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
@@ -139,7 +139,7 @@ public class Icosahedron : RigidBodyShape
         result = vertices[largestIndex] * 0.5f;
     }
 
-    public override void PointWithin(out JVector point)
+    public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
