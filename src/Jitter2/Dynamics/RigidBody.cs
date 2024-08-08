@@ -514,7 +514,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
             if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
-                shape.RigidBody = null;
+                shape.RigidBody = null!;
                 this.shapes.RemoveAt(i);
             }
         }

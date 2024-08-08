@@ -285,7 +285,7 @@ public partial class World
         foreach (var shape in body.Shapes)
         {
             DynamicTree.RemoveProxy(shape);
-            shape.RigidBody = null;
+            shape.RigidBody = null!;
         }
 
         foreach (var contact in body.contacts)
