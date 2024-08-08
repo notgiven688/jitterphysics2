@@ -62,8 +62,8 @@ public partial class Playground : RenderWindow
                     }
                     else
                     {
-                        foreach (Shape s in body.Shapes)
-                            JBBox.CreateMerged(box, s.WorldBoundingBox, out box);
+                        foreach (var shape in body.Shapes)
+                            JBBox.CreateMerged(box, shape.WorldBoundingBox, out box);
                     }
 
                     active = body.IsActive;

@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Jitter2.Collision;
+using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;

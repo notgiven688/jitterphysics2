@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Jitter2.Collision;
+using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
 namespace Jitter2;

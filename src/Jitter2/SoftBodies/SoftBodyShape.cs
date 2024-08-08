@@ -22,6 +22,7 @@
  */
 
 using Jitter2.Collision;
+using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
