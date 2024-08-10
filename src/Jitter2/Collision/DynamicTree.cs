@@ -544,19 +544,19 @@ public class DynamicTree
 
     private void InternalAddProxy(IDynamicTreeProxy proxy)
     {
-        JBBox b = proxy.WorldBoundingBox;
+        JBBox box = proxy.WorldBoundingBox;
 
         int index = AllocateNode();
         float pseudoRandomExt = GenerateRandom((ulong)index);
 
-        ExpandBoundingBox(ref b, proxy.Velocity * ExpandFactor * (1.0f + pseudoRandomExt));
+        ExpandBoundingBox(ref box, proxy.Velocity * ExpandFactor * (1.0f + pseudoRandomExt));
 
         Nodes[index].Proxy = proxy;
         Nodes[index].IsLeaf = true;
         Nodes[index].Height = 0;
         proxy.NodePtr = index;
 
-        Nodes[index].ExpandedBox = b;
+        Nodes[index].ExpandedBox = box;
 
         AddLeaf(index);
     }
