@@ -183,7 +183,7 @@ public class CubedSoftBody(World world) : SoftBody(world)
 				Vertices[trh.A], Vertices[trh.B],
 				Vertices[trh.C], Vertices[trh.D]);
 
-			world.AddShape(sbt);
+			world.DynamicTree.AddProxy(sbt);
 			this.Shapes.Add(sbt);
 		}
 
