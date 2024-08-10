@@ -36,7 +36,7 @@ public class CollisionTests
         Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
 
         float distance = (hp - sp).Length();
-        Assert.That(MathF.Abs(distance - radius) < 1e-4f);
+        Assert.That(MathF.Abs(distance - radius), Is.LessThan(1e-4f));
     }
 
     [TestCase]

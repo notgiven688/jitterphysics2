@@ -419,11 +419,11 @@ public class DynamicTree
     {
         if (node.IsLeaf)
         {
-            Debug.Assert(node.ExpandedBox.Perimeter < 1e8);
-            return node.ExpandedBox.Perimeter;
+            Debug.Assert(node.ExpandedBox.GetSurfaceArea() < 1e8);
+            return node.ExpandedBox.GetSurfaceArea();
         }
 
-        return node.ExpandedBox.Perimeter + Cost(ref Nodes[node.Left]) + Cost(ref Nodes[node.Right]);
+        return node.ExpandedBox.GetSurfaceArea() + Cost(ref Nodes[node.Left]) + Cost(ref Nodes[node.Right]);
     }
 
     private int Height(ref Node node)
@@ -611,7 +611,7 @@ public class DynamicTree
         }
     }
 
-    private static double MergedPerimeter(in JBBox box1, in JBBox box2)
+    private static double MergedSurface(in JBBox box1, in JBBox box2)
     {
         double a, b;
         double x, y, z;
@@ -654,9 +654,9 @@ public class DynamicTree
             int left = Nodes[sibling].Left;
             int rght = Nodes[sibling].Right;
 
-            double area = Nodes[sibling].ExpandedBox.Perimeter;
+            double area = Nodes[sibling].ExpandedBox.GetSurfaceArea();
 
-            double combinedArea = MergedPerimeter(Nodes[sibling].ExpandedBox, nodeBox);
+            double combinedArea = MergedSurface(Nodes[sibling].ExpandedBox, nodeBox);
 
             double cost = 2.0d * combinedArea;
             double inhcost = 2.0d * (combinedArea - area);
@@ -664,23 +664,23 @@ public class DynamicTree
 
             if (Nodes[left].IsLeaf)
             {
-                costl = inhcost + MergedPerimeter(Nodes[left].ExpandedBox, nodeBox);
+                costl = inhcost + MergedSurface(Nodes[left].ExpandedBox, nodeBox);
             }
             else
             {
-                double oldArea = Nodes[left].ExpandedBox.Perimeter;
-                double newArea = MergedPerimeter(Nodes[left].ExpandedBox, nodeBox);
+                double oldArea = Nodes[left].ExpandedBox.GetSurfaceArea();
+                double newArea = MergedSurface(Nodes[left].ExpandedBox, nodeBox);
                 costl = newArea - oldArea + inhcost;
             }
 
             if (Nodes[rght].IsLeaf)
             {
-                costr = inhcost + MergedPerimeter(Nodes[rght].ExpandedBox, nodeBox);
+                costr = inhcost + MergedSurface(Nodes[rght].ExpandedBox, nodeBox);
             }
             else
             {
-                double oldArea = Nodes[rght].ExpandedBox.Perimeter;
-                double newArea = MergedPerimeter(Nodes[rght].ExpandedBox, nodeBox);
+                double oldArea = Nodes[rght].ExpandedBox.GetSurfaceArea();
+                double newArea = MergedSurface(Nodes[rght].ExpandedBox, nodeBox);
                 costr = newArea - oldArea + inhcost;
             }
 

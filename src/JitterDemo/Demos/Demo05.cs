@@ -71,7 +71,7 @@ public class Demo05 : IDemo
         pg.ResetScene();
 
         level = world.CreateRigidBody();
-        level.AddShape(CreateShapes());
+        level.AddShape(CreateShapes(), false);
         level.Position = new JVector(0, 0, 0);
         level.IsStatic = true;
 
