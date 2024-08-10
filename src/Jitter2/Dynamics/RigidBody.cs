@@ -560,7 +560,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
         if (!JMatrix.Inverse(inertia, out inverseInertia))
         {
-            throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
+            throw new InvalidOperationException("Inertia matrix is not invertible. This might happen if a shape has " +
+                                                "invalid mass properties. If you encounter this while calling " +
+                                                "RigidBody.AddShape, call AddShape with setMassInertia set to false.");
         }
 
         inverseMass = 1.0f / mass;

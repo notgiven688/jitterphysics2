@@ -51,8 +51,8 @@ public class TriangleShape : RigidBodyShape
     {
         // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
-                                        $"If you encounter this while calling AddShape, call AddShape with" +
-                                        $"setMassInertia set to false.");
+                                        $"If you encounter this while calling RigidBody.AddShape, " +
+                                        $"call AddShape with setMassInertia set to false.");
     }
 
     /// <summary>
