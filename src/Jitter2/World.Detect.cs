@@ -257,10 +257,10 @@ public partial class World
         }
     }
 
-    public void RegisterContact(ulong id0, ulong id1, RigidBody body0, RigidBody body1,
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
         in JVector point1, in JVector point2, in JVector normal, float penetration, bool speculative = false)
     {
-        GetArbiter(id0, id1, body0, body1, out Arbiter arbiter);
+        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
     }
 

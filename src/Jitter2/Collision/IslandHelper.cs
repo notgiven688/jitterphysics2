@@ -126,22 +126,18 @@ internal static class IslandHelper
     private static readonly List<RigidBody> visitedBodiesLeft = new();
     private static readonly List<RigidBody> visitedBodiesRight = new();
 
-    private static void SplitIslands(IslandList islands, RigidBody body0, RigidBody body1)
+    private static void SplitIslands(IslandList islands, RigidBody body1, RigidBody body2)
     {
-        bool cond = body0.island != null && body0.island == body1.island;
-        if (!cond) return;
+        Debug.Assert(body1.island == body2.island, "Islands not the same or null.");
 
-        Debug.Assert(body0.island != null && body0.island == body1.island,
-            "Islands not the same or null.");
+        leftSearchQueue.Enqueue(body1);
+        rightSearchQueue.Enqueue(body2);
 
-        leftSearchQueue.Enqueue(body0);
-        rightSearchQueue.Enqueue(body1);
+        visitedBodiesLeft.Add(body1);
+        visitedBodiesRight.Add(body2);
 
-        visitedBodiesLeft.Add(body0);
-        visitedBodiesRight.Add(body1);
-
-        body0.islandMarker = 1;
-        body1.islandMarker = 2;
+        body1.islandMarker = 1;
+        body2.islandMarker = 2;
 
         while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
         {
@@ -198,7 +194,7 @@ internal static class IslandHelper
             for (int i = 0; i < visitedBodiesLeft.Count; i++)
             {
                 RigidBody body = visitedBodiesLeft[i];
-                body1.island.bodies.Remove(body);
+                body2.island.bodies.Remove(body);
                 island.bodies.Add(body);
                 body.island = island;
             }
@@ -210,7 +206,7 @@ internal static class IslandHelper
             for (int i = 0; i < visitedBodiesRight.Count; i++)
             {
                 RigidBody body = visitedBodiesRight[i];
-                body0.island.bodies.Remove(body);
+                body1.island.bodies.Remove(body);
                 island.bodies.Add(body);
                 body.island = island;
             }
@@ -235,22 +231,22 @@ internal static class IslandHelper
     }
 
     // Both bodies must be !static
-    private static void MergeIslands(IslandList islands, RigidBody body0, RigidBody body1)
+    private static void MergeIslands(IslandList islands, RigidBody body1, RigidBody body2)
     {
-        if (body0.island == body1.island) return;
+        if (body1.island == body2.island) return;
 
         // merge smaller into larger
         RigidBody smallIslandOwner, largeIslandOwner;
 
-        if (body0.island.bodies.Count > body1.island.bodies.Count)
+        if (body1.island.bodies.Count > body2.island.bodies.Count)
         {
-            smallIslandOwner = body1;
-            largeIslandOwner = body0;
+            smallIslandOwner = body2;
+            largeIslandOwner = body1;
         }
         else
         {
-            smallIslandOwner = body0;
-            largeIslandOwner = body1;
+            smallIslandOwner = body1;
+            largeIslandOwner = body2;
         }
 
         Island giveBackIsland = smallIslandOwner.island;
