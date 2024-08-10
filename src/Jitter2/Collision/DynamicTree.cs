@@ -287,10 +287,10 @@ public class DynamicTree
 
     public void TrimInactivePairs()
     {
-        // We actually only search 1/100 of the whole potentialPairs Hashset for
+        // We actually only search 1/128 of the whole potentialPairs Hashset for
         // potentially prunable contacts. No need to sweep through the whole hashset
         // every step.
-        const int divisions = 100;
+        const int divisions = 128;
         stepper += 1;
 
         for (int i = 0; i < PotentialPairs.Slots.Length / divisions; i++)
