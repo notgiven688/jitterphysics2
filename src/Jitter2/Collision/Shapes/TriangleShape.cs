@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -31,9 +32,7 @@ namespace Jitter2.Collision.Shapes;
 public class TriangleShape : RigidBodyShape
 {
     public readonly TriangleMesh Mesh;
-    public int Index;
-
-    private JVector center;
+    public readonly int Index;
 
     /// <summary>
     /// Initializes a new instance of the TriangleShape class.
@@ -45,25 +44,15 @@ public class TriangleShape : RigidBodyShape
         Mesh = mesh;
         Index = index;
 
-        UpdateShape();
+        UpdateWorldBoundingBox();
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        inertia = JMatrix.Identity;
-        mass = 1;
-        com = center;
-    }
-
-    public void UpdateShape()
-    {
-        ref var triangle = ref Mesh.Indices[Index];
-
-        JVector a = Mesh.Vertices[triangle.IndexA];
-        JVector b = Mesh.Vertices[triangle.IndexB];
-        JVector c = Mesh.Vertices[triangle.IndexC];
-
-        center = 1.0f / 3.0f * (a + b + c);
+        // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
+        throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
+                                        $"If you encounter this while calling AddShape, call AddShape with" +
+                                        $"setMassInertia set to false.");
     }
 
     /// <summary>
@@ -97,7 +86,14 @@ public class TriangleShape : RigidBodyShape
     {
         const float extraMargin = 0.01f;
 
-        GetWorldVertices(out JVector a, out JVector b, out JVector c);
+        ref var triangle = ref Mesh.Indices[Index];
+        var a = Mesh.Vertices[triangle.IndexA];
+        var b = Mesh.Vertices[triangle.IndexB];
+        var c = Mesh.Vertices[triangle.IndexC];
+
+        JVector.Transform(a, orientation, out a);
+        JVector.Transform(b, orientation, out b);
+        JVector.Transform(c, orientation, out c);
 
         box = JBBox.SmallBox;
 
@@ -107,8 +103,8 @@ public class TriangleShape : RigidBodyShape
 
         // prevent a degenerate bounding box
         JVector extra = new JVector(extraMargin);
-        box.Min -= extra;
-        box.Max += extra;
+        box.Min += position - extra;
+        box.Max += position + extra;
     }
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
@@ -122,33 +118,39 @@ public class TriangleShape : RigidBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        point = center;
+        ref var triangle = ref Mesh.Indices[Index];
+
+        JVector a = Mesh.Vertices[triangle.IndexA];
+        JVector b = Mesh.Vertices[triangle.IndexB];
+        JVector c = Mesh.Vertices[triangle.IndexC];
+
+        point = 1.0f / 3.0f * (a + b + c);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
         ref var triangle = ref Mesh.Indices[Index];
 
-        JVector A = Mesh.Vertices[triangle.IndexA];
-        JVector B = Mesh.Vertices[triangle.IndexB];
-        JVector C = Mesh.Vertices[triangle.IndexC];
+        JVector a = Mesh.Vertices[triangle.IndexA];
+        JVector b = Mesh.Vertices[triangle.IndexB];
+        JVector c = Mesh.Vertices[triangle.IndexC];
 
-        float min = JVector.Dot(A, direction);
-        float dot = JVector.Dot(B, direction);
+        float min = JVector.Dot(a, direction);
+        float dot = JVector.Dot(b, direction);
 
-        result = A;
+        result = a;
 
         if (dot > min)
         {
             min = dot;
-            result = B;
+            result = b;
         }
 
-        dot = JVector.Dot(C, direction);
+        dot = JVector.Dot(c, direction);
 
         if (dot > min)
         {
-            result = C;
+            result = c;
         }
     }
 }

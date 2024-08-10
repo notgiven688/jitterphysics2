@@ -247,8 +247,15 @@ public struct JBBox
 
     public readonly JVector Center => (Min + Max) * (1.0f / 2.0f);
 
-    internal readonly float Perimeter =>
-        2.0f * ((Max.X - Min.X) * (Max.Y - Min.Y) +
-                (Max.X - Min.X) * (Max.Z - Min.Z) +
-                (Max.Z - Min.Z) * (Max.Y - Min.Y));
+    public float GetVolume()
+    {
+        JVector len = Max - Min;
+        return len.X * len.Y * len.Z;
+    }
+
+    public float GetSurfaceArea()
+    {
+        JVector len = Max - Min;
+        return 2.0f * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
+    }
 }
