@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
@@ -77,7 +78,7 @@ public class SoftBodyTriangle : SoftBodyShape
 
     public override void UpdateWorldBoundingBox(float dt = 0.0f)
     {
-        const float extraMargin = 0.01f;
+        float extraMargin = MathF.Max(halfThickness, 0.01f);
 
         JBBox box = JBBox.SmallBox;
 
