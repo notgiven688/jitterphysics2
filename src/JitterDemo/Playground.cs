@@ -25,7 +25,7 @@ public partial class Playground : RenderWindow
     private readonly World world;
 
     private bool multiThread;
-    private bool persistentThreadModel = true;
+    private bool persistentThreadModel = false;
     private RigidBodyShape? floorShape;
 
     private readonly List<IDemo> demos = new()

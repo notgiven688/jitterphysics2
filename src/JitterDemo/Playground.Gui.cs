@@ -145,7 +145,7 @@ public partial class Playground : RenderWindow
 
             ImGui.Checkbox("Multithreading", ref multiThread);
 
-            ImGui.Checkbox("Aggressive Threading", ref persistentThreadModel);
+            ImGui.Checkbox("Persistent Threads", ref persistentThreadModel);
             ImGui.TreePop();
         }
 
