@@ -623,7 +623,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         UpdateWorldInertia();
     }
 
-    private static Stack<JTriangle>? debugTriangles;
+    private static List<JTriangle>? debugTriangles;
 
     /// <summary>
     /// Generates a rough triangle approximation of the shapes of the body.
@@ -632,22 +632,22 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public void DebugDraw(IDebugDrawer drawer)
     {
-        debugTriangles ??= new Stack<JTriangle>();
+        debugTriangles ??= new List<JTriangle>();
 
         foreach (var shape in shapes)
         {
             ShapeHelper.MakeHull(shape, debugTriangles);
 
-            while (debugTriangles.Count > 0)
+            foreach (var tri in debugTriangles)
             {
-                var tri = debugTriangles.Pop();
-
                 drawer.DrawTriangle(
                     JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
                     JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
                     JVector.Transform(tri.V2, Data.Orientation) + Data.Position);
             }
         }
+
+        debugTriangles.Clear();
     }
 
     /// <summary>

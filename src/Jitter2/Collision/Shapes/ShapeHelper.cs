@@ -52,8 +52,8 @@ public static class ShapeHelper
     /// </summary>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
-    /// <param name="stack">A stack to which the triangles are pushed too.</param>
-    public static void MakeHull(ISupportMappable support, Stack<JTriangle> stack, int subdivisions = 3)
+    /// <param name="hullCollection">An ICollection to which the triangles are added too.</param>
+    public static void MakeHull<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle>
     {
         for (int i = 0; i < 20; i++)
         {
@@ -65,13 +65,13 @@ public static class ShapeHelper
             support.SupportMap(v2, out JVector sv2);
             support.SupportMap(v3, out JVector sv3);
 
-            Subdivide(support, stack, v1, v2, v3, sv1, sv2, sv3, subdivisions);
+            Subdivide(support, hullCollection, v1, v2, v3, sv1, sv2, sv3, subdivisions);
         }
     }
 
-    private static void Subdivide(ISupportMappable support, Stack<JTriangle> stack,
+    private static void Subdivide<T>(ISupportMappable support, T hullCollection,
         JVector v1, JVector v2, JVector v3, JVector p1, JVector p2, JVector p3,
-        int subdivisions = 3)
+        int subdivisions = 3) where T : ICollection<JTriangle>
     {
         if (subdivisions <= 1)
         {
@@ -79,7 +79,7 @@ public static class ShapeHelper
 
             if (n.LengthSquared() > 1e-16f)
             {
-                stack.Push(new JTriangle(p1, p2, p3));
+                hullCollection.Add(new JTriangle(p1, p2, p3));
             }
 
             return;
@@ -95,10 +95,10 @@ public static class ShapeHelper
 
         subdivisions -= 1;
 
-        Subdivide(support, stack, v1, h1, h3, p1, sp1, sp3, subdivisions);
-        Subdivide(support, stack, h1, v2, h2, sp1, p2, sp2, subdivisions);
-        Subdivide(support, stack, h3, h2, v3, sp3, sp2, p3, subdivisions);
-        Subdivide(support, stack, h2, h3, h1, sp2, sp3, sp1, subdivisions);
+        Subdivide(support, hullCollection, v1, h1, h3, p1, sp1, sp3, subdivisions);
+        Subdivide(support, hullCollection, h1, v2, h2, sp1, p2, sp2, subdivisions);
+        Subdivide(support, hullCollection, h3, h2, v3, sp3, sp2, p3, subdivisions);
+        Subdivide(support, hullCollection, h2, h3, h1, sp2, sp3, sp1, subdivisions);
     }
 
     /// <summary>
@@ -107,9 +107,10 @@ public static class ShapeHelper
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
     /// <returns>An enumeration of triangles forming the convex hull.</returns>
+    /// <remarks>Allocates a new List and therefore generates garbage.</remarks>
     public static IEnumerable<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
     {
-        Stack<JTriangle> triangles = new();
+        List<JTriangle> triangles = new();
         MakeHull(support, triangles, subdivisions);
         return triangles;
     }
