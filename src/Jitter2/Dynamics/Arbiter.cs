@@ -43,10 +43,10 @@ public class Arbiter
 /// <summary>
 /// Look-up key for stored <see cref="Arbiter"/>.
 /// </summary>
-public struct ArbiterKey : IEquatable<ArbiterKey>
+public readonly struct ArbiterKey : IEquatable<ArbiterKey>
 {
-    public ulong Key1;
-    public ulong Key2;
+    public readonly ulong Key1;
+    public readonly ulong Key2;
 
     public ArbiterKey(ulong key1, ulong key2)
     {
@@ -54,18 +54,28 @@ public struct ArbiterKey : IEquatable<ArbiterKey>
         Key2 = key2;
     }
 
-    public bool Equals(ArbiterKey other)
+    public readonly bool Equals(ArbiterKey other)
     {
         return Key1 == other.Key1 && Key2 == other.Key2;
     }
 
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is ArbiterKey other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         return (int)Key1 + 2281 * (int)Key2;
+    }
+
+    public static bool operator ==(ArbiterKey left, ArbiterKey right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(ArbiterKey left, ArbiterKey right)
+    {
+        return !(left == right);
     }
 }
