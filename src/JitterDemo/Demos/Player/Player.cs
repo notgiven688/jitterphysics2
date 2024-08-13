@@ -12,7 +12,6 @@ namespace JitterDemo;
 public class Player
 {
     public RigidBody Body { get; }
-    public LinearMotor FrictionMotor { get; }
     public AngularMotor AngularMovement { get; }
 
     private readonly float capsuleHalfHeight;
@@ -48,11 +47,8 @@ public class Player
         var ur = world.CreateConstraint<HingeAngle>(Body, world.NullBody);
         ur.Initialize(JVector.UnitY, AngularLimit.Full);
 
-        // Add a "motor" to the body. The motor target velocity is zero.
-        // This acts like friction and stops the player.
-        FrictionMotor = world.CreateConstraint<LinearMotor>(Body, world.NullBody);
-        FrictionMotor.Initialize(JVector.UnitZ, JVector.UnitX);
-        FrictionMotor.MaximumForce = 10;
+        // Add some friction
+        Body.Friction = 0.8f;
 
         // An angular motor for turning.
         AngularMovement = world.CreateConstraint<AngularMotor>(Body, world.NullBody);
@@ -205,7 +201,6 @@ public class Player
     {
         if (!CanJump(out _, out _))
         {
-            FrictionMotor.IsEnabled = false;
             return;
         }
 
@@ -226,15 +221,5 @@ public class Player
             }
         }
 
-        if (bodyVelLen > 0.01f)
-        {
-            FrictionMotor.LocalAxis1 = JVector.TransposedTransform(bodyVel * (1.0f / bodyVelLen), Body.Orientation);
-            FrictionMotor.TargetVelocity = 0;
-            FrictionMotor.IsEnabled = true;
-        }
-        else
-        {
-            FrictionMotor.IsEnabled = false;
-        }
     }
 }
