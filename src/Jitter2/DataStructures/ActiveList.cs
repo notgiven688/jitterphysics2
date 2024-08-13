@@ -167,30 +167,38 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public bool IsActive(T element)
     {
+        Debug.Assert(element.ListIndex != -1);
+        Debug.Assert(elements[element.ListIndex] == element);
+
         return (element.ListIndex < Active);
     }
 
-    public void MoveToActive(T element)
+    public bool MoveToActive(T element)
     {
         Debug.Assert(element.ListIndex != -1);
+        Debug.Assert(elements[element.ListIndex] == element);
 
-        if (element.ListIndex < Active) return;
+        if (element.ListIndex < Active) return false;
         Swap(Active, element.ListIndex);
         Active += 1;
+        return true;
     }
 
-    public void MoveToInactive(T element)
+    public bool MoveToInactive(T element)
     {
         Debug.Assert(element.ListIndex != -1);
+        Debug.Assert(elements[element.ListIndex] == element);
 
-        if (element.ListIndex >= Active) return;
+        if (element.ListIndex >= Active) return false;
         Active -= 1;
         Swap(Active, element.ListIndex);
+        return true;
     }
 
     public void Remove(T element)
     {
         Debug.Assert(element.ListIndex != -1);
+        Debug.Assert(elements[element.ListIndex] == element);
 
         MoveToInactive(element);
 

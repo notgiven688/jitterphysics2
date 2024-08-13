@@ -62,10 +62,10 @@ public class Demo21 : IDemo
 
         Console.WriteLine("Optimizing tree..");
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 10; i++)
         {
-            Console.WriteLine($"({i + 1}/3) Current cost: {(long)world.DynamicTree.CalculateCost()}");
-            world.DynamicTree.Optimize(40);
+            Console.WriteLine($"({i + 1}/10) Current cost: {(long)world.DynamicTree.CalculateCost()}");
+            world.DynamicTree.Optimize(100);
         }
 
         Console.WriteLine("Done.");
