@@ -408,12 +408,12 @@ public partial class World
             var node = phs.Slots[e];
             if (node.ID == 0) continue;
 
-            var shapeA = DynamicTree.Nodes[node.ID1].Proxy;
-            var shapeB = DynamicTree.Nodes[node.ID2].Proxy;
+            var proxyA = DynamicTree.Nodes[node.ID1].Proxy;
+            var proxyB = DynamicTree.Nodes[node.ID2].Proxy;
 
-            if (!shapeA.WorldBoundingBox.Disjoint(shapeB.WorldBoundingBox))
+            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
             {
-                Detect(shapeA, shapeB);
+                Detect(proxyA, proxyB);
             }
         }
     }
