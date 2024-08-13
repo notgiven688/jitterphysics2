@@ -199,7 +199,7 @@ public class Player
 
     public void SetLinearInput(JVector deltaMove)
     {
-        if (!CanJump(out _, out _))
+        if (!CanJump(out var floor, out JVector hitpoint))
         {
             return;
         }
@@ -217,7 +217,13 @@ public class Player
         {
             if (bodyVelLen < 5f)
             {
-                Body.AddForce(JVector.Transform(deltaMove, Body.Orientation) * 10);
+                var force = JVector.Transform(deltaMove, Body.Orientation) * 10.0f;
+
+                Body.AddForce(force);
+
+                // follow Newton's law (for once) and add a force
+                // with equal magnitude in the opposite direction.
+                floor!.AddForce(-force, Body.Position + hitpoint);
             }
         }
 

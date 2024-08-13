@@ -430,10 +430,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is reset to zero with the subsequent call to <see cref="World.Step(float, bool)"/>.
+    /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is
+    /// reset to zero with the subsequent call to <see cref="World.Step(float, bool)"/>.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>
+    [ReferenceFrame(ReferenceFrame.World)]
     public void AddForce(in JVector force, in JVector position)
     {
         ref RigidBodyData data = ref Data;
