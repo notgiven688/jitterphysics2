@@ -22,6 +22,8 @@
  */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -33,16 +35,18 @@ namespace Jitter2.Collision;
 /// all potential overlapping pairs of shapes. The implementation is based
 /// on open addressing.
 /// </summary>
-public class PairHashSet
+public class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
-    public struct Pair
+    public readonly struct Pair
     {
-        [FieldOffset(0)] public long ID;
+        [FieldOffset(0)] public readonly long ID;
 
-        [FieldOffset(0)] public int ID1;
+        [FieldOffset(0)] public readonly int ID1;
 
-        [FieldOffset(4)] public int ID2;
+        [FieldOffset(4)] public readonly int ID2;
+
+        public static Pair Zero = new Pair();
 
         public Pair(int id1, int id2)
         {
@@ -59,7 +63,7 @@ public class PairHashSet
             }
         }
 
-        public readonly int GetHash()
+        public int GetHash()
         {
             return (ID1 + 2281 * ID2) & 0x7FFFFFFF;
         }
@@ -88,6 +92,42 @@ public class PairHashSet
         plt.grid(True)
         plt.show()
         */
+    }
+
+    public struct Enumerator : IEnumerator<Pair>
+    {
+        private readonly PairHashSet hashSet;
+        private int index = -1;
+
+        public Enumerator(PairHashSet hashSet)
+        {
+            this.hashSet = hashSet;
+        }
+
+        public readonly Pair Current => hashSet.Slots[index];
+
+        readonly object IEnumerator.Current => Current;
+
+        public readonly void Dispose()
+        {
+        }
+
+        public bool MoveNext()
+        {
+            var slots = hashSet.Slots;
+
+            while (index < slots.Length - 1)
+            {
+                if (slots[++index].ID != 0) return true;
+            }
+
+            return false;
+        }
+
+        public void Reset()
+        {
+            index = -1;
+        }
     }
 
     public Pair[] Slots = Array.Empty<Pair>();
@@ -150,7 +190,7 @@ public class PairHashSet
 
         if (Slots[hash_i].ID == 0)
         {
-            Slots[hash_i].ID = pair.ID;
+            Slots[hash_i] = pair;
             Count += 1;
 
             if (Slots.Length < 2 * Count)
@@ -176,14 +216,14 @@ public class PairHashSet
         }
     }
 
-    public bool Remove(int hash_i)
+    public bool Remove(int slot)
     {
-        if (Slots[hash_i].ID == 0)
+        if (Slots[slot].ID == 0)
         {
             return false;
         }
 
-        int hash_j = hash_i;
+        int hash_j = slot;
 
         while (true)
         {
@@ -197,15 +237,15 @@ public class PairHashSet
             int hash_k = Slots[hash_j].GetHash() & modder;
 
             // https://en.wikipedia.org/wiki/Open_addressing
-            if ((hash_j > hash_i && (hash_k <= hash_i || hash_k > hash_j)) ||
-                (hash_j < hash_i && hash_k <= hash_i && hash_k > hash_j))
+            if ((hash_j > slot && (hash_k <= slot || hash_k > hash_j)) ||
+                (hash_j < slot && hash_k <= slot && hash_k > hash_j))
             {
-                Slots[hash_i].ID = Slots[hash_j].ID;
-                hash_i = hash_j;
+                Slots[slot] = Slots[hash_j];
+                slot = hash_j;
             }
         }
 
-        Slots[hash_i].ID = 0;
+        Slots[slot] = Pair.Zero;
         Count -= 1;
 
         if (Slots.Length > MinimumSize && Count * TrimFactor < Slots.Length)
@@ -221,5 +261,15 @@ public class PairHashSet
         int hash = pair.GetHash();
         int hash_i = FindSlot(hash, pair.ID);
         return Remove(hash_i);
+    }
+
+    public IEnumerator<Pair> GetEnumerator()
+    {
+        return new Enumerator(this);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
