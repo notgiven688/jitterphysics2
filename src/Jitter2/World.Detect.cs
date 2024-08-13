@@ -294,6 +294,9 @@ public partial class World
         float penetration;
 
         Debug.Assert(sA.RigidBody != sB.RigidBody);
+        Debug.Assert(sA.RigidBody.World == this);
+        Debug.Assert(sB.RigidBody.World == this);
+
         Debug.Assert(sA.RigidBody != null);
         Debug.Assert(sB.RigidBody != null);
 
