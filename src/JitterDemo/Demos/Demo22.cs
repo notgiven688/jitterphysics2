@@ -36,7 +36,7 @@ public class Demo22 : IDemo
         plankC.AddShape(new BoxShape(20,0.1f,6));
         plankC.IsStatic = true;
 
-        plankA.Position = new JVector(-20, 11, 0);
+        plankA.Position = new JVector(-20, 13, 0);
         plankC.Position = new JVector(20, 16, 0);
 
         // (*) The mass is set as inverse mass, so we have a mass of 100 here.
@@ -51,7 +51,7 @@ public class Demo22 : IDemo
         platform.AffectedByGravity = false;
         platform.Position = new JVector(0, 12, 0);
 
-        player = new Player(world, new JVector(-20, 12, 0));
+        player = new Player(world, new JVector(-20, 15, 0));
         player.Body.Orientation = JQuaternion.CreateRotationY(-MathF.PI / 2.0f);
     }
 
