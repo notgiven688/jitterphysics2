@@ -191,7 +191,7 @@ public partial class Playground : RenderWindow
 
             ImGui.Checkbox("Debug draw tree", ref debugDrawTree);
 
-            if (ImGui.Slider("##foo2", ref debugDrawTreeDepth, 0, 64, "Tree depth (%d)", ImGuiSliderFlags.None))
+            if (ImGui.Slider("##foo2", ref debugDrawTreeDepth, 1, 64, "Tree depth (%d)", ImGuiSliderFlags.None))
             {
                 debugDrawTree = true;
             }

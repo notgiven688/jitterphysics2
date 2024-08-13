@@ -32,7 +32,7 @@ public partial class Playground : RenderWindow
 
         if (debugDrawTree)
         {
-            World.DynamicTree.EnumerateAll(drawBox);
+            World.DynamicTree.EnumerateAABB(drawBox);
         }
 
         if (debugDrawShapes)
