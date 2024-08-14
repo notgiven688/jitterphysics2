@@ -11,6 +11,21 @@ namespace JitterDemo;
 
 public class Demo22 : IDemo
 {
+    private static class Curve
+    {
+        public static JVector Path(float time)
+        {
+            return new JVector(8.5f * MathF.Sin((float)time * 0.5f),
+                14 + MathF.Cos(time * 0.5f) * 5.0f, 0);
+        }
+
+        public static JVector Derivative(float time)
+        {
+            return new JVector(4.25f * MathF.Cos((float)time * 0.5f),
+                -2.5f * MathF.Sin(time * 0.5f), 0);
+        }
+    }
+
     public string Name => "Kinematic bodies";
 
     private Playground pg = null!;
@@ -19,8 +34,6 @@ public class Demo22 : IDemo
 
     private RigidBody platform = null!;
 
-    private LinearMotor linearMotor = null!;
-
     public void Build()
     {
         pg = (Playground)RenderWindow.Instance;
@@ -28,25 +41,26 @@ public class Demo22 : IDemo
 
         pg.ResetScene(true);
 
-        var plankA = world.CreateRigidBody();
-        plankA.AddShape(new BoxShape(20,0.1f,6));
-        plankA.IsStatic = true;
+        var leftPlank = world.CreateRigidBody();
+        leftPlank.AddShape(new BoxShape(20,0.1f,6));
+        leftPlank.IsStatic = true;
 
-        var plankC = world.CreateRigidBody();
-        plankC.AddShape(new BoxShape(20,0.1f,6));
-        plankC.IsStatic = true;
+        var rightPlank = world.CreateRigidBody();
+        rightPlank.AddShape(new BoxShape(20,0.1f,6));
+        rightPlank.IsStatic = true;
 
-        plankA.Position = new JVector(-20, 13, 0);
-        plankC.Position = new JVector(20, 16, 0);
+        leftPlank.Position = new JVector(-21, 13, 0);
+        rightPlank.Position = new JVector(21, 16, 0);
 
-        // (*) The mass is set as inverse mass, so we have a mass of 100 here.
-        // Reduce the mass to make the body "more" kinematic, i.e. it behaves
-        // more like an unstoppable object. Be careful when setting the mass to infinity (zero
-        // inverse mass) - if Jitter detects a collision between and unstoppable object
-        // (the platform) and an immovable object (static object) the solver explodes.
+        // (*) The mass is specified as the inverse mass, so an inverse mass of 0.01 corresponds to a mass of 100.
+        // Lower the inverse mass (i.e., increase the mass) to make the body behave more kinematically,
+        // akin to an unstoppable object. However, be cautious when setting the inverse mass to zero (infinite mass),
+        // as it can cause the solver to fail if a collision occurs between an unstoppable object (e.g., a platform)
+        // and an immovable object (e.g., a static object).
 
         platform = world.CreateRigidBody();
         platform.AddShape(new BoxShape(4,0.1f,6));
+        platform.AddShape(new SphereShape(0.2f)); // guide to the eye
         platform.SetMassInertia(JMatrix.Zero, 0.01f, true); // (*)
         platform.AffectedByGravity = false;
         platform.Position = new JVector(0, 12, 0);
@@ -57,19 +71,52 @@ public class Demo22 : IDemo
 
     public void Draw()
     {
-        Keyboard kb = Keyboard.Instance;
+        // What is happening in the following *two* lines of code?
+        //
+        // We want to platform to follow a path p(t). We can not set the position
+        // directly, as it will just teleport the body in tiny steps, which
+        // does not produce the kinematic physics we are after.
+        //
+        // We introduce k(t) and manually set the velocity of the platform to be
+        //
+        // v(t) = alpha(k(t) - x(t))
+        // <=> x'(t) = alpha(k(t) - x(t))
+        // <=> 1/alpha x'(t) + x(t) = k(t)
+        //
+        // where alpha is a constant.
+        //
+        // If we now set k(t) to be
+        //  ______________________________
+        // | k(t) = 1/alpha p'(t) + p(t) |
+        // -------------------------------
+        // , we arrive at
+        //
+        // x(t) = C*exp(-alpha*t) + p(t)
+        //
+        // where the first term describes the offset of the target path p(t)
+        // and the position of the platform x(t). This term vanishes with larger t.
 
-        JVector path = new JVector(8.5f * MathF.Sin((float)pg.Time * 0.5f),
-            14 + MathF.Cos((float)pg.Time * 0.5f) * 5.0f, 0);
+        JVector k = Curve.Derivative((float)pg.Time) + Curve.Path((float)pg.Time);
+        platform.Velocity = k - platform.Position;
 
-        JVector delta = path - platform.Position;
+        // Draw the curve
 
-        if (delta.LengthSquared() > 0.001f)
+        const int stepMax = 100;
+        const float maxTime = 4.0f * MathF.PI;
+
+        for (int step = 0; step < stepMax; step++)
         {
-            // setting velocities is absolutely fine, don't ever set
-            // positions - the solver wont properly deal with it.
-            platform.Velocity = delta;
+            float ta = maxTime / stepMax * step;
+            float tb = maxTime / stepMax * (step + 1);
+
+            pg.DebugRenderer.PushLine(DebugRenderer.Color.Green,
+                Conversion.FromJitter(Curve.Path(ta)),
+                Conversion.FromJitter(Curve.Path(tb)));
         }
+
+        // Player handling with keyboard
+
+        Keyboard kb = Keyboard.Instance;
 
         if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
         else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
