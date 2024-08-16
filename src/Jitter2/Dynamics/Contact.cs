@@ -23,6 +23,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
@@ -33,6 +34,7 @@ namespace Jitter2.Dynamics;
 /// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
 /// by one of these structs.
 /// </summary>
+[StructLayout(LayoutKind.Sequential)]
 public struct ContactData
 {
     public const uint MaskContact0 = 0b0001;
@@ -64,8 +66,8 @@ public struct ContactData
 
     public ArbiterKey Key;
 
-    private float Friction;
-    private float Restitution;
+    public float Restitution;
+    public float Friction;
 
     public bool IsSpeculative;
 
@@ -74,20 +76,26 @@ public struct ContactData
     public Contact Contact2;
     public Contact Contact3;
 
-    public void PrepareForIteration(float dt)
+    public unsafe void PrepareForIteration(float dt)
     {
-        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
-        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ref Body1.Data, ref Body2.Data, dt, IsSpeculative);
+        fixed (ContactData* ptr = &this)
+        {
+            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, dt);
+            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, dt);
+            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, dt);
+            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
+        }
     }
 
-    public void Iterate()
+    public unsafe void Iterate()
     {
-        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ref Body1.Data, ref Body2.Data);
-        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ref Body1.Data, ref Body2.Data);
+        fixed (ContactData* ptr = &this)
+        {
+            if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr);
+            if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr);
+            if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr);
+            if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr);
+        }
     }
 
     public void UpdatePosition()
@@ -167,22 +175,22 @@ public struct ContactData
 
         if ((UsageMask & MaskContact0) == 0)
         {
-            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
+            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution);
             UsageMask |= MaskContact0;
         }
         else if ((UsageMask & MaskContact1) == 0)
         {
-            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
+            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution);
             UsageMask |= MaskContact1;
         }
         else if ((UsageMask & MaskContact2) == 0)
         {
-            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
+            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution);
             UsageMask |= MaskContact2;
         }
         else if ((UsageMask & MaskContact3) == 0)
         {
-            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution, Friction);
+            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, true, Restitution);
             UsageMask |= MaskContact3;
         }
     }
@@ -267,7 +275,7 @@ public struct ContactData
             index = MaskContact3;
         }
 
-        cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution, Friction);
+        cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution);
         UsageMask |= index;
     }
 
@@ -298,11 +306,8 @@ public struct ContactData
 
         public float MassTangent1;
         public float MassTangent2;
-        public float MaxTangentImpulse;
 
-        public float Friction;
         public float Penetration;
-        public float RestitutionBias;
 
         public JVector Normal;
         public JVector Tangent1;
@@ -323,7 +328,7 @@ public struct ContactData
         public JVector RelativePos2;
 
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2, in JVector n,
-            float penetration, bool newContact, float restitution, float friction)
+            float penetration, bool newContact, float restitution)
         {
             Normal = n;
             Debug.Assert(Math.Abs(n.LengthSquared() - 1.0f) < 1e-3);
@@ -351,10 +356,12 @@ public struct ContactData
 
                 float relNormalVel = JVector.Dot(dv, Normal);
 
+                Bias = 0;
+
                 // Fake restitution
                 if (relNormalVel < -1.0f && (Flag & Flags.NewContact) != 0)
                 {
-                    Bias = Math.Max(-restitution * relNormalVel, Bias);
+                    Bias = -restitution * relNormalVel;
                 }
 
                 Tangent1 = dv - Normal * relNormalVel;
@@ -372,16 +379,6 @@ public struct ContactData
                 }
 
                 Tangent2 = Tangent1 % Normal;
-
-                RestitutionBias = 0.0f;
-
-                // Fake restitution
-                if (relNormalVel < -1.0f)
-                {
-                    RestitutionBias = -restitution * relNormalVel;
-                }
-
-                Friction = friction;
             }
         }
 
@@ -413,9 +410,12 @@ public struct ContactData
             return true;
         }
 
-        public void PrepareForIteration(ref RigidBodyData b1, ref RigidBodyData b2,
-            float idt, bool speculative = false)
+        public unsafe void PrepareForIteration(ContactData* cd, float idt)
         {
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
+            bool speculative = cd->IsSpeculative;
+
             if ((Flag & Flags.NewContact) != 0) Flag = Flags.NewContact;
             else Flag = 0;
 
@@ -496,9 +496,6 @@ public struct ContactData
             MassTangent2 = 1.0f / kTangent2;
             MassNormal = 1.0f / kNormal;
 
-            Bias = RestitutionBias;
-            RestitutionBias = 0;
-
             // Speculative Contacts!
             if (Penetration < -BreakThreshold)
             {
@@ -508,8 +505,7 @@ public struct ContactData
 
             if (Penetration > AllowedPenetration)
             {
-                Bias = Math.Max(Bias,
-                    BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
+                Bias = Math.Max(Bias, BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
                 Bias = Math.Clamp(Bias, 0.0f, MaximumBias);
             }
 
@@ -528,8 +524,11 @@ public struct ContactData
             Flag &= ~Flags.NewContact;
         }
 
-        public void Iterate(ref RigidBodyData b1, ref RigidBodyData b2)
+        public unsafe void Iterate(ContactData* cd)
         {
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
+
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePos2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePos1;
 
@@ -544,7 +543,7 @@ public struct ContactData
             AccumulatedNormalImpulse = MathF.Max(oldNormalImpulse + normalImpulse, 0.0f);
             normalImpulse = AccumulatedNormalImpulse - oldNormalImpulse;
 
-            float maxTangentImpulse = Friction * AccumulatedNormalImpulse;
+            float maxTangentImpulse = cd->Friction * AccumulatedNormalImpulse;
             float tangentImpulse1 = MassTangent1 * -vt1;
             float tangentImpulse2 = MassTangent2 * -vt2;
 
