@@ -37,7 +37,7 @@ public partial class Playground : RenderWindow
 
         if (debugDrawShapes)
         {
-            foreach (var shape in World.DynamicTree.ActiveList)
+            foreach (var shape in World.DynamicTree.Proxies)
             {
                 var bb = shape.WorldBoundingBox;
                 DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(bb.Min),

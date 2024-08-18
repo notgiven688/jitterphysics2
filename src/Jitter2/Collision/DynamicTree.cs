@@ -38,9 +38,9 @@ public class DynamicTree
 {
     private volatile SlimBag<IDynamicTreeProxy>[] lists = Array.Empty<SlimBag<IDynamicTreeProxy>>();
 
-    private readonly ActiveList<IDynamicTreeProxy> activeList = new();
+    private readonly ActiveList<IDynamicTreeProxy> proxies = new();
 
-    public readonly ReadOnlyActiveList<IDynamicTreeProxy> ActiveList;
+    public readonly ReadOnlyActiveList<IDynamicTreeProxy> Proxies;
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
@@ -110,7 +110,7 @@ public class DynamicTree
             ScanForOverlaps(batch.BatchIndex, false);
         };
 
-        ActiveList = new ReadOnlyActiveList<IDynamicTreeProxy>(activeList);
+        Proxies = new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
 
         scanOverlapsPost = batch => { ScanForOverlaps(batch.BatchIndex, true); };
 
@@ -158,8 +158,8 @@ public class DynamicTree
         if (multiThread)
         {
             const int taskThreshold = 24;
-            int numTasks = Math.Clamp(activeList.Active / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
-            Parallel.ForBatch(0, activeList.Active, numTasks, scanOverlapsPre);
+            int numTasks = Math.Clamp(proxies.Active / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
+            Parallel.ForBatch(0, proxies.Active, numTasks, scanOverlapsPre);
 
             SetTime(Timings.ScanOverlapsPre);
 
@@ -180,13 +180,13 @@ public class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            Parallel.ForBatch(0, activeList.Active, numTasks, scanOverlapsPost);
+            Parallel.ForBatch(0, proxies.Active, numTasks, scanOverlapsPost);
 
             SetTime(Timings.ScanOverlapsPost);
         }
         else
         {
-            scanOverlapsPre(new Parallel.Batch(0, activeList.Active));
+            scanOverlapsPre(new Parallel.Batch(0, proxies.Active));
             SetTime(Timings.ScanOverlapsPre);
 
             var sl = lists[0];
@@ -199,7 +199,7 @@ public class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            scanOverlapsPost(new Parallel.Batch(0, activeList.Active));
+            scanOverlapsPost(new Parallel.Batch(0, proxies.Active));
             SetTime(Timings.ScanOverlapsPost);
         }
     }
@@ -223,17 +223,17 @@ public class DynamicTree
     {
         InternalAddProxy(proxy);
         OverlapCheck(root, proxy.NodePtr, true);
-        activeList.Add(proxy, active);
+        proxies.Add(proxy, active);
     }
 
     public bool IsActive<T>(T proxy) where T : class, IDynamicTreeProxy
     {
-        return activeList.IsActive(proxy);
+        return proxies.IsActive(proxy);
     }
 
     public void Activate<T>(T proxy) where T : class, IDynamicTreeProxy
     {
-        if (activeList.MoveToActive(proxy))
+        if (proxies.MoveToActive(proxy))
         {
             Nodes[proxy.NodePtr].ForceUpdate = true;
         }
@@ -241,7 +241,7 @@ public class DynamicTree
 
     public void Deactivate<T>(T proxy) where T : class, IDynamicTreeProxy
     {
-        activeList.MoveToInactive(proxy);
+        proxies.MoveToInactive(proxy);
     }
 
     /// <summary>
@@ -252,7 +252,7 @@ public class DynamicTree
         OverlapCheck(root, proxy.NodePtr, false);
         InternalRemoveProxy(proxy);
         proxy.NodePtr = NullNode;
-        activeList.Remove(proxy);
+        proxies.Remove(proxy);
     }
 
     /// <summary>
@@ -413,9 +413,9 @@ public class DynamicTree
         Stack<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
-            for (int i = 0; i < activeList.Count; i++)
+            for (int i = 0; i < proxies.Count; i++)
             {
-                var proxy = activeList[i];
+                var proxy = proxies[i];
 
                 if (optimizeRandom.NextDouble() > 0.01d) continue;
 
@@ -517,7 +517,7 @@ public class DynamicTree
 
         for (int i = batch.Start; i < batch.End; i++)
         {
-            var proxy = activeList[i];
+            var proxy = proxies[i];
 
             ref var node = ref Nodes[proxy.NodePtr];
 

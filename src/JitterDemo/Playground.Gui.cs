@@ -122,7 +122,7 @@ public partial class Playground : RenderWindow
             AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
             AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
             AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
-            AddRow("Shapes", $"{World.DynamicTree.ActiveList.Count}", $"{World.DynamicTree.ActiveList.Active}");
+            AddRow("Proxies", $"{World.DynamicTree.Proxies.Count}", $"{World.DynamicTree.Proxies.Active}");
 
             ImGui.EndTable();
             ImGui.TreePop();

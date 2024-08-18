@@ -263,7 +263,7 @@ public partial class World
         while (bodyStack.Count > 0) Remove(bodyStack.Pop());
 
         // Left-over shapes not associated with a rigid body.
-        Stack<IDynamicTreeProxy> proxies = new(DynamicTree.ActiveList);
+        Stack<IDynamicTreeProxy> proxies = new(DynamicTree.Proxies);
         while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
     }
 

@@ -55,7 +55,7 @@ public partial class World
     private Action<Parallel.Batch> prepareSmallConstraints;
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
-    private Action<Parallel.Batch> updateShapes;
+    private Action<Parallel.Batch> updateBoundingBoxes;
     private Action<Parallel.Batch> detectCollisions;
 
     private void InitParallelCallbacks()
@@ -70,7 +70,7 @@ public partial class World
         iterateSmallConstraints = IterateSmallConstraintsCallback;
         updateContacts = UpdateContactsCallback;
         updateBodies = UpdateBodiesCallback;
-        updateShapes = UpdateShapesCallback;
+        updateBoundingBoxes = UpdateBoundingBoxesCallback;
         detectCollisions = DetectCollisionsCallback;
     }
 
@@ -210,12 +210,12 @@ public partial class World
         }
     }
 
-    private void UpdateShapesCallback(Parallel.Batch batch)
+    private void UpdateBoundingBoxesCallback(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            var shape = DynamicTree.ActiveList[i];
-            if (shape is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
+            var proxy = DynamicTree.Proxies[i];
+            if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
         }
     }
 
@@ -447,12 +447,12 @@ public partial class World
     {
         if (multiThread)
         {
-            DynamicTree.ActiveList.ParallelForBatch(256, updateShapes);
+            DynamicTree.Proxies.ParallelForBatch(256, updateBoundingBoxes);
         }
         else
         {
-            Parallel.Batch batch = new(0, DynamicTree.ActiveList.Active);
-            UpdateShapesCallback(batch);
+            Parallel.Batch batch = new(0, DynamicTree.Proxies.Active);
+            UpdateBoundingBoxesCallback(batch);
         }
     }
 
