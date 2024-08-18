@@ -63,7 +63,7 @@ public partial class World
         public RayCastFilterPost? FilterPost;
         public RayCastFilterPre? FilterPre;
 
-        public readonly float Lambda;
+        public float Lambda;
 
         public Ray(in JVector origin, in JVector direction)
         {
@@ -95,6 +95,24 @@ public partial class World
         {
             FilterPre = pre,
             FilterPost = post
+        };
+        var result = QueryRay(ray);
+        shape = result.Entity;
+        normal = result.Normal;
+        fraction = result.Fraction;
+        return result.Hit;
+    }
+
+    /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)"/>
+    /// <param name="maxFraction">Maximum fraction of the ray's length to consider for intersections.</param>
+    public bool RayCast(JVector origin, JVector direction, float maxFraction, RayCastFilterPre? pre, RayCastFilterPost? post,
+        out IDynamicTreeProxy? shape, out JVector normal, out float fraction)
+    {
+        Ray ray = new(origin, direction)
+        {
+            FilterPre = pre,
+            FilterPost = post,
+            Lambda = maxFraction
         };
         var result = QueryRay(ray);
         shape = result.Entity;
