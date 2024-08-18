@@ -23,6 +23,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
@@ -41,7 +42,8 @@ public struct ContactData
     public const uint MaskContact1 = 0b0010;
     public const uint MaskContact2 = 0b0100;
     public const uint MaskContact3 = 0b1000;
-    public const uint MaskContactAll = 0b1111;
+
+    public const uint MaskContactAll = MaskContact0 | MaskContact1 | MaskContact2 | MaskContact3;
 
     // Accessed in unsafe code.
 #pragma warning disable CS0649
@@ -78,49 +80,49 @@ public struct ContactData
 
     public unsafe void PrepareForIteration(float dt)
     {
-        fixed (ContactData* ptr = &this)
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
-        }
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, dt);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, dt);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, dt);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
     }
 
     public unsafe void Iterate()
     {
-        fixed (ContactData* ptr = &this)
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr);
-            if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr);
-            if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr);
-            if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr);
-        }
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr);
+        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr);
+        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr);
+        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr);
     }
 
-    public void UpdatePosition()
+    public unsafe void UpdatePosition()
     {
         UsageMask &= MaskContactAll;
         UsageMask |= UsageMask << 4;
 
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
         if ((UsageMask & MaskContact0) != 0)
         {
-            if (!Contact0.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact0;
+            if (!Contact0.UpdatePosition(ptr)) UsageMask &= ~MaskContact0;
         }
 
         if ((UsageMask & MaskContact1) != 0)
         {
-            if (!Contact1.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact1;
+            if (!Contact1.UpdatePosition(ptr)) UsageMask &= ~MaskContact1;
         }
 
         if ((UsageMask & MaskContact2) != 0)
         {
-            if (!Contact2.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact2;
+            if (!Contact2.UpdatePosition(ptr)) UsageMask &= ~MaskContact2;
         }
 
         if ((UsageMask & MaskContact3) != 0)
         {
-            if (!Contact3.UpdatePosition(ref Body1.Data, ref Body2.Data)) UsageMask &= ~MaskContact3;
+            if (!Contact3.UpdatePosition(ptr)) UsageMask &= ~MaskContact3;
         }
     }
 
@@ -382,8 +384,11 @@ public struct ContactData
             }
         }
 
-        public bool UpdatePosition(ref RigidBodyData b1, ref RigidBodyData b2)
+        public unsafe bool UpdatePosition(ContactData* cd)
         {
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
+
             JVector.Transform(RealRelPos1, b1.Orientation, out RelativePos1);
             JVector.Add(RelativePos1, b1.Position, out JVector p1);
 
