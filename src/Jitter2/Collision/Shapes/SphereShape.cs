@@ -105,7 +105,7 @@ public class SphereShape : RigidBodyShape
             return true;
         }
 
-        return MathF.Max(t0, t1) > 0.0f;
+        return t1 > 0.0f;
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
