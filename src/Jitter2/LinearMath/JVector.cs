@@ -517,9 +517,15 @@ public struct JVector
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JVector operator -(JVector left)
+    public static JVector operator -(in JVector left)
     {
         return Multiply(left, -1.0f);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector operator +(in JVector left)
+    {
+        return left;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
