@@ -359,6 +359,17 @@ public partial class World
             return;
         }
 
+        // Auxiliary Flat Surface Contact Points
+        //
+        if (EnableAuxiliaryContactPoints)
+        {
+            // We cannot run the NarrowPhaseFilter in advance since it
+            // may modify normal and penetration values. We need the 'correct'
+            // values from the narrow phase algorithm to build a meaningful
+            // contact manifold.
+            cvh.BuildManifold(sA, sB, pA, pB, normal, penetration);
+        }
+
         if (NarrowPhaseFilter != null)
         {
             if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
@@ -368,16 +379,6 @@ public partial class World
         }
 
         GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter);
-
-        // Auxiliary Flat Surface Contact Points
-        //
-
-        cvh.Reset();
-
-        if (EnableAuxiliaryContactPoints)
-        {
-            cvh.BuildManifold(sA, sB, pA, pB, normal, penetration);
-        }
 
         lock (arbiter)
         {
