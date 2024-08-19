@@ -359,6 +359,8 @@ public partial class World
             return;
         }
 
+        cvh.Reset();
+
         // Auxiliary Flat Surface Contact Points
         //
         if (EnableAuxiliaryContactPoints)
