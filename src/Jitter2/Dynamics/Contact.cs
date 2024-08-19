@@ -361,7 +361,7 @@ public struct ContactData
                 Bias = 0;
 
                 // Fake restitution
-                if (relNormalVel < -1.0f && (Flag & Flags.NewContact) != 0)
+                if (relNormalVel < -1.0f)
                 {
                     Bias = -restitution * relNormalVel;
                 }
@@ -500,6 +500,11 @@ public struct ContactData
             MassTangent1 = 1.0f / kTangent1;
             MassTangent2 = 1.0f / kTangent2;
             MassNormal = 1.0f / kNormal;
+
+            if ((Flag & Flags.NewContact) == 0)
+            {
+                Bias = 0;
+            }
 
             // Speculative Contacts!
             if (Penetration < -BreakThreshold)
