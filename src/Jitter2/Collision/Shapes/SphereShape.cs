@@ -47,7 +47,7 @@ public class SphereShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SphereShape"/> class with an optional radius parameter. 
+    /// Initializes a new instance of the <see cref="SphereShape"/> class with an optional radius parameter.
     /// The default radius is 1.0 units.
     /// </summary>
     /// <param name="radius">The radius of the sphere. Defaults to 1.0f.</param>
@@ -80,6 +80,32 @@ public class SphereShape : RigidBodyShape
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);
+    }
+
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    {
+        normal = JVector.Zero;
+        lambda = 0.0f;
+
+        float disq = 1.0f / direction.LengthSquared();
+        float p = JVector.Dot(direction, origin) * disq;
+        float d = p * p - (origin.LengthSquared() - radius * radius) * disq;
+
+        if (d < 0.0f) return false;
+
+        float sqrtd = MathF.Sqrt(d);
+
+        float t0 = -p - sqrtd;
+        float t1 = -p + sqrtd;
+
+        if (t0 >= 0.0f)
+        {
+            lambda = t0;
+            JVector.Normalize(origin + t0 * direction, out normal);
+            return true;
+        }
+
+        return MathF.Max(t0, t1) > 0.0f;
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)

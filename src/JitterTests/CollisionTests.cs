@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace JitterTests;
 
 public class CollisionTests
@@ -14,6 +16,62 @@ public class CollisionTests
         BoxShape shape = new BoxShape(boxSize);
         Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Max - shape.Size * 0.5f));
         Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Min + shape.Size * 0.5f));
+    }
+
+    [TestCase]
+    public void SphereRayCast()
+    {
+        SphereShape ss = new SphereShape(1.2f);
+
+        const float epsilon = 1e-12f;
+
+        bool hit = ss.LocalRayCast(new JVector(0, 1.2f + 0.25f, 0), -JVector.UnitY, out JVector normal, out float lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda - 0.25f), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal - JVector.UnitY));
+
+        hit = ss.LocalRayCast(new JVector(0, 1.2f + 0.25f, 0), -2.0f * JVector.UnitY, out normal, out lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda - 0.125f), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal - JVector.UnitY));
+
+        hit = ss.LocalRayCast(new JVector(0, 1.2f - 0.25f, 0), -JVector.UnitY, out normal, out lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal));
+
+        hit = ss.LocalRayCast(new JVector(0, -1.2f - 0.25f, 0), -JVector.UnitY * 1.1f, out normal, out lambda);
+        Assert.That(!hit);
+        Assert.That(MathF.Abs(lambda), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal));
+    }
+
+    [TestCase]
+    public void BoxRayCast()
+    {
+        BoxShape bs = new BoxShape(1.2f*2.0f);
+
+        const float epsilon = 1e-12f;
+
+        bool hit = bs.LocalRayCast(new JVector(0, 1.2f + 0.25f, 0), -JVector.UnitY, out JVector normal, out float lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda - 0.25f), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal - JVector.UnitY));
+
+        hit = bs.LocalRayCast(new JVector(0, 1.2f + 0.25f, 0), -2.0f * JVector.UnitY, out normal, out lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda - 0.125f), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal - JVector.UnitY));
+
+        hit = bs.LocalRayCast(new JVector(0, 1.2f - 0.25f, 0), -JVector.UnitY, out normal, out lambda);
+        Assert.That(hit);
+        Assert.That(MathF.Abs(lambda), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal));
+
+        hit = bs.LocalRayCast(new JVector(0, -1.2f - 0.25f, 0), -JVector.UnitY * 1.1f, out normal, out lambda);
+        Assert.That(!hit);
+        Assert.That(MathF.Abs(lambda), Is.LessThan(epsilon));
+        Assert.That(MathHelper.CloseToZero(normal));
     }
 
     [TestCase]
