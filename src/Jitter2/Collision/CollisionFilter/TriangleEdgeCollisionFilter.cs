@@ -89,6 +89,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
         if (c2) tnormal.Negate();
 
+        if (JVector.Dot(normal, tnormal) < -cosAT) normal.Negate();
+
         tshape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
         JVector n, pma;
@@ -160,6 +162,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 }
 
                 penetration *= f5;
+                normal = nnormal;
             }
             else
             {
@@ -173,6 +176,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 }
 
                 penetration *= f6;
+                normal = tnormal;
             }
 
             return true;

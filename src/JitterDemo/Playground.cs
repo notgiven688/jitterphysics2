@@ -115,8 +115,7 @@ public partial class Playground : RenderWindow
         sb.Position = Conversion.ToJitterVector(pos);
         sb.Velocity = Conversion.ToJitterVector(dir * primitiveVelocity);
 
-
-        var ss = new SphereShape(0.5f);
+        var ss = new BoxShape(1);
         sb.AddShape(ss);
     }
 
@@ -227,13 +226,6 @@ public partial class Playground : RenderWindow
 
         if (!GuiRenderer.WantsCaptureKeyboard && Keyboard.KeyPressBegin(Keyboard.Key.Space))
         {
-            /*
-            Camera.Position = new(-28.477571f, 6.2047358f, -6.972821f);
-            Camera.Direction = new(-0.51022285f, -0.36347938f, 0.7794584f);
-            Console.WriteLine(this.Camera.Position);
-            Console.WriteLine(this.Camera.Direction);
-            */
-
             ShootPrimitive();
         }
 
