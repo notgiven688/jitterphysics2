@@ -49,7 +49,7 @@ public class CollisionTests
     [TestCase]
     public void BoxRayCast()
     {
-        BoxShape bs = new BoxShape(1.2f*2.0f);
+        BoxShape bs = new BoxShape(1.2f * 2.0f);
 
         const float epsilon = 1e-12f;
 
