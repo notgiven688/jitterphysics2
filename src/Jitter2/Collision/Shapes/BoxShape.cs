@@ -85,6 +85,89 @@ public class BoxShape : RigidBodyShape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    {
+        float epsilon = 1e-22f;
+
+        JVector min = -halfSize;
+        JVector max = halfSize;
+
+        normal = JVector.Zero;
+        lambda = 0.0f;
+
+        float exit = float.PositiveInfinity;
+
+        if (MathF.Abs(direction.X) > epsilon)
+        {
+            float ix = 1.0f / direction.X;
+            float t0 = (min.X - origin.X) * ix;
+            float t1 = (max.X - origin.X) * ix;
+
+            if (t0 > t1) (t0, t1) = (t1, t0);
+
+            if (t0 > exit || t1 < lambda) return false;
+
+            if (t0 > lambda)
+            {
+                lambda = t0;
+                normal = direction.X < 0.0f ? JVector.UnitX : -JVector.UnitX;
+            }
+
+            if (t1 < exit) exit = t1;
+        }
+        else if (origin.X < min.X || origin.X > max.X)
+        {
+            return false;
+        }
+
+        if (MathF.Abs(direction.Y) > epsilon)
+        {
+            float iy = 1.0f / direction.Y;
+            float t0 = (min.Y - origin.Y) * iy;
+            float t1 = (max.Y - origin.Y) * iy;
+
+            if (t0 > t1) (t0, t1) = (t1, t0);
+
+            if (t0 > exit || t1 < lambda) return false;
+
+            if (t0 > lambda)
+            {
+                lambda = t0;
+                normal = direction.Y < 0.0f ? JVector.UnitY : -JVector.UnitY;
+            }
+
+            if (t1 < exit) exit = t1;
+        }
+        else if (origin.Y < min.Y || origin.Y > max.Y)
+        {
+            return false;
+        }
+
+        if (MathF.Abs(direction.Z) > epsilon)
+        {
+            float iz = 1.0f / direction.Z;
+            float t0 = (min.Z - origin.Z) * iz;
+            float t1 = (max.Z - origin.Z) * iz;
+
+            if (t0 > t1) (t0, t1) = (t1, t0);
+
+            if (t0 > exit || t1 < lambda) return false;
+
+            if (t0 > lambda)
+            {
+                lambda = t0;
+                normal = direction.Z < 0.0f ? JVector.UnitZ : -JVector.UnitZ;
+            }
+            //if (t1 < exit) exit = t1;
+        }
+        else if (origin.Z < min.Z || origin.Z > max.Z)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
