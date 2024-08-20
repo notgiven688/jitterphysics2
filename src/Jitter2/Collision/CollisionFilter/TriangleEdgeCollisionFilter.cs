@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#define DEBUG_EDGEFILTER
+// #define DEBUG_EDGEFILTER
 
 using System;
 using Jitter2.Collision.Shapes;
@@ -48,7 +48,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// <summary>
     /// A tweakable parameter.
     /// </summary>
-    public float ProjectThreshold { get; set; } = 0.5f;
+    public float ProjectionThreshold { get; set; } = 0.5f;
 
     /// <summary>
     /// A tweakable parameter that defines the threshold to determine when two normals
@@ -186,7 +186,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         JVector cross = nnormal % tnormal;
         JVector proj = normal - cross * normal * cross;
 
-        if (proj.LengthSquared() < ProjectThreshold * ProjectThreshold)
+        if (proj.LengthSquared() < ProjectionThreshold * ProjectionThreshold)
         {
 #if DEBUG_EDGEFILTER
             Console.WriteLine($"case #3: discarding");
