@@ -161,8 +161,6 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
-
-
                 penetration *= f5;
                 normal = nnormal;
             }
@@ -171,8 +169,6 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
-
-
                 penetration *= f6;
                 normal = tnormal;
             }
@@ -222,7 +218,6 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {nnormal}");
 
 #endif
-
                 penetration *= f3;
                 normal = nnormal;
             }
@@ -231,7 +226,6 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {tnormal}");
 #endif
-
                 penetration *= f4;
                 normal = tnormal;
             }
