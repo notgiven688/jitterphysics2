@@ -19,42 +19,42 @@ static Texture2D GenCheckedTexture(int size, int checks, Color colorA, Color col
     return textureMag;
 }
 
-// Set a hint for anti-aliasing
-SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT);
+// set a hint for anti-aliasing
+SetConfigFlags(ConfigFlags.Msaa4xHint);
 
-// Initialize a 1200x800 px window with a title
-InitWindow(1200, 800, "BoxDrop Example");
+// initialize a 1200x800 px window with a title
+InitWindow(1200, 800, "BoxDrop example");
 
-// Dynamically create a plane model
-Texture2D texture = GenCheckedTexture(10, 1,  Color.LIGHTGRAY, Color.GRAY);
+// dynamically create a plane model
+Texture2D texture = GenCheckedTexture(10, 1,  Color.LightGray, Color.Gray);
 Model planeModel = LoadModelFromMesh(GenMeshPlane(10, 10, 10, 10));
-SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.MATERIAL_MAP_DIFFUSE, ref texture);
+SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.Diffuse, ref texture);
 
-// Create a camera
+// create a camera
 Camera3D camera = new ()
 {
     Position = new Vector3(-20.0f, 8.0f, 10.0f),
     Target = new Vector3(0.0f, 4.0f, 0.0f),
     Up = new Vector3(0.0f, 1.0f, 0.0f),
     FovY = 45.0f,
-    Projection = CameraProjection.CAMERA_PERSPECTIVE
+    Projection = CameraProjection.Perspective
 };
 
-// Set a target of 100 fps
+// 100 fps target
 SetTargetFPS(100);
 
-// Simple render loop
+// simple render loop
 while (!WindowShouldClose())
 {
     BeginDrawing();
-    ClearBackground(Color.BLUE);
+    ClearBackground(Color.Blue);
 
     BeginMode3D(camera);
 
-    DrawModel(planeModel, Vector3.Zero, 1.0f, Color.WHITE);
+    DrawModel(planeModel, Vector3.Zero, 1.0f, Color.White);
 
     EndMode3D();
-    DrawText($"{GetFPS()} fps", 10, 10, 20, Color.WHITE); 
+    DrawText($"{GetFPS()} fps", 10, 10, 20, Color.White);
 
     EndDrawing();
 }
