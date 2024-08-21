@@ -46,6 +46,11 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     private float cosAT = 0.99f;
 
     /// <summary>
+    /// A tweakable parameter.
+    /// </summary>
+    public float ProjectionThreshold { get; set; } = 0.5f;
+
+    /// <summary>
     /// A tweakable parameter that defines the threshold to determine when two normals
     /// are considered identical.
     /// </summary>
@@ -89,7 +94,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
         if (c2) tnormal.Negate();
 
-        if (JVector.Dot(normal, tnormal) < -cosAT) normal.Negate();
+        // Make triangles penetrable from one side
+        if (JVector.Dot(normal, tnormal) < -cosAT) return false;
 
         tshape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
@@ -153,28 +159,16 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             if (f5 > f6)
             {
 #if DEBUG_EDGEFILTER
-                    if(f5 < cosAT) Console.WriteLine($"case #1.1: dropping; normal {normal} -> {nnormal}");
-                    else Console.WriteLine($"case #1.2: adjusting; normal {normal} -> {nnormal}");
+                Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
-                if (f5 < cosAT)
-                {
-                    return false;
-                }
-
                 penetration *= f5;
                 normal = nnormal;
             }
             else
             {
 #if DEBUG_EDGEFILTER
-                if(f6 < cosAT) Console.WriteLine($"case #1.1: dropping; normal {normal} -> {tnormal}");
-                else Console.WriteLine($"case #1.2: adjusting; normal {normal} -> {tnormal}");
+                Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
-                if (f6 < cosAT)
-                {
-                    return false;
-                }
-
                 penetration *= f6;
                 normal = tnormal;
             }
@@ -187,6 +181,16 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // 1st step, project the normal onto the plane given by tnormal and nnormal
         JVector cross = nnormal % tnormal;
         JVector proj = normal - cross * normal * cross;
+
+        if (proj.LengthSquared() < ProjectionThreshold * ProjectionThreshold)
+        {
+#if DEBUG_EDGEFILTER
+            Console.WriteLine($"case #3: discarding");
+
+#endif
+            // can not project onto the plane, discard
+            return false;
+        }
 
         // 2nd step, determine if "proj" is between nnormal and tnormal
         //
@@ -204,35 +208,24 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
         if (!between)
         {
-            // not in-between, clamp normal
+            // not in-between, snap normal
             float f3 = JVector.Dot(normal, nnormal);
             float f4 = JVector.Dot(normal, tnormal);
 
             if (f3 > f4)
             {
 #if DEBUG_EDGEFILTER
-                    if(f3 < cosAT) Console.WriteLine($"case #2.1: adjusting; normal {normal} -> {nnormal}");
-                    else Console.WriteLine($"case #2.2: adjusting; normal {normal} -> {nnormal}");
-#endif
-                if (f3 < cosAT)
-                {
-                    return false;
-                }
+                Console.WriteLine($"case #2: adjusting; normal {normal} -> {nnormal}");
 
+#endif
                 penetration *= f3;
                 normal = nnormal;
             }
             else
             {
 #if DEBUG_EDGEFILTER
-                    if (f4 < cosAT) Console.WriteLine($"case #2.1: dropping; normal {normal} -> {tnormal}");
-                    else Console.WriteLine($"case #2.2: adjusting; normal {normal} -> {tnormal}");
+                Console.WriteLine($"case #2: adjusting; normal {normal} -> {tnormal}");
 #endif
-                if (f4 < cosAT)
-                {
-                    return false;
-                }
-
                 penetration *= f4;
                 normal = tnormal;
             }
