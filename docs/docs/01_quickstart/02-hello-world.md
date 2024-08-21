@@ -39,21 +39,21 @@ static Texture2D GenCheckedTexture(int size, int checks, Color colorA, Color col
 const int NumberOfBoxes = 12;
 
 // set a hint for anti-aliasing
-SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT);
+SetConfigFlags(ConfigFlags.Msaa4xHint);
 
 // initialize a 1200x800 px window with a title
 InitWindow(1200, 800, "BoxDrop example");
 
 // dynamically create a plane model
-Texture2D texture = GenCheckedTexture(10, 1,  Color.LIGHTGRAY, Color.GRAY);
+Texture2D texture = GenCheckedTexture(10, 1,  Color.LightGray, Color.Gray);
 Model planeModel = LoadModelFromMesh(GenMeshPlane(10, 10, 10, 10));
-SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.MATERIAL_MAP_DIFFUSE, ref texture);
+SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.Diffuse, ref texture);
 
 // dynamically create a box model
-texture = GenCheckedTexture(2, 1,  Color.WHITE, Color.MAGENTA);
+texture = GenCheckedTexture(2, 1,  Color.White, Color.Magenta);
 Mesh boxMesh = GenMeshCube(1, 1, 1);
 Material boxMat = LoadMaterialDefault();
-SetMaterialTexture(ref boxMat, MaterialMapIndex.MATERIAL_MAP_DIFFUSE, texture);
+SetMaterialTexture(ref boxMat, MaterialMapIndex.Diffuse, texture);
 
 // initialize the Jitter physics world
 World world = new ();
@@ -80,7 +80,7 @@ Camera3D camera = new ()
     Target = new Vector3(0.0f, 4.0f, 0.0f),
     Up = new Vector3(0.0f, 1.0f, 0.0f),
     FovY = 45.0f,
-    Projection = CameraProjection.CAMERA_PERSPECTIVE
+    Projection = CameraProjection.Perspective
 };
 
 // 100 fps target
@@ -90,11 +90,11 @@ SetTargetFPS(100);
 while (!WindowShouldClose())
 {
     BeginDrawing();
-    ClearBackground(Color.BLUE);
+    ClearBackground(Color.Blue);
 
     BeginMode3D(camera);
 
-    DrawModel(planeModel, Vector3.Zero, 1.0f, Color.WHITE);
+    DrawModel(planeModel, Vector3.Zero, 1.0f, Color.White);
 
     world.Step(1.0f / 100.0f, true);
 
@@ -105,7 +105,7 @@ while (!WindowShouldClose())
     }
 
     EndMode3D();
-    DrawText($"{GetFPS()} fps", 10, 10, 20, Color.WHITE); 
+    DrawText($"{GetFPS()} fps", 10, 10, 20, Color.White);
 
     EndDrawing();
 }
