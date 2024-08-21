@@ -4,6 +4,16 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.1 (08-21-2024)
+- Improved TriangleEdgeCollisionFilter.
+- Impemented analytical box and sphere ray casting.
+- Made Restitution and Friction public in Contact.
+- Improved DynamicTree interface.
+- Add Debug.Asserts in ActiveList.
+- Mark ArbiterKey as readonly.
+- Added enumerator to PairHashSet.
+- Changed ShapeHelper.MakeHull to take a generic of type ICollection.
+
 ### Jitter 2.4.0 (08-10-2024)
 - Improved TrimPotentialPairs logic.
 - Optimized quaternion vector transformation.
