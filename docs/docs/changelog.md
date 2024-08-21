@@ -6,7 +6,7 @@ sidebar_position: 5
 
 ### Jitter 2.4.1 (08-21-2024)
 - Improved TriangleEdgeCollisionFilter.
-- Impemented analytical box and sphere ray casting.
+- Implemented analytical box and sphere ray casting.
 - Made Restitution and Friction public in Contact.
 - Improved DynamicTree interface.
 - Add Debug.Asserts in ActiveList.
