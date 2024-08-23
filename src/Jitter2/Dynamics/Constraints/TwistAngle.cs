@@ -78,8 +78,8 @@ public unsafe class TwistAngle : Constraint
     /// </summary>
     /// <param name="axis1">Axis fixed in the local reference frame of the first body, represented in world space.</param>
     /// <param name="axis2">Axis fixed in the local reference frame of the second body, represented in world space.</param>
-    /// <param name="angle">The permissible relative twist between the bodies along the specified axes.</param>
-    public void Initialize(JVector axis1, JVector axis2, AngularLimit angle)
+    /// <param name="limit">The permissible relative twist between the bodies along the specified axes.</param>
+    public void Initialize(JVector axis1, JVector axis2, AngularLimit limit)
     {
         ref TwistLimitData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -91,8 +91,8 @@ public unsafe class TwistAngle : Constraint
         axis1.Normalize();
         axis2.Normalize();
 
-        data.Angle1 = MathF.Sin((float)angle.From / 2.0f);
-        data.Angle2 = MathF.Sin((float)angle.To / 2.0f);
+        data.Angle1 = MathF.Sin((float)limit.From / 2.0f);
+        data.Angle2 = MathF.Sin((float)limit.To / 2.0f);
 
         data.B = JVector.TransposedTransform(axis2, body2.Orientation);
 
@@ -100,6 +100,16 @@ public unsafe class TwistAngle : Constraint
         JQuaternion q2 = body2.Orientation;
 
         data.Q0 = q2.Conjugate() * q1;
+    }
+
+    public AngularLimit Limit
+    {
+        set
+        {
+            ref TwistLimitData data = ref handle.Data;
+            data.Angle1 = MathF.Sin((float)value.From / 2.0f);
+            data.Angle2 = MathF.Sin((float)value.To / 2.0f);
+        }
     }
 
     /// <summary>

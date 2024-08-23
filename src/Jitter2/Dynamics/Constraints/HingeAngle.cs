@@ -80,7 +80,7 @@ public unsafe class HingeAngle : Constraint
     /// Initializes the constraint.
     /// </summary>
     /// <param name="axis">Axis in world space for which relative angular movement is allowed.</param>
-    public void Initialize(JVector axis, AngularLimit angle)
+    public void Initialize(JVector axis, AngularLimit limit)
     {
         ref HingeAngleData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -91,8 +91,8 @@ public unsafe class HingeAngle : Constraint
         data.BiasFactor = 0.2f;
         data.LimitBias = 0.1f;
 
-        data.MinAngle = MathF.Sin((float)angle.From / 2.0f);
-        data.MaxAngle = MathF.Sin((float)angle.To / 2.0f);
+        data.MinAngle = MathF.Sin((float)limit.From / 2.0f);
+        data.MaxAngle = MathF.Sin((float)limit.To / 2.0f);
 
         data.Axis = JVector.TransposedTransform(axis, body2.Orientation);
 
