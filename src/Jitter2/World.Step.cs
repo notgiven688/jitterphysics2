@@ -381,6 +381,24 @@ public partial class World
         }
     }
 
+    private void IterateContactsCallback2(Parallel.Batch batch)
+    {
+        var span = memContacts.Active[batch.Start..batch.End];
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            ref ContactData c = ref span[i];
+            ref RigidBodyData b1 = ref c.Body1.Data;
+            ref RigidBodyData b2 = ref c.Body2.Data;
+
+            AssertConstraint(ref b1, ref b2);
+
+            LockTwoBody(ref b1, ref b2);
+            c.PositionCorrection();
+            UnlockTwoBody(ref b1, ref b2);
+        }
+    }
+
     private void IterateContactsCallback(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
@@ -670,6 +688,11 @@ public partial class World
             Parallel.Batch batchContacts = new(0, memContacts.Active.Length);
             Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
             Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
+
+            for (int iter = 0; iter < 8; iter++)
+            {
+                IterateContactsCallback2(batchContacts);
+            }
 
             PrepareContactsCallback(batchContacts);
             PrepareConstraintsCallback(batchConstraints);

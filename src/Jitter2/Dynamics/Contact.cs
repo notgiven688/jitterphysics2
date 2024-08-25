@@ -88,6 +88,16 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
     }
 
+    public unsafe void PositionCorrection()
+    {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.PositionCorrection(ptr);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PositionCorrection(ptr);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PositionCorrection(ptr);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PositionCorrection(ptr);
+    }
+
     public unsafe void Iterate()
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -285,7 +295,7 @@ public struct ContactData
     public struct Contact
     {
         public const float MaximumBias = 100.0f;
-        public const float BiasFactor = 0.2f;
+        public const float BiasFactor = 0.3f;
         public const float AllowedPenetration = 0.01f;
         public const float BreakThreshold = 0.02f;
 
@@ -532,6 +542,21 @@ public struct ContactData
                                   AccumulatedTangentImpulse2 * M_tt2;
 
             Flag &= ~Flags.NewContact;
+        }
+
+        public unsafe void PositionCorrection(ContactData *cd)
+        {
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
+
+            JVector delta = 0.2f * (this.RelativePos1 + b1.Position - this.RelativePos2 - b2.Position);
+
+            if(JVector.Dot(delta, Normal) < 0.0f) return;
+
+            float imass = b1.InverseMass + b2.InverseMass;
+
+            b1.Position -= b1.InverseMass / imass * delta;
+            b2.Position += b2.InverseMass / imass * delta;
         }
 
         public unsafe void Iterate(ContactData* cd)
