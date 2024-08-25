@@ -175,6 +175,11 @@ public static class Common
             world.CreateConstraint<TwistAngle>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperArmRight]);
         shoulderRight1.Initialize(JVector.UnitX, JVector.UnitX, AngularLimit.FromDegree(-20, 60));
 
+        shoulderLeft1.Bias = 0.01f;
+        shoulderRight1.Bias = 0.01f;
+        hipLeft1.Bias = 0.01f;
+        hipRight1.Bias = 0.01f;
+
         if (world.BroadPhaseFilter is not IgnoreCollisionBetweenFilter filter)
         {
             filter = new IgnoreCollisionBetweenFilter();
