@@ -885,8 +885,10 @@ public static class NarrowPhase
     /// Calculates the time of impact and the collision points in world space for two shapes with velocities
     /// sweepA and sweepB.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space. Zero if no hit is detected.</param>
-    /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
+    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.
+    /// Zero if no hit is detected.</param>
+    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.
+    /// Zero if no hit is detected.</param>
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -924,8 +926,12 @@ public static class NarrowPhase
         JVector.Transform(normal, orientationA, out normal);
 
         // transform back from the relative velocities
-        pointA -= fraction * sweepA;
-        pointB -= fraction * sweepB;
+
+        // This is where the collision will occur in world space:
+        //      pointA += fraction * sweepA;
+        //      pointB += fraction * sweepA; // sweepA is not a typo
+
+        pointB += fraction * (sweepA - sweepB);
 
         return true;
     }

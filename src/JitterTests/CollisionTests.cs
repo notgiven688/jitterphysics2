@@ -116,10 +116,12 @@ public class CollisionTests
         float expectedFraction = (MathF.Sqrt(200.0f) - 1.0f) * (1.0f / 3.0f);
         JVector expectedNormal = JVector.Normalize(new JVector(1, 1, 0));
         JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * (0.5f + expectedFraction);
+        JVector expectedPointA = expectedPoint - sweep * fraction;
+        JVector expectedPointB = expectedPoint + 2.0f * sweep * fraction;
 
         Assert.That((normal - expectedNormal).LengthSquared(), Is.LessThan(1e-4f));
-        Assert.That((pA - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
-        Assert.That((pB - expectedPoint).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pA - expectedPointA).LengthSquared(), Is.LessThan(1e-4f));
+        Assert.That((pB - expectedPointB).LengthSquared(), Is.LessThan(1e-4f));
         Assert.That(MathF.Abs(fraction - expectedFraction), Is.LessThan(1e-4f));
     }
 
