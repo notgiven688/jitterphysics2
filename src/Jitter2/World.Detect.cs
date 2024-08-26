@@ -314,7 +314,8 @@ public partial class World
                 out pA, out pB, out normal, out penetration);
 
             if (!success) return;
-            colliding = penetration > 0.0f;
+
+            colliding = penetration >= 0.0f;
         }
         else
         {
