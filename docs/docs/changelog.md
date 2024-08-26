@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.2 (08-26-2024)
+- Added FatTriangleShape to give triangles thickness which can be useful for static triangle meshes.
+- Removal from potential pairs in DynamicTree ignores filters from now on (bug fix).
+- Use sweep tests for speculative contacts, vastly improving simulation quality in this scenario.
+- **Breaking Change:** Redefinition of NarrowPhase.SweepTest results.
+- Improved TriangleEdgeCollisionFilter.
+
 ### Jitter 2.4.1 (08-21-2024)
 - Improved TriangleEdgeCollisionFilter.
 - Implemented analytical box and sphere ray casting.
