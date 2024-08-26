@@ -33,6 +33,8 @@ public class Demo05 : IDemo
 
     private RigidBody level = null!;
 
+    private bool debugDraw = false;
+
     public List<RigidBodyShape> CreateShapes()
     {
         var indices = tm.mesh.Indices;
@@ -54,7 +56,7 @@ public class Demo05 : IDemo
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
-            TriangleShape ts = new TriangleShape(jtm, i);
+            FatTriangleShape ts = new FatTriangleShape(jtm, i);
             shapesToAdd.Add(ts);
         }
 
@@ -84,7 +86,25 @@ public class Demo05 : IDemo
     {
         tm.PushMatrix(Conversion.FromJitter(level), new Vector3(0.35f, 0.35f, 0.35f));
 
+        if (debugDraw)
+        {
+            Playground pg = (Playground)RenderWindow.Instance;
+
+            foreach (var triangle in tm.mesh.Indices)
+            {
+                var a = tm.mesh.Vertices[triangle.T1].Position;
+                var b = tm.mesh.Vertices[triangle.T2].Position;
+                var c = tm.mesh.Vertices[triangle.T3].Position;
+
+                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, a, b);
+                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, b, c);
+                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, c, a);
+            }
+        }
+
         Keyboard kb = Keyboard.Instance;
+
+        if (kb.KeyPressBegin(Keyboard.Key.O)) debugDraw = !debugDraw;
 
         if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
         else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
