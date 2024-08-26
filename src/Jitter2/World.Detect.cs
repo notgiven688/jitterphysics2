@@ -308,14 +308,13 @@ public partial class World
 
         bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
 
-        if (UseFullEPASolver || speculative)
+        if (UseFullEPASolver)
         {
             bool success = NarrowPhase.GJKEPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
                 out pA, out pB, out normal, out penetration);
 
             if (!success) return;
-
-            colliding = penetration >= 0.0f;
+            colliding = penetration > 0.0f;
         }
         else
         {
@@ -323,13 +322,20 @@ public partial class World
                 out pA, out pB, out normal, out penetration);
         }
 
-        Debug.Assert(!float.IsNaN(normal.X));
-
         if (!colliding)
         {
             if (!speculative) return;
 
             JVector dv = sB.RigidBody.Velocity - sA.RigidBody.Velocity;
+
+            if (dv.LengthSquared() < SpeculativeVelocityThreshold * SpeculativeVelocityThreshold) return;
+
+            bool success = NarrowPhase.SweepTest(sA, sB, b1.Orientation, b2.Orientation,
+                b1.Position, b2.Position,b1.Velocity, b2.Velocity,
+                out pA, out pB, out normal, out float toi);
+
+            if (!success || toi > step_dt || toi == 0.0f) return;
+
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
 
             if (NarrowPhaseFilter != null)
@@ -340,20 +346,15 @@ public partial class World
                 }
             }
 
-            float dvn = -normal * dv;
+            GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
 
-            if (dvn > SpeculativeVelocityThreshold)
+            lock (arbiter2)
             {
-                GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
-
-                lock (arbiter2)
-                {
-                    // (see. 1)
-                    arbiter2.Handle.Data.IsSpeculative = true;
-                    memContacts.ResizeLock.EnterReadLock();
-                    arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
-                    memContacts.ResizeLock.ExitReadLock();
-                }
+                // (see. 1)
+                arbiter2.Handle.Data.IsSpeculative = true;
+                memContacts.ResizeLock.EnterReadLock();
+                arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
+                memContacts.ResizeLock.ExitReadLock();
             }
 
             return;

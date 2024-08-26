@@ -924,8 +924,8 @@ public static class NarrowPhase
         JVector.Transform(normal, orientationA, out normal);
 
         // transform back from the relative velocities
-        pointA += fraction * sweepA;
-        pointB += fraction * sweepA; // sweepA is not a typo
+        pointA -= fraction * sweepA;
+        pointB -= fraction * sweepB;
 
         return true;
     }
