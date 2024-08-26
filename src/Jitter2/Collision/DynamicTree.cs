@@ -489,7 +489,7 @@ public class DynamicTree
         {
             if (node == index) return;
 
-            if (!Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
+            if (add && !Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
 
             lock (PotentialPairs)
             {
