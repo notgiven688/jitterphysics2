@@ -161,6 +161,11 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
+                if (f5 < ProjectionThreshold)
+                {
+                    return false;
+                }
+
                 penetration *= f5;
                 normal = nnormal;
             }
@@ -169,6 +174,11 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
+                if (f6 < ProjectionThreshold)
+                {
+                    return false;
+                }
+
                 penetration *= f6;
                 normal = tnormal;
             }
