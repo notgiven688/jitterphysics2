@@ -92,6 +92,9 @@ public class TriangleMesh
         public int NeighborB;
         public int NeighborC;
 
+        /// <summary>
+        /// The normalized normal of the triangle.
+        /// </summary>
         public JVector Normal;
 
         public Triangle(int a, int b, int c)

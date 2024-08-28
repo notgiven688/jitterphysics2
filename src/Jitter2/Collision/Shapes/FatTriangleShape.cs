@@ -76,8 +76,9 @@ public class FatTriangleShape : TriangleShape
         JVector.Transform(a, orientation, out a);
         JVector.Transform(b, orientation, out b);
         JVector.Transform(c, orientation, out c);
+        JVector.Transform(triangle.Normal, orientation, out JVector delta);
 
-        JVector delta = JVector.Normalize((a - b) % (a - c)) * Thickness;
+        delta *= Thickness;
 
         box = JBBox.SmallBox;
 
@@ -85,9 +86,12 @@ public class FatTriangleShape : TriangleShape
         box.AddPoint(b);
         box.AddPoint(c);
 
-        box.AddPoint(a + delta);
-        box.AddPoint(b + delta);
-        box.AddPoint(c + delta);
+        box.AddPoint(a - delta);
+        box.AddPoint(b - delta);
+        box.AddPoint(c - delta);
+
+        box.Min += position;
+        box.Max += position;
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -116,9 +120,7 @@ public class FatTriangleShape : TriangleShape
             result = c;
         }
 
-        JVector nnorm = (a - b) % (a - c);
-
-        if (JVector.Dot(nnorm, direction) > 0.0f)
-            result += JVector.Normalize(nnorm) * Thickness;
+        if (JVector.Dot(triangle.Normal, direction) < 0.0f)
+            result -= triangle.Normal * Thickness;
     }
 }
