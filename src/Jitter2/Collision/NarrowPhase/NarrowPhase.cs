@@ -327,7 +327,6 @@ public static class NarrowPhase
             Unsafe.SkipInit(out ConvexPolytope.Vertex v3);
             Unsafe.SkipInit(out ConvexPolytope.Vertex v4);
 
-
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
             Unsafe.SkipInit(out JVector temp3);
@@ -338,7 +337,7 @@ public static class NarrowPhase
 
             if (Math.Abs(v0.V.X) < NumericEpsilon &&
                 Math.Abs(v0.V.Y) < NumericEpsilon &&
-                Math.Abs(v0.V.Y) < NumericEpsilon)
+                Math.Abs(v0.V.Z) < NumericEpsilon)
             {
                 // any direction is fine
                 v0.V.X = 1e-05f;
