@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.3 (08-31-2024)
+- Correct corner case beeing wrong in MPR collision detection due to typo (bug fix).
+- FatTriangleShape level did not properly take transformations into account (bug fix).
+
 ### Jitter 2.4.2 (08-26-2024)
 - Added FatTriangleShape to give triangles thickness which can be useful for static triangle meshes.
 - Removal from potential pairs in DynamicTree ignores filters from now on (bug fix).
