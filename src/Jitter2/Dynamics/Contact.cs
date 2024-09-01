@@ -557,10 +557,10 @@ public struct ContactData
             float tangentImpulse1 = MassTangent1 * -vt1;
             float tangentImpulse2 = MassTangent2 * -vt2;
 
-            float oldTangentImpulse = AccumulatedTangentImpulse1;
-            AccumulatedTangentImpulse1 = oldTangentImpulse + tangentImpulse1;
+            float oldTangentImpulse1 = AccumulatedTangentImpulse1;
+            AccumulatedTangentImpulse1 = oldTangentImpulse1 + tangentImpulse1;
             AccumulatedTangentImpulse1 = Math.Clamp(AccumulatedTangentImpulse1, -maxTangentImpulse, maxTangentImpulse);
-            tangentImpulse1 = AccumulatedTangentImpulse1 - oldTangentImpulse;
+            tangentImpulse1 = AccumulatedTangentImpulse1 - oldTangentImpulse1;
 
             float oldTangentImpulse2 = AccumulatedTangentImpulse2;
             AccumulatedTangentImpulse2 = oldTangentImpulse2 + tangentImpulse2;
