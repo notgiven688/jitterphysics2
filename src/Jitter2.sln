@@ -14,7 +14,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JitterBenchmark", "JitterBenchmark\JitterBenchmark.csproj", "{2F4C8CF8-AF11-4B68-8521-2806A44CAA6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JitterBenchmark", "JitterBenchmark\JitterBenchmark.csproj", "{2F4C8CF8-AF11-4B68-8521-2806A44CAA6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedMath", "FixedMath\FixedMath.csproj", "{1A69B9ED-0F3A-4C96-AEA5-F48C10160199}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedMath.Numerics", "FixedMath.Numerics\FixedMath.Numerics.csproj", "{573BF76B-995B-4CD5-9FFD-000AE667D8A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,14 @@ Global
 		{2F4C8CF8-AF11-4B68-8521-2806A44CAA6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F4C8CF8-AF11-4B68-8521-2806A44CAA6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F4C8CF8-AF11-4B68-8521-2806A44CAA6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A69B9ED-0F3A-4C96-AEA5-F48C10160199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A69B9ED-0F3A-4C96-AEA5-F48C10160199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A69B9ED-0F3A-4C96-AEA5-F48C10160199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A69B9ED-0F3A-4C96-AEA5-F48C10160199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{573BF76B-995B-4CD5-9FFD-000AE667D8A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{573BF76B-995B-4CD5-9FFD-000AE667D8A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{573BF76B-995B-4CD5-9FFD-000AE667D8A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{573BF76B-995B-4CD5-9FFD-000AE667D8A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
