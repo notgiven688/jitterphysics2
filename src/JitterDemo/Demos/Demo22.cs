@@ -122,8 +122,8 @@ public class Demo22 : IDemo
         else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
         else player.SetAngularInput(0.0f);
 
-        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
-        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);
+        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ * 20f);
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ * 20f);
         else player.SetLinearInput(JVector.Zero);
 
         if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();

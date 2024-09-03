@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0</TargetFrameworks>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -32,8 +32,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="./../../publish/readme.md" Pack="true" PackagePath=""/>
-        <None Include="./../../publish/icon.png" Pack="true" PackagePath=""/>
+        <None Include="./../../publish/readme.md" Pack="true" PackagePath="" />
+        <None Include="./../../publish/icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FixedMath\FixedMath.csproj" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
