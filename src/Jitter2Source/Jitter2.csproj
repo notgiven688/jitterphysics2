@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0</TargetFrameworks>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <NoWarn>CS1591;CS1573</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Description>
+            Jitter Physics 2, the evolution of Jitter Physics, is an impulse-based dynamics engine with a semi-implicit Euler integrator.
+            It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
+        </Description>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+        <PackageProjectUrl>https://jitterphysics.com</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>physics engine;collision;csharp;dotnet</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Authors>notgiven688</Authors>
+        <RepositoryUrl>https://github.com/notgiven688/jitterphysics2.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <DebugType>Embedded</DebugType>
+        <EmbedAllSources>True</EmbedAllSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="./../../publish/readme.md" Pack="true" PackagePath="" />
+        <None Include="./../../publish/icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FixedMath\FixedMath.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DefineConstants>$(DefineConstants);RELEASE;TRACE</DefineConstants>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>portable</DebugType>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+</Project>
