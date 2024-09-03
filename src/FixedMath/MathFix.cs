@@ -90,6 +90,11 @@ namespace FixedMath
             return Math.Clamp((float)value, (float)min, (float)max);
         }
 
+        public static int Clamp(int value, int min, int max)
+        {
+            return Math.Clamp(value, min, max);
+        }
+
         /// <summary>
         /// Returns the hyperbolic cosine of the specified angle.
         /// </summary>
@@ -222,6 +227,11 @@ namespace FixedMath
         /// <param name="val2">The second of two <see cref="Fix64"/> numbers to compare.</param>
         /// <returns></returns>
         public static Fix64 Max(Fix64 val1, Fix64 val2)
+        {
+            return (val1 < val2) ? val2 : val1;
+        }
+
+        public static int Max(int val1, int val2)
         {
             return (val1 < val2) ? val2 : val1;
         }
