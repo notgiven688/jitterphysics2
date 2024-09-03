@@ -27,6 +27,11 @@
             return false;
         }
 
+        public static bool IsNormal(Fix64 f) 
+        {
+            return float.IsNormal((float)f);
+        }
+
         /// <summary>
         /// Adds x and y witout performing overflow checking. Should be inlined by the CLR.
         /// </summary>
