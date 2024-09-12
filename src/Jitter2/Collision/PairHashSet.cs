@@ -164,7 +164,7 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
     private void Resize(int size)
     {
         if (Slots.Length == size) return;
-        Trace.WriteLine($"RESIZING PAIRHASHSET, {Slots.Length} -> {size}");
+        Trace.WriteLine($"PairHashSet: Resizing {Slots.Length} -> {size}");
 
         var tmp = Slots;
         Count = 0;
