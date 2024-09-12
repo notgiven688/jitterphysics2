@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Jitter2.DataStructures;
 
@@ -104,7 +105,20 @@ public sealed class ThreadPool
         threadCount = 0;
         mainResetEvent = new ManualResetEventSlim(true);
 
-        ChangeThreadCount(ThreadCountSuggestion);
+        int initialThreadCount = ThreadCountSuggestion;
+
+#if !NET9_0_OR_GREATER
+        // Fixed in .NET >= 9 - hangups/freezing in Debug mode.
+        // https://github.com/dotnet/runtime/pull/95555
+        if (!OperatingSystem.IsWindows() && Debugger.IsAttached)
+        {
+            System.Diagnostics.Debug.WriteLine("Debugger + .NET version < 9.0 + non-Windows System detected: " +
+                                               "Disabled multi-threading!");
+            initialThreadCount = 1;
+        }
+#endif
+
+        ChangeThreadCount(initialThreadCount);
     }
 
     public static int ThreadCountSuggestion => Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
