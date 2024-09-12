@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Jitter2.DataStructures;
 
@@ -69,6 +70,8 @@ public sealed class ThreadPool
         }
     }
 
+    public const float ThreadsPerProcessor = 0.9f;
+
     // ManualResetEventSlim performs much better than the regular ManualResetEvent.
     // mainResetEvent.Wait() is a 'fallthrough' for the persistent threading model in Jitter.
     // Here the performance improvement of ManualResetEvent is mostly visible.
@@ -79,14 +82,6 @@ public sealed class ThreadPool
     private readonly ConcurrentQueue<ITask> taskQueue = new();
 
     private static volatile bool running = true;
-
-    // TODO: somehow the visual studio code debugger under linux
-    //       does not like multiThreading. maybe we can find out why.
-#if DEBUG
-    public const float ThreadsPerProcessor = 0.0f;
-#else
-    public const float ThreadsPerProcessor = 0.9f;
-#endif
 
     private volatile int tasksLeft;
     internal int threadCount;
@@ -104,7 +99,22 @@ public sealed class ThreadPool
         threadCount = 0;
         mainResetEvent = new ManualResetEventSlim(true);
 
-        ChangeThreadCount(ThreadCountSuggestion);
+        int initialThreadCount = ThreadCountSuggestion;
+
+#if !NET9_0_OR_GREATER
+        // .NET versions below 9.0 have a known issue that can cause hangups or freezing
+        // when debugging on non-Windows systems. See: https://github.com/dotnet/runtime/pull/95555
+        // To avoid this issue, multi-threading is disabled when a debugger is attached on non-Windows systems.
+        if (!OperatingSystem.IsWindows() && Debugger.IsAttached)
+        {
+            System.Diagnostics.Debug.WriteLine(
+                "Multi-threading disabled to prevent potential hangups: Debugger attached, " +
+                ".NET version < 9.0, non-Windows system detected.");
+            initialThreadCount = 1; // Forces single-threading to avoid hangups
+        }
+#endif
+
+        ChangeThreadCount(initialThreadCount);
     }
 
     public static int ThreadCountSuggestion => Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
