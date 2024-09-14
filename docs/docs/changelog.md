@@ -4,6 +4,9 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.4 (09-14-2024)
+- Implemented fixes and workarounds for using Jitter with a debugger attached.
+
 ### Jitter 2.4.3 (08-31-2024)
 - Correct corner case beeing wrong in MPR collision detection due to typo (bug fix).
 - FatTriangleShape level did not properly take transformations into account (bug fix).
