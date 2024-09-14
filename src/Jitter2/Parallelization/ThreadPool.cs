@@ -153,6 +153,8 @@ public sealed class ThreadPool
             threads[i].Start();
             initWaitHandle.WaitOne();
         }
+
+        SignalReset();
     }
 
     /// <summary>
@@ -166,6 +168,12 @@ public sealed class ThreadPool
         instance.parameter = parameter;
         taskList.Add(instance);
     }
+
+    /// <summary>
+    /// Indicates whether the <see cref="ThreadPool"/> instance is initialized.
+    /// </summary>
+    /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
+    public static bool InstanceInitialized => instance != null;
 
     /// <summary>
     /// Implements the singleton pattern to provide a single instance of the ThreadPool.
@@ -216,6 +224,8 @@ public sealed class ThreadPool
     /// </summary>
     public void Execute()
     {
+        SignalWait();
+
         int totalTasks = taskList.Count;
         tasksLeft = totalTasks;
 

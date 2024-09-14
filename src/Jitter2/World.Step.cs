@@ -201,10 +201,8 @@ public partial class World
 
         PostStep?.Invoke(dt);
 
-        // Signal the thread pool that threads can go into a wait state. If threadModel is set to
-        // aggressive this will not happen. Also make sure that a switch from (aggressive, multiThreaded)
-        // to (aggressive, sequential) triggers a signalReset here.
-        if (ThreadModel == ThreadModelType.Regular || !multiThread)
+        // Signal the thread pool that threads can go into a wait state.
+        if (ThreadModel == ThreadModelType.Regular && ThreadPool.InstanceInitialized)
         {
             ThreadPool.Instance.SignalReset();
         }
@@ -711,15 +709,9 @@ public partial class World
 
     private void DetectCollisions(bool multiThread)
     {
-        const int taskThreshold = 1024;
-
-        int numTasks = DynamicTree.PotentialPairs.Slots.Length / taskThreshold + 1;
-        numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
-
-        if (numTasks > 1 && multiThread)
+        if (multiThread)
         {
-            Parallel.ForBatch(0, DynamicTree.PotentialPairs.Slots.Length,
-                ThreadPool.Instance.ThreadCount, detectCollisions);
+            DynamicTree.PotentialPairs.Slots.ParallelForBatch<PairHashSet.Pair>(1024, detectCollisions);
         }
         else
         {

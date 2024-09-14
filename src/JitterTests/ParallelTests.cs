@@ -1,11 +1,29 @@
 using System.Diagnostics;
+using Parallel = Jitter2.Parallelization.Parallel;
 using ReaderWriterLock = Jitter2.Parallelization.ReaderWriterLock;
+using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
 namespace JitterTests;
 
 public class ParallelTests
 {
     private static volatile int current;
+
+    [TestCase]
+    public static void ThreadPoolTest()
+    {
+        ThreadPool.Instance.ChangeThreadCount(4);
+        var batches = new Parallel.Batch[4];
+
+        Parallel.ForBatch(0, 1024, 4,
+            batch => batches[batch.BatchIndex] = batch, execute: true);
+
+        for (int i = 0; i < 4; i++)
+        {
+            Assert.That(batches[i].Start, Is.EqualTo(256 * i));
+            Assert.That(batches[i].End, Is.EqualTo(256 * (i + 1)));
+        }
+    }
 
     [TestCase]
     public static void ReaderWriterLockTest()
