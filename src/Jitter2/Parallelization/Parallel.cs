@@ -44,6 +44,11 @@ public static class Parallel
             BatchIndex = index;
         }
 
+        public override string ToString()
+        {
+            return $"Batch(Start: {Start}, End: {End}, BatchIndex: {BatchIndex})";
+        }
+
         public readonly int Start;
         public readonly int End;
         public readonly ushort BatchIndex;
@@ -53,7 +58,7 @@ public static class Parallel
     /// Given the number of elements, the number of divisions into parts and a part index, returns
     /// the lower and upper bound for that part.
     /// </summary>
-    public static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
+    private static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
     {
         // Example:
         // numElements = 14, numDivisions = 4, part = {0, 1, 2, 3}
