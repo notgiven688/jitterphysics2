@@ -202,7 +202,8 @@ public partial class World
         PostStep?.Invoke(dt);
 
         // Signal the thread pool that threads can go into a wait state.
-        if (ThreadModel == ThreadModelType.Regular && ThreadPool.InstanceInitialized)
+        if ((ThreadModel == ThreadModelType.Regular || !multiThread)
+            && ThreadPool.InstanceInitialized)
         {
             ThreadPool.Instance.SignalReset();
         }
