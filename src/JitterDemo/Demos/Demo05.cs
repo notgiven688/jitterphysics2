@@ -106,12 +106,12 @@ public class Demo05 : IDemo
 
         if (kb.KeyPressBegin(Keyboard.Key.O)) debugDraw = !debugDraw;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-5.0f);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(5.0f);
         else player.SetAngularInput(0.0f);
 
-        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ*15f);
-        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ*15f);
+        if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ * 1f);
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ * 1f);
         else player.SetLinearInput(JVector.Zero);
 
         if (kb.IsKeyDown(Keyboard.Key.LeftControl)) player.Jump();

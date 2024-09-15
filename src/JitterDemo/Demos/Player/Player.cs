@@ -211,21 +211,25 @@ public class Player
         JVector bodyVel = Body.Velocity;
         bodyVel.Y = 0;
 
-        float bodyVelLen = bodyVel.Length();
+        //float bodyVelLen = bodyVel.Length();
 
         if (deltaMoveLen > 0.01f)
         {
-            if (bodyVelLen < 5f)
+            //if (bodyVelLen < 5f)
             {
                 var force = JVector.Transform(deltaMove, Body.Orientation) * 10.0f;
 
-                Body.AddForce(force);
+                //Body.AddForce(force);
+                Body.Velocity = force;
 
                 // follow Newton's law (for once) and add a force
                 // with equal magnitude in the opposite direction.
                 floor!.AddForce(-force, Body.Position + hitpoint);
             }
         }
-
+        else 
+        {
+            Body.Velocity = JVector.Zero;
+        }
     }
 }
