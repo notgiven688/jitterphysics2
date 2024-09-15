@@ -201,10 +201,9 @@ public partial class World
 
         PostStep?.Invoke(dt);
 
-        // Signal the thread pool that threads can go into a wait state. If threadModel is set to
-        // aggressive this will not happen. Also make sure that a switch from (aggressive, multiThreaded)
-        // to (aggressive, sequential) triggers a signalReset here.
-        if (ThreadModel == ThreadModelType.Regular || !multiThread)
+        // Signal the thread pool that threads can go into a wait state.
+        if ((ThreadModel == ThreadModelType.Regular || !multiThread)
+            && ThreadPool.InstanceInitialized)
         {
             ThreadPool.Instance.SignalReset();
         }
@@ -327,8 +326,6 @@ public partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            AssertConstraint(ref b1, ref b2);
-
             if (constraint.Iterate == null) continue;
 
             LockTwoBody(ref b1, ref b2);
@@ -371,8 +368,6 @@ public partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            AssertConstraint(ref b1, ref b2);
-
             if (constraint.Iterate == null) continue;
 
             LockTwoBody(ref b1, ref b2);
@@ -390,8 +385,6 @@ public partial class World
             ref ContactData c = ref span[i];
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
-
-            AssertConstraint(ref b1, ref b2);
 
             LockTwoBody(ref b1, ref b2);
             c.Iterate();
@@ -418,29 +411,12 @@ public partial class World
         }
     }
 
-    private void AssertConstraint(ref RigidBodyData rb1, ref RigidBodyData rb2)
-    {
-        Debug.Assert(!(rb1.IsStaticOrInactive && rb2.IsStaticOrInactive));
-
-        if (rb1.IsStatic)
-        {
-            Debug.Assert(rb1.InverseMass == 0.0f);
-            Debug.Assert(rb1.InverseInertiaWorld.Equals(JMatrix.Zero));
-        }
-
-        if (rb2.IsStatic)
-        {
-            Debug.Assert(rb2.InverseMass == 0.0f);
-            Debug.Assert(rb2.InverseInertiaWorld.Equals(JMatrix.Zero));
-        }
-    }
-
     private void AssertNullBody()
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.IsStatic);
         Debug.Assert(rigidBody.InverseMass == 0.0f);
-        Debug.Assert(rigidBody.InverseInertiaWorld.Equals(JMatrix.Zero));
+        Debug.Assert(MathHelper.UnsafeIsZero(rigidBody.InverseInertiaWorld));
     }
 
     private void ForeachActiveShape(bool multiThread)
@@ -458,6 +434,17 @@ public partial class World
 
     private void ForeachActiveBody(bool multiThread)
     {
+#if DEBUG
+        foreach (var body in bodies)
+        {
+            if (body.IsStatic)
+            {
+                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(body.Data.InverseInertiaWorld));
+                System.Diagnostics.Debug.Assert(body.Data.InverseMass == 0.0f);
+            }
+        }
+#endif
+
         if (multiThread)
         {
             bodies.ParallelForBatch(256, updateBodies);
@@ -723,15 +710,9 @@ public partial class World
 
     private void DetectCollisions(bool multiThread)
     {
-        const int taskThreshold = 1024;
-
-        int numTasks = DynamicTree.PotentialPairs.Slots.Length / taskThreshold + 1;
-        numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
-
-        if (numTasks > 1 && multiThread)
+        if (multiThread)
         {
-            Parallel.ForBatch(0, DynamicTree.PotentialPairs.Slots.Length,
-                ThreadPool.Instance.ThreadCount, detectCollisions);
+            DynamicTree.PotentialPairs.Slots.ParallelForBatch<PairHashSet.Pair>(1024, detectCollisions);
         }
         else
         {

@@ -143,7 +143,7 @@ public class DynamicTree
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
 
-        CheckBagCount();
+        CheckBagCount(multiThread);
 
         void SetTime(Timings type)
         {
@@ -454,9 +454,9 @@ public class DynamicTree
         freeNodes.Push(node);
     }
 
-    private void CheckBagCount()
+    private void CheckBagCount(bool multiThread)
     {
-        int numThreads = ThreadPool.Instance.ThreadCount;
+        int numThreads = multiThread ? ThreadPool.Instance.ThreadCount : 1;
         if (lists.Length != numThreads)
         {
             lists = new SlimBag<IDynamicTreeProxy>[numThreads];
