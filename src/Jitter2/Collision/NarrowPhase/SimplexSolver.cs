@@ -36,11 +36,11 @@ public unsafe struct SimplexSolver
     private JVector v2;
     private JVector v3;
 
-    private short useCount;
+    private uint usedMask;
 
     public void Reset()
     {
-        useCount = 0;
+        usedMask = 0;
     }
 
     public JVector ClosestSegment(int i0, int i1, out uint mask)
@@ -202,7 +202,6 @@ public unsafe struct SimplexSolver
     }
 
 
-
     // Helper method to calculate determinant (scalar triple product)
     private static float Determinant(JVector v0, JVector v1, JVector v2, JVector v3)
     {
@@ -213,16 +212,6 @@ public unsafe struct SimplexSolver
         return JVector.Dot(v10, JVector.Cross(v20, v30));
     }
 
-    private void Shuffle(uint usedMask)
-    {
-        var ptr = (JVector*)Unsafe.AsPointer(ref this.v0);
-        useCount = 0;
-
-        if ((usedMask & 0b0001) != 0) ptr[useCount++] = v0;
-        if ((usedMask & 0b0010) != 0) ptr[useCount++] = v1;
-        if ((usedMask & 0b0100) != 0) ptr[useCount++] = v2;
-        if ((usedMask & 0b1000) != 0) ptr[useCount++] = v3;
-    }
 
     public bool AddVertex(in JVector vertex, out JVector closest)
     {
@@ -230,56 +219,75 @@ public unsafe struct SimplexSolver
 
         Unsafe.SkipInit(out closest);
 
+        int* ix = stackalloc int[4];
+
+        int useCount = 0;
+        int freeSlot = 0;
+
+        if ((usedMask & 0b0001) != 0) ix[useCount++] = 0;
+        else freeSlot = 0;
+        if ((usedMask & 0b0010) != 0) ix[useCount++] = 1;
+        else freeSlot = 1;
+        if ((usedMask & 0b0100) != 0) ix[useCount++] = 2;
+        else freeSlot = 2;
+        if ((usedMask & 0b1000) != 0) ix[useCount++] = 3;
+        else freeSlot = 3;
+
+        ix[useCount++] = freeSlot;
+
         // If the vertex is not able to "extend" the simplex (in any dimension)
         // we return false and do nothing.
 
         var ptr = (JVector*)Unsafe.AsPointer(ref this.v0);
-        ptr[useCount++] = vertex;
 
-        uint usedMask;
+        ptr[freeSlot] = vertex;
 
         switch (useCount)
         {
             case 1:
             {
-                closest = v0;
+                int i0 = ix[0];
+                closest = ptr[i0];
+                usedMask = 1u << i0;
                 return true;
             }
             case 2:
             {
-                if ((v0 - v1).LengthSquared() < epsilon * epsilon)
+                int i0 = ix[0], i1 = ix[1];
+                if ((ptr[i0] - ptr[i1]).LengthSquared() < epsilon * epsilon)
                 {
                     return false;
                 }
 
-                closest = ClosestSegment(0,1,out usedMask);
-                Shuffle(usedMask);
+                closest = ClosestSegment(i0, i1, out usedMask);
 
                 return true;
             }
             case 3:
             {
-                JVector u = v0 - v2;
-                JVector v = v1 - v2;
+                int i0 = ix[0], i1 = ix[1], i2 = ix[2];
+                JVector u = ptr[i0] - ptr[i2];
+                JVector v = ptr[i1] - ptr[i2];
 
                 if ((u % v).LengthSquared() < epsilon * epsilon)
                 {
                     return false;
                 }
 
-                closest = ClosestTriangle(0, 1, 2, out usedMask);
-                Shuffle(usedMask);
+                closest = ClosestTriangle(i0, i1, i2, out usedMask);
 
                 return true;
             }
             case 4:
             {
-                JVector u = v0 - v2;
-                JVector v = v1 - v2;
+                int i0 = ix[0], i1 = ix[1], i2 = ix[2], i3 = ix[3];
+
+                JVector u = ptr[i0] - ptr[i2];
+                JVector v = ptr[i1] - ptr[i2];
 
                 JVector normal = u % v;
 
-                if (MathF.Abs(JVector.Dot(normal, v3 - v0)) < epsilon)
+                if (MathF.Abs(JVector.Dot(normal, ptr[i3] - ptr[i0])) < epsilon)
                 {
                     return false;
                 }
@@ -287,7 +295,6 @@ public unsafe struct SimplexSolver
                 closest = ClosestTetrahedron(out usedMask);
                 if (usedMask == 0) return false;
 
-                Shuffle(usedMask);
                 return true;
             }
 
