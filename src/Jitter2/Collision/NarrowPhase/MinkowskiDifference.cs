@@ -33,6 +33,25 @@ namespace Jitter2.Collision;
 /// </summary>
 public struct MinkowskiDifference
 {
+    /// <summary>
+    /// Represents a vertex utilized in algorithms that operate on the Minkowski sum of two shapes.
+    /// </summary>
+    public struct Vertex
+    {
+        public JVector V;
+        public JVector A;
+        public JVector B;
+
+        public Vertex(JVector v)
+        {
+#if NET6_0
+            A = new JVector();
+            B = new JVector();
+#endif
+            V = v;
+        }
+    }
+
     public ISupportMappable SupportA, SupportB;
     public JQuaternion OrientationB;
     public JVector PositionB;
@@ -50,7 +69,7 @@ public struct MinkowskiDifference
     /// Calculates the support function S_{A-B}(d) = S_{A}(d) - S_{B}(-d), where "d" represents the direction.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Support(in JVector direction, out ConvexPolytope.Vertex v)
+    public readonly void Support(in JVector direction, out Vertex v)
     {
         JVector.Negate(direction, out JVector tmp);
         SupportA.SupportMap(direction, out v.A);
@@ -62,7 +81,7 @@ public struct MinkowskiDifference
     /// Retrieves a point within the Minkowski Difference.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void GetCenter(out ConvexPolytope.Vertex center)
+    public readonly void GetCenter(out Vertex center)
     {
         SupportA.GetCenter(out center.A);
         SupportB.GetCenter(out center.B);

@@ -27,6 +27,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
+using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 namespace Jitter2.Collision;
 
@@ -50,25 +51,6 @@ public unsafe struct ConvexPolytope
 
         public float NormalSq;
         public float ClosestToOriginSq;
-    }
-
-    /// <summary>
-    /// Represents a vertex utilized in algorithms that operate on the Minkowski sum of two shapes.
-    /// </summary>
-    public struct Vertex
-    {
-        public JVector V;
-        public JVector A;
-        public JVector B;
-
-        public Vertex(JVector v)
-        {
-#if NET6_0
-            A = new JVector();
-            B = new JVector();
-#endif
-            V = v;
-        }
     }
 
     private struct Edge
@@ -358,23 +340,9 @@ public unsafe struct ConvexPolytope
     /// </summary>
     public void InitHeap()
     {
-        if (vertices == (void*)0)
-        {
-            vertices = MemoryHelper.AllocateHeap<Vertex>(MaxVertices);
-            triangles = MemoryHelper.AllocateHeap<Triangle>(MaxTriangles);
-        }
-    }
-
-    /// <summary>
-    /// Incorporates a single point into the polyhedron, disregarding A- and B-space.
-    /// This operation contrasts with <see cref="AddVertex"/>.
-    /// </summary>
-    /// <returns>Indicates whether the polyhedron successfully incorporated the new point.</returns>
-    public bool AddPoint(in JVector point)
-    {
-        Unsafe.SkipInit(out Vertex v);
-        v.V = point;
-        return AddVertex(v);
+        if (vertices != (void*)0) return;
+        vertices = MemoryHelper.AllocateHeap<Vertex>(MaxVertices);
+        triangles = MemoryHelper.AllocateHeap<Triangle>(MaxTriangles);
     }
 
     /// <summary>

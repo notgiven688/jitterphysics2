@@ -25,21 +25,38 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
+using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace Jitter2.Collision;
 
 // This is a GJK-Implementation "by the book".
 
-public unsafe struct SimplexSolver
+public unsafe struct SimplexSolverAB
 {
     const float Epsilon = 1e-8f;
 
-    private JVector v0;
-    private JVector v1;
-    private JVector v2;
-    private JVector v3;
+    private struct Barycentric
+    {
+        public float Lambda0;
+        public float Lambda1;
+        public float Lambda2;
+        public float Lambda3;
 
+        public float this[int i]
+        {
+            get => ((float*)Unsafe.AsPointer(ref this.Lambda0))[i];
+            set => ((float*)Unsafe.AsPointer(ref this.Lambda0))[i] = value;
+        }
+    }
+
+    private Vertex v0;
+    private Vertex v1;
+    private Vertex v2;
+    private Vertex v3;
+
+    private Barycentric barycentric;
     private uint usageMask;
 
     public void Reset()
@@ -47,11 +64,11 @@ public unsafe struct SimplexSolver
         usageMask = 0;
     }
 
-    private JVector ClosestSegment(int i0, int i1, out uint mask)
+    private JVector ClosestSegment(int i0, int i1, ref Barycentric bc, out uint mask)
     {
-        var ptr = (JVector*)Unsafe.AsPointer(ref this.v0);
-        JVector a = ptr[i0];
-        JVector b = ptr[i1];
+        var ptr = (Vertex*)Unsafe.AsPointer(ref this.v0);
+        JVector a = ptr[i0].V;
+        JVector b = ptr[i1].V;
 
         JVector v = b - a;
         float vsq = v.LengthSquared();
@@ -77,17 +94,20 @@ public unsafe struct SimplexSolver
             lambda1 = 0;
         }
 
+        bc[i0] = lambda0;
+        bc[i1] = lambda1;
+
         return lambda0 * a + lambda1 * b;
     }
 
-    private JVector ClosestTriangle(int i0, int i1, int i2, out uint mask)
+    private JVector ClosestTriangle(int i0, int i1, int i2, ref Barycentric bc, out uint mask)
     {
         mask = 0;
 
-        var ptr = (JVector*)Unsafe.AsPointer(ref this.v0);
-        JVector a = ptr[i0];
-        JVector b = ptr[i1];
-        JVector c = ptr[i2];
+        var ptr = (Vertex*)Unsafe.AsPointer(ref this.v0);
+        JVector a = ptr[i0].V;
+        JVector b = ptr[i1].V;
+        JVector c = ptr[i2].V;
 
         JVector.Subtract(a, b, out var u);
         JVector.Subtract(a, c, out var v);
@@ -108,13 +128,15 @@ public unsafe struct SimplexSolver
 
         float bestDistance = float.MaxValue;
         Unsafe.SkipInit(out JVector closestPt);
+        Unsafe.SkipInit(out Barycentric b0);
 
         if (lambda0 < 0.0f || degenerate)
         {
-            var closest = ClosestSegment(i1, i2, out uint m);
+            var closest = ClosestSegment(i1, i2, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -123,10 +145,11 @@ public unsafe struct SimplexSolver
 
         if (lambda1 < 0.0f || degenerate)
         {
-            var closest = ClosestSegment(i0, i2, out uint m);
+            var closest = ClosestSegment(i0, i2, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -135,10 +158,11 @@ public unsafe struct SimplexSolver
 
         if (lambda2 < 0.0f || degenerate)
         {
-            var closest = ClosestSegment(i0, i1, out uint m);
+            var closest = ClosestSegment(i0, i1, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 closestPt = closest;
             }
@@ -146,11 +170,15 @@ public unsafe struct SimplexSolver
 
         if (mask != 0) return closestPt;
 
+        bc[i0] = lambda0;
+        bc[i1] = lambda1;
+        bc[i2] = lambda2;
+
         mask = (1u << i0) | (1u << i1) | (1u << i2);
         return lambda0 * a + lambda1 * b + lambda2 * c;
     }
 
-    private JVector ClosestTetrahedron(out uint mask)
+    private JVector ClosestTetrahedron(ref Barycentric bc, out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         float Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
@@ -158,28 +186,30 @@ public unsafe struct SimplexSolver
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
 
-        float detT = Determinant(v0, v1, v2, v3);
+        float detT = Determinant(v0.V, v1.V, v2.V, v3.V);
         float idetT = 1.0f / detT;
 
         bool degenerate = detT * detT < Epsilon;
 
-        float lambda0 = Determinant(JVector.Zero, v1, v2, v3) * idetT;
-        float lambda1 = Determinant(v0, JVector.Zero, v2, v3) * idetT;
-        float lambda2 = Determinant(v0, v1, JVector.Zero, v3) * idetT;
+        float lambda0 = Determinant(JVector.Zero, v1.V, v2.V, v3.V) * idetT;
+        float lambda1 = Determinant(v0.V, JVector.Zero, v2.V, v3.V) * idetT;
+        float lambda2 = Determinant(v0.V, v1.V, JVector.Zero, v3.V) * idetT;
         float lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
 
         float bestDistance = float.MaxValue;
 
         Unsafe.SkipInit(out JVector closestPt);
+        Unsafe.SkipInit(out Barycentric b0);
 
         mask = 0;
 
         if (lambda0 < 0.0f || degenerate)
         {
-            var closest = ClosestTriangle(1, 2, 3, out uint m);
+            var closest = ClosestTriangle(1, 2, 3, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -188,10 +218,11 @@ public unsafe struct SimplexSolver
 
         if (lambda1 < 0.0f || degenerate)
         {
-            var closest = ClosestTriangle(0, 2, 3, out uint m);
+            var closest = ClosestTriangle(0, 2, 3, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -200,10 +231,11 @@ public unsafe struct SimplexSolver
 
         if (lambda2 < 0.0f || degenerate)
         {
-            var closest = ClosestTriangle(0, 1, 3, out uint m);
+            var closest = ClosestTriangle(0, 1, 3, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -212,10 +244,11 @@ public unsafe struct SimplexSolver
 
         if (lambda3 < 0.0f || degenerate)
         {
-            var closest = ClosestTriangle(0, 1, 2, out uint m);
+            var closest = ClosestTriangle(0, 1, 2, ref b0, out uint m);
             float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
+                bc = b0;
                 mask = m;
                 bestDistance = dist;
                 closestPt = closest;
@@ -225,11 +258,33 @@ public unsafe struct SimplexSolver
         return closestPt;
     }
 
+    public void GetClosest(out JVector pointA, out JVector pointB)
+    {
+        pointA = JVector.Zero;
+        pointB = JVector.Zero;
+
+        var ptr = (Vertex*)Unsafe.AsPointer(ref this.v0);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if ((usageMask & (1u << i)) == 0) continue;
+            pointA += barycentric[i] * ptr[i].A;
+            pointB += barycentric[i] * ptr[i].B;
+        }
+    }
+
     public bool AddVertex(in JVector vertex, out JVector closest)
+    {
+        Unsafe.SkipInit(out Vertex fullVertex);
+        fullVertex.V = vertex;
+        return AddVertex(fullVertex, out closest);
+    }
+
+    public bool AddVertex(in Vertex vertex, out JVector closest)
     {
         Unsafe.SkipInit(out closest);
 
-        var ptr = (JVector*)Unsafe.AsPointer(ref this.v0);
+        var ptr = (Vertex*)Unsafe.AsPointer(ref this.v0);
         int* ix = stackalloc int[4];
 
         int useCount = 0;
@@ -249,25 +304,26 @@ public unsafe struct SimplexSolver
             case 1:
             {
                 int i0 = ix[0];
-                closest = ptr[i0];
+                closest = ptr[i0].V;
                 usageMask = 1u << i0;
+                barycentric[i0] = 1.0f;
                 return true;
             }
             case 2:
             {
                 int i0 = ix[0], i1 = ix[1];
-                closest = ClosestSegment(i0, i1, out usageMask);
+                closest = ClosestSegment(i0, i1, ref barycentric, out usageMask);
                 return true;
             }
             case 3:
             {
                 int i0 = ix[0], i1 = ix[1], i2 = ix[2];
-                closest = ClosestTriangle(i0, i1, i2, out usageMask);
+                closest = ClosestTriangle(i0, i1, i2, ref barycentric, out usageMask);
                 return true;
             }
             case 4:
             {
-                closest = ClosestTetrahedron(out usageMask);
+                closest = ClosestTetrahedron(ref barycentric, out usageMask);
                 return usageMask != 0;
             }
         }
