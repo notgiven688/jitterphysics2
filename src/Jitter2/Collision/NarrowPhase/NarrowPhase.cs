@@ -25,6 +25,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
+using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 namespace Jitter2.Collision;
 
@@ -50,8 +51,8 @@ public static class NarrowPhase
             supportA.GetCenter(out var center);
             JVector v = x - center;
 
-            convexPolytope.InitHeap();
-            convexPolytope.InitTetrahedron(v);
+            Unsafe.SkipInit(out SimplexSolver simplexSolver);
+            simplexSolver.Reset();
 
             int maxIter = MaxIter;
 
@@ -69,14 +70,10 @@ public static class NarrowPhase
                     return false;
                 }
 
-                if (!convexPolytope.AddPoint(w))
+                if (!simplexSolver.AddVertex(w, out v))
                 {
                     goto converged;
                 }
-
-                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
-
-                if (convexPolytope.OriginEnclosed) return true;
 
                 distSq = v.LengthSquared();
             }
@@ -102,8 +99,8 @@ public static class NarrowPhase
             supportA.GetCenter(out var center);
             JVector v = x - center;
 
-            convexPolytope.InitHeap();
-            convexPolytope.InitTetrahedron(v);
+            Unsafe.SkipInit(out SimplexSolver simplexSolver);
+            simplexSolver.Reset();
 
             int maxIter = MaxIter;
 
@@ -134,12 +131,10 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                if (!convexPolytope.AddPoint(w))
+                if (!simplexSolver.AddVertex(w, out v))
                 {
                     goto converged;
                 }
-
-                v = convexPolytope.GetClosestTriangle().ClosestToOrigin;
 
                 distSq = v.LengthSquared();
             }
@@ -164,10 +159,10 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
-            convexPolytope.InitHeap();
+            Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+            simplexSolver.Reset();
 
             mkd.GetCenter(out var center);
-            convexPolytope.InitTetrahedron(center.V);
 
             JVector posB = mkd.PositionB;
 
@@ -176,20 +171,17 @@ public static class NarrowPhase
             p1 = p2 = JVector.Zero;
 
             JVector r = sweep;
-
-            ConvexPolytope.Triangle ctri = convexPolytope.GetClosestTriangle();
-
-            JVector v = -ctri.ClosestToOrigin;
+            JVector v = -center.V;
 
             normal = JVector.Zero;
 
             int iter = MaxIter;
 
-            float distSq = v.LengthSquared();
+            float distSq = float.MaxValue;
 
             while ((distSq > CollideEpsilon * CollideEpsilon) && (iter-- != 0))
             {
-                mkd.Support(v, out ConvexPolytope.Vertex vertex);
+                mkd.Support(v, out Vertex vertex);
                 var w = vertex.V;
 
                 float VdotW = -JVector.Dot(v, w);
@@ -210,21 +202,19 @@ public static class NarrowPhase
                     normal = v;
                 }
 
-                if (!convexPolytope.AddVertex(vertex))
+                if (!simplexSolver.AddVertex(vertex, out v))
                 {
                     goto converged;
                 }
 
-                ctri = convexPolytope.GetClosestTriangle();
-
-                v = -ctri.ClosestToOrigin;
+                v.Negate();
 
                 distSq = v.LengthSquared();
             }
 
             converged:
 
-            convexPolytope.CalculatePoints(ctri, out p1, out p2);
+            simplexSolver.GetClosest(out p1, out p2);
 
             float nlen2 = normal.LengthSquared();
 
@@ -260,7 +250,7 @@ public static class NarrowPhase
                     searchDirSq = ctri.NormalSq;
                 }
 
-                mkd.Support(searchDir, out ConvexPolytope.Vertex vertex);
+                mkd.Support(searchDir, out Vertex vertex);
 
                 // compare with the corresponding code in SolveGJKEPA.
                 float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
@@ -321,11 +311,11 @@ public static class NarrowPhase
             // MPR to have found the global minimum and perform an EPA run.
             const float EPAPenetrationThreshold = 0.02f;
 
-            Unsafe.SkipInit(out ConvexPolytope.Vertex v0);
-            Unsafe.SkipInit(out ConvexPolytope.Vertex v1);
-            Unsafe.SkipInit(out ConvexPolytope.Vertex v2);
-            Unsafe.SkipInit(out ConvexPolytope.Vertex v3);
-            Unsafe.SkipInit(out ConvexPolytope.Vertex v4);
+            Unsafe.SkipInit(out Vertex v0);
+            Unsafe.SkipInit(out Vertex v1);
+            Unsafe.SkipInit(out Vertex v2);
+            Unsafe.SkipInit(out Vertex v3);
+            Unsafe.SkipInit(out Vertex v4);
 
             Unsafe.SkipInit(out JVector temp1);
             Unsafe.SkipInit(out JVector temp2);
@@ -477,7 +467,6 @@ public static class NarrowPhase
 
                         if (penetration > EPAPenetrationThreshold)
                         {
-
                             convexPolytope.InitHeap();
                             convexPolytope.GetVertex(0) = v0;
                             convexPolytope.GetVertex(1) = v1;
@@ -543,7 +532,7 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            mkd.GetCenter(out ConvexPolytope.Vertex centerVertex);
+            mkd.GetCenter(out Vertex centerVertex);
             JVector center = centerVertex.V;
 
             convexPolytope.InitHeap();
@@ -568,7 +557,7 @@ public static class NarrowPhase
                     searchDirSq = ctri.NormalSq;
                 }
 
-                mkd.Support(searchDir, out ConvexPolytope.Vertex vertex);
+                mkd.Support(searchDir, out Vertex vertex);
 
                 // Can we further "extend" the convex hull by adding the new vertex?
                 //
