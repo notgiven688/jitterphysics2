@@ -534,7 +534,7 @@ public static class NarrowPhase
 
             // ####################################################
             // Find an initial tetrahedron
-            // within the minkowski difference
+            // within the Minkowski difference
 
             convexPolytope.InitHeap();
 
