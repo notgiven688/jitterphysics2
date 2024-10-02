@@ -294,6 +294,12 @@ public unsafe struct ConvexPolytope
         return ref triangles[closestIndex];
     }
 
+    public float GetInitialVolume()
+    {
+        return (1.0f / 6.0f) * MathF.Abs(JVector.Dot(vertices[1].V - vertices[0].V,
+            JVector.Cross(vertices[2].V - vertices[0].V, vertices[3].V - vertices[0].V)));
+    }
+
     /// <summary>
     /// Initializes the structure with a tetrahedron formed using the first four vertices.
     /// </summary>

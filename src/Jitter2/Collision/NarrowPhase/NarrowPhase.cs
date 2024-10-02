@@ -532,11 +532,59 @@ public static class NarrowPhase
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 85;
 
-            mkd.GetCenter(out Vertex centerVertex);
-            JVector center = centerVertex.V;
+            // ####################################################
+            // Find an initial tetrahedron
+            // within the minkowski difference
 
             convexPolytope.InitHeap();
-            convexPolytope.InitTetrahedron(center);
+
+            ref Vertex v0 = ref convexPolytope.GetVertex(0);
+            ref Vertex v1 = ref convexPolytope.GetVertex(1);
+            ref Vertex v2 = ref convexPolytope.GetVertex(2);
+            ref Vertex v3 = ref convexPolytope.GetVertex(3);
+
+            // first point is deep within the Minkowski difference
+            mkd.GetCenter(out v0);
+            // if we already hit the origin here we translate by a tiny amount
+            if (v0.V.LengthSquared() < NumericEpsilon) v0.V.X = 1e-05f;
+
+            // we search from the center in the negative direction towards the origin.
+            // v1 is our first point on the surface of the md, therefore it can not
+            // coincide with v0.
+            mkd.Support(-v0.V, out v1);
+
+            // we find a vector perpendicular to the triangle with the vertices
+            // (origin, v0, v1).
+            normal = v1.V % v0.V;
+
+            // if we can not find such a vector the origin must be on the line (v0, v1).
+            // construct *any* orthogonal vector
+            if (normal.LengthSquared() < NumericEpsilon)
+            {
+                normal = MathHelper.CreateOrthonormal(v1.V - v0.V);
+            }
+
+            // v2 is our next point on the surface of the md. it can not be on the line (v0, v1)
+            // since that would imply that v0 is not a point within the md.
+            mkd.Support(normal, out v2);
+
+            // find a vector perpendicular to the triangle (v0, v1, v2)
+            normal = (v1.V - v0.V) % (v2.V - v0.V);
+
+            // search in the direction of the origin
+            float dist = JVector.Dot(normal, v0.V);
+            if (dist > 0.0f) JVector.Negate(normal, out normal);
+
+            // v3 is our next point on the surface of the md. it can not be on the triangle
+            // (v0, v1, v2) since that would imply that v0 is not a point within the md.
+            mkd.Support(normal, out v3);
+
+            convexPolytope.InitTetrahedron();
+
+            System.Diagnostics.Debug.Assert(convexPolytope.GetInitialVolume() > 1e-8f);
+
+            // ####################################################
+            // epa iterations
 
             int iter = 0;
 
@@ -589,13 +637,12 @@ public static class NarrowPhase
             converged:
 
             convexPolytope.CalculatePoints(ctri, out point1, out point2);
-            normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
-            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
 
-            // origin not enclosed: we basically did a pure GJK run
-            // without ever enclosing the origin, i.e. the shapes do not overlap
-            // and the penetration is negative.
+            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
             if (!convexPolytope.OriginEnclosed) penetration *= -1.0f;
+
+            if (MathF.Abs(penetration) > NumericEpsilon) normal = ctri.ClosestToOrigin * (1.0f / penetration);
+            else normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
 
             return true;
         }
