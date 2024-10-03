@@ -589,13 +589,12 @@ public static class NarrowPhase
             converged:
 
             convexPolytope.CalculatePoints(ctri, out point1, out point2);
-            normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
-            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
 
-            // origin not enclosed: we basically did a pure GJK run
-            // without ever enclosing the origin, i.e. the shapes do not overlap
-            // and the penetration is negative.
+            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
             if (!convexPolytope.OriginEnclosed) penetration *= -1.0f;
+
+            if (MathF.Abs(penetration) > NumericEpsilon) normal = ctri.ClosestToOrigin * (1.0f / penetration);
+            else normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
 
             return true;
         }
