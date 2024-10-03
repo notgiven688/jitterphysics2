@@ -526,6 +526,48 @@ public static class NarrowPhase
                 }
             }
         }
+
+        public bool Distance(in MinkowskiDifference mkd,
+            out JVector point1, out JVector point2, out float distance)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+            simplexSolver.Reset();
+
+            int maxIter = MaxIter;
+
+            mkd.GetCenter(out var center);
+            JVector v = center.V;
+            float distSq = v.LengthSquared();
+
+            while (maxIter-- != 0)
+            {
+                mkd.Support(-v, out var w);
+
+                distSq = v.LengthSquared();
+
+                float deltaDist = JVector.Dot(v - w.V, v);
+                if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * distSq)
+                {
+                    break;
+                }
+
+                if (distSq < CollideEpsilon * CollideEpsilon ||
+                    !simplexSolver.AddVertex(w, out v))
+                {
+                    distance = 0.0f;
+                    point1 = point2 = JVector.Zero;
+                    return false;
+                }
+            }
+
+            distance = MathF.Sqrt(distSq);
+            simplexSolver.GetClosest(out point1, out point2);
+
+            return true;
+        }
         public bool Overlap(in MinkowskiDifference mkd)
         {
             const float CollideEpsilon = 1e-4f;
@@ -810,7 +852,78 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Performs an overlap test.It assumes that support shape A is located
+    /// Provides the distance and closest points for non overlapping shapes. It
+    /// assumes that support shape A is located at position zero and not rotated.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
+    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
+    /// <returns>Returns true if the shapes do not overlap and distance information
+    /// can be provided.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Distance(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationB, in JVector positionB,
+        out JVector pointA, out JVector pointB, out float distance)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
+
+        // ..perform overlap test..
+        return solver.Distance(mkd, out pointA, out pointB, out distance);
+    }
+
+    /// <summary>
+    /// Provides the distance and closest points for non overlapping shapes.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationA">The orientation of shape A in world space.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionA">The position of shape A in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
+    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
+    /// <returns>Returns true if the shapes do not overlap and distance information
+    /// can be provided.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Distance(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
+        in JVector positionA, in JVector positionB,
+        out JVector pointA, out JVector pointB, out float distance)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+
+        // rotate into the reference frame of bodyA..
+        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JVector.Subtract(positionB, positionA, out mkd.PositionB);
+        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+
+        // ..perform overlap test..
+        bool result = solver.Distance(mkd, out pointA, out pointB, out distance);
+        if (!result) return false;
+
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when
+        // the support function is called multiple times.
+        JVector.Transform(pointA, orientationA, out pointA);
+        JVector.Add(pointA, positionA, out pointA);
+        JVector.Transform(pointB, orientationA, out pointB);
+        JVector.Add(pointB, positionA, out pointB);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Performs an overlap test. It assumes that support shape A is located
     /// at position zero and not rotated.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
