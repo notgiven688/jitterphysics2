@@ -455,7 +455,8 @@ public static class NarrowPhase
                 float delta = JVector.Dot(temp3, normal);
                 penetration = JVector.Dot(v4.V, normal);
 
-                // If the boundary is thin enough or the origin is outside the support plane for the newly discovered vertex, then we can terminate
+                // If the boundary is thin enough or the origin is outside the support plane for the newly discovered
+                // vertex, then we can terminate
                 if (delta * delta <= CollideEpsilon * CollideEpsilon * normalSq || penetration <= 0.0f ||
                     phase2 > MaxIter)
                 {
@@ -524,6 +525,32 @@ public static class NarrowPhase
                     }
                 }
             }
+        }
+        public bool Overlap(in MinkowskiDifference mkd)
+        {
+            const float CollideEpsilon = 1e-4f;
+            const int MaxIter = 34;
+
+            Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+            simplexSolver.Reset();
+
+            int maxIter = MaxIter;
+
+            mkd.GetCenter(out var center);
+            JVector v = center.V;
+            float distSq = v.LengthSquared();
+
+            while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
+            {
+                mkd.Support(-v, out var w);
+                float vw = JVector.Dot(v, w.V);
+                if (vw >= 0.0f)
+                    return false;
+                if (!simplexSolver.AddVertex(w, out v)) return true;
+                distSq = v.LengthSquared();
+            }
+
+            return true;
         }
 
         public bool SolveGJKEPA(in MinkowskiDifference mkd,
@@ -780,6 +807,57 @@ public static class NarrowPhase
         JVector.Transform(normal, orientationA, out normal);
 
         return success;
+    }
+
+    /// <summary>
+    /// Performs an overlap test.It assumes that support shape A is located
+    /// at position zero and not rotated.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Overlap(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationB, in JVector positionB)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+        mkd.PositionB = positionB;
+        mkd.OrientationB = orientationB;
+
+        // ..perform overlap test..
+        return solver.Overlap(mkd);
+    }
+
+    /// <summary>
+    /// Performs an overlap test.
+    /// </summary>
+    /// <param name="supportA">The support function of shape A.</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationA">The orientation of shape A in world space.</param>
+    /// <param name="orientationB">The orientation of shape B in world space.</param>
+    /// <param name="positionA">The position of shape A in world space.</param>
+    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Overlap(in ISupportMappable supportA, in ISupportMappable supportB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
+        in JVector positionA, in JVector positionB)
+    {
+        Unsafe.SkipInit(out MinkowskiDifference mkd);
+        mkd.SupportA = supportA;
+        mkd.SupportB = supportB;
+
+        // rotate into the reference frame of bodyA..
+        JQuaternion.ConjugateMultiply(orientationA, orientationB, out mkd.OrientationB);
+        JVector.Subtract(positionB, positionA, out mkd.PositionB);
+        JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
+
+        // ..perform overlap test..
+        return solver.Overlap(mkd);
     }
 
     /// <summary>
