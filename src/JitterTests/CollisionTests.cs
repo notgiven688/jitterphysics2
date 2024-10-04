@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using JVector = Jitter2.LinearMath.JVector;
 
 namespace JitterTests;
 
@@ -16,6 +17,53 @@ public class CollisionTests
         BoxShape shape = new BoxShape(boxSize);
         Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Max - shape.Size * 0.5f));
         Assert.That(MathHelper.CloseToZero(shape.WorldBoundingBox.Min + shape.Size * 0.5f));
+    }
+
+    [TestCase]
+    public void OverlapDistanceTest()
+    {
+        BoxShape bs = new BoxShape(1);
+        SphereShape ss = new SphereShape(1);
+
+        var overlap = NarrowPhase.Overlap(bs, ss,
+            JQuaternion.CreateRotationX(0.2f), JVector.UnitY * 3.0f);
+
+        var separated = NarrowPhase.Distance(bs, ss,
+            JQuaternion.CreateRotationX(0.2f), JVector.UnitY * 3.0f,
+            out JVector pA, out JVector pB, out float dist);
+
+        Assert.That(!overlap);
+        Assert.That(separated);
+
+        Assert.That(MathF.Abs(dist - 1.5f) < 1e-4f);
+        Assert.That(MathHelper.CloseToZero(pA - new JVector(0, 0.5f, 0), 1e-4f));
+        Assert.That(MathHelper.CloseToZero(pB - new JVector(0, 2.0f, 0), 1e-4f));
+
+        overlap = NarrowPhase.Overlap(bs, ss,
+            JQuaternion.CreateRotationX(0.2f), JVector.UnitY * 0.5f);
+
+        separated = NarrowPhase.Distance(bs, ss,
+            JQuaternion.CreateRotationX(0.2f), JVector.UnitY * 0.5f,
+            out pA, out pB, out dist);
+
+        Assert.That(overlap);
+        Assert.That(!separated);
+
+        JVector delta = new JVector(10, 13, -22);
+
+        overlap = NarrowPhase.Overlap(ss, ss,
+            JQuaternion.CreateRotationX(0.2f), delta);
+
+        separated = NarrowPhase.Distance(ss, ss,
+            JQuaternion.CreateRotationX(0.2f), delta,
+            out pA, out pB, out dist);
+
+        Assert.That(!overlap);
+        Assert.That(separated);
+
+        Assert.That(MathF.Abs(dist - delta.Length() + 2) < 1e-4f);
+        Assert.That(MathHelper.CloseToZero(pA - JVector.Normalize(delta), 1e-4f));
+        Assert.That(MathHelper.CloseToZero(pB - delta + JVector.Normalize(delta), 1e-4f));
     }
 
     [TestCase]
