@@ -568,6 +568,7 @@ public static class NarrowPhase
 
             return true;
         }
+
         public bool Overlap(in MinkowskiDifference mkd)
         {
             const float CollideEpsilon = 1e-4f;
