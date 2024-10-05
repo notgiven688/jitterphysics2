@@ -255,7 +255,15 @@ public unsafe struct SimplexSolverAB
             }
         }
 
-        return closestPt;
+        if (mask != 0) return closestPt;
+
+        barycentric[0] = lambda0;
+        barycentric[1] = lambda1;
+        barycentric[2] = lambda2;
+        barycentric[3] = lambda3;
+
+        mask = 0b1111;
+        return JVector.Zero;
     }
 
     public void GetClosest(out JVector pointA, out JVector pointB)
@@ -324,7 +332,7 @@ public unsafe struct SimplexSolverAB
             case 4:
             {
                 closest = ClosestTetrahedron(ref barycentric, out usageMask);
-                return usageMask != 0;
+                return usageMask != 0b1111;
             }
         }
 
