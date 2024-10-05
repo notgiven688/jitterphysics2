@@ -310,7 +310,7 @@ public partial class World
 
         if (UseFullEPASolver)
         {
-            bool success = NarrowPhase.GJKEPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
+            bool success = NarrowPhase.Collision(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
                 out pA, out pB, out normal, out penetration);
 
             if (!success) return;
@@ -331,7 +331,7 @@ public partial class World
 
             if (dv.LengthSquared() < SpeculativeVelocityThreshold * SpeculativeVelocityThreshold) return;
 
-            bool success = NarrowPhase.SweepTest(sA, sB, b1.Orientation, b2.Orientation,
+            bool success = NarrowPhase.Sweep(sA, sB, b1.Orientation, b2.Orientation,
                 b1.Position, b2.Position,b1.Velocity, b2.Velocity,
                 out pA, out pB, out normal, out float toi);
 

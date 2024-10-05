@@ -153,7 +153,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool SweepTest(ref MinkowskiDifference mkd, in JVector sweep,
+        public bool Sweep(ref MinkowskiDifference mkd, in JVector sweep,
             out JVector p1, out JVector p2, out JVector normal, out float fraction)
         {
             const float CollideEpsilon = 1e-4f;
@@ -596,7 +596,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool SolveGJKEPA(in MinkowskiDifference mkd,
+        public bool Collision(in MinkowskiDifference mkd,
             out JVector point1, out JVector point2, out JVector normal, out float penetration)
         {
             const float CollideEpsilon = 1e-4f;
@@ -778,7 +778,7 @@ public static class NarrowPhase
     /// failure, collision information reverts to the type's default values.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
+    public static bool Collision(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
     {
@@ -789,7 +789,7 @@ public static class NarrowPhase
         mkd.OrientationB = orientationB;
 
         // ..perform collision detection..
-        bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
+        bool success = solver.Collision(mkd, out pointA, out pointB, out normal, out penetration);
 
         return success;
     }
@@ -824,7 +824,7 @@ public static class NarrowPhase
     /// failure, collision information reverts to the type's default values.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool GJKEPA(in ISupportMappable supportA, in ISupportMappable supportB,
+    public static bool Collision(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
@@ -839,7 +839,7 @@ public static class NarrowPhase
         JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
-        bool success = solver.SolveGJKEPA(mkd, out pointA, out pointB, out normal, out penetration);
+        bool success = solver.Collision(mkd, out pointA, out pointB, out normal, out penetration);
 
         // ..rotate back. this hopefully saves some matrix vector multiplication
         // when calling the support function multiple times.
@@ -1071,7 +1071,7 @@ public static class NarrowPhase
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
+    public static bool Sweep(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
@@ -1092,7 +1092,7 @@ public static class NarrowPhase
         JVector.ConjugatedTransform(sweep, orientationA, out sweep);
 
         // ..perform toi calculation
-        bool res = solver.SweepTest(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
+        bool res = solver.Sweep(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
 
         if (!res) return false;
 
@@ -1124,7 +1124,7 @@ public static class NarrowPhase
     /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool SweepTest(in ISupportMappable supportA, in ISupportMappable supportB,
+    public static bool Sweep(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
     {
@@ -1136,6 +1136,6 @@ public static class NarrowPhase
         mkd.OrientationB = orientationB;
 
         // ..perform toi calculation
-        return solver.SweepTest(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
+        return solver.Sweep(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
     }
 }

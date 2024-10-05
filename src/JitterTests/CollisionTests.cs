@@ -154,7 +154,7 @@ public class CollisionTests
         var rot = JQuaternion.CreateRotationZ(MathF.PI / 4.0f);
         var sweep = JVector.Normalize(new JVector(1, 1, 0));
 
-        bool hit = NarrowPhase.SweepTest(s1, s2, rot, rot,
+        bool hit = NarrowPhase.Sweep(s1, s2, rot, rot,
             new JVector(1, 1, 3), new JVector(11, 11, 3),
             sweep, -2.0f * sweep,
             out JVector pA, out JVector pB, out JVector normal, out float fraction);
@@ -196,7 +196,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.GJKEPA(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
+        NarrowPhase.Collision(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-0.25f, 0, 0), new JVector(+0.25f, 0, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // pointA is on s1 and pointB is on s2
@@ -229,7 +229,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.GJKEPA(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-2.25f, 0, 0), new JVector(+2.25f, 0, 0),
+        NarrowPhase.Collision(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-2.25f, 0, 0), new JVector(+2.25f, 0, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // the collision normal points from s2 to s1
