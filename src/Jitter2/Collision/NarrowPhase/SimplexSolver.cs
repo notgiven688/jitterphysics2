@@ -222,7 +222,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        return closestPt;
+        if (mask != 0) return closestPt;
+
+        mask = 0b1111;
+        return JVector.Zero;
     }
 
     public bool AddVertex(in JVector vertex, out JVector closest)
@@ -268,7 +271,7 @@ public unsafe struct SimplexSolver
             case 4:
             {
                 closest = ClosestTetrahedron(out usageMask);
-                return usageMask != 0;
+                return usageMask != 0b1111;
             }
         }
 
