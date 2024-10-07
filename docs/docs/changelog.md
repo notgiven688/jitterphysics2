@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.5 (10-07-2024)
+- Added new methods to NarrowPhase: Distance and Overlap.
+- **Breaking Change:**  Renamed NarrowPhase.SweepTest to NarrowPhase.Sweep.
+- **Breaking Change:**  Renamed NarrowPhase.GJKEPA to NarrowPhase.Collision.
+- Made PointTest, Raycast and SweepTest to use new SimplexSolver and SimplexSolverAB implementations.
+- Fixed normal in GJKEPA for separating case.
+
 ### Jitter 2.4.4 (09-14-2024)
 - Implemented fixes and workarounds for using Jitter with a debugger attached.
 
