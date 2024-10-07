@@ -116,96 +116,72 @@ public unsafe struct ConvexPolytope
 
     private bool CalcBarycentric(in Triangle tri, out JVector result)
     {
-        bool clamped = false;
+        // The code in this function is largely based on the code
+        // "from (the book) Real-Time Collision Detection by Christer Ericson,
+        // published by Morgan Kaufmann Publishers, (c) 2005 Elsevier Inc".
 
         JVector a = vertices[tri.A].V;
         JVector b = vertices[tri.B].V;
         JVector c = vertices[tri.C].V;
 
-        // Calculate the barycentric coordinates of the origin (0,0,0) projected
-        // onto the plane of the triangle.
-        //
-        // [W. Heidrich, Journal of Graphics, GPU, and Game Tools,Volume 10, Issue 3, 2005.]
-#pragma warning disable IDE0018
-        JVector u, v, w, tmp;
-#pragma warning restore IDE0018
+        JVector ab = b - a;
+        JVector ac = c - a;
 
-        JVector.Subtract(a, b, out u);
-        JVector.Subtract(a, c, out v);
+        float d1 = JVector.Dot(ab, a);
+        float d2 = JVector.Dot(ac, a);
 
-        float t = 1.0f / tri.NormalSq;
-
-        JVector.Cross(u, a, out tmp);
-        float gamma = JVector.Dot(tmp, tri.Normal) * t;
-        JVector.Cross(a, v, out tmp);
-        float beta = JVector.Dot(tmp, tri.Normal) * t;
-        float alpha = 1.0f - gamma - beta;
-
-        // Clamp the projected barycentric coordinates to lie within the triangle,
-        // such that the clamped coordinates are closest (euclidean) to the original point.
-        //
-        // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
-        if (alpha >= 0.0f && beta < 0.0f)
+        if (d1 > 0.0f && d2 > 0.0f)
         {
-            t = JVector.Dot(a, u);
-            if (gamma < 0.0f && t > 0.0f)
-            {
-                beta = MathF.Min(1.0f, t / u.LengthSquared());
-                alpha = 1.0f - beta;
-                gamma = 0.0f;
-            }
-            else
-            {
-                gamma = MathF.Min(1.0f, MathF.Max(0.0f, JVector.Dot(a, v) / v.LengthSquared()));
-                alpha = 1.0f - gamma;
-                beta = 0.0f;
-            }
-
-            clamped = true;
-        }
-        else if (beta >= 0.0f && gamma < 0.0f)
-        {
-            JVector.Subtract(b, c, out w);
-            t = JVector.Dot(b, w);
-            if (alpha < 0.0f && t > 0.0f)
-            {
-                gamma = MathF.Min(1.0f, t / w.LengthSquared());
-                beta = 1.0f - gamma;
-                alpha = 0.0f;
-            }
-            else
-            {
-                alpha = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(b, u) / u.LengthSquared()));
-                beta = 1.0f - alpha;
-                gamma = 0.0f;
-            }
-
-            clamped = true;
-        }
-        else if (gamma >= 0.0f && alpha < 0.0f)
-        {
-            JVector.Subtract(b, c, out w);
-            t = -JVector.Dot(c, v);
-            if (beta < 0.0f && t > 0.0f)
-            {
-                alpha = MathF.Min(1.0f, t / v.LengthSquared());
-                gamma = 1.0f - alpha;
-                beta = 0.0f;
-            }
-            else
-            {
-                beta = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(c, w) / w.LengthSquared()));
-                gamma = 1.0f - beta;
-                alpha = 0.0f;
-            }
-
-            clamped = true;
+            result = new JVector(1, 0, 0);
+            return true;
         }
 
-        result.X = alpha;
-        result.Y = beta;
-        result.Z = gamma;
-        return clamped;
+        float d3 = JVector.Dot(ab, b);
+        float d4 = JVector.Dot(ac, b);
+        if (d3 < 0.0f && d4 > d3)
+        {
+            result = new JVector(0, 1, 0);
+            return true;
+        }
+
+        float vc = d1 * d4 - d3 * d2;
+        if (vc <= 0.0f && d1 < 0.0f && d3 > 0.0f)
+        {
+            float v = d1 / (d1 - d3);
+            result = new JVector(1.0f - v, v, 0);
+            return true;
+        }
+
+        float d5 = JVector.Dot(ab, c);
+        float d6 = JVector.Dot(ac, c);
+        if (d6 < 0.0f && d5 > d6)
+        {
+            result = new JVector(0, 0, 1);
+            return true;
+        }
+
+        float vb = d5 * d2 - d1 * d6;
+        if (vb <= 0.0f && d2 < 0.0f && d6 > 0.0f)
+        {
+            float w = d2 / (d2 - d6);
+            result = new JVector(1.0f - w, 0, w);
+            return true;
+        }
+
+        float va = d3 * d6 - d5 * d4;
+        if (va <= 0.0f && (d4 - d3) < 0.0f && (d5 - d6) < 0.0f)
+        {
+            float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+            result = new JVector(0, 1.0f - w, w);
+            return true;
+        }
+
+        float d = 1.0f / (va + vb + vc);
+        float vf = vb * d;
+        float wf = vc * d;
+
+        result = new JVector(1.0f - vf - wf, vf, wf);
+        return false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
