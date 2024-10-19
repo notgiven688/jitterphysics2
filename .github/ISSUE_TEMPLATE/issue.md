@@ -7,4 +7,4 @@ assignees: ''
 
 ---
 
-Please do not open issues for general questions, which can be formulated like "How do I..?". Use the discussion page (https://github.com/notgiven688/jitterphysics2/discussions) instead.
+**Note:** For general inquiries, such as "How do I...?", please use the discussion page instead of opening issues. You can find the discussion page [here](https://github.com/notgiven688/jitterphysics2/discussions).
