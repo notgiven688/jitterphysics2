@@ -7,7 +7,7 @@ public class AddRemoveTests
     [SetUp]
     public void Setup()
     {
-        world = new World(100, 100, 100);
+        world = new World();
     }
 
     private class FilterOut(IDynamicTreeProxy shape) : IBroadPhaseFilter

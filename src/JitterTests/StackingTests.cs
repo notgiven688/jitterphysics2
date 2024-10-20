@@ -7,7 +7,7 @@ public class StackingTests
     [SetUp]
     public void Setup()
     {
-        world = new World(2000, 10000, 100)
+        world = new World()
         {
             AllowDeactivation = false
         };

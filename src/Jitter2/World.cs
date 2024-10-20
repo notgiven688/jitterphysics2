@@ -234,17 +234,23 @@ public partial class World
     public bool UseFullEPASolver { get; set; }
 
     /// <summary>
-    /// Creates an instance of the World class. As Jitter utilizes a distinct memory model, it is necessary to specify
-    /// the maximum number of instances for <see cref="RigidBody"/>, <see cref="ContactData"/>, and <see cref="Constraint"/>.
+    /// Creates an instance of the <see cref="World"/> class with the default capacity.
+    /// This initializes the world using default values for the number of bodies, contacts,
+    /// constraints, and small constraints as defined in <see cref="Capacity.Default"/>.
     /// </summary>
-    public World(int numBodies = 32768, int numContacts = 65536, int numConstraints = 32768)
+    /// <seealso cref="World(Capacity)"/>
+    public World() : this(Capacity.Default) { }
+
+    /// <summary>
+    /// Creates an instance of the World class. As Jitter utilizes a distinct memory model, it is necessary to specify
+    /// the capacity of the world in advance.
+    /// </summary>
+    public World(Capacity capacity)
     {
-        // int numBodies = 32768, int numContacts = 65536, int numConstraints = 32768
-        // with this choice (32768 + 65536 + 2 x 32768) x 8 Bytes = 1280 KB are allocated on the heap.
-        memRigidBodies = new UnmanagedActiveList<RigidBodyData>(numBodies);
-        memContacts = new UnmanagedActiveList<ContactData>(numContacts);
-        memConstraints = new UnmanagedActiveList<ConstraintData>(numConstraints);
-        memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(numConstraints);
+        memRigidBodies = new UnmanagedActiveList<RigidBodyData>(capacity.BodyCount);
+        memContacts = new UnmanagedActiveList<ContactData>(capacity.ContactCount);
+        memConstraints = new UnmanagedActiveList<ConstraintData>(capacity.ConstraintCount);
+        memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
 
         InitParallelCallbacks();
 
