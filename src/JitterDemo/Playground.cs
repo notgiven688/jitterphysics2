@@ -66,7 +66,15 @@ public partial class Playground : RenderWindow
 
     public Playground()
     {
-        world = new World(64_000, 64_000, 32_000);
+        var capacity = new World.Capacity
+        {
+            BodyCount = 64_000,
+            ContactCount = 64_000,
+            ConstraintCount = 32_000,
+            SmallConstraintCount = 32_000
+        };
+
+        world = new World(capacity);
         world.NullBody.Tag = new RigidBodyTag();
         drawBox = DrawBox;
     }
@@ -88,7 +96,7 @@ public partial class Playground : RenderWindow
         world.BroadPhaseFilter = null;
         world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter();
         world.Gravity = new JVector(0, -9.81f, 0);
-        world.NumberSubsteps = 1;
+        world.SubstepCount = 1;
         world.SolverIterations = 12;
     }
 

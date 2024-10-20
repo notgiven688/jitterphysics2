@@ -76,7 +76,7 @@ public class Demo01 : IDemo
             );
         }
 
-        world.NumberSubsteps = 4;
+        world.SubstepCount = 4;
         world.SolverIterations = 4;
     }
 

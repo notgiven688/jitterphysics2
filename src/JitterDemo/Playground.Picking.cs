@@ -64,7 +64,7 @@ public partial class Playground : RenderWindow
         {
             grepBody = null;
 
-            bool result = World.RayCast(origin, jdir, null, null,
+            bool result = World.DynamicTree.RayCast(origin, jdir, null, null,
                 out IDynamicTreeProxy? grepShape, out JVector _, out hitDistance);
 
             if (grepShape != null)

@@ -56,7 +56,7 @@ public class Wheel
 
     private float torque;
 
-    private readonly World.RayCastFilterPre rayCast;
+    private readonly DynamicTree.RayCastFilterPre rayCast;
 
     /// <summary>
     /// Sets or gets the current steering angle of
@@ -253,7 +253,7 @@ public class Wheel
 
             RigidBody body;
 
-            bool result = world.RayCast(newOrigin, wheelRayDelta,
+            bool result = world.DynamicTree.RayCast(newOrigin, wheelRayDelta,
                 rayCast, null, out IDynamicTreeProxy? shape, out JVector normal, out float frac);
 
             // Debug Rendering

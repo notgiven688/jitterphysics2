@@ -61,7 +61,7 @@ public class Player
         AngularMovement.TargetVelocity = rotate;
     }
 
-    private World.RayCastFilterPre? preFilter;
+    private DynamicTree.RayCastFilterPre? preFilter;
 
     public bool FilterShape(IDynamicTreeProxy shape)
     {

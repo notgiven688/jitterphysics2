@@ -57,7 +57,7 @@ public unsafe struct JHandle<T> where T : unmanaged
 /// </summary>
 public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmanaged
 {
-    // this is a mixture of a datastructure and an allocator.
+    // this is a mixture of a data structure and an allocator.
 
     // layout:
     // 0 [ .... ] active [ .... ] count [ .... ] size
@@ -96,6 +96,11 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     }
 
     /// <summary>
+    /// Returns the total amount of unmanaged memory allocated in bytes.
+    /// </summary>
+    public long TotalBytesAllocated => size * sizeof(T) + maximumSize * sizeof(IntPtr);
+
+    /// <summary>
     /// Removes the associated native structure from the data structure.
     /// </summary>
     public void Free(JHandle<T> handle)
@@ -117,6 +122,11 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     /// A span for all elements marked as active.
     /// </summary>
     public Span<T> Active => new(memory, active);
+
+    /// <summary>
+    /// A span for all elements marked as inactive.
+    /// </summary>
+    public Span<T> Inactive => new(&memory[active], Count - active);
 
     /// <summary>
     /// A span for all elements.

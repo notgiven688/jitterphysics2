@@ -34,7 +34,7 @@ namespace Jitter2.Collision;
 /// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>)
 /// maintains a record of potential overlapping pairs.
 /// </summary>
-public class DynamicTree
+public partial class DynamicTree
 {
     private volatile SlimBag<IDynamicTreeProxy>[] lists = Array.Empty<SlimBag<IDynamicTreeProxy>>();
 

@@ -42,7 +42,7 @@ public class Demo10 : IDemo
 
 
         world.SolverIterations = 4;
-        world.NumberSubsteps = 3;
+        world.SubstepCount = 3;
     }
 
     public void Draw()

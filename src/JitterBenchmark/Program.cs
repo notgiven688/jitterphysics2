@@ -10,7 +10,15 @@ public class TowerStack
     [GlobalSetup]
     public void GlobalSetup()
     {
-        world = new World(10000, 10000, 10000);
+        World.Capacity capacity = new World.Capacity
+        {
+            BodyCount = 10_000,
+            ConstraintCount = 10_000,
+            ContactCount = 10_000,
+            SmallConstraintCount = 10_000
+        };
+
+        world = new World(capacity);
         ThreadPool.Instance.ChangeThreadCount(4);
         world.AllowDeactivation = false;
     }
