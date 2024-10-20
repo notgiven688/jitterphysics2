@@ -143,7 +143,7 @@ public partial class World
     /// Access to the <see cref="DynamicTree"/> instance. The instance
     /// should only be modified by Jitter.
     /// </summary>
-    public readonly DynamicTree DynamicTree;
+    public DynamicTree DynamicTree { get; }
 
     /// <summary>
     /// A fixed body, pinned to the world. Can be used to create constraints with.
