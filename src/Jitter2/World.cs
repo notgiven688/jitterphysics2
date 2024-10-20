@@ -60,16 +60,29 @@ public partial class World
             this.world = world;
         }
 
+        /// <summary>
+        /// Returns the total amount of unmanaged memory allocated in bytes.
+        /// </summary>
+        public long TotalBytesAllocated =>
+            world.memRigidBodies.TotalBytesAllocated +
+            world.memContacts.TotalBytesAllocated +
+            world.memConstraints.TotalBytesAllocated +
+            world.memSmallConstraints.TotalBytesAllocated;
+
         public readonly Span<RigidBodyData> ActiveRigidBodies => world.memRigidBodies.Active;
+        public readonly Span<RigidBodyData> InactiveRigidBodies => world.memRigidBodies.Inactive;
         public readonly Span<RigidBodyData> RigidBodies => world.memRigidBodies.Elements;
 
         public readonly Span<ContactData> ActiveContacts => world.memContacts.Active;
+        public readonly Span<ContactData> InactiveContacts => world.memContacts.Inactive;
         public readonly Span<ContactData> Contacts => world.memContacts.Elements;
 
         public readonly Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
+        public readonly Span<ConstraintData> InactiveConstraints => world.memConstraints.Inactive;
         public readonly Span<ConstraintData> Constraints => world.memConstraints.Elements;
 
         public readonly Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
+        public readonly Span<SmallConstraintData> InactiveSmallConstraints => world.memSmallConstraints.Inactive;
         public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
 
