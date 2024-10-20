@@ -293,8 +293,6 @@ public struct ContactData
         public enum Flags
         {
             NewContact = 1 << 1,
-            Body1Static = 1 << 2,
-            Body2Static = 1 << 3
         }
 
         public Flags Flag;
@@ -346,8 +344,6 @@ public struct ContactData
             if (newContact)
             {
                 Flag = Flags.NewContact;
-                if (b1.IsStatic || !b1.IsActive) Flag |= Flags.Body1Static;
-                if (b2.IsStatic || !b2.IsActive) Flag |= Flags.Body2Static;
 
                 AccumulatedNormalImpulse = 0;
                 AccumulatedTangentImpulse1 = 0;
@@ -420,9 +416,6 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
             bool speculative = cd->IsSpeculative;
-
-            if ((Flag & Flags.NewContact) != 0) Flag = Flags.NewContact;
-            else Flag = 0;
 
             // redundant if contact has just been initialized or updateposition was called
             // before <=> it is redundant the first time it is called in world.step <=> it is
