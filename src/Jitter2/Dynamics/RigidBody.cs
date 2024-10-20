@@ -207,8 +207,15 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public (float angular, float linear) DeactivationThreshold
     {
+        get => (MathF.Sqrt(inactiveThresholdAngularSq), MathF.Sqrt(inactiveThresholdLinearSq));
         set
         {
+            if (value.linear < 0 || value.angular < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "Both linear and angular thresholds must be non-negative.");
+            }
+
             inactiveThresholdLinearSq = value.linear * value.linear;
             inactiveThresholdAngularSq = value.angular * value.angular;
         }
