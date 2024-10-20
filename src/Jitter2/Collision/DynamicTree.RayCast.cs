@@ -28,9 +28,9 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
-namespace Jitter2;
+namespace Jitter2.Collision;
 
-public partial class World
+public partial class DynamicTree
 {
     /// <summary>
     /// Preliminary result of the ray cast.
@@ -74,8 +74,6 @@ public partial class World
             Lambda = float.MaxValue;
         }
     }
-
-    [ThreadStatic] private static Stack<int>? stack;
 
     /// <summary>
     /// Ray cast against the world.
@@ -123,11 +121,11 @@ public partial class World
 
     private RayCastResult QueryRay(in Ray ray)
     {
-        if (DynamicTree.Root == -1) return new RayCastResult();
+        if (root == -1) return new RayCastResult();
 
         stack ??= new Stack<int>(256);
 
-        stack.Push(DynamicTree.Root);
+        stack.Push(root);
 
         RayCastResult result = new();
         result.Fraction = ray.Lambda;
@@ -136,7 +134,7 @@ public partial class World
         {
             int pop = stack.Pop();
 
-            ref DynamicTree.Node node = ref DynamicTree.Nodes[pop];
+            ref Node node = ref Nodes[pop];
 
             if (node.IsLeaf)
             {
@@ -157,8 +155,8 @@ public partial class World
                 continue;
             }
 
-            ref DynamicTree.Node lnode = ref DynamicTree.Nodes[node.Left];
-            ref DynamicTree.Node rnode = ref DynamicTree.Nodes[node.Right];
+            ref Node lnode = ref Nodes[node.Left];
+            ref Node rnode = ref Nodes[node.Right];
 
             bool lres = lnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterl);
             bool rres = rnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterr);

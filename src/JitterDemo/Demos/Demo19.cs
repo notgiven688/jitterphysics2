@@ -25,7 +25,7 @@ public class Demo19 : IDemo
             dr.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(origin),
                 Conversion.FromJitter(origin + dir));
 
-            bool hit = world.RayCast(origin, dir, null, null, out IDynamicTreeProxy? shape,
+            bool hit = world.DynamicTree.RayCast(origin, dir, null, null, out IDynamicTreeProxy? shape,
                 out JVector normal, out float frac);
 
             if (hit)
