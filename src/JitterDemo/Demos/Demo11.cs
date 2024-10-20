@@ -40,7 +40,7 @@ public class Demo11 : IDemo
         var c1 = world.CreateConstraint<DistanceLimit>(b0, b1);
         c1.Initialize(b0.Position, b1.Position);
 
-        world.NumberSubsteps = 10;
+        world.SubstepCount = 10;
         world.SolverIterations = 4;
 
         b0.Damping = (0, 0);

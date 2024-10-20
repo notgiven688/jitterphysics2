@@ -123,7 +123,7 @@ public class Demo06 : IDemo
         Common.BuildWall(new JVector(30, 0, -20), 4);
 
         world.SolverIterations = 2;
-        world.NumberSubsteps = 8;
+        world.SubstepCount = 8;
     }
 
     public void Draw()

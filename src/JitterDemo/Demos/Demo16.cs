@@ -63,7 +63,7 @@ public class Demo16 : IDemo, ICleanDemo
         }
 
         world.SolverIterations = 4;
-        world.NumberSubsteps = 4;
+        world.SubstepCount = 4;
     }
 
     public void Draw()

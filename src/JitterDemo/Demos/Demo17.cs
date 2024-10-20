@@ -98,7 +98,7 @@ public class Demo17 : IDemo, ICleanDemo
         c3.Initialize(fb3.Position);
 
         world.SolverIterations = 4;
-        world.NumberSubsteps = 4;
+        world.SubstepCount = 4;
     }
 
     private void SetUVCoordinates()

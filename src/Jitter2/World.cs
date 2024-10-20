@@ -170,7 +170,7 @@ public partial class World
     public bool AllowDeactivation { get; set; } = true;
 
     /// <summary>
-    /// Number of iterations per substep (see <see cref="World.NumberSubsteps"/>).
+    /// Number of iterations per substep (see <see cref="SubstepCount"/>).
     /// </summary>
     /// <value></value>
     public int SolverIterations
@@ -192,7 +192,7 @@ public partial class World
     /// The number of substeps for each call to <see cref="World.Step(float, bool)"/>.
     /// Substepping is deactivated when set to one.
     /// </summary>
-    public int NumberSubsteps
+    public int SubstepCount
     {
         get => substeps;
         set
