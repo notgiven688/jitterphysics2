@@ -49,6 +49,7 @@ public partial class World
     private Action<Parallel.Batch> integrateForces;
     private Action<Parallel.Batch> prepareContacts;
     private Action<Parallel.Batch> iterateContacts;
+    private Action<Parallel.Batch> relaxVelocities;
     private Action<Parallel.Batch> updateContacts;
     private Action<Parallel.Batch> prepareConstraints;
     private Action<Parallel.Batch> iterateConstraints;
@@ -64,6 +65,7 @@ public partial class World
         integrateForces = IntegrateForcesCallback;
         prepareContacts = PrepareContactsCallback;
         iterateContacts = IterateContactsCallback;
+        relaxVelocities = RelaxVelocitiesCallback;
         prepareConstraints = PrepareConstraintsCallback;
         iterateConstraints = IterateConstraintsCallback;
         prepareSmallConstraints = PrepareSmallConstraintsCallback;
@@ -174,6 +176,7 @@ public partial class World
             IntegrateForces(multiThread); // FAST SWEEP
             Solve(multiThread, solverIterations); // FAST SWEEP
             Integrate(multiThread); // FAST SWEEP
+            RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
         }
 
         SetTime(Timings.SolveContacts);
@@ -387,7 +390,23 @@ public partial class World
             ref RigidBodyData b2 = ref c.Body2.Data;
 
             LockTwoBody(ref b1, ref b2);
-            c.Iterate();
+            c.Iterate(true);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+    }
+
+    private void RelaxVelocitiesCallback(Parallel.Batch batch)
+    {
+        var span = memContacts.Active[batch.Start..batch.End];
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            ref ContactData c = ref span[i];
+            ref RigidBodyData b1 = ref c.Body1.Data;
+            ref RigidBodyData b2 = ref c.Body2.Data;
+
+            LockTwoBody(ref b1, ref b2);
+            c.Iterate(false);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -630,6 +649,26 @@ public partial class World
             dorn.Normalize();
             //JMatrix.CreateFromQuaternion(dorn, out rigidBody.Orientation);
             rigidBody.Orientation = dorn;
+        }
+    }
+
+    private void RelaxVelocities(bool multiThread, int iterations)
+    {
+        if (multiThread)
+        {
+            for (int iter = 0; iter < iterations; iter++)
+            {
+                memContacts.ParallelForBatch(64, relaxVelocities);
+            }
+        }
+        else
+        {
+            var batchContacts = new Parallel.Batch(0, memContacts.Active.Length);
+
+            for (int iter = 0; iter < iterations; iter++)
+            {
+                RelaxVelocitiesCallback(batchContacts);
+            }
         }
     }
 

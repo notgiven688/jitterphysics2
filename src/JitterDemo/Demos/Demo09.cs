@@ -18,7 +18,7 @@ public class Demo09 : IDemo
 
         pg.ResetScene();
 
-        world.SolverIterations = 20;
+        world.SolverIterations = (20, 4);
 
         if (pg.FloorShape != null)
         {

@@ -97,7 +97,7 @@ public partial class Playground : RenderWindow
         world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter();
         world.Gravity = new JVector(0, -9.81f, 0);
         world.SubstepCount = 1;
-        world.SolverIterations = 12;
+        world.SolverIterations = (8, 4);
     }
 
     public override void Load()

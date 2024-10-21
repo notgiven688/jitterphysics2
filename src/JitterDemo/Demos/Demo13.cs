@@ -63,7 +63,7 @@ public class Demo13 : IDemo
         }
 
 
-        world.SolverIterations = 4;
+        world.SolverIterations = (4, 2);
         world.SubstepCount = 3;
     }
 

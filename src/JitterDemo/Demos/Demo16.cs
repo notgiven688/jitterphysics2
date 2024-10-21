@@ -62,7 +62,7 @@ public class Demo16 : IDemo, ICleanDemo
             }
         }
 
-        world.SolverIterations = 4;
+        world.SolverIterations = (4, 2);
         world.SubstepCount = 4;
     }
 

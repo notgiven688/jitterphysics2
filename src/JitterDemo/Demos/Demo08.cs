@@ -16,7 +16,7 @@ public class Demo08 : IDemo
 
         pg.ResetScene();
 
-        world.SolverIterations = 8;
+        world.SolverIterations = (4, 4);
 
         var body = world.CreateRigidBody();
         body.AddShape(new BoxShape(new JVector(5, 0.5f, 0.5f)));
