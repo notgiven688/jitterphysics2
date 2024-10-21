@@ -187,7 +187,7 @@ public partial class World
 
             if (value.relaxation < 0)
             {
-                throw new ArgumentException("Iterations for relaxation can not be smaller than zero.",
+                throw new ArgumentException("Relaxation iterations can not be smaller than zero.",
                     nameof(SolverIterations));
             }
 
