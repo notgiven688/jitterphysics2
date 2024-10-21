@@ -40,7 +40,7 @@ public class Demo00 : IDemo
         for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(5, 10 + i * 3, -6));
 
-        world.SolverIterations = (8,4);
+        world.SolverIterations = (8, 4);
     }
 
     public void Draw()

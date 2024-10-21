@@ -34,7 +34,7 @@ public class Demo15 : IDemo, ICleanDemo
             spheres.Add(sphere);
         }
 
-        world.SolverIterations = (4,2);
+        world.SolverIterations = (4, 2);
         world.SubstepCount = 3;
     }
 

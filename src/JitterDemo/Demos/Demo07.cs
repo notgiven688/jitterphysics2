@@ -15,7 +15,7 @@ public class Demo07 : IDemo
 
         pg.ResetScene();
 
-        world.SolverIterations = (4,2);
+        world.SolverIterations = (4, 2);
 
         for (int e = 0; e < 2; e++)
         {
