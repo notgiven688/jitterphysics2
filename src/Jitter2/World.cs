@@ -170,21 +170,29 @@ public partial class World
     public bool AllowDeactivation { get; set; } = true;
 
     /// <summary>
-    /// Number of iterations per substep (see <see cref="SubstepCount"/>).
+    /// Number of iterations (solver and relaxation) per substep (see <see cref="SubstepCount"/>).
     /// </summary>
+    /// <remarks>Default value: (solver: 8, relaxation: 4)</remarks>
     /// <value></value>
-    public int SolverIterations
+    public (int solver, int relaxation) SolverIterations
     {
-        get => solverIterations;
+        get => (solverIterations, velocityRelaxations);
         set
         {
-            if (value < 1)
+            if (value.solver < 1)
             {
-                throw new ArgumentException("Value can not be smaller than 1.",
+                throw new ArgumentException("Solver iterations can not be smaller than one.",
                     nameof(SolverIterations));
             }
 
-            solverIterations = value;
+            if (value.relaxation < 0)
+            {
+                throw new ArgumentException("Iterations for relaxation can not be smaller than zero.",
+                    nameof(SolverIterations));
+            }
+
+            solverIterations = value.solver;
+            velocityRelaxations = value.relaxation;
         }
     }
 
@@ -221,6 +229,7 @@ public partial class World
     // Make this global since it is used by nearly every method called
     // in World.Step.
     private volatile int solverIterations = 8;
+    private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
 
     private volatile float substep_dt = 1.0f / 100.0f;

@@ -88,14 +88,14 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
     }
 
-    public unsafe void Iterate()
+    public unsafe void Iterate(bool applyBias)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
-        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr);
-        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr);
-        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr);
-        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr);
+        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr, applyBias);
     }
 
     public unsafe void UpdatePosition()
@@ -298,6 +298,7 @@ public struct ContactData
         public Flags Flag;
 
         public float Bias;
+        public float PenaltyBias;
         public float MassNormal;
 
         public float AccumulatedTangentImpulse1;
@@ -506,13 +507,10 @@ public struct ContactData
                 Bias = Penetration * idt;
             }
 
-            if (Penetration > AllowedPenetration)
-            {
-                Bias = Math.Max(Bias, BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration));
-                Bias = Math.Clamp(Bias, 0.0f, MaximumBias);
-            }
+            PenaltyBias = BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration);
+            PenaltyBias = Math.Clamp(PenaltyBias, 0.0f, MaximumBias);
 
-            // warmstarting
+            // warm starting
             JVector impulse = Normal * AccumulatedNormalImpulse + Tangent1 * AccumulatedTangentImpulse1 +
                               Tangent2 * AccumulatedTangentImpulse2;
 
@@ -527,7 +525,7 @@ public struct ContactData
             Flag &= ~Flags.NewContact;
         }
 
-        public unsafe void Iterate(ContactData* cd)
+        public unsafe void Iterate(ContactData* cd, bool applyBias)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
@@ -539,7 +537,11 @@ public struct ContactData
             float vt1 = JVector.Dot(Tangent1, dv);
             float vt2 = JVector.Dot(Tangent2, dv);
 
-            float normalImpulse = Bias - vn;
+            float normalImpulse = -vn;
+
+            if (applyBias) normalImpulse += MathF.Max(PenaltyBias, Bias);
+            else normalImpulse += Bias;
+
             normalImpulse *= MassNormal;
 
             float oldNormalImpulse = AccumulatedNormalImpulse;

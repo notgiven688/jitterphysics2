@@ -41,7 +41,7 @@ public class Demo11 : IDemo
         c1.Initialize(b0.Position, b1.Position);
 
         world.SubstepCount = 10;
-        world.SolverIterations = 4;
+        world.SolverIterations = (2, 2);
 
         b0.Damping = (0, 0);
         b1.Damping = (0, 0);

@@ -122,8 +122,8 @@ public class Demo06 : IDemo
         Common.BuildJenga(new JVector(-20, 0, -10), 10);
         Common.BuildWall(new JVector(30, 0, -20), 4);
 
-        world.SolverIterations = 2;
-        world.SubstepCount = 8;
+        world.SolverIterations = (4,4);
+        world.SubstepCount = 2;
     }
 
     public void Draw()

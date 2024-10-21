@@ -17,7 +17,7 @@ public class StackingTests
     [TestCase(false)]
     public void SimpleStack(bool fullEPA)
     {
-        world.SolverIterations = 8;
+        world.SolverIterations = (4,4);
 
         RigidBody last = Helper.BuildSimpleStack(world);
 
@@ -35,7 +35,7 @@ public class StackingTests
     [TestCase(1, 0, 0, true)]
     public void PyramidStack(int x, int y, int z, bool multiThread)
     {
-        world.SolverIterations = 8;
+        world.SolverIterations = (4,4);
 
         RigidBody last = Helper.BuildPyramidBox(world, new JVector(x, y, z));
 
@@ -53,7 +53,7 @@ public class StackingTests
     public void PyramidStackCylinder(int x, int y, int z, bool fullEPA, bool multiThread)
     {
         world.UseFullEPASolver = fullEPA;
-        world.SolverIterations = 8;
+        world.SolverIterations = (4,4);
 
         RigidBody last = Helper.BuildPyramidCylinder(world, new JVector(x, y, z));
 
@@ -69,7 +69,7 @@ public class StackingTests
     public void TowerStack(bool fullEPA, bool multiThread)
     {
         world.UseFullEPASolver = fullEPA;
-        world.SolverIterations = 18;
+        world.SolverIterations = (14,4);
 
         RigidBody last = Helper.BuildTower(world, JVector.Zero, 30);
 

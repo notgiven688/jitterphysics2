@@ -97,8 +97,8 @@ public class Demo17 : IDemo, ICleanDemo
         var c3 = world.CreateConstraint<BallSocket>(fb3, world.NullBody);
         c3.Initialize(fb3.Position);
 
-        world.SolverIterations = 4;
-        world.SubstepCount = 4;
+        world.SolverIterations = (4,2);
+        world.SubstepCount = 3;
     }
 
     private void SetUVCoordinates()

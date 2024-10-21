@@ -34,8 +34,8 @@ public class Demo15 : IDemo, ICleanDemo
             spheres.Add(sphere);
         }
 
-        world.SolverIterations = 4;
-        world.SubstepCount = 4;
+        world.SolverIterations = (4,2);
+        world.SubstepCount = 3;
     }
 
     public void Draw()

@@ -77,7 +77,7 @@ public class Demo01 : IDemo
         }
 
         world.SubstepCount = 4;
-        world.SolverIterations = 4;
+        world.SolverIterations = (2,2);
     }
 
     public void Draw()

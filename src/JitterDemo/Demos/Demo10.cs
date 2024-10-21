@@ -40,8 +40,7 @@ public class Demo10 : IDemo
             body.Damping = (0.002f, 0.002f);
         }
 
-
-        world.SolverIterations = 4;
+        world.SolverIterations = (4,2);
         world.SubstepCount = 3;
     }
 

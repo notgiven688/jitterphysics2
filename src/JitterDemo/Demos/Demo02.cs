@@ -17,7 +17,7 @@ public class Demo02 : IDemo
 
         Common.BuildTower(JVector.Zero);
 
-        world.SolverIterations = 18;
+        world.SolverIterations = (12,4);
     }
 
     public void Draw()
