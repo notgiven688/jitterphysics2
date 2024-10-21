@@ -172,7 +172,7 @@ public partial class World
     /// <summary>
     /// Number of iterations (solver and relaxation) per substep (see <see cref="SubstepCount"/>).
     /// </summary>
-    /// <remarks>Default value: (solver: 8, relaxation: 4)</remarks>
+    /// <remarks>Default value: (solver: 6, relaxation: 4)</remarks>
     /// <value></value>
     public (int solver, int relaxation) SolverIterations
     {
@@ -228,7 +228,7 @@ public partial class World
 
     // Make this global since it is used by nearly every method called
     // in World.Step.
-    private volatile int solverIterations = 8;
+    private volatile int solverIterations = 6;
     private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
 
