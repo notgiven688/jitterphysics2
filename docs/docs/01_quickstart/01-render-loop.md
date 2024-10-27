@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Setting Up a Render Loop
+# Render Loop
 
 The first thing we need to do is to familiarize ourselves a bit with Raylib_cs. Replace the content of `Program.cs` with the following code:
 
