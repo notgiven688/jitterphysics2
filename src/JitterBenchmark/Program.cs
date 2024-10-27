@@ -26,7 +26,7 @@ public class TowerStack
     [Benchmark]
     public void Test()
     {
-        world.SolverIterations = 18;
+        world.SolverIterations = (14, 4);
 
         Helper.BuildTower(world, JVector.Zero, 30);
         Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, false);
