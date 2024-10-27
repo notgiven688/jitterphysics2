@@ -65,6 +65,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     public readonly ulong RigidBodyId;
 
+    private float restitution = 0.0f;
+    private float friction = 0.2f;
+
     /// <summary>
     /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
     /// is stored within a contiguous block of unmanaged memory. This refers to the raw memory location
@@ -156,8 +159,59 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal JMatrix inverseInertia = JMatrix.Identity;
     internal float inverseMass = 1.0f;
 
-    public float Friction { get; set; } = 0.2f;
-    public float Restitution { get; set; } = 0.0f;
+    /// <summary>
+    /// Gets or sets the friction coefficient for this object.
+    /// </summary>
+    /// <remarks>
+    /// The friction coefficient determines the resistance to sliding motion.
+    /// Higher values create more friction, while lower values allow easier sliding.
+    /// A typical value ranges between 0 (no friction) and 1 (maximum friction).
+    /// Default is 0.2.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if the value is not between 0 and 1.
+    /// </exception>
+    public float Friction
+    {
+        get => friction;
+        set
+        {
+            if (value < 0.0f || value > 1.0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "Friction must be between 0 and 1.");
+            }
+
+            friction = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the restitution (bounciness) of this object.
+    /// </summary>
+    /// <remarks>
+    /// The restitution value determines how much energy is retained after a collision,
+    /// with 0 representing an inelastic collision (no bounce) and 1 representing a perfectly elastic collision (full bounce).
+    /// Values between 0 and 1 create a partially elastic collision effect.
+    /// Default is 0.0.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if the value is not between 0 and 1.
+    /// </exception>
+    public float Restitution
+    {
+        get => restitution;
+        set
+        {
+            if (value < 0.0f || value > 1.0f)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value),
+                    "Restitution must be between 0 and 1.");
+            }
+
+            restitution = value;
+        }
+    }
 
     private readonly int hashCode;
 
