@@ -164,11 +164,11 @@ public class Player
         // ...or the more traditional way of using a raycast
 
         bool hit = world.RayCast(Body.Position, -JVector.UnitY, preFilter, null,
-            out floor, out JVector normal, out float fraction);
+            out floor, out JVector normal, out float lambda);
 
-        float delta = fraction - capsuleHalfHeight;
+        float delta = lambda - capsuleHalfHeight;
 
-        hitPoint = Body.Position - JVector.UnitY * fraction;
+        hitPoint = Body.Position - JVector.UnitY * lambda;
         return (hit && delta < 0.04f && floor != null);
         */
     }

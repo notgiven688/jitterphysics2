@@ -133,10 +133,10 @@ public class CollisionTests
         SphereShape s1 = new(radius);
 
         bool hit = NarrowPhase.RayCast(s1, JQuaternion.CreateRotationX(0.32f), sp,
-            op, sp - op, out float fraction, out JVector normal);
+            op, sp - op, out float lambda, out JVector normal);
 
         JVector cn = JVector.Normalize(op - sp); // analytical normal
-        JVector hp = op + (sp - op) * fraction; // hit point
+        JVector hp = op + (sp - op) * lambda; // hit point
 
         Assert.That(hit);
         Assert.That(MathHelper.CloseToZero(normal - cn, 1e-6f));
@@ -157,20 +157,20 @@ public class CollisionTests
         bool hit = NarrowPhase.Sweep(s1, s2, rot, rot,
             new JVector(1, 1, 3), new JVector(11, 11, 3),
             sweep, -2.0f * sweep,
-            out JVector pA, out JVector pB, out JVector normal, out float fraction);
+            out JVector pA, out JVector pB, out JVector normal, out float lambda);
 
         Assert.That(hit);
 
-        float expectedFraction = (MathF.Sqrt(200.0f) - 1.0f) * (1.0f / 3.0f);
+        float expectedlambda = (MathF.Sqrt(200.0f) - 1.0f) * (1.0f / 3.0f);
         JVector expectedNormal = JVector.Normalize(new JVector(1, 1, 0));
-        JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * (0.5f + expectedFraction);
-        JVector expectedPointA = expectedPoint - sweep * fraction;
-        JVector expectedPointB = expectedPoint + 2.0f * sweep * fraction;
+        JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * (0.5f + expectedlambda);
+        JVector expectedPointA = expectedPoint - sweep * lambda;
+        JVector expectedPointB = expectedPoint + 2.0f * sweep * lambda;
 
         Assert.That((normal - expectedNormal).LengthSquared(), Is.LessThan(1e-4f));
         Assert.That((pA - expectedPointA).LengthSquared(), Is.LessThan(1e-4f));
         Assert.That((pB - expectedPointB).LengthSquared(), Is.LessThan(1e-4f));
-        Assert.That(MathF.Abs(fraction - expectedFraction), Is.LessThan(1e-4f));
+        Assert.That(MathF.Abs(lambda - expectedlambda), Is.LessThan(1e-4f));
     }
 
     [TestCase]

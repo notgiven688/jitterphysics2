@@ -83,15 +83,13 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out float lambda, out JVector normal)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
 
             normal = JVector.Zero;
-            fraction = float.PositiveInfinity;
-
-            float lambda = 0.0f;
+            lambda = 0.0f;
 
             JVector r = direction;
             JVector x = origin;
@@ -120,6 +118,7 @@ public static class NarrowPhase
 
                     if (VdotR >= -NumericEpsilon)
                     {
+                        lambda = float.PositiveInfinity;
                         return false;
                     }
 
@@ -141,8 +140,6 @@ public static class NarrowPhase
 
             converged:
 
-            fraction = lambda;
-
             float nlen2 = normal.LengthSquared();
 
             if (nlen2 > NumericEpsilon)
@@ -154,7 +151,7 @@ public static class NarrowPhase
         }
 
         public bool Sweep(ref MinkowskiDifference mkd, in JVector sweep,
-            out JVector p1, out JVector p2, out JVector normal, out float fraction)
+            out JVector p1, out JVector p2, out JVector normal, out float lambda)
         {
             const float CollideEpsilon = 1e-4f;
             const int MaxIter = 34;
@@ -166,7 +163,7 @@ public static class NarrowPhase
 
             JVector posB = mkd.PositionB;
 
-            fraction = 0.0f;
+            lambda = 0.0f;
 
             p1 = p2 = JVector.Zero;
 
@@ -192,13 +189,13 @@ public static class NarrowPhase
 
                     if (VdotR >= -1e-12f)
                     {
-                        fraction = float.PositiveInfinity;
+                        lambda = float.PositiveInfinity;
                         return false;
                     }
 
-                    fraction -= VdotW / VdotR;
+                    lambda -= VdotW / VdotR;
 
-                    mkd.PositionB = posB + fraction * r;
+                    mkd.PositionB = posB + lambda * r;
                     normal = v;
                 }
 
@@ -709,7 +706,7 @@ public static class NarrowPhase
     /// <param name="position">The position of the shape in world space.</param>
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
-    /// <param name="fraction">Specifies the hit point of the ray, calculated as 'origin + fraction * direction'.</param>
+    /// <param name="lambda">Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. If the ray does not
     /// hit, this parameter will be zero.
@@ -717,13 +714,13 @@ public static class NarrowPhase
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool RayCast(in ISupportMappable support, in JQuaternion orientation,
-        in JVector position, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+        in JVector position, in JVector origin, in JVector direction, out float lambda, out JVector normal)
     {
         // rotate the ray into the reference frame of bodyA..
         JVector tdirection = JVector.TransposedTransform(direction, orientation);
         JVector torigin = JVector.TransposedTransform(origin - position, orientation);
 
-        bool result = solver.RayCast(support, torigin, tdirection, out fraction, out normal);
+        bool result = solver.RayCast(support, torigin, tdirection, out lambda, out normal);
 
         // ..rotate back.
         JVector.Transform(normal, orientation, out normal);
@@ -737,16 +734,16 @@ public static class NarrowPhase
     /// <param name="support">The support function of the shape.</param>
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
-    /// <param name="fraction">Specifies the hit point of the ray, calculated as 'origin + fraction * direction'.</param>
+    /// <param name="lambda">Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. If the ray does not
     /// hit, this parameter will be zero.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float fraction, out JVector normal)
+    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float lambda, out JVector normal)
     {
-        return solver.RayCast(support, origin, direction, out fraction, out normal);
+        return solver.RayCast(support, origin, direction, out lambda, out normal);
     }
 
     /// <summary>
@@ -1068,14 +1065,14 @@ public static class NarrowPhase
     /// Zero if no hit is detected.</param>
     /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.
     /// Zero if no hit is detected.</param>
-    /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
+    /// <param name="lambda">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
+        out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
 
@@ -1092,7 +1089,7 @@ public static class NarrowPhase
         JVector.ConjugatedTransform(sweep, orientationA, out sweep);
 
         // ..perform toi calculation
-        bool res = solver.Sweep(ref mkd, sweep, out pointA, out pointB, out normal, out fraction);
+        bool res = solver.Sweep(ref mkd, sweep, out pointA, out pointB, out normal, out lambda);
 
         if (!res) return false;
 
@@ -1107,10 +1104,10 @@ public static class NarrowPhase
         // transform back from the relative velocities
 
         // This is where the collision will occur in world space:
-        //      pointA += fraction * sweepA;
-        //      pointB += fraction * sweepA; // sweepA is not a typo
+        //      pointA += lambda * sweepA;
+        //      pointB += lambda * sweepA; // sweepA is not a typo
 
-        pointB += fraction * (sweepA - sweepB);
+        pointB += lambda * (sweepA - sweepB);
 
         return true;
     }
@@ -1121,12 +1118,12 @@ public static class NarrowPhase
     /// </summary>
     /// <param name="pointA">Collision point on shapeA in world space. Zero if no hit is detected.</param>
     /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
-    /// <param name="fraction">Time of impact. Infinity if no hit is detected.</param>
+    /// <param name="lambda">Time of impact. Infinity if no hit is detected.</param>
     /// <returns>True if the shapes hit, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float fraction)
+        out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
 
@@ -1136,6 +1133,6 @@ public static class NarrowPhase
         mkd.OrientationB = orientationB;
 
         // ..perform toi calculation
-        return solver.Sweep(ref mkd, sweepB, out pointA, out pointB, out normal, out fraction);
+        return solver.Sweep(ref mkd, sweepB, out pointA, out pointB, out normal, out lambda);
     }
 }

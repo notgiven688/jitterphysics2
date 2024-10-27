@@ -38,7 +38,7 @@ public partial class DynamicTree
     public struct RayCastResult
     {
         public IDynamicTreeProxy Entity;
-        public float Fraction;
+        public float Lambda;
         public JVector Normal;
         public bool Hit;
     }
@@ -82,12 +82,12 @@ public partial class DynamicTree
     /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
     /// <param name="pre">Optional pre-filter which allows to skip shapes in the detection.</param>
     /// <param name="post">Optional post-filter which allows to skip detections.</param>
-    /// <param name="shape">The shape which was hit.</param>
+    /// <param name="proxy">The shape which was hit.</param>
     /// <param name="normal">The normal of the surface where the ray hits. Zero if ray does not hit.</param>
-    /// <param name="fraction">Distance from the origin to the ray hit point in units of the ray's directin.</param>
+    /// <param name="lambda">Distance from the origin to the ray hit point in units of the ray's direction.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
-        out IDynamicTreeProxy? shape, out JVector normal, out float fraction)
+        out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
     {
         Ray ray = new(origin, direction)
         {
@@ -95,27 +95,27 @@ public partial class DynamicTree
             FilterPost = post
         };
         var result = QueryRay(ray);
-        shape = result.Entity;
+        proxy = result.Entity;
         normal = result.Normal;
-        fraction = result.Fraction;
+        lambda = result.Lambda;
         return result.Hit;
     }
 
     /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)"/>
-    /// <param name="maxFraction">Maximum fraction of the ray's length to consider for intersections.</param>
-    public bool RayCast(JVector origin, JVector direction, float maxFraction, RayCastFilterPre? pre, RayCastFilterPost? post,
-        out IDynamicTreeProxy? shape, out JVector normal, out float fraction)
+    /// <param name="maxLambda">Maximum lambda of the ray's length to consider for intersections.</param>
+    public bool RayCast(JVector origin, JVector direction, float maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
+        out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
     {
         Ray ray = new(origin, direction)
         {
             FilterPre = pre,
             FilterPost = post,
-            Lambda = maxFraction
+            Lambda = maxLambda
         };
         var result = QueryRay(ray);
-        shape = result.Entity;
+        proxy = result.Entity;
         normal = result.Normal;
-        fraction = result.Fraction;
+        lambda = result.Lambda;
         return result.Hit;
     }
 
@@ -128,7 +128,7 @@ public partial class DynamicTree
         stack.Push(root);
 
         RayCastResult result = new();
-        result.Fraction = ray.Lambda;
+        result.Lambda = ray.Lambda;
 
         while (stack.Count > 0)
         {
@@ -143,10 +143,10 @@ public partial class DynamicTree
                 if (ray.FilterPre != null && !ray.FilterPre(node.Proxy)) continue;
 
                 Unsafe.SkipInit(out RayCastResult res);
-                res.Hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Fraction);
+                res.Hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
                 res.Entity = node.Proxy;
 
-                if (res.Hit && res.Fraction < result.Fraction)
+                if (res.Hit && res.Lambda < result.Lambda)
                 {
                     if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
                     result = res;
@@ -161,8 +161,8 @@ public partial class DynamicTree
             bool lres = lnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterl);
             bool rres = rnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterr);
 
-            if (enterl > result.Fraction) lres = false;
-            if (enterr > result.Fraction) rres = false;
+            if (enterl > result.Lambda) lres = false;
+            if (enterr > result.Lambda) rres = false;
 
             if (lres && rres)
             {
