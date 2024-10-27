@@ -26,7 +26,7 @@ public class Demo04 : IDemo
             BuildRagdoll(new JVector(0, 3 + 2 * i, 0));
         }
 
-        world.SolverIterations = 12;
+        world.SolverIterations = (8, 4);
     }
 
     public void Draw()
