@@ -405,20 +405,29 @@ public partial class DynamicTree
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
     /// </summary>
-    /// <param name="sweeps">The number of optimization iterations to perform. The default value is 100.</param>
-    public void Optimize(int sweeps = 100)
+    /// <param name="sweeps">The number of times to iterate over all proxies in the tree. Must be greater than zero.</param>
+    /// <param name="chance">The chance of a proxy to be removed and re-added to the tree for each sweep. Must be between 0 and 1.</param>
+    public void Optimize(int sweeps = 100, float chance = 0.01f)
     {
         optimizeRandom ??= new Random(0);
+        Optimize(optimizeRandom, sweeps, chance);
+    }
+
+    /// <inheritdoc cref="Optimize(int, float)" />
+    /// <param name="random">Provide an instance of a random class.</param>
+    public void Optimize(Random random, int sweeps, float chance)
+    {
+        if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
+        if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
 
         Stack<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
             for (int i = 0; i < proxies.Count; i++)
             {
+                if (random.NextDouble() > chance) continue;
+
                 var proxy = proxies[i];
-
-                if (optimizeRandom.NextDouble() > 0.01d) continue;
-
                 temp.Push(proxy);
                 InternalRemoveProxy(proxy);
             }
