@@ -137,6 +137,8 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     public int Count { get; private set; }
 
+    public Span<T> AsSpan() => this.elements.AsSpan(0, Count);
+
     public void Add(T element, bool active = false)
     {
         Debug.Assert(element.ListIndex == -1);
