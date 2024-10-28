@@ -434,7 +434,7 @@ public partial class Program : Node3D
 		world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
 		world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
 
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			AddI(0, (5 * i + 0) * 30, 0);
 			AddL(0, (5 * i + 1) * 30, 0);
@@ -443,7 +443,7 @@ public partial class Program : Node3D
 			AddO(0, (5 * i + 4) * 30, 0);
 		}
 
-		world.NumberSubsteps = 4;
+		world.SubstepCount = 4;
 		world.SolverIterations = (4, 1);
 	}
 
