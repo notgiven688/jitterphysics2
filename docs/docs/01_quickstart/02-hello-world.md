@@ -57,7 +57,7 @@ SetMaterialTexture(ref boxMat, MaterialMapIndex.Diffuse, texture);
 
 // initialize the Jitter physics world
 World world = new ();
-world.NumberSubsteps = 4;
+world.SubstepCount = 4;
 
 // add a body representing the plane
 RigidBody planeBody = world.CreateRigidBody();
