@@ -6,9 +6,9 @@ sidebar_position: 5
 
 ### Jitter 2.4.6 (10-28-2024)
 
-- **Breaking Change:** Jitter world is now constructed using World.Capacity
-- **Breaking Change:** World.RayCast moved to World.DynamicTree.RayCast
-- **Breaking Change:** Renamed NumberSubsteps to SubstepCount
+- **Breaking Change:** Jitter world is now constructed using World.Capacity.
+- **Breaking Change:** World.RayCast moved to World.DynamicTree.RayCast.
+- **Breaking Change:** Renamed NumberSubsteps to SubstepCount.
 - Added split impulses. **Breaking Change:** SolverIterations property is now a tuple.
 - Several smaller improvements in the API.
 
