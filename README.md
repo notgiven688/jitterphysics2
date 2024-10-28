@@ -55,12 +55,6 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 
 Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 
-## ToDo
-
-- [x] Develop and distribute NuGet packages and releases.
-- [x] Stabilize the engine and demo.
-- [ ] Expand the documentation to cover more topics and functionalities.
-
 ## Credits
 
 Grateful acknowledgment to Erin Catto, Dirk Gregorius, Erwin Coumans, Gino van den Bergen, Daniel Chappuis, Marijn Tamis, Danny Chapman, Gary Snethen, and Christer Ericson for sharing their knowledge through forum posts, talks, code, papers, and books.
