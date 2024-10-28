@@ -444,7 +444,7 @@ public partial class Program : Node3D
 		}
 
 		world.NumberSubsteps = 4;
-		world.SolverIterations = 4;
+		world.SolverIterations = (4, 1);
 	}
 
 	public override void _Process(double delta)
