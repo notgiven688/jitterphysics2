@@ -158,8 +158,8 @@ public partial class DynamicTree
         if (multiThread)
         {
             const int taskThreshold = 24;
-            int numTasks = Math.Clamp(proxies.Active / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
-            Parallel.ForBatch(0, proxies.Active, numTasks, scanOverlapsPre);
+            int numTasks = Math.Clamp(proxies.ActiveCount / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
+            Parallel.ForBatch(0, proxies.ActiveCount, numTasks, scanOverlapsPre);
 
             SetTime(Timings.ScanOverlapsPre);
 
@@ -180,13 +180,13 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            Parallel.ForBatch(0, proxies.Active, numTasks, scanOverlapsPost);
+            Parallel.ForBatch(0, proxies.ActiveCount, numTasks, scanOverlapsPost);
 
             SetTime(Timings.ScanOverlapsPost);
         }
         else
         {
-            scanOverlapsPre(new Parallel.Batch(0, proxies.Active));
+            scanOverlapsPre(new Parallel.Batch(0, proxies.ActiveCount));
             SetTime(Timings.ScanOverlapsPre);
 
             var sl = lists[0];
@@ -199,7 +199,7 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            scanOverlapsPost(new Parallel.Batch(0, proxies.Active));
+            scanOverlapsPost(new Parallel.Batch(0, proxies.ActiveCount));
             SetTime(Timings.ScanOverlapsPost);
         }
     }

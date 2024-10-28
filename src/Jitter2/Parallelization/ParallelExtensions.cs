@@ -97,10 +97,10 @@ public static class ParallelExtensions
     public static int ParallelForBatch<T>(this ActiveList<T> list, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : class, IListIndex
     {
-        int numTasks = list.Active / taskThreshold + 1;
+        int numTasks = list.ActiveCount / taskThreshold + 1;
         numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
 
-        Parallel.ForBatch(0, list.Active, numTasks, action, execute);
+        Parallel.ForBatch(0, list.ActiveCount, numTasks, action, execute);
 
         return numTasks;
     }

@@ -64,7 +64,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     private T* memory;
     private T** handles;
 
-    private int active;
+    private int activeCount;
 
     private int size;
 
@@ -121,12 +121,12 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     /// <summary>
     /// A span for all elements marked as active.
     /// </summary>
-    public Span<T> Active => new(memory, active);
+    public Span<T> Active => new(memory, activeCount);
 
     /// <summary>
     /// A span for all elements marked as inactive.
     /// </summary>
-    public Span<T> Inactive => new(&memory[active], Count - active);
+    public Span<T> Inactive => new(&memory[activeCount], Count - activeCount);
 
     /// <summary>
     /// A span for all elements.
@@ -149,7 +149,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     public bool IsActive(JHandle<T> handle)
     {
         Debug.Assert(*handle.Pointer - memory < Count);
-        return (nint)(*handle.Pointer) - (nint)memory < active * sizeof(T);
+        return (nint)(*handle.Pointer) - (nint)memory < activeCount * sizeof(T);
     }
 
     /// <summary>
@@ -159,11 +159,11 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     {
         Debug.Assert(*handle.Pointer - memory < Count);
 
-        if ((nint)(*handle.Pointer) - (nint)memory < active * sizeof(T)) return;
-        (**handle.Pointer, memory[active]) = (memory[active], **handle.Pointer);
+        if ((nint)(*handle.Pointer) - (nint)memory < activeCount * sizeof(T)) return;
+        (**handle.Pointer, memory[activeCount]) = (memory[activeCount], **handle.Pointer);
         handles[Unsafe.Read<int>(*handle.Pointer)] = *handle.Pointer;
-        handles[Unsafe.Read<int>(&memory[active])] = &memory[active];
-        active += 1;
+        handles[Unsafe.Read<int>(&memory[activeCount])] = &memory[activeCount];
+        activeCount += 1;
     }
 
     /// <summary>
@@ -171,12 +171,12 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     /// </summary>
     public void MoveToInactive(JHandle<T> handle)
     {
-        if ((nint)(*handle.Pointer) - (nint)memory >= active * sizeof(T)) return;
+        if ((nint)(*handle.Pointer) - (nint)memory >= activeCount * sizeof(T)) return;
 
-        active -= 1;
-        (**handle.Pointer, memory[active]) = (memory[active], **handle.Pointer);
+        activeCount -= 1;
+        (**handle.Pointer, memory[activeCount]) = (memory[activeCount], **handle.Pointer);
         handles[Unsafe.Read<int>(*handle.Pointer)] = *handle.Pointer;
-        handles[Unsafe.Read<int>(&memory[active])] = &memory[active];
+        handles[Unsafe.Read<int>(&memory[activeCount])] = &memory[activeCount];
     }
 
     /// <summary>

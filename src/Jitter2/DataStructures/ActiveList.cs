@@ -42,7 +42,7 @@ public readonly struct ReadOnlyActiveList<T> : IEnumerable<T> where T : class, I
         this.list = list;
     }
 
-    public int Active => list.Active;
+    public int Active => list.ActiveCount;
     public int Count => list.Count;
 
     public T this[int i] => list[i];
@@ -114,18 +114,14 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
 
     private T[] elements;
 
-    public int Active { get; private set; }
+    public int ActiveCount { get; private set; }
 
     public ActiveList(int initialSize = 1024)
     {
         elements = new T[initialSize];
     }
 
-    public T this[int i]
-    {
-        get => elements[i];
-        set => elements[i] = value;
-    }
+    public T this[int i] => elements[i];
 
     public void Clear()
     {
@@ -136,7 +132,7 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         }
 
         Count = 0;
-        Active = 0;
+        ActiveCount = 0;
     }
 
     public int Count { get; private set; }
@@ -170,7 +166,7 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         Debug.Assert(element.ListIndex != -1);
         Debug.Assert(elements[element.ListIndex] == element);
 
-        return (element.ListIndex < Active);
+        return (element.ListIndex < ActiveCount);
     }
 
     public bool MoveToActive(T element)
@@ -178,9 +174,9 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         Debug.Assert(element.ListIndex != -1);
         Debug.Assert(elements[element.ListIndex] == element);
 
-        if (element.ListIndex < Active) return false;
-        Swap(Active, element.ListIndex);
-        Active += 1;
+        if (element.ListIndex < ActiveCount) return false;
+        Swap(ActiveCount, element.ListIndex);
+        ActiveCount += 1;
         return true;
     }
 
@@ -189,9 +185,9 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         Debug.Assert(element.ListIndex != -1);
         Debug.Assert(elements[element.ListIndex] == element);
 
-        if (element.ListIndex >= Active) return false;
-        Active -= 1;
-        Swap(Active, element.ListIndex);
+        if (element.ListIndex >= ActiveCount) return false;
+        ActiveCount -= 1;
+        Swap(ActiveCount, element.ListIndex);
         return true;
     }
 
