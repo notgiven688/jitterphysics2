@@ -61,6 +61,12 @@ Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
 - [x] Stabilize the engine and demo.
 - [ ] Expand the documentation to cover more topics and functionalities.
 
+## Credits
+
+Grateful acknowledgment to Erin Catto, Dirk Gregorius, Erwin Coumans, Gino van den Bergen, Daniel Chappuis, Marijn Tamis, Danny Chapman, Gary Snethen, and Christer Ericson for sharing their knowledge through forum posts, talks, code, papers, and books.
+
+Special thanks also to the contributors of the predecessor projects JigLibX and Jitter.
+
 ## Contribute 👋
 
 Contributions of all forms are welcome! Feel free to fork the project and create a pull request.
