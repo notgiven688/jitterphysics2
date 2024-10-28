@@ -33,32 +33,32 @@ public class SequentialTests
         ActiveList<Number> ts = new();
 
         Assert.That(ts.Count, Is.EqualTo(0));
-        Assert.That(ts.Active, Is.EqualTo(0));
+        Assert.That(ts.ActiveCount, Is.EqualTo(0));
 
         ts.Add(num5);
 
         Assert.That(ts.Count, Is.EqualTo(1));
-        Assert.That(ts.Active, Is.EqualTo(0));
+        Assert.That(ts.ActiveCount, Is.EqualTo(0));
 
         ts.MoveToInactive(num5);
 
         Assert.That(ts.Count, Is.EqualTo(1));
-        Assert.That(ts.Active, Is.EqualTo(0));
+        Assert.That(ts.ActiveCount, Is.EqualTo(0));
 
         ts.MoveToActive(num5);
 
         Assert.That(ts.Count, Is.EqualTo(1));
-        Assert.That(ts.Active, Is.EqualTo(1));
+        Assert.That(ts.ActiveCount, Is.EqualTo(1));
 
         ts.Remove(num5);
 
         Assert.That(ts.Count, Is.EqualTo(0));
-        Assert.That(ts.Active, Is.EqualTo(0));
+        Assert.That(ts.ActiveCount, Is.EqualTo(0));
 
         ts.Add(num5, true);
 
         Assert.That(ts.Count, Is.EqualTo(1));
-        Assert.That(ts.Active, Is.EqualTo(1));
+        Assert.That(ts.ActiveCount, Is.EqualTo(1));
 
         ts.Add(num1);
         ts.Add(num2);
@@ -66,7 +66,7 @@ public class SequentialTests
         ts.Add(num4);
 
         Assert.That(ts.Count, Is.EqualTo(5));
-        Assert.That(ts.Active, Is.EqualTo(1));
+        Assert.That(ts.ActiveCount, Is.EqualTo(1));
 
         ts.MoveToActive(num2);
         ts.MoveToActive(num1);
@@ -75,10 +75,10 @@ public class SequentialTests
         ts.MoveToInactive(num5);
 
         Assert.That(ts.Count, Is.EqualTo(4));
-        Assert.That(ts.Active, Is.EqualTo(2));
+        Assert.That(ts.ActiveCount, Is.EqualTo(2));
 
         List<Number> elements = new();
-        for (int i = 0; i < ts.Active; i++)
+        for (int i = 0; i < ts.ActiveCount; i++)
         {
             elements.Add(ts[i]);
         }

@@ -470,7 +470,7 @@ public partial class World
         }
         else
         {
-            Parallel.Batch batch = new(0, bodies.Active);
+            Parallel.Batch batch = new(0, bodies.ActiveCount);
             UpdateBodiesCallback(batch);
         }
     }
@@ -763,7 +763,7 @@ public partial class World
 
     private void CheckDeactivation()
     {
-        for (int i = 0; i < islands.Active; i++)
+        for (int i = 0; i < islands.ActiveCount; i++)
         {
             Island island = islands[i];
 
