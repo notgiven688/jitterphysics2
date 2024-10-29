@@ -43,7 +43,7 @@ public class TransformedShape : RigidBodyShape
 
     /// <summary>
     /// Constructs a transformed shape through an affine transformation define by
-    /// a linear map and a translation. 
+    /// a linear map and a translation.
     /// </summary>
     /// <param name="shape">The original shape which should be transformed.</param>
     /// <param name="translation">Shape is translated by this vector.</param>
@@ -79,7 +79,8 @@ public class TransformedShape : RigidBodyShape
     {
         if (MathHelper.IsRotationMatrix(transformation))
         {
-            type = MathHelper.UnsafeIsZero(transformation - JMatrix.Identity) ? TransformationType.Identity : TransformationType.Rotation;
+            JMatrix delta = transformation - JMatrix.Identity;
+            type = MathHelper.UnsafeIsZero(ref delta) ? TransformationType.Identity : TransformationType.Rotation;
         }
         else
         {
