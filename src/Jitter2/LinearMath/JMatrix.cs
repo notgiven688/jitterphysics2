@@ -194,10 +194,9 @@ public struct JMatrix
         float c = (float)Math.Cos(radians);
         float s = (float)Math.Sin(radians);
 
-        // [  1  0  0  0 ]
-        // [  0  c -s  0 ]
-        // [  0  s  c  0 ]
-        // [  0  0  0  1 ]
+        // [  1  0  0  ]
+        // [  0  c -s  ]
+        // [  0  s  c  ]
         result.M22 = c;
         result.M23 = -s;
         result.M32 = s;
@@ -213,10 +212,9 @@ public struct JMatrix
         float c = (float)Math.Cos(radians);
         float s = (float)Math.Sin(radians);
 
-        // [  c  0  s  0 ]
-        // [  0  1  0  0 ]
-        // [ -s  0  c  0 ]
-        // [  0  0  0  1 ]
+        // [  c  0  s  ]
+        // [  0  1  0  ]
+        // [ -s  0  c  ]
         result.M11 = c;
         result.M13 = s;
         result.M31 = -s;
@@ -232,10 +230,9 @@ public struct JMatrix
         float c = (float)Math.Cos(radians);
         float s = (float)Math.Sin(radians);
 
-        // [  c -s  0  0 ]
-        // [  s  c  0  0 ]
-        // [  0  0  1  0 ]
-        // [  0  0  0  1 ]
+        // [  c -s  0  ]
+        // [  s  c  0  ]
+        // [  0  0  1  ]
         result.M11 = c;
         result.M12 = -s;
         result.M21 = s;
