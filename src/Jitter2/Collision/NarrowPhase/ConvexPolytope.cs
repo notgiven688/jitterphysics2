@@ -327,6 +327,7 @@ public unsafe struct ConvexPolytope
     /// the return value of this method.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
+    [System.Runtime.CompilerServices.SkipLocalsInit]
     public bool AddVertex(in Vertex vertex)
     {
         Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");

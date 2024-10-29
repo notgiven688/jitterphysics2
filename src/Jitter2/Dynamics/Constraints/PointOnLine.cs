@@ -139,6 +139,7 @@ public unsafe class PointOnLine : Constraint
         }
     }
 
+    [System.Runtime.CompilerServices.SkipLocalsInit]
     public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
@@ -277,6 +278,7 @@ public unsafe class PointOnLine : Constraint
         set => handle.Data.LimitBias = value;
     }
 
+    [System.Runtime.CompilerServices.SkipLocalsInit]
     public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
