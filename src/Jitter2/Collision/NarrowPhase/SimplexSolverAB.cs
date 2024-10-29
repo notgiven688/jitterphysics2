@@ -187,13 +187,13 @@ public unsafe struct SimplexSolverAB
         }
 
         float detT = Determinant(v0.V, v1.V, v2.V, v3.V);
-        float idetT = 1.0f / detT;
+        float inverseDetT = 1.0f / detT;
 
         bool degenerate = detT * detT < Epsilon;
 
-        float lambda0 = Determinant(JVector.Zero, v1.V, v2.V, v3.V) * idetT;
-        float lambda1 = Determinant(v0.V, JVector.Zero, v2.V, v3.V) * idetT;
-        float lambda2 = Determinant(v0.V, v1.V, JVector.Zero, v3.V) * idetT;
+        float lambda0 = Determinant(JVector.Zero, v1.V, v2.V, v3.V) * inverseDetT;
+        float lambda1 = Determinant(v0.V, JVector.Zero, v2.V, v3.V) * inverseDetT;
+        float lambda2 = Determinant(v0.V, v1.V, JVector.Zero, v3.V) * inverseDetT;
         float lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
 
         float bestDistance = float.MaxValue;
