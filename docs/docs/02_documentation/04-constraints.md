@@ -68,7 +68,7 @@ For most constraints a softness and bias value can be set.
 These values define how strict the constraint limits are enforced.
 Softer constraints might improve simulation stability but do not fully enforce the constraint limits.
 The softness and bias parameters can be tweaked for optimal results.
-Better constraint behaviour can also be archived by sub-stepping, see [world.Step](/docs/documentation/01world).
+Better constraint behaviour can also be archived by sub-stepping, see [world.Step](/docs/documentation/world).
 
 ### Enable/Disable constraints
 
