@@ -458,7 +458,7 @@ public partial class World
         {
             if (body.IsStatic)
             {
-                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(body.Data.InverseInertiaWorld));
+                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
                 System.Diagnostics.Debug.Assert(body.Data.InverseMass == 0.0f);
             }
         }
