@@ -606,14 +606,9 @@ public partial class World
             {
                 int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-                if (memContacts.Active(color).Length == 0) break;
-
-                var span = memContacts.Active(color);
-                Parallel.ForColoredBatch(0, span.Length, 6, color, prepareContacts, false);
-
-                //memContacts.Active(color).ParallelForBatch(taskThreshold, color, prepareContacts, false);
-                //memConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareConstraints, false);
-                //memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareSmallConstraints, false);
+                memContacts.Active(color).ParallelForBatch(taskThreshold, color, prepareContacts, false);
+                memConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareConstraints, false);
+                memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareSmallConstraints, false);
                 ThreadPool.Instance.Execute();
             }
 
@@ -621,16 +616,11 @@ public partial class World
             {
                 for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
                 {
-                    if (memContacts.Active(color).Length == 0) break;
-
                     int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-                    var span = memContacts.Active(color);
-                    Parallel.ForColoredBatch(0, span.Length, 6, color, iterateContacts, false);
-
-                    //memContacts.Active(color).ParallelForBatch(taskThreshold, color, iterateContacts, false);
-                    //memConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateConstraints, false);
-                    //memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateSmallConstraints, false);
+                    memContacts.Active(color).ParallelForBatch(taskThreshold, color, iterateContacts, false);
+                    memConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateConstraints, false);
+                    memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateSmallConstraints, false);
                     ThreadPool.Instance.Execute();
                 }
             }
