@@ -273,15 +273,12 @@ public partial class World
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memContacts.Active[batch.Start..batch.End];
+        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
             ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
 
-            LockTwoBody(ref b1, ref b2);
 
             // Why step_dt and not substep_dt?
             // The contact uses the time to calculate the bias from dt:
@@ -291,7 +288,6 @@ public partial class World
             // Since collision detection is happening at a rate of step_dt
             // and not substep_dt the penetration magnitude can be large.
             c.PrepareForIteration(istep_dt);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
@@ -299,7 +295,7 @@ public partial class World
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memSmallConstraints.Active[batch.Start..batch.End];
+        var span = memSmallConstraints.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -311,9 +307,7 @@ public partial class World
 
             Debug.Assert(!b1.IsStatic || !b2.IsStatic);
 
-            LockTwoBody(ref b1, ref b2);
             constraint.PrepareForIteration(ref constraint, istep_dt);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
@@ -321,7 +315,7 @@ public partial class World
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memSmallConstraints.Active[batch.Start..batch.End];
+        var span = memSmallConstraints.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -331,9 +325,7 @@ public partial class World
 
             if (constraint.Iterate == null) continue;
 
-            LockTwoBody(ref b1, ref b2);
             constraint.Iterate(ref constraint, istep_dt);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
@@ -341,21 +333,13 @@ public partial class World
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memConstraints.Active[batch.Start..batch.End];
+        var span = memConstraints.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
             ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
             if (constraint.PrepareForIteration == null) continue;
-
-            Debug.Assert(!b1.IsStatic || !b2.IsStatic);
-
-            LockTwoBody(ref b1, ref b2);
             constraint.PrepareForIteration(ref constraint, istep_dt);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
@@ -363,53 +347,39 @@ public partial class World
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memConstraints.Active[batch.Start..batch.End];
+        var span = memConstraints.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
             ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
             if (constraint.Iterate == null) continue;
-
-            LockTwoBody(ref b1, ref b2);
             constraint.Iterate(ref constraint, istep_dt);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
     private void IterateContactsCallback(Parallel.Batch batch)
     {
-        var span = memContacts.Active[batch.Start..batch.End];
+        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
             ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            LockTwoBody(ref b1, ref b2);
             c.Iterate(true);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
+
 
     private void RelaxVelocitiesCallback(Parallel.Batch batch)
     {
-        var span = memContacts.Active[batch.Start..batch.End];
+        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
             ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            LockTwoBody(ref b1, ref b2);
             c.Iterate(false);
-            UnlockTwoBody(ref b1, ref b2);
         }
     }
+
 
     private void DetectCollisionsCallback(Parallel.Batch batch)
     {
@@ -487,6 +457,8 @@ public partial class World
                 AddToActiveList(arb.Body1.island);
                 AddToActiveList(arb.Body2.island);
 
+                UnColor(ref arb.Body1.Data, ref arb.Body2.Data, memContacts.GetColor(handle));
+
                 memContacts.Free(handle);
                 IslandHelper.ArbiterRemoved(islands, arb);
                 arbiters.Remove(handle.Data.Key);
@@ -504,7 +476,7 @@ public partial class World
 
     private void UpdateContactsCallback(Parallel.Batch batch)
     {
-        var span = memContacts.Active[batch.Start..batch.End];
+        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -538,60 +510,6 @@ public partial class World
         }
 
         deferredArbiters.Clear();
-    }
-
-    /// <summary>
-    /// Spin-wait loop to prevent accessing a body from multiple threads.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void LockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
-    {
-        if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
-        {
-            if (!b1.IsStatic)
-                while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
-                {
-                    Thread.SpinWait(10);
-                }
-
-            if (!b2.IsStatic)
-                while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
-                {
-                    Thread.SpinWait(10);
-                }
-        }
-        else
-        {
-            if (!b2.IsStatic)
-                while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
-                {
-                    Thread.SpinWait(10);
-                }
-
-            if (!b1.IsStatic)
-                while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
-                {
-                    Thread.SpinWait(10);
-                }
-        }
-    }
-
-    /// <summary>
-    /// Spin-wait loop to prevent accessing a body from multiple threads.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void UnlockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
-    {
-        if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
-        {
-            if (!b2.IsStatic) Interlocked.Decrement(ref b2._lockFlag);
-            if (!b1.IsStatic) Interlocked.Decrement(ref b1._lockFlag);
-        }
-        else
-        {
-            if (!b1.IsStatic) Interlocked.Decrement(ref b1._lockFlag);
-            if (!b2.IsStatic) Interlocked.Decrement(ref b2._lockFlag);
-        }
     }
 
     private void IntegrateForcesCallback(Parallel.Batch batch)
@@ -652,60 +570,83 @@ public partial class World
         }
     }
 
+
     private void RelaxVelocities(bool multiThread, int iterations)
     {
         if (multiThread)
         {
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, relaxVelocities);
+                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                {
+                    currentColor = color;
+                    int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 64;
+                    memContacts.Active(color).ParallelForBatch(taskThreshold, relaxVelocities, true);
+                }
             }
         }
         else
         {
-            var batchContacts = new Parallel.Batch(0, memContacts.Active.Length);
-
             for (int iter = 0; iter < iterations; iter++)
             {
-                RelaxVelocitiesCallback(batchContacts);
+                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                {
+                    currentColor = color;
+                    RelaxVelocitiesCallback(new (0, memContacts.Active(color).Length));
+                }
             }
         }
     }
+
 
     private void Solve(bool multiThread, int iterations)
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(64, prepareContacts, false);
-            memConstraints.ParallelForBatch(64, prepareConstraints, false);
-            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
+            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            {
+                currentColor = color;
+                int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-            ThreadPool.Instance.Execute();
+                memContacts.Active(color).ParallelForBatch(taskThreshold, prepareContacts, false);
+                memConstraints.Active(color).ParallelForBatch(taskThreshold, prepareConstraints, false);
+                memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, prepareSmallConstraints, false);
+                ThreadPool.Instance.Execute();
+            }
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, iterateContacts, false);
-                memConstraints.ParallelForBatch(64, iterateConstraints, false);
-                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
+                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                {
+                    currentColor = color;
+                    int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-                ThreadPool.Instance.Execute();
+                    memContacts.Active(color).ParallelForBatch(taskThreshold, iterateContacts, false);
+                    memConstraints.Active(color).ParallelForBatch(taskThreshold, iterateConstraints, false);
+                    memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, iterateSmallConstraints, false);
+                    ThreadPool.Instance.Execute();
+                }
             }
         }
         else
         {
-            Parallel.Batch batchContacts = new(0, memContacts.Active.Length);
-            Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
-            Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
-
-            PrepareContactsCallback(batchContacts);
-            PrepareConstraintsCallback(batchConstraints);
-            PrepareSmallConstraintsCallback(batchSmallConstraints);
+            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            {
+                currentColor = color;
+                PrepareContactsCallback(new (0, memContacts.Active(color).Length));
+                PrepareConstraintsCallback(new (0, memConstraints.Active(color).Length));
+                PrepareSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length));
+            }
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                IterateContactsCallback(batchContacts);
-                IterateConstraintsCallback(batchConstraints);
-                IterateSmallConstraintsCallback(batchSmallConstraints);
+                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                {
+                    currentColor = color;
+                    IterateContactsCallback(new (0, memContacts.Active(color).Length));
+                    IterateConstraintsCallback(new (0, memConstraints.Active(color).Length));
+                    IterateSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length));
+                }
             }
         }
     }
@@ -714,12 +655,20 @@ public partial class World
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(256, updateContacts);
+            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            {
+                currentColor = color;
+                int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 256;
+                memContacts.Active(color).ParallelForBatch(taskThreshold, updateContacts, true);
+            }
         }
         else
         {
-            Parallel.Batch batch = new(0, memContacts.Active.Length);
-            UpdateContactsCallback(batch);
+            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            {
+                currentColor = color;
+                UpdateContactsCallback(new (0, memContacts.Active(color).Length));
+            }
         }
     }
 

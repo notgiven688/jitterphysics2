@@ -75,6 +75,7 @@ public partial class Playground : RenderWindow
             }
         }
 
+        /*
         if (debugDrawContacts)
         {
             var contacts = World.RawData.ActiveContacts;
@@ -98,5 +99,6 @@ public partial class Playground : RenderWindow
                 if ((cq.UsageMask & ContactData.MaskContact3) != 0) DrawContact(cq, cq.Contact3);
             }
         }
+        */
     }
 }

@@ -185,7 +185,7 @@ public partial class Playground : RenderWindow
 
             foreach (var shape in body.Shapes)
             {
-                var color = ColorGenerator.GetColor(shape.GetHashCode());
+                var color = ColorGenerator.GetColor((int)shape.RigidBody.Data.Color);
 
                 if (shape.RigidBody == null) break;
 

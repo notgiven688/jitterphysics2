@@ -29,6 +29,7 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
+using Jitter2.UnmanagedMemory;
 
 namespace Jitter2;
 
@@ -406,6 +407,36 @@ public partial class World
         }
     }
 
+    private int Color(ref RigidBodyData b1, ref RigidBodyData b2)
+    {
+        uint colorA = b1.Color;
+        uint colorB = b2.Color;
+
+        for (int i = 0; i < UnmanagedColoredActiveList<ContactData>.ColorCount - 1; i++)
+        {
+            uint color = 1u << i;
+
+            if (!b1.IsStatic && (colorA & color) != 0) continue;
+            if (!b2.IsStatic && (colorB & color) != 0) continue;
+
+            if (!b1.IsStatic) b1.Color |= color;
+            if (!b2.IsStatic) b2.Color |= color;
+
+            return i;
+        }
+
+        return UnmanagedColoredActiveList<ContactData>.ColorCount - 1;
+    }
+
+    private void UnColor(ref RigidBodyData b1, ref RigidBodyData b2, int color)
+    {
+        if (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) return;
+
+        uint nColor = ~(uint)(1u << color);
+        if (!b1.IsStatic) b1.Color &= nColor;
+        if (!b2.IsStatic) b2.Color &= nColor;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {
@@ -424,7 +455,9 @@ public partial class World
 
                 deferredArbiters.Add(arb);
 
-                var h = memContacts.Allocate(true);
+                int color = Color(ref b0.Data, ref b1.Data);
+
+                var h = memContacts.Allocate(color, true);
                 arb.Handle = h;
                 h.Data.Init(b0, b1);
                 h.Data.Key = arbiterKey;

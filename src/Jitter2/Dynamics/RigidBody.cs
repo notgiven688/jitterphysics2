@@ -37,7 +37,6 @@ namespace Jitter2.Dynamics;
 public struct RigidBodyData
 {
     public int _index;
-    public int _lockFlag;
 
     public JVector Position;
     public JVector Velocity;
@@ -52,6 +51,8 @@ public struct RigidBodyData
     public float InverseMass;
     public bool IsActive;
     public bool IsStatic;
+
+    public uint Color;
 
     public readonly bool IsStaticOrInactive => !IsActive || IsStatic;
 }
@@ -240,8 +241,6 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         h ^= h >> 15;
 
         hashCode = unchecked((int)h);
-
-        Data._lockFlag = 0;
     }
 
     /// <summary>

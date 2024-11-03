@@ -69,6 +69,17 @@ public static class ParallelExtensions
         return numTasks;
     }
 
+    public static int ParallelForBatch<T>(this Span<T> span, int taskThreshold,
+        Action<Parallel.Batch> action, bool execute = true) where T : unmanaged
+    {
+        int numTasks = span.Length / taskThreshold + 1;
+        numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
+
+        Parallel.ForBatch(0, span.Length, numTasks, action, execute);
+
+        return numTasks;
+    }
+
     /// <summary>
     /// Loop in batches over the active elements of the <see cref="ReadOnlyActiveList{T}"/>.
     /// </summary>

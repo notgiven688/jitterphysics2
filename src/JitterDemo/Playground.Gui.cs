@@ -3,6 +3,8 @@ using System.Linq;
 using System.Text;
 using Jitter2;
 using Jitter2.Collision;
+using Jitter2.Dynamics;
+using Jitter2.UnmanagedMemory;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.DearImGui;
 using JitterDemo.Renderer.OpenGL;
@@ -76,6 +78,11 @@ public partial class Playground : RenderWindow
 
         ImGui.Text($"{fps} fps", new Vector4(1, 1, 0, 1));
 
+        for (int i = 0; i < UnmanagedColoredActiveList<ContactData>.ColorCount; i++)
+        {
+            ImGui.Text($"#{i}: {world.memContacts.Active(i).Length} {world.memConstraints.Active(i).Length} {world.memSmallConstraints.Active(i).Length}", new Vector4(1, 1, 0, 1));
+        }
+
         if (ImGui.BeginMenu("Select Demo Scene", true))
         {
             for (int i = 0; i < demos.Count; i++)
@@ -119,9 +126,9 @@ public partial class Playground : RenderWindow
 
             AddRow("Islands", $"{World.Islands.Count}", $"{World.Islands.Active}");
             AddRow("Bodies", $"{data.RigidBodies.Length}", $"{data.ActiveRigidBodies.Length}");
-            AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
-            AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
-            AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
+            //AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
+            //AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
+            //AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
             AddRow("Proxies", $"{World.DynamicTree.Proxies.Count}", $"{World.DynamicTree.Proxies.Active}");
 
             ImGui.EndTable();

@@ -64,32 +64,21 @@ public partial class World
         /// Returns the total amount of unmanaged memory allocated in bytes.
         /// </summary>
         public long TotalBytesAllocated =>
-            world.memRigidBodies.TotalBytesAllocated +
-            world.memContacts.TotalBytesAllocated +
-            world.memConstraints.TotalBytesAllocated +
-            world.memSmallConstraints.TotalBytesAllocated;
+            world.memRigidBodies.TotalBytesAllocated;
 
         public readonly Span<RigidBodyData> ActiveRigidBodies => world.memRigidBodies.Active;
         public readonly Span<RigidBodyData> InactiveRigidBodies => world.memRigidBodies.Inactive;
         public readonly Span<RigidBodyData> RigidBodies => world.memRigidBodies.Elements;
 
-        public readonly Span<ContactData> ActiveContacts => world.memContacts.Active;
-        public readonly Span<ContactData> InactiveContacts => world.memContacts.Inactive;
-        public readonly Span<ContactData> Contacts => world.memContacts.Elements;
 
-        public readonly Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
-        public readonly Span<ConstraintData> InactiveConstraints => world.memConstraints.Inactive;
-        public readonly Span<ConstraintData> Constraints => world.memConstraints.Elements;
 
-        public readonly Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
-        public readonly Span<SmallConstraintData> InactiveSmallConstraints => world.memSmallConstraints.Inactive;
-        public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
 
-    private readonly UnmanagedActiveList<ContactData> memContacts;
+    public readonly UnmanagedColoredActiveList<ContactData> memContacts;
+    public readonly UnmanagedColoredActiveList<ConstraintData> memConstraints;
+    public readonly UnmanagedColoredActiveList<SmallConstraintData> memSmallConstraints;
+
     private readonly UnmanagedActiveList<RigidBodyData> memRigidBodies;
-    private readonly UnmanagedActiveList<ConstraintData> memConstraints;
-    private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
 
     public delegate void WorldStep(float dt);
 
@@ -231,6 +220,7 @@ public partial class World
     private volatile int solverIterations = 6;
     private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
+    private volatile int currentColor = 0;
 
     private volatile float substep_dt = 1.0f / 100.0f;
     private volatile float step_dt = 1.0f / 100.0f;
@@ -257,9 +247,9 @@ public partial class World
     public World(Capacity capacity)
     {
         memRigidBodies = new UnmanagedActiveList<RigidBodyData>(capacity.BodyCount);
-        memContacts = new UnmanagedActiveList<ContactData>(capacity.ContactCount);
-        memConstraints = new UnmanagedActiveList<ConstraintData>(capacity.ConstraintCount);
-        memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
+        memContacts = new UnmanagedColoredActiveList<ContactData>(capacity.ContactCount);
+        memConstraints = new UnmanagedColoredActiveList<ConstraintData>(capacity.ConstraintCount);
+        memSmallConstraints = new UnmanagedColoredActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
 
         InitParallelCallbacks();
 
@@ -347,6 +337,8 @@ public partial class World
 
         IslandHelper.ConstraintRemoved(islands, constraint);
 
+        UnColor(ref constraint.Body1.Data, ref constraint.Body2.Data, memConstraints.GetColor(constraint.Handle));
+
         if (constraint.IsSmallConstraint)
         {
             memSmallConstraints.Free(constraint.SmallHandle);
@@ -369,6 +361,8 @@ public partial class World
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
         arbiters.Remove(arbiter.Handle.Data.Key);
+
+        UnColor(ref arbiter.Body1.Data, ref arbiter.Body2.Data, memContacts.GetColor(arbiter.Handle));
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
@@ -406,13 +400,15 @@ public partial class World
     {
         T constraint = new();
 
+        int color = Color(ref body1.Data, ref body2.Data);
+
         if (constraint.IsSmallConstraint)
         {
-            constraint.Create(memSmallConstraints.Allocate(true, true), body1, body2);
+            constraint.Create(memSmallConstraints.Allocate(color, true, true), body1, body2);
         }
         else
         {
-            constraint.Create(memConstraints.Allocate(true, true), body1, body2);
+            constraint.Create(memConstraints.Allocate(color, true, true), body1, body2);
         }
 
         IslandHelper.ConstraintCreated(islands, constraint);
