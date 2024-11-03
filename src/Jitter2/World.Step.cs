@@ -47,17 +47,18 @@ public partial class World
 
     private Action<Parallel.Batch> integrate;
     private Action<Parallel.Batch> integrateForces;
-    private Action<Parallel.Batch> prepareContacts;
-    private Action<Parallel.Batch> iterateContacts;
-    private Action<Parallel.Batch> relaxVelocities;
-    private Action<Parallel.Batch> updateContacts;
-    private Action<Parallel.Batch> prepareConstraints;
-    private Action<Parallel.Batch> iterateConstraints;
-    private Action<Parallel.Batch> prepareSmallConstraints;
-    private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<Parallel.Batch> updateBoundingBoxes;
     private Action<Parallel.Batch> detectCollisions;
+
+    private Action<Parallel.ColoredBatch> prepareContacts;
+    private Action<Parallel.ColoredBatch> iterateContacts;
+    private Action<Parallel.ColoredBatch> relaxVelocities;
+    private Action<Parallel.ColoredBatch> updateContacts;
+    private Action<Parallel.ColoredBatch> prepareConstraints;
+    private Action<Parallel.ColoredBatch> iterateConstraints;
+    private Action<Parallel.ColoredBatch> prepareSmallConstraints;
+    private Action<Parallel.ColoredBatch> iterateSmallConstraints;
 
     private void InitParallelCallbacks()
     {
@@ -269,11 +270,11 @@ public partial class World
         }
     }
 
-    private void PrepareContactsCallback(Parallel.Batch batch)
+    private void PrepareContactsCallback(Parallel.ColoredBatch batch)
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
+        var span = memContacts.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -291,11 +292,11 @@ public partial class World
         }
     }
 
-    private unsafe void PrepareSmallConstraintsCallback(Parallel.Batch batch)
+    private unsafe void PrepareSmallConstraintsCallback(Parallel.ColoredBatch batch)
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memSmallConstraints.Active(currentColor)[batch.Start..batch.End];
+        var span = memSmallConstraints.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -311,11 +312,11 @@ public partial class World
         }
     }
 
-    private unsafe void IterateSmallConstraintsCallback(Parallel.Batch batch)
+    private unsafe void IterateSmallConstraintsCallback(Parallel.ColoredBatch batch)
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memSmallConstraints.Active(currentColor)[batch.Start..batch.End];
+        var span = memSmallConstraints.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -329,11 +330,11 @@ public partial class World
         }
     }
 
-    private unsafe void PrepareConstraintsCallback(Parallel.Batch batch)
+    private unsafe void PrepareConstraintsCallback(Parallel.ColoredBatch batch)
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memConstraints.Active(currentColor)[batch.Start..batch.End];
+        var span = memConstraints.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -343,11 +344,11 @@ public partial class World
         }
     }
 
-    private unsafe void IterateConstraintsCallback(Parallel.Batch batch)
+    private unsafe void IterateConstraintsCallback(Parallel.ColoredBatch batch)
     {
         float istep_dt = 1.0f / step_dt;
 
-        var span = memConstraints.Active(currentColor)[batch.Start..batch.End];
+        var span = memConstraints.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -357,9 +358,9 @@ public partial class World
         }
     }
 
-    private void IterateContactsCallback(Parallel.Batch batch)
+    private void IterateContactsCallback(Parallel.ColoredBatch batch)
     {
-        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
+        var span = memContacts.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -369,9 +370,9 @@ public partial class World
     }
 
 
-    private void RelaxVelocitiesCallback(Parallel.Batch batch)
+    private void RelaxVelocitiesCallback(Parallel.ColoredBatch batch)
     {
-        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
+        var span = memContacts.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -474,9 +475,9 @@ public partial class World
         brokenArbiters.Clear();
     }
 
-    private void UpdateContactsCallback(Parallel.Batch batch)
+    private void UpdateContactsCallback(Parallel.ColoredBatch batch)
     {
-        var span = memContacts.Active(currentColor)[batch.Start..batch.End];
+        var span = memContacts.Active(batch.Color)[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -577,11 +578,10 @@ public partial class World
         {
             for (int iter = 0; iter < iterations; iter++)
             {
-                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
                 {
-                    currentColor = color;
                     int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 64;
-                    memContacts.Active(color).ParallelForBatch(taskThreshold, relaxVelocities, true);
+                    memContacts.Active(color).ParallelForBatch(taskThreshold, color, relaxVelocities, true);
                 }
             }
         }
@@ -589,10 +589,9 @@ public partial class World
         {
             for (int iter = 0; iter < iterations; iter++)
             {
-                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
                 {
-                    currentColor = color;
-                    RelaxVelocitiesCallback(new (0, memContacts.Active(color).Length));
+                    RelaxVelocitiesCallback(new (0, memContacts.Active(color).Length, color));
                 }
             }
         }
@@ -603,49 +602,55 @@ public partial class World
     {
         if (multiThread)
         {
-            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
             {
-                currentColor = color;
                 int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-                memContacts.Active(color).ParallelForBatch(taskThreshold, prepareContacts, false);
-                memConstraints.Active(color).ParallelForBatch(taskThreshold, prepareConstraints, false);
-                memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, prepareSmallConstraints, false);
+                if (memContacts.Active(color).Length == 0) break;
+
+                var span = memContacts.Active(color);
+                Parallel.ForColoredBatch(0, span.Length, 6, color, prepareContacts, false);
+
+                //memContacts.Active(color).ParallelForBatch(taskThreshold, color, prepareContacts, false);
+                //memConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareConstraints, false);
+                //memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, prepareSmallConstraints, false);
                 ThreadPool.Instance.Execute();
             }
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
                 {
-                    currentColor = color;
+                    if (memContacts.Active(color).Length == 0) break;
+
                     int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 24;
 
-                    memContacts.Active(color).ParallelForBatch(taskThreshold, iterateContacts, false);
-                    memConstraints.Active(color).ParallelForBatch(taskThreshold, iterateConstraints, false);
-                    memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, iterateSmallConstraints, false);
+                    var span = memContacts.Active(color);
+                    Parallel.ForColoredBatch(0, span.Length, 6, color, iterateContacts, false);
+
+                    //memContacts.Active(color).ParallelForBatch(taskThreshold, color, iterateContacts, false);
+                    //memConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateConstraints, false);
+                    //memSmallConstraints.Active(color).ParallelForBatch(taskThreshold, color, iterateSmallConstraints, false);
                     ThreadPool.Instance.Execute();
                 }
             }
         }
         else
         {
-            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
             {
-                currentColor = color;
-                PrepareContactsCallback(new (0, memContacts.Active(color).Length));
-                PrepareConstraintsCallback(new (0, memConstraints.Active(color).Length));
-                PrepareSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length));
+                PrepareContactsCallback(new (0, memContacts.Active(color).Length, color));
+                PrepareConstraintsCallback(new (0, memConstraints.Active(color).Length, color));
+                PrepareSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length, color));
             }
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+                for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
                 {
-                    currentColor = color;
-                    IterateContactsCallback(new (0, memContacts.Active(color).Length));
-                    IterateConstraintsCallback(new (0, memConstraints.Active(color).Length));
-                    IterateSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length));
+                    IterateContactsCallback(new (0, memContacts.Active(color).Length, color));
+                    IterateConstraintsCallback(new (0, memConstraints.Active(color).Length, color));
+                    IterateSmallConstraintsCallback(new (0, memSmallConstraints.Active(color).Length, color));
                 }
             }
         }
@@ -655,19 +660,17 @@ public partial class World
     {
         if (multiThread)
         {
-            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
             {
-                currentColor = color;
                 int taskThreshold = (color == UnmanagedColoredActiveList<ContactData>.ColorCount - 1) ? int.MaxValue : 256;
-                memContacts.Active(color).ParallelForBatch(taskThreshold, updateContacts, true);
+                memContacts.Active(color).ParallelForBatch(taskThreshold, color, updateContacts, true);
             }
         }
         else
         {
-            for (int color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
+            for (ushort color = 0; color < UnmanagedColoredActiveList<ContactData>.ColorCount; color++)
             {
-                currentColor = color;
-                UpdateContactsCallback(new (0, memContacts.Active(color).Length));
+                UpdateContactsCallback(new (0, memContacts.Active(color).Length, color));
             }
         }
     }

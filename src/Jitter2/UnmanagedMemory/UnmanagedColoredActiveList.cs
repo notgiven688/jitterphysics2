@@ -55,7 +55,7 @@ public sealed unsafe class UnmanagedColoredActiveList<T> : IDisposable where T :
 
     private T** handles;
 
-    private ushort[] colors;
+    public ushort[] colors;
 
     private readonly ColorList[] colorList;
 
@@ -127,6 +127,12 @@ public sealed unsafe class UnmanagedColoredActiveList<T> : IDisposable where T :
     {
         int index = Unsafe.Read<int>(*handle.Pointer);
         return colors[index];
+    }
+
+    public void SetColor(JHandle<T> handle, ushort color)
+    {
+        int index = Unsafe.Read<int>(*handle.Pointer);
+        colors[index] = color;
     }
 
     /// <summary>

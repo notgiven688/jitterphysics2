@@ -15,7 +15,7 @@ public class Demo02 : IDemo
 
         pg.ResetScene();
 
-        Common.BuildTower(JVector.Zero,400);
+        Common.BuildTower(JVector.Zero);
 
         world.SolverIterations = (12, 4);
     }

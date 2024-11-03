@@ -54,6 +54,25 @@ public static class Parallel
         public readonly ushort BatchIndex;
     }
 
+    public readonly struct ColoredBatch
+    {
+        public ColoredBatch(int start, int end, ushort color = 0)
+        {
+            Start = start;
+            End = end;
+            Color = color;
+        }
+
+        public override string ToString()
+        {
+            return $"Batch(Start: {Start}, End: {End}, Color: {Color})";
+        }
+
+        public readonly int Start;
+        public readonly int End;
+        public readonly ushort Color;
+    }
+
     /// <summary>
     /// Given the number of elements, the number of divisions into parts and a part index, returns
     /// the lower and upper bound for that part.
@@ -108,6 +127,30 @@ public static class Parallel
         {
             GetBounds(upper - lower, numTasks, i, out int start, out int end);
             threadPool.AddTask(action, new Batch(start + lower, end + lower, (ushort)i));
+        }
+
+        if (execute) threadPool.Execute();
+    }
+
+    public static void ForColoredBatch(int lower, int upper, int numTasks, ushort color, Action<ColoredBatch> action, bool execute = true)
+    {
+        Debug.Assert(numTasks <= ushort.MaxValue);
+        for (int i = 0; i < numTasks; i++)
+        {
+            GetBounds(upper - lower, numTasks, i, out int start, out int end);
+            threadPool.AddTask(action, new ColoredBatch(start + lower, end + lower, color));
+        }
+
+        if (execute) threadPool.Execute();
+    }
+
+    public static void ForBatch(int lower, int upper, int numTasks, ushort color, Action<ColoredBatch> action, bool execute = true)
+    {
+        Debug.Assert(numTasks <= ushort.MaxValue);
+        for (int i = 0; i < numTasks; i++)
+        {
+            GetBounds(upper - lower, numTasks, i, out int start, out int end);
+            threadPool.AddTask(action, new ColoredBatch(start + lower, end + lower, color));
         }
 
         if (execute) threadPool.Execute();

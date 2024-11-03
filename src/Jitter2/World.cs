@@ -220,7 +220,6 @@ public partial class World
     private volatile int solverIterations = 6;
     private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
-    private volatile int currentColor = 0;
 
     private volatile float substep_dt = 1.0f / 100.0f;
     private volatile float step_dt = 1.0f / 100.0f;

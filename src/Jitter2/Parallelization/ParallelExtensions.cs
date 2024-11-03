@@ -69,13 +69,13 @@ public static class ParallelExtensions
         return numTasks;
     }
 
-    public static int ParallelForBatch<T>(this Span<T> span, int taskThreshold,
-        Action<Parallel.Batch> action, bool execute = true) where T : unmanaged
+    public static int ParallelForBatch<T>(this Span<T> span, int taskThreshold, ushort color,
+        Action<Parallel.ColoredBatch> action, bool execute = true) where T : unmanaged
     {
         int numTasks = span.Length / taskThreshold + 1;
         numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
 
-        Parallel.ForBatch(0, span.Length, numTasks, action, execute);
+        Parallel.ForColoredBatch(0, span.Length, numTasks, color, action, execute);
 
         return numTasks;
     }
