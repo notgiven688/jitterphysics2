@@ -48,10 +48,10 @@ public struct AngularLimit
         To = to;
     }
 
-    internal readonly void Deconstruct(out JAngle LimitMin, out JAngle LimitMax)
+    public readonly void Deconstruct(out JAngle limitMin, out JAngle limitMax)
     {
-        LimitMin = From;
-        LimitMax = To;
+        limitMin = From;
+        limitMax = To;
     }
 }
 
@@ -77,9 +77,9 @@ public struct LinearLimit
         return new LinearLimit(min, max);
     }
 
-    internal readonly void Deconstruct(out float LimitMin, out float LimitMax)
+    public readonly void Deconstruct(out float limitMin, out float limitMax)
     {
-        LimitMin = From;
-        LimitMax = To;
+        limitMin = From;
+        limitMax = To;
     }
 }

@@ -435,7 +435,7 @@ public partial class World
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.IsStatic);
         Debug.Assert(rigidBody.InverseMass == 0.0f);
-        Debug.Assert(MathHelper.UnsafeIsZero(rigidBody.InverseInertiaWorld));
+        Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
     }
 
     private void ForeachActiveShape(bool multiThread)
@@ -458,7 +458,7 @@ public partial class World
         {
             if (body.IsStatic)
             {
-                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(body.Data.InverseInertiaWorld));
+                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
                 System.Diagnostics.Debug.Assert(body.Data.InverseMass == 0.0f);
             }
         }

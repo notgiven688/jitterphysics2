@@ -88,6 +88,7 @@ public partial class World
             manifoldCount = 0;
         }
 
+        [System.Runtime.CompilerServices.SkipLocalsInit]
         public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
             in JVector pA, in JVector pB, in JVector normal, float penetration)
         {

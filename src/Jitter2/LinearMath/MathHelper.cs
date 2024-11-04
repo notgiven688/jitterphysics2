@@ -68,9 +68,14 @@ public static class MathHelper
 
     */
 
+    /// <summary>
+    /// Checks if matrix is a pure rotation matrix.
+    /// </summary>
     public static bool IsRotationMatrix(in JMatrix matrix, float epsilon = 1e-06f)
     {
-        if (!UnsafeIsZero(JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity, epsilon))
+        JMatrix delta = JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity;
+
+        if (!UnsafeIsZero(ref delta, epsilon))
         {
             return false;
         }
@@ -78,19 +83,9 @@ public static class MathHelper
         return MathF.Abs(matrix.Determinant() - 1.0f) < epsilon;
     }
 
-    public static void UnsafeDecomposeMatrix(in JMatrix matrix, out JMatrix orientation, out JVector scale)
-    {
-        orientation = matrix;
-
-        scale.X = orientation.UnsafeGet(0).Length();
-        scale.Y = orientation.UnsafeGet(1).Length();
-        scale.Z = orientation.UnsafeGet(2).Length();
-
-        orientation.UnsafeGet(0) *= 1.0f / scale.X;
-        orientation.UnsafeGet(1) *= 1.0f / scale.Y;
-        orientation.UnsafeGet(2) *= 1.0f / scale.Z;
-    }
-
+    /// <summary>
+    /// Checks if all entries of a vector are close to zero.
+    /// </summary>
     public static bool IsZero(in JVector vector, float epsilon = 1e-6f)
     {
         float x = MathF.Abs(vector.X);
@@ -100,14 +95,21 @@ public static class MathHelper
         return MathF.Max(x, MathF.Max(y, z)) < epsilon;
     }
 
-    public static bool UnsafeIsZero(in JMatrix matrix, float epsilon = 1e-6f)
+    /// <summary>
+    /// Checks if all entries of a matrix are close to zero.
+    /// </summary>
+    public static bool UnsafeIsZero(ref JMatrix matrix, float epsilon = 1e-6f)
     {
-        if (!IsZero(matrix.UnsafeGet(0))) return false;
-        if (!IsZero(matrix.UnsafeGet(1))) return false;
-        if (!IsZero(matrix.UnsafeGet(2))) return false;
+        if (!IsZero(matrix.UnsafeGet(0), epsilon)) return false;
+        if (!IsZero(matrix.UnsafeGet(1), epsilon)) return false;
+        if (!IsZero(matrix.UnsafeGet(2), epsilon)) return false;
         return true;
     }
 
+    /// <summary>
+    /// Calculates (M^T \times M)^(-1/2) using Jacobi iterations.
+    /// </summary>
+    /// <param name="sweeps">The number of Jacobi iterations.</param>
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
         float phi, cp, sp;
@@ -194,20 +196,16 @@ public static class MathHelper
         return result;
     }
 
-
     /// <summary>
     /// Verifies whether the columns of the given matrix constitute an orthonormal basis.
     /// An orthonormal basis means that the columns are mutually perpendicular and have unit length.
     /// </summary>
     /// <param name="matrix">The input matrix to check for an orthonormal basis.</param>
     /// <returns>True if the columns of the matrix form an orthonormal basis; otherwise, false.</returns>
-    public static bool CheckOrthonormalBasis(in JMatrix matrix)
+    public static bool CheckOrthonormalBasis(in JMatrix matrix, float epsilon = 1e-6f)
     {
         JMatrix delta = JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity;
-        if (JVector.MaxAbs(delta.UnsafeGet(0)) > 1e-6f) return false;
-        if (JVector.MaxAbs(delta.UnsafeGet(1)) > 1e-6f) return false;
-        if (JVector.MaxAbs(delta.UnsafeGet(2)) > 1e-6f) return false;
-        return true;
+        return UnsafeIsZero(ref delta, epsilon);
     }
 
     /// <summary>
