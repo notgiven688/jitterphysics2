@@ -54,17 +54,17 @@ public readonly struct ArbiterKey : IEquatable<ArbiterKey>
         Key2 = key2;
     }
 
-    public readonly bool Equals(ArbiterKey other)
+    public bool Equals(ArbiterKey other)
     {
         return Key1 == other.Key1 && Key2 == other.Key2;
     }
 
-    public override readonly bool Equals(object? obj)
+    public override bool Equals(object? obj)
     {
         return obj is ArbiterKey other && Equals(other);
     }
 
-    public override readonly int GetHashCode()
+    public override int GetHashCode()
     {
         return (int)Key1 + 2281 * (int)Key2;
     }
