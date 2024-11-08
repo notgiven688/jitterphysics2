@@ -654,17 +654,31 @@ public struct ContactData
                 var rry = Vector128.Subtract(Vector128.Multiply(rp1Z, NormalTangentX), Vector128.Multiply(rp1X, NormalTangentZ));
                 var rrz = Vector128.Subtract(Vector128.Multiply(rp1X, NormalTangentY), Vector128.Multiply(rp1Y, NormalTangentX));
 
-                var e1 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M11), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M12), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M13), rrz));
-                var e2 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M21), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M22), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M23), rrz));
-                var e3 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M31), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M32), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M33), rrz));
+                var ixx = Vector128.Create(b1.InverseInertiaWorld.M11);
+                var ixy = Vector128.Create(b1.InverseInertiaWorld.M21);
+                var ixz = Vector128.Create(b1.InverseInertiaWorld.M31);
+                var iyy = Vector128.Create(b1.InverseInertiaWorld.M22);
+                var iyz = Vector128.Create(b1.InverseInertiaWorld.M23);
+                var izz = Vector128.Create(b1.InverseInertiaWorld.M33);
+
+                var e1 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixx, rrx), Vector128.Multiply(ixy, rry)), Vector128.Multiply(ixz, rrz));
+                var e2 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixy, rrx), Vector128.Multiply(iyy, rry)), Vector128.Multiply(iyz, rrz));
+                var e3 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixz, rrx), Vector128.Multiply(iyz, rry)), Vector128.Multiply(izz, rrz));
 
                 rrx = Vector128.Subtract(Vector128.Multiply(rp2Y, NormalTangentZ), Vector128.Multiply(rp2Z, NormalTangentY));
                 rry = Vector128.Subtract(Vector128.Multiply(rp2Z, NormalTangentX), Vector128.Multiply(rp2X, NormalTangentZ));
                 rrz = Vector128.Subtract(Vector128.Multiply(rp2X, NormalTangentY), Vector128.Multiply(rp2Y, NormalTangentX));
 
-                var f1 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M11), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M12), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M13), rrz));
-                var f2 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M21), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M22), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M23), rrz));
-                var f3 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M31), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M32), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M33), rrz));
+                ixx = Vector128.Create(b2.InverseInertiaWorld.M11);
+                ixy = Vector128.Create(b2.InverseInertiaWorld.M21);
+                ixz = Vector128.Create(b2.InverseInertiaWorld.M31);
+                iyy = Vector128.Create(b2.InverseInertiaWorld.M22);
+                iyz = Vector128.Create(b2.InverseInertiaWorld.M23);
+                izz = Vector128.Create(b2.InverseInertiaWorld.M33);
+
+                var f1 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixx, rrx), Vector128.Multiply(ixy, rry)), Vector128.Multiply(ixz, rrz));
+                var f2 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixy, rrx), Vector128.Multiply(iyy, rry)), Vector128.Multiply(iyz, rrz));
+                var f3 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixz, rrx), Vector128.Multiply(iyz, rry)), Vector128.Multiply(izz, rrz));
 
                 var ktnx = Vector128.Subtract(Vector128.Add(Vector128.Subtract(Vector128.Multiply(e2, rp1Z), Vector128.Multiply(e3, rp1Y)), Vector128.Multiply(f2, rp2Z)), Vector128.Multiply(f3, rp2Y));
                 var ktny = Vector128.Subtract(Vector128.Add(Vector128.Subtract(Vector128.Multiply(e3, rp1X), Vector128.Multiply(e1, rp1Z)), Vector128.Multiply(f3, rp2X)), Vector128.Multiply(f1, rp2Z));
@@ -755,17 +769,31 @@ public struct ContactData
                 var rry = Vector128.Subtract(Vector128.Multiply(rp1Z, NormalTangentX), Vector128.Multiply(rp1X, NormalTangentZ));
                 var rrz = Vector128.Subtract(Vector128.Multiply(rp1X, NormalTangentY), Vector128.Multiply(rp1Y, NormalTangentX));
 
-                var e1 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M11), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M12), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M13), rrz));
-                var e2 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M21), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M22), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M23), rrz));
-                var e3 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M31), rrx), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M32), rry)), Vector128.Multiply(Vector128.Create(b1.InverseInertiaWorld.M33), rrz));
+                var ixx = Vector128.Create(b1.InverseInertiaWorld.M11);
+                var ixy = Vector128.Create(b1.InverseInertiaWorld.M21);
+                var ixz = Vector128.Create(b1.InverseInertiaWorld.M31);
+                var iyy = Vector128.Create(b1.InverseInertiaWorld.M22);
+                var iyz = Vector128.Create(b1.InverseInertiaWorld.M23);
+                var izz = Vector128.Create(b1.InverseInertiaWorld.M33);
+
+                var e1 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixx, rrx), Vector128.Multiply(ixy, rry)), Vector128.Multiply(ixz, rrz));
+                var e2 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixy, rrx), Vector128.Multiply(iyy, rry)), Vector128.Multiply(iyz, rrz));
+                var e3 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixz, rrx), Vector128.Multiply(iyz, rry)), Vector128.Multiply(izz, rrz));
 
                 rrx = Vector128.Subtract(Vector128.Multiply(rp2Y, NormalTangentZ), Vector128.Multiply(rp2Z, NormalTangentY));
                 rry = Vector128.Subtract(Vector128.Multiply(rp2Z, NormalTangentX), Vector128.Multiply(rp2X, NormalTangentZ));
                 rrz = Vector128.Subtract(Vector128.Multiply(rp2X, NormalTangentY), Vector128.Multiply(rp2Y, NormalTangentX));
 
-                var f1 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M11), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M12), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M13), rrz));
-                var f2 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M21), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M22), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M23), rrz));
-                var f3 = Vector128.Add(Vector128.Add(Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M31), rrx), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M32), rry)), Vector128.Multiply(Vector128.Create(b2.InverseInertiaWorld.M33), rrz));
+                ixx = Vector128.Create(b2.InverseInertiaWorld.M11);
+                ixy = Vector128.Create(b2.InverseInertiaWorld.M21);
+                ixz = Vector128.Create(b2.InverseInertiaWorld.M31);
+                iyy = Vector128.Create(b2.InverseInertiaWorld.M22);
+                iyz = Vector128.Create(b2.InverseInertiaWorld.M23);
+                izz = Vector128.Create(b2.InverseInertiaWorld.M33);
+
+                var f1 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixx, rrx), Vector128.Multiply(ixy, rry)), Vector128.Multiply(ixz, rrz));
+                var f2 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixy, rrx), Vector128.Multiply(iyy, rry)), Vector128.Multiply(iyz, rrz));
+                var f3 = Vector128.Add(Vector128.Add(Vector128.Multiply(ixz, rrx), Vector128.Multiply(iyz, rry)), Vector128.Multiply(izz, rrz));
 
                 Unsafe.SkipInit(out JVector angularImpulse1);
                 angularImpulse1.X = GetSum3(Vector128.Multiply(impulse, e1));
