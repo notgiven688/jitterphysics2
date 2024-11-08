@@ -153,7 +153,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal float inactiveThresholdAngularSq = 0.1f;
     internal float deactivationTimeThreshold = 1.0f;
 
-    internal float linearDampingMultiplier = 0.995f;
+    internal float linearDampingMultiplier = 0.998f;
     internal float angularDampingMultiplier = 0.995f;
 
     internal JMatrix inverseInertia = JMatrix.Identity;
