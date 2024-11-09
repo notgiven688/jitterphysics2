@@ -22,9 +22,9 @@ jobs:
         working-directory: ./src/JitterTests
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     - name: Restore dependencies
@@ -36,7 +36,7 @@ jobs:
       #run: dotnet test -c Release --no-restore --test-adapter-path:. --logger:"junit;LogFilePath=test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
 
     - name: TestReport
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v4
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: JitterTests            # Name of the check run which will be created
