@@ -85,8 +85,8 @@ public partial class Playground : RenderWindow
 
                 void DrawContact(in ContactData cq, in ContactData.Contact c)
                 {
-                    JVector v1 = c.RelativePos1 + cq.Body1.Data.Position;
-                    JVector v2 = c.RelativePos2 + cq.Body2.Data.Position;
+                    JVector v1 = c.RelativePosition1 + cq.Body1.Data.Position;
+                    JVector v2 = c.RelativePosition2 + cq.Body2.Data.Position;
 
                     DebugRenderer.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(v1), 0.1f);
                     DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(v2), 0.1f);

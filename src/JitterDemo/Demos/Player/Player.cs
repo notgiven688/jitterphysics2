@@ -93,25 +93,25 @@ public class Player
             {
                 if ((mask & ContactData.MaskContact0) != 0)
                 {
-                    hitPoint += cd.Contact0.RelativePos1;
+                    hitPoint += cd.Contact0.RelativePosition1;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact1) != 0)
                 {
-                    hitPoint += cd.Contact1.RelativePos1;
+                    hitPoint += cd.Contact1.RelativePosition1;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact2) != 0)
                 {
-                    hitPoint += cd.Contact2.RelativePos1;
+                    hitPoint += cd.Contact2.RelativePosition1;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact3) != 0)
                 {
-                    hitPoint += cd.Contact3.RelativePos1;
+                    hitPoint += cd.Contact3.RelativePosition1;
                     numContacts++;
                 }
 
@@ -121,25 +121,25 @@ public class Player
             {
                 if ((mask & ContactData.MaskContact0) != 0)
                 {
-                    hitPoint += cd.Contact0.RelativePos2;
+                    hitPoint += cd.Contact0.RelativePosition2;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact1) != 0)
                 {
-                    hitPoint += cd.Contact1.RelativePos2;
+                    hitPoint += cd.Contact1.RelativePosition2;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact2) != 0)
                 {
-                    hitPoint += cd.Contact2.RelativePos2;
+                    hitPoint += cd.Contact2.RelativePosition2;
                     numContacts++;
                 }
 
                 if ((mask & ContactData.MaskContact3) != 0)
                 {
-                    hitPoint += cd.Contact3.RelativePos2;
+                    hitPoint += cd.Contact3.RelativePosition2;
                     numContacts++;
                 }
 
