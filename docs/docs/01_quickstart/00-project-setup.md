@@ -6,7 +6,7 @@ sidebar_position: 1
 
 ### Requirements
 
-Install the [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0).
+Install the [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0).
 
 Ensure that dotnet is correctly set up by executing the following command:
 
