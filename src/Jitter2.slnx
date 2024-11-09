@@ -1,9 +1,6 @@
 ﻿<Solution>
-  <Folder Name="/Solution Items/">
-    <File Path=".editorconfig" />
-  </Folder>
   <Project Path="Jitter2\Jitter2.csproj" />
-  <Project Path="JitterBenchmark\JitterBenchmark.csproj" Type="Classic C#" />
+  <Project Path="JitterBenchmark\JitterBenchmark.csproj" />
   <Project Path="JitterDemo\JitterDemo.csproj" />
   <Project Path="JitterTests\JitterTests.csproj" />
 </Solution>
