@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="Jitter2\Jitter2.csproj" />
+  <Project Path="JitterBenchmark\JitterBenchmark.csproj" />
+  <Project Path="JitterDemo\JitterDemo.csproj" />
+  <Project Path="JitterTests\JitterTests.csproj" />
+</Solution>
