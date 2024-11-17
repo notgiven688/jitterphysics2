@@ -36,7 +36,7 @@ jobs:
       #run: dotnet test -c Release --no-restore --test-adapter-path:. --logger:"junit;LogFilePath=test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
 
     - name: TestReport
-      uses: dorny/test-reporter@v4
+      uses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: JitterTests            # Name of the check run which will be created
