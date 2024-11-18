@@ -4,6 +4,15 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.7 (11-18-2024)
+
+- **Breaking Change:** Dropped .NET6 support, added .NET9.
+- SIMD for contacts.
+- Contact manifold overflow fix.
+- Changed default damping.
+- Improved auxiliary contact points.
+- Minor API changes.
+
 ### Jitter 2.4.6 (10-28-2024)
 
 - **Breaking Change:** Jitter world is now constructed using World.Capacity.

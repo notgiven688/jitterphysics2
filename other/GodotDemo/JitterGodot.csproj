@@ -4,6 +4,6 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Jitter2" Version="2.4.6" />
+    <PackageReference Include="Jitter2" Version="2.4.7" />
   </ItemGroup>
 </Project>
