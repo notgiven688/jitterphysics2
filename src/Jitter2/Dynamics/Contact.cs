@@ -184,7 +184,7 @@ public struct ContactData
     /// <summary>
     /// Adds a new collision result to the contact manifold. Keeps at most four points.
     /// </summary>
-    public void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
+    public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
         if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
@@ -195,6 +195,59 @@ public struct ContactData
 
         // Not all contacts are in use, but the new contact point is close enough
         // to an already existing point. Replace this point by the new one.
+
+        Contact* closest = (Contact*)IntPtr.Zero;
+        float distanceSq = float.MaxValue;
+
+        JVector relP1 = point1 - Body1.Data.Position;
+
+        if ((UsageMask & MaskContact0) != 0)
+        {
+            float distSq = (Contact0.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact0);
+            }
+        }
+
+        if ((UsageMask & MaskContact1) != 0)
+        {
+            float distSq = (Contact1.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact1);
+            }
+        }
+
+        if ((UsageMask & MaskContact2) != 0)
+        {
+            float distSq = (Contact2.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact2);
+            }
+        }
+
+        if ((UsageMask & MaskContact3) != 0)
+        {
+            float distSq = (Contact3.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact3);
+            }
+        }
+
+        if (distanceSq < Contact.BreakThreshold * Contact.BreakThreshold)
+        {
+            closest->Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution);
+            return;
+        }
+
+        // It is a completely new contact.
 
         if ((UsageMask & MaskContact0) == 0)
         {
