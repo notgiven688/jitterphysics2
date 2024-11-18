@@ -402,6 +402,8 @@ public partial class World
                 JVector mfB = cvh.ManifoldB[e];
 
                 float nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < 0.0f) continue;
+
                 arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
             }
 
