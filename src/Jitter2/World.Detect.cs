@@ -157,9 +157,9 @@ public partial class World
 
                     if (sameSign)
                     {
-                        float diff = JVector.Dot(p - pB, normal);
+                        float diff = JVector.Dot(p - pA, normal);
                         mB[manifoldCount] = p;
-                        mA[manifoldCount++] = p - (diff - penetration) * normal;
+                        mA[manifoldCount++] = p - diff * normal;
 
                         if (manifoldCount == 6) return;
                     }
@@ -192,9 +192,9 @@ public partial class World
 
                     if (sameSign)
                     {
-                        float diff = -JVector.Dot(p - pA, normal);
+                        float diff = JVector.Dot(p - pB, normal);
                         mA[manifoldCount] = p;
-                        mB[manifoldCount++] = p - (diff - penetration) * normal;
+                        mB[manifoldCount++] = p - diff * normal;
 
                         if (manifoldCount == 6) return;
                     }
