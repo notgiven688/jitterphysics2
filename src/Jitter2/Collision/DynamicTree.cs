@@ -31,6 +31,44 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
+/// Represents an object for which the bounding box can be updated.
+/// </summary>
+public interface IUpdatableBoundingBox
+{
+    /// <summary>
+    /// Updates the bounding box.
+    /// </summary>
+    public void UpdateWorldBoundingBox(float dt);
+}
+
+/// <summary>
+/// Represents an object that can be intersected by a ray.
+/// </summary>
+public interface IRayCastable
+{
+    /// <summary>
+    /// Performs a ray cast against the object, checking if a ray originating from a specified point
+    /// and traveling in a specified direction intersects with the object.
+    /// </summary>
+    /// <param name="origin">The starting point of the ray.</param>
+    /// <param name="direction">
+    /// The direction of the ray. This vector does not need to be normalized.
+    /// </param>
+    /// <param name="normal">
+    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
+    /// </param>
+    /// <param name="lambda">
+    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
+    /// <c>origin + lambda * direction</c>.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
+    /// </returns>
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
+}
+
+/// <summary>
 /// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>)
 /// maintains a record of potential overlapping pairs.
 /// </summary>
@@ -87,6 +125,8 @@ public partial class DynamicTree
     private readonly Stack<int> freeNodes = new();
     private int nodePointer = -1;
     private int root = NullNode;
+    
+    private Action<Parallel.Batch> updateBoundingBoxes;
 
     /// <summary>
     /// Gets the root of the dynamic tree.
@@ -113,6 +153,8 @@ public partial class DynamicTree
         Proxies = new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
 
         scanOverlapsPost = batch => { ScanForOverlaps(batch.BatchIndex, true); };
+        
+        updateBoundingBoxes = UpdateBoundingBoxesCallback;
 
         Filter = filter;
     }
@@ -122,6 +164,7 @@ public partial class DynamicTree
         ScanOverlapsPre,
         UpdateProxies,
         ScanOverlapsPost,
+        UpdateBoundingBoxes,
         Last
     }
 
@@ -138,12 +181,10 @@ public partial class DynamicTree
     /// Updates all entities that are marked as active in the active list.
     /// </summary>
     /// <param name="multiThread">A boolean indicating whether to perform a multi-threaded update.</param>
-    public void Update(bool multiThread)
+    public void Update(bool multiThread, float dt)
     {
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
-
-        CheckBagCount(multiThread);
 
         void SetTime(Timings type)
         {
@@ -153,12 +194,21 @@ public partial class DynamicTree
             time = ctime;
         }
 
+        this.step_dt = dt;
+
+        CheckBagCount(multiThread);
+
         SetTime(Timings.ScanOverlapsPre);
+
+        SetTime(Timings.UpdateBoundingBoxes);
 
         if (multiThread)
         {
+            Proxies.ParallelForBatch(256, updateBoundingBoxes);
+
             const int taskThreshold = 24;
             int numTasks = Math.Clamp(proxies.ActiveCount / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
+
             Parallel.ForBatch(0, proxies.ActiveCount, numTasks, scanOverlapsPre);
 
             SetTime(Timings.ScanOverlapsPre);
@@ -186,7 +236,12 @@ public partial class DynamicTree
         }
         else
         {
-            scanOverlapsPre(new Parallel.Batch(0, proxies.ActiveCount));
+            var batch = new Parallel.Batch(0, Proxies.Active);
+
+            UpdateBoundingBoxesCallback(batch);
+            SetTime(Timings.UpdateBoundingBoxes);
+
+            scanOverlapsPre(batch);
             SetTime(Timings.ScanOverlapsPre);
 
             var sl = lists[0];
@@ -201,6 +256,17 @@ public partial class DynamicTree
 
             scanOverlapsPost(new Parallel.Batch(0, proxies.ActiveCount));
             SetTime(Timings.ScanOverlapsPost);
+        }
+    }
+
+    private float step_dt;
+    
+    private void UpdateBoundingBoxesCallback(Parallel.Batch batch)
+    {
+        for (int i = batch.Start; i < batch.End; i++)
+        {
+            var proxy = Proxies[i];
+            if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
         }
     }
 

@@ -184,7 +184,7 @@ public struct ContactData
     /// <summary>
     /// Adds a new collision result to the contact manifold. Keeps at most four points.
     /// </summary>
-    public void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
+    public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
     {
         if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
@@ -195,6 +195,59 @@ public struct ContactData
 
         // Not all contacts are in use, but the new contact point is close enough
         // to an already existing point. Replace this point by the new one.
+
+        Contact* closest = (Contact*)IntPtr.Zero;
+        float distanceSq = float.MaxValue;
+
+        JVector relP1 = point1 - Body1.Data.Position;
+
+        if ((UsageMask & MaskContact0) != 0)
+        {
+            float distSq = (Contact0.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact0);
+            }
+        }
+
+        if ((UsageMask & MaskContact1) != 0)
+        {
+            float distSq = (Contact1.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact1);
+            }
+        }
+
+        if ((UsageMask & MaskContact2) != 0)
+        {
+            float distSq = (Contact2.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact2);
+            }
+        }
+
+        if ((UsageMask & MaskContact3) != 0)
+        {
+            float distSq = (Contact3.RelativePosition1 - relP1).LengthSquared();
+            if (distSq < distanceSq)
+            {
+                distanceSq = distSq;
+                closest = (Contact*)Unsafe.AsPointer(ref Contact3);
+            }
+        }
+
+        if (distanceSq < Contact.BreakThreshold * Contact.BreakThreshold)
+        {
+            closest->Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, penetration, false, Restitution);
+            return;
+        }
+
+        // It is a completely new contact.
 
         if ((UsageMask & MaskContact0) == 0)
         {
@@ -290,6 +343,8 @@ public struct ContactData
     }
 
     // ---------------------------------------------------------------------------------------------------------
+
+    [StructLayout(LayoutKind.Explicit)]
     public struct Contact
     {
         public const float MaximumBias = 100.0f;
@@ -303,29 +358,49 @@ public struct ContactData
             NewContact = 1 << 1,
         }
 
+        [FieldOffset(0)]
         public Flags Flag;
+
+        [FieldOffset(4)]
         public float Bias;
+
+        [FieldOffset(8)]
         public float PenaltyBias;
+
+        [FieldOffset(12)]
         public float Penetration;
 
+        [FieldOffset(16)]
         internal Vector128<float> NormalTangentX;
+
+        [FieldOffset(28)]
         internal Vector128<float> NormalTangentY;
+
+        [FieldOffset(40)]
         internal Vector128<float> NormalTangentZ;
+
+        [FieldOffset(52)]
         internal Vector128<float> MassNormalTangent;
+
+        [FieldOffset(64)]
         internal Vector128<float> Accumulated;
 
+        [FieldOffset(80)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position1;
 
+        [FieldOffset(92)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position2;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the first body.
         /// </summary>
+        [FieldOffset(104)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the second body.
         /// </summary>
+        [FieldOffset(116)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
@@ -507,7 +582,8 @@ public struct ContactData
             float massTangent2 = 1.0f / kTangent2;
             float massNormal = 1.0f / kNormal;
 
-            MassNormalTangent = Vector128.Create(massNormal, massTangent1, massTangent2, 0);
+            JVector mass = new JVector(massNormal, massTangent1, massTangent2);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 12);
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -702,7 +778,8 @@ public struct ContactData
                 b2.AngularVelocity += angularImpulse2;
             }
 
-            MassNormalTangent = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
+            var mnt = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 12);
 
             if ((Flag & Flags.NewContact) == 0)
             {

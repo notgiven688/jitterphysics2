@@ -92,10 +92,12 @@ public partial class Playground : RenderWindow
                     DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(v2), 0.1f);
                 }
 
-                if ((cq.UsageMask & ContactData.MaskContact0) != 0) DrawContact(cq, cq.Contact0);
-                if ((cq.UsageMask & ContactData.MaskContact1) != 0) DrawContact(cq, cq.Contact1);
-                if ((cq.UsageMask & ContactData.MaskContact2) != 0) DrawContact(cq, cq.Contact2);
-                if ((cq.UsageMask & ContactData.MaskContact3) != 0) DrawContact(cq, cq.Contact3);
+                uint umask = cq.UsageMask >> 4;
+
+                if ((umask & ContactData.MaskContact0) != 0) DrawContact(cq, cq.Contact0);
+                if ((umask & ContactData.MaskContact1) != 0) DrawContact(cq, cq.Contact1);
+                if ((umask & ContactData.MaskContact2) != 0) DrawContact(cq, cq.Contact2);
+                if ((umask & ContactData.MaskContact3) != 0) DrawContact(cq, cq.Contact3);
             }
         }
     }

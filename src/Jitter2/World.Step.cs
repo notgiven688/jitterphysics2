@@ -56,7 +56,6 @@ public partial class World
     private Action<Parallel.Batch> prepareSmallConstraints;
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
-    private Action<Parallel.Batch> updateBoundingBoxes;
     private Action<Parallel.Batch> detectCollisions;
 
     private void InitParallelCallbacks()
@@ -72,7 +71,6 @@ public partial class World
         iterateSmallConstraints = IterateSmallConstraintsCallback;
         updateContacts = UpdateContactsCallback;
         updateBodies = UpdateBodiesCallback;
-        updateBoundingBoxes = UpdateBoundingBoxesCallback;
         detectCollisions = DetectCollisionsCallback;
     }
 
@@ -190,7 +188,7 @@ public partial class World
         // substep_dt = +dt;
         // Integrate(multiThread);
         ForeachActiveBody(multiThread);
-        ForeachActiveShape(multiThread);
+        
         SetTime(Timings.UpdateBodies);
 
         // Perform collision detection.
@@ -199,7 +197,7 @@ public partial class World
         // If both bodies are inactive we do nothing.
         // We perform narrow phase detection.
         // New arbiters are added to deferredArbiters
-        DynamicTree.Update(multiThread);
+        DynamicTree.Update(multiThread, step_dt);
         SetTime(Timings.CollisionDetect2);
 
         PostStep?.Invoke(dt);
@@ -209,15 +207,6 @@ public partial class World
             && ThreadPool.InstanceInitialized)
         {
             ThreadPool.Instance.SignalReset();
-        }
-    }
-
-    private void UpdateBoundingBoxesCallback(Parallel.Batch batch)
-    {
-        for (int i = batch.Start; i < batch.End; i++)
-        {
-            var proxy = DynamicTree.Proxies[i];
-            if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
         }
     }
 
@@ -436,19 +425,6 @@ public partial class World
         Debug.Assert(rigidBody.IsStatic);
         Debug.Assert(rigidBody.InverseMass == 0.0f);
         Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
-    }
-
-    private void ForeachActiveShape(bool multiThread)
-    {
-        if (multiThread)
-        {
-            DynamicTree.Proxies.ParallelForBatch(256, updateBoundingBoxes);
-        }
-        else
-        {
-            Parallel.Batch batch = new(0, DynamicTree.Proxies.Active);
-            UpdateBoundingBoxesCallback(batch);
-        }
     }
 
     private void ForeachActiveBody(bool multiThread)
