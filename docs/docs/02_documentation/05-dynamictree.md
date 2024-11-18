@@ -17,7 +17,7 @@ In this case the user has to implement a `BroadPhaseFilter` and register it (usi
 
 ## Potential pairs
 
-The tree implementation in Jitter needs to be updated using `tree.Update(bool multiThread)`.
+The tree implementation in Jitter needs to be updated using `tree.Update(bool multiThread, float dt)`.
 This is done automatically for the dynamic tree owned by the world class (`world.DynamicTree`).
 This update process generates information about pairs of proxies which either start overlapping, or start to separate.
 This 'events' are used to update the `tree.PotentialPairs` hash set, which holds all overlapping pairs.
