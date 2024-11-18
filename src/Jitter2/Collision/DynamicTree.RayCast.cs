@@ -21,11 +21,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision;
@@ -40,7 +37,6 @@ public partial class DynamicTree
         public IDynamicTreeProxy Entity;
         public float Lambda;
         public JVector Normal;
-        public bool Hit;
     }
 
     /// <summary>
@@ -94,11 +90,11 @@ public partial class DynamicTree
             FilterPre = pre,
             FilterPost = post
         };
-        var result = QueryRay(ray);
+        bool hit = QueryRay(ray, out var result);
         proxy = result.Entity;
         normal = result.Normal;
         lambda = result.Lambda;
-        return result.Hit;
+        return hit;
     }
 
     /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)"/>
@@ -112,22 +108,28 @@ public partial class DynamicTree
             FilterPost = post,
             Lambda = maxLambda
         };
-        var result = QueryRay(ray);
+        bool hit = QueryRay(ray, out var result);
         proxy = result.Entity;
         normal = result.Normal;
         lambda = result.Lambda;
-        return result.Hit;
+        return hit;
     }
 
-    private RayCastResult QueryRay(in Ray ray)
+    private bool QueryRay(in Ray ray, out RayCastResult result)
     {
-        if (root == -1) return new RayCastResult();
+        result = new RayCastResult();
+
+        if (root == -1)
+        {
+            return false;
+        }
 
         stack ??= new Stack<int>(256);
 
         stack.Push(root);
 
-        RayCastResult result = new();
+        bool globalHit = false;
+
         result.Lambda = ray.Lambda;
 
         while (stack.Count > 0)
@@ -143,30 +145,31 @@ public partial class DynamicTree
                 if (ray.FilterPre != null && !ray.FilterPre(node.Proxy)) continue;
 
                 Unsafe.SkipInit(out RayCastResult res);
-                res.Hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
+                bool hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
                 res.Entity = node.Proxy;
 
-                if (res.Hit && res.Lambda < result.Lambda)
+                if (hit && res.Lambda < result.Lambda)
                 {
                     if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
                     result = res;
+                    globalHit = true;
                 }
 
                 continue;
             }
 
-            ref Node lnode = ref Nodes[node.Left];
-            ref Node rnode = ref Nodes[node.Right];
+            ref Node lNode = ref Nodes[node.Left];
+            ref Node rNode = ref Nodes[node.Right];
 
-            bool lres = lnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterl);
-            bool rres = rnode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float enterr);
+            bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float lEnter);
+            bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float rEnter);
 
-            if (enterl > result.Lambda) lres = false;
-            if (enterr > result.Lambda) rres = false;
+            if (lEnter > result.Lambda) lRes = false;
+            if (rEnter > result.Lambda) rRes = false;
 
-            if (lres && rres)
+            if (lRes && rRes)
             {
-                if (enterl < enterr)
+                if (lEnter < rEnter)
                 {
                     stack.Push(node.Right);
                     stack.Push(node.Left);
@@ -179,11 +182,11 @@ public partial class DynamicTree
             }
             else
             {
-                if (lres) stack.Push(node.Left);
-                if (rres) stack.Push(node.Right);
+                if (lRes) stack.Push(node.Left);
+                if (rRes) stack.Push(node.Right);
             }
         }
 
-        return result;
+        return globalHit;
     }
 }
