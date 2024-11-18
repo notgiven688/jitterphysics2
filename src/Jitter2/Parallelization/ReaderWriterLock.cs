@@ -69,7 +69,7 @@ public struct ReaderWriterLock
     }
 
     /// <summary>
-    /// Exist the read section.
+    /// Exits the read section.
     /// </summary>
     public void ExitReadLock()
     {
