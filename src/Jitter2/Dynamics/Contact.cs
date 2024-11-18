@@ -343,6 +343,8 @@ public struct ContactData
     }
 
     // ---------------------------------------------------------------------------------------------------------
+
+    [StructLayout(LayoutKind.Explicit)]
     public struct Contact
     {
         public const float MaximumBias = 100.0f;
@@ -356,29 +358,49 @@ public struct ContactData
             NewContact = 1 << 1,
         }
 
+        [FieldOffset(0)]
         public Flags Flag;
+
+        [FieldOffset(4)]
         public float Bias;
+
+        [FieldOffset(8)]
         public float PenaltyBias;
+
+        [FieldOffset(12)]
         public float Penetration;
 
+        [FieldOffset(16)]
         internal Vector128<float> NormalTangentX;
+
+        [FieldOffset(28)]
         internal Vector128<float> NormalTangentY;
+
+        [FieldOffset(40)]
         internal Vector128<float> NormalTangentZ;
+
+        [FieldOffset(52)]
         internal Vector128<float> MassNormalTangent;
+
+        [FieldOffset(64)]
         internal Vector128<float> Accumulated;
 
+        [FieldOffset(80)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position1;
 
+        [FieldOffset(92)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position2;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the first body.
         /// </summary>
+        [FieldOffset(104)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the second body.
         /// </summary>
+        [FieldOffset(116)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
@@ -560,7 +582,8 @@ public struct ContactData
             float massTangent2 = 1.0f / kTangent2;
             float massNormal = 1.0f / kNormal;
 
-            MassNormalTangent = Vector128.Create(massNormal, massTangent1, massTangent2, 0);
+            JVector mass = new JVector(massNormal, massTangent1, massTangent2);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 12);
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -755,7 +778,8 @@ public struct ContactData
                 b2.AngularVelocity += angularImpulse2;
             }
 
-            MassNormalTangent = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
+            var mnt = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 12);
 
             if ((Flag & Flags.NewContact) == 0)
             {
