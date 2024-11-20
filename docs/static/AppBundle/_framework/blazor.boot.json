@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "WebDemo.dll",
   "resources": {
-    "hash": "sha256-XMyCrXXF41P5cN3MT+NL9TSkjP+knjSxCwS7qDNGx9g=",
+    "hash": "sha256-RCdSVPHOs6KAic+xFmPCvRYoaPnuPvU+Kc8CphtXEas=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-xMh4WeE8mQDEZK2+LK1LFlo7V6W+n1UdaFe9TSeMQog="
     },
@@ -9,7 +9,7 @@
       "dotnet.runtime.js": "sha256-uD1t4tsPtmIHsx30SC4OztehGGaHVDksFD38rL2e3P4="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-/aae6CqxsO76b3oE/AGl+vYzuzsu7BBOOGQHAw11xAo="
+      "dotnet.native.wasm": "sha256-uVc65D8+eea+vPJA+OZbvkl0J/+se/I/fiaRTllosVs="
     },
     "coreAssembly": {
       "Jitter2.wasm": "sha256-wYytxKRKlJ0zW9Wl0J7suE8BdIjoZV3zs/Gs78u+MvY=",
@@ -18,7 +18,7 @@
       "System.Diagnostics.TraceSource.wasm": "sha256-f+3Elnx9efxFqMeQwPmR/eBY81wQduJGJohmIy3CYVA=",
       "System.Private.CoreLib.wasm": "sha256-aPD1Ub4c7JrYIl6FmYrAO0MsSgCOOqMvjC1/dtDxoQI=",
       "System.Runtime.InteropServices.JavaScript.wasm": "sha256-XNXRuTJP6o1BGPLeqQcHjDLpNMRusjivjAHKa/MBZB4=",
-      "WebDemo.wasm": "sha256-pE/vGk9d0IchuwC6YhFznkkSeUQ3N9+RETvp4s9XDcU="
+      "WebDemo.wasm": "sha256-fYvRUW5lyxcFBFu5XBx1drDbLDmmwvfVUm/Q5R3gEHc="
     },
     "assembly": {},
     "coreVfs": {
