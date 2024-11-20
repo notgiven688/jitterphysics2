@@ -14,17 +14,17 @@
     <!-- This is to basically disable globalization to exclude icudt.dat (1.5MB) and reduce size of dotnet.wasm -->
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
-  
+
   <Choose>
     <When Condition=" $(Configuration) == 'Debug' ">
       <PropertyGroup>
         <WasmEmitSymbolMap>true</WasmEmitSymbolMap>
-        <EmccFlags>-sUSE_GLFW=3 -sASYNCIFY=1 -sVERBOSE=1 -Wbad-function-cast -Wcast-function-type -O2 -g3 -sVERBOSE=1 -sINITIAL_MEMORY=128MB -sMAXIMUM_MEMORY=2048MB -sALLOW_MEMORY_GROWTH=1 -sASYNCIFY_STACK_SIZE=10000000</EmccFlags>
+        <EmccFlags>-sUSE_GLFW=3</EmccFlags>
       </PropertyGroup>
     </When>
     <When Condition=" $(Configuration) == 'Release' ">
       <PropertyGroup>
-        <EmccFlags>-s USE_GLFW=3 -sASYNCIFY=1 -O3</EmccFlags>
+        <EmccFlags>-s USE_GLFW=3 -O3</EmccFlags>
       </PropertyGroup>
     </When>
   </Choose>
@@ -37,8 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jitter2" Version="2.1.1" />
-    <PackageReference Include="Raylib-cs" Version="5.0.0" />
+    <PackageReference Include="Jitter2" Version="2.4.7" />
+    <PackageReference Include="Raylib-cs" Version="6.1.1" />
   </ItemGroup>
 
 </Project>

@@ -1,17 +1,31 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-import { dotnet } from './dotnet.js'
+import { dotnet } from './_framework/dotnet.js';
 
-await dotnet
-    .withDebugging(1)
-    .withDiagnosticTracing(false)
-    .withApplicationArgumentsFromQuery()
-    .create();
+async function initialize() {
+    const { getAssemblyExports, getConfig, runMain } = await dotnet
+        .withDiagnosticTracing(false)
+        .create();
 
-dotnet.instance.Module['canvas'] = document.getElementById('canvas');
+    const config = getConfig();
+    const exports = await getAssemblyExports(config.mainAssemblyName);
 
-// We're ready to dotnet.run, so let's remove the spinner
-const loading_div = document.getElementById('spinner');
-loading_div.remove();
+    dotnet.instance.Module['canvas'] = document.getElementById('canvas');
 
-await dotnet.run();
+    function mainLoop() {
+        exports.WebDemo.Application.UpdateFrame();
+        window.requestAnimationFrame(mainLoop);
+    }
+
+    // Run the C# Main() method and keep the runtime process running and executing further API calls
+    await runMain();
+
+    // Remove the spinner once the application is ready
+    const loading_div = document.getElementById('spinner');
+    loading_div.remove();
+
+    window.requestAnimationFrame(mainLoop);
+}
+
+// Initialize the application
+initialize().catch(err => {
+    console.error('An error occurred during initialization:', err);
+});
