@@ -1,10 +1,10 @@
 ## Jitter2 in the browser
 
-**Credits for raylib-cs in the browser and this README go to: https://github.com/disketteman/DotnetRaylibWasm**
+**Credits for raylib-cs in the browser and this README go to: https://github.com/disketteman/DotnetRaylibWasm and https://github.com/Kiriller12/RaylibWasm**
 
 ## Setup
 
-Make sure you have the latest version of .NET 7.
+Make sure you have the latest version of .NET 9.
 
 Install the official wasm tooling:
 
@@ -30,5 +30,5 @@ dotnet publish -c Release
 To serve the files use this command:
 
 ```
-dotnet serve --mime .wasm=application/wasm --mime .js=text/javascript --mime .json=application/json --directory ./bin/Release/net7.0/browser-wasm/AppBundle
+dotnet serve --mime .wasm=application/wasm --mime .js=text/javascript --mime .json=application/json --directory ./bin/Release/net9.0/browser-wasm/AppBundle
 ```

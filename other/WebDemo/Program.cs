@@ -5,209 +5,218 @@ using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using static Raylib_cs.Raylib;
+using System.Runtime.InteropServices.JavaScript;
 
-static Matrix4x4 GetRayLibTransformMatrix(RigidBody body)
+namespace WebDemo;
+
+public class Playground
 {
-    JMatrix ori = body.Orientation;
-    JVector pos = body.Position;
+    private Camera3D camera;
+    private Shader shader;
+    private Texture2D texture;
 
-    return new Matrix4x4(ori.M11, ori.M12, ori.M13, pos.X,
-                         ori.M21, ori.M22, ori.M23, pos.Y,
-                         ori.M31, ori.M32, ori.M33, pos.Z,
-                         0, 0, 0, 1.0f);
-}
+    private Model modelPlane;
+    private Model modelCube;
+    private Model modelSphere;
 
-static JVector ToJitter(in Vector3 v) => new JVector(v.X, v.Y, v.Z);
+    private World world;
+    private RigidBody planeBody;
 
-// initialize the Jitter physics world
-World world = new();
-
-RigidBody SpawnBox(Vector3 position)
-{
-    RigidBody body = world.CreateRigidBody();
-    body.AddShape(new BoxShape(1));
-    body.Position = ToJitter(position);
-    return body;
-}
-
-RigidBody SpawnSphere(Vector3 position)
-{
-    RigidBody body = world.CreateRigidBody();
-    body.AddShape(new SphereShape(0.5f));
-    body.Position = ToJitter(position);
-    return body;
-}
-
-RigidBody? planeBody = null;
-
-void InitWorld()
-{
-    world.Clear();
-
-    // add a body representing the plane
-    planeBody = world.CreateRigidBody();
-    planeBody.AddShape(new BoxShape(12));
-    planeBody.Position = new JVector(0, -6, 0);
-    planeBody.IsStatic = true;
-
-    for (int i = 0; i < 8; i++)
+    public Playground()
     {
-        SpawnBox(new Vector3(0, 3f * i + 0.5f, 0));
-        SpawnSphere(new Vector3(0, 3f * i + 1.5f, 0));
-    }
-}
+        const int screenWidth = 800;
+        const int screenHeight = 600;
 
-// Initialization
-//--------------------------------------------------------------------------------------
-const int screenWidth = 800;
-const int screenHeight = 600;
+        // Enable Multi Sampling Anti Aliasing 4x (if available)
+        SetConfigFlags(ConfigFlags.Msaa4xHint);
+        InitWindow(screenWidth, screenHeight, "Jitter2 Demo");
 
-// Enable Multi Sampling Anti Aliasing 4x (if available)
-SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT);
-InitWindow(screenWidth, screenHeight, "Jitter2 Demo");
+        // Define the camera to look into our 3d world
+        camera= new()
+        {
+            Position = new Vector3(2.0f, 8.0f, -16.0f),
+            Target = new Vector3(0.0f, 0.5f, 0.0f),
+            Up = new Vector3(0.0f, 1.0f, 0.0f),
+            FovY = 45.0f,
+            Projection = CameraProjection.Perspective
+        };
 
-// Define the camera to look into our 3d world
-Camera3D camera = new()
-{
-    Position = new Vector3(2.0f, 8.0f, -16.0f),
-    Target = new Vector3(0.0f, 0.5f, 0.0f),
-    Up = new Vector3(0.0f, 1.0f, 0.0f),
-    FovY = 45.0f,
-    Projection = CameraProjection.CAMERA_PERSPECTIVE
-};
+        // Load models and texture
+        modelPlane = LoadModelFromMesh(GenMeshPlane(24, 24, 1, 1));
+        modelCube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
+        modelSphere = LoadModelFromMesh(GenMeshSphere(0.5f, 32, 32));
 
-// Load models and texture
-Model modelPlane = LoadModelFromMesh(GenMeshPlane(12, 12, 1, 1));
-Model modelCube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
-Model modelSphere = LoadModelFromMesh(GenMeshSphere(0.5f, 32, 32));
+        var img = LoadImage("assets/texel_checker.png");
 
-var img = LoadImage("assets/texel_checker.png");
+        texture = LoadTextureFromImage(img);
+        Texture2D textureQ = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 512, 512)));
 
-Texture2D texture = LoadTextureFromImage(img);
-Texture2D textureQ = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 512, 512)));
+        // Assign texture to default model material
+        Raylib.SetMaterialTexture(ref modelCube, 0, MaterialMapIndex.Albedo, ref textureQ);
+        Raylib.SetMaterialTexture(ref modelSphere, 0, MaterialMapIndex.Albedo, ref texture);
+        Raylib.SetMaterialTexture(ref modelPlane, 0, MaterialMapIndex.Albedo, ref texture);
 
-// Assign texture to default model material
-Raylib.SetMaterialTexture(ref modelCube, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref textureQ);
-Raylib.SetMaterialTexture(ref modelSphere, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref texture);
-Raylib.SetMaterialTexture(ref modelPlane, 0, MaterialMapIndex.MATERIAL_MAP_ALBEDO, ref texture);
+        // Load shader
+        shader = LoadShader("assets/lighting.vs", "assets/lighting.fs");
 
-// Load shader
-Shader shader = LoadShader("assets/lighting.vs", "assets/lighting.fs");
+        unsafe
+        {
+            shader.Locs[(int)ShaderLocationIndex.MatrixModel] = GetShaderLocation(shader, "matModel");
+            shader.Locs[(int)ShaderLocationIndex.VectorView] = GetShaderLocation(shader, "viewPos");
+        }
 
-unsafe
-{
-    shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL] = GetShaderLocation(shader, "matModel");
-    shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(shader, "viewPos");
-}
+        // Ambient light level
+        int ambientLoc = GetShaderLocation(shader, "ambient");
+        Raylib.SetShaderValue(
+            shader,
+            ambientLoc,
+            new float[]
+            {
+                0.2f, 0.2f, 0.2f, 1.0f
+            },
+            ShaderUniformDataType.Vec4
+        );
 
-// Ambient light level
-int ambientLoc = GetShaderLocation(shader, "ambient");
-Raylib.SetShaderValue(
-    shader,
-    ambientLoc,
-    new float[] { 0.2f, 0.2f, 0.2f, 1.0f },
-    ShaderUniformDataType.SHADER_UNIFORM_VEC4
-);
+        // NOTE: All models share the same shader
+        Raylib.SetMaterialShader(ref modelPlane, 0, ref shader);
+        Raylib.SetMaterialShader(ref modelCube, 0, ref shader);
+        Raylib.SetMaterialShader(ref modelSphere, 0, ref shader);
 
-// NOTE: All models share the same shader
-Raylib.SetMaterialShader(ref modelPlane, 0, ref shader);
-Raylib.SetMaterialShader(ref modelCube, 0, ref shader);
-Raylib.SetMaterialShader(ref modelSphere, 0, ref shader);
+        // Using just 1 point lights
+        Rlights.CreateLight(0, LightType.Point, new Vector3(0, 8, 6), Vector3.Zero, Color.White, shader);
 
-// Using just 1 point lights
-Rlights.CreateLight(0, LightType.Point, new Vector3(0, 4, 6), Vector3.Zero, Color.WHITE, shader);
+        SetTargetFPS(60);
 
-SetTargetFPS(60);
-
-InitWorld();
-
-//SetCamera(camera, CameraMode.CAMERA_ORBITAL);
-
-//--------------------------------------------------------------------------------------
-
-// Main game loop
-while (!WindowShouldClose())
-{
-    // Update
-    //----------------------------------------------------------------------------------
-
-    UpdateCamera(ref camera, CameraMode.CAMERA_ORBITAL);
-
-    // if (IsKeyPressed(KeyboardKey.KEY_SPACE))
-    // {
-    //     var ob = SpawnBox(camera.position);
-    //     ob.Velocity = JVector.Normalize(ToJitter(camera.target - camera.position)) * 10.0f;
-    // }
-
-    if (IsKeyPressed(KeyboardKey.KEY_R) || IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
-    {
+        world = new World();
         InitWorld();
     }
 
-    unsafe
+    public void Close()
     {
-        // Update the light shader with the camera view position
-        Raylib.SetShaderValue(
-            shader,
-            shader.Locs[(int)ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW],
-            camera.Position,
-            ShaderUniformDataType.SHADER_UNIFORM_VEC3
-        );
+        UnloadModel(modelCube);
+        UnloadModel(modelSphere);
+
+        UnloadTexture(texture);
+        UnloadShader(shader);
+
+        CloseWindow();
     }
-    //----------------------------------------------------------------------------------
 
-    // Draw
-    //----------------------------------------------------------------------------------
-    BeginDrawing();
-    ClearBackground(Color.GRAY);
-
-    BeginMode3D(camera);
-
-    // Draw the spheres and cubes
-    foreach (var body in world.RigidBodies)
+    void InitWorld()
     {
-        if (body == planeBody) continue; // do not draw this
-        if (body == world.NullBody) continue;
+        world.Clear();
 
-        if (body.Shapes[0] is BoxShape)
+        // add a body representing the plane
+        planeBody = world.CreateRigidBody();
+        planeBody.AddShape(new BoxShape(24));
+        planeBody.Position = new JVector(0, -12, 0);
+        planeBody.IsStatic = true;
+
+        for (int i = 0; i < 120; i++)
         {
-            modelCube.Transform = GetRayLibTransformMatrix(body);
-            DrawModel(modelCube, Vector3.Zero, 1.0f, Color.WHITE);
-        }
-        else if (body.Shapes[0] is SphereShape)
-        {
-            modelSphere.Transform = GetRayLibTransformMatrix(body);
-            DrawModel(modelSphere, Vector3.Zero, 1.0f, Color.WHITE);
+            SpawnBox(new Vector3(0, 3f * i + 0.5f, 0));
+            SpawnSphere(new Vector3(0, 3f * i + 1.5f, 0));
         }
     }
 
-    DrawModel(modelPlane, Vector3.Zero, 1.0f, Color.WHITE);
+    static JVector ToJitter(in Vector3 v) => new JVector(v.X, v.Y, v.Z);
 
-    EndMode3D();
+    static Matrix4x4 GetRayLibTransformMatrix(RigidBody body)
+    {
+        JMatrix ori = JMatrix.CreateFromQuaternion(body.Orientation);
+        JVector pos = body.Position;
 
-    DrawText(
-        $"{GetFPS()} fps\nPress R (or touch) to reset",
-        10,
-        10,
-        20,
-        Color.RAYWHITE
-    );
+        return new Matrix4x4(ori.M11, ori.M12, ori.M13, pos.X,
+            ori.M21, ori.M22, ori.M23, pos.Y,
+            ori.M31, ori.M32, ori.M33, pos.Z,
+            0, 0, 0, 1.0f);
+    }
 
-    EndDrawing();
+    RigidBody SpawnBox(Vector3 position)
+    {
+        RigidBody body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.Position = ToJitter(position);
+        body.Friction = 0.35f;
+        return body;
+    }
 
-    world.Step(1.0f / 100.0f, true);
-    //----------------------------------------------------------------------------------
+    RigidBody SpawnSphere(Vector3 position)
+    {
+        RigidBody body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(0.5f));
+        body.Position = ToJitter(position);
+        body.Friction = 0.35f;
+        return body;
+    }
+
+    public void UpdateFrame()
+    {
+        UpdateCamera(ref camera, CameraMode.Orbital);
+
+        if (IsKeyPressed(KeyboardKey.R) || IsMouseButtonDown(MouseButton.Left))
+        {
+            InitWorld();
+        }
+
+        unsafe
+        {
+            // Update the light shader with the camera view position
+            Raylib.SetShaderValue(
+                shader,
+                shader.Locs[(int)ShaderLocationIndex.VectorView],
+                camera.Position,
+                ShaderUniformDataType.Vec3
+            );
+        }
+
+        BeginDrawing();
+        ClearBackground(Color.Gray);
+
+        BeginMode3D(camera);
+
+        // Draw the spheres and cubes
+        foreach (var body in world.RigidBodies)
+        {
+            if (body == planeBody) continue; // do not draw this
+            if (body == world.NullBody) continue;
+
+            if (body.Shapes[0] is BoxShape)
+            {
+                modelCube.Transform = GetRayLibTransformMatrix(body);
+                DrawModel(modelCube, Vector3.Zero, 1.0f, Color.White);
+            }
+            else if (body.Shapes[0] is SphereShape)
+            {
+                modelSphere.Transform = GetRayLibTransformMatrix(body);
+                DrawModel(modelSphere, Vector3.Zero, 1.0f, Color.White);
+            }
+        }
+
+        DrawModel(modelPlane, Vector3.Zero, 1.0f, Color.White);
+
+        EndMode3D();
+
+        DrawText($"{GetFPS()} fps\nPress R (or touch) to reset", 10, 10, 20, Color.RayWhite);
+
+        EndDrawing();
+
+        world.Step(1.0f / 100.0f, true);
+    }
 }
 
-// De-Initialization
-//--------------------------------------------------------------------------------------
-UnloadModel(modelCube);
-UnloadModel(modelSphere);
+public partial class Application
+{
+    private static Playground _playground;
 
-UnloadTexture(texture);
-UnloadShader(shader);
+    [JSExport]
+    public static void UpdateFrame()
+    {
+        _playground?.UpdateFrame();
+    }
 
-CloseWindow();
-//--------------------------------------------------------------------------------------
-
-return 0;
+    public static void Main()
+    {
+        _playground = new Playground();
+    }
+}
