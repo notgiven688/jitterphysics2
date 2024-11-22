@@ -22,6 +22,13 @@ public struct Vector3
         Z = z;
     }
 
+    public Vector3(double x, double y, double z)
+    {
+        X = (float)x;
+        Y = (float)y;
+        Z = (float)z;
+    }
+
     public static Vector3 operator *(Vector3 left, float right)
     {
         return Multiply(left, right);

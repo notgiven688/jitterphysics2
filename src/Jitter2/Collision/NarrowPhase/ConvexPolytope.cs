@@ -49,8 +49,8 @@ public unsafe struct ConvexPolytope
         public JVector Normal;
         public JVector ClosestToOrigin;
 
-        public float NormalSq;
-        public float ClosestToOriginSq;
+        public double NormalSq;
+        public double ClosestToOriginSq;
     }
 
     private struct Edge
@@ -70,7 +70,7 @@ public unsafe struct ConvexPolytope
         }
     }
 
-    private const float NumericEpsilon = 1e-16f;
+    private const double NumericEpsilon = 1e-16;
 
     // (*) Euler-characteristic: V (vertices) - E (edges) + F (faces) = 2
     // We have triangles T instead of faces: F = T
@@ -127,60 +127,60 @@ public unsafe struct ConvexPolytope
         JVector ab = b - a;
         JVector ac = c - a;
 
-        float d1 = JVector.Dot(ab, a);
-        float d2 = JVector.Dot(ac, a);
+        double d1 = JVector.Dot(ab, a);
+        double d2 = JVector.Dot(ac, a);
 
-        if (d1 > 0.0f && d2 > 0.0f)
+        if (d1 > 0.0 && d2 > 0.0)
         {
             result = new JVector(1, 0, 0);
             return true;
         }
 
-        float d3 = JVector.Dot(ab, b);
-        float d4 = JVector.Dot(ac, b);
-        if (d3 < 0.0f && d4 > d3)
+        double d3 = JVector.Dot(ab, b);
+        double d4 = JVector.Dot(ac, b);
+        if (d3 < 0.0 && d4 > d3)
         {
             result = new JVector(0, 1, 0);
             return true;
         }
 
-        float vc = d1 * d4 - d3 * d2;
-        if (vc <= 0.0f && d1 < 0.0f && d3 > 0.0f)
+        double vc = d1 * d4 - d3 * d2;
+        if (vc <= 0.0 && d1 < 0.0 && d3 > 0.0)
         {
-            float v = d1 / (d1 - d3);
-            result = new JVector(1.0f - v, v, 0);
+            double v = d1 / (d1 - d3);
+            result = new JVector(1.0 - v, v, 0);
             return true;
         }
 
-        float d5 = JVector.Dot(ab, c);
-        float d6 = JVector.Dot(ac, c);
-        if (d6 < 0.0f && d5 > d6)
+        double d5 = JVector.Dot(ab, c);
+        double d6 = JVector.Dot(ac, c);
+        if (d6 < 0.0 && d5 > d6)
         {
             result = new JVector(0, 0, 1);
             return true;
         }
 
-        float vb = d5 * d2 - d1 * d6;
-        if (vb <= 0.0f && d2 < 0.0f && d6 > 0.0f)
+        double vb = d5 * d2 - d1 * d6;
+        if (vb <= 0.0 && d2 < 0.0 && d6 > 0.0)
         {
-            float w = d2 / (d2 - d6);
-            result = new JVector(1.0f - w, 0, w);
+            double w = d2 / (d2 - d6);
+            result = new JVector(1.0 - w, 0, w);
             return true;
         }
 
-        float va = d3 * d6 - d5 * d4;
-        if (va <= 0.0f && (d4 - d3) < 0.0f && (d5 - d6) < 0.0f)
+        double va = d3 * d6 - d5 * d4;
+        if (va <= 0.0 && (d4 - d3) < 0.0 && (d5 - d6) < 0.0)
         {
-            float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-            result = new JVector(0, 1.0f - w, w);
+            double w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+            result = new JVector(0, 1.0 - w, w);
             return true;
         }
 
-        float d = 1.0f / (va + vb + vc);
-        float vf = vb * d;
-        float wf = vc * d;
+        double d = 1.0 / (va + vb + vc);
+        double vf = vb * d;
+        double wf = vc * d;
 
-        result = new JVector(1.0f - vf - wf, vf, wf);
+        result = new JVector(1.0 - vf - wf, vf, wf);
         return false;
     }
 
@@ -213,7 +213,7 @@ public unsafe struct ConvexPolytope
         }
 
         // do we need to flip the triangle? (the origin of the md has to be enclosed)
-        float delta = JVector.Dot(triangle.Normal, vertices[a].V - center);
+        double delta = JVector.Dot(triangle.Normal, vertices[a].V - center);
 
         if (delta < 0)
         {
@@ -222,7 +222,7 @@ public unsafe struct ConvexPolytope
         }
 
         delta = JVector.Dot(triangle.Normal, vertices[a].V);
-        triangle.FacingOrigin = delta >= 0.0f;
+        triangle.FacingOrigin = delta >= 0.0;
 
         if (CalcBarycentric(triangle, out JVector bc))
         {
@@ -248,7 +248,7 @@ public unsafe struct ConvexPolytope
     public ref Triangle GetClosestTriangle()
     {
         int closestIndex = -1;
-        float currentMin = float.MaxValue;
+        double currentMin = double.MaxValue;
 
         // We can skip the test for enclosed origin if the origin was
         // already enclosed once.
@@ -279,7 +279,7 @@ public unsafe struct ConvexPolytope
         vPointer = 4;
         tPointer = 0;
 
-        center = 0.25f * (vertices[0].V + vertices[1].V + vertices[2].V + vertices[3].V);
+        center = 0.25 * (vertices[0].V + vertices[1].V + vertices[2].V + vertices[3].V);
 
         CreateTriangle(0, 2, 1);
         CreateTriangle(0, 1, 3);
@@ -297,11 +297,11 @@ public unsafe struct ConvexPolytope
         tPointer = 0;
         center = point;
 
-        const float scale = 1e-2f; // minkowski sums not allowed to be thinner
-        vertices[0] = new Vertex(center + scale * new JVector(MathF.Sqrt(8.0f / 9.0f), 0.0f, -1.0f / 3.0f));
-        vertices[1] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
-        vertices[2] = new Vertex(center + scale * new JVector(-MathF.Sqrt(2.0f / 9.0f), -MathF.Sqrt(2.0f / 3.0f), -1.0f / 3.0f));
-        vertices[3] = new Vertex(center + scale * new JVector(0.0f, 0.0f, 1.0f));
+        const double scale = 1e-2; // minkowski sums not allowed to be thinner
+        vertices[0] = new Vertex(center + scale * new JVector(Math.Sqrt(8.0 / 9.0), 0.0, -1.0 / 3.0));
+        vertices[1] = new Vertex(center + scale * new JVector(-Math.Sqrt(2.0 / 9.0), Math.Sqrt(2.0 / 3.0), -1.0 / 3.0));
+        vertices[2] = new Vertex(center + scale * new JVector(-Math.Sqrt(2.0 / 9.0), -Math.Sqrt(2.0 / 3.0), -1.0 / 3.0));
+        vertices[3] = new Vertex(center + scale * new JVector(0.0, 0.0, 1.0));
 
         CreateTriangle(2, 0, 1);
         CreateTriangle(1, 0, 3);

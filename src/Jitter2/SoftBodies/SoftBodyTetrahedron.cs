@@ -53,7 +53,7 @@ public class SoftBodyTetrahedron : SoftBodyShape
                 vel += Vertices[i].Velocity;
             }
 
-            vel *= 0.25f;
+            vel *= 0.25;
 
             return vel;
         }
@@ -61,12 +61,12 @@ public class SoftBodyTetrahedron : SoftBodyShape
 
     public override RigidBody GetClosest(in JVector pos)
     {
-        float dist = float.MaxValue;
+        double dist = double.MaxValue;
         int closest = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            float len = (pos - Vertices[i].Position).LengthSquared();
+            double len = (pos - Vertices[i].Position).LengthSquared();
             if (len < dist)
             {
                 dist = len;
@@ -79,12 +79,12 @@ public class SoftBodyTetrahedron : SoftBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float maxDot = float.MinValue;
+        double maxDot = double.MinValue;
         int furthest = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            float dot = JVector.Dot(direction, Vertices[i].Position);
+            double dot = JVector.Dot(direction, Vertices[i].Position);
             if (dot > maxDot)
             {
                 maxDot = dot;
@@ -97,13 +97,13 @@ public class SoftBodyTetrahedron : SoftBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        point = 0.25f * (Vertices[0].Position + Vertices[1].Position +
+        point = 0.25 * (Vertices[0].Position + Vertices[1].Position +
                          Vertices[2].Position + Vertices[3].Position);
     }
 
-    public override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public override void UpdateWorldBoundingBox(double dt = 0.0)
     {
-        const float extraMargin = 0.01f;
+        const double extraMargin = 0.01;
 
         JBBox box = JBBox.SmallBox;
         box.AddPoint(Vertices[0].Position);

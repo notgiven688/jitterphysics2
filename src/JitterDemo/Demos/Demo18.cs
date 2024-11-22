@@ -10,11 +10,11 @@ public class Demo18 : IDemo
 {
     public void Draw()
     {
-        float time = (float)pg.Time;
+        double time = (double)pg.Time;
 
-        JMatrix ori = JMatrix.CreateRotationX(1.1f * time) *
-                      JMatrix.CreateRotationY(2.1f * time) *
-                      JMatrix.CreateRotationZ(1.7f * time);
+        JMatrix ori = JMatrix.CreateRotationX(1.1 * time) *
+                      JMatrix.CreateRotationY(2.1 * time) *
+                      JMatrix.CreateRotationZ(1.7 * time);
 
         for (int i = -15; i < 16; i++)
         {
@@ -22,7 +22,7 @@ public class Demo18 : IDemo
             {
                 for (int k = -15; k < 16; k++)
                 {
-                    JVector point = new JVector(i, e, k) * 0.1f;
+                    JVector point = new JVector(i, e, k) * 0.1;
 
                     bool result = NarrowPhase.PointTest(testShape, ori, JVector.Zero, point);
 
@@ -48,7 +48,7 @@ public class Demo18 : IDemo
         pg = (Playground)RenderWindow.Instance;
         world = pg.World;
 
-        testShape = new ConeShape(1f);
+        testShape = new ConeShape(1);
         pg.ResetScene(false);
     }
 }

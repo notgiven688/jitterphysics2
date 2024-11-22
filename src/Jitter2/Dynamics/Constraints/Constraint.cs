@@ -30,11 +30,11 @@ namespace Jitter2.Dynamics.Constraints;
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct SmallConstraintData
 {
-    public const int ConstraintSize = 128;
+    public const int ConstraintSize = 256;
 
     internal int _internal;
-    public delegate*<ref SmallConstraintData, float, void> Iterate;
-    public delegate*<ref SmallConstraintData, float, void> PrepareForIteration;
+    public delegate*<ref SmallConstraintData, double, void> Iterate;
+    public delegate*<ref SmallConstraintData, double, void> PrepareForIteration;
 
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
@@ -43,11 +43,11 @@ public unsafe struct SmallConstraintData
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct ConstraintData
 {
-    public const int ConstraintSize = 256;
+    public const int ConstraintSize = 512;
 
     internal int _internal;
-    public delegate*<ref ConstraintData, float, void> Iterate;
-    public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+    public delegate*<ref ConstraintData, double, void> Iterate;
+    public delegate*<ref ConstraintData, double, void> PrepareForIteration;
 
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
@@ -82,8 +82,8 @@ public abstract class Constraint : IDebugDrawable
     {
     }
 
-    protected unsafe delegate*<ref ConstraintData, float, void> iterate = null;
-    protected unsafe delegate*<ref ConstraintData, float, void> prepareForIteration = null;
+    protected unsafe delegate*<ref ConstraintData, double, void> iterate = null;
+    protected unsafe delegate*<ref ConstraintData, double, void> prepareForIteration = null;
 
     /// <summary>
     /// Enables or disables this constraint temporarily. For a complete removal of the constraint,

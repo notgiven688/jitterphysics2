@@ -43,7 +43,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
         var csmInstance = RenderWindow.Instance.CSMRenderer.GetInstance<T>();
         Mesh mesh = csmInstance.mesh;
 
-        float totalMass = 0.0f;
+        double totalMass = 0.0;
 
         foreach (var group in mesh.Groups)
         {
@@ -71,7 +71,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
             shapesToAdd.Add(chs);
         }
 
-        com *= 1.0f / totalMass;
+        com *= 1.0 / totalMass;
 
         foreach (Shape s in shapesToAdd)
         {
@@ -92,7 +92,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
         {
             var mat = Conversion.FromJitter(body);
             Vector3 color = Vector3.Zero;
-            //if (!body.Data.isActive) color = new Vector3(0.2f, 0.2f, 0.2f);
+            //if (!body.Data.isActive) color = new Vector3(0.2, 0.2, 0.2);
             csmInstance.PushMatrix(mat * MatrixHelper.CreateTranslation(Conversion.FromJitter(-com)), color);
         }
     }

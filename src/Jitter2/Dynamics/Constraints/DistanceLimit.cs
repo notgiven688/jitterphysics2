@@ -42,7 +42,7 @@ public unsafe class DistanceLimit : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, double, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -50,16 +50,16 @@ public unsafe class DistanceLimit : Constraint
         public JVector LocalAnchor1;
         public JVector LocalAnchor2;
 
-        public float BiasFactor;
-        public float Softness;
-        public float Distance;
+        public double BiasFactor;
+        public double Softness;
+        public double Distance;
 
-        public float LimitMin;
-        public float LimitMax;
+        public double LimitMin;
+        public double LimitMax;
 
-        public float EffectiveMass;
-        public float AccumulatedImpulse;
-        public float Bias;
+        public double EffectiveMass;
+        public double AccumulatedImpulse;
+        public double Bias;
 
         public MemoryHelper.MemBlock48 J0;
 
@@ -99,8 +99,8 @@ public unsafe class DistanceLimit : Constraint
         JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
-        data.Softness = 0.001f;
-        data.BiasFactor = 0.2f;
+        data.Softness = 0.001;
+        data.BiasFactor = 0.2;
         data.Distance = (anchor2 - anchor1).Length();
 
         (data.LimitMin, data.LimitMax) = limit;
@@ -144,7 +144,7 @@ public unsafe class DistanceLimit : Constraint
         }
     }
 
-    public float TargetDistance
+    public double TargetDistance
     {
         set
         {
@@ -154,7 +154,7 @@ public unsafe class DistanceLimit : Constraint
         get => handle.Data.Distance;
     }
 
-    public float Distance
+    public double Distance
     {
         get
         {
@@ -174,7 +174,7 @@ public unsafe class DistanceLimit : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, double idt)
     {
         ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -188,7 +188,7 @@ public unsafe class DistanceLimit : Constraint
 
         JVector.Subtract(p2, p1, out JVector dp);
 
-        float error = dp.Length() - data.Distance;
+        double error = dp.Length() - data.Distance;
 
         data.Clamp = 0;
 
@@ -204,18 +204,18 @@ public unsafe class DistanceLimit : Constraint
         }
         else
         {
-            data.AccumulatedImpulse = 0.0f;
+            data.AccumulatedImpulse = 0.0;
             return;
         }
 
         JVector n = p2 - p1;
-        if (n.LengthSquared() != 0.0f) n.Normalize();
+        if (n.LengthSquared() != 0.0) n.Normalize();
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 
-        jacobian[0] = -1.0f * n;
-        jacobian[1] = -1.0f * (r1 % n);
-        jacobian[2] = 1.0f * n;
+        jacobian[0] = -1.0 * n;
+        jacobian[1] = -1.0 * (r1 % n);
+        jacobian[2] = 1.0 * n;
         jacobian[3] = r2 % n;
 
         data.EffectiveMass = body1.InverseMass +
@@ -225,7 +225,7 @@ public unsafe class DistanceLimit : Constraint
 
         data.EffectiveMass += data.Softness * idt;
 
-        data.EffectiveMass = 1.0f / data.EffectiveMass;
+        data.EffectiveMass = 1.0 / data.EffectiveMass;
 
         data.Bias = error * data.BiasFactor * idt;
 
@@ -236,21 +236,21 @@ public unsafe class DistanceLimit : Constraint
         body2.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * jacobian[3], body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public double Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public double Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public float Impulse => handle.Data.AccumulatedImpulse;
+    public double Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, double idt)
     {
         ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -260,27 +260,27 @@ public unsafe class DistanceLimit : Constraint
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 
-        float jv =
+        double jv =
             body1.Velocity * jacobian[0] +
             body1.AngularVelocity * jacobian[1] +
             body2.Velocity * jacobian[2] +
             body2.AngularVelocity * jacobian[3];
 
-        float softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        double softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
 
-        float lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
+        double lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        float oldacc = data.AccumulatedImpulse;
+        double oldacc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse = MathF.Min(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = Math.Min(data.AccumulatedImpulse, 0.0);
         }
         else
         {
-            data.AccumulatedImpulse = MathF.Max(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = Math.Max(data.AccumulatedImpulse, 0.0);
         }
 
         lambda = data.AccumulatedImpulse - oldacc;

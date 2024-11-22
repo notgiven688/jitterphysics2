@@ -87,7 +87,7 @@ public partial class Playground : RenderWindow
         {
             RigidBody body = World.CreateRigidBody();
             floorShape = new BoxShape(200, 200, 200);
-            body.Position = new JVector(0, -100, 0f);
+            body.Position = new JVector(0, -100, 0);
             body.IsStatic = true;
             body.AddShape(floorShape);
         }
@@ -95,7 +95,7 @@ public partial class Playground : RenderWindow
         world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
         world.BroadPhaseFilter = null;
         world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter();
-        world.Gravity = new JVector(0, -9.81f, 0);
+        world.Gravity = new JVector(0, -9.81, 0);
         world.SubstepCount = 1;
         world.SolverIterations = (8, 4);
     }
@@ -114,14 +114,14 @@ public partial class Playground : RenderWindow
 
     public void ShootPrimitive()
     {
-        const float primitiveVelocity = 20.0f;
+        const double primitiveVelocity = 20.0;
 
         var pos = Camera.Position;
         var dir = Camera.Direction;
 
         var sb = World.CreateRigidBody();
         sb.Position = Conversion.ToJitterVector(pos);
-        sb.Velocity = Conversion.ToJitterVector(dir * primitiveVelocity);
+        sb.Velocity = Conversion.ToJitterVector(dir * (float)primitiveVelocity);
 
         var ss = new BoxShape(1);
         sb.AddShape(ss);
@@ -130,7 +130,7 @@ public partial class Playground : RenderWindow
     public override void Draw()
     {
         // if (Keyboard.KeyPressBegin(Keyboard.Key.P))
-        world.Step(1.0f / 100.0f, multiThread);
+        world.Step(1.0 / 100.0, multiThread);
 
         UpdateDisplayText();
         LayoutGui();
@@ -150,26 +150,26 @@ public partial class Playground : RenderWindow
             switch (shape)
             {
                 case BoxShape s:
-                    ms = MatrixHelper.CreateScale(s.Size.X, s.Size.Y, s.Size.Z);
+                    ms = MatrixHelper.CreateScale((float)s.Size.X, (float)s.Size.Y, (float)s.Size.Z);
                     boxDrawer.PushMatrix(mat * ms, color);
                     break;
                 case SphereShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius * 2);
+                    ms = MatrixHelper.CreateScale((float)s.Radius * 2);
                     sphereDrawer.PushMatrix(mat * ms, color);
                     break;
                 case CylinderShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius, s.Height, s.Radius);
+                    ms = MatrixHelper.CreateScale((float)s.Radius, (float)s.Height, (float)s.Radius);
                     cylinderDrawer.PushMatrix(mat * ms, color);
                     break;
                 case CapsuleShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius, s.Length, s.Radius);
+                    ms = MatrixHelper.CreateScale((float)s.Radius, (float)s.Length, (float)s.Radius);
                     cylinderDrawer.PushMatrix(mat * ms, color);
-                    ms = MatrixHelper.CreateTranslation(0, 0.5f * s.Length, 0) * MatrixHelper.CreateScale(s.Radius * 2);
+                    ms = MatrixHelper.CreateTranslation(0, 0.5f * (float)s.Length, 0) * MatrixHelper.CreateScale((float)s.Radius * 2);
                     halfSphereDrawer.PushMatrix(mat * ms, color);
                     halfSphereDrawer.PushMatrix(mat * MatrixHelper.CreateRotationX(MathF.PI) * ms, color);
                     break;
                 case ConeShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius * 2, s.Height, s.Radius * 2);
+                    ms = MatrixHelper.CreateScale((float)s.Radius * 2, (float)s.Height, (float)s.Radius * 2);
                     coneDrawer.PushMatrix(mat * ms, color);
                     break;
             }
@@ -195,7 +195,7 @@ public partial class Playground : RenderWindow
                     continue;
                 }
 
-                if (!shape.RigidBody.Data.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
+                if (!shape.RigidBody.Data.IsActive) color += new Vector3(0.2, 0.2, 0.2);
 
                 if (shape is TransformedShape ts)
                 {

@@ -44,36 +44,36 @@ public class RayCastCar
 
     public RigidBody Body { get; }
 
-    private float destSteering;
-    private float destAccelerate;
-    private float steering;
-    private float accelerate;
+    private double destSteering;
+    private double destAccelerate;
+    private double steering;
+    private double accelerate;
 
     /// <summary>
     /// The maximum steering angle in degrees
     /// for both front wheels
     /// </summary>
-    public float SteerAngle { get; set; }
+    public double SteerAngle { get; set; }
 
     /// <summary>
     /// The maximum torque which is applied to the
     /// car when accelerating.
     /// </summary>
-    public float DriveTorque { get; set; }
+    public double DriveTorque { get; set; }
 
     /// <summary>
     /// Lower/Higher the acceleration of the car.
     /// </summary>
-    public float AccelerationRate { get; set; }
+    public double AccelerationRate { get; set; }
 
     /// <summary>
     /// Lower/Higher the steering rate of the car.
     /// </summary>
-    public float SteerRate { get; set; }
+    public double SteerRate { get; set; }
 
     // don't damp perfect, allow some bounciness.
-    private const float dampingFrac = 0.8f;
-    private const float springFrac = 0.45f;
+    private const double dampingFrac = 0.8;
+    private const double springFrac = 0.45;
 
     /// <summary>
     /// Initializes a new instance of the DefaultCar class.
@@ -85,40 +85,40 @@ public class RayCastCar
         this.world = world;
 
         // set some default values
-        AccelerationRate = 10f;
-        SteerAngle = (float)JAngle.FromDegree(40.0f);
-        DriveTorque = 340.0f;
-        SteerRate = 5.0f;
+        AccelerationRate = 10;
+        SteerAngle = (double)JAngle.FromDegree(40.0);
+        DriveTorque = 340.0;
+        SteerRate = 5.0;
 
         Body = world.CreateRigidBody();
 
-        TransformedShape tfs1 = new(new BoxShape(3.1f, 1.4f, 8f), new JVector(0, 0.6f, 0));
-        TransformedShape tfs2 = new(new BoxShape(2.4f, 0.8f, 5f), new JVector(0.0f, 1.7f, 1.1f));
+        TransformedShape tfs1 = new(new BoxShape(3.1, 1.4, 8), new JVector(0, 0.6, 0));
+        TransformedShape tfs2 = new(new BoxShape(2.4, 0.8, 5), new JVector(0.0, 1.7, 1.1));
 
         Body.AddShape(tfs1);
         Body.AddShape(tfs2);
 
-        float mass = 100.0f;
-        JVector sides = new JVector(3.1f, 1.0f, 8.0f);
+        double mass = 100.0;
+        JVector sides = new JVector(3.1, 1.0, 8.0);
 
-        float Ixx = (1.0f / 12.0f) * mass * (sides.Y * sides.Y + sides.Z * sides.Z);
-        float Iyy = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Z * sides.Z);
-        float Izz = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Y * sides.Y);
+        double Ixx = (1.0 / 12.0) * mass * (sides.Y * sides.Y + sides.Z * sides.Z);
+        double Iyy = (1.0 / 12.0) * mass * (sides.X * sides.X + sides.Z * sides.Z);
+        double Izz = (1.0 / 12.0) * mass * (sides.X * sides.X + sides.Y * sides.Y);
 
         JMatrix inertia = new JMatrix(Ixx, 0, 0, 0, Iyy, 0, 0, 0, Izz);
         JVector r = new JVector(0, 0, 0);
         inertia += mass * r.LengthSquared() * JMatrix.Identity - mass * JVector.Outer(r, r);
 
-        Body.Position = new JVector(0, 0.5f, -4);
+        Body.Position = new JVector(0, 0.5, -4);
         Body.SetMassInertia(inertia, mass);
 
-        Body.Damping = (0.0001f, 0.0001f);
+        Body.Damping = (0.0001, 0.0001);
 
         // create default wheels
-        Wheels[0] = new Wheel(world, Body, new JVector(-1.3f, 0.1f, -2.5f), 0.60f);
-        Wheels[1] = new Wheel(world, Body, new JVector(+1.3f, 0.1f, -2.5f), 0.60f);
-        Wheels[2] = new Wheel(world, Body, new JVector(-1.3f, 0.1f, +2.4f), 0.60f);
-        Wheels[3] = new Wheel(world, Body, new JVector(+1.3f, 0.1f, +2.4f), 0.60f);
+        Wheels[0] = new Wheel(world, Body, new JVector(-1.3, 0.1, -2.5), 0.60);
+        Wheels[1] = new Wheel(world, Body, new JVector(+1.3, 0.1, -2.5), 0.60);
+        Wheels[2] = new Wheel(world, Body, new JVector(-1.3, 0.1, +2.4), 0.60);
+        Wheels[3] = new Wheel(world, Body, new JVector(+1.3, 0.1, +2.4), 0.60);
 
         AdjustWheelValues();
     }
@@ -130,14 +130,14 @@ public class RayCastCar
     /// </summary>
     public void AdjustWheelValues()
     {
-        float mass = Body.Mass / 4.0f;
-        float wheelMass = Body.Mass * 0.03f;
+        double mass = Body.Mass / 4.0;
+        double wheelMass = Body.Mass * 0.03;
 
         foreach (Wheel w in Wheels)
         {
-            w.Inertia = 0.5f * (w.Radius * w.Radius) * wheelMass;
+            w.Inertia = 0.5 * (w.Radius * w.Radius) * wheelMass;
             w.Spring = mass * world.Gravity.Length() / (w.WheelTravel * springFrac);
-            w.Damping = 2.0f * (float)Math.Sqrt(w.Spring * Body.Mass) * 0.25f * dampingFrac;
+            w.Damping = 2.0 * (double)Math.Sqrt(w.Spring * Body.Mass) * 0.25 * dampingFrac;
         }
     }
 
@@ -159,36 +159,36 @@ public class RayCastCar
     /// the maximum steer angle by setting <see cref="SteerAngle" />. The speed of steering
     /// change is adjusted by <see cref="SteerRate" />.
     /// </param>
-    public void SetInput(float accelerate, float steer)
+    public void SetInput(double accelerate, double steer)
     {
         destAccelerate = accelerate;
         destSteering = steer;
     }
 
-    public void Step(float timestep)
+    public void Step(double timestep)
     {
         foreach (Wheel w in Wheels) w.PreStep(timestep);
 
-        float deltaAccelerate = timestep * AccelerationRate;
+        double deltaAccelerate = timestep * AccelerationRate;
 
-        float deltaSteering = timestep * SteerRate;
+        double deltaSteering = timestep * SteerRate;
 
-        float dAccelerate = destAccelerate - accelerate;
+        double dAccelerate = destAccelerate - accelerate;
         dAccelerate = Math.Clamp(dAccelerate, -deltaAccelerate, deltaAccelerate);
 
-        float dSteering = destSteering - steering;
+        double dSteering = destSteering - steering;
         dSteering = Math.Clamp(dSteering, -deltaSteering, deltaSteering);
 
         accelerate += dAccelerate;
         steering += dSteering;
 
-        float maxTorque = DriveTorque * 0.5f;
+        double maxTorque = DriveTorque * 0.5;
 
         foreach (Wheel w in Wheels)
         {
             w.AddTorque(maxTorque * accelerate);
 
-            if (destAccelerate == 0.0f && w.AngularVelocity < 0.8f)
+            if (destAccelerate == 0.0 && w.AngularVelocity < 0.8)
             {
                 // if the car is slow enough and destAccelerate is zero
                 // apply torque in the opposite direction of the angular velocity
@@ -197,7 +197,7 @@ public class RayCastCar
             }
         }
 
-        float alpha = SteerAngle * steering;
+        double alpha = SteerAngle * steering;
 
         Wheels[0].SteerAngle = alpha;
         Wheels[1].SteerAngle = alpha;

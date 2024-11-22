@@ -194,7 +194,7 @@ public class TriangleMesh
 
             JVector normal = (C - A) % (B - A);
 
-            if (MathHelper.CloseToZero(normal, 1e-12f))
+            if (MathHelper.CloseToZero(normal, 1e-12))
             {
                 throw new DegenerateTriangleException("Degenerate triangle found in mesh. Try to clean the " +
                                                       "mesh in the editor of your choice first.");

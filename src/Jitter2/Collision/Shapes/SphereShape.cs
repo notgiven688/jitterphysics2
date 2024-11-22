@@ -31,12 +31,12 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class SphereShape : RigidBodyShape
 {
-    private float radius;
+    private double radius;
 
     /// <summary>
     /// Gets or sets the radius of the sphere.
     /// </summary>
-    public float Radius
+    public double Radius
     {
         get => radius;
         set
@@ -50,8 +50,8 @@ public class SphereShape : RigidBodyShape
     /// Initializes a new instance of the <see cref="SphereShape"/> class with an optional radius parameter.
     /// The default radius is 1.0 units.
     /// </summary>
-    /// <param name="radius">The radius of the sphere. Defaults to 1.0f.</param>
-    public SphereShape(float radius = 1.0f)
+    /// <param name="radius">The radius of the sphere. Defaults to 1.0.</param>
+    public SphereShape(double radius = 1.0)
     {
         this.radius = radius;
         UpdateWorldBoundingBox();
@@ -82,41 +82,41 @@ public class SphereShape : RigidBodyShape
         JVector.Add(box.Max, position, out box.Max);
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
         normal = JVector.Zero;
-        lambda = 0.0f;
+        lambda = 0.0;
 
-        float disq = 1.0f / direction.LengthSquared();
-        float p = JVector.Dot(direction, origin) * disq;
-        float d = p * p - (origin.LengthSquared() - radius * radius) * disq;
+        double disq = 1.0 / direction.LengthSquared();
+        double p = JVector.Dot(direction, origin) * disq;
+        double d = p * p - (origin.LengthSquared() - radius * radius) * disq;
 
-        if (d < 0.0f) return false;
+        if (d < 0.0) return false;
 
-        float sqrtd = MathF.Sqrt(d);
+        double sqrtd = Math.Sqrt(d);
 
-        float t0 = -p - sqrtd;
-        float t1 = -p + sqrtd;
+        double t0 = -p - sqrtd;
+        double t1 = -p + sqrtd;
 
-        if (t0 >= 0.0f)
+        if (t0 >= 0.0)
         {
             lambda = t0;
             JVector.Normalize(origin + t0 * direction, out normal);
             return true;
         }
 
-        return t1 > 0.0f;
+        return t1 > 0.0;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
     {
-        mass = 4.0f / 3.0f * MathF.PI * radius * radius * radius;
+        mass = 4.0 / 3.0 * Math.PI * radius * radius * radius;
 
         // (0,0,0) is the center of mass
         inertia = JMatrix.Identity;
-        inertia.M11 = 2.0f / 5.0f * mass * radius * radius;
-        inertia.M22 = 2.0f / 5.0f * mass * radius * radius;
-        inertia.M33 = 2.0f / 5.0f * mass * radius * radius;
+        inertia.M11 = 2.0 / 5.0 * mass * radius * radius;
+        inertia.M22 = 2.0 / 5.0 * mass * radius * radius;
+        inertia.M33 = 2.0 / 5.0 * mass * radius * radius;
 
         com = JVector.Zero;
     }

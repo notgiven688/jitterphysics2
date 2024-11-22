@@ -31,6 +31,73 @@ using Jitter2.UnmanagedMemory;
 
 namespace Jitter2.Dynamics;
 
+[StructLayout(LayoutKind.Sequential)]
+public struct Vector128
+{
+
+    public double X; 
+    public double Y;
+    public double Z; 
+    public double W;
+    public static bool IsHardwareAccelerated => false;
+
+    public Vector128(double x, double y, double z, double w)
+    {
+        X = x; Y = y; Z = z; W = w;
+    }
+
+    public static Vector128 Create(double x)
+    {
+        return new Vector128(x, x, x, x);
+    }
+
+    public static Vector128 Create(double x, double y, double z, double w)
+    {
+        return new Vector128(x, y, z, w);
+    }
+
+    internal double GetElement(int v)
+    {
+        return v switch {
+            0 => X,
+            1 => Y,
+            2 => Z,
+            3 => W,
+            _ => throw new IndexOutOfRangeException()
+        };
+    }
+
+    internal static Vector128 Subtract(Vector128 a, Vector128 b)
+    {
+        return new Vector128(a.X - b.X, a.Y - b.Y, a.Z - b.Z, a.W - b.W);
+    }
+
+    internal static Vector128 Multiply(Vector128 a, Vector128 b)
+    {
+        return new Vector128(a.X * b.X, a.Y * b.Y, a.Z * b.Z, a.W * b.W);
+    }
+
+    internal static Vector128 Add(Vector128 a, Vector128 b)
+    {
+        return new Vector128(a.X + b.X, a.Y + b.Y, a.Z + b.Z, a.W + b.W);
+    }
+
+    internal static object Divide(Vector128 a, Vector128 b)
+    {
+        return new Vector128(a.X / b.X, a.Y / b.Y, a.Z / b.Z, a.W / b.W);
+    }
+
+    internal static Vector128 Min(Vector128 a, Vector128 b)
+    {
+        return new Vector128(Math.Min(a.X, b.X), Math.Min(a.Y, b.Y), Math.Min(a.Z, b.Z), Math.Min(a.W, b.W));
+    }
+
+    internal static Vector128 Max(Vector128 a, Vector128 b)
+    {
+        return new Vector128(Math.Max(a.X, b.X), Math.Max(a.Y, b.Y), Math.Max(a.Z, b.Z), Math.Max(a.W, b.W));
+    }
+}
+
 /// <summary>
 /// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/>
 /// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
@@ -59,7 +126,7 @@ public struct ContactData
     /// A sphere may slide down a ramp. Within one timestep Jitter may detect the collision, create the contact,
     /// solve the contact, integrate velocities and positions and then consider the contact as broken, since the
     /// movement orthogonal to the contact normal exceeds a threshold. This results in no intact contact before calling
-    /// <see cref="World.Step(float, bool)"/> and no intact contact after the call. However, the correspondig bit for the
+    /// <see cref="World.Step(double, bool)"/> and no intact contact after the call. However, the correspondig bit for the
     /// solver-phase will be set in this scenario.
     /// </example>
     public uint UsageMask;
@@ -69,8 +136,8 @@ public struct ContactData
 
     public ArbiterKey Key;
 
-    public float Restitution;
-    public float Friction;
+    public double Restitution;
+    public double Friction;
 
     public bool IsSpeculative;
 
@@ -79,7 +146,7 @@ public struct ContactData
     public Contact Contact2;
     public Contact Contact3;
 
-    public unsafe void PrepareForIteration(float dt)
+    public unsafe void PrepareForIteration(double dt)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
@@ -152,8 +219,8 @@ public struct ContactData
         Body1 = body1.handle;
         Body2 = body2.handle;
 
-        Friction = MathF.Max(body1.Friction, body2.Friction);
-        Restitution = MathF.Max(body1.Restitution, body2.Restitution);
+        Friction = Math.Max(body1.Friction, body2.Friction);
+        Restitution = Math.Max(body1.Restitution, body2.Restitution);
 
         UsageMask = 0;
     }
@@ -178,13 +245,13 @@ public struct ContactData
     //    being the original software.
     // 3. This notice may not be removed or altered from any source distribution.
     //
-    // https://github.com/bulletphysics/bullet3/blob/39b8de74df93721add193e5b3d9ebee579faebf8/
+    // https://github.com/bulletphysics/bullet3/blob/39b8de74df93721add193e5b3d9ebee579aebf8/
     // src/Bullet3OpenCL/NarrowphaseCollision/b3ContactCache.cpp
 
     /// <summary>
     /// Adds a new collision result to the contact manifold. Keeps at most four points.
     /// </summary>
-    public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal, float penetration)
+    public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal, double penetration)
     {
         if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
@@ -197,13 +264,13 @@ public struct ContactData
         // to an already existing point. Replace this point by the new one.
 
         Contact* closest = (Contact*)IntPtr.Zero;
-        float distanceSq = float.MaxValue;
+        double distanceSq = double.MaxValue;
 
         JVector relP1 = point1 - Body1.Data.Position;
 
         if ((UsageMask & MaskContact0) != 0)
         {
-            float distSq = (Contact0.RelativePosition1 - relP1).LengthSquared();
+            double distSq = (Contact0.RelativePosition1 - relP1).LengthSquared();
             if (distSq < distanceSq)
             {
                 distanceSq = distSq;
@@ -213,7 +280,7 @@ public struct ContactData
 
         if ((UsageMask & MaskContact1) != 0)
         {
-            float distSq = (Contact1.RelativePosition1 - relP1).LengthSquared();
+            double distSq = (Contact1.RelativePosition1 - relP1).LengthSquared();
             if (distSq < distanceSq)
             {
                 distanceSq = distSq;
@@ -223,7 +290,7 @@ public struct ContactData
 
         if ((UsageMask & MaskContact2) != 0)
         {
-            float distSq = (Contact2.RelativePosition1 - relP1).LengthSquared();
+            double distSq = (Contact2.RelativePosition1 - relP1).LengthSquared();
             if (distSq < distanceSq)
             {
                 distanceSq = distSq;
@@ -233,7 +300,7 @@ public struct ContactData
 
         if ((UsageMask & MaskContact3) != 0)
         {
-            float distSq = (Contact3.RelativePosition1 - relP1).LengthSquared();
+            double distSq = (Contact3.RelativePosition1 - relP1).LengthSquared();
             if (distSq < distanceSq)
             {
                 distanceSq = distSq;
@@ -271,7 +338,7 @@ public struct ContactData
         }
     }
 
-    private static float CalcArea4Points(in JVector p0, in JVector p1, in JVector p2, in JVector p3)
+    private static double CalcArea4Points(in JVector p0, in JVector p1, in JVector p2, in JVector p3)
     {
         JVector a0 = p0 - p1;
         JVector a1 = p0 - p2;
@@ -284,26 +351,26 @@ public struct ContactData
         JVector tmp1 = a1 % b1;
         JVector tmp2 = a2 % b2;
 
-        return MathF.Max(MathF.Max(tmp0.LengthSquared(), tmp1.LengthSquared()), tmp2.LengthSquared());
+        return Math.Max(Math.Max(tmp0.LengthSquared(), tmp1.LengthSquared()), tmp2.LengthSquared());
     }
 
-    private void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal, float penetration)
+    private void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal, double penetration)
     {
         JVector.Subtract(point1, Body1.Data.Position, out JVector rp1);
 
         // calculate 4 possible cases areas, and take the biggest area
         // int maxPenetrationIndex = -1;
-        // float maxPenetration = penetration;
+        // double maxPenetration = penetration;
 
         // always prefer the new point
-        const float epsilon = -0.0001f;
+        const double epsilon = -0.0001;
 
-        float biggestArea = 0;
+        double biggestArea = 0;
 
         ref Contact cref = ref Contact0;
         uint index = 0;
 
-        float clsq = CalcArea4Points(rp1, Contact1.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
+        double clsq = CalcArea4Points(rp1, Contact1.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
 
         if (clsq > biggestArea + epsilon)
         {
@@ -344,13 +411,13 @@ public struct ContactData
 
     // ---------------------------------------------------------------------------------------------------------
 
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Sequential)]
     public struct Contact
     {
-        public const float MaximumBias = 100.0f;
-        public const float BiasFactor = 0.2f;
-        public const float AllowedPenetration = 0.01f;
-        public const float BreakThreshold = 0.02f;
+        public const double MaximumBias = 100.0;
+        public const double BiasFactor = 0.2;
+        public const double AllowedPenetration = 0.01;
+        public const double BreakThreshold = 0.02;
 
         [Flags]
         public enum Flags
@@ -358,49 +425,36 @@ public struct ContactData
             NewContact = 1 << 1,
         }
 
-        [FieldOffset(0)]
         public Flags Flag;
 
-        [FieldOffset(4)]
-        public float Bias;
+        public double Bias;
 
-        [FieldOffset(8)]
-        public float PenaltyBias;
+        public double PenaltyBias;
 
-        [FieldOffset(12)]
-        public float Penetration;
+        public double Penetration;
 
-        [FieldOffset(16)]
-        internal Vector128<float> NormalTangentX;
+        internal Vector128 NormalTangentX;
 
-        [FieldOffset(28)]
-        internal Vector128<float> NormalTangentY;
+        internal Vector128 NormalTangentY;
 
-        [FieldOffset(40)]
-        internal Vector128<float> NormalTangentZ;
+        internal Vector128 NormalTangentZ;
 
-        [FieldOffset(52)]
-        internal Vector128<float> MassNormalTangent;
+        internal Vector128 MassNormalTangent;
 
-        [FieldOffset(64)]
-        internal Vector128<float> Accumulated;
+        internal Vector128 Accumulated;
 
-        [FieldOffset(80)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position1;
 
-        [FieldOffset(92)]
         [ReferenceFrame(ReferenceFrame.Local)] internal JVector Position2;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the first body.
         /// </summary>
-        [FieldOffset(104)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the second body.
         /// </summary>
-        [FieldOffset(116)]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
@@ -409,16 +463,16 @@ public struct ContactData
 
         [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent2 => new JVector(NormalTangentX.GetElement(2), NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
 
-        public float Impulse => Accumulated.GetElement(0);
+        public double Impulse => Accumulated.GetElement(0);
 
-        public float TangentImpulse1 => Accumulated.GetElement(1);
+        public double TangentImpulse1 => Accumulated.GetElement(1);
 
-        public float TangentImpulse2 => Accumulated.GetElement(2);
+        public double TangentImpulse2 => Accumulated.GetElement(2);
 
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2, in JVector n,
-            float penetration, bool newContact, float restitution)
+            double penetration, bool newContact, double restitution)
         {
-            Debug.Assert(Math.Abs(n.LengthSquared() - 1.0f) < 1e-3);
+            Debug.Assert(Math.Abs(n.LengthSquared() - 1.0) < 1e-3);
 
             JVector.Subtract(point1, b1.Position, out RelativePosition1);
             JVector.Subtract(point2, b2.Position, out RelativePosition2);
@@ -431,28 +485,28 @@ public struct ContactData
             if (!newContact) return;
 
             Flag = Flags.NewContact;
-            Accumulated = Vector128.Create(0.0f);
+            Accumulated = Vector128.Create(0.0);
 
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            float relNormalVel = JVector.Dot(dv, n);
+            double relNormalVel = JVector.Dot(dv, n);
 
             Bias = 0;
 
             // Fake restitution
-            if (relNormalVel < -1.0f)
+            if (relNormalVel < -1.0)
             {
                 Bias = -restitution * relNormalVel;
             }
 
             var tangent1 = dv - n * relNormalVel;
 
-            float num = tangent1.LengthSquared();
+            double num = tangent1.LengthSquared();
 
-            if (num > 1e-12f)
+            if (num > 1e-12)
             {
-                num = 1.0f / MathF.Sqrt(num);
+                num = 1.0 / Math.Sqrt(num);
                 tangent1 *= num;
             }
             else
@@ -462,9 +516,9 @@ public struct ContactData
 
             var tangent2 = tangent1 % n;
 
-            NormalTangentX = Vector128.Create(n.X, tangent1.X, tangent2.X, 0);
-            NormalTangentY = Vector128.Create(n.Y, tangent1.Y, tangent2.Y, 0);
-            NormalTangentZ = Vector128.Create(n.Z, tangent1.Z, tangent2.Z, 0);
+            NormalTangentX = Vector128.Create(n.X, tangent1.X, tangent2.X, 0.0);
+            NormalTangentY = Vector128.Create(n.Y, tangent1.Y, tangent2.Y, 0.0);
+            NormalTangentZ = Vector128.Create(n.Z, tangent1.Z, tangent2.Z, 0.0);
         }
 
         public unsafe bool UpdatePosition(ContactData* cd)
@@ -487,13 +541,13 @@ public struct ContactData
 
             Penetration = JVector.Dot(dist, n);
 
-            if (Penetration < -BreakThreshold * 0.1f)
+            if (Penetration < -BreakThreshold * 0.1)
             {
                 return false;
             }
 
             dist -= Penetration * n;
-            float tangentialOffsetSq = dist.LengthSquared();
+            double tangentialOffsetSq = dist.LengthSquared();
 
             if (tangentialOffsetSq > BreakThreshold * BreakThreshold)
             {
@@ -504,15 +558,15 @@ public struct ContactData
         }
 
         // Fallback for missing hardware acceleration
-        #region public unsafe void PrepareForIteration(ContactData* cd, float idt)
-        public unsafe void PrepareForIteration(ContactData* cd, float idt)
+        #region public unsafe void PrepareForIteration(ContactData* cd, double idt)
+        public unsafe void PrepareForIteration(ContactData* cd, double idt)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            float accumulatedNormalImpulse = Accumulated.GetElement(0);
-            float accumulatedTangentImpulse1 = Accumulated.GetElement(1);
-            float accumulatedTangentImpulse2 = Accumulated.GetElement(2);
+            double accumulatedNormalImpulse = Accumulated.GetElement(0);
+            double accumulatedTangentImpulse1 = Accumulated.GetElement(1);
+            double accumulatedTangentImpulse2 = Accumulated.GetElement(2);
 
             var normal = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
             var tangent1 = new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
@@ -524,11 +578,11 @@ public struct ContactData
             JVector.Add(RelativePosition2, b2.Position, out JVector p2);
             JVector.Subtract(p1, p2, out JVector dist);
 
-            float inverseMass = b1.InverseMass + b2.InverseMass;
+            double inverseMass = b1.InverseMass + b2.InverseMass;
 
-            float kTangent1 = inverseMass;
-            float kTangent2 = inverseMass;
-            float kNormal = inverseMass;
+            double kTangent1 = inverseMass;
+            double kTangent2 = inverseMass;
+            double kNormal = inverseMass;
 
             if (!cd->IsSpeculative)
             {
@@ -578,12 +632,12 @@ public struct ContactData
                                       accumulatedTangentImpulse2 * mTt2;
             }
 
-            float massTangent1 = 1.0f / kTangent1;
-            float massTangent2 = 1.0f / kTangent2;
-            float massNormal = 1.0f / kNormal;
+            double massTangent1 = 1.0 / kTangent1;
+            double massTangent2 = 1.0 / kTangent2;
+            double massNormal = 1.0 / kNormal;
 
             JVector mass = new JVector(massNormal, massTangent1, massTangent2);
-            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 12);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 24);
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -595,8 +649,8 @@ public struct ContactData
                 Bias = Penetration * idt;
             }
 
-            PenaltyBias = BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration);
-            PenaltyBias = Math.Clamp(PenaltyBias, 0.0f, MaximumBias);
+            PenaltyBias = BiasFactor * idt * Math.Max(0.0, Penetration - AllowedPenetration);
+            PenaltyBias = Math.Clamp(PenaltyBias, 0.0, MaximumBias);
 
             JVector impulse = normal * accumulatedNormalImpulse +
                               tangent1 * accumulatedTangentImpulse1 +
@@ -616,12 +670,12 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            float massNormal = MassNormalTangent.GetElement(0);
-            float massTangent1 = MassNormalTangent.GetElement(1);
-            float massTangent2 = MassNormalTangent.GetElement(2);
-            float accumulatedNormalImpulse = Accumulated.GetElement(0);
-            float accumulatedTangentImpulse1 = Accumulated.GetElement(1);
-            float accumulatedTangentImpulse2 = Accumulated.GetElement(2);
+            double massNormal = MassNormalTangent.GetElement(0);
+            double massTangent1 = MassNormalTangent.GetElement(1);
+            double massTangent2 = MassNormalTangent.GetElement(2);
+            double accumulatedNormalImpulse = Accumulated.GetElement(0);
+            double accumulatedTangentImpulse1 = Accumulated.GetElement(1);
+            double accumulatedTangentImpulse2 = Accumulated.GetElement(2);
 
             var normal = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
             var tangent1 = new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
@@ -630,31 +684,31 @@ public struct ContactData
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            float vn = JVector.Dot(normal, dv);
-            float vt1 = JVector.Dot(tangent1, dv);
-            float vt2 = JVector.Dot(tangent2, dv);
+            double vn = JVector.Dot(normal, dv);
+            double vt1 = JVector.Dot(tangent1, dv);
+            double vt2 = JVector.Dot(tangent2, dv);
 
-            float normalImpulse = -vn;
+            double normalImpulse = -vn;
 
-            if (applyBias) normalImpulse += MathF.Max(PenaltyBias, Bias);
+            if (applyBias) normalImpulse += Math.Max(PenaltyBias, Bias);
             else normalImpulse += Bias;
 
             normalImpulse *= massNormal;
 
-            float oldNormalImpulse = accumulatedNormalImpulse;
-            accumulatedNormalImpulse = MathF.Max(oldNormalImpulse + normalImpulse, 0.0f);
+            double oldNormalImpulse = accumulatedNormalImpulse;
+            accumulatedNormalImpulse = Math.Max(oldNormalImpulse + normalImpulse, 0.0);
             normalImpulse = accumulatedNormalImpulse - oldNormalImpulse;
 
-            float maxTangentImpulse = cd->Friction * accumulatedNormalImpulse;
-            float tangentImpulse1 = massTangent1 * -vt1;
-            float tangentImpulse2 = massTangent2 * -vt2;
+            double maxTangentImpulse = cd->Friction * accumulatedNormalImpulse;
+            double tangentImpulse1 = massTangent1 * -vt1;
+            double tangentImpulse2 = massTangent2 * -vt2;
 
-            float oldTangentImpulse1 = accumulatedTangentImpulse1;
+            double oldTangentImpulse1 = accumulatedTangentImpulse1;
             accumulatedTangentImpulse1 = oldTangentImpulse1 + tangentImpulse1;
             accumulatedTangentImpulse1 = Math.Clamp(accumulatedTangentImpulse1, -maxTangentImpulse, maxTangentImpulse);
             tangentImpulse1 = accumulatedTangentImpulse1 - oldTangentImpulse1;
 
-            float oldTangentImpulse2 = accumulatedTangentImpulse2;
+            double oldTangentImpulse2 = accumulatedTangentImpulse2;
             accumulatedTangentImpulse2 = oldTangentImpulse2 + tangentImpulse2;
             accumulatedTangentImpulse2 = Math.Clamp(accumulatedTangentImpulse2, -maxTangentImpulse, maxTangentImpulse);
             tangentImpulse2 = accumulatedTangentImpulse2 - oldTangentImpulse2;
@@ -693,12 +747,12 @@ public struct ContactData
         #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static float GetSum3(Vector128<float> vector)
+        private static double GetSum3(Vector128 vector)
         {
             return vector.GetElement(0) + vector.GetElement(1) + vector.GetElement(2);
         }
 
-        public unsafe void PrepareForIterationAccelerated(ContactData* cd, float idt)
+        public unsafe void PrepareForIterationAccelerated(ContactData* cd, double idt)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
@@ -706,7 +760,7 @@ public struct ContactData
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
 
-            Vector128<float> kNormalTangent = Vector128.Create(b1.InverseMass + b2.InverseMass);
+            Vector128 kNormalTangent = Vector128.Create(b1.InverseMass + b2.InverseMass);
 
             if (!cd->IsSpeculative)
             {
@@ -778,8 +832,8 @@ public struct ContactData
                 b2.AngularVelocity += angularImpulse2;
             }
 
-            var mnt = Vector128.Divide(Vector128.Create(1.0f), kNormalTangent);
-            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 12);
+            var mnt = Vector128.Divide(Vector128.Create(1.0), kNormalTangent);
+            Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 24);
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -792,8 +846,8 @@ public struct ContactData
                 Bias = Penetration * idt;
             }
 
-            PenaltyBias = BiasFactor * idt * Math.Max(0.0f, Penetration - AllowedPenetration);
-            PenaltyBias = Math.Clamp(PenaltyBias, 0.0f, MaximumBias);
+            PenaltyBias = BiasFactor * idt * Math.Max(0.0, Penetration - AllowedPenetration);
+            PenaltyBias = Math.Clamp(PenaltyBias, 0.0, MaximumBias);
 
             // warm-starting, linear
             Unsafe.SkipInit(out JVector linearImpulse);
@@ -817,17 +871,17 @@ public struct ContactData
 
             var vdots = Vector128.Add(Vector128.Add(Vector128.Multiply(NormalTangentX, Vector128.Create(dv.X)), Vector128.Multiply(NormalTangentY, Vector128.Create(dv.Y))), Vector128.Multiply(NormalTangentZ, Vector128.Create(dv.Z)));
 
-            float bias = applyBias ? MathF.Max(PenaltyBias, Bias) : Bias;
+            double bias = applyBias ? Math.Max(PenaltyBias, Bias) : Bias;
 
             var impulse = Vector128.Multiply(MassNormalTangent, (Vector128.Subtract(Vector128.Create(bias, 0, 0, 0), vdots)));
             var oldImpulse = Accumulated;
 
-            float maxTangentImpulse = cd->Friction * Accumulated.GetElement(0);
+            double maxTangentImpulse = cd->Friction * Accumulated.GetElement(0);
 
             Accumulated = Vector128.Add(oldImpulse, impulse);
 
             var minImpulse = Vector128.Create(0, -maxTangentImpulse, -maxTangentImpulse, 0);
-            var maxImpulse = Vector128.Create(float.MaxValue, maxTangentImpulse, maxTangentImpulse, 0);
+            var maxImpulse = Vector128.Create(double.MaxValue, maxTangentImpulse, maxTangentImpulse, 0);
 
             Accumulated = Vector128.Min(Vector128.Max(Accumulated, minImpulse), maxImpulse);
             impulse = Vector128.Subtract(Accumulated, oldImpulse);

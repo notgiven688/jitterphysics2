@@ -29,7 +29,7 @@ public class AddRemoveTests
 
         world.BroadPhaseFilter = new FilterOut(staticShape);
 
-        world.Step(0.01f);
+        world.Step(0.01);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
 
         world.Clear();
@@ -47,7 +47,7 @@ public class AddRemoveTests
 
         world.BroadPhaseFilter = new FilterOut(staticShape);
 
-        world.Step(0.01f);
+        world.Step(0.01);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
 
         world.Remove(body);
@@ -69,23 +69,23 @@ public class AddRemoveTests
         bD.AddShape(new SphereShape());
         bD.AddShape(new SphereShape());
         Assert.That(world.DynamicTree.PotentialPairs.Count == 9);
-        world.Step(1e-12f);
+        world.Step(1e-12);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 9);
         world.Remove(bB);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 5);
-        world.Step(1e-12f);
+        world.Step(1e-12);
         bD.RemoveShape(bD.Shapes[0]);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 3);
-        world.Step(1e-12f);
+        world.Step(1e-12);
         world.Remove(bD);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
-        world.Step(1e-12f);
+        world.Step(1e-12);
         world.NullBody.AddShape(new SphereShape());
-        world.Step(1e-12f);
+        world.Step(1e-12);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 3);
-        world.Step(1e-12f);
+        world.Step(1e-12);
         world.Remove(world.NullBody);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
-        world.Step(1e-12f);
+        world.Step(1e-12);
     }
 }

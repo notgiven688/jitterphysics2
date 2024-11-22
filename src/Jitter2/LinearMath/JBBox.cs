@@ -28,7 +28,7 @@ namespace Jitter2.LinearMath;
 /// </summary>
 public struct JBBox
 {
-    public const float Epsilon = 1e-12f;
+    public const double Epsilon = 1e-12;
 
     public enum ContainmentType
     {
@@ -46,10 +46,10 @@ public struct JBBox
 
     static JBBox()
     {
-        LargeBox.Min = new JVector(float.MinValue);
-        LargeBox.Max = new JVector(float.MaxValue);
-        SmallBox.Min = new JVector(float.MaxValue);
-        SmallBox.Max = new JVector(float.MinValue);
+        LargeBox.Min = new JVector(double.MinValue);
+        LargeBox.Max = new JVector(double.MaxValue);
+        SmallBox.Min = new JVector(double.MaxValue);
+        SmallBox.Max = new JVector(double.MinValue);
     }
 
     public JBBox(JVector min, JVector max)
@@ -64,14 +64,14 @@ public struct JBBox
         JVector.Subtract(Min, position, out Min);
 
         JVector.Add(Max, Min, out JVector center);
-        center.X *= 0.5f;
-        center.Y *= 0.5f;
-        center.Z *= 0.5f;
+        center.X *= 0.5;
+        center.Y *= 0.5;
+        center.Z *= 0.5;
 
         JVector.Subtract(Max, Min, out JVector halfExtents);
-        halfExtents.X *= 0.5f;
-        halfExtents.Y *= 0.5f;
-        halfExtents.Z *= 0.5f;
+        halfExtents.X *= 0.5;
+        halfExtents.Y *= 0.5;
+        halfExtents.Z *= 0.5;
 
         JVector.TransposedTransform(center, orientation, out center);
 
@@ -84,8 +84,8 @@ public struct JBBox
 
     public void Transform(ref JMatrix orientation)
     {
-        JVector halfExtents = 0.5f * (Max - Min);
-        JVector center = 0.5f * (Max + Min);
+        JVector halfExtents = 0.5 * (Max - Min);
+        JVector center = 0.5 * (Max + Min);
 
         JVector.Transform(center, orientation, out center);
 
@@ -96,13 +96,13 @@ public struct JBBox
         Min = center - halfExtents;
     }
 
-    private bool Intersect1D(float start, float dir, float min, float max,
-        ref float enter, ref float exit)
+    private bool Intersect1D(double start, double dir, double min, double max,
+        ref double enter, ref double exit)
     {
         if (dir * dir < Epsilon * Epsilon) return start >= min && start <= max;
 
-        float t0 = (min - start) / dir;
-        float t1 = (max - start) / dir;
+        double t0 = (min - start) / dir;
+        double t1 = (max - start) / dir;
 
         if (t0 > t1)
         {
@@ -118,7 +118,7 @@ public struct JBBox
 
     public bool SegmentIntersect(in JVector origin, in JVector direction)
     {
-        float enter = 0.0f, exit = 1.0f;
+        double enter = 0.0, exit = 1.0;
 
         if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
             return false;
@@ -134,7 +134,7 @@ public struct JBBox
 
     public bool RayIntersect(in JVector origin, in JVector direction)
     {
-        float enter = 0.0f, exit = float.MaxValue;
+        double enter = 0.0, exit = double.MaxValue;
 
         if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
             return false;
@@ -148,10 +148,10 @@ public struct JBBox
         return true;
     }
 
-    public bool RayIntersect(in JVector origin, in JVector direction, out float enter)
+    public bool RayIntersect(in JVector origin, in JVector direction, out double enter)
     {
-        enter = 0.0f;
-        float exit = float.MaxValue;
+        enter = 0.0;
+        double exit = double.MaxValue;
 
         if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
             return false;
@@ -194,8 +194,8 @@ public struct JBBox
 
     public static JBBox CreateFromPoints(JVector[] points)
     {
-        JVector vector3 = new JVector(float.MaxValue);
-        JVector vector2 = new JVector(float.MinValue);
+        JVector vector3 = new JVector(double.MaxValue);
+        JVector vector2 = new JVector(double.MinValue);
 
         for (int i = 0; i < points.Length; i++)
         {
@@ -245,17 +245,17 @@ public struct JBBox
         JVector.Max(original.Max, additional.Max, out result.Max);
     }
 
-    public readonly JVector Center => (Min + Max) * (1.0f / 2.0f);
+    public readonly JVector Center => (Min + Max) * (1.0 / 2.0);
 
-    public float GetVolume()
+    public double GetVolume()
     {
         JVector len = Max - Min;
         return len.X * len.Y * len.Z;
     }
 
-    public float GetSurfaceArea()
+    public double GetSurfaceArea()
     {
         JVector len = Max - Min;
-        return 2.0f * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
+        return 2.0 * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
     }
 }

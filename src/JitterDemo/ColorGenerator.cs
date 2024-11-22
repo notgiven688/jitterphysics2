@@ -15,7 +15,7 @@ public static class ColorGenerator
     {
         for (int i = 0; i < NumColors; i++)
         {
-            buffer[i] = ColorFromHSV((float)i / NumColors, 1, 0.6f);
+            buffer[i] = ColorFromHSV((float)i / NumColors, 1f, 0.6f);
         }
     }
 
@@ -23,8 +23,8 @@ public static class ColorGenerator
     {
         float Gen(float n)
         {
-            float k = (n + h * 6) % 6;
-            return v - v * s * Math.Max(0.0f, Math.Min(Math.Min(k, 4.0f - k), 1.0f));
+            float k = (n + h * 6f) % 6f;
+            return v - v * s * MathF.Max(0.0f, MathF.Min(MathF.Min(k, 4.0f - k), 1.0f));
         }
 
         return new Vector3(Gen(5), Gen(3), Gen(1));

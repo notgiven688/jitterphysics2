@@ -31,13 +31,13 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class CapsuleShape : RigidBodyShape
 {
-    private float radius;
-    private float halfLength;
+    private double radius;
+    private double halfLength;
 
     /// <summary>
     /// Gets or sets the radius of the capsule.
     /// </summary>
-    public float Radius
+    public double Radius
     {
         get => radius;
         set
@@ -50,12 +50,12 @@ public class CapsuleShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the length of the cylindrical part of the capsule, excluding the half-spheres on both ends.
     /// </summary>
-    public float Length
+    public double Length
     {
-        get => 2.0f * halfLength;
+        get => 2.0 * halfLength;
         set
         {
-            halfLength = value / 2.0f;
+            halfLength = value / 2.0;
             UpdateWorldBoundingBox();
         }
     }
@@ -65,10 +65,10 @@ public class CapsuleShape : RigidBodyShape
     /// </summary>
     /// <param name="radius">The radius of the capsule.</param>
     /// <param name="length">The length of the cylindrical part of the capsule, excluding the half-spheres at both ends.</param>
-    public CapsuleShape(float radius = 0.5f, float length = 1.0f)
+    public CapsuleShape(double radius = 0.5, double length = 1.0)
     {
         this.radius = radius;
-        halfLength = 0.5f * length;
+        halfLength = 0.5 * length;
         UpdateWorldBoundingBox();
     }
 
@@ -86,7 +86,7 @@ public class CapsuleShape : RigidBodyShape
 
         // we have to calculate the dot-product with the direction
         // vector to decide whether p_1 or p_2 is the correct support point
-        result.Y += MathF.Sign(direction.Y) * halfLength;
+        result.Y += Math.Sign(direction.Y) * halfLength;
     }
 
     public override void GetCenter(out JVector point)
@@ -98,9 +98,9 @@ public class CapsuleShape : RigidBodyShape
     {
         JVector delta = halfLength * orientation.GetBasisY();
 
-        box.Max.X = +radius + MathF.Abs(delta.X);
-        box.Max.Y = +radius + MathF.Abs(delta.Y);
-        box.Max.Z = +radius + MathF.Abs(delta.Z);
+        box.Max.X = +radius + Math.Abs(delta.X);
+        box.Max.Y = +radius + Math.Abs(delta.Y);
+        box.Max.Z = +radius + Math.Abs(delta.Z);
 
         box.Min = -box.Max;
 
@@ -108,20 +108,20 @@ public class CapsuleShape : RigidBodyShape
         box.Max += position;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
     {
-        float length = 2.0f * halfLength;
+        double length = 2.0 * halfLength;
 
-        float massSphere = 4.0f / 3.0f * MathF.PI * radius * radius * radius;
-        float massCylinder = MathF.PI * radius * radius * length;
+        double massSphere = 4.0 / 3.0 * Math.PI * radius * radius * radius;
+        double massCylinder = Math.PI * radius * radius * length;
 
         inertia = JMatrix.Identity;
 
-        inertia.M11 = massCylinder * (1.0f / 12.0f * length * length + 1.0f / 4.0f * radius * radius) + massSphere *
-            (2.0f / 5.0f * radius * radius + 1.0f / 4.0f * length * length + 3.0f / 8.0f * length * radius);
-        inertia.M22 = 1.0f / 2.0f * massCylinder * radius * radius + 2.0f / 5.0f * massSphere * radius * radius;
-        inertia.M33 = massCylinder * (1.0f / 12.0f * length * length + 1.0f / 4.0f * radius * radius) + massSphere *
-            (2.0f / 5.0f * radius * radius + 1.0f / 4.0f * length * length + 3.0f / 8.0f * length * radius);
+        inertia.M11 = massCylinder * (1.0 / 12.0 * length * length + 1.0 / 4.0 * radius * radius) + massSphere *
+            (2.0 / 5.0 * radius * radius + 1.0 / 4.0 * length * length + 3.0 / 8.0 * length * radius);
+        inertia.M22 = 1.0 / 2.0 * massCylinder * radius * radius + 2.0 / 5.0 * massSphere * radius * radius;
+        inertia.M33 = massCylinder * (1.0 / 12.0 * length * length + 1.0 / 4.0 * radius * radius) + massSphere *
+            (2.0 / 5.0 * radius * radius + 1.0 / 4.0 * length * length + 3.0 / 8.0 * length * radius);
 
         mass = massCylinder + massSphere;
         com = JVector.Zero;

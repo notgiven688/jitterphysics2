@@ -54,14 +54,14 @@ public class EllipsoidShape : RigidBodyShape
     public override void SupportMap(in JVector direction, out JVector result)
     {
         JVector dir = direction;
-        dir.X *= 0.8f;
-        dir.Y *= 1.2f;
-        dir.Z *= 0.4f;
+        dir.X *= 0.8;
+        dir.Y *= 1.2;
+        dir.Z *= 0.4;
         result = dir;
         result.Normalize();
-        result.X *= 0.8f;
-        result.Y *= 1.2f;
-        result.Z *= 0.4f;
+        result.X *= 0.8;
+        result.Y *= 1.2;
+        result.Z *= 0.4;
     }
 
     public override void GetCenter(out JVector point)
@@ -81,16 +81,16 @@ public class DoubleSphereShape : RigidBodyShape
     {
         JVector.Normalize(direction, out JVector ndir);
 
-        JVector sphere1 = ndir * 1.0f + JVector.UnitY * 1.1f;
-        JVector sphere2 = ndir * 1.5f - JVector.UnitY * 0.5f;
+        JVector sphere1 = ndir * 1.0 + JVector.UnitY * 1.1;
+        JVector sphere2 = ndir * 1.5 - JVector.UnitY * 0.5;
 
         if (JVector.Dot(sphere1, ndir) > JVector.Dot(sphere2, ndir))
         {
-            result = sphere1 * 0.5f;
+            result = sphere1 * 0.5;
         }
         else
         {
-            result = sphere2 * 0.5f;
+            result = sphere2 * 0.5;
         }
     }
 
@@ -109,7 +109,7 @@ public class Icosahedron : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float gr = (1.0f + MathF.Sqrt(5.0f)) / 2.0f;
+        double gr = (1.0 + Math.Sqrt(5.0)) / 2.0;
 
         Span<JVector> vertices = stackalloc JVector[12];
 
@@ -136,7 +136,7 @@ public class Icosahedron : RigidBodyShape
             }
         }
 
-        result = vertices[largestIndex] * 0.5f;
+        result = vertices[largestIndex] * 0.5;
     }
 
     public override void GetCenter(out JVector point)
@@ -198,7 +198,7 @@ public class Demo14 : IDemo
         foreach (var body in demoBodies)
         {
             var color = ColorGenerator.GetColor(body.GetHashCode());
-            if (!body.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
+            if (!body.IsActive) color += new Vector3(0.2, 0.2, 0.2);
 
             switch (body.Shapes[0])
             {

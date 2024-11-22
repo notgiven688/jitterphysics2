@@ -14,7 +14,7 @@ public partial class Playground : RenderWindow
     private readonly double[] debugTimes = new double[(int)World.Timings.Last];
     private readonly StringBuilder gcText = new();
 
-    public float[] physicsTime = new float[100];
+    public double[] physicsTime = new double[100];
     private double totalTime;
 
     private int samplingRate = 5;
@@ -50,7 +50,7 @@ public partial class Playground : RenderWindow
             physicsTime[i] = physicsTime[i - 1];
         }
 
-        physicsTime[0] = (float)totalTime;
+        physicsTime[0] = (double)totalTime;
 
         gcText.AppendLine(
             $"gen0: {GC.CollectionCount(0)}; gen1: {GC.CollectionCount(1)}; gen2: {GC.CollectionCount(2)}");
@@ -227,8 +227,8 @@ public partial class Playground : RenderWindow
 
             ImGui.EndTable();
 
-            float max = physicsTime.Max();
-            ImGui.PlotHistogram(physicsTime, string.Empty, $"max. {max:f2} ms", 0, max * 1.0f, 200, 80);
+            double max = physicsTime.Max();
+            //ImGui.PlotHistogram(physicsTime, string.Empty, $"max. {max:f2} ms", 0, max * 1.0f, 200, 80);
 
             ImGui.Text($"Total: {totalTime,0:N2} ms ({1000.0d / totalTime,0:N0} fps)");
             ImGui.Slider("##foo1", ref samplingRate, 1, 10, "sampling rate (%d)", ImGuiSliderFlags.None);

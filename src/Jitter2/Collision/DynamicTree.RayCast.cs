@@ -35,7 +35,7 @@ public partial class DynamicTree
     public struct RayCastResult
     {
         public IDynamicTreeProxy Entity;
-        public float Lambda;
+        public double Lambda;
         public JVector Normal;
     }
 
@@ -59,7 +59,7 @@ public partial class DynamicTree
         public RayCastFilterPost? FilterPost;
         public RayCastFilterPre? FilterPre;
 
-        public float Lambda;
+        public double Lambda;
 
         public Ray(in JVector origin, in JVector direction)
         {
@@ -67,7 +67,7 @@ public partial class DynamicTree
             Direction = direction;
             FilterPost = null;
             FilterPre = null;
-            Lambda = float.MaxValue;
+            Lambda = double.MaxValue;
         }
     }
 
@@ -83,7 +83,7 @@ public partial class DynamicTree
     /// <param name="lambda">Distance from the origin to the ray hit point in units of the ray's direction.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
-        out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
+        out IDynamicTreeProxy? proxy, out JVector normal, out double lambda)
     {
         Ray ray = new(origin, direction)
         {
@@ -97,10 +97,10 @@ public partial class DynamicTree
         return hit;
     }
 
-    /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)"/>
+    /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out double)"/>
     /// <param name="maxLambda">Maximum lambda of the ray's length to consider for intersections.</param>
-    public bool RayCast(JVector origin, JVector direction, float maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
-        out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
+    public bool RayCast(JVector origin, JVector direction, double maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
+        out IDynamicTreeProxy? proxy, out JVector normal, out double lambda)
     {
         Ray ray = new(origin, direction)
         {
@@ -161,8 +161,8 @@ public partial class DynamicTree
             ref Node lNode = ref Nodes[node.Left];
             ref Node rNode = ref Nodes[node.Right];
 
-            bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float lEnter);
-            bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out float rEnter);
+            bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out double lEnter);
+            bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out double rEnter);
 
             if (lEnter > result.Lambda) lRes = false;
             if (rEnter > result.Lambda) rRes = false;

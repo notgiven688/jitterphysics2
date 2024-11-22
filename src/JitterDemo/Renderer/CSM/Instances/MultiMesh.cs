@@ -6,10 +6,10 @@ public class MultiMesh : CSMInstance
 {
     public readonly Mesh mesh;
 
-    public MultiMesh(string filename, float scale = 1.0f)
+    public MultiMesh(string filename, double scale = 1.0f)
     {
         mesh = Mesh.LoadMesh(filename, true);
-        mesh.Transform(MatrixHelper.CreateScale(scale));
+        mesh.Transform(MatrixHelper.CreateScale((float)scale));
     }
 
     public override void LightPass(PhongShader shader)

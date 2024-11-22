@@ -35,7 +35,7 @@ public abstract class RigidBodyShape : Shape
 
     public sealed override JVector Velocity => RigidBody?.Velocity ?? JVector.Zero;
 
-    public sealed override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public sealed override void UpdateWorldBoundingBox(double dt = 0.0)
     {
         JBBox box;
 
@@ -63,7 +63,7 @@ public abstract class RigidBodyShape : Shape
     /// constructed using the support map function.
     /// </summary>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
     {
         ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
     }
@@ -89,13 +89,13 @@ public abstract class RigidBodyShape : Shape
     /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
     /// </returns>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
         return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
     }
 
     [ReferenceFrame(ReferenceFrame.World)]
-    public sealed override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public sealed override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
         ref var data = ref RigidBody.Data;
 

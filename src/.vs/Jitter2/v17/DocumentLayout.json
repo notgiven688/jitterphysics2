@@ -1,0 +1,890 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\constraints\\internal\\qmatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\constraints\\internal\\qmatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\constraints\\ballsocket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\constraints\\ballsocket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\acer1\\AppData\\Local\\Temp\\.vsdbgsrc\\439e1e95cf7b952d52ea1864d7074bc5277ef8bc84338003a33955fd6bdff1ee\\TraceInternal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\constraints\\hingeangle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\constraints\\hingeangle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\constraints\\constraint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\constraints\\constraint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\world.step.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\world.step.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\pairhashset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\pairhashset.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\linearmath\\jquaternion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\linearmath\\jquaternion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\linearmath\\jbbox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\linearmath\\jbbox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\linearmath\\mathhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\linearmath\\mathhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\linearmath\\jvector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\linearmath\\jvector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\rigidbody.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\rigidbody.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\datastructures\\slimbag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\datastructures\\slimbag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\unmanagedmemory\\memoryhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\unmanagedmemory\\memoryhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\narrowphase\\convexpolytope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\narrowphase\\convexpolytope.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\unmanagedmemory\\unmanagedactivelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\unmanagedmemory\\unmanagedactivelist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\unmanagedmemory\\maximumsizeexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\unmanagedmemory\\maximumsizeexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\attributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\attributes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\world.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\conversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\conversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\playground.gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\playground.gui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\softbodies\\springconstraint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\softbodies\\springconstraint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\playground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\playground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\dynamics\\constraints\\conelimit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\dynamics\\constraints\\conelimit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\linearmath\\jmatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\linearmath\\jmatrix.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\demos\\car\\wheel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\demos\\car\\wheel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\playground.picking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\playground.picking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\demos\\demo18.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\demos\\demo18.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\demos\\demo16.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\demos\\demo16.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\playground.debug.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\playground.debug.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\demos\\demo05.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\demos\\demo05.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\renderer\\opengl\\linearmath\\vector3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\renderer\\opengl\\linearmath\\vector3.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\renderer\\csm\\instances\\trianglemesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\renderer\\csm\\instances\\trianglemesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\renderer\\csm\\instances\\multimesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\renderer\\csm\\instances\\multimesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\demos\\demo00.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\demos\\demo00.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\colorgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\colorgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\renderer\\opengl\\objects\\vertexarrayobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\renderer\\opengl\\objects\\vertexarrayobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitterdemo\\renderer\\csm\\csminstance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{72FE1C6B-BEF7-420E-BC33-EA5A807F8E0B}|JitterDemo\\JitterDemo.csproj|solutionrelative:jitterdemo\\renderer\\csm\\csminstance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\narrowphase\\narrowphase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\narrowphase\\narrowphase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\shapes\\rigidbodyshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\shapes\\rigidbodyshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\shapes\\trianglemesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\shapes\\trianglemesh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\shapes\\transformedshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\shapes\\transformedshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\shapes\\convexhullshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\shapes\\convexhullshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\shapes\\boxshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\shapes\\boxshape.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\islandhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\islandhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\idynamictreeproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\idynamictreeproxy.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\dynamictree.raycast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\dynamictree.raycast.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\dynamictree.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\dynamictree.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\collisionisland.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\collisionisland.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|c:\\users\\acer1\\documents\\github\\prowl.jitter\\src\\jitter2\\collision\\collisionhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B3C7FF7-AC18-4301-9F67-664E7C3D029A}|Jitter2\\Jitter2.csproj|solutionrelative:jitter2\\collision\\collisionhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 20,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "ConvexPolytope.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\NarrowPhase\\ConvexPolytope.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\NarrowPhase\\ConvexPolytope.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\NarrowPhase\\ConvexPolytope.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\NarrowPhase\\ConvexPolytope.cs",
+              "ViewState": "AgIAACoBAAAAAAAAAAAAAD8BAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:37:23.632Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "UnmanagedActiveList.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\UnmanagedActiveList.cs",
+              "RelativeDocumentMoniker": "Jitter2\\UnmanagedMemory\\UnmanagedActiveList.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\UnmanagedActiveList.cs",
+              "RelativeToolTip": "Jitter2\\UnmanagedMemory\\UnmanagedActiveList.cs",
+              "ViewState": "AgIAAAIBAAAAAAAAAAAQwFEAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:36:13.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "MaximumSizeException.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\MaximumSizeException.cs",
+              "RelativeDocumentMoniker": "Jitter2\\UnmanagedMemory\\MaximumSizeException.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\MaximumSizeException.cs",
+              "RelativeToolTip": "Jitter2\\UnmanagedMemory\\MaximumSizeException.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:37:00.778Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Attributes.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Attributes.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Attributes.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Attributes.cs",
+              "RelativeToolTip": "Jitter2\\Attributes.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAC8AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:36:43.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Demo00.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo00.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Demos\\Demo00.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo00.cs",
+              "RelativeToolTip": "JitterDemo\\Demos\\Demo00.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:48:56.943Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Conversion.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Conversion.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Conversion.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Conversion.cs",
+              "RelativeToolTip": "JitterDemo\\Conversion.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAAAEEAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:48:35.238Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ColorGenerator.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\ColorGenerator.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\ColorGenerator.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\ColorGenerator.cs",
+              "RelativeToolTip": "JitterDemo\\ColorGenerator.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAqwBoAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:47:56.77Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "VertexArrayObject.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\OpenGL\\Objects\\VertexArrayObject.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Renderer\\OpenGL\\Objects\\VertexArrayObject.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\OpenGL\\Objects\\VertexArrayObject.cs",
+              "RelativeToolTip": "JitterDemo\\Renderer\\OpenGL\\Objects\\VertexArrayObject.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAMwCAAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:46:26.253Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "CSMInstance.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\CSMInstance.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Renderer\\CSM\\CSMInstance.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\CSMInstance.cs",
+              "RelativeToolTip": "JitterDemo\\Renderer\\CSM\\CSMInstance.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAowGEAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:46:15.176Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TraceInternal.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\AppData\\Local\\Temp\\.vsdbgsrc\\439e1e95cf7b952d52ea1864d7074bc5277ef8bc84338003a33955fd6bdff1ee\\TraceInternal.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\439e1e95cf7b952d52ea1864d7074bc5277ef8bc84338003a33955fd6bdff1ee\\TraceInternal.cs",
+              "ToolTip": "C:\\Users\\acer1\\AppData\\Local\\Temp\\.vsdbgsrc\\439e1e95cf7b952d52ea1864d7074bc5277ef8bc84338003a33955fd6bdff1ee\\TraceInternal.cs [Read Only]",
+              "RelativeToolTip": "..\\..\\..\\..\\AppData\\Local\\Temp\\.vsdbgsrc\\439e1e95cf7b952d52ea1864d7074bc5277ef8bc84338003a33955fd6bdff1ee\\TraceInternal.cs [Read Only]",
+              "ViewState": "AgIAANEAAAAAAAAAAAAIwOcAAAAFAAAAAQAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:06:07.536Z",
+              "EditorCaption": " [Read Only]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "World.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\World.cs",
+              "RelativeDocumentMoniker": "Jitter2\\World.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\World.cs",
+              "RelativeToolTip": "Jitter2\\World.cs",
+              "ViewState": "AgIAAOgAAAAAAAAAAAAgwAIBAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:39:51.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "Playground.Gui.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Gui.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Playground.Gui.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Gui.cs",
+              "RelativeToolTip": "JitterDemo\\Playground.Gui.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAApwG0AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:53:53.882Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "World.Step.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\World.Step.cs",
+              "RelativeDocumentMoniker": "Jitter2\\World.Step.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\World.Step.cs",
+              "RelativeToolTip": "Jitter2\\World.Step.cs",
+              "ViewState": "AgIAAIkBAAAAAAAAAAAgwJ4BAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:18:18.567Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "Playground.Debug.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Debug.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Playground.Debug.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Debug.cs",
+              "RelativeToolTip": "JitterDemo\\Playground.Debug.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAowFsAAABmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:53:45.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Demo16.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo16.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Demos\\Demo16.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo16.cs",
+              "RelativeToolTip": "JitterDemo\\Demos\\Demo16.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAAAE4AAABpAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:53:49.17Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "Demo18.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo18.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Demos\\Demo18.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo18.cs",
+              "RelativeToolTip": "JitterDemo\\Demos\\Demo18.cs",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAowB8AAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:53:51.313Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Contact.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Contact.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Contact.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Contact.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Contact.cs",
+              "ViewState": "AgIAAJQBAAAAAAAAAAAuwJsBAABwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:40:12.536Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Constraint.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\Constraint.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Constraints\\Constraint.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\Constraint.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Constraints\\Constraint.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAhwC0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:16:39.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HingeAngle.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\HingeAngle.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Constraints\\HingeAngle.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\HingeAngle.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Constraints\\HingeAngle.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAqwEcAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:16:40.87Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "MathHelper.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\MathHelper.cs",
+              "RelativeDocumentMoniker": "Jitter2\\LinearMath\\MathHelper.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\MathHelper.cs",
+              "RelativeToolTip": "Jitter2\\LinearMath\\MathHelper.cs",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:40:58.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QMatrix.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\Internal\\QMatrix.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Constraints\\Internal\\QMatrix.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\Internal\\QMatrix.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Constraints\\Internal\\QMatrix.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAUwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:11:44.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BallSocket.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\BallSocket.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Constraints\\BallSocket.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\BallSocket.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Constraints\\BallSocket.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAIA9wDwAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:45:42.413Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "SlimBag.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\DataStructures\\SlimBag.cs",
+              "RelativeDocumentMoniker": "Jitter2\\DataStructures\\SlimBag.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\DataStructures\\SlimBag.cs",
+              "RelativeToolTip": "Jitter2\\DataStructures\\SlimBag.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:38:54.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "JBBox.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JBBox.cs",
+              "RelativeDocumentMoniker": "Jitter2\\LinearMath\\JBBox.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JBBox.cs",
+              "RelativeToolTip": "Jitter2\\LinearMath\\JBBox.cs",
+              "ViewState": "AgIAAO8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:41:10.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PairHashSet.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\PairHashSet.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\PairHashSet.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\PairHashSet.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\PairHashSet.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAACcAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:33.661Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "JQuaternion.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JQuaternion.cs",
+              "RelativeDocumentMoniker": "Jitter2\\LinearMath\\JQuaternion.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JQuaternion.cs",
+              "RelativeToolTip": "Jitter2\\LinearMath\\JQuaternion.cs",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:41:23.539Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "MultiMesh.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\Instances\\MultiMesh.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Renderer\\CSM\\Instances\\MultiMesh.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\Instances\\MultiMesh.cs",
+              "RelativeToolTip": "JitterDemo\\Renderer\\CSM\\Instances\\MultiMesh.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:49:00.999Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Demo05.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo05.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Demos\\Demo05.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Demo05.cs",
+              "RelativeToolTip": "JitterDemo\\Demos\\Demo05.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:49:10.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RigidBody.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\RigidBody.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\RigidBody.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\RigidBody.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\RigidBody.cs",
+              "ViewState": "AgIAAK4CAAAAAAAAAAAAACoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:55:37.99Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "JVector.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JVector.cs",
+              "RelativeDocumentMoniker": "Jitter2\\LinearMath\\JVector.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JVector.cs",
+              "RelativeToolTip": "Jitter2\\LinearMath\\JVector.cs",
+              "ViewState": "AgIAAAcCAAAAAAAAAAAAACAAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:23:52.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "TriangleMesh.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\Instances\\TriangleMesh.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Renderer\\CSM\\Instances\\TriangleMesh.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\CSM\\Instances\\TriangleMesh.cs",
+              "RelativeToolTip": "JitterDemo\\Renderer\\CSM\\Instances\\TriangleMesh.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:49:17.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "MemoryHelper.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\MemoryHelper.cs",
+              "RelativeDocumentMoniker": "Jitter2\\UnmanagedMemory\\MemoryHelper.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\UnmanagedMemory\\MemoryHelper.cs",
+              "RelativeToolTip": "Jitter2\\UnmanagedMemory\\MemoryHelper.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAAAFgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:11:33.602Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Vector3.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\OpenGL\\LinearMath\\Vector3.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Renderer\\OpenGL\\LinearMath\\Vector3.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Renderer\\OpenGL\\LinearMath\\Vector3.cs",
+              "RelativeToolTip": "JitterDemo\\Renderer\\OpenGL\\LinearMath\\Vector3.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAuwBsAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:49:29.367Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "Playground.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Playground.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.cs",
+              "RelativeToolTip": "JitterDemo\\Playground.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAAAAAJgAAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:53:17.957Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "SpringConstraint.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\SoftBodies\\SpringConstraint.cs",
+              "RelativeDocumentMoniker": "Jitter2\\SoftBodies\\SpringConstraint.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\SoftBodies\\SpringConstraint.cs",
+              "RelativeToolTip": "Jitter2\\SoftBodies\\SpringConstraint.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAhwEkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:18:04.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ConeLimit.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\ConeLimit.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Dynamics\\Constraints\\ConeLimit.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Dynamics\\Constraints\\ConeLimit.cs",
+              "RelativeToolTip": "Jitter2\\Dynamics\\Constraints\\ConeLimit.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAgwD4AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T15:12:18.059Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Playground.Picking.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Picking.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Playground.Picking.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Playground.Picking.cs",
+              "RelativeToolTip": "JitterDemo\\Playground.Picking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:54:15.418Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "JMatrix.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JMatrix.cs",
+              "RelativeDocumentMoniker": "Jitter2\\LinearMath\\JMatrix.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\LinearMath\\JMatrix.cs",
+              "RelativeToolTip": "Jitter2\\LinearMath\\JMatrix.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAIAwwCAAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:55:25.857Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Wheel.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Car\\Wheel.cs",
+              "RelativeDocumentMoniker": "JitterDemo\\Demos\\Car\\Wheel.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\JitterDemo\\Demos\\Car\\Wheel.cs",
+              "RelativeToolTip": "JitterDemo\\Demos\\Car\\Wheel.cs",
+              "ViewState": "AgIAAHQBAAAAAAAAAAAowIwBAAB3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:54:24.248Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "NarrowPhase.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\NarrowPhase\\NarrowPhase.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\NarrowPhase\\NarrowPhase.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\NarrowPhase\\NarrowPhase.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\NarrowPhase\\NarrowPhase.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:52.512Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "RigidBodyShape.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\RigidBodyShape.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\Shapes\\RigidBodyShape.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\RigidBodyShape.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\Shapes\\RigidBodyShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:49.388Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "TriangleMesh.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\TriangleMesh.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\Shapes\\TriangleMesh.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\TriangleMesh.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\Shapes\\TriangleMesh.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:47.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "TransformedShape.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\TransformedShape.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\Shapes\\TransformedShape.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\TransformedShape.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\Shapes\\TransformedShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:44.93Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "ConvexHullShape.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\ConvexHullShape.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\Shapes\\ConvexHullShape.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\ConvexHullShape.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\Shapes\\ConvexHullShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:42.504Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "BoxShape.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\BoxShape.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\Shapes\\BoxShape.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\Shapes\\BoxShape.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\Shapes\\BoxShape.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:37.142Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "IslandHelper.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\IslandHelper.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\IslandHelper.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\IslandHelper.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\IslandHelper.cs",
+              "ViewState": "AQIAAMgAAAAAAAAAAAAswAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:26.952Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "IDynamicTreeProxy.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\IDynamicTreeProxy.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\IDynamicTreeProxy.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\IDynamicTreeProxy.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\IDynamicTreeProxy.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:25.03Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "DynamicTree.RayCast.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\DynamicTree.RayCast.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\DynamicTree.RayCast.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\DynamicTree.RayCast.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\DynamicTree.RayCast.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:22.381Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "DynamicTree.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\DynamicTree.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\DynamicTree.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\DynamicTree.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\DynamicTree.cs",
+              "ViewState": "AQIAAHwCAAAAAAAAAAAwwI0CAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:04.904Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "CollisionIsland.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\CollisionIsland.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\CollisionIsland.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\CollisionIsland.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\CollisionIsland.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:17:02.63Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "CollisionHelper.cs",
+              "DocumentMoniker": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\CollisionHelper.cs",
+              "RelativeDocumentMoniker": "Jitter2\\Collision\\CollisionHelper.cs",
+              "ToolTip": "C:\\Users\\acer1\\Documents\\GitHub\\Prowl.Jitter\\src\\Jitter2\\Collision\\CollisionHelper.cs",
+              "RelativeToolTip": "Jitter2\\Collision\\CollisionHelper.cs",
+              "ViewState": "AQIAADcAAAAAAAAAAAAgwFEAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-22T14:14:57.785Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "Microsoft.NET.TargetFrameworkInference.targets",
+              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\8.0.100-rc.2.23502.2\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "ViewState": "AQIAAI0AAAAAAAAAAAAhwKUAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2024-11-22T14:14:25.957Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

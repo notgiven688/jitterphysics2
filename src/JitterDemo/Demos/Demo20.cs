@@ -31,8 +31,8 @@ public struct CollisionTriangle : ISupportMappable
 
     public void SupportMap(in JVector direction, out JVector result)
     {
-        float min = JVector.Dot(A, direction);
-        float dot = JVector.Dot(B, direction);
+        double min = JVector.Dot(A, direction);
+        double dot = JVector.Dot(B, direction);
 
         result = A;
         if (dot > min)
@@ -50,7 +50,7 @@ public struct CollisionTriangle : ISupportMappable
 
     public void GetCenter(out JVector point)
     {
-        point = (1.0f / 3.0f) * (A + B + C);
+        point = (1.0 / 3.0) * (A + B + C);
     }
 }
 
@@ -93,7 +93,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
             ts.C = octree.Vertices[octree.Indices[index].IndexC];
 
             bool hit = NarrowPhase.MPREPA(ts, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
-                out JVector pointA, out JVector pointB, out JVector normal, out float penetration);
+                out JVector pointA, out JVector pointB, out JVector normal, out double penetration);
 
             if (hit)
             {
@@ -154,7 +154,7 @@ public class Demo20 : IDemo, ICleanDemo
     public void Draw()
     {
         var tm = RenderWindow.Instance.CSMRenderer.GetInstance<Dragon>();
-        tm.PushMatrix(Matrix4.Identity, new Vector3(0.35f, 0.35f, 0.35f));
+        tm.PushMatrix(Matrix4.Identity, new Vector3(0.35, 0.35, 0.35));
     }
 
     public void CleanUp()

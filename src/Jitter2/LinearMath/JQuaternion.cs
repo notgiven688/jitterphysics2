@@ -31,10 +31,10 @@ namespace Jitter2.LinearMath;
 /// </summary>
 public struct JQuaternion
 {
-    public float X;
-    public float Y;
-    public float Z;
-    public float W;
+    public double X;
+    public double Y;
+    public double Z;
+    public double W;
 
     /// <summary>
     /// Gets the identity quaternion (0, 0, 0, 1).
@@ -48,7 +48,7 @@ public struct JQuaternion
     /// <param name="y">The Y component.</param>
     /// <param name="z">The Z component.</param>
     /// <param name="w">The W component.</param>
-    public JQuaternion(float x, float y, float z, float w)
+    public JQuaternion(double x, double y, double z, double w)
     {
         X = x;
         Y = y;
@@ -61,7 +61,7 @@ public struct JQuaternion
     /// </summary>
     /// <param name="w">The W component.</param>
     /// <param name="v">The vector component.</param>
-    public JQuaternion(float w, in JVector v)
+    public JQuaternion(double w, in JVector v)
     {
         X = v.X;
         Y = v.Y;
@@ -186,9 +186,9 @@ public struct JQuaternion
     {
         JVector result;
 
-        result.X = 1.0f - 2.0f * (Y * Y + Z * Z);
-        result.Y = 2.0f * (X * Y + Z * W);
-        result.Z = 2.0f * (X * Z - Y * W);
+        result.X = 1.0 - 2.0 * (Y * Y + Z * Z);
+        result.Y = 2.0 * (X * Y + Z * W);
+        result.Z = 2.0 * (X * Z - Y * W);
 
         return result;
     }
@@ -201,9 +201,9 @@ public struct JQuaternion
     {
         JVector result;
 
-        result.X = 2.0f * (X * Y - Z * W);
-        result.Y = 1.0f - 2.0f * (X * X + Z * Z);
-        result.Z = 2.0f * (Y * Z + X * W);
+        result.X = 2.0 * (X * Y - Z * W);
+        result.Y = 1.0 - 2.0 * (X * X + Z * Z);
+        result.Z = 2.0 * (Y * Z + X * W);
 
         return result;
     }
@@ -216,9 +216,9 @@ public struct JQuaternion
     {
         JVector result;
 
-        result.X = 2.0f * (X * Z + Y * W);
-        result.Y = 2.0f * (Y * Z - X * W);
-        result.Z = 1.0f - 2.0f * (X * X + Y * Y);
+        result.X = 2.0 * (X * Z + Y * W);
+        result.Y = 2.0 * (Y * Z - X * W);
+        result.Z = 1.0 - 2.0 * (X * X + Y * Y);
 
         return result;
     }
@@ -228,10 +228,10 @@ public struct JQuaternion
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
     /// <returns>A quaternion representing the rotation.</returns>
-    public static JQuaternion CreateRotationX(float radians)
+    public static JQuaternion CreateRotationX(double radians)
     {
-        float halfAngle = radians * 0.5f;
-        (float sha, float cha) = MathF.SinCos(halfAngle);
+        double halfAngle = radians * 0.5;
+        (double sha, double cha) = Math.SinCos(halfAngle);
         return new JQuaternion(sha, 0, 0, cha);
     }
 
@@ -240,10 +240,10 @@ public struct JQuaternion
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
     /// <returns>A quaternion representing the rotation.</returns>
-    public static JQuaternion CreateRotationY(float radians)
+    public static JQuaternion CreateRotationY(double radians)
     {
-        float halfAngle = radians * 0.5f;
-        (float sha, float cha) = MathF.SinCos(halfAngle);
+        double halfAngle = radians * 0.5;
+        (double sha, double cha) = Math.SinCos(halfAngle);
         return new JQuaternion(0, sha, 0, cha);
     }
 
@@ -252,10 +252,10 @@ public struct JQuaternion
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
     /// <returns>A quaternion representing the rotation.</returns>
-    public static JQuaternion CreateRotationZ(float radians)
+    public static JQuaternion CreateRotationZ(double radians)
     {
-        float halfAngle = radians * 0.5f;
-        (float sha, float cha) = MathF.SinCos(halfAngle);
+        double halfAngle = radians * 0.5;
+        (double sha, double cha) = Math.SinCos(halfAngle);
         return new JQuaternion(0, 0, sha, cha);
     }
 
@@ -268,15 +268,15 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
-        float r1 = quaternion1.W;
-        float i1 = quaternion1.X;
-        float j1 = quaternion1.Y;
-        float k1 = quaternion1.Z;
+        double r1 = quaternion1.W;
+        double i1 = quaternion1.X;
+        double j1 = quaternion1.Y;
+        double k1 = quaternion1.Z;
 
-        float r2 = quaternion2.W;
-        float i2 = quaternion2.X;
-        float j2 = quaternion2.Y;
-        float k2 = quaternion2.Z;
+        double r2 = quaternion2.W;
+        double i2 = quaternion2.X;
+        double j2 = quaternion2.Y;
+        double k2 = quaternion2.Z;
 
         result.W = r1 * r2 - (i1 * i2 + j1 * j2 + k1 * k2);
         result.X = r1 * i2 + r2 * i1 + j1 * k2 - k1 * j2;
@@ -293,15 +293,15 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
-        float r1 = quaternion1.W;
-        float i1 = -quaternion1.X;
-        float j1 = -quaternion1.Y;
-        float k1 = -quaternion1.Z;
+        double r1 = quaternion1.W;
+        double i1 = -quaternion1.X;
+        double j1 = -quaternion1.Y;
+        double k1 = -quaternion1.Z;
 
-        float r2 = quaternion2.W;
-        float i2 = quaternion2.X;
-        float j2 = quaternion2.Y;
-        float k2 = quaternion2.Z;
+        double r2 = quaternion2.W;
+        double i2 = quaternion2.X;
+        double j2 = quaternion2.Y;
+        double k2 = quaternion2.Z;
 
         result.W = r1 * r2 - (i1 * i2 + j1 * j2 + k1 * k2);
         result.X = r1 * i2 + r2 * i1 + j1 * k2 - k1 * j2;
@@ -330,15 +330,15 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
-        float r1 = quaternion1.W;
-        float i1 = quaternion1.X;
-        float j1 = quaternion1.Y;
-        float k1 = quaternion1.Z;
+        double r1 = quaternion1.W;
+        double i1 = quaternion1.X;
+        double j1 = quaternion1.Y;
+        double k1 = quaternion1.Z;
 
-        float r2 = quaternion2.W;
-        float i2 = -quaternion2.X;
-        float j2 = -quaternion2.Y;
-        float k2 = -quaternion2.Z;
+        double r2 = quaternion2.W;
+        double i2 = -quaternion2.X;
+        double j2 = -quaternion2.Y;
+        double k2 = -quaternion2.Z;
 
         result.W = r1 * r2 - (i1 * i2 + j1 * j2 + k1 * k2);
         result.X = r1 * i2 + r2 * i1 + j1 * k2 - k1 * j2;
@@ -365,7 +365,7 @@ public struct JQuaternion
     /// <param name="scaleFactor">The scalar factor.</param>
     /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JQuaternion Multiply(in JQuaternion quaternion1, float scaleFactor)
+    public static JQuaternion Multiply(in JQuaternion quaternion1, double scaleFactor)
     {
         Multiply(in quaternion1, scaleFactor, out JQuaternion result);
         return result;
@@ -378,7 +378,7 @@ public struct JQuaternion
     /// <param name="scaleFactor">The scalar factor.</param>
     /// <param name="result">When the method completes, contains the scaled quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Multiply(in JQuaternion quaternion1, float scaleFactor, out JQuaternion result)
+    public static void Multiply(in JQuaternion quaternion1, double scaleFactor, out JQuaternion result)
     {
         result.W = quaternion1.W * scaleFactor;
         result.X = quaternion1.X * scaleFactor;
@@ -391,9 +391,9 @@ public struct JQuaternion
     /// </summary>
     /// <returns>The length of the quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly float Length()
+    public readonly double Length()
     {
-        return (float)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+        return (double)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
     /// <summary>
@@ -402,8 +402,8 @@ public struct JQuaternion
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
-        float num2 = X * X + Y * Y + Z * Z + W * W;
-        float num = 1f / (float)Math.Sqrt(num2);
+        double num2 = X * X + Y * Y + Z * Z + W * W;
+        double num = 1 / (double)Math.Sqrt(num2);
         X *= num;
         Y *= num;
         Z *= num;
@@ -429,18 +429,18 @@ public struct JQuaternion
     /// <param name="result">When the method completes, contains the quaternion representing the rotation.</param>
     public static void CreateFromMatrix(in JMatrix matrix, out JQuaternion result)
     {
-        float t;
+        double t;
 
         if (matrix.M33 < 0)
         {
             if (matrix.M11 > matrix.M22)
             {
-                t = 1.0f + matrix.M11 - matrix.M22 - matrix.M33;
+                t = 1.0 + matrix.M11 - matrix.M22 - matrix.M33;
                 result = new JQuaternion(t, matrix.M21 + matrix.M12, matrix.M31 + matrix.M13, matrix.M32 - matrix.M23);
             }
             else
             {
-                t = 1.0f - matrix.M11 + matrix.M22 - matrix.M33;
+                t = 1.0 - matrix.M11 + matrix.M22 - matrix.M33;
                 result = new JQuaternion(matrix.M21 + matrix.M12, t, matrix.M32 + matrix.M23, matrix.M13 - matrix.M31);
             }
         }
@@ -448,17 +448,17 @@ public struct JQuaternion
         {
             if (matrix.M11 < -matrix.M22)
             {
-                t = 1.0f - matrix.M11 - matrix.M22 + matrix.M33;
+                t = 1.0 - matrix.M11 - matrix.M22 + matrix.M33;
                 result = new JQuaternion(matrix.M13 + matrix.M31, matrix.M32 + matrix.M23, t, matrix.M21 - matrix.M12);
             }
             else
             {
-                t = 1.0f + matrix.M11 + matrix.M22 + matrix.M33;
+                t = 1.0 + matrix.M11 + matrix.M22 + matrix.M33;
                 result = new JQuaternion(matrix.M32 - matrix.M23, matrix.M13 - matrix.M31, matrix.M21 - matrix.M12, t);
             }
         }
 
-        t = (float)(0.5d / Math.Sqrt(t));
+        t = (double)(0.5d / Math.Sqrt(t));
         result.X *= t;
         result.Y *= t;
         result.Z *= t;
@@ -485,7 +485,7 @@ public struct JQuaternion
     /// <param name="value2">The quaternion to multiply.</param>
     /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JQuaternion operator *(float value1, in JQuaternion value2)
+    public static JQuaternion operator *(double value1, in JQuaternion value2)
     {
         Multiply(value2, value1, out JQuaternion result);
         return result;
@@ -498,7 +498,7 @@ public struct JQuaternion
     /// <param name="value2">The scalar factor.</param>
     /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JQuaternion operator *(in JQuaternion value1, float value2)
+    public static JQuaternion operator *(in JQuaternion value1, double value2)
     {
         Multiply(value1, value2, out JQuaternion result);
         return result;

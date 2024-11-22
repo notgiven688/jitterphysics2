@@ -70,7 +70,7 @@ public sealed class ThreadPool
         }
     }
 
-    public const float ThreadsPerProcessor = 0.9f;
+    public const double ThreadsPerProcessor = 0.9;
 
     // ManualResetEventSlim performs much better than the regular ManualResetEvent.
     // mainResetEvent.Wait() is a 'fallthrough' for the persistent threading model in Jitter.
