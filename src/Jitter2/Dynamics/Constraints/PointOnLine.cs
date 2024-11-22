@@ -43,7 +43,7 @@ public unsafe class PointOnLine : Constraint
         internal int _internal;
 
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, double, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -53,17 +53,17 @@ public unsafe class PointOnLine : Constraint
         public JVector LocalAnchor1;
         public JVector LocalAnchor2;
 
-        public double BiasFactor;
-        public double LimitBias;
-        public double Softness;
-        public double LimitSoftness;
+        public float BiasFactor;
+        public float LimitBias;
+        public float Softness;
+        public float LimitSoftness;
 
         public JMatrix EffectiveMass;
         public JVector AccumulatedImpulse;
         public JVector Bias;
 
-        public double Min;
-        public double Max;
+        public float Min;
+        public float Max;
 
         public ushort Clamp;
 
@@ -109,15 +109,15 @@ public unsafe class PointOnLine : Constraint
 
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis);
 
-        data.BiasFactor = 0.01;
-        data.Softness = 0.00001;
-        data.LimitSoftness = 0.0001;
-        data.LimitBias = 0.2;
+        data.BiasFactor = 0.01f;
+        data.Softness = 0.00001f;
+        data.LimitSoftness = 0.0001f;
+        data.LimitBias = 0.2f;
 
         (data.Min, data.Max) = limit;
     }
 
-    public double Distance
+    public float Distance
     {
         get
         {
@@ -140,7 +140,7 @@ public unsafe class PointOnLine : Constraint
     }
 
     [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void PrepareForIteration(ref ConstraintData constraint, double idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -252,13 +252,13 @@ public unsafe class PointOnLine : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
     }
 
-    public double Softness
+    public float Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public double Bias
+    public float Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
@@ -266,20 +266,20 @@ public unsafe class PointOnLine : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public double LimitSoftness
+    public float LimitSoftness
     {
         get => handle.Data.LimitSoftness;
         set => handle.Data.LimitSoftness = value;
     }
 
-    public double LimitBias
+    public float LimitBias
     {
         get => handle.Data.LimitBias;
         set => handle.Data.LimitBias = value;
     }
 
     [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void Iterate(ref ConstraintData constraint, double idt)
+    public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -332,20 +332,20 @@ public unsafe class PointOnLine : Constraint
         softnessVector.Y *= data.Softness;
         softnessVector.Z *= data.LimitSoftness;
 
-        JVector lambda = -1.0 * JVector.Transform(jv + data.Bias + softnessVector, data.EffectiveMass);
+        JVector lambda = -1.0f * JVector.Transform(jv + data.Bias + softnessVector, data.EffectiveMass);
 
         JVector origAcc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         if ((data.Clamp & 1) != 0)
-            data.AccumulatedImpulse.Z = Math.Min(data.AccumulatedImpulse.Z, 0.0);
+            data.AccumulatedImpulse.Z = MathF.Min(data.AccumulatedImpulse.Z, 0.0f);
         else if ((data.Clamp & 2) != 0)
-            data.AccumulatedImpulse.Z = Math.Max(data.AccumulatedImpulse.Z, 0.0);
+            data.AccumulatedImpulse.Z = MathF.Max(data.AccumulatedImpulse.Z, 0.0f);
         else
         {
-            data.AccumulatedImpulse.Z = 0.0;
-            origAcc.Z = 0.0;
+            data.AccumulatedImpulse.Z = 0.0f;
+            origAcc.Z = 0.0f;
         }
 
         lambda = data.AccumulatedImpulse - origAcc;

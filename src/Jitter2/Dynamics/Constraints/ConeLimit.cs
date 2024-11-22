@@ -41,22 +41,22 @@ public unsafe class ConeLimit : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, double, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
 
         public JVector LocalAxis1, LocalAxis2;
 
-        public double BiasFactor;
-        public double Softness;
+        public float BiasFactor;
+        public float Softness;
 
-        public double EffectiveMass;
-        public double AccumulatedImpulse;
-        public double Bias;
+        public float EffectiveMass;
+        public float AccumulatedImpulse;
+        public float Bias;
 
-        public double LimitLow;
-        public double LimitHigh;
+        public float LimitLow;
+        public float LimitHigh;
 
         public short Clamp;
 
@@ -88,14 +88,14 @@ public unsafe class ConeLimit : Constraint
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis1);
         JVector.ConjugatedTransform(axis, body2.Orientation, out data.LocalAxis2);
 
-        data.Softness = 0.001;
-        data.BiasFactor = 0.2;
+        data.Softness = 0.001f;
+        data.BiasFactor = 0.2f;
 
-        double lower = (double)limit.From;
-        double upper = (double)limit.To;
+        float lower = (float)limit.From;
+        float upper = (float)limit.To;
 
-        data.LimitLow = Math.Cos(lower);
-        data.LimitHigh = Math.Cos(upper);
+        data.LimitLow = MathF.Cos(lower);
+        data.LimitHigh = MathF.Cos(upper);
     }
 
     public JAngle Angle
@@ -110,11 +110,11 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector a1);
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector a2);
 
-            return (JAngle)Math.Acos(JVector.Dot(a1, a2));
+            return (JAngle)MathF.Acos(JVector.Dot(a1, a2));
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, double idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
 
@@ -131,7 +131,7 @@ public unsafe class ConeLimit : Constraint
 
         data.Clamp = 0;
 
-        double error = JVector.Dot(a1, a2);
+        float error = JVector.Dot(a1, a2);
 
         if (error < data.LimitHigh)
         {
@@ -145,7 +145,7 @@ public unsafe class ConeLimit : Constraint
         }
         else
         {
-            data.AccumulatedImpulse = 0.0;
+            data.AccumulatedImpulse = 0.0f;
             return;
         }
 
@@ -154,7 +154,7 @@ public unsafe class ConeLimit : Constraint
 
         data.EffectiveMass += data.Softness * idt;
 
-        data.EffectiveMass = 1.0 / data.EffectiveMass;
+        data.EffectiveMass = 1.0f / data.EffectiveMass;
 
         data.Bias = -error * data.BiasFactor * idt;
 
@@ -165,21 +165,21 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
     }
 
-    public double Softness
+    public float Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public double Bias
+    public float Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public double Impulse => handle.Data.AccumulatedImpulse;
+    public float Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, double idt)
+    public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -189,25 +189,25 @@ public unsafe class ConeLimit : Constraint
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 2);
 
-        double jv =
+        float jv =
             body1.AngularVelocity * jacobian[0] +
             body2.AngularVelocity * jacobian[1];
 
-        double softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        float softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
 
-        double lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
+        float lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        double oldacc = data.AccumulatedImpulse;
+        float oldacc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse = Math.Min(data.AccumulatedImpulse, 0.0);
+            data.AccumulatedImpulse = MathF.Min(data.AccumulatedImpulse, 0.0f);
         }
         else
         {
-            data.AccumulatedImpulse = Math.Max(data.AccumulatedImpulse, 0.0);
+            data.AccumulatedImpulse = MathF.Max(data.AccumulatedImpulse, 0.0f);
         }
 
         lambda = data.AccumulatedImpulse - oldacc;

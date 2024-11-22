@@ -26,8 +26,8 @@ public class ConstraintCar
     private const int BackLeft = 2;
     private const int BackRight = 3;
 
-    private const double MaxAngle = 40;
-    private double steer;
+    private const float MaxAngle = 40;
+    private float steer;
 
     public void BuildCar(World world, JVector position, Action<RigidBody>? action = null)
     {
@@ -36,24 +36,24 @@ public class ConstraintCar
         car = world.CreateRigidBody();
         bodies.Add(car);
 
-        TransformedShape tfs1 = new TransformedShape(new BoxShape(1.5, 0.60, 3), new JVector(0, -0.3, 0.0));
-        TransformedShape tfs2 = new TransformedShape(new BoxShape(1.0, 0.45, 1.5), new JVector(0, 0.20, 0.3));
+        TransformedShape tfs1 = new TransformedShape(new BoxShape(1.5f, 0.60f, 3), new JVector(0, -0.3f, 0.0f));
+        TransformedShape tfs2 = new TransformedShape(new BoxShape(1.0f, 0.45f, 1.5f), new JVector(0, 0.20f, 0.3f));
 
         car.AddShape(tfs1);
         car.AddShape(tfs2);
         car.Position = new JVector(0, 2, 0);
-        car.SetMassInertia(new JMatrix(0.4, 0, 0, 0, 0.4, 0, 0, 0, 1.0), 1.0);
+        car.SetMassInertia(new JMatrix(0.4f, 0, 0, 0, 0.4f, 0, 0, 0, 1.0f), 1.0f);
 
         for (int i = 0; i < 4; i++)
         {
             damper[i] = world.CreateRigidBody();
-            damper[i].AddShape(new BoxShape(0.2));
-            damper[i].SetMassInertia(0.1);
+            damper[i].AddShape(new BoxShape(0.2f));
+            damper[i].SetMassInertia(0.1f);
 
             wheels[i] = world.CreateRigidBody();
 
-            CylinderShape shape = new CylinderShape(0.1, 0.3);
-            TransformedShape tf = new TransformedShape(shape, JVector.Zero, JMatrix.CreateRotationZ(Math.PI / 2.0));
+            CylinderShape shape = new CylinderShape(0.1f, 0.3f);
+            TransformedShape tf = new TransformedShape(shape, JVector.Zero, JMatrix.CreateRotationZ(MathF.PI / 2.0f));
 
             wheels[i].AddShape(tf);
 
@@ -66,11 +66,11 @@ public class ConstraintCar
         //car.IsStatic = true;
         car.DeactivationTime = TimeSpan.MaxValue;
 
-        damper[FrontLeft].Position = new JVector(-0.75, 1.4, -1.1);
-        damper[FrontRight].Position = new JVector(+0.75, 1.4, -1.1);
+        damper[FrontLeft].Position = new JVector(-0.75f, 1.4f, -1.1f);
+        damper[FrontRight].Position = new JVector(+0.75f, 1.4f, -1.1f);
 
-        damper[BackLeft].Position = new JVector(-0.75, 1.4, 1.1);
-        damper[BackRight].Position = new JVector(+0.75, 1.4, 1.1);
+        damper[BackLeft].Position = new JVector(-0.75f, 1.4f, 1.1f);
+        damper[BackRight].Position = new JVector(+0.75f, 1.4f, 1.1f);
 
         for (int i = 0; i < 4; i++)
         {
@@ -82,11 +82,11 @@ public class ConstraintCar
             damperJoints[i] = new PrismaticJoint(world, car, damper[i], damper[i].Position, JVector.UnitY, LinearLimit.Fixed, false);
 
             damperJoints[i].Slider.LimitBias = 2;
-            damperJoints[i].Slider.LimitSoftness = 0.6;
-            damperJoints[i].Slider.Bias = 0.2;
+            damperJoints[i].Slider.LimitSoftness = 0.6f;
+            damperJoints[i].Slider.Bias = 0.2f;
 
-            damperJoints[i].HingeAngle.LimitBias = 0.6;
-            damperJoints[i].HingeAngle.LimitSoftness = 0.01;
+            damperJoints[i].HingeAngle.LimitBias = 0.6f;
+            damperJoints[i].HingeAngle.LimitSoftness = 0.01f;
         }
 
         damperJoints[FrontLeft].HingeAngle.Limit = AngularLimit.FromDegree(-MaxAngle, MaxAngle);
@@ -122,34 +122,34 @@ public class ConstraintCar
 
     public void UpdateControls()
     {
-        double accelerate;
+        float accelerate;
         var kb = RenderWindow.Instance.Keyboard;
 
-        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0;
-        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0;
-        else accelerate = 0.0;
+        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0f;
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0f;
+        else accelerate = 0.0f;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) steer += 0.1;
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) steer -= 0.1;
-        else steer *= 0.9;
+        if (kb.IsKeyDown(Keyboard.Key.Left)) steer += 0.1f;
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) steer -= 0.1f;
+        else steer *= 0.9f;
 
-        steer = Math.Clamp(steer, -1.0, 1.0);
+        steer = Math.Clamp(steer, -1.0f, 1.0f);
 
-        double targetAngle = steer * MaxAngle / 180.0 * Math.PI;
-        double currentAngleL = (double)damperJoints[FrontLeft].HingeAngle.Angle;
-        double currentAngleR = (double)damperJoints[FrontRight].HingeAngle.Angle;
+        float targetAngle = steer * MaxAngle / 180.0f * MathF.PI;
+        float currentAngleL = (float)damperJoints[FrontLeft].HingeAngle.Angle;
+        float currentAngleR = (float)damperJoints[FrontRight].HingeAngle.Angle;
 
-        steerMotor[FrontLeft].MaximumForce = 10.0 * Math.Abs(targetAngle - currentAngleL);
-        steerMotor[FrontLeft].TargetVelocity = 10.0 * (targetAngle - currentAngleL);
+        steerMotor[FrontLeft].MaximumForce = 10.0f * Math.Abs(targetAngle - currentAngleL);
+        steerMotor[FrontLeft].TargetVelocity = 10.0f * (targetAngle - currentAngleL);
 
-        steerMotor[FrontRight].MaximumForce = 10.0 * Math.Abs(targetAngle - currentAngleR);
-        steerMotor[FrontRight].TargetVelocity = 10.0 * (targetAngle - currentAngleR);
+        steerMotor[FrontRight].MaximumForce = 10.0f * Math.Abs(targetAngle - currentAngleR);
+        steerMotor[FrontRight].TargetVelocity = 10.0f * (targetAngle - currentAngleR);
 
         for (int i = 0; i < 4; i++)
         {
-            wheels[i].Friction = 0.8;
-            sockets[i].Motor.MaximumForce = 1.0 * Math.Abs(accelerate);
-            sockets[i].Motor.TargetVelocity = -80.0 * accelerate;
+            wheels[i].Friction = 0.8f;
+            sockets[i].Motor.MaximumForce = 1.0f * MathF.Abs(accelerate);
+            sockets[i].Motor.TargetVelocity = -80.0f * accelerate;
         }
     }
 }

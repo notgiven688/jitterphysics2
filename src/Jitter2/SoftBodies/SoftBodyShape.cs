@@ -33,7 +33,7 @@ public abstract class SoftBodyShape : Shape
     public abstract RigidBody GetClosest(in JVector pos);
     public SoftBody SoftBody { get; internal init; } = null!;
 
-    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
+    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
         return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
     }

@@ -90,7 +90,7 @@ public partial class World
     }
 
     /// <summary>
-    /// Contains timings for the stages of the last call to <see cref="World.Step(double, bool)"/>.
+    /// Contains timings for the stages of the last call to <see cref="World.Step(float, bool)"/>.
     /// Array elements correspond to the enums in <see cref="Timings"/>. Can be used to identify
     /// bottlenecks.
     /// </summary>
@@ -101,16 +101,16 @@ public partial class World
     /// </summary>
     /// <param name="dt">The duration of time to simulate. This should remain fixed and not exceed 1/60 of a second.</param>
     /// <param name="multiThread">Indicates whether multithreading should be utilized. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
-    public void Step(double dt, bool multiThread = true)
+    public void Step(float dt, bool multiThread = true)
     {
         AssertNullBody();
 
-        if (dt < 0.0)
+        if (dt < 0.0f)
         {
             throw new ArgumentException("Time step cannot be negative.", nameof(dt));
         }
 
-        if (dt == 0.0) return; // nothing to do
+        if (dt == 0.0f) return; // nothing to do
 
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -124,8 +124,8 @@ public partial class World
         }
 
         int ssp1 = substeps;
-        substep_dt = (float)(dt / ssp1);
-        step_dt = (float)(dt);
+        substep_dt = dt / ssp1;
+        step_dt = dt;
 
         SetTime(Timings.Integrate);
 
@@ -260,7 +260,7 @@ public partial class World
 
     private void PrepareContactsCallback(Parallel.Batch batch)
     {
-        double istep_dt = 1.0 / step_dt;
+        float istep_dt = 1.0f / step_dt;
 
         var span = memContacts.Active[batch.Start..batch.End];
 
@@ -286,7 +286,7 @@ public partial class World
 
     private unsafe void PrepareSmallConstraintsCallback(Parallel.Batch batch)
     {
-        double istep_dt = 1.0 / step_dt;
+        float istep_dt = 1.0f / step_dt;
 
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
@@ -308,7 +308,7 @@ public partial class World
 
     private unsafe void IterateSmallConstraintsCallback(Parallel.Batch batch)
     {
-        double istep_dt = 1.0 / step_dt;
+        float istep_dt = 1.0f / step_dt;
 
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
@@ -328,7 +328,7 @@ public partial class World
 
     private unsafe void PrepareConstraintsCallback(Parallel.Batch batch)
     {
-        double istep_dt = 1.0 / step_dt;
+        float istep_dt = 1.0f / step_dt;
 
         var span = memConstraints.Active[batch.Start..batch.End];
 
@@ -350,7 +350,7 @@ public partial class World
 
     private unsafe void IterateConstraintsCallback(Parallel.Batch batch)
     {
-        double istep_dt = 1.0 / step_dt;
+        float istep_dt = 1.0f / step_dt;
 
         var span = memConstraints.Active[batch.Start..batch.End];
 
@@ -423,7 +423,7 @@ public partial class World
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.IsStatic);
-        Debug.Assert(rigidBody.InverseMass == 0.0);
+        Debug.Assert(rigidBody.InverseMass == 0.0f);
         Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
     }
 
@@ -435,7 +435,7 @@ public partial class World
             if (body.IsStatic)
             {
                 System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
-                System.Diagnostics.Debug.Assert(body.Data.InverseMass == 0.0);
+                System.Diagnostics.Debug.Assert(body.Data.InverseMass == 0.0f);
             }
         }
 #endif
@@ -599,24 +599,24 @@ public partial class World
 
             rigidBody.Position += lvel * substep_dt;
 
-            double angle = avel.Length();
+            float angle = avel.Length();
             JVector axis;
 
-            if (angle < 0.001)
+            if (angle < 0.001f)
             {
                 // use Taylor's expansions of sync function
-                // axis = body.angularVelocity * (0.5 * timestep - (timestep * timestep * timestep) * (0.020833333333) * angle * angle);
+                // axis = body.angularVelocity * (0.5f * timestep - (timestep * timestep * timestep) * (0.020833333333f) * angle * angle);
                 JVector.Multiply(avel,
-                    0.5 * substep_dt - substep_dt * substep_dt * substep_dt * 0.020833333333 * angle * angle,
+                    0.5f * substep_dt - substep_dt * substep_dt * substep_dt * 0.020833333333f * angle * angle,
                     out axis);
             }
             else
             {
                 // sync(fAngle) = sin(c*fAngle)/t
-                JVector.Multiply(avel, (double)Math.Sin(0.5 * angle * substep_dt) / angle, out axis);
+                JVector.Multiply(avel, (float)Math.Sin(0.5f * angle * substep_dt) / angle, out axis);
             }
 
-            JQuaternion dorn = new(axis.X, axis.Y, axis.Z, (double)Math.Cos(angle * substep_dt * 0.5));
+            JQuaternion dorn = new(axis.X, axis.Y, axis.Z, (float)Math.Cos(angle * substep_dt * 0.5f));
             //JQuaternion.CreateFromMatrix(rigidBody.Orientation, out JQuaternion ornA);
             JQuaternion ornA = rigidBody.Orientation;
 

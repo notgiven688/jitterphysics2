@@ -33,7 +33,7 @@ namespace Jitter2.Collision;
 
 public unsafe struct SimplexSolver
 {
-    const double Epsilon = 1e-8;
+    const float Epsilon = 1e-8f;
 
     private JVector v0;
     private JVector v1;
@@ -54,13 +54,13 @@ public unsafe struct SimplexSolver
         JVector b = ptr[i1];
 
         JVector v = b - a;
-        double vsq = v.LengthSquared();
+        float vsq = v.LengthSquared();
 
         bool degenerate = vsq < Epsilon;
 
-        double t = -JVector.Dot(a, v) / vsq;
-        double lambda0 = 1 - t;
-        double lambda1 = t;
+        float t = -JVector.Dot(a, v) / vsq;
+        float lambda0 = 1 - t;
+        float lambda1 = t;
 
         mask = (1u << i0 | 1u << i1);
 
@@ -94,25 +94,25 @@ public unsafe struct SimplexSolver
 
         JVector normal = u % v;
 
-        double t = normal.LengthSquared();
-        double it = 1.0 / t;
+        float t = normal.LengthSquared();
+        float it = 1.0f / t;
 
         bool degenerate = t < Epsilon;
 
         JVector.Cross(u, a, out var c1);
         JVector.Cross(a, v, out var c2);
 
-        double lambda2 = JVector.Dot(c1, normal) * it;
-        double lambda1 = JVector.Dot(c2, normal) * it;
-        double lambda0 = 1.0 - lambda2 - lambda1;
+        float lambda2 = JVector.Dot(c1, normal) * it;
+        float lambda1 = JVector.Dot(c2, normal) * it;
+        float lambda0 = 1.0f - lambda2 - lambda1;
 
-        double bestDistance = double.MaxValue;
+        float bestDistance = float.MaxValue;
         Unsafe.SkipInit(out JVector closestPt);
 
-        if (lambda0 < 0.0 || degenerate)
+        if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i1, i2, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -121,10 +121,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        if (lambda1 < 0.0 || degenerate)
+        if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i2, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -133,10 +133,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        if (lambda2 < 0.0 || degenerate)
+        if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i1, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -153,31 +153,31 @@ public unsafe struct SimplexSolver
     private JVector ClosestTetrahedron(out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        double Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
+        float Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
         {
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
 
-        double detT = Determinant(v0, v1, v2, v3);
-        double inverseDetT = 1.0 / detT;
+        float detT = Determinant(v0, v1, v2, v3);
+        float inverseDetT = 1.0f / detT;
 
         bool degenerate = detT * detT < Epsilon;
 
-        double lambda0 = Determinant(JVector.Zero, v1, v2, v3) * inverseDetT;
-        double lambda1 = Determinant(v0, JVector.Zero, v2, v3) * inverseDetT;
-        double lambda2 = Determinant(v0, v1, JVector.Zero, v3) * inverseDetT;
-        double lambda3 = 1.0 - lambda0 - lambda1 - lambda2;
+        float lambda0 = Determinant(JVector.Zero, v1, v2, v3) * inverseDetT;
+        float lambda1 = Determinant(v0, JVector.Zero, v2, v3) * inverseDetT;
+        float lambda2 = Determinant(v0, v1, JVector.Zero, v3) * inverseDetT;
+        float lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
 
-        double bestDistance = double.MaxValue;
+        float bestDistance = float.MaxValue;
 
         Unsafe.SkipInit(out JVector closestPt);
 
         mask = 0;
 
-        if (lambda0 < 0.0 || degenerate)
+        if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(1, 2, 3, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -186,10 +186,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        if (lambda1 < 0.0 || degenerate)
+        if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 2, 3, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -198,10 +198,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        if (lambda2 < 0.0 || degenerate)
+        if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 3, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -210,10 +210,10 @@ public unsafe struct SimplexSolver
             }
         }
 
-        if (lambda3 < 0.0 || degenerate)
+        if (lambda3 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 2, out uint m);
-            double dist = closest.LengthSquared();
+            float dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;

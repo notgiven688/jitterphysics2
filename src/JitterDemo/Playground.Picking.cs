@@ -24,8 +24,8 @@ public partial class Playground : RenderWindow
 
     private Vector3 RayTo(int x, int y)
     {
-        Vector3 nearSource = new(x, y, 0.1);
-        Vector3 farSource = new(x, y, 0.5);
+        Vector3 nearSource = new(x, y, 0.1f);
+        Vector3 farSource = new(x, y, 0.5f);
 
         Vector3 nearPoint = Unproject(nearSource, Camera.ProjectionMatrix, Camera.ViewMatrix);
         Vector3 farPoint = Unproject(farSource, Camera.ProjectionMatrix, Camera.ViewMatrix);
@@ -37,8 +37,8 @@ public partial class Playground : RenderWindow
     private bool grepping;
 
     private DistanceLimit? grepConstraint;
-    private double hitDistance;
-    private double hitWheelPosition;
+    private float hitDistance;
+    private float hitWheelPosition;
 
     private void Pick()
     {
@@ -52,13 +52,13 @@ public partial class Playground : RenderWindow
             if (grepBody == null) return;
             if (grepConstraint == null) return;
 
-            hitDistance += ((double)Mouse.ScrollWheel.Y - hitWheelPosition);
+            hitDistance += ((float)Mouse.ScrollWheel.Y - hitWheelPosition);
 
             grepConstraint.Anchor2 = origin + hitDistance * jdir;
             grepBody.SetActivationState(true);
 
-            grepBody.Data.Velocity *= 0.98;
-            grepBody.Data.AngularVelocity *= 0.98;
+            grepBody.Data.Velocity *= 0.98f;
+            grepBody.Data.AngularVelocity *= 0.98f;
         }
         else
         {
@@ -82,7 +82,7 @@ public partial class Playground : RenderWindow
             if (!result || grepBody == null || grepBody.IsStatic) return;
             grepping = true;
 
-            hitWheelPosition = (double)Mouse.ScrollWheel.Y;
+            hitWheelPosition = (float)Mouse.ScrollWheel.Y;
 
             if (grepConstraint != null) World.Remove(grepConstraint);
 
@@ -90,8 +90,8 @@ public partial class Playground : RenderWindow
 
             grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
             grepConstraint.Initialize(anchor, anchor);
-            grepConstraint.Softness = 0.01;
-            grepConstraint.Bias = 0.1;
+            grepConstraint.Softness = 0.01f;
+            grepConstraint.Bias = 0.1f;
         }
     }
 }

@@ -47,17 +47,17 @@ public static class CollisionHelper
         JVector v = a - c;
 
         JVector normal = u % v;
-        double t = normal.LengthSquared();
+        float t = normal.LengthSquared();
 
         JVector at = a - point;
 
         JVector.Cross(u, at, out JVector tmp);
-        double gamma = JVector.Dot(tmp, normal) / t;
+        float gamma = JVector.Dot(tmp, normal) / t;
         JVector.Cross(at, v, out tmp);
-        double beta = JVector.Dot(tmp, normal) / t;
-        double alpha = 1.0 - gamma - beta;
+        float beta = JVector.Dot(tmp, normal) / t;
+        float alpha = 1.0f - gamma - beta;
 
-        return alpha > 0.0 && beta > 0.0 && gamma > 0.0;
+        return alpha > 0.0f && beta > 0.0f && gamma > 0.0f;
     }
 
     /// <summary>
@@ -73,20 +73,20 @@ public static class CollisionHelper
     /// <returns>Returns true if the ray intersects with the triangle, otherwise returns false.</returns>
     public static bool RayTriangle(in JVector a, in JVector b, in JVector c,
         in JVector rayStart, in JVector rayDir,
-        out double lambda, out JVector normal)
+        out float lambda, out JVector normal)
     {
         JVector u = b - a;
         JVector v = c - a;
 
         normal = v % u;
-        double t = normal.LengthSquared();
+        float t = normal.LengthSquared();
 
         // triangle is expected to span an area
-        Debug.Assert(t > 1e-06);
+        Debug.Assert(t > 1e-06f);
 
-        double denom = JVector.Dot(rayDir, normal);
+        float denom = JVector.Dot(rayDir, normal);
 
-        if (Math.Abs(denom) < 1e-06)
+        if (Math.Abs(denom) < 1e-06f)
         {
             // triangle and ray are parallel
             lambda = 0;
@@ -95,7 +95,7 @@ public static class CollisionHelper
         }
 
         lambda = JVector.Dot(a - rayStart, normal);
-        if (lambda > 0.0) return false;
+        if (lambda > 0.0f) return false;
         lambda /= denom;
 
         // point where the ray intersects the plane of the triangle.
@@ -103,10 +103,10 @@ public static class CollisionHelper
         JVector at = a - hitPoint;
 
         JVector.Cross(u, at, out JVector tmp);
-        double gamma = JVector.Dot(tmp, normal) / t;
+        float gamma = JVector.Dot(tmp, normal) / t;
         JVector.Cross(at, v, out tmp);
-        double beta = JVector.Dot(tmp, normal) / t;
-        double alpha = 1.0 - gamma - beta;
+        float beta = JVector.Dot(tmp, normal) / t;
+        float alpha = 1.0f - gamma - beta;
 
         return alpha > 0 && beta > 0 && gamma > 0;
     }

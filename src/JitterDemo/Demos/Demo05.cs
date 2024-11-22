@@ -11,7 +11,7 @@ namespace JitterDemo;
 
 public class Dust : TriangleMesh
 {
-    public Dust() : base("level.obj", 0.8)
+    public Dust() : base("level.obj", 0.8f)
     {
     }
 
@@ -77,14 +77,14 @@ public class Demo05 : IDemo
         level.Position = new JVector(0, 0, 0);
         level.IsStatic = true;
 
-        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3);
+        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
 
         player = new Player(world, new JVector(-6, 7, 32));
     }
 
     public void Draw()
     {
-        tm.PushMatrix(Conversion.FromJitter(level), new Vector3(0.35, 0.35, 0.35));
+        tm.PushMatrix(Conversion.FromJitter(level), new Vector3(0.35f, 0.35f, 0.35f));
 
         if (debugDraw)
         {
@@ -106,9 +106,9 @@ public class Demo05 : IDemo
 
         if (kb.KeyPressBegin(Keyboard.Key.O)) debugDraw = !debugDraw;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0);
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0);
-        else player.SetAngularInput(0.0);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
+        else player.SetAngularInput(0.0f);
 
         if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
         else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);

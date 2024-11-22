@@ -33,18 +33,18 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class FatTriangleShape : TriangleShape
 {
-    private double thickness;
+    private float thickness;
 
     /// <summary>
     /// Set or get the thickness of the triangle.
     /// </summary>
     /// <exception cref="ArgumentException">Thickness must be larger than 0.01 length units.</exception>
-    public double Thickness
+    public float Thickness
     {
         get => thickness;
         set
         {
-            const double minimumThickness = 0.01;
+            const float minimumThickness = 0.01f;
 
             if (value < minimumThickness)
             {
@@ -60,7 +60,7 @@ public class FatTriangleShape : TriangleShape
     /// </summary>
     /// <param name="mesh">The triangle mesh to which this triangle belongs.</param>
     /// <param name="index">The index representing the position of the triangle within the mesh.</param>
-    public FatTriangleShape(TriangleMesh mesh, int index, double thickness = 0.2) : base(mesh, index)
+    public FatTriangleShape(TriangleMesh mesh, int index, float thickness = 0.2f) : base(mesh, index)
     {
         this.thickness = thickness;
         UpdateWorldBoundingBox();
@@ -102,8 +102,8 @@ public class FatTriangleShape : TriangleShape
         JVector b = Mesh.Vertices[triangle.IndexB];
         JVector c = Mesh.Vertices[triangle.IndexC];
 
-        double min = JVector.Dot(a, direction);
-        double dot = JVector.Dot(b, direction);
+        float min = JVector.Dot(a, direction);
+        float dot = JVector.Dot(b, direction);
 
         result = a;
 
@@ -120,7 +120,7 @@ public class FatTriangleShape : TriangleShape
             result = c;
         }
 
-        if (JVector.Dot(triangle.Normal, direction) < 0.0)
+        if (JVector.Dot(triangle.Normal, direction) < 0.0f)
             result -= triangle.Normal * Thickness;
     }
 }

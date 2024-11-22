@@ -32,12 +32,12 @@ public struct AngularLimit
     public JAngle To { get; set; }
 
     public static readonly AngularLimit Full =
-        new(JAngle.FromRadiant(-Math.PI), JAngle.FromRadiant(Math.PI));
+        new(JAngle.FromRadiant(-MathF.PI), JAngle.FromRadiant(MathF.PI));
 
     public static readonly AngularLimit Fixed =
-        new(JAngle.FromRadiant(+1e-6), JAngle.FromRadiant(-1e-6));
+        new(JAngle.FromRadiant(+1e-6f), JAngle.FromRadiant(-1e-6f));
 
-    public static AngularLimit FromDegree(double min, double max)
+    public static AngularLimit FromDegree(float min, float max)
     {
         return new AngularLimit(JAngle.FromDegree(min), JAngle.FromDegree(max));
     }
@@ -57,27 +57,27 @@ public struct AngularLimit
 
 public struct LinearLimit
 {
-    public double From { get; set; }
-    public double To { get; set; }
+    public float From { get; set; }
+    public float To { get; set; }
 
     public static readonly LinearLimit Full =
-        new(double.NegativeInfinity, double.PositiveInfinity);
+        new(float.NegativeInfinity, float.PositiveInfinity);
 
     public static readonly LinearLimit Fixed =
-        new(1e-6, -1e-6);
+        new(1e-6f, -1e-6f);
 
-    public LinearLimit(double from, double to)
+    public LinearLimit(float from, float to)
     {
         From = from;
         To = to;
     }
 
-    public static LinearLimit FromMinMax(double min, double max)
+    public static LinearLimit FromMinMax(float min, float max)
     {
         return new LinearLimit(min, max);
     }
 
-    public readonly void Deconstruct(out double limitMin, out double limitMax)
+    public readonly void Deconstruct(out float limitMin, out float limitMax)
     {
         limitMin = From;
         limitMax = To;

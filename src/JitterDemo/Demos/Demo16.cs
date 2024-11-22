@@ -36,10 +36,10 @@ public class Demo16 : IDemo, ICleanDemo
 
             JVector[] offset =
             {
-                new(-0.5, -1.5, -0.5),
-                new(-0.5, -1.5, +0.5),
-                new(+0.5, -1.5, -0.5),
-                new(+0.5, -1.5, +0.5)
+                new(-0.5f, -1.5f, -0.5f),
+                new(-0.5f, -1.5f, +0.5f),
+                new(+0.5f, -1.5f, -0.5f),
+                new(+0.5f, -1.5f, +0.5f)
             };
 
             for (int e = 0; e < 4; e++)
@@ -56,7 +56,7 @@ public class Demo16 : IDemo, ICleanDemo
         {
             for (int e = i; e < 3; e++)
             {
-                JVector cpos = position + new JVector((e - i * 0.5) * 1.01, 0.5 + i * 1.0, 0) * 2;
+                JVector cpos = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * 1.0f, 0) * 2;
                 var cube = new SoftBodyCube(world, cpos);
                 cubes.Add(cube);
             }

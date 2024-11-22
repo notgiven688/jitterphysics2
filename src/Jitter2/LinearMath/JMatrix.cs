@@ -28,20 +28,20 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// 3x3 matrix of 32 bit double values in column major format.
+/// 3x3 matrix of 32 bit float values in column major format.
 /// </summary>
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Explicit, Size = 36)]
 public struct JMatrix
 {
-    public double M11;
-    public double M21;
-    public double M31;
-    public double M12;
-    public double M22;
-    public double M32;
-    public double M13;
-    public double M23;
-    public double M33;
+    [FieldOffset(0)] public float M11;
+    [FieldOffset(4)] public float M21;
+    [FieldOffset(8)] public float M31;
+    [FieldOffset(12)] public float M12;
+    [FieldOffset(16)] public float M22;
+    [FieldOffset(20)] public float M32;
+    [FieldOffset(24)] public float M13;
+    [FieldOffset(28)] public float M23;
+    [FieldOffset(32)] public float M33;
 
     public static readonly JMatrix Identity;
     public static readonly JMatrix Zero;
@@ -52,13 +52,13 @@ public struct JMatrix
 
         Identity = new JMatrix
         {
-            M11 = 1.0,
-            M22 = 1.0,
-            M33 = 1.0
+            M11 = 1.0f,
+            M22 = 1.0f,
+            M33 = 1.0f
         };
     }
 
-    public JMatrix(double m11, double m12, double m13, double m21, double m22, double m23, double m31, double m32, double m33)
+    public JMatrix(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
     {
         M11 = m11;
         M12 = m12;
@@ -91,7 +91,7 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe JVector GetColumn(int index)
     {
-        fixed (double* ptr = &M11)
+        fixed (float* ptr = &M11)
         {
             JVector* vptr = (JVector*)ptr;
             return vptr[index];
@@ -119,10 +119,10 @@ public struct JMatrix
         return result;
     }
 
-    public static JMatrix CreateRotationMatrix(JVector axis, double angle)
+    public static JMatrix CreateRotationMatrix(JVector axis, float angle)
     {
-        double c = Math.Cos(angle / 2.0);
-        double s = Math.Sin(angle / 2.0);
+        float c = MathF.Cos(angle / 2.0f);
+        float s = MathF.Sin(angle / 2.0f);
         axis *= s;
         JQuaternion jq = new(axis.X, axis.Y, axis.Z, c);
         CreateFromQuaternion(in jq, out JMatrix result);
@@ -132,15 +132,15 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
-        double num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
-        double num1 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
-        double num2 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;
-        double num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M23 * matrix2.M31;
-        double num4 = matrix1.M21 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M32;
-        double num5 = matrix1.M21 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M23 * matrix2.M33;
-        double num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M21 + matrix1.M33 * matrix2.M31;
-        double num7 = matrix1.M31 * matrix2.M12 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M32;
-        double num8 = matrix1.M31 * matrix2.M13 + matrix1.M32 * matrix2.M23 + matrix1.M33 * matrix2.M33;
+        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M21 + matrix1.M13 * matrix2.M31;
+        float num1 = matrix1.M11 * matrix2.M12 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M32;
+        float num2 = matrix1.M11 * matrix2.M13 + matrix1.M12 * matrix2.M23 + matrix1.M13 * matrix2.M33;
+        float num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M23 * matrix2.M31;
+        float num4 = matrix1.M21 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M32;
+        float num5 = matrix1.M21 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M23 * matrix2.M33;
+        float num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M21 + matrix1.M33 * matrix2.M31;
+        float num7 = matrix1.M31 * matrix2.M12 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M32;
+        float num8 = matrix1.M31 * matrix2.M13 + matrix1.M32 * matrix2.M23 + matrix1.M33 * matrix2.M33;
 
         result.M11 = num0;
         result.M12 = num1;
@@ -166,15 +166,15 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
-        double num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M12 + matrix1.M13 * matrix2.M13;
-        double num1 = matrix1.M11 * matrix2.M21 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M23;
-        double num2 = matrix1.M11 * matrix2.M31 + matrix1.M12 * matrix2.M32 + matrix1.M13 * matrix2.M33;
-        double num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M12 + matrix1.M23 * matrix2.M13;
-        double num4 = matrix1.M21 * matrix2.M21 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M23;
-        double num5 = matrix1.M21 * matrix2.M31 + matrix1.M22 * matrix2.M32 + matrix1.M23 * matrix2.M33;
-        double num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M12 + matrix1.M33 * matrix2.M13;
-        double num7 = matrix1.M31 * matrix2.M21 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M23;
-        double num8 = matrix1.M31 * matrix2.M31 + matrix1.M32 * matrix2.M32 + matrix1.M33 * matrix2.M33;
+        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M12 * matrix2.M12 + matrix1.M13 * matrix2.M13;
+        float num1 = matrix1.M11 * matrix2.M21 + matrix1.M12 * matrix2.M22 + matrix1.M13 * matrix2.M23;
+        float num2 = matrix1.M11 * matrix2.M31 + matrix1.M12 * matrix2.M32 + matrix1.M13 * matrix2.M33;
+        float num3 = matrix1.M21 * matrix2.M11 + matrix1.M22 * matrix2.M12 + matrix1.M23 * matrix2.M13;
+        float num4 = matrix1.M21 * matrix2.M21 + matrix1.M22 * matrix2.M22 + matrix1.M23 * matrix2.M23;
+        float num5 = matrix1.M21 * matrix2.M31 + matrix1.M22 * matrix2.M32 + matrix1.M23 * matrix2.M33;
+        float num6 = matrix1.M31 * matrix2.M11 + matrix1.M32 * matrix2.M12 + matrix1.M33 * matrix2.M13;
+        float num7 = matrix1.M31 * matrix2.M21 + matrix1.M32 * matrix2.M22 + matrix1.M33 * matrix2.M23;
+        float num8 = matrix1.M31 * matrix2.M31 + matrix1.M32 * matrix2.M32 + matrix1.M33 * matrix2.M33;
 
         result.M11 = num0;
         result.M12 = num1;
@@ -187,12 +187,12 @@ public struct JMatrix
         result.M33 = num8;
     }
 
-    public static JMatrix CreateRotationX(double radians)
+    public static JMatrix CreateRotationX(float radians)
     {
         JMatrix result = Identity;
 
-        double c = (double)Math.Cos(radians);
-        double s = (double)Math.Sin(radians);
+        float c = (float)Math.Cos(radians);
+        float s = (float)Math.Sin(radians);
 
         // [  1  0  0  ]
         // [  0  c -s  ]
@@ -205,12 +205,12 @@ public struct JMatrix
         return result;
     }
 
-    public static JMatrix CreateRotationY(double radians)
+    public static JMatrix CreateRotationY(float radians)
     {
         JMatrix result = Identity;
 
-        double c = (double)Math.Cos(radians);
-        double s = (double)Math.Sin(radians);
+        float c = (float)Math.Cos(radians);
+        float s = (float)Math.Sin(radians);
 
         // [  c  0  s  ]
         // [  0  1  0  ]
@@ -223,12 +223,12 @@ public struct JMatrix
         return result;
     }
 
-    public static JMatrix CreateRotationZ(double radians)
+    public static JMatrix CreateRotationZ(float radians)
     {
         JMatrix result = Identity;
 
-        double c = (double)Math.Cos(radians);
-        double s = (double)Math.Sin(radians);
+        float c = (float)Math.Cos(radians);
+        float s = (float)Math.Sin(radians);
 
         // [  c -s  0  ]
         // [  s  c  0  ]
@@ -260,7 +260,7 @@ public struct JMatrix
     /// Create a scaling matrix.
     /// </summary>
     /// <returns></returns>
-    public static JMatrix CreateScale(double x, double y, double z)
+    public static JMatrix CreateScale(float x, float y, float z)
     {
         return CreateScale(new JVector(x, y, z));
     }
@@ -271,15 +271,15 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
-        double num0 = matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M21 + matrix1.M31 * matrix2.M31;
-        double num1 = matrix1.M11 * matrix2.M12 + matrix1.M21 * matrix2.M22 + matrix1.M31 * matrix2.M32;
-        double num2 = matrix1.M11 * matrix2.M13 + matrix1.M21 * matrix2.M23 + matrix1.M31 * matrix2.M33;
-        double num3 = matrix1.M12 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M32 * matrix2.M31;
-        double num4 = matrix1.M12 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M32 * matrix2.M32;
-        double num5 = matrix1.M12 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M32 * matrix2.M33;
-        double num6 = matrix1.M13 * matrix2.M11 + matrix1.M23 * matrix2.M21 + matrix1.M33 * matrix2.M31;
-        double num7 = matrix1.M13 * matrix2.M12 + matrix1.M23 * matrix2.M22 + matrix1.M33 * matrix2.M32;
-        double num8 = matrix1.M13 * matrix2.M13 + matrix1.M23 * matrix2.M23 + matrix1.M33 * matrix2.M33;
+        float num0 = matrix1.M11 * matrix2.M11 + matrix1.M21 * matrix2.M21 + matrix1.M31 * matrix2.M31;
+        float num1 = matrix1.M11 * matrix2.M12 + matrix1.M21 * matrix2.M22 + matrix1.M31 * matrix2.M32;
+        float num2 = matrix1.M11 * matrix2.M13 + matrix1.M21 * matrix2.M23 + matrix1.M31 * matrix2.M33;
+        float num3 = matrix1.M12 * matrix2.M11 + matrix1.M22 * matrix2.M21 + matrix1.M32 * matrix2.M31;
+        float num4 = matrix1.M12 * matrix2.M12 + matrix1.M22 * matrix2.M22 + matrix1.M32 * matrix2.M32;
+        float num5 = matrix1.M12 * matrix2.M13 + matrix1.M22 * matrix2.M23 + matrix1.M32 * matrix2.M33;
+        float num6 = matrix1.M13 * matrix2.M11 + matrix1.M23 * matrix2.M21 + matrix1.M33 * matrix2.M31;
+        float num7 = matrix1.M13 * matrix2.M12 + matrix1.M23 * matrix2.M22 + matrix1.M33 * matrix2.M32;
+        float num8 = matrix1.M13 * matrix2.M13 + matrix1.M23 * matrix2.M23 + matrix1.M33 * matrix2.M33;
 
         result.M11 = num0;
         result.M12 = num1;
@@ -321,7 +321,7 @@ public struct JMatrix
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly double Determinant()
+    public readonly float Determinant()
     {
         return M11 * M22 * M33 + M12 * M23 * M31 + M13 * M21 * M32 -
                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
@@ -330,25 +330,25 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
-        double idet = 1.0 / matrix.Determinant();
+        float idet = 1.0f / matrix.Determinant();
 
-        if (!double.IsNormal(idet))
+        if (!float.IsNormal(idet))
         {
             result = new JMatrix();
             return false;
         }
 
-        double num11 = matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32;
-        double num12 = matrix.M13 * matrix.M32 - matrix.M12 * matrix.M33;
-        double num13 = matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13;
+        float num11 = matrix.M22 * matrix.M33 - matrix.M23 * matrix.M32;
+        float num12 = matrix.M13 * matrix.M32 - matrix.M12 * matrix.M33;
+        float num13 = matrix.M12 * matrix.M23 - matrix.M22 * matrix.M13;
 
-        double num21 = matrix.M23 * matrix.M31 - matrix.M33 * matrix.M21;
-        double num22 = matrix.M11 * matrix.M33 - matrix.M31 * matrix.M13;
-        double num23 = matrix.M13 * matrix.M21 - matrix.M23 * matrix.M11;
+        float num21 = matrix.M23 * matrix.M31 - matrix.M33 * matrix.M21;
+        float num22 = matrix.M11 * matrix.M33 - matrix.M31 * matrix.M13;
+        float num23 = matrix.M13 * matrix.M21 - matrix.M23 * matrix.M11;
 
-        double num31 = matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22;
-        double num32 = matrix.M12 * matrix.M31 - matrix.M32 * matrix.M11;
-        double num33 = matrix.M11 * matrix.M22 - matrix.M21 * matrix.M12;
+        float num31 = matrix.M21 * matrix.M32 - matrix.M31 * matrix.M22;
+        float num32 = matrix.M12 * matrix.M31 - matrix.M32 * matrix.M11;
+        float num33 = matrix.M11 * matrix.M22 - matrix.M21 * matrix.M12;
 
         result.M11 = num11 * idet;
         result.M12 = num12 * idet;
@@ -364,16 +364,16 @@ public struct JMatrix
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JMatrix Multiply(JMatrix matrix1, double scaleFactor)
+    public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)
     {
         Multiply(in matrix1, scaleFactor, out JMatrix result);
         return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Multiply(in JMatrix matrix1, double scaleFactor, out JMatrix result)
+    public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)
     {
-        double num = scaleFactor;
+        float num = scaleFactor;
         result.M11 = matrix1.M11 * num;
         result.M12 = matrix1.M12 * num;
         result.M13 = matrix1.M13 * num;
@@ -409,20 +409,20 @@ public struct JMatrix
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
     {
-        double r = quaternion.W;
-        double i = quaternion.X;
-        double j = quaternion.Y;
-        double k = quaternion.Z;
+        float r = quaternion.W;
+        float i = quaternion.X;
+        float j = quaternion.Y;
+        float k = quaternion.Z;
 
-        result.M11 = 1.0 - 2.0 * (j * j + k * k);
-        result.M12 = 2.0 * (i * j - k * r);
-        result.M13 = 2.0 * (i * k + j * r);
-        result.M21 = 2.0 * (i * j + k * r);
-        result.M22 = 1.0 - 2.0 * (i * i + k * k);
-        result.M23 = 2.0 * (j * k - i * r);
-        result.M31 = 2.0 * (i * k - j * r);
-        result.M32 = 2.0 * (j * k + i * r);
-        result.M33 = 1.0 - 2.0 * (i * i + j * j);
+        result.M11 = 1.0f - 2.0f * (j * j + k * k);
+        result.M12 = 2.0f * (i * j - k * r);
+        result.M13 = 2.0f * (i * k + j * r);
+        result.M21 = 2.0f * (i * j + k * r);
+        result.M22 = 1.0f - 2.0f * (i * i + k * k);
+        result.M23 = 2.0f * (j * k - i * r);
+        result.M31 = 2.0f * (i * k - j * r);
+        result.M32 = 2.0f * (j * k + i * r);
+        result.M33 = 1.0f - 2.0f * (i * i + j * j);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -472,20 +472,20 @@ public struct JMatrix
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public double Trace()
+    public float Trace()
     {
         return M11 + M22 + M33;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JMatrix operator *(double factor, in JMatrix matrix)
+    public static JMatrix operator *(float factor, in JMatrix matrix)
     {
         Multiply(matrix, factor, out JMatrix result);
         return result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JMatrix operator *(in JMatrix matrix, double factor)
+    public static JMatrix operator *(in JMatrix matrix, float factor)
     {
         Multiply(matrix, factor, out JMatrix result);
         return result;

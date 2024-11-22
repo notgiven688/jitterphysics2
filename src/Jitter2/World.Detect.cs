@@ -49,7 +49,7 @@ public partial class World
 
         private void PushLeft(Span<JVector> left, in JVector v)
         {
-            const double epsilon = 0.001;
+            const float epsilon = 0.001f;
 
             if (leftCount > 0)
             {
@@ -66,7 +66,7 @@ public partial class World
 
         private void PushRight(Span<JVector> right, in JVector v)
         {
-            const double epsilon = 0.001;
+            const float epsilon = 0.001f;
 
             if (rightCount > 0)
             {
@@ -90,7 +90,7 @@ public partial class World
 
         [System.Runtime.CompilerServices.SkipLocalsInit]
         public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
-            in JVector pA, in JVector pB, in JVector normal, double penetration)
+            in JVector pA, in JVector pB, in JVector normal, float penetration)
         {
             manifoldData ??= new JVector[12];
             Reset();
@@ -109,15 +109,15 @@ public partial class World
             Span<JVector> left = stackalloc JVector[6];
             Span<JVector> right = stackalloc JVector[6];
 
-            const double sqrt3Over2 = 0.8660254;
+            const float sqrt3Over2 = 0.8660254f;
 
-            Span<double> hexagonVertices = stackalloc double[]
-                { 1, 0, 0.5, sqrt3Over2, -0.5, sqrt3Over2, -1, 0, -0.5, -sqrt3Over2, 0.5, -sqrt3Over2 };
+            Span<float> hexagonVertices = stackalloc float[]
+                { 1f, 0f, 0.5f, sqrt3Over2, -0.5f, sqrt3Over2, -1f, 0f, -0.5f, -sqrt3Over2, 0.5f, -sqrt3Over2 };
 
             for (int e = 0; e < 6; e++)
             {
-                JVector ptNormal = normal + hexagonVertices[2 * e + 0] * 0.01 * crossVector1 +
-                                   hexagonVertices[2 * e + 1] * 0.01 * crossVector2;
+                JVector ptNormal = normal + hexagonVertices[2 * e + 0] * 0.01f * crossVector1 +
+                                   hexagonVertices[2 * e + 1] * 0.01f * crossVector2;
 
                 Support(shapeA, ptNormal, out JVector np1);
                 PushLeft(left, np1);
@@ -151,13 +151,13 @@ public partial class World
 
                         JVector cr2 = (b - a) % (p - a);
 
-                        sameSign = JVector.Dot(cr, cr2) > 1e-3;
+                        sameSign = JVector.Dot(cr, cr2) > 1e-3f;
                         if (!sameSign) break;
                     }
 
                     if (sameSign)
                     {
-                        double diff = JVector.Dot(p - pA, normal);
+                        float diff = JVector.Dot(p - pA, normal);
                         mB[manifoldCount] = p;
                         mA[manifoldCount++] = p - diff * normal;
 
@@ -186,13 +186,13 @@ public partial class World
 
                         JVector cr2 = (b - a) % (p - a);
 
-                        sameSign = JVector.Dot(cr, cr2) > 1e-3;
+                        sameSign = JVector.Dot(cr, cr2) > 1e-3f;
                         if (!sameSign) break;
                     }
 
                     if (sameSign)
                     {
-                        double diff = JVector.Dot(p - pB, normal);
+                        float diff = JVector.Dot(p - pB, normal);
                         mA[manifoldCount] = p;
                         mB[manifoldCount++] = p - diff * normal;
 
@@ -239,7 +239,7 @@ public partial class World
     /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
     /// might be sufficient to trigger another speculative contact in the next frame.
     /// </summary>
-    public double SpeculativeRelaxationFactor { get; set; } = 0.9;
+    public float SpeculativeRelaxationFactor { get; set; } = 0.9f;
 
     /// <summary>
     /// Speculative contacts are generated when the velocity towards an obstacle exceeds
@@ -247,11 +247,11 @@ public partial class World
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01s.
     /// </summary>
-    public double SpeculativeVelocityThreshold { get; set; } = 10;
+    public float SpeculativeVelocityThreshold { get; set; } = 10f;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
-        in JVector normal, double penetration, bool speculative = false)
+        in JVector normal, float penetration, bool speculative = false)
     {
         lock (arbiter)
         {
@@ -263,7 +263,7 @@ public partial class World
     }
 
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
-        in JVector point1, in JVector point2, in JVector normal, double penetration, bool speculative = false)
+        in JVector point1, in JVector point2, in JVector normal, float penetration, bool speculative = false)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
@@ -296,7 +296,7 @@ public partial class World
         Unsafe.SkipInit(out JVector normal);
         Unsafe.SkipInit(out JVector pA);
         Unsafe.SkipInit(out JVector pB);
-        double penetration;
+        float penetration;
 
         Debug.Assert(sA.RigidBody != sB.RigidBody);
         Debug.Assert(sA.RigidBody.World == this);
@@ -320,7 +320,7 @@ public partial class World
 
             if (!success) return;
 
-            colliding = penetration >= 0.0;
+            colliding = penetration >= 0.0f;
         }
         else
         {
@@ -338,9 +338,9 @@ public partial class World
 
             bool success = NarrowPhase.Sweep(sA, sB, b1.Orientation, b2.Orientation,
                 b1.Position, b2.Position,b1.Velocity, b2.Velocity,
-                out pA, out pB, out normal, out double toi);
+                out pA, out pB, out normal, out float toi);
 
-            if (!success || toi > step_dt || toi == 0.0) return;
+            if (!success || toi > step_dt || toi == 0.0f) return;
 
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
 
@@ -401,8 +401,8 @@ public partial class World
                 JVector mfA = cvh.ManifoldA[e];
                 JVector mfB = cvh.ManifoldB[e];
 
-                double nd = JVector.Dot(mfA - mfB, normal);
-                if (nd < 0.0) continue;
+                float nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < 0.0f) continue;
 
                 arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
             }

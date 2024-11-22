@@ -65,7 +65,7 @@ public class SoftBody
 
     private bool active = true;
 
-    protected virtual void WorldOnPostStep(double dt)
+    protected virtual void WorldOnPostStep(float dt)
     {
         if (IsActive == active) return;
         active = IsActive;

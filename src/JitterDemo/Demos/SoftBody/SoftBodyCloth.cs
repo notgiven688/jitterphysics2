@@ -92,7 +92,7 @@ public class SoftBodyCloth : SoftBody
         foreach (var vertex in vertices)
         {
             RigidBody body = world.CreateRigidBody();
-            body.SetMassInertia(JMatrix.Zero, 100.0, true);
+            body.SetMassInertia(JMatrix.Zero, 100.0f, true);
             body.Position = vertex;
             Vertices.Add(body);
         }
@@ -101,7 +101,7 @@ public class SoftBodyCloth : SoftBody
         {
             var constraint = world.CreateConstraint<SpringConstraint>(Vertices[edge.IndexA], Vertices[edge.IndexB]);
             constraint.Initialize(Vertices[edge.IndexA].Position, Vertices[edge.IndexB].Position);
-            constraint.Softness = 0.2;
+            constraint.Softness = 0.2f;
             Springs.Add(constraint);
         }
 

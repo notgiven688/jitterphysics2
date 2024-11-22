@@ -7,7 +7,7 @@ namespace JitterDemo;
 
 public class Teapot : MultiMesh
 {
-    public Teapot() : base(Path.Combine("assets", "teapot_hull.obj"), 0.03)
+    public Teapot() : base(Path.Combine("assets", "teapot_hull.obj"), 0.03f)
     {
     }
 }

@@ -41,7 +41,7 @@ public unsafe class LinearMotor : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, double, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -49,13 +49,13 @@ public unsafe class LinearMotor : Constraint
         public JVector LocalAxis1;
         public JVector LocalAxis2;
 
-        public double Velocity;
-        public double MaxForce;
-        public double MaxLambda;
+        public float Velocity;
+        public float MaxForce;
+        public float MaxLambda;
 
-        public double EffectiveMass;
+        public float EffectiveMass;
 
-        public double AccumulatedImpulse;
+        public float AccumulatedImpulse;
     }
 
     private JHandle<LinearMotorData> handle;
@@ -101,18 +101,18 @@ public unsafe class LinearMotor : Constraint
         data.Velocity = 0;
     }
 
-    public double TargetVelocity
+    public float TargetVelocity
     {
         get => handle.Data.Velocity;
         set => handle.Data.Velocity = value;
     }
 
-    public double MaximumForce
+    public float MaximumForce
     {
         get => handle.Data.MaxForce;
         set
         {
-            if (value < 0.0)
+            if (value < 0.0f)
             {
                 throw new ArgumentException("Maximum force must not be negative.");
             }
@@ -121,9 +121,9 @@ public unsafe class LinearMotor : Constraint
         }
     }
 
-    public double Impulse => handle.Data.AccumulatedImpulse;
+    public float Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void PrepareForIteration(ref ConstraintData constraint, double idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
 
@@ -134,8 +134,8 @@ public unsafe class LinearMotor : Constraint
         JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector j2);
 
         data.EffectiveMass = body1.InverseMass + body2.InverseMass;
-        data.EffectiveMass = 1.0 / data.EffectiveMass;
-        data.MaxLambda = (1.0 / idt) * data.MaxForce;
+        data.EffectiveMass = 1.0f / data.EffectiveMass;
+        data.MaxLambda = (1.0f / idt) * data.MaxForce;
 
         body1.Velocity -= j1 * data.AccumulatedImpulse * body1.InverseMass;
         body2.Velocity += j2 * data.AccumulatedImpulse * body2.InverseMass;
@@ -149,7 +149,7 @@ public unsafe class LinearMotor : Constraint
         ref RigidBodyData body2 = ref data.Body2.Data;
     }
 
-    public static void Iterate(ref ConstraintData constraint, double idt)
+    public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -158,11 +158,11 @@ public unsafe class LinearMotor : Constraint
         JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector j1);
         JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector j2);
 
-        double jv = -j1 * body1.Velocity + j2 * body2.Velocity;
+        float jv = -j1 * body1.Velocity + j2 * body2.Velocity;
 
-        double lambda = -(jv - data.Velocity) * data.EffectiveMass;
+        float lambda = -(jv - data.Velocity) * data.EffectiveMass;
 
-        double olda = data.AccumulatedImpulse;
+        float olda = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 

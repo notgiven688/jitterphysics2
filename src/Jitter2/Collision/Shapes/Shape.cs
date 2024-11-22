@@ -52,25 +52,25 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     int IDynamicTreeProxy.NodePtr { get; set; }
 
-    protected void SweptExpandBoundingBox(double dt)
+    protected void SweptExpandBoundingBox(float dt)
     {
         JVector sweptDirection = dt * Velocity;
 
         JBBox box = WorldBoundingBox;
 
-        double sxa = Math.Abs(sweptDirection.X);
-        double sya = Math.Abs(sweptDirection.Y);
-        double sza = Math.Abs(sweptDirection.Z);
+        float sxa = MathF.Abs(sweptDirection.X);
+        float sya = MathF.Abs(sweptDirection.Y);
+        float sza = MathF.Abs(sweptDirection.Z);
 
-        double max = Math.Max(Math.Max(sxa, sya), sza);
+        float max = MathF.Max(MathF.Max(sxa, sya), sza);
 
-        if (sweptDirection.X < 0.0) box.Min.X -= max;
+        if (sweptDirection.X < 0.0f) box.Min.X -= max;
         else box.Max.X += max;
 
-        if (sweptDirection.Y < 0.0) box.Min.Y -= max;
+        if (sweptDirection.Y < 0.0f) box.Min.Y -= max;
         else box.Max.Y += max;
 
-        if (sweptDirection.Z < 0.0) box.Min.Z -= max;
+        if (sweptDirection.Z < 0.0f) box.Min.Z -= max;
         else box.Max.Z += max;
 
         WorldBoundingBox = box;
@@ -82,10 +82,10 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     public abstract JVector Velocity { get; }
 
     [ReferenceFrame(ReferenceFrame.World)]
-    public abstract void UpdateWorldBoundingBox(double dt = 0.0);
+    public abstract void UpdateWorldBoundingBox(float dt = 0.0f);
 
     [ReferenceFrame(ReferenceFrame.World)]
-    public abstract bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda);
+    public abstract bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
 
     /// <inheritdoc/>
     [ReferenceFrame(ReferenceFrame.Local)]

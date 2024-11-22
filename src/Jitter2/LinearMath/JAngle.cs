@@ -26,12 +26,12 @@ using System;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A 32-bit doubleing point variable representing an angle. This structure exists to eliminate
+/// A 32-bit floating point variable representing an angle. This structure exists to eliminate
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
 public struct JAngle : IEquatable<JAngle>
 {
-    public double Radiant { get; set; }
+    public float Radiant { get; set; }
 
     public readonly override bool Equals(object? obj)
     {
@@ -48,23 +48,23 @@ public struct JAngle : IEquatable<JAngle>
         return Radiant.GetHashCode();
     }
 
-    public double Degree
+    public float Degree
     {
-        readonly get => Radiant / Math.PI * 180.0;
-        set => Radiant = value / 180.0 * Math.PI;
+        readonly get => Radiant / MathF.PI * 180.0f;
+        set => Radiant = value / 180.0f * MathF.PI;
     }
 
-    public static JAngle FromRadiant(double rad)
+    public static JAngle FromRadiant(float rad)
     {
         return new JAngle { Radiant = rad };
     }
 
-    public static JAngle FromDegree(double deg)
+    public static JAngle FromDegree(float deg)
     {
         return new JAngle { Degree = deg };
     }
 
-    public static explicit operator JAngle(double angle)
+    public static explicit operator JAngle(float angle)
     {
         return FromRadiant(angle);
     }
@@ -86,35 +86,35 @@ public struct JAngle : IEquatable<JAngle>
 
     public static bool operator ==(JAngle l, JAngle r)
     {
-        return (double)l == (double)r;
+        return (float)l == (float)r;
     }
 
     public static bool operator !=(JAngle l, JAngle r)
     {
-        return (double)l != (double)r;
+        return (float)l != (float)r;
     }
 
     public static bool operator <(JAngle l, JAngle r)
     {
-        return (double)l < (double)r;
+        return (float)l < (float)r;
     }
 
     public static bool operator >(JAngle l, JAngle r)
     {
-        return (double)l > (double)r;
+        return (float)l > (float)r;
     }
 
     public static bool operator >=(JAngle l, JAngle r)
     {
-        return (double)l >= (double)r;
+        return (float)l >= (float)r;
     }
 
     public static bool operator <=(JAngle l, JAngle r)
     {
-        return (double)l <= (double)r;
+        return (float)l <= (float)r;
     }
 
-    public static explicit operator double(JAngle angle)
+    public static explicit operator float(JAngle angle)
     {
         return angle.Radiant;
     }

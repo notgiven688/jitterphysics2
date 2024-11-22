@@ -31,13 +31,13 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class CylinderShape : RigidBodyShape
 {
-    private double radius;
-    private double height;
+    private float radius;
+    private float height;
 
     /// <summary>
     /// Gets or sets the radius of the cylinder.
     /// </summary>
-    public double Radius
+    public float Radius
     {
         get => radius;
         set
@@ -50,7 +50,7 @@ public class CylinderShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cylinder.
     /// </summary>
-    public double Height
+    public float Height
     {
         get => height;
         set
@@ -65,7 +65,7 @@ public class CylinderShape : RigidBodyShape
     /// </summary>
     /// <param name="height">The height of the cylinder.</param>
     /// <param name="radius">The radius of the cylinder at its base.</param>
-    public CylinderShape(double height, double radius)
+    public CylinderShape(float height, float radius)
     {
         this.radius = radius;
         this.height = height;
@@ -79,58 +79,58 @@ public class CylinderShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        double sigma = (double)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
+        float sigma = (float)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
 
-        if (sigma > 0.0)
+        if (sigma > 0.0f)
         {
             result.X = direction.X / sigma * radius;
-            result.Y = Math.Sign(direction.Y) * height * 0.5;
+            result.Y = Math.Sign(direction.Y) * height * 0.5f;
             result.Z = direction.Z / sigma * radius;
         }
         else
         {
-            result.X = 0.0;
-            result.Y = Math.Sign(direction.Y) * height * 0.5;
-            result.Z = 0.0;
+            result.X = 0.0f;
+            result.Y = Math.Sign(direction.Y) * height * 0.5f;
+            result.Z = 0.0f;
         }
     }
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const double zeroEpsilon = 1e-12;
+        const float zeroEpsilon = 1e-12f;
 
         JVector upa = orientation.GetBasisY();
 
-        double xx = upa.X * upa.X;
-        double yy = upa.Y * upa.Y;
-        double zz = upa.Z * upa.Z;
+        float xx = upa.X * upa.X;
+        float yy = upa.Y * upa.Y;
+        float zz = upa.Z * upa.Z;
 
-        double l1 = yy + zz;
-        double l2 = xx + zz;
-        double l3 = xx + yy;
+        float l1 = yy + zz;
+        float l2 = xx + zz;
+        float l3 = xx + yy;
 
-        double xext = 0, yext = 0, zext = 0;
+        float xext = 0, yext = 0, zext = 0;
 
         if (l1 > zeroEpsilon)
         {
-            double sl = 1.0 / Math.Sqrt(l1);
+            float sl = 1.0f / MathF.Sqrt(l1);
             xext = (yy + zz) * sl * radius;
         }
 
         if (l2 > zeroEpsilon)
         {
-            double sl = 1.0 / Math.Sqrt(l2);
+            float sl = 1.0f / MathF.Sqrt(l2);
             yext = (xx + zz) * sl * radius;
         }
 
         if (l3 > zeroEpsilon)
         {
-            double sl = 1.0 / Math.Sqrt(l3);
+            float sl = 1.0f / MathF.Sqrt(l3);
             zext = (xx + yy) * sl * radius;
         }
 
-        JVector p1 = -0.5 * height * upa;
-        JVector p2 = +0.5 * height * upa;
+        JVector p1 = -0.5f * height * upa;
+        JVector p2 = +0.5f * height * upa;
 
         JVector delta = JVector.Max(p1, p2) + new JVector(xext, yext, zext);
 
@@ -138,15 +138,15 @@ public class CylinderShape : RigidBodyShape
         box.Max = position + delta;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        mass = Math.PI * radius * radius * height;
+        mass = MathF.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
 
-        inertia.M11 = 1.0 / 4.0 * mass * radius * radius + 1.0 / 12.0 * mass * height * height;
-        inertia.M22 = 1.0 / 2.0 * mass * radius * radius;
-        inertia.M33 = 1.0 / 4.0 * mass * radius * radius + 1.0 / 12.0 * mass * height * height;
+        inertia.M11 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;
+        inertia.M22 = 1.0f / 2.0f * mass * radius * radius;
+        inertia.M33 = 1.0f / 4.0f * mass * radius * radius + 1.0f / 12.0f * mass * height * height;
 
         com = JVector.Zero;
     }

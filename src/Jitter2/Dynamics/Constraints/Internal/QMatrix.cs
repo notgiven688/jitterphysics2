@@ -31,6 +31,31 @@ namespace Jitter2.Dynamics.Constraints;
 
 internal unsafe struct QMatrix
 {
+    private MemoryHelper.MemBlock64 mem;
+
+    public float* Pointer => (float*)Unsafe.AsPointer(ref mem);
+
+    private static QMatrix Multiply(float* left, float* right)
+    {
+        Unsafe.SkipInit(out QMatrix res);
+        float* result = res.Pointer;
+
+        for (int c = 0; c < 4; c++)
+        {
+            for (int r = 0; r < 4; r++)
+            {
+                float* tt = &result[4 * c + r];
+                *tt = 0;
+                for (int k = 0; k < 4; k++)
+                {
+                    *tt += left[4 * k + r] * right[4 * c + k];
+                }
+            }
+        }
+
+        return res;
+    }
+
     public static JMatrix ProjectMultiplyLeftRight(in JQuaternion left, in JQuaternion right)
     {
         Unsafe.SkipInit(out JMatrix res);
@@ -48,4 +73,73 @@ internal unsafe struct QMatrix
         return res;
     }
 
+    public JMatrix Projection()
+    {
+        float* m = Pointer;
+
+        return new JMatrix(m[0x5], m[0x9], m[0xD],
+            m[0x6], m[0xA], m[0xE],
+            m[0x7], m[0xB], m[0xF]);
+    }
+
+    public static QMatrix CreateLM(in JQuaternion quat)
+    {
+        Unsafe.SkipInit(out QMatrix result);
+        float* q = result.Pointer;
+
+        q[0x0] = +quat.W;
+        q[0x4] = -quat.X;
+        q[0x8] = -quat.Y;
+        q[0xC] = -quat.Z;
+        q[0x1] = +quat.X;
+        q[0x5] = +quat.W;
+        q[0x9] = -quat.Z;
+        q[0xD] = +quat.Y;
+        q[0x2] = +quat.Y;
+        q[0x6] = +quat.Z;
+        q[0xA] = +quat.W;
+        q[0xE] = -quat.X;
+        q[0x3] = +quat.Z;
+        q[0x7] = -quat.Y;
+        q[0xB] = +quat.X;
+        q[0xF] = +quat.W;
+
+        return result;
+    }
+
+    public static QMatrix CreateRM(in JQuaternion quat)
+    {
+        Unsafe.SkipInit(out QMatrix result);
+        float* q = result.Pointer;
+
+        q[0x0] = +quat.W;
+        q[0x4] = -quat.X;
+        q[0x8] = -quat.Y;
+        q[0xC] = -quat.Z;
+        q[0x1] = +quat.X;
+        q[0x5] = +quat.W;
+        q[0x9] = +quat.Z;
+        q[0xD] = -quat.Y;
+        q[0x2] = +quat.Y;
+        q[0x6] = -quat.Z;
+        q[0xA] = +quat.W;
+        q[0xE] = +quat.X;
+        q[0x3] = +quat.Z;
+        q[0x7] = +quat.Y;
+        q[0xB] = -quat.X;
+        q[0xF] = +quat.W;
+
+        return result;
+    }
+
+    public static QMatrix Multiply(ref QMatrix left, ref QMatrix right)
+    {
+        fixed (QMatrix* lptr = &left)
+        {
+            fixed (QMatrix* rptr = &right)
+            {
+                return Multiply((float*)lptr, (float*)rptr);
+            }
+        }
+    }
 }

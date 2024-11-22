@@ -38,10 +38,10 @@ public class BoxShape : RigidBodyShape
     /// </summary>
     public JVector Size
     {
-        get => 2.0 * halfSize;
+        get => 2.0f * halfSize;
         set
         {
-            halfSize = value * 0.5;
+            halfSize = value * 0.5f;
             UpdateWorldBoundingBox();
         }
     }
@@ -52,7 +52,7 @@ public class BoxShape : RigidBodyShape
     /// <param name="size">The dimensions of the box.</param>
     public BoxShape(JVector size)
     {
-        halfSize = 0.5 * size;
+        halfSize = 0.5f * size;
         UpdateWorldBoundingBox();
     }
 
@@ -60,9 +60,9 @@ public class BoxShape : RigidBodyShape
     /// Creates a cube shape with the specified side length.
     /// </summary>
     /// <param name="size">The length of each side of the cube.</param>
-    public BoxShape(double size)
+    public BoxShape(float size)
     {
-        halfSize = new JVector(size * 0.5);
+        halfSize = new JVector(size * 0.5f);
         UpdateWorldBoundingBox();
     }
 
@@ -72,9 +72,9 @@ public class BoxShape : RigidBodyShape
     /// <param name="length">The length of the box.</param>
     /// <param name="height">The height of the box.</param>
     /// <param name="width">The width of the box.</param>
-    public BoxShape(double length, double height, double width)
+    public BoxShape(float length, float height, float width)
     {
-        halfSize = 0.5 * new JVector(length, height, width);
+        halfSize = 0.5f * new JVector(length, height, width);
         UpdateWorldBoundingBox();
     }
 
@@ -85,23 +85,23 @@ public class BoxShape : RigidBodyShape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
-        double epsilon = 1e-22;
+        float epsilon = 1e-22f;
 
         JVector min = -halfSize;
         JVector max = halfSize;
 
         normal = JVector.Zero;
-        lambda = 0.0;
+        lambda = 0.0f;
 
-        double exit = double.PositiveInfinity;
+        float exit = float.PositiveInfinity;
 
-        if (Math.Abs(direction.X) > epsilon)
+        if (MathF.Abs(direction.X) > epsilon)
         {
-            double ix = 1.0 / direction.X;
-            double t0 = (min.X - origin.X) * ix;
-            double t1 = (max.X - origin.X) * ix;
+            float ix = 1.0f / direction.X;
+            float t0 = (min.X - origin.X) * ix;
+            float t1 = (max.X - origin.X) * ix;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -110,7 +110,7 @@ public class BoxShape : RigidBodyShape
             if (t0 > lambda)
             {
                 lambda = t0;
-                normal = direction.X < 0.0 ? JVector.UnitX : -JVector.UnitX;
+                normal = direction.X < 0.0f ? JVector.UnitX : -JVector.UnitX;
             }
 
             if (t1 < exit) exit = t1;
@@ -120,11 +120,11 @@ public class BoxShape : RigidBodyShape
             return false;
         }
 
-        if (Math.Abs(direction.Y) > epsilon)
+        if (MathF.Abs(direction.Y) > epsilon)
         {
-            double iy = 1.0 / direction.Y;
-            double t0 = (min.Y - origin.Y) * iy;
-            double t1 = (max.Y - origin.Y) * iy;
+            float iy = 1.0f / direction.Y;
+            float t0 = (min.Y - origin.Y) * iy;
+            float t1 = (max.Y - origin.Y) * iy;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -133,7 +133,7 @@ public class BoxShape : RigidBodyShape
             if (t0 > lambda)
             {
                 lambda = t0;
-                normal = direction.Y < 0.0 ? JVector.UnitY : -JVector.UnitY;
+                normal = direction.Y < 0.0f ? JVector.UnitY : -JVector.UnitY;
             }
 
             if (t1 < exit) exit = t1;
@@ -143,11 +143,11 @@ public class BoxShape : RigidBodyShape
             return false;
         }
 
-        if (Math.Abs(direction.Z) > epsilon)
+        if (MathF.Abs(direction.Z) > epsilon)
         {
-            double iz = 1.0 / direction.Z;
-            double t0 = (min.Z - origin.Z) * iz;
-            double t1 = (max.Z - origin.Z) * iz;
+            float iz = 1.0f / direction.Z;
+            float t0 = (min.Z - origin.Z) * iz;
+            float t1 = (max.Z - origin.Z) * iz;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -156,7 +156,7 @@ public class BoxShape : RigidBodyShape
             if (t0 > lambda)
             {
                 lambda = t0;
-                normal = direction.Z < 0.0 ? JVector.UnitZ : -JVector.UnitZ;
+                normal = direction.Z < 0.0f ? JVector.UnitZ : -JVector.UnitZ;
             }
             //if (t1 < exit) exit = t1;
         }
@@ -181,15 +181,15 @@ public class BoxShape : RigidBodyShape
         box.Max = position + ths;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
     {
-        JVector size = halfSize * 2.0;
+        JVector size = halfSize * 2.0f;
         mass = size.X * size.Y * size.Z;
 
         inertia = JMatrix.Identity;
-        inertia.M11 = 1.0 / 12.0 * mass * (size.Y * size.Y + size.Z * size.Z);
-        inertia.M22 = 1.0 / 12.0 * mass * (size.X * size.X + size.Z * size.Z);
-        inertia.M33 = 1.0 / 12.0 * mass * (size.X * size.X + size.Y * size.Y);
+        inertia.M11 = 1.0f / 12.0f * mass * (size.Y * size.Y + size.Z * size.Z);
+        inertia.M22 = 1.0f / 12.0f * mass * (size.X * size.X + size.Z * size.Z);
+        inertia.M33 = 1.0f / 12.0f * mass * (size.X * size.X + size.Y * size.Y);
 
         com = JVector.Zero;
     }

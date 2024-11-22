@@ -45,16 +45,16 @@ public class Wheel
 
     private readonly RigidBody car;
 
-    private double displacement, upSpeed, lastDisplacement;
+    private float displacement, upSpeed, lastDisplacement;
     private bool onFloor;
-    private double driveTorque;
+    private float driveTorque;
 
-    private double angVel;
+    private float angVel;
 
     /// used to estimate the friction
-    private double angVelForGrip;
+    private float angVelForGrip;
 
-    private double torque;
+    private float torque;
 
     private readonly DynamicTree.RayCastFilterPre rayCast;
 
@@ -62,47 +62,47 @@ public class Wheel
     /// Sets or gets the current steering angle of
     /// the wheel in degrees.
     /// </summary>
-    public double SteerAngle { get; set; }
+    public float SteerAngle { get; set; }
 
     /// <summary>
     /// Gets the current rotation of the wheel in degrees.
     /// </summary>
-    public double WheelRotation { get; private set; }
+    public float WheelRotation { get; private set; }
 
     /// <summary>
     /// The damping factor of the supension spring.
     /// </summary>
-    public double Damping { get; set; }
+    public float Damping { get; set; }
 
     /// <summary>
     /// The supension spring.
     /// </summary>
-    public double Spring { get; set; }
+    public float Spring { get; set; }
 
     /// <summary>
     /// Inertia of the wheel.
     /// </summary>
-    public double Inertia { get; set; }
+    public float Inertia { get; set; }
 
     /// <summary>
     /// The wheel radius.
     /// </summary>
-    public double Radius { get; set; }
+    public float Radius { get; set; }
 
     /// <summary>
     /// The friction of the car in the side direction.
     /// </summary>
-    public double SideFriction { get; set; }
+    public float SideFriction { get; set; }
 
     /// <summary>
     /// Friction of the car in forward direction.
     /// </summary>
-    public double ForwardFriction { get; set; }
+    public float ForwardFriction { get; set; }
 
     /// <summary>
     /// The length of the suspension spring.
     /// </summary>
-    public double WheelTravel { get; set; }
+    public float WheelTravel { get; set; }
 
     /// <summary>
     /// If set to true the wheel blocks.
@@ -112,7 +112,7 @@ public class Wheel
     /// <summary>
     /// The highest possible velocity of the wheel.
     /// </summary>
-    public double MaximumAngularVelocity { get; set; }
+    public float MaximumAngularVelocity { get; set; }
 
     /// <summary>
     /// The number of rays used for this wheel.
@@ -124,7 +124,7 @@ public class Wheel
     /// </summary>
     public JVector Position { get; set; }
 
-    public double AngularVelocity => angVel;
+    public float AngularVelocity => angVel;
 
     public readonly JVector Up = JVector.UnitY;
 
@@ -135,7 +135,7 @@ public class Wheel
     /// <param name="car">The RigidBody on which to apply the wheel forces.</param>
     /// <param name="position">The position of the wheel on the body (in body space).</param>
     /// <param name="radius">The wheel radius.</param>
-    public Wheel(World world, RigidBody car, JVector position, double radius)
+    public Wheel(World world, RigidBody car, JVector position, float radius)
     {
         this.world = world;
         this.car = car;
@@ -144,11 +144,11 @@ public class Wheel
         rayCast = RayCastCallback;
 
         // set some default values.
-        SideFriction = 3.2;
-        ForwardFriction = 5.0;
+        SideFriction = 3.2f;
+        ForwardFriction = 5.0f;
         Radius = radius;
-        Inertia = 1.0;
-        WheelTravel = 0.2;
+        Inertia = 1.0f;
+        WheelTravel = 0.2f;
         MaximumAngularVelocity = 200;
         NumberOfRays = 1;
     }
@@ -166,16 +166,16 @@ public class Wheel
     /// Adds drivetorque.
     /// </summary>
     /// <param name="torque">The amount of torque applied to this wheel.</param>
-    public void AddTorque(double torque)
+    public void AddTorque(float torque)
     {
         driveTorque += torque;
     }
 
-    public void PostStep(double timeStep)
+    public void PostStep(float timeStep)
     {
-        if (timeStep <= 0.0) return;
+        if (timeStep <= 0.0f) return;
 
-        double origAngVel = angVel;
+        float origAngVel = angVel;
         upSpeed = (displacement - lastDisplacement) / timeStep;
 
         if (Locked)
@@ -188,7 +188,7 @@ public class Wheel
             angVel += torque * timeStep / Inertia;
             torque = 0;
 
-            if (!onFloor) driveTorque *= 0.1;
+            if (!onFloor) driveTorque *= 0.1f;
 
             // prevent friction from reversing dir - todo do this better
             // by limiting the torque
@@ -199,22 +199,22 @@ public class Wheel
             angVel += driveTorque * timeStep / Inertia;
             driveTorque = 0;
 
-            double maxAngVel = MaximumAngularVelocity;
+            float maxAngVel = MaximumAngularVelocity;
             angVel = Math.Clamp(angVel, -maxAngVel, maxAngVel);
 
             WheelRotation += timeStep * angVel;
         }
     }
 
-    public void PreStep(double timeStep)
+    public void PreStep(float timeStep)
     {
         // var dr = Playground.Instance.DebugRenderer;
 
         JVector force = JVector.Zero;
         lastDisplacement = displacement;
-        displacement = 0.0;
+        displacement = 0.0f;
 
-        double vel = car.Velocity.Length();
+        float vel = car.Velocity.Length();
 
         JVector worldPos = car.Position + JVector.Transform(Position, car.Orientation);
         JVector worldAxis = JVector.Transform(Up, car.Orientation);
@@ -228,44 +228,44 @@ public class Wheel
 
         JVector wheelUp = JVector.Cross(wheelFwd, wheelLeft);
 
-        double rayLen = 2.0 * Radius + WheelTravel;
+        float rayLen = 2.0f * Radius + WheelTravel;
 
         JVector wheelRayEnd = worldPos - Radius * worldAxis;
         JVector wheelRayOrigin = wheelRayEnd + rayLen * worldAxis;
         JVector wheelRayDelta = wheelRayEnd - wheelRayOrigin;
 
-        double deltaFwd = 2.0 * Radius / (NumberOfRays + 1);
-        double deltaFwdStart = deltaFwd;
+        float deltaFwd = 2.0f * Radius / (NumberOfRays + 1);
+        float deltaFwdStart = deltaFwd;
 
         onFloor = false;
 
         JVector groundNormal = JVector.Zero;
         JVector groundPos = JVector.Zero;
-        double deepestFrac = double.MaxValue;
+        float deepestFrac = float.MaxValue;
         RigidBody worldBody = null!;
 
         for (int i = 0; i < NumberOfRays; i++)
         {
-            double distFwd = deltaFwdStart + i * deltaFwd - Radius;
-            double zOffset = Radius * (1.0 - (double)Math.Cos(Math.PI / 2.0 * (distFwd / Radius)));
+            float distFwd = deltaFwdStart + i * deltaFwd - Radius;
+            float zOffset = Radius * (1.0f - (float)Math.Cos(Math.PI / 2.0f * (distFwd / Radius)));
 
             JVector newOrigin = wheelRayOrigin + distFwd * wheelFwd + zOffset * wheelUp;
 
             RigidBody body;
 
             bool result = world.DynamicTree.RayCast(newOrigin, wheelRayDelta,
-                rayCast, null, out IDynamicTreeProxy? shape, out JVector normal, out double frac);
+                rayCast, null, out IDynamicTreeProxy? shape, out JVector normal, out float frac);
 
             // Debug Rendering
-            // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2);
-            // dr.PushPoint(DebugRenderer.Color.Red, Conversion.FromJitter(newOrigin + wheelRayDelta), 0.2);
+            // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2f);
+            // dr.PushPoint(DebugRenderer.Color.Red, Conversion.FromJitter(newOrigin + wheelRayDelta), 0.2f);
 
             JVector minBox = worldPos - new JVector(Radius);
             JVector maxBox = worldPos + new JVector(Radius);
 
             // dr.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(minBox), Conversion.FromJitter(maxBox));
 
-            if (result && frac <= 1.0)
+            if (result && frac <= 1.0f)
             {
                 // shape must be RigidBodyShape since we filter out other ray tests
                 body = (shape as RigidBodyShape)!.RigidBody;
@@ -284,26 +284,26 @@ public class Wheel
 
         if (!onFloor) return;
 
-        // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(groundPos), 0.2);
+        // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(groundPos), 0.2f);
 
-        if (groundNormal.LengthSquared() > 0.0) groundNormal.Normalize();
+        if (groundNormal.LengthSquared() > 0.0f) groundNormal.Normalize();
 
         // System.Diagnostics.Debug.WriteLine(groundPos.ToString());
 
-        displacement = rayLen * (1.0 - deepestFrac);
-        displacement = Math.Clamp(displacement, 0.0, WheelTravel);
+        displacement = rayLen * (1.0f - deepestFrac);
+        displacement = Math.Clamp(displacement, 0.0f, WheelTravel);
 
-        double displacementForceMag = displacement * Spring;
+        float displacementForceMag = displacement * Spring;
 
         // reduce force when suspension is par to ground
         displacementForceMag *= JVector.Dot(groundNormal, worldAxis);
 
         // apply damping
-        double dampingForceMag = upSpeed * Damping;
+        float dampingForceMag = upSpeed * Damping;
 
-        double totalForceMag = displacementForceMag + dampingForceMag;
+        float totalForceMag = displacementForceMag + dampingForceMag;
 
-        if (totalForceMag < 0.0) totalForceMag = 0.0;
+        if (totalForceMag < 0.0f) totalForceMag = 0.0f;
 
         JVector extraForce = totalForceMag * worldAxis;
 
@@ -312,7 +312,7 @@ public class Wheel
         // side-slip friction and drive force. Work out wheel- and floor-relative coordinate frame
         JVector groundUp = groundNormal;
         JVector groundLeft = JVector.Cross(groundNormal, wheelFwd);
-        if (groundLeft.LengthSquared() > 0.0) groundLeft.Normalize();
+        if (groundLeft.LengthSquared() > 0.0f) groundLeft.Normalize();
 
         JVector groundFwd = JVector.Cross(groundLeft, groundUp);
 
@@ -331,14 +331,14 @@ public class Wheel
         wheelPointVel -= worldVel;
 
         // sideways forces
-        double noslipVel = 0.2;
-        double slipVel = 0.4;
-        double slipFactor = 0.7;
+        float noslipVel = 0.2f;
+        float slipVel = 0.4f;
+        float slipFactor = 0.7f;
 
-        double smallVel = 3.0;
-        double friction = SideFriction;
+        float smallVel = 3.0f;
+        float friction = SideFriction;
 
-        double sideVel = JVector.Dot(wheelPointVel, groundLeft);
+        float sideVel = JVector.Dot(wheelPointVel, groundLeft);
 
         if (sideVel > slipVel || sideVel < -slipVel)
         {
@@ -346,23 +346,23 @@ public class Wheel
         }
         else if (sideVel > noslipVel || sideVel < -noslipVel)
         {
-            friction *= 1.0 - (1.0 - slipFactor) * (Math.Abs(sideVel) - noslipVel) / (slipVel - noslipVel);
+            friction *= 1.0f - (1.0f - slipFactor) * (Math.Abs(sideVel) - noslipVel) / (slipVel - noslipVel);
         }
 
-        if (sideVel < 0.0)
-            friction *= -1.0;
+        if (sideVel < 0.0f)
+            friction *= -1.0f;
 
         if (Math.Abs(sideVel) < smallVel)
             friction *= Math.Abs(sideVel) / smallVel;
 
-        double sideForce = -friction * totalForceMag;
+        float sideForce = -friction * totalForceMag;
 
         extraForce = sideForce * groundLeft;
         force += extraForce;
 
         // fwd/back forces
         friction = ForwardFriction;
-        double fwdVel = JVector.Dot(wheelPointVel, groundFwd);
+        float fwdVel = JVector.Dot(wheelPointVel, groundFwd);
 
         if (fwdVel > slipVel || fwdVel < -slipVel)
         {
@@ -370,16 +370,16 @@ public class Wheel
         }
         else if (fwdVel > noslipVel || fwdVel < -noslipVel)
         {
-            friction *= 1.0 - (1.0 - slipFactor) * (Math.Abs(fwdVel) - noslipVel) / (slipVel - noslipVel);
+            friction *= 1.0f - (1.0f - slipFactor) * (Math.Abs(fwdVel) - noslipVel) / (slipVel - noslipVel);
         }
 
-        if (fwdVel < 0.0)
-            friction *= -1.0;
+        if (fwdVel < 0.0f)
+            friction *= -1.0f;
 
         if (Math.Abs(fwdVel) < smallVel)
             friction *= Math.Abs(fwdVel) / smallVel;
 
-        double fwdForce = -friction * totalForceMag;
+        float fwdForce = -friction * totalForceMag;
 
         extraForce = fwdForce * groundFwd;
         force += extraForce;
@@ -399,8 +399,8 @@ public class Wheel
         // add force to the world
         if (!worldBody.IsStatic)
         {
-            const double maxOtherBodyAcc = 500.0;
-            double maxOtherBodyForce = maxOtherBodyAcc * worldBody.Mass;
+            const float maxOtherBodyAcc = 500.0f;
+            float maxOtherBodyForce = maxOtherBodyAcc * worldBody.Mass;
 
             if (force.LengthSquared() > (maxOtherBodyForce * maxOtherBodyForce))
                 force *= maxOtherBodyForce / force.Length();

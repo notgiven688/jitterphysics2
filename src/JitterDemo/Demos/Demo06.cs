@@ -71,7 +71,7 @@ public class CarMesh : MultiMesh
 
         Vao.Bind();
 
-        int sof = sizeof(double);
+        int sof = sizeof(float);
         Mesh.Group mg;
 
         // chassis
@@ -144,26 +144,26 @@ public class Demo06 : IDemo
 
             Matrix4 whm = Conversion.FromJitter(defaultCar.Body) *
                           MatrixHelper.CreateTranslation(Conversion.FromJitter(wh.GetWheelCenter())) *
-                          MatrixHelper.CreateRotationY((float)wh.SteerAngle) *
-                          MatrixHelper.CreateRotationX(-(float)wh.WheelRotation) *
+                          MatrixHelper.CreateRotationY(wh.SteerAngle) *
+                          MatrixHelper.CreateRotationX(-wh.WheelRotation) *
                           rotate;
 
             whr.PushMatrix(whm);
         }
 
-        double steer, accelerate;
+        float steer, accelerate;
         var kb = Keyboard.Instance;
 
-        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0;
-        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0;
-        else accelerate = 0.0;
+        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0f;
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0f;
+        else accelerate = 0.0f;
 
         if (kb.IsKeyDown(Keyboard.Key.Left)) steer = 1;
         else if (kb.IsKeyDown(Keyboard.Key.Right)) steer = -1;
-        else steer = 0.0;
+        else steer = 0.0f;
 
         defaultCar.SetInput(accelerate, steer);
 
-        defaultCar.Step(1.0 / 100.0);
+        defaultCar.Step(1.0f / 100.0f);
     }
 }

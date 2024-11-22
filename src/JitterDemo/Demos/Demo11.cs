@@ -24,14 +24,14 @@ public class Demo11 : IDemo
         pg.ResetScene();
 
         b0 = world.CreateRigidBody();
-        b0.AddShape(new SphereShape(0.2));
+        b0.AddShape(new SphereShape(0.2f));
         b0.Position = new JVector(0, 12, 0);
-        b0.Velocity = new JVector(0.01, 0, 0);
+        b0.Velocity = new JVector(0.01f, 0, 0);
         b0.DeactivationTime = TimeSpan.MaxValue;
 
         b1 = world.CreateRigidBody();
-        b1.AddShape(new SphereShape(0.2));
-        b1.Velocity = new JVector(0, 0, 0.01);
+        b1.AddShape(new SphereShape(0.2f));
+        b1.Velocity = new JVector(0, 0, 0.01f);
         b1.Position = new JVector(0, 13, 0);
 
         var c0 = world.CreateConstraint<DistanceLimit>(world.NullBody, b0);
@@ -49,8 +49,8 @@ public class Demo11 : IDemo
 
     public void Draw()
     {
-        double ekin = 0.5 * (b0.Velocity.LengthSquared() + b1.Velocity.LengthSquared());
-        double epot = -world.Gravity.Y * (b0.Position.Y + b1.Position.Y);
+        float ekin = 0.5f * (b0.Velocity.LengthSquared() + b1.Velocity.LengthSquared());
+        float epot = -world.Gravity.Y * (b0.Position.Y + b1.Position.Y);
 
         Console.WriteLine($"Energy: {ekin + epot} Kinetic {ekin}; Potential {epot}");
 

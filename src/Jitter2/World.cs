@@ -91,7 +91,7 @@ public partial class World
     private readonly UnmanagedActiveList<ConstraintData> memConstraints;
     private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
 
-    public delegate void WorldStep(double dt);
+    public delegate void WorldStep(float dt);
 
     // Post- and Pre-step
     public event WorldStep? PreStep;
@@ -135,9 +135,9 @@ public partial class World
 
     /// <summary>
     /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
-    /// threads active continuously, even when the <see cref="World.Step(double, bool)"/> is not in operation, which might
+    /// threads active continuously, even when the <see cref="World.Step(float, bool)"/> is not in operation, which might
     /// consume more CPU cycles and possibly affect the performance of other operations such as rendering. However, it ensures that the threads
-    /// remain 'warm' for the next invocation of <see cref="World.Step(double, bool)"/>. Conversely, the <see cref="ThreadModelType.Regular"/> model allows
+    /// remain 'warm' for the next invocation of <see cref="World.Step(float, bool)"/>. Conversely, the <see cref="ThreadModelType.Regular"/> model allows
     /// the worker threads to yield and undertake other tasks.
     /// </summary>
     public ThreadModelType ThreadModel { get; set; } = ThreadModelType.Regular;
@@ -197,7 +197,7 @@ public partial class World
     }
 
     /// <summary>
-    /// The number of substeps for each call to <see cref="World.Step(double, bool)"/>.
+    /// The number of substeps for each call to <see cref="World.Step(float, bool)"/>.
     /// Substepping is deactivated when set to one.
     /// </summary>
     public int SubstepCount
@@ -215,7 +215,7 @@ public partial class World
         }
     }
 
-    private JVector gravity = new(0, -9.81, 0);
+    private JVector gravity = new(0, -9.81f, 0);
 
     /// <summary>
     /// Default gravity, see also <see cref="RigidBody.AffectedByGravity"/>.
@@ -392,7 +392,7 @@ public partial class World
 
     internal void DeactivateBodyNextStep(RigidBody body)
     {
-        body.sleepTime = double.PositiveInfinity;
+        body.sleepTime = float.PositiveInfinity;
     }
 
     /// <summary>

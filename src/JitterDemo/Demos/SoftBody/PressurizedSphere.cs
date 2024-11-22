@@ -14,7 +14,7 @@ namespace JitterDemo;
 
 public class SoftBodySphere : SoftBodyCloth
 {
-    public double Pressure { get; set; } = 400.0;
+    public float Pressure { get; set; } = 400.0f;
 
     private class UnitSphere : ISupportMappable
     {
@@ -51,23 +51,23 @@ public class SoftBodySphere : SoftBodyCloth
     {
         foreach (var rb in Vertices)
         {
-            rb.SetMassInertia(JMatrix.Zero, 100.0, true);
-            rb.Damping = (0.001, 0);
+            rb.SetMassInertia(JMatrix.Zero, 100.0f, true);
+            rb.Damping = (0.001f, 0);
         }
 
         foreach (var spring in Springs)
         {
-            (spring as SpringConstraint).Softness = 0.5;
+            (spring as SpringConstraint).Softness = 0.5f;
         }
     }
 
-    protected override void WorldOnPostStep(double dt)
+    protected override void WorldOnPostStep(float dt)
     {
         base.WorldOnPostStep(dt);
 
         if (!IsActive) return;
 
-        double volume = 0.0;
+        float volume = 0.0f;
 
         foreach (SoftBodyTriangle sbt in Shapes)
         {
@@ -79,7 +79,7 @@ public class SoftBodySphere : SoftBodyCloth
                        (v2.Z - v1.Z) * (v3.Y - v1.Y)) * (v1.X + v2.X + v3.X);
         }
 
-        double invVol = 1.0 / Math.Max(0.1, volume);
+        float invVol = 1.0f / MathF.Max(0.1f, volume);
 
         foreach (SoftBodyTriangle sbt in Shapes)
         {
@@ -91,13 +91,13 @@ public class SoftBodySphere : SoftBodyCloth
             JVector force = normal * Pressure * invVol;
 
             // Limit the maximum force
-            const double maxForce = 2.0;
+            const float maxForce = 2.0f;
 
-            double fl2 = force.LengthSquared();
+            float fl2 = force.LengthSquared();
 
             if (fl2 > maxForce * maxForce)
             {
-                force *= 1.0 / Math.Sqrt(fl2) * maxForce;
+                force *= 1.0f / MathF.Sqrt(fl2) * maxForce;
             }
 
             sbt.Vertex1.AddForce(force);

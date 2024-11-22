@@ -43,7 +43,7 @@ public unsafe class SpringConstraint : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, double, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -51,13 +51,13 @@ public unsafe class SpringConstraint : Constraint
         public JVector LocalAnchor1;
         public JVector LocalAnchor2;
 
-        public double BiasFactor;
-        public double Softness;
-        public double Distance;
+        public float BiasFactor;
+        public float Softness;
+        public float Distance;
 
-        public double EffectiveMass;
-        public double AccumulatedImpulse;
-        public double Bias;
+        public float EffectiveMass;
+        public float AccumulatedImpulse;
+        public float Bias;
 
         public JVector Jacobian;
     }
@@ -88,12 +88,12 @@ public unsafe class SpringConstraint : Constraint
         JVector.Subtract(anchor1, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor2, body2.Position, out data.LocalAnchor2);
 
-        data.Softness = 0.001;
-        data.BiasFactor = 0.2;
+        data.Softness = 0.001f;
+        data.BiasFactor = 0.2f;
         data.Distance = (anchor2 - anchor1).Length();
     }
 
-    public double Impulse
+    public float Impulse
     {
         get
         {
@@ -136,7 +136,7 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
-    public double TargetDistance
+    public float TargetDistance
     {
         set
         {
@@ -146,7 +146,7 @@ public unsafe class SpringConstraint : Constraint
         get => handle.Data.Distance;
     }
 
-    public double Distance
+    public float Distance
     {
         get
         {
@@ -166,7 +166,7 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, double idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
     {
         ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -180,15 +180,15 @@ public unsafe class SpringConstraint : Constraint
 
         JVector.Subtract(p2, p1, out JVector dp);
 
-        double error = dp.Length() - data.Distance;
+        float error = dp.Length() - data.Distance;
 
         JVector n = p2 - p1;
-        if (n.LengthSquared() != 0.0) n.Normalize();
+        if (n.LengthSquared() != 0.0f) n.Normalize();
 
         data.Jacobian = n;
         data.EffectiveMass = body1.InverseMass + body2.InverseMass;
         data.EffectiveMass += data.Softness * idt;
-        data.EffectiveMass = 1.0 / data.EffectiveMass;
+        data.EffectiveMass = 1.0f / data.EffectiveMass;
 
         data.Bias = error * data.BiasFactor * idt;
 
@@ -196,31 +196,31 @@ public unsafe class SpringConstraint : Constraint
         body2.Velocity += body2.InverseMass * data.AccumulatedImpulse * data.Jacobian;
     }
 
-    public double Softness
+    public float Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public double Bias
+    public float Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public static void Iterate(ref ConstraintData constraint, double idt)
+    public static void Iterate(ref ConstraintData constraint, float idt)
     {
         ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 
-        double jv = (body2.Velocity - body1.Velocity) * data.Jacobian;
+        float jv = (body2.Velocity - body1.Velocity) * data.Jacobian;
 
-        double softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        float softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
 
-        double lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
+        float lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        double oldacc = data.AccumulatedImpulse;
+        float oldacc = data.AccumulatedImpulse;
         data.AccumulatedImpulse += lambda;
         lambda = data.AccumulatedImpulse - oldacc;
 

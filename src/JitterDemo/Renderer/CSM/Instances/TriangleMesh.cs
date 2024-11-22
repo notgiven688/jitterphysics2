@@ -9,11 +9,11 @@ public class TriangleMesh : CSMInstance
 
     public Vector3 Color { get; set; }
 
-    public TriangleMesh(string objFile, double scale = 1.0f)
+    public TriangleMesh(string objFile, float scale = 1.0f)
     {
         string filename = Path.Combine("assets", objFile);
         mesh = Mesh.LoadMesh(filename, true);
-        mesh.Transform(MatrixHelper.CreateScale((float)scale));
+        mesh.Transform(MatrixHelper.CreateScale(scale));
     }
 
     public override (Vertex[] vertices, TriangleVertexIndex[] indices) ProvideVertices()
