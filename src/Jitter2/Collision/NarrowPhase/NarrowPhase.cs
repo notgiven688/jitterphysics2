@@ -35,7 +35,7 @@ namespace Jitter2.Collision;
 /// </summary>
 public static class NarrowPhase
 {
-    private const float NumericEpsilon = 1e-16f;
+    private const Real NumericEpsilon = (Real)1e-16;
 
     private struct Solver
     {
@@ -43,7 +43,7 @@ public static class NarrowPhase
 
         public bool PointTest(in ISupportMappable supportA, in JVector origin)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             JVector x = origin;
@@ -56,16 +56,16 @@ public static class NarrowPhase
 
             int maxIter = MaxIter;
 
-            float distSq = v.LengthSquared();
+            Real distSq = v.LengthSquared();
 
             while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
             {
                 supportA.SupportMap(v, out JVector p);
                 JVector.Subtract(x, p, out JVector w);
 
-                float vw = JVector.Dot(v, w);
+                Real vw = JVector.Dot(v, w);
 
-                if (vw >= 0.0f)
+                if (vw >= (Real)0.0)
                 {
                     return false;
                 }
@@ -83,13 +83,13 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out float lambda, out JVector normal)
+        public bool RayCast(in ISupportMappable supportA, in JVector origin, in JVector direction, out Real lambda, out JVector normal)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             normal = JVector.Zero;
-            lambda = 0.0f;
+            lambda = (Real)0.0;
 
             JVector r = direction;
             JVector x = origin;
@@ -102,7 +102,7 @@ public static class NarrowPhase
 
             int maxIter = MaxIter;
 
-            float distSq = v.LengthSquared();
+            Real distSq = v.LengthSquared();
 
             while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
             {
@@ -110,15 +110,15 @@ public static class NarrowPhase
 
                 JVector.Subtract(x, p, out JVector w);
 
-                float VdotW = JVector.Dot(v, w);
+                Real VdotW = JVector.Dot(v, w);
 
-                if (VdotW > 0.0f)
+                if (VdotW > (Real)0.0)
                 {
-                    float VdotR = JVector.Dot(v, r);
+                    Real VdotR = JVector.Dot(v, r);
 
                     if (VdotR >= -NumericEpsilon)
                     {
-                        lambda = float.PositiveInfinity;
+                        lambda = Real.PositiveInfinity;
                         return false;
                     }
 
@@ -140,20 +140,20 @@ public static class NarrowPhase
 
             converged:
 
-            float nlen2 = normal.LengthSquared();
+            Real nlen2 = normal.LengthSquared();
 
             if (nlen2 > NumericEpsilon)
             {
-                normal *= 1.0f / MathF.Sqrt(nlen2);
+                normal *= (Real)1.0 / MathR.Sqrt(nlen2);
             }
 
             return true;
         }
 
         public bool Sweep(ref MinkowskiDifference mkd, in JVector sweep,
-            out JVector p1, out JVector p2, out JVector normal, out float lambda)
+            out JVector p1, out JVector p2, out JVector normal, out Real lambda)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
@@ -163,7 +163,7 @@ public static class NarrowPhase
 
             JVector posB = mkd.PositionB;
 
-            lambda = 0.0f;
+            lambda = (Real)0.0;
 
             p1 = p2 = JVector.Zero;
 
@@ -174,22 +174,22 @@ public static class NarrowPhase
 
             int iter = MaxIter;
 
-            float distSq = float.MaxValue;
+            Real distSq = Real.MaxValue;
 
             while ((distSq > CollideEpsilon * CollideEpsilon) && (iter-- != 0))
             {
                 mkd.Support(v, out Vertex vertex);
                 var w = vertex.V;
 
-                float VdotW = -JVector.Dot(v, w);
+                Real VdotW = -JVector.Dot(v, w);
 
-                if (VdotW > 0.0f)
+                if (VdotW > (Real)0.0)
                 {
-                    float VdotR = JVector.Dot(v, r);
+                    Real VdotR = JVector.Dot(v, r);
 
-                    if (VdotR >= -1e-12f)
+                    if (VdotR >= -(Real)1e-12)
                     {
-                        lambda = float.PositiveInfinity;
+                        lambda = Real.PositiveInfinity;
                         return false;
                     }
 
@@ -213,19 +213,19 @@ public static class NarrowPhase
 
             simplexSolver.GetClosest(out p1, out p2);
 
-            float nlen2 = normal.LengthSquared();
+            Real nlen2 = normal.LengthSquared();
 
             if (nlen2 > NumericEpsilon)
             {
-                normal *= 1.0f / MathF.Sqrt(nlen2);
+                normal *= (Real)1.0 / MathR.Sqrt(nlen2);
             }
 
             return true;
         }
 
-        private bool SolveMPREPA(in MinkowskiDifference mkd, ref JVector point1, ref JVector point2, ref JVector normal, ref float penetration)
+        private bool SolveMPREPA(in MinkowskiDifference mkd, ref JVector point1, ref JVector point2, ref JVector normal, ref Real penetration)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 85;
 
             convexPolytope.InitTetrahedron();
@@ -239,7 +239,7 @@ public static class NarrowPhase
                 ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
-                float searchDirSq = ctri.ClosestToOriginSq;
+                Real searchDirSq = ctri.ClosestToOriginSq;
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
@@ -250,7 +250,7 @@ public static class NarrowPhase
                 mkd.Support(searchDir, out Vertex vertex);
 
                 // compare with the corresponding code in SolveGJKEPA.
-                float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
+                Real deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
 
                 if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * searchDirSq)
                 {
@@ -271,14 +271,14 @@ public static class NarrowPhase
 
             convexPolytope.CalculatePoints(ctri, out point1, out point2);
 
-            normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
-            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
+            normal = ctri.Normal * ((Real)1.0 / MathR.Sqrt(ctri.NormalSq));
+            penetration = MathR.Sqrt(ctri.ClosestToOriginSq);
 
             return true;
         }
 
         public bool SolveMPR(in MinkowskiDifference mkd,
-            out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+            out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
         {
             /*
             XenoCollide is available under the zlib license:
@@ -301,12 +301,12 @@ public static class NarrowPhase
             not be misrepresented as being the original software.
             3. This notice may not be removed or altered from any source distribution.
             */
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             // If MPR reports a penetration deeper than this value we do not trust
             // MPR to have found the global minimum and perform an EPA run.
-            const float EPAPenetrationThreshold = 0.02f;
+            const Real EPAPenetrationThreshold = (Real)0.02;
 
             Unsafe.SkipInit(out Vertex v0);
             Unsafe.SkipInit(out Vertex v1);
@@ -318,7 +318,7 @@ public static class NarrowPhase
             Unsafe.SkipInit(out JVector temp2);
             Unsafe.SkipInit(out JVector temp3);
 
-            penetration = 0.0f;
+            penetration = (Real)0.0;
 
             mkd.GetCenter(out v0);
 
@@ -327,7 +327,7 @@ public static class NarrowPhase
                 Math.Abs(v0.V.Z) < NumericEpsilon)
             {
                 // any direction is fine
-                v0.V.X = 1e-05f;
+                v0.V.X = (Real)1e-05;
             }
 
             JVector.Negate(v0.V, out normal);
@@ -337,7 +337,7 @@ public static class NarrowPhase
             pointA = v1.A;
             pointB = v1.B;
 
-            if (JVector.Dot(v1.V, normal) <= 0.0f) return false;
+            if (JVector.Dot(v1.V, normal) <= (Real)0.0) return false;
             JVector.Cross(v1.V, v0.V, out normal);
 
             if (normal.LengthSquared() < NumericEpsilon)
@@ -354,17 +354,17 @@ public static class NarrowPhase
 
             mkd.Support(normal, out v2);
 
-            if (JVector.Dot(v2.V, normal) <= 0.0f) return false;
+            if (JVector.Dot(v2.V, normal) <= (Real)0.0) return false;
 
             // Determine whether origin is on + or - side of plane (v1.V,v0.V,v2.V)
             JVector.Subtract(v1.V, v0.V, out temp1);
             JVector.Subtract(v2.V, v0.V, out temp2);
             JVector.Cross(temp1, temp2, out normal);
 
-            float dist = JVector.Dot(normal, v0.V);
+            Real dist = JVector.Dot(normal, v0.V);
 
             // If the origin is on the - side of the plane, reverse the direction of the plane
-            if (dist > 0.0f)
+            if (dist > (Real)0.0)
             {
                 JVector.Swap(ref v1.V, ref v2.V);
                 JVector.Swap(ref v1.A, ref v2.A);
@@ -385,14 +385,14 @@ public static class NarrowPhase
 
                 mkd.Support(normal, out v3);
 
-                if (JVector.Dot(v3.V, normal) <= 0.0f)
+                if (JVector.Dot(v3.V, normal) <= (Real)0.0)
                 {
                     return false;
                 }
 
                 // If origin is outside (v1.V,v0.V,v3.V), then eliminate v2.V and loop
                 JVector.Cross(v1.V, v3.V, out temp1);
-                if (JVector.Dot(temp1, v0.V) < 0.0f)
+                if (JVector.Dot(temp1, v0.V) < (Real)0.0)
                 {
                     v2 = v3;
                     JVector.Subtract(v1.V, v0.V, out temp1);
@@ -403,7 +403,7 @@ public static class NarrowPhase
 
                 // If origin is outside (v3.V,v0.V,v2.V), then eliminate v1.V and loop
                 JVector.Cross(v3.V, v2.V, out temp1);
-                if (JVector.Dot(temp1, v0.V) < 0.0f)
+                if (JVector.Dot(temp1, v0.V) < (Real)0.0)
                 {
                     v1 = v3;
                     JVector.Subtract(v3.V, v0.V, out temp1);
@@ -427,7 +427,7 @@ public static class NarrowPhase
                 JVector.Cross(temp1, temp2, out normal);
 
                 // normal.Normalize();
-                float normalSq = normal.LengthSquared();
+                Real normalSq = normal.LengthSquared();
 
                 // Can this happen???  Can it be handled more cleanly?
                 if (normalSq < NumericEpsilon)
@@ -441,7 +441,7 @@ public static class NarrowPhase
                 if (!hit)
                 {
                     // Compute distance from origin to wedge face
-                    float d = JVector.Dot(normal, v1.V);
+                    Real d = JVector.Dot(normal, v1.V);
                     // If the origin is inside the wedge, we have a hit
                     hit = d >= 0;
                 }
@@ -449,17 +449,17 @@ public static class NarrowPhase
                 mkd.Support(normal, out v4);
 
                 JVector.Subtract(v4.V, v3.V, out temp3);
-                float delta = JVector.Dot(temp3, normal);
+                Real delta = JVector.Dot(temp3, normal);
                 penetration = JVector.Dot(v4.V, normal);
 
                 // If the boundary is thin enough or the origin is outside the support plane for the newly discovered
                 // vertex, then we can terminate
-                if (delta * delta <= CollideEpsilon * CollideEpsilon * normalSq || penetration <= 0.0f ||
+                if (delta * delta <= CollideEpsilon * CollideEpsilon * normalSq || penetration <= (Real)0.0 ||
                     phase2 > MaxIter)
                 {
                     if (hit)
                     {
-                        float invnormal = 1.0f / (float)Math.Sqrt(normalSq);
+                        Real invnormal = (Real)1.0 / (Real)Math.Sqrt(normalSq);
 
                         penetration *= invnormal;
 
@@ -479,10 +479,10 @@ public static class NarrowPhase
 
                         // Compute the barycentric coordinates of the origin
                         JVector.Cross(v1.V, temp1, out temp3);
-                        float gamma = JVector.Dot(temp3, normal) * invnormal;
+                        Real gamma = JVector.Dot(temp3, normal) * invnormal;
                         JVector.Cross(temp2, v1.V, out temp3);
-                        float beta = JVector.Dot(temp3, normal) * invnormal;
-                        float alpha = 1.0f - gamma - beta;
+                        Real beta = JVector.Dot(temp3, normal) * invnormal;
+                        Real alpha = (Real)1.0 - gamma - beta;
 
                         pointA = alpha * v1.A + beta * v2.A + gamma * v3.A;
                         pointB = alpha * v1.B + beta * v2.B + gamma * v3.B;
@@ -493,13 +493,13 @@ public static class NarrowPhase
 
                 // Compute the tetrahedron dividing face (v4.V,v0.V,v3.V)
                 JVector.Cross(v4.V, v0.V, out temp1);
-                float dot = JVector.Dot(temp1, v1.V);
+                Real dot = JVector.Dot(temp1, v1.V);
 
-                if (dot >= 0.0f)
+                if (dot >= (Real)0.0)
                 {
                     dot = JVector.Dot(temp1, v2.V);
 
-                    if (dot >= 0.0f)
+                    if (dot >= (Real)0.0)
                     {
                         v1 = v4; // Inside d1 & inside d2 -> eliminate v1.V
                     }
@@ -512,7 +512,7 @@ public static class NarrowPhase
                 {
                     dot = JVector.Dot(temp1, v3.V);
 
-                    if (dot >= 0.0f)
+                    if (dot >= (Real)0.0)
                     {
                         v2 = v4; // Outside d1 & inside d3 -> eliminate v2.V
                     }
@@ -525,9 +525,9 @@ public static class NarrowPhase
         }
 
         public bool Distance(in MinkowskiDifference mkd,
-            out JVector point1, out JVector point2, out float distance)
+            out JVector point1, out JVector point2, out Real distance)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
@@ -537,7 +537,7 @@ public static class NarrowPhase
 
             mkd.GetCenter(out var center);
             JVector v = center.V;
-            float distSq = v.LengthSquared();
+            Real distSq = v.LengthSquared();
 
             while (maxIter-- != 0)
             {
@@ -545,7 +545,7 @@ public static class NarrowPhase
 
                 distSq = v.LengthSquared();
 
-                float deltaDist = JVector.Dot(v - w.V, v);
+                Real deltaDist = JVector.Dot(v - w.V, v);
                 if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * distSq)
                 {
                     break;
@@ -554,13 +554,13 @@ public static class NarrowPhase
                 if (distSq < CollideEpsilon * CollideEpsilon ||
                     !simplexSolver.AddVertex(w, out v))
                 {
-                    distance = 0.0f;
+                    distance = (Real)0.0;
                     point1 = point2 = JVector.Zero;
                     return false;
                 }
             }
 
-            distance = MathF.Sqrt(distSq);
+            distance = MathR.Sqrt(distSq);
             simplexSolver.GetClosest(out point1, out point2);
 
             return true;
@@ -568,7 +568,7 @@ public static class NarrowPhase
 
         public bool Overlap(in MinkowskiDifference mkd)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
 
             Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
@@ -578,13 +578,13 @@ public static class NarrowPhase
 
             mkd.GetCenter(out var center);
             JVector v = center.V;
-            float distSq = v.LengthSquared();
+            Real distSq = v.LengthSquared();
 
             while (distSq > CollideEpsilon * CollideEpsilon && maxIter-- != 0)
             {
                 mkd.Support(-v, out var w);
-                float vw = JVector.Dot(v, w.V);
-                if (vw >= 0.0f)
+                Real vw = JVector.Dot(v, w.V);
+                if (vw >= (Real)0.0)
                     return false;
                 if (!simplexSolver.AddVertex(w, out v)) return true;
                 distSq = v.LengthSquared();
@@ -594,9 +594,9 @@ public static class NarrowPhase
         }
 
         public bool Collision(in MinkowskiDifference mkd,
-            out JVector point1, out JVector point2, out JVector normal, out float penetration)
+            out JVector point1, out JVector point2, out JVector normal, out Real penetration)
         {
-            const float CollideEpsilon = 1e-4f;
+            const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 85;
 
             mkd.GetCenter(out Vertex centerVertex);
@@ -614,7 +614,7 @@ public static class NarrowPhase
                 ctri = convexPolytope.GetClosestTriangle();
 
                 JVector searchDir = ctri.ClosestToOrigin;
-                float searchDirSq = ctri.ClosestToOriginSq;
+                Real searchDirSq = ctri.ClosestToOriginSq;
 
                 if (!convexPolytope.OriginEnclosed) searchDir.Negate();
 
@@ -633,7 +633,7 @@ public static class NarrowPhase
                 // s = searchDir
                 //
                 // abs(dot(c - v, s)) / len(s) < e <=> [dot(c - v, s)]^2 = e*e*s^2
-                float deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
+                Real deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
 
                 if (deltaDist * deltaDist <= CollideEpsilon * CollideEpsilon * searchDirSq)
                 {
@@ -647,7 +647,7 @@ public static class NarrowPhase
             }
 
             point1 = point2 = normal = JVector.Zero;
-            penetration = 0.0f;
+            penetration = (Real)0.0;
 
             Trace.WriteLine($"EPA: Could not converge within {MaxIter} iterations.");
 
@@ -657,11 +657,11 @@ public static class NarrowPhase
 
             convexPolytope.CalculatePoints(ctri, out point1, out point2);
 
-            penetration = MathF.Sqrt(ctri.ClosestToOriginSq);
-            if (!convexPolytope.OriginEnclosed) penetration *= -1.0f;
+            penetration = MathR.Sqrt(ctri.ClosestToOriginSq);
+            if (!convexPolytope.OriginEnclosed) penetration *= -(Real)1.0;
 
-            if (MathF.Abs(penetration) > NumericEpsilon) normal = ctri.ClosestToOrigin * (1.0f / penetration);
-            else normal = ctri.Normal * (1.0f / MathF.Sqrt(ctri.NormalSq));
+            if (MathR.Abs(penetration) > NumericEpsilon) normal = ctri.ClosestToOrigin * ((Real)1.0 / penetration);
+            else normal = ctri.Normal * ((Real)1.0 / MathR.Sqrt(ctri.NormalSq));
 
             return true;
         }
@@ -714,7 +714,7 @@ public static class NarrowPhase
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool RayCast(in ISupportMappable support, in JQuaternion orientation,
-        in JVector position, in JVector origin, in JVector direction, out float lambda, out JVector normal)
+        in JVector position, in JVector origin, in JVector direction, out Real lambda, out JVector normal)
     {
         // rotate the ray into the reference frame of bodyA..
         JVector tdirection = JVector.TransposedTransform(direction, orientation);
@@ -741,7 +741,7 @@ public static class NarrowPhase
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out float lambda, out JVector normal)
+    public static bool RayCast(in ISupportMappable support, in JVector origin, in JVector direction, out Real lambda, out JVector normal)
     {
         return solver.RayCast(support, origin, direction, out lambda, out normal);
     }
@@ -777,7 +777,7 @@ public static class NarrowPhase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Collision(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -824,7 +824,7 @@ public static class NarrowPhase
     public static bool Collision(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -865,7 +865,7 @@ public static class NarrowPhase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Distance(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out float distance)
+        out JVector pointA, out JVector pointB, out Real distance)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -895,7 +895,7 @@ public static class NarrowPhase
     public static bool Distance(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out float distance)
+        out JVector pointA, out JVector pointB, out Real distance)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -996,7 +996,7 @@ public static class NarrowPhase
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -1043,7 +1043,7 @@ public static class NarrowPhase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -1072,7 +1072,7 @@ public static class NarrowPhase
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
 
@@ -1123,7 +1123,7 @@ public static class NarrowPhase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
-        out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
 

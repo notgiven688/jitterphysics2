@@ -32,8 +32,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="./../../publish/readme.md" Pack="true" PackagePath=""/>
-        <None Include="./../../publish/icon.png" Pack="true" PackagePath=""/>
+        <None Include="./../../publish/readme.md" Pack="true" PackagePath="" />
+        <None Include="./../../publish/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">

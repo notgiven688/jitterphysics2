@@ -39,16 +39,16 @@ public unsafe class FixedAngle : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
 
-        public float MinAngle;
-        public float MaxAngle;
+        public Real MinAngle;
+        public Real MaxAngle;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
         public JVector Axis;
         public JQuaternion Q0;
@@ -78,8 +78,8 @@ public unsafe class FixedAngle : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = 0.001f;
-        data.BiasFactor = 0.2f;
+        data.Softness = (Real)0.001;
+        data.BiasFactor = (Real)0.2;
 
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
@@ -87,7 +87,7 @@ public unsafe class FixedAngle : Constraint
         data.Q0 = q2.Conjugate() * q1;
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
 
@@ -105,10 +105,10 @@ public unsafe class FixedAngle : Constraint
 
         data.Jacobian = QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
-        if (quat0.W < 0.0f)
+        if (quat0.W < (Real)0.0)
         {
-            error *= -1.0f;
-            data.Jacobian *= -1.0f;
+            error *= -(Real)1.0;
+            data.Jacobian *= -(Real)1.0;
         }
 
         data.EffectiveMass = JMatrix.Multiply(data.Jacobian, JMatrix.MultiplyTransposed(body1.InverseInertiaWorld + body2.InverseInertiaWorld, data.Jacobian));
@@ -125,13 +125,13 @@ public unsafe class FixedAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
@@ -139,7 +139,7 @@ public unsafe class FixedAngle : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -147,7 +147,7 @@ public unsafe class FixedAngle : Constraint
 
         JVector jv = JVector.Transform(body1.AngularVelocity - body2.AngularVelocity, data.Jacobian);
         JVector softness = data.AccumulatedImpulse * (data.Softness * idt);
-        JVector lambda = -1.0f * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
+        JVector lambda = -(Real)1.0 * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
 
         data.AccumulatedImpulse += lambda;
 

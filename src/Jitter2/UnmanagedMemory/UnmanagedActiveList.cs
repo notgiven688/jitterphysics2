@@ -244,7 +244,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
         if (clear)
         {
-            MemoryHelper.Memset((byte*)handles[hdl] + sizeof(IntPtr),
+            MemoryHelper.MemSet((byte*)handles[hdl] + sizeof(IntPtr),
                 sizeof(T) - sizeof(IntPtr));
         }
 

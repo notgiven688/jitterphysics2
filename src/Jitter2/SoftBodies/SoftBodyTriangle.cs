@@ -37,12 +37,12 @@ public class SoftBodyTriangle : SoftBodyShape
     public RigidBody Vertex2 => v2;
     public RigidBody Vertex3 => v3;
 
-    private float halfThickness = 0.05f;
+    private Real halfThickness = (Real)0.05;
 
-    public float Thickness
+    public Real Thickness
     {
-        get => halfThickness * 2.0f;
-        set => halfThickness = value * 0.5f;
+        get => halfThickness * (Real)2.0;
+        set => halfThickness = value * (Real)0.5;
     }
 
     public SoftBodyTriangle(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3)
@@ -55,13 +55,13 @@ public class SoftBodyTriangle : SoftBodyShape
         UpdateWorldBoundingBox();
     }
 
-    public override JVector Velocity => 1.0f / 3.0f * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
+    public override JVector Velocity => (Real)1.0 / (Real)3.0 * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
 
     public override RigidBody GetClosest(in JVector pos)
     {
-        float len1 = (pos - v1.Position).LengthSquared();
-        float len2 = (pos - v2.Position).LengthSquared();
-        float len3 = (pos - v3.Position).LengthSquared();
+        Real len1 = (pos - v1.Position).LengthSquared();
+        Real len2 = (pos - v2.Position).LengthSquared();
+        Real len3 = (pos - v3.Position).LengthSquared();
 
         if (len1 < len2 && len1 < len3)
         {
@@ -76,9 +76,9 @@ public class SoftBodyTriangle : SoftBodyShape
         return v3;
     }
 
-    public override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public override void UpdateWorldBoundingBox(Real dt = (Real)0.0)
     {
-        float extraMargin = MathF.Max(halfThickness, 0.01f);
+        Real extraMargin = MathR.Max(halfThickness, (Real)0.01);
 
         JBBox box = JBBox.SmallBox;
 
@@ -100,8 +100,8 @@ public class SoftBodyTriangle : SoftBodyShape
         JVector b = v2.Position;
         JVector c = v3.Position;
 
-        float min = JVector.Dot(a, direction);
-        float dot = JVector.Dot(b, direction);
+        Real min = JVector.Dot(a, direction);
+        Real dot = JVector.Dot(b, direction);
 
         result = a;
 
@@ -123,6 +123,6 @@ public class SoftBodyTriangle : SoftBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        point = (1.0f / 3.0f) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
+        point = ((Real)1.0 / (Real)3.0) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
     }
 }

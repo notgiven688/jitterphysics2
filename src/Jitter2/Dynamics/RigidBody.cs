@@ -49,7 +49,7 @@ public struct RigidBodyData
     public JQuaternion Orientation;
     public JMatrix InverseInertiaWorld;
 
-    public float InverseMass;
+    public Real InverseMass;
     public bool IsActive;
     public bool IsStatic;
 
@@ -65,8 +65,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     public readonly ulong RigidBodyId;
 
-    private float restitution = 0.0f;
-    private float friction = 0.2f;
+    private Real restitution = (Real)0.0;
+    private Real friction = (Real)0.2;
 
     /// <summary>
     /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
@@ -147,17 +147,17 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     internal int islandMarker;
 
-    internal float sleepTime = 0.0f;
+    internal Real sleepTime = (Real)0.0;
 
-    internal float inactiveThresholdLinearSq = 0.1f;
-    internal float inactiveThresholdAngularSq = 0.1f;
-    internal float deactivationTimeThreshold = 1.0f;
+    internal Real inactiveThresholdLinearSq = (Real)0.1;
+    internal Real inactiveThresholdAngularSq = (Real)0.1;
+    internal Real deactivationTimeThreshold = (Real)1.0;
 
-    internal float linearDampingMultiplier = 0.998f;
-    internal float angularDampingMultiplier = 0.995f;
+    internal Real linearDampingMultiplier = (Real)0.998;
+    internal Real angularDampingMultiplier = (Real)0.995;
 
     internal JMatrix inverseInertia = JMatrix.Identity;
-    internal float inverseMass = 1.0f;
+    internal Real inverseMass = (Real)1.0;
 
     /// <summary>
     /// Gets or sets the friction coefficient for this object.
@@ -171,12 +171,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if the value is not between 0 and 1.
     /// </exception>
-    public float Friction
+    public Real Friction
     {
         get => friction;
         set
         {
-            if (value < 0.0f || value > 1.0f)
+            if (value < (Real)0.0 || value > (Real)1.0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
                     "Friction must be between 0 and 1.");
@@ -198,12 +198,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if the value is not between 0 and 1.
     /// </exception>
-    public float Restitution
+    public Real Restitution
     {
         get => restitution;
         set
         {
-            if (value < 0.0f || value > 1.0f)
+            if (value < (Real)0.0 || value > (Real)1.0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
                     "Restitution must be between 0 and 1.");
@@ -251,7 +251,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     public TimeSpan DeactivationTime
     {
         get => TimeSpan.FromSeconds(deactivationTimeThreshold);
-        set => deactivationTimeThreshold = (float)value.TotalSeconds;
+        set => deactivationTimeThreshold = (Real)value.TotalSeconds;
     }
 
     /// <summary>
@@ -259,9 +259,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, the body is deactivated.
     /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
-    public (float angular, float linear) DeactivationThreshold
+    public (Real angular, Real linear) DeactivationThreshold
     {
-        get => (MathF.Sqrt(inactiveThresholdAngularSq), MathF.Sqrt(inactiveThresholdLinearSq));
+        get => (MathR.Sqrt(inactiveThresholdAngularSq), MathR.Sqrt(inactiveThresholdLinearSq));
         set
         {
             if (value.linear < 0 || value.angular < 0)
@@ -279,27 +279,27 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// Gets or sets the damping factors for linear and angular motion.
     /// A damping factor of 0 means the body is not damped, while 1 brings
     /// the body to a halt immediately. Damping is applied when calling
-    /// <see cref="World.Step(float, bool)"/>. Jitter multiplies the respective
+    /// <see cref="World.Step(Real, bool)"/>. Jitter multiplies the respective
     /// velocity each step by 1 minus the damping factor. Note that the values
     /// are not scaled by time; a smaller time-step in
-    /// <see cref="World.Step(float, bool)"/> results in increased damping.
+    /// <see cref="World.Step(Real, bool)"/> results in increased damping.
     /// </summary>
     /// <remarks>
     /// The damping factors should be within the range [0, 1].
     /// </remarks>
-    public (float linear, float angular) Damping
+    public (Real linear, Real angular) Damping
     {
-        get => (1.0f - linearDampingMultiplier, 1.0f - angularDampingMultiplier);
+        get => ((Real)1.0 - linearDampingMultiplier, (Real)1.0 - angularDampingMultiplier);
         set
         {
-            if (value.linear < 0.0f || value.linear > 1.0f || value.angular < 0.0f || value.angular > 1.0f)
+            if (value.linear < (Real)0.0 || value.linear > (Real)1.0 || value.angular < (Real)0.0 || value.angular > (Real)1.0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
                     "Damping multiplier has to be within [0, 1].");
             }
 
-            linearDampingMultiplier = 1.0f - value.linear;
-            angularDampingMultiplier = 1.0f - value.angular;
+            linearDampingMultiplier = (Real)1.0 - value.linear;
+            angularDampingMultiplier = (Real)1.0 - value.angular;
         }
     }
 
@@ -311,7 +311,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     private void SetDefaultMassInertia()
     {
         inverseInertia = JMatrix.Identity;
-        Data.InverseMass = 1.0f;
+        Data.InverseMass = (Real)1.0;
         UpdateWorldInertia();
     }
 
@@ -374,7 +374,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         if (Data.IsStatic)
         {
             Data.InverseInertiaWorld = JMatrix.Zero;
-            Data.InverseMass = 0.0f;
+            Data.InverseMass = (Real)0.0;
         }
         else
         {
@@ -470,19 +470,19 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>.
+    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
     /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Force { get; set; }
 
     /// <summary>
-    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(float, bool)"/>.
+    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
     /// This value is automatically reset to zero after the call.
     /// </summary>
     public JVector Torque { get; set; }
 
     /// <summary>
-    /// Applies a force to the rigid body, thereby altering its velocity. This force is effective for a single frame only and is reset to zero during the next call to <see cref="World.Step(float, bool)"/>.
+    /// Applies a force to the rigid body, thereby altering its velocity. This force is effective for a single frame only and is reset to zero during the next call to <see cref="World.Step(Real, bool)"/>.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     public void AddForce(in JVector force)
@@ -492,7 +492,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     /// <summary>
     /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is
-    /// reset to zero with the subsequent call to <see cref="World.Step(float, bool)"/>.
+    /// reset to zero with the subsequent call to <see cref="World.Step(Real, bool)"/>.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>
@@ -606,12 +606,12 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         if (shapes.Count == 0)
         {
             inverseInertia = JMatrix.Identity;
-            Data.InverseMass = 1.0f;
+            Data.InverseMass = (Real)1.0;
             return;
         }
 
         JMatrix inertia = JMatrix.Zero;
-        float mass = 0.0f;
+        Real mass = (Real)0.0;
 
         for (int i = 0; i < shapes.Count; i++)
         {
@@ -628,7 +628,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                                                 "RigidBody.AddShape, call AddShape with setMassInertia set to false.");
         }
 
-        inverseMass = 1.0f / mass;
+        inverseMass = (Real)1.0 / mass;
 
         UpdateWorldInertia();
     }
@@ -636,9 +636,9 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// <summary>
     /// Sets a new mass value and scales the inertia according to the ratio of the old mass to the new mass.
     /// </summary>
-    public void SetMassInertia(float mass)
+    public void SetMassInertia(Real mass)
     {
-        if (mass <= 0.0f)
+        if (mass <= (Real)0.0)
         {
             // we do not protect against NaN here, since it is the users responsibility
             // to not feed NaNs to the engine.
@@ -646,8 +646,8 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
 
         SetMassInertia();
-        inverseInertia = JMatrix.Multiply(inverseInertia, 1.0f / (Data.InverseMass * mass));
-        inverseMass = 1.0f / mass;
+        inverseInertia = JMatrix.Multiply(inverseInertia, (Real)1.0 / (Data.InverseMass * mass));
+        inverseMass = (Real)1.0 / mass;
         UpdateWorldInertia();
     }
 
@@ -656,11 +656,11 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     /// <param name="setAsInverse">Set the inverse values.</param>
     /// <exception cref="ArgumentException"></exception>
-    public void SetMassInertia(in JMatrix inertia, float mass, bool setAsInverse = false)
+    public void SetMassInertia(in JMatrix inertia, Real mass, bool setAsInverse = false)
     {
         if (setAsInverse)
         {
-            if (float.IsInfinity(mass) || mass < 0.0f)
+            if (Real.IsInfinity(mass) || mass < (Real)0.0)
             {
                 throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
             }
@@ -670,7 +670,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
         }
         else
         {
-            if (mass <= 0.0f)
+            if (mass <= (Real)0.0)
             {
                 throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
             }
@@ -680,7 +680,7 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
                 throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
             }
 
-            inverseMass = 1.0f / mass;
+            inverseMass = (Real)1.0 / mass;
         }
 
         UpdateWorldInertia();
@@ -715,10 +715,10 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
 
     /// <summary>
     /// Gets the mass of the rigid body. To modify the mass, use
-    /// <see cref="RigidBody.SetMassInertia(float)"/> or
-    /// <see cref="RigidBody.SetMassInertia(in JMatrix, float, bool)"/>.
+    /// <see cref="RigidBody.SetMassInertia(Real)"/> or
+    /// <see cref="RigidBody.SetMassInertia(in JMatrix, Real, bool)"/>.
     /// </summary>
-    public float Mass => 1.0f / inverseMass;
+    public Real Mass => (Real)1.0 / inverseMass;
 
     int IListIndex.ListIndex { get; set; } = -1;
 }

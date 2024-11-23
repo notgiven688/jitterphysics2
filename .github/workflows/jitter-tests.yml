@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    types: [opened, reopened, edited]
 
 permissions:
   id-token: write
@@ -29,16 +28,29 @@ jobs:
         dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Build
       run: dotnet build --no-restore
+
     - name: Test
       run: dotnet test -c Release --no-restore --test-adapter-path:. --logger "trx;LogFileName=test-results.trx"
-      #run: dotnet test -c Release --no-restore --test-adapter-path:. --logger:"junit;LogFilePath=test-result.xml;MethodFormat=Class;FailureBodyFormat=Verbose"
 
     - name: TestReport
       uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
+      if: always()    # Run this step even if "Test" fails
       with:
-        name: JitterTests            # Name of the check run which will be created
-        path: ./src/JitterTests/TestResults/test-results.trx    # Path to test results
-        reporter: dotnet-trx        # Format of test results
+        name: JitterTests
+        path: ./src/JitterTests/TestResults/test-results.trx
+        reporter: dotnet-trx
+
+    - name: TestDP
+      run: dotnet test -c Release -p:DefineConstants="USE_DOUBLE_PRECISION" --no-restore --test-adapter-path:. --logger "trx;LogFileName=test-results-dp.trx"
+      if: always()    # Run this step even if "Test" fails
+
+    - name: TestReportDP
+      uses: dorny/test-reporter@v1
+      if: always()    # Run this step even if "TestDP" fails
+      with:
+        name: JitterTestsDP
+        path: ./src/JitterTests/TestResults/test-results-dp.trx
+        reporter: dotnet-trx

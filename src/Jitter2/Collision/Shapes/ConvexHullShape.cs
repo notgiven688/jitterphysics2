@@ -75,7 +75,7 @@ public class ConvexHullShape : RigidBodyShape
 
     private JBBox cachedBoundingBox;
     private JMatrix cachedInertia;
-    private float cachedMass;
+    private Real cachedMass;
     private JVector cachedCenter;
 
     private CHullVector[] vertices = null!;
@@ -208,7 +208,7 @@ public class ConvexHullShape : RigidBodyShape
         CalcInitBox();
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
         com = cachedCenter;
@@ -221,8 +221,8 @@ public class ConvexHullShape : RigidBodyShape
         cachedInertia = JMatrix.Zero;
         cachedMass = 0;
 
-        const float a = 1.0f / 60.0f;
-        const float b = 1.0f / 120.0f;
+        const Real a = (Real)1.0 / (Real)60.0;
+        const Real b = (Real)1.0 / (Real)120.0;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         JVector pointWithin = JVector.Zero;
@@ -232,7 +232,7 @@ public class ConvexHullShape : RigidBodyShape
             pointWithin += vertices[i].Vertex;
         }
 
-        pointWithin = pointWithin * (1.0f / vertices.Length) + shifted;
+        pointWithin = pointWithin * ((Real)1.0 / vertices.Length) + shifted;
 
         foreach (CHullTriangle tri in indices)
         {
@@ -243,8 +243,8 @@ public class ConvexHullShape : RigidBodyShape
             // check winding
             {
                 JVector normal = (column1 - column0) % (column2 - column0);
-                float ddot = JVector.Dot(normal, column0 - pointWithin);
-                if (ddot < 0.0f)
+                Real ddot = JVector.Dot(normal, column0 - pointWithin);
+                if (ddot < (Real)0.0)
                 {
                     (column0, column1) = (column1, column0);
                 }
@@ -255,12 +255,12 @@ public class ConvexHullShape : RigidBodyShape
                 column0.Y, column1.Y, column2.Y,
                 column0.Z, column1.Z, column2.Z);
 
-            float detA = A.Determinant();
+            Real detA = A.Determinant();
 
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCom = 1.0f / 4.0f * (column0 + column1 + column2);
-            float tetrahedronMass = 1.0f / 6.0f * detA;
+            JVector tetrahedronCom = (Real)1.0 / (Real)4.0 * (column0 + column1 + column2);
+            Real tetrahedronMass = (Real)1.0 / (Real)6.0 * detA;
 
             cachedInertia += tetrahedronInertia;
             cachedCenter += tetrahedronMass * tetrahedronCom;
@@ -268,13 +268,13 @@ public class ConvexHullShape : RigidBodyShape
         }
 
         cachedInertia = JMatrix.Multiply(JMatrix.Identity, cachedInertia.Trace()) - cachedInertia;
-        cachedCenter *= 1.0f / cachedMass;
+        cachedCenter *= (Real)1.0 / cachedMass;
     }
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        JVector halfSize = 0.5f * (cachedBoundingBox.Max - cachedBoundingBox.Min);
-        JVector center = 0.5f * (cachedBoundingBox.Max + cachedBoundingBox.Min);
+        JVector halfSize = (Real)0.5 * (cachedBoundingBox.Max - cachedBoundingBox.Min);
+        JVector center = (Real)0.5 * (cachedBoundingBox.Max + cachedBoundingBox.Min);
 
         JMatrix ori = JMatrix.CreateFromQuaternion(orientation);
         JMatrix.Absolute(in ori, out JMatrix abs);
@@ -318,7 +318,7 @@ public class ConvexHullShape : RigidBodyShape
     private ushort InternalSupportMap(in JVector direction, out JVector result)
     {
         ushort current = 0;
-        float dotProduct = JVector.Dot(vertices[current].Vertex, direction);
+        Real dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
         again:
         var min = vertices[current].NeighborMinIndex;
@@ -327,7 +327,7 @@ public class ConvexHullShape : RigidBodyShape
         for (int i = min; i < max; i++)
         {
             ushort nb = neighborList[i];
-            float nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
+            Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
             if (nbProduct > dotProduct)
             {

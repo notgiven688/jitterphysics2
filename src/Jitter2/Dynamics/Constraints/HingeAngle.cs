@@ -40,19 +40,19 @@ public unsafe class HingeAngle : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
 
-        public float MinAngle;
-        public float MaxAngle;
+        public Real MinAngle;
+        public Real MaxAngle;
 
-        public float BiasFactor;
-        public float LimitBias;
+        public Real BiasFactor;
+        public Real LimitBias;
 
-        public float LimitSoftness;
-        public float Softness;
+        public Real LimitSoftness;
+        public Real Softness;
 
         public JVector Axis;
         public JQuaternion Q0;
@@ -86,13 +86,13 @@ public unsafe class HingeAngle : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = 0.001f;
-        data.LimitSoftness = 0.001f;
-        data.BiasFactor = 0.2f;
-        data.LimitBias = 0.1f;
+        data.Softness = (Real)0.001;
+        data.LimitSoftness = (Real)0.001;
+        data.BiasFactor = (Real)0.2;
+        data.LimitBias = (Real)0.1;
 
-        data.MinAngle = MathF.Sin((float)limit.From / 2.0f);
-        data.MaxAngle = MathF.Sin((float)limit.To / 2.0f);
+        data.MinAngle = MathR.Sin((Real)limit.From / (Real)2.0);
+        data.MaxAngle = MathR.Sin((Real)limit.To / (Real)2.0);
 
         data.Axis = JVector.TransposedTransform(axis, body2.Orientation);
 
@@ -107,12 +107,12 @@ public unsafe class HingeAngle : Constraint
         set
         {
             ref HingeAngleData data = ref handle.Data;
-            data.MinAngle = MathF.Sin((float)value.From / 2.0f);
-            data.MaxAngle = MathF.Sin((float)value.To / 2.0f);
+            data.MinAngle = MathR.Sin((Real)value.From / (Real)2.0);
+            data.MaxAngle = MathR.Sin((Real)value.To / (Real)2.0);
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
 
@@ -134,12 +134,12 @@ public unsafe class HingeAngle : Constraint
 
         data.Clamp = 0;
 
-        JMatrix m0 = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
+        JMatrix m0 = (-(Real)1.0 / (Real)2.0) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
-        if (quat0.W < 0.0f)
+        if (quat0.W < (Real)0.0)
         {
-            error *= -1.0f;
-            m0 *= -1.0f;
+            error *= -(Real)1.0;
+            m0 *= -(Real)1.0;
         }
 
         data.Jacobian.UnsafeGet(0) = JVector.TransposedTransform(p0, m0);
@@ -152,8 +152,8 @@ public unsafe class HingeAngle : Constraint
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.LimitSoftness * idt;
 
-        float maxa = data.MaxAngle;
-        float mina = data.MinAngle;
+        Real maxa = data.MaxAngle;
+        Real mina = data.MinAngle;
 
         if (error.Z > maxa)
         {
@@ -198,35 +198,35 @@ public unsafe class HingeAngle : Constraint
 
             JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
-            if (quat0.W < 0.0f)
+            if (quat0.W < (Real)0.0)
             {
-                quat0 *= -1.0f;
+                quat0 *= -(Real)1.0;
             }
 
-            float error = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)(2.0f * MathF.Asin(error));
+            Real error = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
+            return (JAngle)((Real)2.0 * MathR.Asin(error));
         }
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float LimitSoftness
+    public Real LimitSoftness
     {
         get => handle.Data.LimitSoftness;
         set => handle.Data.LimitSoftness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public float LimitBias
+    public Real LimitBias
     {
         get => handle.Data.LimitBias;
         set => handle.Data.LimitBias = value;
@@ -234,7 +234,7 @@ public unsafe class HingeAngle : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -247,7 +247,7 @@ public unsafe class HingeAngle : Constraint
         softness.Y *= data.Softness;
         softness.Z *= data.LimitSoftness;
 
-        JVector lambda = -1.0f * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
+        JVector lambda = -(Real)1.0 * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
 
         JVector origAcc = data.AccumulatedImpulse;
 
@@ -255,11 +255,11 @@ public unsafe class HingeAngle : Constraint
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse.Z = MathF.Min(0, data.AccumulatedImpulse.Z);
+            data.AccumulatedImpulse.Z = MathR.Min(0, data.AccumulatedImpulse.Z);
         }
         else if (data.Clamp == 2)
         {
-            data.AccumulatedImpulse.Z = MathF.Max(0, data.AccumulatedImpulse.Z);
+            data.AccumulatedImpulse.Z = MathR.Max(0, data.AccumulatedImpulse.Z);
         }
         else
         {

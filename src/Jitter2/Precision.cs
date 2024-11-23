@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) Thorben Linneweber and others
  *
  * Permission is hereby granted, free of charge, to any person obtaining
@@ -21,23 +21,36 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using Jitter2.Collision.Shapes;
-using Jitter2.LinearMath;
+#if USE_DOUBLE_PRECISION
 
-namespace Jitter2.Collision;
+global using Real = System.Double;
+global using MathR = System.Math;
+global using Vector = System.Runtime.Intrinsics.Vector256;
+global using VectorReal = System.Runtime.Intrinsics.Vector256<double>;
 
-/// <summary>
-/// Interface to facilitate the implementation of a generic filter. This filter can either exclude certain pairs of shapes or modify collision
-/// information subsequent to Jitter's execution of narrow phase collision detection between the shapes.
-/// </summary>
-public interface INarrowPhaseFilter
+#else
+
+global using Real = System.Single;
+global using MathR = System.MathF;
+global using Vector = System.Runtime.Intrinsics.Vector128;
+global using VectorReal = System.Runtime.Intrinsics.Vector128<float>;
+
+#endif
+
+namespace Jitter2;
+public static class Precision
 {
+    #if USE_DOUBLE_PRECISION
+        public const int ConstraintSizeFull = 512;
+        public const int ConstraintSizeSmall = 256;
+    #else
+        public const int ConstraintSizeFull = 256;
+        public const int ConstraintSizeSmall = 128;
+    #endif
+
     /// <summary>
-    /// Invoked following the narrow phase of collision detection in Jitter. This allows for the modification of collision information.
-    /// Refer to the corresponding <see cref="NarrowPhase"/> methods for details on the parameters.
+    /// Gets a value indicating whether the engine is configured to use double-precision floating-point numbers.
     /// </summary>
-    /// <returns>False if the collision should be filtered out, true otherwise.</returns>
-    bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
-        ref JVector pointA, ref JVector pointB,
-        ref JVector normal, ref Real penetration);
+    public static bool IsDoublePrecision => sizeof(Real) == 8;
 }
+

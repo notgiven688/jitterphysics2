@@ -41,7 +41,7 @@ public unsafe class TwistAngle : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -50,15 +50,15 @@ public unsafe class TwistAngle : Constraint
 
         public JQuaternion Q0;
 
-        public float Angle1, Angle2;
+        public Real Angle1, Angle2;
         public ushort Clamp;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
-        public float EffectiveMass;
-        public float AccumulatedImpulse;
-        public float Bias;
+        public Real EffectiveMass;
+        public Real AccumulatedImpulse;
+        public Real Bias;
 
         public JVector Jacobian;
     }
@@ -85,14 +85,14 @@ public unsafe class TwistAngle : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = 0.0001f;
-        data.BiasFactor = 0.2f;
+        data.Softness = (Real)0.0001;
+        data.BiasFactor = (Real)0.2;
 
         axis1.Normalize();
         axis2.Normalize();
 
-        data.Angle1 = MathF.Sin((float)limit.From / 2.0f);
-        data.Angle2 = MathF.Sin((float)limit.To / 2.0f);
+        data.Angle1 = MathR.Sin((Real)limit.From / (Real)2.0);
+        data.Angle2 = MathR.Sin((Real)limit.To / (Real)2.0);
 
         data.B = JVector.TransposedTransform(axis2, body2.Orientation);
 
@@ -107,8 +107,8 @@ public unsafe class TwistAngle : Constraint
         set
         {
             ref TwistLimitData data = ref handle.Data;
-            data.Angle1 = MathF.Sin((float)value.From / 2.0f);
-            data.Angle2 = MathF.Sin((float)value.To / 2.0f);
+            data.Angle1 = MathR.Sin((Real)value.From / (Real)2.0);
+            data.Angle2 = MathR.Sin((Real)value.To / (Real)2.0);
         }
     }
 
@@ -122,7 +122,7 @@ public unsafe class TwistAngle : Constraint
         Initialize(axis1, axis2, AngularLimit.Fixed);
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
 
@@ -132,7 +132,7 @@ public unsafe class TwistAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JMatrix m = (-1.0f / 2.0f) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
+        JMatrix m = (-(Real)1.0 / (Real)2.0) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
         JQuaternion q = data.Q0 * q1.Conjugate() * q2;
 
@@ -142,13 +142,13 @@ public unsafe class TwistAngle : Constraint
 
         data.EffectiveMass += (data.Softness * idt);
 
-        data.EffectiveMass = 1.0f / data.EffectiveMass;
+        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
 
-        float error = JVector.Dot(data.B, new JVector(q.X, q.Y, q.Z));
+        Real error = JVector.Dot(data.B, new JVector(q.X, q.Y, q.Z));
 
-        if (q.W < 0.0f)
+        if (q.W < (Real)0.0)
         {
-            error *= -1.0f;
+            error *= -(Real)1.0;
             data.Jacobian *= -1;
         }
 
@@ -166,7 +166,7 @@ public unsafe class TwistAngle : Constraint
         }
         else
         {
-            data.AccumulatedImpulse = 0.0f;
+            data.AccumulatedImpulse = (Real)0.0;
             return;
         }
 
@@ -186,29 +186,29 @@ public unsafe class TwistAngle : Constraint
 
             JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
-            if (quat0.W < 0.0f)
+            if (quat0.W < (Real)0.0)
             {
-                quat0 *= -1.0f;
+                quat0 *= -(Real)1.0;
             }
 
-            float error = JVector.Dot(data.B, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)(2.0f * MathF.Asin(error));
+            Real error = JVector.Dot(data.B, new JVector(quat0.X, quat0.Y, quat0.Z));
+            return (JAngle)((Real)2.0 * MathR.Asin(error));
         }
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public float Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => handle.Data.AccumulatedImpulse;
 
     public override void DebugDraw(IDebugDrawer drawer)
     {
@@ -218,7 +218,7 @@ public unsafe class TwistAngle : Constraint
         ref RigidBodyData body2 = ref data.Body2.Data;
     }
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -226,22 +226,22 @@ public unsafe class TwistAngle : Constraint
 
         if (data.Clamp == 0) return;
 
-        float jv = (body1.AngularVelocity - body2.AngularVelocity) * data.Jacobian;
+        Real jv = (body1.AngularVelocity - body2.AngularVelocity) * data.Jacobian;
 
-        float softnessScalar = data.AccumulatedImpulse * (data.Softness * idt);
+        Real softnessScalar = data.AccumulatedImpulse * (data.Softness * idt);
 
-        float lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
+        Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        float origAcc = data.AccumulatedImpulse;
+        Real origAcc = data.AccumulatedImpulse;
         data.AccumulatedImpulse += lambda;
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse = MathF.Min(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, (Real)0.0);
         }
         else
         {
-            data.AccumulatedImpulse = MathF.Max(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }
 
         lambda = data.AccumulatedImpulse - origAcc;

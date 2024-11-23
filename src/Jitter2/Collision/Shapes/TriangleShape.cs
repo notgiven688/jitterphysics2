@@ -47,7 +47,7 @@ public class TriangleShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
@@ -84,7 +84,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const float extraMargin = 0.01f;
+        const Real extraMargin = (Real)0.01;
 
         ref var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
@@ -107,7 +107,7 @@ public class TriangleShape : RigidBodyShape
         box.Max += position + extra;
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
@@ -124,7 +124,7 @@ public class TriangleShape : RigidBodyShape
         JVector b = Mesh.Vertices[triangle.IndexB];
         JVector c = Mesh.Vertices[triangle.IndexC];
 
-        point = 1.0f / 3.0f * (a + b + c);
+        point = (Real)1.0 / (Real)3.0 * (a + b + c);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)
@@ -135,8 +135,8 @@ public class TriangleShape : RigidBodyShape
         JVector b = Mesh.Vertices[triangle.IndexB];
         JVector c = Mesh.Vertices[triangle.IndexC];
 
-        float min = JVector.Dot(a, direction);
-        float dot = JVector.Dot(b, direction);
+        Real min = JVector.Dot(a, direction);
+        Real dot = JVector.Dot(b, direction);
 
         result = a;
 

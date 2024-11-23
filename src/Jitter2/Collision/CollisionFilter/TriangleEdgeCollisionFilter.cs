@@ -41,14 +41,14 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// A tweakable parameter. Collision points that are closer than this value to a triangle edge
     /// are considered as edge collisions and might be modified or discarded entirely.
     /// </summary>
-    public float EdgeThreshold { get; set; } = 0.05f;
+    public Real EdgeThreshold { get; set; } = (Real)0.05;
 
-    private float cosAT = 0.99f;
+    private Real cosAT = (Real)0.99;
 
     /// <summary>
     /// A tweakable parameter.
     /// </summary>
-    public float ProjectionThreshold { get; set; } = 0.5f;
+    public Real ProjectionThreshold { get; set; } = (Real)0.5;
 
     /// <summary>
     /// A tweakable parameter that defines the threshold to determine when two normals
@@ -56,13 +56,13 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// </summary>
     public JAngle AngleThreshold
     {
-        get => JAngle.FromRadiant(MathF.Acos(cosAT));
-        set => cosAT = MathF.Cos(value.Radiant);
+        get => JAngle.FromRadiant(MathR.Acos(cosAT));
+        set => cosAT = MathR.Cos(value.Radiant);
     }
 
     /// <inheritdoc />
     public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
-        ref JVector pointA, ref JVector pointB, ref JVector normal, ref float penetration)
+        ref JVector pointA, ref JVector pointB, ref JVector normal, ref Real penetration)
     {
         TriangleShape? ts1 = shapeA as TriangleShape;
         TriangleShape? ts2 = shapeB as TriangleShape;
@@ -100,22 +100,22 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         tshape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
         JVector n, pma;
-        float d0, d1, d2;
+        Real d0, d1, d2;
 
         // TODO: this can be optimized
         n = b - a;
         pma = collP - a;
-        d0 = (pma - JVector.Dot(pma, n) * n * (1.0f / n.LengthSquared())).LengthSquared();
+        d0 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         n = c - a;
         pma = collP - a;
-        d1 = (pma - JVector.Dot(pma, n) * n * (1.0f / n.LengthSquared())).LengthSquared();
+        d1 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         n = c - b;
         pma = collP - b;
-        d2 = (pma - JVector.Dot(pma, n) * n * (1.0f / n.LengthSquared())).LengthSquared();
+        d2 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
-        if (MathF.Min(MathF.Min(d0, d1), d2) > EdgeThreshold) return true;
+        if (MathR.Min(MathR.Min(d0, d1), d2) > EdgeThreshold) return true;
 
         JVector nnormal;
 
@@ -153,8 +153,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         {
             // tnormal and nnormal are the same
             // --------------------------------
-            float f5 = JVector.Dot(normal, nnormal);
-            float f6 = JVector.Dot(normal, tnormal);
+            Real f5 = JVector.Dot(normal, nnormal);
+            Real f6 = JVector.Dot(normal, tnormal);
 
             if (f5 > f6)
             {
@@ -211,16 +211,16 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // \
         //  \
         //   \     tnormal
-        float f1 = proj % nnormal * cross;
-        float f2 = proj % tnormal * cross;
+        Real f1 = proj % nnormal * cross;
+        Real f2 = proj % tnormal * cross;
 
-        bool between = f1 * f2 <= 0.0f;
+        bool between = f1 * f2 <= (Real)0.0;
 
         if (!between)
         {
             // not in-between, snap normal
-            float f3 = JVector.Dot(normal, nnormal);
-            float f4 = JVector.Dot(normal, tnormal);
+            Real f3 = JVector.Dot(normal, nnormal);
+            Real f4 = JVector.Dot(normal, tnormal);
 
             if (f3 > f4)
             {

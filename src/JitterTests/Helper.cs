@@ -2,7 +2,7 @@ namespace JitterTests;
 
 public static class Helper
 {
-    public static void AdvanceWorld(World world, int seconds, float dt, bool multiThread)
+    public static void AdvanceWorld(World world, int seconds, Real dt, bool multiThread)
     {
         int total = (int)(seconds / dt);
         for (int i = 0; i < total; i++)
@@ -11,7 +11,7 @@ public static class Helper
 
     public static RigidBody BuildTower(World world, JVector pos, int size = 40)
     {
-        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * 2.0f / 64.0f);
+        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * (Real)2.0 / (Real)64.0);
         JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
         JQuaternion orientation = JQuaternion.Identity;
 
@@ -69,7 +69,7 @@ public static class Helper
             for (int e = i; e < size; e++)
             {
                 last = world.CreateRigidBody();
-                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * 1.0f, 0.0f);
+                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * (Real)1.0, (Real)0.0);
                 var shape = new BoxShape(1);
                 last.AddShape(shape);
 
@@ -88,8 +88,8 @@ public static class Helper
             for (int e = i; e < size; e++)
             {
                 last = world.CreateRigidBody();
-                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * 1.0f, 0.0f);
-                var shape = new CylinderShape(1.0f, 0.5f);
+                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * (Real)1.0, (Real)0.0);
+                var shape = new CylinderShape((Real)1.0, 0.5f);
                 last.AddShape(shape);
 
                 if (i == 0) last.IsStatic = true;

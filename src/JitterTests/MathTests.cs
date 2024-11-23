@@ -63,8 +63,8 @@ public class MathTests
         // ---
         // https://arxiv.org/abs/1801.07478
 
-        float cos = (float)Math.Cos(0.321f / 2.0f);
-        float sin = (float)Math.Sin(0.321f / 2.0f);
+        float cos = (float)Math.Cos(0.321f / (Real)2.0);
+        float sin = (float)Math.Sin(0.321f / (Real)2.0);
         JQuaternion quat1 = new(sin, 0, 0, cos);
         JQuaternion quat2 = JQuaternion.CreateFromMatrix(JMatrix.CreateRotationZ(0.321f));
         JQuaternion quat = JQuaternion.Multiply(quat1, quat2);
