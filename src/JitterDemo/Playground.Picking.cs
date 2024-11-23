@@ -7,6 +7,14 @@ using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public partial class Playground : RenderWindow
@@ -37,8 +45,8 @@ public partial class Playground : RenderWindow
     private bool grepping;
 
     private DistanceLimit? grepConstraint;
-    private float hitDistance;
-    private float hitWheelPosition;
+    private Real hitDistance;
+    private Real hitWheelPosition;
 
     private void Pick()
     {
@@ -52,7 +60,7 @@ public partial class Playground : RenderWindow
             if (grepBody == null) return;
             if (grepConstraint == null) return;
 
-            hitDistance += ((float)Mouse.ScrollWheel.Y - hitWheelPosition);
+            hitDistance += ((Real)Mouse.ScrollWheel.Y - hitWheelPosition);
 
             grepConstraint.Anchor2 = origin + hitDistance * jdir;
             grepBody.SetActivationState(true);
@@ -82,7 +90,7 @@ public partial class Playground : RenderWindow
             if (!result || grepBody == null || grepBody.IsStatic) return;
             grepping = true;
 
-            hitWheelPosition = (float)Mouse.ScrollWheel.Y;
+            hitWheelPosition = (Real)Mouse.ScrollWheel.Y;
 
             if (grepConstraint != null) World.Remove(grepConstraint);
 

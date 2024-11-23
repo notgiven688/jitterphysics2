@@ -25,6 +25,14 @@ using System;
 using System.Diagnostics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision;
 
 /// <summary>
@@ -47,15 +55,15 @@ public static class CollisionHelper
         JVector v = a - c;
 
         JVector normal = u % v;
-        float t = normal.LengthSquared();
+        Real t = normal.LengthSquared();
 
         JVector at = a - point;
 
         JVector.Cross(u, at, out JVector tmp);
-        float gamma = JVector.Dot(tmp, normal) / t;
+        Real gamma = JVector.Dot(tmp, normal) / t;
         JVector.Cross(at, v, out tmp);
-        float beta = JVector.Dot(tmp, normal) / t;
-        float alpha = 1.0f - gamma - beta;
+        Real beta = JVector.Dot(tmp, normal) / t;
+        Real alpha = 1.0f - gamma - beta;
 
         return alpha > 0.0f && beta > 0.0f && gamma > 0.0f;
     }
@@ -73,20 +81,20 @@ public static class CollisionHelper
     /// <returns>Returns true if the ray intersects with the triangle, otherwise returns false.</returns>
     public static bool RayTriangle(in JVector a, in JVector b, in JVector c,
         in JVector rayStart, in JVector rayDir,
-        out float lambda, out JVector normal)
+        out Real lambda, out JVector normal)
     {
         JVector u = b - a;
         JVector v = c - a;
 
         normal = v % u;
-        float t = normal.LengthSquared();
+        Real t = normal.LengthSquared();
 
         // triangle is expected to span an area
         Debug.Assert(t > 1e-06f);
 
-        float denom = JVector.Dot(rayDir, normal);
+        Real denom = JVector.Dot(rayDir, normal);
 
-        if (Math.Abs(denom) < 1e-06f)
+        if (Math.Abs(denom) < 1e-06)
         {
             // triangle and ray are parallel
             lambda = 0;
@@ -103,10 +111,10 @@ public static class CollisionHelper
         JVector at = a - hitPoint;
 
         JVector.Cross(u, at, out JVector tmp);
-        float gamma = JVector.Dot(tmp, normal) / t;
+        Real gamma = JVector.Dot(tmp, normal) / t;
         JVector.Cross(at, v, out tmp);
-        float beta = JVector.Dot(tmp, normal) / t;
-        float alpha = 1.0f - gamma - beta;
+        Real beta = JVector.Dot(tmp, normal) / t;
+        Real alpha = 1.0f - gamma - beta;
 
         return alpha > 0 && beta > 0 && gamma > 0;
     }

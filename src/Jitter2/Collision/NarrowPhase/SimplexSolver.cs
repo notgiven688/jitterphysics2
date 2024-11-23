@@ -25,6 +25,14 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace Jitter2.Collision;
@@ -33,7 +41,7 @@ namespace Jitter2.Collision;
 
 public unsafe struct SimplexSolver
 {
-    const float Epsilon = 1e-8f;
+    const Real Epsilon = 1e-8f;
 
     private JVector v0;
     private JVector v1;
@@ -54,13 +62,13 @@ public unsafe struct SimplexSolver
         JVector b = ptr[i1];
 
         JVector v = b - a;
-        float vsq = v.LengthSquared();
+        Real vsq = v.LengthSquared();
 
         bool degenerate = vsq < Epsilon;
 
-        float t = -JVector.Dot(a, v) / vsq;
-        float lambda0 = 1 - t;
-        float lambda1 = t;
+        Real t = -JVector.Dot(a, v) / vsq;
+        Real lambda0 = 1 - t;
+        Real lambda1 = t;
 
         mask = (1u << i0 | 1u << i1);
 
@@ -94,25 +102,25 @@ public unsafe struct SimplexSolver
 
         JVector normal = u % v;
 
-        float t = normal.LengthSquared();
-        float it = 1.0f / t;
+        Real t = normal.LengthSquared();
+        Real it = 1.0f / t;
 
         bool degenerate = t < Epsilon;
 
         JVector.Cross(u, a, out var c1);
         JVector.Cross(a, v, out var c2);
 
-        float lambda2 = JVector.Dot(c1, normal) * it;
-        float lambda1 = JVector.Dot(c2, normal) * it;
-        float lambda0 = 1.0f - lambda2 - lambda1;
+        Real lambda2 = JVector.Dot(c1, normal) * it;
+        Real lambda1 = JVector.Dot(c2, normal) * it;
+        Real lambda0 = 1.0f - lambda2 - lambda1;
 
-        float bestDistance = float.MaxValue;
+        Real bestDistance = Real.MaxValue;
         Unsafe.SkipInit(out JVector closestPt);
 
         if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i1, i2, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -124,7 +132,7 @@ public unsafe struct SimplexSolver
         if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i2, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -136,7 +144,7 @@ public unsafe struct SimplexSolver
         if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i1, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -153,22 +161,22 @@ public unsafe struct SimplexSolver
     private JVector ClosestTetrahedron(out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        float Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
+        Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
         {
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
 
-        float detT = Determinant(v0, v1, v2, v3);
-        float inverseDetT = 1.0f / detT;
+        Real detT = Determinant(v0, v1, v2, v3);
+        Real inverseDetT = 1.0f / detT;
 
         bool degenerate = detT * detT < Epsilon;
 
-        float lambda0 = Determinant(JVector.Zero, v1, v2, v3) * inverseDetT;
-        float lambda1 = Determinant(v0, JVector.Zero, v2, v3) * inverseDetT;
-        float lambda2 = Determinant(v0, v1, JVector.Zero, v3) * inverseDetT;
-        float lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
+        Real lambda0 = Determinant(JVector.Zero, v1, v2, v3) * inverseDetT;
+        Real lambda1 = Determinant(v0, JVector.Zero, v2, v3) * inverseDetT;
+        Real lambda2 = Determinant(v0, v1, JVector.Zero, v3) * inverseDetT;
+        Real lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
 
-        float bestDistance = float.MaxValue;
+        Real bestDistance = Real.MaxValue;
 
         Unsafe.SkipInit(out JVector closestPt);
 
@@ -177,7 +185,7 @@ public unsafe struct SimplexSolver
         if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(1, 2, 3, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -189,7 +197,7 @@ public unsafe struct SimplexSolver
         if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 2, 3, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -201,7 +209,7 @@ public unsafe struct SimplexSolver
         if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 3, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;
@@ -213,7 +221,7 @@ public unsafe struct SimplexSolver
         if (lambda3 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 2, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 mask = m;

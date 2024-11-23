@@ -9,6 +9,14 @@ using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class Demo17 : IDemo, ICleanDemo
@@ -32,7 +40,7 @@ public class Demo17 : IDemo, ICleanDemo
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
 
         const int len = 40;
-        const float scale = 0.2f;
+        const Real scale = 0.2f;
         const int leno2 = len / 2;
 
         List<JTriangle> tris = new();
@@ -108,7 +116,7 @@ public class Demo17 : IDemo, ICleanDemo
         for (int i = 0; i < cloth.Vertices.Count; i++)
         {
             ref var pos = ref cloth.Vertices[i].Data.Position;
-            vertices[i].Texture = new Vector2(pos.X, pos.Z);
+            vertices[i].Texture = new Vector2((float)pos.X, (float)pos.Z);
         }
     }
 

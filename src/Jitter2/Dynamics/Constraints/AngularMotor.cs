@@ -28,6 +28,14 @@ using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
@@ -40,7 +48,7 @@ public unsafe class AngularMotor : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -48,13 +56,13 @@ public unsafe class AngularMotor : Constraint
         public JVector LocalAxis1;
         public JVector LocalAxis2;
 
-        public float Velocity;
-        public float MaxForce;
-        public float MaxLambda;
+        public Real Velocity;
+        public Real MaxForce;
+        public Real MaxLambda;
 
-        public float EffectiveMass;
+        public Real EffectiveMass;
 
-        public float AccumulatedImpulse;
+        public Real AccumulatedImpulse;
     }
 
     private JHandle<AngularMotorData> handle;
@@ -93,7 +101,7 @@ public unsafe class AngularMotor : Constraint
         Initialize(axis, axis);
     }
 
-    public float TargetVelocity
+    public Real TargetVelocity
     {
         get => handle.Data.Velocity;
         set => handle.Data.Velocity = value;
@@ -103,7 +111,7 @@ public unsafe class AngularMotor : Constraint
 
     public JVector LocalAxis2 => handle.Data.LocalAxis2;
 
-    public float MaximumForce
+    public Real MaximumForce
     {
         get => handle.Data.MaxForce;
         set
@@ -117,7 +125,7 @@ public unsafe class AngularMotor : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
 
@@ -137,7 +145,7 @@ public unsafe class AngularMotor : Constraint
         body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
     }
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -146,11 +154,11 @@ public unsafe class AngularMotor : Constraint
         JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector j1);
         JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector j2);
 
-        float jv = -j1 * body1.AngularVelocity + j2 * body2.AngularVelocity;
+        Real jv = -j1 * body1.AngularVelocity + j2 * body2.AngularVelocity;
 
-        float lambda = -(jv - data.Velocity) * data.EffectiveMass;
+        Real lambda = -(jv - data.Velocity) * data.EffectiveMass;
 
-        float olda = data.AccumulatedImpulse;
+        Real olda = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 

@@ -1,3 +1,10 @@
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
 namespace JitterTests;
 
 public class StackingTests
@@ -23,9 +30,9 @@ public class StackingTests
 
         world.UseFullEPASolver = fullEPA;
 
-        float stackHeight = last.Position.Y;
+        Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, true);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real delta = Math.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -39,9 +46,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildPyramidBox(world, new JVector(x, y, z));
 
-        float stackHeight = last.Position.Y;
+        Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real delta = Math.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -57,9 +64,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildPyramidCylinder(world, new JVector(x, y, z));
 
-        float stackHeight = last.Position.Y;
+        Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real delta = Math.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -73,9 +80,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildTower(world, JVector.Zero, 30);
 
-        float stackHeight = last.Position.Y;
+        Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real delta = Math.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }

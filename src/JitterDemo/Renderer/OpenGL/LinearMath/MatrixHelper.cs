@@ -1,16 +1,24 @@
 using System;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo.Renderer.OpenGL;
 
 public static class MatrixHelper
 {
-    public static Matrix4 CreateTranslation(float xPosition, float yPosition, float zPosition)
+    public static Matrix4 CreateTranslation(Real xPosition, Real yPosition, Real zPosition)
     {
         Matrix4 result = Matrix4.Identity;
 
-        result.M14 = xPosition;
-        result.M24 = yPosition;
-        result.M34 = zPosition;
+        result.M14 = (float)xPosition;
+        result.M24 = (float)yPosition;
+        result.M34 = (float)zPosition;
 
         return result;
     }
@@ -24,8 +32,8 @@ public static class MatrixHelper
         return result;
     }
 
-    public static Matrix4 CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance,
-        float farPlaneDistance)
+    public static Matrix4 CreatePerspectiveFieldOfView(Real fieldOfView, Real aspectRatio, Real nearPlaneDistance,
+        Real farPlaneDistance)
     {
         if (fieldOfView <= 0.0f || fieldOfView >= Math.PI)
             throw new ArgumentOutOfRangeException(nameof(fieldOfView));
@@ -39,123 +47,123 @@ public static class MatrixHelper
         if (nearPlaneDistance >= farPlaneDistance)
             throw new ArgumentOutOfRangeException(nameof(nearPlaneDistance));
 
-        float yScale = 1.0f / (float)Math.Tan(fieldOfView * 0.5f);
-        float xScale = yScale / aspectRatio;
+        Real yScale = 1.0f / (Real)Math.Tan(fieldOfView * 0.5f);
+        Real xScale = yScale / aspectRatio;
 
         Matrix4 result;
 
-        result.M11 = xScale;
+        result.M11 = (float)xScale;
         result.M12 = result.M13 = result.M14 = 0.0f;
 
-        result.M22 = yScale;
+        result.M22 = (float)yScale;
         result.M21 = result.M23 = result.M24 = 0.0f;
 
         result.M31 = result.M32 = 0.0f;
-        result.M33 = farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+        result.M33 = (float)(farPlaneDistance / (nearPlaneDistance - farPlaneDistance));
         result.M34 = -1.0f;
 
         result.M41 = result.M42 = result.M44 = 0.0f;
-        result.M43 = nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance);
+        result.M43 = (float)(nearPlaneDistance * farPlaneDistance / (nearPlaneDistance - farPlaneDistance));
 
         return Matrix4.Transpose(result);
     }
 
-    public static Matrix4 CreateRotationX(float radians)
+    public static Matrix4 CreateRotationX(Real radians)
     {
         Matrix4 result = Matrix4.Identity;
 
-        float c = (float)Math.Cos(radians);
-        float s = (float)Math.Sin(radians);
+        Real c = (Real)Math.Cos(radians);
+        Real s = (Real)Math.Sin(radians);
 
         // [  1  0  0  0 ]
         // [  0  c -s  0 ]
         // [  0  s  c  0 ]
         // [  0  0  0  1 ]
-        result.M22 = c;
-        result.M23 = -s;
-        result.M32 = s;
-        result.M33 = c;
+        result.M22 = (float)c;
+        result.M23 = (float)-s;
+        result.M32 = (float)s;
+        result.M33 = (float)c;
 
         return result;
     }
 
-    public static Matrix4 CreateRotationY(float radians)
+    public static Matrix4 CreateRotationY(Real radians)
     {
         Matrix4 result = Matrix4.Identity;
 
-        float c = (float)Math.Cos(radians);
-        float s = (float)Math.Sin(radians);
+        Real c = (Real)Math.Cos(radians);
+        Real s = (Real)Math.Sin(radians);
 
         // [  c  0  s  0 ]
         // [  0  1  0  0 ]
         // [ -s  0  c  0 ]
         // [  0  0  0  1 ]
-        result.M11 = c;
-        result.M13 = s;
-        result.M31 = -s;
-        result.M33 = c;
+        result.M11 = (float)c;
+        result.M13 = (float)s;
+        result.M31 = (float)-s;
+        result.M33 = (float)c;
 
         return result;
     }
 
-    public static Matrix4 CreateRotationZ(float radians)
+    public static Matrix4 CreateRotationZ(Real radians)
     {
         Matrix4 result = Matrix4.Identity;
 
-        float c = (float)Math.Cos(radians);
-        float s = (float)Math.Sin(radians);
+        Real c = (Real)Math.Cos(radians);
+        Real s = (Real)Math.Sin(radians);
 
         // [  c -s  0  0 ]
         // [  s  c  0  0 ]
         // [  0  0  1  0 ]
         // [  0  0  0  1 ]
-        result.M11 = c;
-        result.M12 = -s;
-        result.M21 = s;
-        result.M22 = c;
+        result.M11 = (float)c;
+        result.M12 = (float)-s;
+        result.M21 = (float)s;
+        result.M22 = (float)c;
 
         return result;
     }
 
-    public static Matrix4 CreateScale(float scale)
+    public static Matrix4 CreateScale(Real scale)
     {
         Matrix4 result = Matrix4.Identity;
 
-        result.M11 = scale;
-        result.M22 = scale;
-        result.M33 = scale;
+        result.M11 = (float)scale;
+        result.M22 = (float)scale;
+        result.M33 = (float)scale;
 
         return result;
     }
 
-    public static Matrix4 CreateScale(float xScale, float yScale, float zScale)
+    public static Matrix4 CreateScale(Real xScale, Real yScale, Real zScale)
     {
         Matrix4 result = Matrix4.Identity;
 
-        result.M11 = xScale;
-        result.M22 = yScale;
-        result.M33 = zScale;
+        result.M11 = (float)xScale;
+        result.M22 = (float)yScale;
+        result.M33 = (float)zScale;
 
         return result;
     }
 
-    public static Matrix4 CreateOrthographicOffCenter(float left, float right, float bottom, float top,
-        float zNearPlane, float zFarPlane)
+    public static Matrix4 CreateOrthographicOffCenter(Real left, Real right, Real bottom, Real top,
+        Real zNearPlane, Real zFarPlane)
     {
         Matrix4 result;
 
-        result.M11 = 2.0f / (right - left);
+        result.M11 = (float)(2.0f / (right - left));
         result.M12 = result.M13 = result.M14 = 0.0f;
 
-        result.M22 = 2.0f / (top - bottom);
+        result.M22 = (float)(2.0f / (top - bottom));
         result.M21 = result.M23 = result.M24 = 0.0f;
 
-        result.M33 = 1.0f / (zNearPlane - zFarPlane);
+        result.M33 = (float)(1.0f / (zNearPlane - zFarPlane));
         result.M31 = result.M32 = result.M34 = 0.0f;
 
-        result.M41 = (left + right) / (left - right);
-        result.M42 = (top + bottom) / (bottom - top);
-        result.M43 = zNearPlane / (zNearPlane - zFarPlane);
+        result.M41 = (float)((left + right) / (left - right));
+        result.M42 = (float)((top + bottom) / (bottom - top));
+        result.M43 = (float)(zNearPlane / (zNearPlane - zFarPlane));
         result.M44 = 1.0f;
 
         return Matrix4.Transpose(result);

@@ -24,6 +24,14 @@
 using System.Collections.Generic;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -31,7 +39,7 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public static class ShapeHelper
 {
-    private const float GoldenRatio = 1.6180339887498948482045f;
+    private const Real GoldenRatio = 1.6180339887498948482045f;
 
     private static readonly JVector[] icosahedronVertices = new JVector[12]
     {
@@ -150,13 +158,13 @@ public static class ShapeHelper
     /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
     /// <param name="mass">Output parameter for the calculated mass.</param>
     public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass,
-        out float mass, int subdivisions = 4)
+        out Real mass, int subdivisions = 4)
     {
         centerOfMass = JVector.Zero;
         inertia = JMatrix.Zero;
         mass = 0;
 
-        const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+        const Real a = 1.0f / 60.0f, b = 1.0f / 120.0f;
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         foreach (JTriangle triangle in MakeHull(support, subdivisions))
@@ -170,14 +178,14 @@ public static class ShapeHelper
                 column0.Y, column1.Y, column2.Y,
                 column0.Z, column1.Z, column2.Z);
 
-            float detA = A.Determinant();
+            Real detA = A.Determinant();
 
             // now transform this canonical tetrahedron to the target tetrahedron
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
             JVector tetrahedronCOM = 1.0f / 4.0f * (column0 + column1 + column2);
-            float tetrahedronMass = 1.0f / 6.0f * detA;
+            Real tetrahedronMass = 1.0f / 6.0f * detA;
 
             inertia += tetrahedronInertia;
             centerOfMass += tetrahedronMass * tetrahedronCOM;

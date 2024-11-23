@@ -25,6 +25,14 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
@@ -35,19 +43,19 @@ namespace Jitter2.Collision;
 
 public unsafe struct SimplexSolverAB
 {
-    const float Epsilon = 1e-8f;
+    const Real Epsilon = 1e-8f;
 
     private struct Barycentric
     {
-        public float Lambda0;
-        public float Lambda1;
-        public float Lambda2;
-        public float Lambda3;
+        public Real Lambda0;
+        public Real Lambda1;
+        public Real Lambda2;
+        public Real Lambda3;
 
-        public float this[int i]
+        public Real this[int i]
         {
-            get => ((float*)Unsafe.AsPointer(ref this.Lambda0))[i];
-            set => ((float*)Unsafe.AsPointer(ref this.Lambda0))[i] = value;
+            get => ((Real*)Unsafe.AsPointer(ref this.Lambda0))[i];
+            set => ((Real*)Unsafe.AsPointer(ref this.Lambda0))[i] = value;
         }
     }
 
@@ -71,13 +79,13 @@ public unsafe struct SimplexSolverAB
         JVector b = ptr[i1].V;
 
         JVector v = b - a;
-        float vsq = v.LengthSquared();
+        Real vsq = v.LengthSquared();
 
         bool degenerate = vsq < Epsilon;
 
-        float t = -JVector.Dot(a, v) / vsq;
-        float lambda0 = 1 - t;
-        float lambda1 = t;
+        Real t = -JVector.Dot(a, v) / vsq;
+        Real lambda0 = 1 - t;
+        Real lambda1 = t;
 
         mask = (1u << i0 | 1u << i1);
 
@@ -114,26 +122,26 @@ public unsafe struct SimplexSolverAB
 
         JVector normal = u % v;
 
-        float t = normal.LengthSquared();
-        float it = 1.0f / t;
+        Real t = normal.LengthSquared();
+        Real it = 1.0f / t;
 
         bool degenerate = t < Epsilon;
 
         JVector.Cross(u, a, out var c1);
         JVector.Cross(a, v, out var c2);
 
-        float lambda2 = JVector.Dot(c1, normal) * it;
-        float lambda1 = JVector.Dot(c2, normal) * it;
-        float lambda0 = 1.0f - lambda2 - lambda1;
+        Real lambda2 = JVector.Dot(c1, normal) * it;
+        Real lambda1 = JVector.Dot(c2, normal) * it;
+        Real lambda0 = 1.0f - lambda2 - lambda1;
 
-        float bestDistance = float.MaxValue;
+        Real bestDistance = Real.MaxValue;
         Unsafe.SkipInit(out JVector closestPt);
         Unsafe.SkipInit(out Barycentric b0);
 
         if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i1, i2, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -146,7 +154,7 @@ public unsafe struct SimplexSolverAB
         if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i2, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -159,7 +167,7 @@ public unsafe struct SimplexSolverAB
         if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestSegment(i0, i1, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -181,22 +189,22 @@ public unsafe struct SimplexSolverAB
     private JVector ClosestTetrahedron(ref Barycentric bc, out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        float Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
+        Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
         {
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
 
-        float detT = Determinant(v0.V, v1.V, v2.V, v3.V);
-        float inverseDetT = 1.0f / detT;
+        Real detT = Determinant(v0.V, v1.V, v2.V, v3.V);
+        Real inverseDetT = 1.0f / detT;
 
         bool degenerate = detT * detT < Epsilon;
 
-        float lambda0 = Determinant(JVector.Zero, v1.V, v2.V, v3.V) * inverseDetT;
-        float lambda1 = Determinant(v0.V, JVector.Zero, v2.V, v3.V) * inverseDetT;
-        float lambda2 = Determinant(v0.V, v1.V, JVector.Zero, v3.V) * inverseDetT;
-        float lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
+        Real lambda0 = Determinant(JVector.Zero, v1.V, v2.V, v3.V) * inverseDetT;
+        Real lambda1 = Determinant(v0.V, JVector.Zero, v2.V, v3.V) * inverseDetT;
+        Real lambda2 = Determinant(v0.V, v1.V, JVector.Zero, v3.V) * inverseDetT;
+        Real lambda3 = 1.0f - lambda0 - lambda1 - lambda2;
 
-        float bestDistance = float.MaxValue;
+        Real bestDistance = Real.MaxValue;
 
         Unsafe.SkipInit(out JVector closestPt);
         Unsafe.SkipInit(out Barycentric b0);
@@ -206,7 +214,7 @@ public unsafe struct SimplexSolverAB
         if (lambda0 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(1, 2, 3, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -219,7 +227,7 @@ public unsafe struct SimplexSolverAB
         if (lambda1 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 2, 3, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -232,7 +240,7 @@ public unsafe struct SimplexSolverAB
         if (lambda2 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 3, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;
@@ -245,7 +253,7 @@ public unsafe struct SimplexSolverAB
         if (lambda3 < 0.0f || degenerate)
         {
             var closest = ClosestTriangle(0, 1, 2, ref b0, out uint m);
-            float dist = closest.LengthSquared();
+            Real dist = closest.LengthSquared();
             if (dist < bestDistance)
             {
                 bc = b0;

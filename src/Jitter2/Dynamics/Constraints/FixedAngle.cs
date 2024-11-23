@@ -27,6 +27,14 @@ using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
@@ -39,16 +47,16 @@ public unsafe class FixedAngle : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
 
-        public float MinAngle;
-        public float MaxAngle;
+        public Real MinAngle;
+        public Real MaxAngle;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
         public JVector Axis;
         public JQuaternion Q0;
@@ -87,7 +95,7 @@ public unsafe class FixedAngle : Constraint
         data.Q0 = q2.Conjugate() * q1;
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
 
@@ -125,13 +133,13 @@ public unsafe class FixedAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
@@ -139,7 +147,7 @@ public unsafe class FixedAngle : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

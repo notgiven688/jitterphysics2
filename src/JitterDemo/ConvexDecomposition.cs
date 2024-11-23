@@ -7,6 +7,14 @@ using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class ConvexDecomposition<T> where T : MultiMesh
@@ -43,7 +51,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
         var csmInstance = RenderWindow.Instance.CSMRenderer.GetInstance<T>();
         Mesh mesh = csmInstance.mesh;
 
-        float totalMass = 0.0f;
+        Real totalMass = 0.0f;
 
         foreach (var group in mesh.Groups)
         {

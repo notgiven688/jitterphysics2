@@ -32,8 +32,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="./../../publish/readme.md" Pack="true" PackagePath=""/>
-        <None Include="./../../publish/icon.png" Pack="true" PackagePath=""/>
+        <None Include="./../../publish/readme.md" Pack="true" PackagePath="" />
+        <None Include="./../../publish/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -41,6 +41,30 @@
         <DebugSymbols>false</DebugSymbols>
         <DebugType>portable</DebugType>
         <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);RELEASE;TRACE;USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);RELEASE;TRACE;USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0|AnyCPU'">
+      <DefineConstants>$(DefineConstants);RELEASE;TRACE;USE_DOUBLE_PRECISION</DefineConstants>
     </PropertyGroup>
 
 </Project>

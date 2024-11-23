@@ -1,5 +1,13 @@
 using Jitter2.Dynamics.Constraints;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterTests;
 
 public class MathTests
@@ -9,6 +17,7 @@ public class MathTests
     {
     }
 
+#if !USE_DOUBLE_PRECISION
     [TestCase]
     public static void QMatrixProjectMultiplyLeftRight()
     {
@@ -26,6 +35,7 @@ public class MathTests
         Assert.That(JVector.MaxAbs(delta.GetColumn(1)), Is.LessThan(1e-06f));
         Assert.That(JVector.MaxAbs(delta.GetColumn(2)), Is.LessThan(1e-06f));
     }
+#endif
 
     [TestCase]
     public static void TransformTests()

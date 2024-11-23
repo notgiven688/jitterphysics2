@@ -59,6 +59,14 @@ public static unsafe class MemoryHelper
     {
     }
 
+    /// <summary>
+    /// A block of 96 bytes of memory.
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, Size = 96)]
+    public struct MemBlock96
+    {
+    }
+
     public static T* AllocateHeap<T>(int num) where T : unmanaged
     {
         return (T*)AllocateHeap(num * sizeof(T));

@@ -25,6 +25,14 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.SoftBodies;
 
 public class BroadPhaseCollisionFilter : IBroadPhaseFilter
@@ -52,7 +60,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
             bool colliding = NarrowPhase.MPREPA(i1, i2,
                 JQuaternion.Identity, JVector.Zero,
-                out JVector pA, out JVector pB, out JVector normal, out float penetration);
+                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
 
             if (!colliding) return false;
 
@@ -72,7 +80,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             if (!i1.SoftBody.IsActive && !rb.Data.IsActive) return false;
 
             bool colliding = NarrowPhase.MPREPA(i1, (proxyB as RigidBodyShape)!, rb.Orientation, rb.Position,
-                out JVector pA, out JVector pB, out JVector normal, out float penetration);
+                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
 
             if (!colliding) return false;
 
@@ -91,7 +99,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             if (!i2.SoftBody.IsActive && !ra.Data.IsActive) return false;
 
             bool colliding = NarrowPhase.MPREPA(i2, (proxyA as RigidBodyShape)!, ra.Orientation, ra.Position,
-                out JVector pA, out JVector pB, out JVector normal, out float penetration);
+                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
 
             if (!colliding) return false;
 

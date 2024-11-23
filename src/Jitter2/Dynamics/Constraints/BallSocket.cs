@@ -27,6 +27,14 @@ using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
@@ -42,7 +50,7 @@ public unsafe class BallSocket : Constraint
         internal int _internal;
 
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -54,8 +62,8 @@ public unsafe class BallSocket : Constraint
         public JVector R1;
         public JVector R2;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
         public JMatrix EffectiveMass;
         public JVector AccumulatedImpulse;
@@ -93,7 +101,7 @@ public unsafe class BallSocket : Constraint
         data.Softness = 0.00f;
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -113,7 +121,7 @@ public unsafe class BallSocket : Constraint
                              body2.InverseMass * JMatrix.Identity +
                              JMatrix.Multiply(cr2, JMatrix.MultiplyTransposed(body2.InverseInertiaWorld, cr2));
 
-        float softness = data.Softness * idt;
+        Real softness = data.Softness * idt;
 
         data.EffectiveMass.M11 += softness;
         data.EffectiveMass.M22 += softness;
@@ -132,13 +140,13 @@ public unsafe class BallSocket : Constraint
         body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
@@ -146,7 +154,7 @@ public unsafe class BallSocket : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

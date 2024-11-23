@@ -26,6 +26,14 @@ using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.SoftBodies;
 
 public abstract class SoftBodyShape : Shape
@@ -33,7 +41,7 @@ public abstract class SoftBodyShape : Shape
     public abstract RigidBody GetClosest(in JVector pos);
     public SoftBody SoftBody { get; internal init; } = null!;
 
-    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
     }

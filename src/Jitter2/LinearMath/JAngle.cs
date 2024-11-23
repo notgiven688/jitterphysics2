@@ -23,15 +23,23 @@
 
 using System;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A 32-bit floating point variable representing an angle. This structure exists to eliminate
+/// A 32-bit Realing point variable representing an angle. This structure exists to eliminate
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
 public struct JAngle : IEquatable<JAngle>
 {
-    public float Radiant { get; set; }
+    public Real Radiant { get; set; }
 
     public readonly override bool Equals(object? obj)
     {
@@ -48,23 +56,23 @@ public struct JAngle : IEquatable<JAngle>
         return Radiant.GetHashCode();
     }
 
-    public float Degree
+    public Real Degree
     {
-        readonly get => Radiant / MathF.PI * 180.0f;
-        set => Radiant = value / 180.0f * MathF.PI;
+        readonly get => Radiant / MathR.PI * 180.0f;
+        set => Radiant = value / 180.0f * MathR.PI;
     }
 
-    public static JAngle FromRadiant(float rad)
+    public static JAngle FromRadiant(Real rad)
     {
         return new JAngle { Radiant = rad };
     }
 
-    public static JAngle FromDegree(float deg)
+    public static JAngle FromDegree(Real deg)
     {
         return new JAngle { Degree = deg };
     }
 
-    public static explicit operator JAngle(float angle)
+    public static explicit operator JAngle(Real angle)
     {
         return FromRadiant(angle);
     }
@@ -86,35 +94,35 @@ public struct JAngle : IEquatable<JAngle>
 
     public static bool operator ==(JAngle l, JAngle r)
     {
-        return (float)l == (float)r;
+        return (Real)l == (Real)r;
     }
 
     public static bool operator !=(JAngle l, JAngle r)
     {
-        return (float)l != (float)r;
+        return (Real)l != (Real)r;
     }
 
     public static bool operator <(JAngle l, JAngle r)
     {
-        return (float)l < (float)r;
+        return (Real)l < (Real)r;
     }
 
     public static bool operator >(JAngle l, JAngle r)
     {
-        return (float)l > (float)r;
+        return (Real)l > (Real)r;
     }
 
     public static bool operator >=(JAngle l, JAngle r)
     {
-        return (float)l >= (float)r;
+        return (Real)l >= (Real)r;
     }
 
     public static bool operator <=(JAngle l, JAngle r)
     {
-        return (float)l <= (float)r;
+        return (Real)l <= (Real)r;
     }
 
-    public static explicit operator float(JAngle angle)
+    public static explicit operator Real(JAngle angle)
     {
         return angle.Radiant;
     }

@@ -21,6 +21,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#if !USE_DOUBLE_PRECISION
+
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -896,3 +898,5 @@ public struct ContactData
         }
     }
 }
+
+#endif

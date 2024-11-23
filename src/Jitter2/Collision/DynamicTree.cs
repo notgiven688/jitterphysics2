@@ -28,6 +28,14 @@ using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using Jitter2.Parallelization;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision;
 
 /// <summary>
@@ -38,7 +46,7 @@ public interface IUpdatableBoundingBox
     /// <summary>
     /// Updates the bounding box.
     /// </summary>
-    public void UpdateWorldBoundingBox(float dt);
+    public void UpdateWorldBoundingBox(Real dt);
 }
 
 /// <summary>
@@ -65,7 +73,7 @@ public interface IRayCastable
     /// <returns>
     /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
     /// </returns>
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda);
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda);
 }
 
 /// <summary>
@@ -92,13 +100,13 @@ public partial class DynamicTree
     /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
     /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * alpha, where alpha is a pseudo-random number in the range [1,2].
     /// </summary>
-    public const float ExpandFactor = 0.1f;
+    public const Real ExpandFactor = 0.1f;
 
     /// <summary>
     /// Specifies a small additional expansion of the bounding box in the AABB tree structure to prevent
     /// the creation of bounding boxes with zero volume.
     /// </summary>
-    public const float ExpandEps = 0.01f;
+    public const Real ExpandEps = 0.01f;
 
     /// <summary>
     /// Represents a node in the AABB tree.
@@ -181,7 +189,7 @@ public partial class DynamicTree
     /// Updates all entities that are marked as active in the active list.
     /// </summary>
     /// <param name="multiThread">A boolean indicating whether to perform a multi-threaded update.</param>
-    public void Update(bool multiThread, float dt)
+    public void Update(bool multiThread, Real dt)
     {
         long time = Stopwatch.GetTimestamp();
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -259,7 +267,7 @@ public partial class DynamicTree
         }
     }
 
-    private float step_dt;
+    private Real step_dt;
     
     private void UpdateBoundingBoxesCallback(Parallel.Batch batch)
     {
@@ -473,15 +481,15 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="sweeps">The number of times to iterate over all proxies in the tree. Must be greater than zero.</param>
     /// <param name="chance">The chance of a proxy to be removed and re-added to the tree for each sweep. Must be between 0 and 1.</param>
-    public void Optimize(int sweeps = 100, float chance = 0.01f)
+    public void Optimize(int sweeps = 100, Real chance = 0.01f)
     {
         optimizeRandom ??= new Random(0);
         Optimize(optimizeRandom, sweeps, chance);
     }
 
-    /// <inheritdoc cref="Optimize(int, float)" />
+    /// <inheritdoc cref="Optimize(int, Real)" />
     /// <param name="random">Provide an instance of a random class.</param>
-    public void Optimize(Random random, int sweeps, float chance)
+    public void Optimize(Random random, int sweeps, Real chance)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
         if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
@@ -641,7 +649,7 @@ public partial class DynamicTree
         box.Max.Z += ExpandEps;
     }
 
-    private static float GenerateRandom(ulong seed)
+    private static Real GenerateRandom(ulong seed)
     {
         const uint a = 21_687_443;
         const uint b = 35_253_893;
@@ -651,7 +659,7 @@ public partial class DynamicTree
         seed ^= seed << 5;
 
         uint randomBits = (uint)seed * a + b;
-        return MathF.Abs((float)randomBits / uint.MaxValue);
+        return MathR.Abs((Real)randomBits / uint.MaxValue);
     }
 
     private void InternalAddProxy(IDynamicTreeProxy proxy)
@@ -659,7 +667,7 @@ public partial class DynamicTree
         JBBox box = proxy.WorldBoundingBox;
 
         int index = AllocateNode();
-        float pseudoRandomExt = GenerateRandom((ulong)index);
+        Real pseudoRandomExt = GenerateRandom((ulong)index);
 
         ExpandBoundingBox(ref box, proxy.Velocity * ExpandFactor * (1.0f + pseudoRandomExt));
 

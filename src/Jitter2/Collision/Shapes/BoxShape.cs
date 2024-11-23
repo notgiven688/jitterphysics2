@@ -24,6 +24,14 @@
 using System;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -60,7 +68,7 @@ public class BoxShape : RigidBodyShape
     /// Creates a cube shape with the specified side length.
     /// </summary>
     /// <param name="size">The length of each side of the cube.</param>
-    public BoxShape(float size)
+    public BoxShape(Real size)
     {
         halfSize = new JVector(size * 0.5f);
         UpdateWorldBoundingBox();
@@ -72,7 +80,7 @@ public class BoxShape : RigidBodyShape
     /// <param name="length">The length of the box.</param>
     /// <param name="height">The height of the box.</param>
     /// <param name="width">The width of the box.</param>
-    public BoxShape(float length, float height, float width)
+    public BoxShape(Real length, Real height, Real width)
     {
         halfSize = 0.5f * new JVector(length, height, width);
         UpdateWorldBoundingBox();
@@ -85,9 +93,9 @@ public class BoxShape : RigidBodyShape
         result.Z = Math.Sign(direction.Z) * halfSize.Z;
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
-        float epsilon = 1e-22f;
+        Real epsilon = 1e-22f;
 
         JVector min = -halfSize;
         JVector max = halfSize;
@@ -95,13 +103,13 @@ public class BoxShape : RigidBodyShape
         normal = JVector.Zero;
         lambda = 0.0f;
 
-        float exit = float.PositiveInfinity;
+        Real exit = Real.PositiveInfinity;
 
-        if (MathF.Abs(direction.X) > epsilon)
+        if (MathR.Abs(direction.X) > epsilon)
         {
-            float ix = 1.0f / direction.X;
-            float t0 = (min.X - origin.X) * ix;
-            float t1 = (max.X - origin.X) * ix;
+            Real ix = 1.0f / direction.X;
+            Real t0 = (min.X - origin.X) * ix;
+            Real t1 = (max.X - origin.X) * ix;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -120,11 +128,11 @@ public class BoxShape : RigidBodyShape
             return false;
         }
 
-        if (MathF.Abs(direction.Y) > epsilon)
+        if (MathR.Abs(direction.Y) > epsilon)
         {
-            float iy = 1.0f / direction.Y;
-            float t0 = (min.Y - origin.Y) * iy;
-            float t1 = (max.Y - origin.Y) * iy;
+            Real iy = 1.0f / direction.Y;
+            Real t0 = (min.Y - origin.Y) * iy;
+            Real t1 = (max.Y - origin.Y) * iy;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -143,11 +151,11 @@ public class BoxShape : RigidBodyShape
             return false;
         }
 
-        if (MathF.Abs(direction.Z) > epsilon)
+        if (MathR.Abs(direction.Z) > epsilon)
         {
-            float iz = 1.0f / direction.Z;
-            float t0 = (min.Z - origin.Z) * iz;
-            float t1 = (max.Z - origin.Z) * iz;
+            Real iz = 1.0f / direction.Z;
+            Real t0 = (min.Z - origin.Z) * iz;
+            Real t1 = (max.Z - origin.Z) * iz;
 
             if (t0 > t1) (t0, t1) = (t1, t0);
 
@@ -181,7 +189,7 @@ public class BoxShape : RigidBodyShape
         box.Max = position + ths;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         JVector size = halfSize * 2.0f;
         mass = size.X * size.Y * size.Z;

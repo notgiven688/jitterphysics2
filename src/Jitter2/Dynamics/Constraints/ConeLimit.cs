@@ -28,6 +28,14 @@ using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
@@ -41,26 +49,31 @@ public unsafe class ConeLimit : Constraint
     {
         internal int _internal;
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
 
         public JVector LocalAxis1, LocalAxis2;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
-        public float EffectiveMass;
-        public float AccumulatedImpulse;
-        public float Bias;
+        public Real EffectiveMass;
+        public Real AccumulatedImpulse;
+        public Real Bias;
 
-        public float LimitLow;
-        public float LimitHigh;
+        public Real LimitLow;
+        public Real LimitHigh;
 
         public short Clamp;
 
+
+#if USE_DOUBLE_PRECISION
+        public MemoryHelper.MemBlock96 J0;
+#else
         public MemoryHelper.MemBlock48 J0;
+#endif
     }
 
     private JHandle<ConeLimitData> handle;
@@ -91,11 +104,11 @@ public unsafe class ConeLimit : Constraint
         data.Softness = 0.001f;
         data.BiasFactor = 0.2f;
 
-        float lower = (float)limit.From;
-        float upper = (float)limit.To;
+        Real lower = (Real)limit.From;
+        Real upper = (Real)limit.To;
 
-        data.LimitLow = MathF.Cos(lower);
-        data.LimitHigh = MathF.Cos(upper);
+        data.LimitLow = MathR.Cos(lower);
+        data.LimitHigh = MathR.Cos(upper);
     }
 
     public JAngle Angle
@@ -110,11 +123,11 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector a1);
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector a2);
 
-            return (JAngle)MathF.Acos(JVector.Dot(a1, a2));
+            return (JAngle)MathR.Acos(JVector.Dot(a1, a2));
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
 
@@ -131,7 +144,7 @@ public unsafe class ConeLimit : Constraint
 
         data.Clamp = 0;
 
-        float error = JVector.Dot(a1, a2);
+        Real error = JVector.Dot(a1, a2);
 
         if (error < data.LimitHigh)
         {
@@ -165,21 +178,21 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public float Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -189,25 +202,25 @@ public unsafe class ConeLimit : Constraint
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 2);
 
-        float jv =
+        Real jv =
             body1.AngularVelocity * jacobian[0] +
             body2.AngularVelocity * jacobian[1];
 
-        float softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        Real softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
 
-        float lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
+        Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        float oldacc = data.AccumulatedImpulse;
+        Real oldacc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse = MathF.Min(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, 0.0f);
         }
         else
         {
-            data.AccumulatedImpulse = MathF.Max(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, 0.0f);
         }
 
         lambda = data.AccumulatedImpulse - oldacc;

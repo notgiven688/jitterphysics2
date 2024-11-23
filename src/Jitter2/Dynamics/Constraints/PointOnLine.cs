@@ -28,6 +28,14 @@ using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
@@ -43,7 +51,7 @@ public unsafe class PointOnLine : Constraint
         internal int _internal;
 
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -53,17 +61,17 @@ public unsafe class PointOnLine : Constraint
         public JVector LocalAnchor1;
         public JVector LocalAnchor2;
 
-        public float BiasFactor;
-        public float LimitBias;
-        public float Softness;
-        public float LimitSoftness;
+        public Real BiasFactor;
+        public Real LimitBias;
+        public Real Softness;
+        public Real LimitSoftness;
 
         public JMatrix EffectiveMass;
         public JVector AccumulatedImpulse;
         public JVector Bias;
 
-        public float Min;
-        public float Max;
+        public Real Min;
+        public Real Max;
 
         public ushort Clamp;
 
@@ -117,7 +125,7 @@ public unsafe class PointOnLine : Constraint
         (data.Min, data.Max) = limit;
     }
 
-    public float Distance
+    public Real Distance
     {
         get
         {
@@ -140,7 +148,7 @@ public unsafe class PointOnLine : Constraint
     }
 
     [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -252,13 +260,13 @@ public unsafe class PointOnLine : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
@@ -266,20 +274,20 @@ public unsafe class PointOnLine : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public float LimitSoftness
+    public Real LimitSoftness
     {
         get => handle.Data.LimitSoftness;
         set => handle.Data.LimitSoftness = value;
     }
 
-    public float LimitBias
+    public Real LimitBias
     {
         get => handle.Data.LimitBias;
         set => handle.Data.LimitBias = value;
     }
 
     [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -339,9 +347,9 @@ public unsafe class PointOnLine : Constraint
         data.AccumulatedImpulse += lambda;
 
         if ((data.Clamp & 1) != 0)
-            data.AccumulatedImpulse.Z = MathF.Min(data.AccumulatedImpulse.Z, 0.0f);
+            data.AccumulatedImpulse.Z = MathR.Min(data.AccumulatedImpulse.Z, 0.0f);
         else if ((data.Clamp & 2) != 0)
-            data.AccumulatedImpulse.Z = MathF.Max(data.AccumulatedImpulse.Z, 0.0f);
+            data.AccumulatedImpulse.Z = MathR.Max(data.AccumulatedImpulse.Z, 0.0f);
         else
         {
             data.AccumulatedImpulse.Z = 0.0f;

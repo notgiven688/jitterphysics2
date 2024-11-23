@@ -5,6 +5,14 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class Octree
@@ -149,7 +157,7 @@ public class Octree
         JVector delta = box.Max - box.Min;
         JVector center = box.Center;
 
-        float max = MathF.Max(MathF.Max(delta.X, delta.Y), delta.Z);
+        Real max = MathR.Max(MathR.Max(delta.X, delta.Y), delta.Z);
         delta = new JVector(max, max, max);
 
         box.Max = center + delta * 0.5f;
@@ -193,7 +201,7 @@ public class Octree
         JVector.Add(result.Min, parent.Min, out result.Min);
         JVector.Add(result.Min, dims, out result.Max);
 
-        const float margin = 1e-6f; // expand boxes by a tiny amount
+        const Real margin = 1e-6f; // expand boxes by a tiny amount
         JVector.Multiply(dims, margin, out var temp);
         JVector.Subtract(result.Min, temp, out result.Min);
         JVector.Add(result.Max, temp, out result.Max);

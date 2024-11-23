@@ -31,6 +31,14 @@ using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 /// <summary>
@@ -44,36 +52,36 @@ public class RayCastCar
 
     public RigidBody Body { get; }
 
-    private float destSteering;
-    private float destAccelerate;
-    private float steering;
-    private float accelerate;
+    private Real destSteering;
+    private Real destAccelerate;
+    private Real steering;
+    private Real accelerate;
 
     /// <summary>
     /// The maximum steering angle in degrees
     /// for both front wheels
     /// </summary>
-    public float SteerAngle { get; set; }
+    public Real SteerAngle { get; set; }
 
     /// <summary>
     /// The maximum torque which is applied to the
     /// car when accelerating.
     /// </summary>
-    public float DriveTorque { get; set; }
+    public Real DriveTorque { get; set; }
 
     /// <summary>
     /// Lower/Higher the acceleration of the car.
     /// </summary>
-    public float AccelerationRate { get; set; }
+    public Real AccelerationRate { get; set; }
 
     /// <summary>
     /// Lower/Higher the steering rate of the car.
     /// </summary>
-    public float SteerRate { get; set; }
+    public Real SteerRate { get; set; }
 
     // don't damp perfect, allow some bounciness.
-    private const float dampingFrac = 0.8f;
-    private const float springFrac = 0.45f;
+    private const Real dampingFrac = 0.8f;
+    private const Real springFrac = 0.45f;
 
     /// <summary>
     /// Initializes a new instance of the DefaultCar class.
@@ -86,7 +94,7 @@ public class RayCastCar
 
         // set some default values
         AccelerationRate = 10f;
-        SteerAngle = (float)JAngle.FromDegree(40.0f);
+        SteerAngle = (Real)JAngle.FromDegree(40.0f);
         DriveTorque = 340.0f;
         SteerRate = 5.0f;
 
@@ -98,12 +106,12 @@ public class RayCastCar
         Body.AddShape(tfs1);
         Body.AddShape(tfs2);
 
-        float mass = 100.0f;
+        Real mass = 100.0f;
         JVector sides = new JVector(3.1f, 1.0f, 8.0f);
 
-        float Ixx = (1.0f / 12.0f) * mass * (sides.Y * sides.Y + sides.Z * sides.Z);
-        float Iyy = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Z * sides.Z);
-        float Izz = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Y * sides.Y);
+        Real Ixx = (1.0f / 12.0f) * mass * (sides.Y * sides.Y + sides.Z * sides.Z);
+        Real Iyy = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Z * sides.Z);
+        Real Izz = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Y * sides.Y);
 
         JMatrix inertia = new JMatrix(Ixx, 0, 0, 0, Iyy, 0, 0, 0, Izz);
         JVector r = new JVector(0, 0, 0);
@@ -130,14 +138,14 @@ public class RayCastCar
     /// </summary>
     public void AdjustWheelValues()
     {
-        float mass = Body.Mass / 4.0f;
-        float wheelMass = Body.Mass * 0.03f;
+        Real mass = Body.Mass / 4.0f;
+        Real wheelMass = Body.Mass * 0.03f;
 
         foreach (Wheel w in Wheels)
         {
             w.Inertia = 0.5f * (w.Radius * w.Radius) * wheelMass;
             w.Spring = mass * world.Gravity.Length() / (w.WheelTravel * springFrac);
-            w.Damping = 2.0f * (float)Math.Sqrt(w.Spring * Body.Mass) * 0.25f * dampingFrac;
+            w.Damping = 2.0f * (Real)Math.Sqrt(w.Spring * Body.Mass) * 0.25f * dampingFrac;
         }
     }
 
@@ -159,30 +167,30 @@ public class RayCastCar
     /// the maximum steer angle by setting <see cref="SteerAngle" />. The speed of steering
     /// change is adjusted by <see cref="SteerRate" />.
     /// </param>
-    public void SetInput(float accelerate, float steer)
+    public void SetInput(Real accelerate, Real steer)
     {
         destAccelerate = accelerate;
         destSteering = steer;
     }
 
-    public void Step(float timestep)
+    public void Step(Real timestep)
     {
         foreach (Wheel w in Wheels) w.PreStep(timestep);
 
-        float deltaAccelerate = timestep * AccelerationRate;
+        Real deltaAccelerate = timestep * AccelerationRate;
 
-        float deltaSteering = timestep * SteerRate;
+        Real deltaSteering = timestep * SteerRate;
 
-        float dAccelerate = destAccelerate - accelerate;
+        Real dAccelerate = destAccelerate - accelerate;
         dAccelerate = Math.Clamp(dAccelerate, -deltaAccelerate, deltaAccelerate);
 
-        float dSteering = destSteering - steering;
+        Real dSteering = destSteering - steering;
         dSteering = Math.Clamp(dSteering, -deltaSteering, deltaSteering);
 
         accelerate += dAccelerate;
         steering += dSteering;
 
-        float maxTorque = DriveTorque * 0.5f;
+        Real maxTorque = DriveTorque * 0.5f;
 
         foreach (Wheel w in Wheels)
         {
@@ -197,7 +205,7 @@ public class RayCastCar
             }
         }
 
-        float alpha = SteerAngle * steering;
+        Real alpha = SteerAngle * steering;
 
         Wheels[0].SteerAngle = alpha;
         Wheels[1].SteerAngle = alpha;

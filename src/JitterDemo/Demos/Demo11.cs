@@ -6,6 +6,14 @@ using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class Demo11 : IDemo
@@ -49,8 +57,8 @@ public class Demo11 : IDemo
 
     public void Draw()
     {
-        float ekin = 0.5f * (b0.Velocity.LengthSquared() + b1.Velocity.LengthSquared());
-        float epot = -world.Gravity.Y * (b0.Position.Y + b1.Position.Y);
+        Real ekin = 0.5f * (b0.Velocity.LengthSquared() + b1.Velocity.LengthSquared());
+        Real epot = -world.Gravity.Y * (b0.Position.Y + b1.Position.Y);
 
         Console.WriteLine($"Energy: {ekin + epot} Kinetic {ekin}; Potential {epot}");
 

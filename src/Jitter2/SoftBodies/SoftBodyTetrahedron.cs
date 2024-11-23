@@ -24,6 +24,14 @@
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.SoftBodies;
 
 public class SoftBodyTetrahedron : SoftBodyShape
@@ -61,12 +69,12 @@ public class SoftBodyTetrahedron : SoftBodyShape
 
     public override RigidBody GetClosest(in JVector pos)
     {
-        float dist = float.MaxValue;
+        Real dist = Real.MaxValue;
         int closest = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            float len = (pos - Vertices[i].Position).LengthSquared();
+            Real len = (pos - Vertices[i].Position).LengthSquared();
             if (len < dist)
             {
                 dist = len;
@@ -79,12 +87,12 @@ public class SoftBodyTetrahedron : SoftBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float maxDot = float.MinValue;
+        Real maxDot = Real.MinValue;
         int furthest = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            float dot = JVector.Dot(direction, Vertices[i].Position);
+            Real dot = JVector.Dot(direction, Vertices[i].Position);
             if (dot > maxDot)
             {
                 maxDot = dot;
@@ -101,9 +109,9 @@ public class SoftBodyTetrahedron : SoftBodyShape
                          Vertices[2].Position + Vertices[3].Position);
     }
 
-    public override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public override void UpdateWorldBoundingBox(Real dt = 0.0f)
     {
-        const float extraMargin = 0.01f;
+        const Real extraMargin = 0.01f;
 
         JBBox box = JBBox.SmallBox;
         box.AddPoint(Vertices[0].Position);

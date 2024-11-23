@@ -24,6 +24,14 @@
 using System;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -31,13 +39,13 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class ConeShape : RigidBodyShape
 {
-    private float radius;
-    private float height;
+    private Real radius;
+    private Real height;
 
     /// <summary>
     /// Gets or sets the radius of the cone at its base.
     /// </summary>
-    public float Radius
+    public Real Radius
     {
         get => radius;
         set
@@ -50,7 +58,7 @@ public class ConeShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cone.
     /// </summary>
-    public float Height
+    public Real Height
     {
         get => height;
         set
@@ -65,7 +73,7 @@ public class ConeShape : RigidBodyShape
     /// </summary>
     /// <param name="radius">The radius of the cone at its base.</param>
     /// <param name="height">The height of the cone.</param>
-    public ConeShape(float radius = 0.5f, float height = 1.0f)
+    public ConeShape(Real radius = 0.5f, Real height = 1.0f)
     {
         this.radius = radius;
         this.height = height;
@@ -74,17 +82,17 @@ public class ConeShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        const float ZeroEpsilon = 1e-12f;
+        const Real ZeroEpsilon = 1e-12f;
         // cone = disk + point
 
         // center of mass of a cone is at 0.25 height
         JVector ndir = direction;
         ndir.Y = 0.0f;
-        float ndir2 = ndir.LengthSquared();
+        Real ndir2 = ndir.LengthSquared();
 
         if (ndir2 > ZeroEpsilon)
         {
-            ndir *= radius / MathF.Sqrt(ndir2);
+            ndir *= radius / MathR.Sqrt(ndir2);
         }
 
         ndir.Y = -0.25f * height;
@@ -107,35 +115,35 @@ public class ConeShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const float ZeroEpsilon = 1e-12f;
+        const Real ZeroEpsilon = 1e-12f;
 
         JVector upa = orientation.GetBasisY();
 
-        float xx = upa.X * upa.X;
-        float yy = upa.Y * upa.Y;
-        float zz = upa.Z * upa.Z;
+        Real xx = upa.X * upa.X;
+        Real yy = upa.Y * upa.Y;
+        Real zz = upa.Z * upa.Z;
 
-        float l1 = yy + zz;
-        float l2 = xx + zz;
-        float l3 = xx + yy;
+        Real l1 = yy + zz;
+        Real l2 = xx + zz;
+        Real l3 = xx + yy;
 
-        float xext = 0, yext = 0, zext = 0;
+        Real xext = 0, yext = 0, zext = 0;
 
         if (l1 > ZeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l1);
+            Real sl = 1.0f / MathR.Sqrt(l1);
             xext = (yy + zz) * sl * radius;
         }
 
         if (l2 > ZeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l2);
+            Real sl = 1.0f / MathR.Sqrt(l2);
             yext = (xx + zz) * sl * radius;
         }
 
         if (l3 > ZeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l3);
+            Real sl = 1.0f / MathR.Sqrt(l3);
             zext = (xx + yy) * sl * radius;
         }
 
@@ -151,9 +159,9 @@ public class ConeShape : RigidBodyShape
         box.Max += position;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        mass = 1.0f / 3.0f * MathF.PI * radius * radius * height;
+        mass = 1.0f / 3.0f * MathR.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
         inertia.M11 = mass * (3.0f / 20.0f * radius * radius + 3.0f / 80.0f * height * height);

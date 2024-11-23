@@ -24,6 +24,14 @@
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 public abstract class RigidBodyShape : Shape
@@ -35,7 +43,7 @@ public abstract class RigidBodyShape : Shape
 
     public sealed override JVector Velocity => RigidBody?.Velocity ?? JVector.Zero;
 
-    public sealed override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public sealed override void UpdateWorldBoundingBox(Real dt = 0.0f)
     {
         JBBox box;
 
@@ -63,7 +71,7 @@ public abstract class RigidBodyShape : Shape
     /// constructed using the support map function.
     /// </summary>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
     }
@@ -89,13 +97,13 @@ public abstract class RigidBodyShape : Shape
     /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
     /// </returns>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         return NarrowPhase.RayCast(this, origin, direction, out lambda, out normal);
     }
 
     [ReferenceFrame(ReferenceFrame.World)]
-    public sealed override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public sealed override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref var data = ref RigidBody.Data;
 

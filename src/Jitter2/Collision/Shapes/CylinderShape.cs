@@ -24,6 +24,14 @@
 using System;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -31,13 +39,13 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class CylinderShape : RigidBodyShape
 {
-    private float radius;
-    private float height;
+    private Real radius;
+    private Real height;
 
     /// <summary>
     /// Gets or sets the radius of the cylinder.
     /// </summary>
-    public float Radius
+    public Real Radius
     {
         get => radius;
         set
@@ -50,7 +58,7 @@ public class CylinderShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cylinder.
     /// </summary>
-    public float Height
+    public Real Height
     {
         get => height;
         set
@@ -65,7 +73,7 @@ public class CylinderShape : RigidBodyShape
     /// </summary>
     /// <param name="height">The height of the cylinder.</param>
     /// <param name="radius">The radius of the cylinder at its base.</param>
-    public CylinderShape(float height, float radius)
+    public CylinderShape(Real height, Real radius)
     {
         this.radius = radius;
         this.height = height;
@@ -79,7 +87,7 @@ public class CylinderShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float sigma = (float)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
+        Real sigma = (Real)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
 
         if (sigma > 0.0f)
         {
@@ -97,35 +105,35 @@ public class CylinderShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const float zeroEpsilon = 1e-12f;
+        const Real zeroEpsilon = 1e-12f;
 
         JVector upa = orientation.GetBasisY();
 
-        float xx = upa.X * upa.X;
-        float yy = upa.Y * upa.Y;
-        float zz = upa.Z * upa.Z;
+        Real xx = upa.X * upa.X;
+        Real yy = upa.Y * upa.Y;
+        Real zz = upa.Z * upa.Z;
 
-        float l1 = yy + zz;
-        float l2 = xx + zz;
-        float l3 = xx + yy;
+        Real l1 = yy + zz;
+        Real l2 = xx + zz;
+        Real l3 = xx + yy;
 
-        float xext = 0, yext = 0, zext = 0;
+        Real xext = 0, yext = 0, zext = 0;
 
         if (l1 > zeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l1);
+            Real sl = 1.0f / MathR.Sqrt(l1);
             xext = (yy + zz) * sl * radius;
         }
 
         if (l2 > zeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l2);
+            Real sl = 1.0f / MathR.Sqrt(l2);
             yext = (xx + zz) * sl * radius;
         }
 
         if (l3 > zeroEpsilon)
         {
-            float sl = 1.0f / MathF.Sqrt(l3);
+            Real sl = 1.0f / MathR.Sqrt(l3);
             zext = (xx + yy) * sl * radius;
         }
 
@@ -138,9 +146,9 @@ public class CylinderShape : RigidBodyShape
         box.Max = position + delta;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        mass = MathF.PI * radius * radius * height;
+        mass = MathR.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
 

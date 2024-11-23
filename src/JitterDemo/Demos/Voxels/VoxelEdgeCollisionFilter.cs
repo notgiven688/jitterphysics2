@@ -2,14 +2,22 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
 {
-    public float Threshold { get; set; } = 0.1f;
+    public Real Threshold { get; set; } = 0.1f;
 
     public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pAA, ref JVector pBB, ref JVector normal,
-        ref float penetration)
+        ref Real penetration)
     {
         VoxelShape? vs1 = shapeA as VoxelShape;
         VoxelShape? vs2 = shapeB as VoxelShape;
@@ -23,7 +31,7 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         VoxelShape vshape = c1 ? vs1! : vs2!;
 
 
-        float trsh = Threshold;
+        Real trsh = Threshold;
         uint nb = vshape.Neighbours;
 
         JVector cnormal = normal;

@@ -5,6 +5,14 @@ using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class Demo19 : IDemo
@@ -26,7 +34,7 @@ public class Demo19 : IDemo
                 Conversion.FromJitter(origin + dir));
 
             bool hit = world.DynamicTree.RayCast(origin, dir, null, null, out IDynamicTreeProxy? shape,
-                out JVector normal, out float frac);
+                out JVector normal, out Real frac);
 
             if (hit)
             {

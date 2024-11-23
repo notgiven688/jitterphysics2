@@ -23,6 +23,14 @@
 
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -136,7 +144,7 @@ public class TransformedShape : RigidBodyShape
         point = JVector.Transform(point, transformation) + translation;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         OriginalShape.CalculateMassInertia(out JMatrix oinertia, out JVector ocom, out mass);
 

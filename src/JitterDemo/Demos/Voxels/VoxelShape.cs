@@ -3,6 +3,14 @@ using System.Diagnostics;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 public class VoxelShape : RigidBodyShape
@@ -47,7 +55,7 @@ public class VoxelShape : RigidBodyShape
         box.Max = Position + JVector.One * 0.5f;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         // Do not try to calculate mass properties here.
         mass = 1;

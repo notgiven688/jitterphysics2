@@ -25,6 +25,14 @@ using System.Collections.Generic;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.SoftBodies;
 
 public class SoftBody
@@ -65,7 +73,7 @@ public class SoftBody
 
     private bool active = true;
 
-    protected virtual void WorldOnPostStep(float dt)
+    protected virtual void WorldOnPostStep(Real dt)
     {
         if (IsActive == active) return;
         active = IsActive;

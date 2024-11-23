@@ -25,6 +25,14 @@ using System;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.SoftBodies;
 
 public class SoftBodyTriangle : SoftBodyShape
@@ -37,9 +45,9 @@ public class SoftBodyTriangle : SoftBodyShape
     public RigidBody Vertex2 => v2;
     public RigidBody Vertex3 => v3;
 
-    private float halfThickness = 0.05f;
+    private Real halfThickness = 0.05f;
 
-    public float Thickness
+    public Real Thickness
     {
         get => halfThickness * 2.0f;
         set => halfThickness = value * 0.5f;
@@ -59,9 +67,9 @@ public class SoftBodyTriangle : SoftBodyShape
 
     public override RigidBody GetClosest(in JVector pos)
     {
-        float len1 = (pos - v1.Position).LengthSquared();
-        float len2 = (pos - v2.Position).LengthSquared();
-        float len3 = (pos - v3.Position).LengthSquared();
+        Real len1 = (pos - v1.Position).LengthSquared();
+        Real len2 = (pos - v2.Position).LengthSquared();
+        Real len3 = (pos - v3.Position).LengthSquared();
 
         if (len1 < len2 && len1 < len3)
         {
@@ -76,9 +84,9 @@ public class SoftBodyTriangle : SoftBodyShape
         return v3;
     }
 
-    public override void UpdateWorldBoundingBox(float dt = 0.0f)
+    public override void UpdateWorldBoundingBox(Real dt = 0.0f)
     {
-        float extraMargin = MathF.Max(halfThickness, 0.01f);
+        Real extraMargin = MathR.Max(halfThickness, 0.01f);
 
         JBBox box = JBBox.SmallBox;
 
@@ -100,8 +108,8 @@ public class SoftBodyTriangle : SoftBodyShape
         JVector b = v2.Position;
         JVector c = v3.Position;
 
-        float min = JVector.Dot(a, direction);
-        float dot = JVector.Dot(b, direction);
+        Real min = JVector.Dot(a, direction);
+        Real dot = JVector.Dot(b, direction);
 
         result = a;
 

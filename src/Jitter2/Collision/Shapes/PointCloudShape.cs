@@ -24,6 +24,14 @@
 using System.Collections.Generic;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -36,7 +44,7 @@ public class PointCloudShape : RigidBodyShape
 {
     private JBBox cachedBoundingBox;
     private JMatrix cachedInertia;
-    private float cachedMass;
+    private Real cachedMass;
     private JVector cachedCenter;
 
     private List<JVector> vertices;
@@ -103,7 +111,7 @@ public class PointCloudShape : RigidBodyShape
         ShapeHelper.CalculateMassInertia(this, out cachedInertia, out cachedCenter, out cachedMass);
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
         com = cachedCenter;
@@ -156,9 +164,9 @@ public class PointCloudShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float maxDotProduct = float.MinValue;
+        Real maxDotProduct = Real.MinValue;
         int maxIndex = 0;
-        float dotProduct;
+        Real dotProduct;
 
         for (int i = 0; i < vertices.Count; i++)
         {

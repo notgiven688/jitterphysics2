@@ -24,6 +24,14 @@
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision;
 
 /// <summary>
@@ -39,5 +47,5 @@ public interface INarrowPhaseFilter
     /// <returns>False if the collision should be filtered out, true otherwise.</returns>
     bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
         ref JVector pointA, ref JVector pointB,
-        ref JVector normal, ref float penetration);
+        ref JVector normal, ref Real penetration);
 }

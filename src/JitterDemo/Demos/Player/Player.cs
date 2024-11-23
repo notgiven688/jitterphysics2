@@ -6,6 +6,14 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace JitterDemo;
 
 // Shows one way to implement a character controller.
@@ -14,7 +22,7 @@ public class Player
     public RigidBody Body { get; }
     public AngularMotor AngularMovement { get; }
 
-    private readonly float capsuleHalfHeight;
+    private readonly Real capsuleHalfHeight;
     private readonly World world;
 
     public Player(World world, JVector position)
@@ -56,7 +64,7 @@ public class Player
         AngularMovement.MaximumForce = 1000;
     }
 
-    public void SetAngularInput(float rotate)
+    public void SetAngularInput(Real rotate)
     {
         AngularMovement.TargetVelocity = rotate;
     }
@@ -164,9 +172,9 @@ public class Player
         // ...or the more traditional way of using a raycast
 
         bool hit = world.RayCast(Body.Position, -JVector.UnitY, preFilter, null,
-            out floor, out JVector normal, out float lambda);
+            out floor, out JVector normal, out Real lambda);
 
-        float delta = lambda - capsuleHalfHeight;
+        Real delta = lambda - capsuleHalfHeight;
 
         hitPoint = Body.Position - JVector.UnitY * lambda;
         return (hit && delta < 0.04f && floor != null);
@@ -177,20 +185,20 @@ public class Player
     {
         if (CanJump(out RigidBody? floorBody, out JVector hitPoint))
         {
-            float newYVel = 5.0f;
+            Real newYVel = 5.0f;
 
             if (floorBody != null && floorBody != null)
             {
                 newYVel += floorBody.Velocity.Y;
             }
 
-            float deltaVel = Body.Velocity.Y - newYVel;
+            Real deltaVel = Body.Velocity.Y - newYVel;
 
             Body.Velocity = new JVector(Body.Velocity.X, newYVel, Body.Velocity.Z);
 
             if (floorBody != null && floorBody.IsStatic)
             {
-                float force = Body.Mass * deltaVel * 100.0f;
+                Real force = Body.Mass * deltaVel * 100.0f;
                 floorBody.SetActivationState(true);
                 floorBody.AddForce(JVector.UnitY * force, hitPoint);
             }
@@ -206,12 +214,12 @@ public class Player
 
         deltaMove *= 3.0f;
 
-        float deltaMoveLen = deltaMove.Length();
+        Real deltaMoveLen = deltaMove.Length();
 
         JVector bodyVel = Body.Velocity;
         bodyVel.Y = 0;
 
-        float bodyVelLen = bodyVel.Length();
+        Real bodyVelLen = bodyVel.Length();
 
         if (deltaMoveLen > 0.01f)
         {

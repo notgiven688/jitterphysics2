@@ -24,6 +24,14 @@
 using System;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -31,12 +39,12 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class SphereShape : RigidBodyShape
 {
-    private float radius;
+    private Real radius;
 
     /// <summary>
     /// Gets or sets the radius of the sphere.
     /// </summary>
-    public float Radius
+    public Real Radius
     {
         get => radius;
         set
@@ -51,7 +59,7 @@ public class SphereShape : RigidBodyShape
     /// The default radius is 1.0 units.
     /// </summary>
     /// <param name="radius">The radius of the sphere. Defaults to 1.0f.</param>
-    public SphereShape(float radius = 1.0f)
+    public SphereShape(Real radius = 1.0f)
     {
         this.radius = radius;
         UpdateWorldBoundingBox();
@@ -82,21 +90,21 @@ public class SphereShape : RigidBodyShape
         JVector.Add(box.Max, position, out box.Max);
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         normal = JVector.Zero;
         lambda = 0.0f;
 
-        float disq = 1.0f / direction.LengthSquared();
-        float p = JVector.Dot(direction, origin) * disq;
-        float d = p * p - (origin.LengthSquared() - radius * radius) * disq;
+        Real disq = 1.0f / direction.LengthSquared();
+        Real p = JVector.Dot(direction, origin) * disq;
+        Real d = p * p - (origin.LengthSquared() - radius * radius) * disq;
 
         if (d < 0.0f) return false;
 
-        float sqrtd = MathF.Sqrt(d);
+        Real sqrtd = MathR.Sqrt(d);
 
-        float t0 = -p - sqrtd;
-        float t1 = -p + sqrtd;
+        Real t0 = -p - sqrtd;
+        Real t1 = -p + sqrtd;
 
         if (t0 >= 0.0f)
         {
@@ -108,9 +116,9 @@ public class SphereShape : RigidBodyShape
         return t1 > 0.0f;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        mass = 4.0f / 3.0f * MathF.PI * radius * radius * radius;
+        mass = 4.0f / 3.0f * MathR.PI * radius * radius * radius;
 
         // (0,0,0) is the center of mass
         inertia = JMatrix.Identity;

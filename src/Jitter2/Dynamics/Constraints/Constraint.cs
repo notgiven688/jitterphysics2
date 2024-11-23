@@ -25,16 +25,28 @@ using System;
 using System.Runtime.InteropServices;
 using Jitter2.UnmanagedMemory;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Dynamics.Constraints;
 
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct SmallConstraintData
 {
+#if USE_DOUBLE_PRECISION
+    public const int ConstraintSize = 256;
+#else
     public const int ConstraintSize = 128;
+#endif
 
     internal int _internal;
-    public delegate*<ref SmallConstraintData, float, void> Iterate;
-    public delegate*<ref SmallConstraintData, float, void> PrepareForIteration;
+    public delegate*<ref SmallConstraintData, Real, void> Iterate;
+    public delegate*<ref SmallConstraintData, Real, void> PrepareForIteration;
 
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
@@ -43,11 +55,15 @@ public unsafe struct SmallConstraintData
 [StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
 public unsafe struct ConstraintData
 {
+#if USE_DOUBLE_PRECISION
+    public const int ConstraintSize = 512;
+#else
     public const int ConstraintSize = 256;
+#endif
 
     internal int _internal;
-    public delegate*<ref ConstraintData, float, void> Iterate;
-    public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+    public delegate*<ref ConstraintData, Real, void> Iterate;
+    public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
     public JHandle<RigidBodyData> Body1;
     public JHandle<RigidBodyData> Body2;
@@ -82,8 +98,8 @@ public abstract class Constraint : IDebugDrawable
     {
     }
 
-    protected unsafe delegate*<ref ConstraintData, float, void> iterate = null;
-    protected unsafe delegate*<ref ConstraintData, float, void> prepareForIteration = null;
+    protected unsafe delegate*<ref ConstraintData, Real, void> iterate = null;
+    protected unsafe delegate*<ref ConstraintData, Real, void> prepareForIteration = null;
 
     /// <summary>
     /// Enables or disables this constraint temporarily. For a complete removal of the constraint,

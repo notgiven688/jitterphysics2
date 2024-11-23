@@ -24,6 +24,14 @@
 using System;
 using Jitter2.LinearMath;
 
+#if USE_DOUBLE_PRECISION
+using Real = System.Double;
+using MathR = System.Math;
+#else
+using Real = System.Single;
+using MathR = System.MathF;
+#endif
+
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
@@ -47,7 +55,7 @@ public class TriangleShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
@@ -84,7 +92,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        const float extraMargin = 0.01f;
+        const Real extraMargin = 0.01f;
 
         ref var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
@@ -107,7 +115,7 @@ public class TriangleShape : RigidBodyShape
         box.Max += position + extra;
     }
 
-    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
@@ -135,8 +143,8 @@ public class TriangleShape : RigidBodyShape
         JVector b = Mesh.Vertices[triangle.IndexB];
         JVector c = Mesh.Vertices[triangle.IndexC];
 
-        float min = JVector.Dot(a, direction);
-        float dot = JVector.Dot(b, direction);
+        Real min = JVector.Dot(a, direction);
+        Real dot = JVector.Dot(b, direction);
 
         result = a;
 
