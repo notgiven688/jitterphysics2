@@ -1,14 +1,6 @@
 using System.Diagnostics;
 using JVector = Jitter2.LinearMath.JVector;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace JitterTests;
 
 public class CollisionTests

@@ -5,14 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace JitterDemo;
 
 public class Octree

@@ -29,14 +29,6 @@ using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace Jitter2.SoftBodies;
 
 /// <summary>

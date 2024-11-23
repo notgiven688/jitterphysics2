@@ -36,14 +36,6 @@ using Jitter2.Parallelization;
 using Jitter2.UnmanagedMemory;
 using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace Jitter2;
 
 public partial class World

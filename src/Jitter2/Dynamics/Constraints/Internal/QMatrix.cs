@@ -25,14 +25,6 @@ using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 using Jitter2.UnmanagedMemory;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 [assembly: InternalsVisibleTo("JitterTests")]
 
 namespace Jitter2.Dynamics.Constraints;

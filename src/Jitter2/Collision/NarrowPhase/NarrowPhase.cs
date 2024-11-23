@@ -27,14 +27,6 @@ using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace Jitter2.Collision;
 
 /// <summary>

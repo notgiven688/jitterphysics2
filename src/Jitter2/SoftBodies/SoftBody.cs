@@ -25,14 +25,6 @@ using System.Collections.Generic;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace Jitter2.SoftBodies;
 
 public class SoftBody

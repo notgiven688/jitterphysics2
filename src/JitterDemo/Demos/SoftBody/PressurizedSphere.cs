@@ -10,14 +10,6 @@ using Jitter2.LinearMath;
 using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace JitterDemo;
 
 public class SoftBodySphere : SoftBodyCloth

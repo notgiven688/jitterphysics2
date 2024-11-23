@@ -25,14 +25,6 @@ using System;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace Jitter2.SoftBodies;
 
 public class SoftBodyTriangle : SoftBodyShape

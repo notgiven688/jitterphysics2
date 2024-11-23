@@ -3,14 +3,6 @@ using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer.OpenGL;
 
-#if USE_DOUBLE_PRECISION
-using Real = System.Double;
-using MathR = System.Math;
-#else
-using Real = System.Single;
-using MathR = System.MathF;
-#endif
-
 namespace JitterDemo;
 
 public class Conversion
