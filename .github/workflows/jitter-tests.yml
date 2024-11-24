@@ -11,8 +11,12 @@ permissions:
   checks: write
   actions: write
 
+env:
+  CONFIGURATION: Release
+  TEST_RESULTS_DIR: ./TestResults
+
 jobs:
-  build:
+  build-and-test:
 
     runs-on: ubuntu-latest
 
@@ -21,36 +25,28 @@ jobs:
         working-directory: ./src/JitterTests
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build --no-restore
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Test
-      run: dotnet test -c Release --no-restore --test-adapter-path:. --logger "trx;LogFileName=test-results.trx"
+      - name: Build
+        run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
 
-    - name: TestReport
-      uses: dorny/test-reporter@v1
-      if: always()    # Run this step even if "Test" fails
-      with:
-        name: JitterTests
-        path: ./src/JitterTests/TestResults/test-results.trx
-        reporter: dotnet-trx
+      - name: Run Tests
+        run: |
+          mkdir -p ${{ env.TEST_RESULTS_DIR }}
+          
+          # Run Single Precision Tests
+          dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore \
+            --test-adapter-path:. --logger "trx;LogFileName=single-precision.trx"
 
-    - name: TestDP
-      run: dotnet test -c Release -p:DefineConstants="USE_DOUBLE_PRECISION" --no-restore --test-adapter-path:. --logger "trx;LogFileName=test-results-dp.trx"
-      if: always()    # Run this step even if "Test" fails
-
-    - name: TestReportDP
-      uses: dorny/test-reporter@v1
-      if: always()    # Run this step even if "TestDP" fails
-      with:
-        name: JitterTestsDP
-        path: ./src/JitterTests/TestResults/test-results-dp.trx
-        reporter: dotnet-trx
+          # Run Double Precision Tests
+          dotnet test --configuration ${{ env.CONFIGURATION }} -p:DefineConstants="USE_DOUBLE_PRECISION" --no-restore \
+            --test-adapter-path:. --logger "trx;LogFileName=double-precision.trx"
+        if: always()
