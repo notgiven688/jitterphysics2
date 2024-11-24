@@ -21,19 +21,26 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+// Uncomment here to build Jitter using double precision
+// --------------------------------------------------------
+// #define USE_DOUBLE_PRECISION
+// --------------------------------------------------------
+// Or use command line option, e.g.
+// dotnet build -c Release -p:DoublePrecision=true
+
 #if USE_DOUBLE_PRECISION
 
 global using Real = System.Double;
 global using MathR = System.Math;
 global using Vector = System.Runtime.Intrinsics.Vector256;
-global using VectorReal = System.Runtime.Intrinsics.Vector256<double>;
+global using VectorReal = System.Runtime.Intrinsics.Vector256<System.Double>;
 
 #else
 
 global using Real = System.Single;
 global using MathR = System.MathF;
 global using Vector = System.Runtime.Intrinsics.Vector128;
-global using VectorReal = System.Runtime.Intrinsics.Vector128<float>;
+global using VectorReal = System.Runtime.Intrinsics.Vector128<System.Single>;
 
 #endif
 
@@ -51,6 +58,6 @@ public static class Precision
     /// <summary>
     /// Gets a value indicating whether the engine is configured to use double-precision floating-point numbers.
     /// </summary>
-    public static bool IsDoublePrecision => sizeof(Real) == 8;
+    public static bool IsDoublePrecision => sizeof(Real) == sizeof(double);
 }
 

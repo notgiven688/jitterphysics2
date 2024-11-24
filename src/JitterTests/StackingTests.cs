@@ -24,10 +24,10 @@ public class StackingTests
         world.UseFullEPASolver = fullEPA;
 
         Real stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, (Real)1.0 / (Real)100.0, true);
-        Real delta = Math.Abs(stackHeight - last.Position.Y);
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), true);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
-        Assert.That(delta, Is.LessThan(1f));
+        Assert.That(delta, Is.LessThan(1));
     }
 
     [TestCase(0, 0, 0, true)]
@@ -40,8 +40,8 @@ public class StackingTests
         RigidBody last = Helper.BuildPyramidBox(world, new JVector(x, y, z));
 
         Real stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, (Real)1.0 / (Real)100.0, multiThread);
-        Real delta = Math.Abs(stackHeight - last.Position.Y);
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -58,8 +58,8 @@ public class StackingTests
         RigidBody last = Helper.BuildPyramidCylinder(world, new JVector(x, y, z));
 
         Real stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, (Real)1.0 / (Real)100.0, multiThread);
-        Real delta = Math.Abs(stackHeight - last.Position.Y);
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -74,8 +74,8 @@ public class StackingTests
         RigidBody last = Helper.BuildTower(world, JVector.Zero, 30);
 
         Real stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, (Real)1.0 / (Real)100.0, multiThread);
-        Real delta = Math.Abs(stackHeight - last.Position.Y);
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
