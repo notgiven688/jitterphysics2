@@ -47,11 +47,11 @@
   <!-- Separate configuration for Double Precision -->
   <PropertyGroup Condition="'$(DoublePrecision)' == 'true'">
     <DefineConstants>$(DefineConstants);USE_DOUBLE_PRECISION</DefineConstants>
-    <PackageId>Jitter2.DoublePrecision</PackageId> <!-- Custom package name for Double Precision -->
+    <PackageId>Jitter2.Double</PackageId> <!-- Custom package name for double precision -->
     <Description>
       Jitter Physics 2 with double precision enabled. This is an impulse-based dynamics engine with a semi-implicit Euler integrator.
     </Description>
-    <AssemblyName>Jitter2.DoublePrecision</AssemblyName> <!-- Custom assembly name -->
+    <AssemblyName>Jitter2.Double</AssemblyName> <!-- Custom assembly name -->
     <PackageTags>physics engine;collision;csharp;dotnet;double precision</PackageTags>
   </PropertyGroup>
 
