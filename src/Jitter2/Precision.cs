@@ -23,7 +23,7 @@
 
 // Uncomment here to build Jitter using double precision
 // --------------------------------------------------------
-// #define USE_DOUBLE_PRECISION
+#define USE_DOUBLE_PRECISION
 // --------------------------------------------------------
 // Or use command line option, e.g.
 // dotnet build -c Release -p:DoublePrecision=true
