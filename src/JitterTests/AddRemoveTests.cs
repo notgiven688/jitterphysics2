@@ -57,6 +57,8 @@ public class AddRemoveTests
     [TestCase]
     public void AddRemoveBodies()
     {
+        void TinyStep() => world.Step((Real)1e-12);
+
         var bA = world.CreateRigidBody();
         bA.AddShape(new SphereShape());
         var bB = world.CreateRigidBody();
@@ -69,23 +71,23 @@ public class AddRemoveTests
         bD.AddShape(new SphereShape());
         bD.AddShape(new SphereShape());
         Assert.That(world.DynamicTree.PotentialPairs.Count == 9);
-        world.Step((Real)1e-12);
+        TinyStep();
         Assert.That(world.DynamicTree.PotentialPairs.Count == 9);
         world.Remove(bB);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 5);
-        world.Step((Real)1e-12);
+        TinyStep();
         bD.RemoveShape(bD.Shapes[0]);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 3);
-        world.Step((Real)1e-12);
+        TinyStep();
         world.Remove(bD);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
-        world.Step((Real)1e-12);
+        TinyStep();
         world.NullBody.AddShape(new SphereShape());
-        world.Step((Real)1e-12);
+        TinyStep();
         Assert.That(world.DynamicTree.PotentialPairs.Count == 3);
-        world.Step((Real)1e-12);
+        TinyStep();
         world.Remove(world.NullBody);
         Assert.That(world.DynamicTree.PotentialPairs.Count == 1);
-        world.Step((Real)1e-12);
+        TinyStep();
     }
 }

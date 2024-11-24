@@ -613,10 +613,10 @@ public partial class World
             else
             {
                 // sync(fAngle) = sin(c*fAngle)/t
-                JVector.Multiply(avel, (Real)Math.Sin((Real)0.5 * angle * substep_dt) / angle, out axis);
+                JVector.Multiply(avel, MathR.Sin((Real)0.5 * angle * substep_dt) / angle, out axis);
             }
 
-            JQuaternion dorn = new(axis.X, axis.Y, axis.Z, (Real)Math.Cos(angle * substep_dt * (Real)0.5));
+            JQuaternion dorn = new(axis.X, axis.Y, axis.Z, MathR.Cos(angle * substep_dt * (Real)0.5));
             //JQuaternion.CreateFromMatrix(rigidBody.Orientation, out JQuaternion ornA);
             JQuaternion ornA = rigidBody.Orientation;
 

@@ -191,8 +191,8 @@ public struct JMatrix
     {
         JMatrix result = Identity;
 
-        Real c = (Real)Math.Cos(radians);
-        Real s = (Real)Math.Sin(radians);
+        Real c = MathR.Cos(radians);
+        Real s = MathR.Sin(radians);
 
         // [  1  0  0  ]
         // [  0  c -s  ]
@@ -209,8 +209,8 @@ public struct JMatrix
     {
         JMatrix result = Identity;
 
-        Real c = (Real)Math.Cos(radians);
-        Real s = (Real)Math.Sin(radians);
+        Real c = MathR.Cos(radians);
+        Real s = MathR.Sin(radians);
 
         // [  c  0  s  ]
         // [  0  1  0  ]
@@ -227,8 +227,8 @@ public struct JMatrix
     {
         JMatrix result = Identity;
 
-        Real c = (Real)Math.Cos(radians);
-        Real s = (Real)Math.Sin(radians);
+        Real c = MathR.Cos(radians);
+        Real s = MathR.Sin(radians);
 
         // [  c -s  0  ]
         // [  s  c  0  ]

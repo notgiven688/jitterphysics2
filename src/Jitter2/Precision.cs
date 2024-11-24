@@ -60,4 +60,3 @@ public static class Precision
     /// </summary>
     public static bool IsDoublePrecision => sizeof(Real) == sizeof(double);
 }
-
