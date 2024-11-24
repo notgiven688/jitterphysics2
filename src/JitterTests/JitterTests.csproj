@@ -20,4 +20,10 @@
         <ProjectReference Include="..\Jitter2\Jitter2.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="..\Jitter2\Precision.cs">
+        <Link>Precision.cs</Link>
+      </Compile>
+    </ItemGroup>
+
 </Project>

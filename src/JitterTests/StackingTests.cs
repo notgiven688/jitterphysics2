@@ -23,11 +23,11 @@ public class StackingTests
 
         world.UseFullEPASolver = fullEPA;
 
-        float stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, true);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real stackHeight = last.Position.Y;
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), true);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
-        Assert.That(delta, Is.LessThan(1f));
+        Assert.That(delta, Is.LessThan(1));
     }
 
     [TestCase(0, 0, 0, true)]
@@ -39,9 +39,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildPyramidBox(world, new JVector(x, y, z));
 
-        float stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real stackHeight = last.Position.Y;
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -57,9 +57,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildPyramidCylinder(world, new JVector(x, y, z));
 
-        float stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real stackHeight = last.Position.Y;
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }
@@ -73,9 +73,9 @@ public class StackingTests
 
         RigidBody last = Helper.BuildTower(world, JVector.Zero, 30);
 
-        float stackHeight = last.Position.Y;
-        Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, multiThread);
-        float delta = Math.Abs(stackHeight - last.Position.Y);
+        Real stackHeight = last.Position.Y;
+        Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), multiThread);
+        Real delta = MathR.Abs(stackHeight - last.Position.Y);
 
         Assert.That(delta, Is.LessThan(1f));
     }

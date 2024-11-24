@@ -39,5 +39,5 @@ public interface INarrowPhaseFilter
     /// <returns>False if the collision should be filtered out, true otherwise.</returns>
     bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
         ref JVector pointA, ref JVector pointB,
-        ref JVector normal, ref float penetration);
+        ref JVector normal, ref Real penetration);
 }

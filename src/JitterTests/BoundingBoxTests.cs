@@ -14,10 +14,10 @@ public class BoundingBoxTests
         ShapeHelper.CalculateBoundingBox(shape, ori, pos, out JBBox shr);
         shape.CalculateBoundingBox(ori, pos, out JBBox sbb);
 
-        float fraction = shr.GetVolume() / sbb.GetVolume();
+        Real fraction = shr.GetVolume() / sbb.GetVolume();
 
-        Assert.That(fraction - 1e-7f, Is.LessThan(1.0f));
-        Assert.That(fraction, Is.GreaterThan(0.2f));
+        Assert.That(fraction - (Real)1e-7, Is.LessThan((Real)1.0));
+        Assert.That(fraction, Is.GreaterThan((Real)0.2));
     }
 
     [TestCase]

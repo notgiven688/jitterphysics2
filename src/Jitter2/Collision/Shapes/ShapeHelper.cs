@@ -31,7 +31,7 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public static class ShapeHelper
 {
-    private const float GoldenRatio = 1.6180339887498948482045f;
+    private const Real GoldenRatio = (Real)1.6180339887498948482045;
 
     private static readonly JVector[] icosahedronVertices = new JVector[12]
     {
@@ -77,7 +77,7 @@ public static class ShapeHelper
         {
             JVector n = (p3 - p1) % (p2 - p1);
 
-            if (n.LengthSquared() > 1e-16f)
+            if (n.LengthSquared() > (Real)1e-16)
             {
                 hullCollection.Add(new JTriangle(p1, p2, p3));
             }
@@ -85,9 +85,9 @@ public static class ShapeHelper
             return;
         }
 
-        JVector h1 = (v1 + v2) * 0.5f;
-        JVector h2 = (v2 + v3) * 0.5f;
-        JVector h3 = (v3 + v1) * 0.5f;
+        JVector h1 = (v1 + v2) * (Real)0.5;
+        JVector h2 = (v2 + v3) * (Real)0.5;
+        JVector h3 = (v3 + v1) * (Real)0.5;
 
         support.SupportMap(h1, out JVector sp1);
         support.SupportMap(h2, out JVector sp2);
@@ -150,13 +150,13 @@ public static class ShapeHelper
     /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
     /// <param name="mass">Output parameter for the calculated mass.</param>
     public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass,
-        out float mass, int subdivisions = 4)
+        out Real mass, int subdivisions = 4)
     {
         centerOfMass = JVector.Zero;
         inertia = JMatrix.Zero;
         mass = 0;
 
-        const float a = 1.0f / 60.0f, b = 1.0f / 120.0f;
+        const Real a = (Real)(1.0 / 60.0), b = (Real)(1.0 / 120.0);
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         foreach (JTriangle triangle in MakeHull(support, subdivisions))
@@ -170,14 +170,14 @@ public static class ShapeHelper
                 column0.Y, column1.Y, column2.Y,
                 column0.Z, column1.Z, column2.Z);
 
-            float detA = A.Determinant();
+            Real detA = A.Determinant();
 
             // now transform this canonical tetrahedron to the target tetrahedron
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCOM = 1.0f / 4.0f * (column0 + column1 + column2);
-            float tetrahedronMass = 1.0f / 6.0f * detA;
+            JVector tetrahedronCOM = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
+            Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
 
             inertia += tetrahedronInertia;
             centerOfMass += tetrahedronMass * tetrahedronCOM;
@@ -185,6 +185,6 @@ public static class ShapeHelper
         }
 
         inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
-        centerOfMass *= 1.0f / mass;
+        centerOfMass *= (Real)1.0 / mass;
     }
 }

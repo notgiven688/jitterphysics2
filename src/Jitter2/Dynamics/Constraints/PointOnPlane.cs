@@ -43,7 +43,7 @@ public unsafe class PointOnPlane : Constraint
         internal int _internal;
 
         public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, float, void> PrepareForIteration;
+        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -53,19 +53,19 @@ public unsafe class PointOnPlane : Constraint
         public JVector LocalAnchor1;
         public JVector LocalAnchor2;
 
-        public float BiasFactor;
-        public float Softness;
+        public Real BiasFactor;
+        public Real Softness;
 
-        public float EffectiveMass;
-        public float AccumulatedImpulse;
-        public float Bias;
+        public Real EffectiveMass;
+        public Real AccumulatedImpulse;
+        public Real Bias;
 
-        public float Min;
-        public float Max;
+        public Real Min;
+        public Real Max;
 
         public ushort Clamp;
 
-        public MemoryHelper.MemBlock48 J0;
+        public MemoryHelper.MemBlock12Real J0;
     }
 
     private JHandle<SliderData> handle;
@@ -107,13 +107,13 @@ public unsafe class PointOnPlane : Constraint
 
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis);
 
-        data.BiasFactor = 0.01f;
-        data.Softness = 0.00001f;
+        data.BiasFactor = (Real)0.01;
+        data.Softness = (Real)0.00001;
 
         (data.Min, data.Max) = limit;
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, float idt)
+    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -138,9 +138,9 @@ public unsafe class PointOnPlane : Constraint
         jacobian[2] = axis;
         jacobian[3] = R2 % axis;
 
-        float error = JVector.Dot(U, axis);
+        Real error = JVector.Dot(U, axis);
 
-        data.EffectiveMass = 1.0f;
+        data.EffectiveMass = (Real)1.0;
 
         if (error > data.Max)
         {
@@ -163,11 +163,11 @@ public unsafe class PointOnPlane : Constraint
                              JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[3];
 
         data.EffectiveMass += (data.Softness * idt);
-        data.EffectiveMass = 1.0f / data.EffectiveMass;
+        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
 
         data.Bias = error * data.BiasFactor * idt;
 
-        float acc = data.AccumulatedImpulse;
+        Real acc = data.AccumulatedImpulse;
 
         body1.Velocity += body1.InverseMass * (jacobian[0] * acc);
         body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
@@ -176,21 +176,21 @@ public unsafe class PointOnPlane : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
     }
 
-    public float Softness
+    public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
-    public float Bias
+    public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
-    public float Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, float idt)
+    public static void Iterate(ref ConstraintData constraint, Real idt)
     {
         ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -200,24 +200,24 @@ public unsafe class PointOnPlane : Constraint
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 
-        float jv = jacobian[0] * body1.Velocity + jacobian[1] * body1.AngularVelocity + jacobian[2] * body2.Velocity +
+        Real jv = jacobian[0] * body1.Velocity + jacobian[1] * body1.AngularVelocity + jacobian[2] * body2.Velocity +
                    jacobian[3] * body2.AngularVelocity;
 
-        float softness = data.AccumulatedImpulse * data.Softness * idt;
+        Real softness = data.AccumulatedImpulse * data.Softness * idt;
 
-        float lambda = -1.0f * (jv + data.Bias + softness) * data.EffectiveMass;
+        Real lambda = -(Real)1.0 * (jv + data.Bias + softness) * data.EffectiveMass;
 
-        float origAcc = data.AccumulatedImpulse;
+        Real origAcc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         if (data.Clamp == 1)
         {
-            data.AccumulatedImpulse = MathF.Min(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, (Real)0.0);
         }
         else
         {
-            data.AccumulatedImpulse = MathF.Max(data.AccumulatedImpulse, 0.0f);
+            data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }
 
         lambda = data.AccumulatedImpulse - origAcc;

@@ -36,7 +36,7 @@ public class PointCloudShape : RigidBodyShape
 {
     private JBBox cachedBoundingBox;
     private JMatrix cachedInertia;
-    private float cachedMass;
+    private Real cachedMass;
     private JVector cachedCenter;
 
     private List<JVector> vertices;
@@ -103,7 +103,7 @@ public class PointCloudShape : RigidBodyShape
         ShapeHelper.CalculateMassInertia(this, out cachedInertia, out cachedCenter, out cachedMass);
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
         com = cachedCenter;
@@ -112,8 +112,8 @@ public class PointCloudShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
-        JVector halfSize = 0.5f * (cachedBoundingBox.Max - cachedBoundingBox.Min);
-        JVector center = 0.5f * (cachedBoundingBox.Max + cachedBoundingBox.Min);
+        JVector halfSize = (Real)0.5 * (cachedBoundingBox.Max - cachedBoundingBox.Min);
+        JVector center = (Real)0.5 * (cachedBoundingBox.Max + cachedBoundingBox.Min);
 
         JMatrix ori = JMatrix.CreateFromQuaternion(orientation);
         JMatrix.Absolute(in ori, out JMatrix abs);
@@ -156,9 +156,9 @@ public class PointCloudShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float maxDotProduct = float.MinValue;
+        Real maxDotProduct = Real.MinValue;
         int maxIndex = 0;
-        float dotProduct;
+        Real dotProduct;
 
         for (int i = 0; i < vertices.Count; i++)
         {

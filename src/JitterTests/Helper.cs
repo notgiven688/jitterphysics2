@@ -2,7 +2,7 @@ namespace JitterTests;
 
 public static class Helper
 {
-    public static void AdvanceWorld(World world, int seconds, float dt, bool multiThread)
+    public static void AdvanceWorld(World world, int seconds, Real dt, bool multiThread)
     {
         int total = (int)(seconds / dt);
         for (int i = 0; i < total; i++)
@@ -11,7 +11,7 @@ public static class Helper
 
     public static RigidBody BuildTower(World world, JVector pos, int size = 40)
     {
-        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * 2.0f / 64.0f);
+        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathR.PI * (Real)(2.0 / 64.0));
         JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
         JQuaternion orientation = JQuaternion.Identity;
 
@@ -24,9 +24,9 @@ public static class Helper
             for (int i = 0; i < 32; i++)
             {
                 JVector position = pos + JVector.Transform(
-                    new JVector(0, 0.5f + e, 19.5f), orientation);
+                    new JVector(0, (Real)0.5 + e, (Real)19.5), orientation);
 
-                var shape = new BoxShape(3f, 1, 0.5f);
+                var shape = new BoxShape(3f, 1, (Real)0.5);
 
                 last = world.CreateRigidBody();
 
@@ -51,9 +51,9 @@ public static class Helper
         {
             last = world.CreateRigidBody();
             //body.AddShape(new BoxShape(1));
-            last.Position = new JVector(0, 0.5f + i * 0.99f, 0);
+            last.Position = new JVector(0, (Real)0.5 + i * (Real)0.99, 0);
             last.AddShape(new BoxShape(1));
-            last.Damping = (0.002f, 0.002f);
+            last.Damping = ((Real)0.002, (Real)0.002);
 
             if (i == 0) last.IsStatic = true;
         }
@@ -69,7 +69,7 @@ public static class Helper
             for (int e = i; e < size; e++)
             {
                 last = world.CreateRigidBody();
-                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * 1.0f, 0.0f);
+                last.Position = position + new JVector((e - i * (Real)0.5) * (Real)1.01, (Real)0.5 + i * (Real)1.0, (Real)0.0);
                 var shape = new BoxShape(1);
                 last.AddShape(shape);
 
@@ -88,8 +88,8 @@ public static class Helper
             for (int e = i; e < size; e++)
             {
                 last = world.CreateRigidBody();
-                last.Position = position + new JVector((e - i * 0.5f) * 1.01f, 0.5f + i * 1.0f, 0.0f);
-                var shape = new CylinderShape(1.0f, 0.5f);
+                last.Position = position + new JVector((e - i * (Real)0.5) * (Real)1.01, (Real)0.5 + i * (Real)1.0, (Real)0.0);
+                var shape = new CylinderShape((Real)1.0, (Real)0.5);
                 last.AddShape(shape);
 
                 if (i == 0) last.IsStatic = true;
