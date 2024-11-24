@@ -110,13 +110,13 @@ public class SphereShape : RigidBodyShape
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        mass = (Real)4.0 / (Real)3.0 * MathR.PI * radius * radius * radius;
+        mass = (Real)(4.0 / 3.0) * MathR.PI * radius * radius * radius;
 
         // (0,0,0) is the center of mass
         inertia = JMatrix.Identity;
-        inertia.M11 = (Real)2.0 / (Real)5.0 * mass * radius * radius;
-        inertia.M22 = (Real)2.0 / (Real)5.0 * mass * radius * radius;
-        inertia.M33 = (Real)2.0 / (Real)5.0 * mass * radius * radius;
+        inertia.M11 = (Real)(2.0 / 5.0) * mass * radius * radius;
+        inertia.M22 = (Real)(2.0 / 5.0) * mass * radius * radius;
+        inertia.M33 = (Real)(2.0 / 5.0) * mass * radius * radius;
 
         com = JVector.Zero;
     }

@@ -403,7 +403,7 @@ public struct JQuaternion
     public void Normalize()
     {
         Real num2 = X * X + Y * Y + Z * Z + W * W;
-        Real num = (Real)1.0 / (Real)Math.Sqrt(num2);
+        Real num = 1 / MathR.Sqrt(num2);
         X *= num;
         Y *= num;
         Z *= num;

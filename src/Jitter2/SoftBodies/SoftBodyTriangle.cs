@@ -55,7 +55,7 @@ public class SoftBodyTriangle : SoftBodyShape
         UpdateWorldBoundingBox();
     }
 
-    public override JVector Velocity => (Real)1.0 / (Real)3.0 * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
+    public override JVector Velocity => (Real)(1.0 / 3.0) * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
 
     public override RigidBody GetClosest(in JVector pos)
     {
@@ -123,6 +123,6 @@ public class SoftBodyTriangle : SoftBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        point = ((Real)1.0 / (Real)3.0) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
+        point = ((Real)(1.0 / 3.0)) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);
     }
 }

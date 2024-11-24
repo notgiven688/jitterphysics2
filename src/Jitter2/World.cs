@@ -232,8 +232,8 @@ public partial class World
     private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
 
-    private Real substep_dt = (Real)1.0 / (Real)100.0;
-    private Real step_dt = (Real)1.0 / (Real)100.0;
+    private Real substep_dt = (Real)(1.0 / 100.0);
+    private Real step_dt = (Real)(1.0 / 100.0);
 
     /// <summary>
     /// Uses a slower alternative narrow phase collision detection method, instead

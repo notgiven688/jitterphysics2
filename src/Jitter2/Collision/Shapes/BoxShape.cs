@@ -187,9 +187,9 @@ public class BoxShape : RigidBodyShape
         mass = size.X * size.Y * size.Z;
 
         inertia = JMatrix.Identity;
-        inertia.M11 = (Real)1.0 / (Real)12.0 * mass * (size.Y * size.Y + size.Z * size.Z);
-        inertia.M22 = (Real)1.0 / (Real)12.0 * mass * (size.X * size.X + size.Z * size.Z);
-        inertia.M33 = (Real)1.0 / (Real)12.0 * mass * (size.X * size.X + size.Y * size.Y);
+        inertia.M11 = (Real)(1.0 / 12.0) * mass * (size.Y * size.Y + size.Z * size.Z);
+        inertia.M22 = (Real)(1.0 / 12.0) * mass * (size.X * size.X + size.Z * size.Z);
+        inertia.M33 = (Real)(1.0 / 12.0) * mass * (size.X * size.X + size.Y * size.Y);
 
         com = JVector.Zero;
     }

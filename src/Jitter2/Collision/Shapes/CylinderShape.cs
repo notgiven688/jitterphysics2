@@ -144,9 +144,9 @@ public class CylinderShape : RigidBodyShape
 
         inertia = JMatrix.Identity;
 
-        inertia.M11 = (Real)1.0 / (Real)4.0 * mass * radius * radius + (Real)1.0 / (Real)12.0 * mass * height * height;
-        inertia.M22 = (Real)1.0 / (Real)2.0 * mass * radius * radius;
-        inertia.M33 = (Real)1.0 / (Real)4.0 * mass * radius * radius + (Real)1.0 / (Real)12.0 * mass * height * height;
+        inertia.M11 = (Real)(1.0 / 4.0) * mass * radius * radius + (Real)(1.0 / 12.0) * mass * height * height;
+        inertia.M22 = (Real)(1.0 / 2.0) * mass * radius * radius;
+        inertia.M33 = (Real)(1.0 / 4.0) * mass * radius * radius + (Real)(1.0 / 12.0) * mass * height * height;
 
         com = JVector.Zero;
     }

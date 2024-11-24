@@ -410,7 +410,7 @@ public struct JVector
     public void Normalize()
     {
         Real num2 = X * X + Y * Y + Z * Z;
-        Real num =(Real)1 / (Real)Math.Sqrt(num2);
+        Real num = (Real)1 / MathR.Sqrt(num2);
         X *= num;
         Y *= num;
         Z *= num;
@@ -420,7 +420,7 @@ public struct JVector
     public static void Normalize(in JVector value, out JVector result)
     {
         Real num2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
-        Real num =(Real)1 / (Real)Math.Sqrt(num2);
+        Real num = (Real)1 / MathR.Sqrt(num2);
         result.X = value.X * num;
         result.Y = value.Y * num;
         result.Z = value.Z * num;

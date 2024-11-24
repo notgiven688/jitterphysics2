@@ -11,7 +11,7 @@ public static class Helper
 
     public static RigidBody BuildTower(World world, JVector pos, int size = 40)
     {
-        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathR.PI * (Real)2.0 / (Real)64.0);
+        JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathR.PI * (Real)(2.0 / 64.0));
         JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
         JQuaternion orientation = JQuaternion.Identity;
 

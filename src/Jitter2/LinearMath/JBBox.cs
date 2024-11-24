@@ -245,7 +245,7 @@ public struct JBBox
         JVector.Max(original.Max, additional.Max, out result.Max);
     }
 
-    public readonly JVector Center => (Min + Max) * ((Real)1.0 / (Real)2.0);
+    public readonly JVector Center => (Min + Max) * ((Real)(1.0 / 2.0));
 
     public Real GetVolume()
     {

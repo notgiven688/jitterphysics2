@@ -153,12 +153,12 @@ public class ConeShape : RigidBodyShape
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        mass = (Real)1.0 / (Real)3.0 * MathR.PI * radius * radius * height;
+        mass = (Real)(1.0 / 3.0) * MathR.PI * radius * radius * height;
 
         inertia = JMatrix.Identity;
-        inertia.M11 = mass * ((Real)3.0 / (Real)20.0 * radius * radius + (Real)3.0 / (Real)80.0 * height * height);
-        inertia.M22 = (Real)3.0 / (Real)10.0 * mass * radius * radius;
-        inertia.M33 = mass * ((Real)3.0 / (Real)20.0 * radius * radius + (Real)3.0 / (Real)80.0 * height * height);
+        inertia.M11 = mass * ((Real)(3.0 / 20.0) * radius * radius + (Real)(3.0 / 80.0) * height * height);
+        inertia.M22 = (Real)(3.0 / 10.0) * mass * radius * radius;
+        inertia.M33 = mass * ((Real)(3.0 / 20.0) * radius * radius + (Real)(3.0 / 80.0) * height * height);
 
         com = JVector.Zero;
     }

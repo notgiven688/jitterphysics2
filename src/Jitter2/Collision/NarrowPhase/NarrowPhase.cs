@@ -459,7 +459,7 @@ public static class NarrowPhase
                 {
                     if (hit)
                     {
-                        Real invnormal = (Real)1.0 / (Real)Math.Sqrt(normalSq);
+                        Real invnormal = 1 / MathR.Sqrt(normalSq);
 
                         penetration *= invnormal;
 

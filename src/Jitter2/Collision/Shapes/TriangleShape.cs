@@ -124,7 +124,7 @@ public class TriangleShape : RigidBodyShape
         JVector b = Mesh.Vertices[triangle.IndexB];
         JVector c = Mesh.Vertices[triangle.IndexC];
 
-        point = (Real)1.0 / (Real)3.0 * (a + b + c);
+        point = (Real)(1.0 / 3.0) * (a + b + c);
     }
 
     public override void SupportMap(in JVector direction, out JVector result)

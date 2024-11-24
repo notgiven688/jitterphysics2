@@ -161,7 +161,7 @@ public class CollisionTests
 
         Assert.That(hit);
 
-        Real expectedlambda = (MathR.Sqrt((Real)200.0) - (Real)1.0) * ((Real)1.0 / (Real)3.0);
+        Real expectedlambda = (MathR.Sqrt((Real)200.0) - (Real)1.0) * ((Real)(1.0 / 3.0));
         JVector expectedNormal = JVector.Normalize(new JVector(1, 1, 0));
         JVector expectedPoint = new JVector(1, 1, 3) + expectedNormal * ((Real)0.5 + expectedlambda);
         JVector expectedPointA = expectedPoint - sweep * lambda;

@@ -134,7 +134,7 @@ public unsafe class HingeAngle : Constraint
 
         data.Clamp = 0;
 
-        JMatrix m0 = (-(Real)1.0 / (Real)2.0) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
+        JMatrix m0 = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
         if (quat0.W < (Real)0.0)
         {

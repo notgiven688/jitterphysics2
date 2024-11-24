@@ -298,9 +298,9 @@ public unsafe struct ConvexPolytope
         center = point;
 
         const Real scale = (Real)1e-2; // minkowski sums not allowed to be thinner
-        vertices[0] = new Vertex(center + scale * new JVector(MathR.Sqrt((Real)8.0 / (Real)9.0), (Real)0.0, -(Real)1.0 / (Real)3.0));
-        vertices[1] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)2.0 / (Real)9.0), MathR.Sqrt((Real)2.0 / (Real)3.0), -(Real)1.0 / (Real)3.0));
-        vertices[2] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)2.0 / (Real)9.0), -MathR.Sqrt((Real)2.0 / (Real)3.0), -(Real)1.0 / (Real)3.0));
+        vertices[0] = new Vertex(center + scale * new JVector(MathR.Sqrt((Real)(8.0 / 9.0)), (Real)0.0, -(Real)(1.0 / 3.0)));
+        vertices[1] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
+        vertices[2] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), -MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
         vertices[3] = new Vertex(center + scale * new JVector((Real)0.0, (Real)0.0, (Real)1.0));
 
         CreateTriangle(2, 0, 1);

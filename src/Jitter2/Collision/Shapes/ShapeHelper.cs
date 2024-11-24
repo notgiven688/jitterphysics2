@@ -156,7 +156,7 @@ public static class ShapeHelper
         inertia = JMatrix.Zero;
         mass = 0;
 
-        const Real a = (Real)1.0 / (Real)60.0, b = (Real)1.0 / (Real)120.0;
+        const Real a = (Real)(1.0 / 60.0), b = (Real)(1.0 / 120.0);
         JMatrix C = new(a, b, b, b, a, b, b, b, a);
 
         foreach (JTriangle triangle in MakeHull(support, subdivisions))
@@ -176,8 +176,8 @@ public static class ShapeHelper
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCOM = (Real)1.0 / (Real)4.0 * (column0 + column1 + column2);
-            Real tetrahedronMass = (Real)1.0 / (Real)6.0 * detA;
+            JVector tetrahedronCOM = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
+            Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
 
             inertia += tetrahedronInertia;
             centerOfMass += tetrahedronMass * tetrahedronCOM;

@@ -132,7 +132,7 @@ public unsafe class TwistAngle : Constraint
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JMatrix m = (-(Real)1.0 / (Real)2.0) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
+        JMatrix m = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
 
         JQuaternion q = data.Q0 * q1.Conjugate() * q2;
 

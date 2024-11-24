@@ -112,16 +112,16 @@ public class CapsuleShape : RigidBodyShape
     {
         Real length = (Real)2.0 * halfLength;
 
-        Real massSphere = (Real)4.0 / (Real)3.0 * MathR.PI * radius * radius * radius;
+        Real massSphere = (Real)(4.0 / 3.0) * MathR.PI * radius * radius * radius;
         Real massCylinder = MathR.PI * radius * radius * length;
 
         inertia = JMatrix.Identity;
 
-        inertia.M11 = massCylinder * ((Real)1.0 / (Real)12.0 * length * length + (Real)1.0 / (Real)4.0 * radius * radius) + massSphere *
-            ((Real)2.0 / (Real)5.0 * radius * radius + (Real)1.0 / (Real)4.0 * length * length + (Real)3.0 / (Real)8.0 * length * radius);
-        inertia.M22 = (Real)1.0 / (Real)2.0 * massCylinder * radius * radius + (Real)2.0 / (Real)5.0 * massSphere * radius * radius;
-        inertia.M33 = massCylinder * ((Real)1.0 / (Real)12.0 * length * length + (Real)1.0 / (Real)4.0 * radius * radius) + massSphere *
-            ((Real)2.0 / (Real)5.0 * radius * radius + (Real)1.0 / (Real)4.0 * length * length + (Real)3.0 / (Real)8.0 * length * radius);
+        inertia.M11 = massCylinder * ((Real)(1.0 / 12.0) * length * length + (Real)(1.0 / 4.0) * radius * radius) + massSphere *
+            ((Real)(2.0 / 5.0) * radius * radius + (Real)(1.0 / 4.0) * length * length + (Real)(3.0 / 8.0) * length * radius);
+        inertia.M22 = (Real)(1.0 / 2.0) * massCylinder * radius * radius + (Real)(2.0 / 5.0) * massSphere * radius * radius;
+        inertia.M33 = massCylinder * ((Real)(1.0 / 12.0) * length * length + (Real)(1.0 / 4.0) * radius * radius) + massSphere *
+            ((Real)(2.0 / 5.0) * radius * radius + (Real)(1.0 / 4.0) * length * length + (Real)(3.0 / 8.0) * length * radius);
 
         mass = massCylinder + massSphere;
         com = JVector.Zero;
