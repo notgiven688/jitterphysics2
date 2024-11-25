@@ -144,26 +144,26 @@ public class Demo06 : IDemo
 
             Matrix4 whm = Conversion.FromJitter(defaultCar.Body) *
                           MatrixHelper.CreateTranslation(Conversion.FromJitter(wh.GetWheelCenter())) *
-                          MatrixHelper.CreateRotationY(wh.SteerAngle) *
-                          MatrixHelper.CreateRotationX(-wh.WheelRotation) *
+                          MatrixHelper.CreateRotationY((float)wh.SteerAngle) *
+                          MatrixHelper.CreateRotationX(-(float)wh.WheelRotation) *
                           rotate;
 
             whr.PushMatrix(whm);
         }
 
-        float steer, accelerate;
+        double steer, accelerate;
         var kb = Keyboard.Instance;
 
-        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0f;
-        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0f;
-        else accelerate = 0.0f;
+        if (kb.IsKeyDown(Keyboard.Key.Up)) accelerate = 1.0d;
+        else if (kb.IsKeyDown(Keyboard.Key.Down)) accelerate = -1.0d;
+        else accelerate = 0.0d;
 
         if (kb.IsKeyDown(Keyboard.Key.Left)) steer = 1;
         else if (kb.IsKeyDown(Keyboard.Key.Right)) steer = -1;
-        else steer = 0.0f;
+        else steer = 0.0d;
 
         defaultCar.SetInput(accelerate, steer);
 
-        defaultCar.Step(1.0f / 100.0f);
+        defaultCar.Step(1.0d / 100.0d);
     }
 }

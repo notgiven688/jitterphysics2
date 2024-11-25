@@ -22,27 +22,27 @@ public class Demo09 : IDemo
 
         if (pg.FloorShape != null)
         {
-            pg.FloorShape.RigidBody.Friction = 0.0f;
-            pg.FloorShape.RigidBody.Restitution = 0.0f;
+            pg.FloorShape.RigidBody.Friction = 0.0d;
+            pg.FloorShape.RigidBody.Restitution = 0.0d;
         }
 
         for (int i = 0; i < 11; i++)
         {
             var body = world.CreateRigidBody();
-            body.AddShape(new BoxShape(0.5f));
+            body.AddShape(new BoxShape(0.5d));
             body.Position = new JVector(-10 + i * 1, 4, -10);
-            body.Restitution = i * 0.1f;
-            body.Damping = (0.001f, 0.001f);
+            body.Restitution = i * 0.1d;
+            body.Damping = (0.001d, 0.001d);
         }
 
         for (int i = 0; i < 11; i++)
         {
             var body = world.CreateRigidBody();
-            body.AddShape(new BoxShape(0.5f));
-            body.Position = new JVector(2 + i, 0.25f, 0);
-            body.Friction = 1.0f - i * 0.1f;
+            body.AddShape(new BoxShape(0.5d));
+            body.Position = new JVector(2 + i, 0.25d, 0);
+            body.Friction = 1.0d - i * 0.1d;
             body.Velocity = new JVector(0, 0, -10);
-            body.Damping = (0.001f, 0.001f);
+            body.Damping = (0.001d, 0.001d);
         }
     }
 
