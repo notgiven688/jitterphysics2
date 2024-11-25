@@ -54,14 +54,14 @@ public class EllipsoidShape : RigidBodyShape
     public override void SupportMap(in JVector direction, out JVector result)
     {
         JVector dir = direction;
-        dir.X *= 0.8f;
-        dir.Y *= 1.2f;
-        dir.Z *= 0.4f;
+        dir.X *= 0.8d;
+        dir.Y *= 1.2d;
+        dir.Z *= 0.4d;
         result = dir;
         result.Normalize();
-        result.X *= 0.8f;
-        result.Y *= 1.2f;
-        result.Z *= 0.4f;
+        result.X *= 0.8d;
+        result.Y *= 1.2d;
+        result.Z *= 0.4d;
     }
 
     public override void GetCenter(out JVector point)
@@ -81,16 +81,16 @@ public class DoubleSphereShape : RigidBodyShape
     {
         JVector.Normalize(direction, out JVector ndir);
 
-        JVector sphere1 = ndir * 1.0f + JVector.UnitY * 1.1f;
-        JVector sphere2 = ndir * 1.5f - JVector.UnitY * 0.5f;
+        JVector sphere1 = ndir * 1.0d + JVector.UnitY * 1.1d;
+        JVector sphere2 = ndir * 1.5d - JVector.UnitY * 0.5d;
 
         if (JVector.Dot(sphere1, ndir) > JVector.Dot(sphere2, ndir))
         {
-            result = sphere1 * 0.5f;
+            result = sphere1 * 0.5d;
         }
         else
         {
-            result = sphere2 * 0.5f;
+            result = sphere2 * 0.5d;
         }
     }
 
@@ -109,7 +109,7 @@ public class Icosahedron : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float gr = (1.0f + MathF.Sqrt(5.0f)) / 2.0f;
+        double gr = (1.0d + Math.Sqrt(5.0d)) / 2.0d;
 
         Span<JVector> vertices = stackalloc JVector[12];
 
@@ -136,7 +136,7 @@ public class Icosahedron : RigidBodyShape
             }
         }
 
-        result = vertices[largestIndex] * 0.5f;
+        result = vertices[largestIndex] * 0.5d;
     }
 
     public override void GetCenter(out JVector point)

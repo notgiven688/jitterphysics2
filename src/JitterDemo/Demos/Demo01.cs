@@ -36,27 +36,27 @@ public class Demo01 : IDemo
             for (int i = 0; i < numElements; i++)
             {
                 var nbody = world.CreateRigidBody();
-                nbody.AddShape(new BoxShape(0.7f, 0.1f, 4f));
-                nbody.Position = startPos + new JVector(i * 0.8f, 0, 0);
+                nbody.AddShape(new BoxShape(0.7d, 0.1d, 4f));
+                nbody.Position = startPos + new JVector(i * 0.8d, 0, 0);
 
                 if (i == 0)
                 {
                     var hinge = new HingeJoint(world, world.NullBody, nbody,
-                        startPos + new JVector(i * 0.8f - 0.1f, 0, 0), JVector.UnitZ);
+                        startPos + new JVector(i * 0.8d - 0.1d, 0, 0), JVector.UnitZ);
                 }
                 else
                 {
                     var hinge = new HingeJoint(world, body, nbody,
-                        startPos + new JVector(i * 0.8f - 0.1f, 0, 0), JVector.UnitZ);
+                        startPos + new JVector(i * 0.8d - 0.1d, 0, 0), JVector.UnitZ);
 
-                    hinge.BallSocket.Softness = 0.1f;
+                    hinge.BallSocket.Softness = 0.1d;
                     hinges.Add(hinge);
                 }
 
                 if (i == numElements - 1)
                 {
                     var hinge = new HingeJoint(world, nbody, world.NullBody,
-                        startPos + new JVector(i * 0.8f + 0.7f, 0, 0), JVector.UnitZ);
+                        startPos + new JVector(i * 0.8d + 0.7d, 0, 0), JVector.UnitZ);
                 }
 
                 body = nbody;
@@ -66,7 +66,7 @@ public class Demo01 : IDemo
         {
             // Add a car made out of constraints
             JVector carPos = new JVector(10, 9, -20);
-            JQuaternion rot = JQuaternion.CreateRotationY(MathF.PI / 2.0f);
+            JQuaternion rot = JQuaternion.CreateRotationY(MathF.PI / 2.0d);
 
             car.BuildCar(world, carPos, body =>
                 {
@@ -85,7 +85,7 @@ public class Demo01 : IDemo
         for (int i = hinges.Count; i-- > 0;)
         {
             var h = hinges[i];
-            if (h.BallSocket.Impulse.Length() > 0.5f)
+            if (h.BallSocket.Impulse.Length() > 0.5d)
             {
                 h.Remove();
                 hinges.RemoveAt(i);
