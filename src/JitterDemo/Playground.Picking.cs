@@ -37,8 +37,8 @@ public partial class Playground : RenderWindow
     private bool grepping;
 
     private DistanceLimit? grepConstraint;
-    private float hitDistance;
-    private float hitWheelPosition;
+    private double hitDistance;
+    private double hitWheelPosition;
 
     private void Pick()
     {
@@ -52,13 +52,13 @@ public partial class Playground : RenderWindow
             if (grepBody == null) return;
             if (grepConstraint == null) return;
 
-            hitDistance += ((float)Mouse.ScrollWheel.Y - hitWheelPosition);
+            hitDistance += Mouse.ScrollWheel.Y - hitWheelPosition;
 
             grepConstraint.Anchor2 = origin + hitDistance * jdir;
             grepBody.SetActivationState(true);
 
-            grepBody.Data.Velocity *= 0.98f;
-            grepBody.Data.AngularVelocity *= 0.98f;
+            grepBody.Data.Velocity *= 0.98d;
+            grepBody.Data.AngularVelocity *= 0.98d;
         }
         else
         {
@@ -82,7 +82,7 @@ public partial class Playground : RenderWindow
             if (!result || grepBody == null || grepBody.IsStatic) return;
             grepping = true;
 
-            hitWheelPosition = (float)Mouse.ScrollWheel.Y;
+            hitWheelPosition = Mouse.ScrollWheel.Y;
 
             if (grepConstraint != null) World.Remove(grepConstraint);
 
@@ -90,8 +90,8 @@ public partial class Playground : RenderWindow
 
             grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
             grepConstraint.Initialize(anchor, anchor);
-            grepConstraint.Softness = 0.01f;
-            grepConstraint.Bias = 0.1f;
+            grepConstraint.Softness = 0.01d;
+            grepConstraint.Bias = 0.1d;
         }
     }
 }
