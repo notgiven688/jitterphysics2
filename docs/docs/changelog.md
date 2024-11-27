@@ -4,12 +4,12 @@ sidebar_position: 5
 
 # Changelog
 
-### Jitter 2.4.8 (11-27-2024)
+### Jitter 2.4.8 (2024-11-27)
 
 - Add option to build in double precision mode.
 - Made `Constraint` constructor public to allow for custom constraints.
 
-### Jitter 2.4.7 (11-18-2024)
+### Jitter 2.4.7 (2024-11-18)
 
 - **Breaking Change:** Dropped .NET6 support, added .NET9.
 - SIMD for contacts.
@@ -18,7 +18,7 @@ sidebar_position: 5
 - Improved auxiliary contact points.
 - Minor API changes.
 
-### Jitter 2.4.6 (10-28-2024)
+### Jitter 2.4.6 (2024-10-28)
 
 - **Breaking Change:** Jitter world is now constructed using World.Capacity.
 - **Breaking Change:** World.RayCast moved to World.DynamicTree.RayCast.
@@ -27,7 +27,7 @@ sidebar_position: 5
 - Several smaller improvements in the API.
 
 
-### Jitter 2.4.5 (10-07-2024)
+### Jitter 2.4.5 (2024-10-07)
 
 - Added new methods to NarrowPhase: Distance and Overlap.
 - **Breaking Change:**  Renamed NarrowPhase.SweepTest to NarrowPhase.Sweep.
@@ -35,16 +35,16 @@ sidebar_position: 5
 - Made PointTest, Raycast and SweepTest to use new SimplexSolver and SimplexSolverAB implementations.
 - Fixed normal in GJKEPA for separating case.
 
-### Jitter 2.4.4 (09-14-2024)
+### Jitter 2.4.4 (2024-09-14)
 
 - Implemented fixes and workarounds for using Jitter with a debugger attached.
 
-### Jitter 2.4.3 (08-31-2024)
+### Jitter 2.4.3 (2024-08-31)
 
 - Correct corner case beeing wrong in MPR collision detection due to typo (bug fix).
 - FatTriangleShape level did not properly take transformations into account (bug fix).
 
-### Jitter 2.4.2 (08-26-2024)
+### Jitter 2.4.2 (2024-08-26)
 
 - Added FatTriangleShape to give triangles thickness which can be useful for static triangle meshes.
 - Removal from potential pairs in DynamicTree ignores filters from now on (bug fix).
@@ -52,7 +52,7 @@ sidebar_position: 5
 - **Breaking Change:** Redefinition of NarrowPhase.SweepTest results.
 - Improved TriangleEdgeCollisionFilter.
 
-### Jitter 2.4.1 (08-21-2024)
+### Jitter 2.4.1 (2024-08-21)
 
 - Improved TriangleEdgeCollisionFilter.
 - Implemented analytical box and sphere ray casting.
@@ -63,7 +63,7 @@ sidebar_position: 5
 - Added enumerator to PairHashSet.
 - Changed ShapeHelper.MakeHull to take a generic of type ICollection.
 
-### Jitter 2.4.0 (08-10-2024)
+### Jitter 2.4.0 (2024-08-10)
 
 - Improved TrimPotentialPairs logic.
 - Optimized quaternion vector transformation.
@@ -72,19 +72,19 @@ sidebar_position: 5
 - Improved exceptions.
 - Added ReferenceFrameAttribute.
 
-### Jitter 2.3.1 (06-02-2024)
+### Jitter 2.3.1 (2024-06-02)
 
 - ReadOnly wrappers (ReadOnlyList, ReadOnlyHashset) are now structs.
 - Shapes with very small dimensions might have close to zero or zero mass/inertia. Creating rigid bodies from them now throws an exception (use body.AddShape(shape, setMassInertia: false) to not use the shape's mass properties).
 - Added BeginCollide and EndCollide events per body.
 
-### Jitter 2.3.0 (05-20-2024)
+### Jitter 2.3.0 (2024-05-20)
 
 - Added RigidBody.RemoveShape overload to remove multiple shapes at once.
 - Marked Rigid.ClearShapes deprecated.
 - **Breaking Change:** Use JQuaternion for orientations. Sorry for the API break.
 
-### Jitter 2.2.1 (04-29-2024)
+### Jitter 2.2.1 (2024-04-29)
 
 - Add optional activate parameter to world.AddShape.
 - Add NarrowPhase.SweepTest.
@@ -94,7 +94,7 @@ sidebar_position: 5
 - Handle zero time steps. Throw ArgumentException for negative time steps.
 - Add joint base class to joint classes.
 
-### Jitter 2.2.0 (01-02-2024)
+### Jitter 2.2.0 (2024-01-02)
 
 - **Breaking Change:** Renamed `Raycast` to `RayCast`.
 - `world.Remove(world.NullBody)` does now remove all shapes, constraints and contacts associated with NullBody.
@@ -102,12 +102,12 @@ sidebar_position: 5
 - Performance improvements for ConvexHullShape.
 - Improved termination condition in GJKEPA collision detection.
 
-### Jitter 2.1.1 (12-17-2023)
+### Jitter 2.1.1 (2023-12-17)
 
 - Fixed O(n^2) problem in `TriangleMesh` due to hash collisions.
 - `WorldBoundingBox` of `Shape` is now updated even if no `RigidBody` is attached.
 
-### Jitter 2.1.0 (12-10-2023)
+### Jitter 2.1.0 (2023-12-10)
 
 - Added debug drawing for rigid bodies (`RigidBody.DebugDraw`).
 - Fixed a bug in `CalculateMassInertia` within `TransformedShape.cs`.
@@ -118,10 +118,10 @@ sidebar_position: 5
 - An exception is now thrown when a body's mass is set to zero.
 - Fixed a bug in the friction handling in `Contact.cs`.
 
-### Jitter 2.0.1 (10-28-2023)
+### Jitter 2.0.1 (2023-10-28)
 
 - Fixed a bug in contact initialization which affected soft body physics.
 
-### Jitter 2.0.0 (10-22-2023)
+### Jitter 2.0.0 (2023-10-22)
 
 Initial stable Release.
