@@ -10,7 +10,7 @@ Run a small demo directly [in the browser](https://jitterphysics.com/AppBundle/i
 
 There is a tiny demo available for the [Godot engine](other/GodotDemo).
 
-The official **NuGet** package can be found [here](https://www.nuget.org/packages/Jitter2).
+The official **NuGet** package can be found [here](https://www.nuget.org/packages/Jitter2), the double precision version [here](https://www.nuget.org/packages/Jitter2.Double).
 
 See below for a fully-featured demo.
 
@@ -41,6 +41,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 
 ## Features
 
+- [x] Compile time option for double precision.
 - [x] Speculative contacts (avoiding the bullet-through-paper problem).
 - [x] A variety of constraints and motors (AngularMotor, BallSocket, ConeLimit, DistanceLimit, FixedAngle, HingeAngle, LinearMotor, PointOnLine, PointOnPlane, TwistAngle) with support for softness.
 - [x] A sophisticated deactivation scheme with minimal cost for inactive rigid bodies (scenes with 100k inactive bodies are easily achievable).

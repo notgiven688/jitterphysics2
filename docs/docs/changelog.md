@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.8 (11-27-2024)
+
+- Add option to build in double precision mode.
+- Made `Constraint` constructor public to allow for custom constraints.
+
 ### Jitter 2.4.7 (11-18-2024)
 
 - **Breaking Change:** Dropped .NET6 support, added .NET9.
