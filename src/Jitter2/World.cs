@@ -150,7 +150,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// All rigid bodies in this world.
     /// </summary>
-    public ReadOnlyActiveList<RigidBody> RigidBodies { get; private set; }
+    public ReadOnlyActiveList<RigidBody> RigidBodies => new ReadOnlyActiveList<RigidBody>(bodies);
 
     /// <summary>
     /// Access to the <see cref="DynamicTree"/> instance. The instance
@@ -262,8 +262,6 @@ public sealed partial class World : IDisposable
         memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
 
         InitParallelCallbacks();
-
-        RigidBodies = new ReadOnlyActiveList<RigidBody>(bodies);
 
         NullBody = CreateRigidBody();
         NullBody.IsStatic = true;

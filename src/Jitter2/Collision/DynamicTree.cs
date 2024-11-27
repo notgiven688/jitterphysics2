@@ -78,7 +78,7 @@ public partial class DynamicTree
 
     private readonly ActiveList<IDynamicTreeProxy> proxies = new();
 
-    public readonly ReadOnlyActiveList<IDynamicTreeProxy> Proxies;
+    public ReadOnlyActiveList<IDynamicTreeProxy> Proxies => new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
@@ -125,7 +125,7 @@ public partial class DynamicTree
     private readonly Stack<int> freeNodes = new();
     private int nodePointer = -1;
     private int root = NullNode;
-    
+
     private Action<Parallel.Batch> updateBoundingBoxes;
 
     /// <summary>
@@ -150,10 +150,8 @@ public partial class DynamicTree
             ScanForOverlaps(batch.BatchIndex, false);
         };
 
-        Proxies = new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
-
         scanOverlapsPost = batch => { ScanForOverlaps(batch.BatchIndex, true); };
-        
+
         updateBoundingBoxes = UpdateBoundingBoxesCallback;
 
         Filter = filter;
@@ -204,7 +202,7 @@ public partial class DynamicTree
 
         if (multiThread)
         {
-            Proxies.ParallelForBatch(256, updateBoundingBoxes);
+            proxies.ParallelForBatch(256, updateBoundingBoxes);
 
             const int taskThreshold = 24;
             int numTasks = Math.Clamp(proxies.ActiveCount / taskThreshold, 1, ThreadPool.Instance.ThreadCount);
@@ -236,7 +234,7 @@ public partial class DynamicTree
         }
         else
         {
-            var batch = new Parallel.Batch(0, Proxies.Active);
+            var batch = new Parallel.Batch(0, proxies.ActiveCount);
 
             UpdateBoundingBoxesCallback(batch);
             SetTime(Timings.UpdateBoundingBoxes);
@@ -260,12 +258,12 @@ public partial class DynamicTree
     }
 
     private Real step_dt;
-    
+
     private void UpdateBoundingBoxesCallback(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            var proxy = Proxies[i];
+            var proxy = proxies[i];
             if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(step_dt);
         }
     }
