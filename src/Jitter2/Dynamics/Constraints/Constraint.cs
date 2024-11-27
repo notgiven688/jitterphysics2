@@ -78,10 +78,6 @@ public abstract class Constraint : IDebugDrawable
     {
     }
 
-    internal Constraint()
-    {
-    }
-
     protected unsafe delegate*<ref ConstraintData, Real, void> iterate = null;
     protected unsafe delegate*<ref ConstraintData, Real, void> prepareForIteration = null;
 
