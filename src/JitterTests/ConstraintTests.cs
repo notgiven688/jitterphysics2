@@ -13,7 +13,7 @@ public class ConstraintTests
     [TestCase]
     public void TestSizes()
     {
-        World world = new World();
+        using World world = new World();
 
         RigidBody b0 = world.CreateRigidBody();
         RigidBody b1 = world.CreateRigidBody();

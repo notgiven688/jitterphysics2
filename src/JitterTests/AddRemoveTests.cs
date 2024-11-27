@@ -10,6 +10,12 @@ public class AddRemoveTests
         world = new World();
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        world.Dispose();
+    }
+
     private class FilterOut(IDynamicTreeProxy shape) : IBroadPhaseFilter
     {
         public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)

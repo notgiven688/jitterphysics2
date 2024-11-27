@@ -13,6 +13,12 @@ public class StackingTests
         };
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        world.Dispose();
+    }
+
     [TestCase(true)]
     [TestCase(false)]
     public void SimpleStack(bool fullEPA)
