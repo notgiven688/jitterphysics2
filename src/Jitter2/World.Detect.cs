@@ -32,7 +32,7 @@ using Jitter2.LinearMath;
 
 namespace Jitter2;
 
-public partial class World
+public sealed partial class World
 {
     private struct ConvexHullIntersection
     {

@@ -40,7 +40,7 @@ namespace Jitter2;
 /// <summary>
 /// Represents a simulation environment that holds and manages the state of all simulation objects.
 /// </summary>
-public partial class World
+public sealed partial class World : IDisposable
 {
     public enum ThreadModelType
     {
@@ -446,5 +446,13 @@ public partial class World
         AddToActiveList(body.island);
 
         return body;
+    }
+
+    public void Dispose()
+    {
+        memContacts.Dispose();
+        memRigidBodies.Dispose();
+        memConstraints.Dispose();
+        memSmallConstraints.Dispose();
     }
 }

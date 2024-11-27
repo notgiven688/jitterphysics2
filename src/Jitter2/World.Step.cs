@@ -38,7 +38,7 @@ using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
 namespace Jitter2;
 
-public partial class World
+public sealed partial class World
 {
     // Note: A SlimBag of the reference type 'Arbiter' does not introduce GC problems (not setting
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
