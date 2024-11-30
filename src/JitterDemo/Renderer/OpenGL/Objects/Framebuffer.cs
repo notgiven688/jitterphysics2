@@ -46,6 +46,6 @@ public class FrameBuffer : GLObject
     {
         Bind();
         GL.FramebufferTexture2D(GLC.FRAMEBUFFER, GLC.DEPTH_ATTACHMENT, GLC.TEXTURE_2D, texture.Handle, 0);
-        GL.NamedFramebufferDrawBuffer(Handle, GLC.NONE);
+        GL.DrawBuffer(GLC.NONE);
     }
 }

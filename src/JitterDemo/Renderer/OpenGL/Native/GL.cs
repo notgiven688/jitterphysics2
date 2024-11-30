@@ -83,9 +83,9 @@ public static class GL
 
     private static glFramebufferTexture2DDelegate glFramebufferTexture2D;
 
-    private delegate void glNamedFramebufferDrawBufferDelegate(uint framebuffer, uint buf);
+    private delegate void glDrawBufferDelegate(uint buf);
 
-    private static glNamedFramebufferDrawBufferDelegate glNamedFramebufferDrawBuffer;
+    private static glDrawBufferDelegate glDrawBuffer;
 
     private delegate void glBindBufferDelegate(uint target, uint buffer);
 
@@ -338,7 +338,7 @@ public static class GL
         glDebugMessageCallback = GetDelegate<glDebugMessageCallbackDelegate>();
         glGenerateMipmap = GetDelegate<glGenerateMipmapDelegate>();
         glBindBuffer = GetDelegate<glBindBufferDelegate>();
-        glNamedFramebufferDrawBuffer = GetDelegate<glNamedFramebufferDrawBufferDelegate>();
+        glDrawBuffer = GetDelegate<glDrawBufferDelegate>();
         glFramebufferTexture2D = GetDelegate<glFramebufferTexture2DDelegate>();
         glBindFramebuffer = GetDelegate<glBindFramebufferDelegate>();
         glGenBuffers = GetDelegate<glGenBuffersDelegate>();
@@ -547,9 +547,9 @@ public static class GL
         glBindBuffer(target, buffer);
     }
 
-    public static void NamedFramebufferDrawBuffer(uint framebuffer, uint buf)
+    public static void DrawBuffer(uint buf)
     {
-        glNamedFramebufferDrawBuffer(framebuffer, buf);
+        glDrawBuffer(buf);
     }
 
     public static void FramebufferTexture2D(uint target, uint attachment, uint textarget, uint texture, int level)
