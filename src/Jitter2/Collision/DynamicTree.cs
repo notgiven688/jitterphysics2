@@ -95,10 +95,9 @@ public partial class DynamicTree
     public const Real ExpandFactor = (Real)0.1;
 
     /// <summary>
-    /// Specifies a small additional expansion of the bounding box in the AABB tree structure to prevent
-    /// the creation of bounding boxes with zero volume.
+    /// Specifies a small additional expansion of the bounding box which is constant.
     /// </summary>
-    public const Real ExpandEps = (Real)0.01;
+    public const Real ExpandEps = (Real)0.1;
 
     /// <summary>
     /// Represents a node in the AABB tree.
