@@ -61,8 +61,8 @@ world.SubstepCount = 4;
 
 // add a body representing the plane
 RigidBody planeBody = world.CreateRigidBody();
-planeBody.AddShape(new BoxShape(10, 1, 10));
-planeBody.Position = new JVector(0, 0, 0);
+planeBody.AddShape(new BoxShape(10));
+planeBody.Position = new JVector(0, -5, 0);
 planeBody.IsStatic = true;
 
 // add NumberOfBoxes cubes
