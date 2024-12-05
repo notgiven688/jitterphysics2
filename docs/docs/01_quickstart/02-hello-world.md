@@ -61,8 +61,8 @@ world.SubstepCount = 4;
 
 // add a body representing the plane
 RigidBody planeBody = world.CreateRigidBody();
-planeBody.AddShape(new BoxShape(10));
-planeBody.Position = new JVector(0, -5, 0);
+planeBody.AddShape(new BoxShape(10, 1, 10));
+planeBody.Position = new JVector(0, 0, 0);
 planeBody.IsStatic = true;
 
 // add NumberOfBoxes cubes
@@ -71,6 +71,7 @@ for(int i = 0; i < NumberOfBoxes; i++)
     RigidBody body = world.CreateRigidBody();
     body.AddShape(new BoxShape(1));
     body.Position = new JVector(0, i * 2 + 0.5f, 0);
+    body.Tag = "box";
 }
 
 // create a camera
@@ -100,7 +101,7 @@ while (!WindowShouldClose())
 
     foreach(var body in world.RigidBodies)
     {
-        if(body == planeBody) continue; // do not draw this
+        if (body.Tag != null && (string)body.Tag != "box") continue; // do not draw this
         DrawMesh(boxMesh, boxMat, GetRayLibTransformMatrix(body));
     }
 
