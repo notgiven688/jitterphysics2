@@ -71,7 +71,6 @@ for(int i = 0; i < NumberOfBoxes; i++)
     RigidBody body = world.CreateRigidBody();
     body.AddShape(new BoxShape(1));
     body.Position = new JVector(0, i * 2 + 0.5f, 0);
-    body.Tag = "box";
 }
 
 // create a camera
@@ -101,7 +100,7 @@ while (!WindowShouldClose())
 
     foreach(var body in world.RigidBodies)
     {
-        if (body.Tag != null && (string)body.Tag != "box") continue; // do not draw this
+        if (body == planeBody || body == world.NullBody) continue; // do not draw this
         DrawMesh(boxMesh, boxMat, GetRayLibTransformMatrix(body));
     }
 
