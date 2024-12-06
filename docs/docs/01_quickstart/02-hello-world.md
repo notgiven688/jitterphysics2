@@ -100,7 +100,7 @@ while (!WindowShouldClose())
 
     foreach(var body in world.RigidBodies)
     {
-        if(body == planeBody) continue; // do not draw this
+        if (body == planeBody || body == world.NullBody) continue; // do not draw this
         DrawMesh(boxMesh, boxMat, GetRayLibTransformMatrix(body));
     }
 
