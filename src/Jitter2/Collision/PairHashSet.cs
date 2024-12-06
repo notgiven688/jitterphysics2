@@ -50,9 +50,6 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         public Pair(int id1, int id2)
         {
-#if NET6_0
-            ID = 0;
-#endif
             if (id1 < id2)
             {
                 (ID1, ID2) = (id1, id2);

@@ -44,10 +44,6 @@ public struct MinkowskiDifference
 
         public Vertex(JVector v)
         {
-#if NET6_0
-            A = new JVector();
-            B = new JVector();
-#endif
             V = v;
         }
     }

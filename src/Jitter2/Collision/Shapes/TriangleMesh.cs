@@ -99,10 +99,6 @@ public class TriangleMesh
 
         public Triangle(int a, int b, int c)
         {
-#if NET6_0
-            Normal = new JVector();
-#endif
-
             IndexA = a;
             IndexB = b;
             IndexC = c;
