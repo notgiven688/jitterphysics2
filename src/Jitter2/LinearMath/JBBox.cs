@@ -233,6 +233,13 @@ public struct JBBox
                  Max.Z >= box.Min.Z && Min.Z <= box.Max.Z);
     }
 
+    public readonly bool Encompasses(in JBBox box)
+    {
+        return Min.X <= box.Min.X && Max.X >= box.Max.X &&
+               Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
+               Min.Z <= box.Min.Z && Max.Z >= box.Max.Z;
+    }
+
     public static JBBox CreateMerged(in JBBox original, in JBBox additional)
     {
         CreateMerged(original, additional, out JBBox result);
