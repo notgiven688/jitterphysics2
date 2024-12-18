@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Jitter2.Collision;
 
@@ -35,7 +36,7 @@ namespace Jitter2.Collision;
 /// all potential overlapping pairs of shapes. The implementation is based
 /// on open addressing.
 /// </summary>
-public class PairHashSet : IEnumerable<PairHashSet.Pair>
+public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
     public readonly struct Pair
@@ -135,7 +136,9 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
     public const int MinimumSize = 16384;
     public const int TrimFactor = 8;
 
-    public int Count { get; private set; }
+    private int count;
+
+    public int Count => count;
 
     private static int PickSize(int size = -1)
     {
@@ -164,9 +167,12 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
         Trace.WriteLine($"PairHashSet: Resizing {Slots.Length} -> {size}");
 
         var tmp = Slots;
-        Count = 0;
+        count = 0;
 
         Slots = new Pair[size];
+
+        Interlocked.MemoryBarrier();
+
         modder = size - 1;
 
         for (int i = 0; i < tmp.Length; i++)
@@ -183,22 +189,54 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
     {
         int hash = pair.GetHash();
 
-        int hash_i = FindSlot(hash, pair.ID);
+        try_again:
 
-        if (Slots[hash_i].ID == 0)
+        var originalSlots = Slots;
+
+        fixed (Pair* slotsPtr = Slots)
         {
-            Slots[hash_i] = pair;
-            Count += 1;
-
-            if (Slots.Length < 2 * Count)
+            while (true)
             {
-                Resize(PickSize(Slots.Length * 2));
-            }
+                int hash_i = FindSlot(hash, pair.ID);
+                Pair* slotPtr = &slotsPtr[hash_i];
 
-            return true;
-        }
+                if (slotPtr->ID == pair.ID)
+                {
+                    return false;
+                }
 
-        return false;
+                if (slotPtr->ID == 0)
+                {
+                    if (Interlocked.CompareExchange(ref *(long*)slotPtr,
+                            *(long*)&pair, 0) == 0)
+                    {
+                        if (originalSlots != Slots)
+                        {
+                            // Item was added to the wrong array.
+                            goto try_again;
+                        }
+
+                        Interlocked.Increment(ref count);
+
+                        if (Slots.Length < 2 * Count)
+                        {
+                            lock (Slots)
+                            {
+                                // check if another thread already did the work for us
+                                if (Slots.Length < 2 * Count)
+                                {
+                                    Resize(PickSize(Slots.Length * 2));
+                                }
+                            }
+                            return true;
+                        }
+
+                        return true;  // Successfully added the pair
+                    }
+                }
+
+            } // while
+        } // fixed
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -243,7 +281,7 @@ public class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
 
         Slots[slot] = Pair.Zero;
-        Count -= 1;
+        count -= 1;
 
         if (Slots.Length > MinimumSize && Count * TrimFactor < Slots.Length)
         {

@@ -27,7 +27,6 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Jitter2.Collision;
-using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
@@ -155,9 +154,8 @@ public sealed partial class World
         // Add the new arbiters to their respective rigid body.
 
         // Go through potential pairs in the collision system and remove
-        // pairs which are inactive. This speeds up the enumeration of all
-        // collisions of interest.
-        DynamicTree.TrimInactivePairs();
+        // pairs which are invalid (i.e. not overlapping or inactive).
+        DynamicTree.TrimInvalidPairs();
 
         SetTime(Timings.TrimPotentialPairs);
 
@@ -411,6 +409,9 @@ public sealed partial class World
 
             var proxyA = DynamicTree.Nodes[node.ID1].Proxy;
             var proxyB = DynamicTree.Nodes[node.ID2].Proxy;
+
+            if(proxyA == null || proxyB == null) continue;
+            if(!DynamicTree.Filter(proxyA, proxyB)) continue;
 
             if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
             {

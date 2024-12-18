@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Jitter2.DataStructures;
 
@@ -163,6 +164,7 @@ public class ActiveList<T> : IEnumerable<T> where T : class, IListIndex
         elements[index1].ListIndex = index1;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsActive(T element)
     {
         Debug.Assert(element.ListIndex != -1);
