@@ -179,6 +179,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public bool Add(Pair pair)
     {
         int hash = pair.GetHash();
+        bool overwriteResult = false;
 
         try_again:
 
@@ -193,7 +194,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
                 if (slotPtr->ID == pair.ID)
                 {
-                    return false;
+                    return overwriteResult;
                 }
 
                 if (slotPtr->ID == 0)
@@ -204,6 +205,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
                         if (originalSlots != Slots)
                         {
                             // Item was added to the wrong array.
+                            overwriteResult = true;
                             goto try_again;
                         }
 
