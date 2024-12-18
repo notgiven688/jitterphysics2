@@ -221,7 +221,6 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
                                     Resize(PickSize(Slots.Length * 2));
                                 }
                             }
-                            return true;
                         }
 
                         return true;  // Successfully added the pair
