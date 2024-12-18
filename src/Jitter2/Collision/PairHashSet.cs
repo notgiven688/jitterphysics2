@@ -32,10 +32,14 @@ using System.Threading;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores pairs of (int, int) values. Utilized in Jitter to monitor
-/// all potential overlapping pairs of shapes. The implementation is based
-/// on open addressing.
+/// A hash set implementation optimized for thread-safe additions of (int,int)-pairs.
 /// </summary>
+/// <remarks>
+/// - The <see cref="Add(Pair)"/> method is thread-safe and can be called concurrently
+///   from multiple threads without additional synchronization.
+/// - Other operations, such as <see cref="Remove(Pair)"/> or enumeration, are NOT thread-safe
+///   and require external synchronization if used concurrently.
+/// </remarks>
 public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
@@ -65,31 +69,6 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         {
             return (ID1 + 2281 * ID2) & 0x7FFFFFFF;
         }
-
-        /*
-        import random
-        import matplotlib.pyplot as plt
-
-        def get_hash(ID1, ID2):
-            return ((ID1 + 2281 * ID2) & 0x7FFFFFFF) % 65536
-
-        num_samples = 100000  # Number of samples to generate
-
-        # Generate random ID1 and ID2 values
-        ID1_values = [random.randint(0, 100000) for _ in range(num_samples)]
-        ID2_values = [random.randint(0, 100000) for _ in range(num_samples)]
-
-        # Compute hashes for each pair of ID1 and ID2
-        hash_values = [get_hash(ID1, ID2) for ID1, ID2 in zip(ID1_values, ID2_values)]
-
-        # Plot histogram
-        plt.hist(hash_values, bins=50, edgecolor='black')
-        plt.xlabel('Hash Value')
-        plt.ylabel('Frequency')
-        plt.title('Histogram of Hash Values')
-        plt.grid(True)
-        plt.show()
-        */
     }
 
     public struct Enumerator : IEnumerator<Pair>
@@ -185,6 +164,18 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
+    /// <summary>
+    /// Adds a pair to the hash set if it does not already exist.
+    /// </summary>
+    /// <remarks>
+    /// This method is thread-safe and can be called concurrently from multiple threads.
+    /// However, it does NOT provide thread safety for other operations like <see cref="Remove(Pair)"/>.
+    /// Ensure external synchronization if other operations are used concurrently.
+    /// </remarks>
+    /// <param name="pair">The pair to add.</param>
+    /// <returns>
+    /// <c>true</c> if the pair was added successfully; <c>false</c> if it already exists.
+    /// </returns>
     public bool Add(Pair pair)
     {
         int hash = pair.GetHash();
