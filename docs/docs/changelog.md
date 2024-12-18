@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.4.9 (2024-12-18)
+
+- Huge improvements for the DynamicTree implementation
+
 ### Jitter 2.4.8 (2024-11-27)
 
 - Add option to build in double precision mode.
