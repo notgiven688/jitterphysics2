@@ -159,27 +159,24 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     internal JMatrix inverseInertia = JMatrix.Identity;
     internal Real inverseMass = (Real)1.0;
 
-    /// <summary>
-    /// Gets or sets the friction coefficient for this object.
-    /// </summary>
     /// <remarks>
     /// The friction coefficient determines the resistance to sliding motion.
-    /// Higher values create more friction, while lower values allow easier sliding.
-    /// A typical value ranges between 0 (no friction) and 1 (maximum friction).
+    /// Values typically range from 0 (no friction) upwards.
+    /// Higher values represent strong friction or adhesion effects.
     /// Default is 0.2.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if the value is not between 0 and 1.
+    /// Thrown if the value is negative.
     /// </exception>
     public Real Friction
     {
         get => friction;
         set
         {
-            if (value < (Real)0.0 || value > (Real)1.0)
+            if (value < (Real)0.0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    "Friction must be between 0 and 1.");
+                    "Friction must be non-negative.");
             }
 
             friction = value;
