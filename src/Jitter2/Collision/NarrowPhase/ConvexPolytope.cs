@@ -150,13 +150,13 @@ public unsafe struct ConvexPolytope
             t = JVector.Dot(a, u);
             if (gamma < (Real)0.0 && t > (Real)0.0)
             {
-                beta = MathF.Min((Real)1.0, t / u.LengthSquared());
+                beta = MathR.Min((Real)1.0, t / u.LengthSquared());
                 alpha = (Real)1.0 - beta;
                 gamma = (Real)0.0;
             }
             else
             {
-                gamma = MathF.Min((Real)1.0, MathF.Max((Real)0.0, JVector.Dot(a, v) / v.LengthSquared()));
+                gamma = MathR.Min((Real)1.0, MathR.Max((Real)0.0, JVector.Dot(a, v) / v.LengthSquared()));
                 alpha = (Real)1.0 - gamma;
                 beta = (Real)0.0;
             }
@@ -169,13 +169,13 @@ public unsafe struct ConvexPolytope
             t = JVector.Dot(b, w);
             if (alpha < (Real)0.0 && t > (Real)0.0)
             {
-                gamma = MathF.Min((Real)1.0, t / w.LengthSquared());
+                gamma = MathR.Min((Real)1.0, t / w.LengthSquared());
                 beta = (Real)1.0 - gamma;
                 alpha = (Real)0.0;
             }
             else
             {
-                alpha = MathF.Min((Real)1.0, MathF.Max((Real)0.0, -JVector.Dot(b, u) / u.LengthSquared()));
+                alpha = MathR.Min((Real)1.0, MathR.Max((Real)0.0, -JVector.Dot(b, u) / u.LengthSquared()));
                 beta = (Real)1.0 - alpha;
                 gamma = (Real)0.0;
             }
@@ -188,13 +188,13 @@ public unsafe struct ConvexPolytope
             t = -JVector.Dot(c, v);
             if (beta < (Real)0.0 && t > (Real)0.0)
             {
-                alpha = MathF.Min((Real)1.0, t / v.LengthSquared());
+                alpha = MathR.Min((Real)1.0, t / v.LengthSquared());
                 gamma = (Real)1.0 - alpha;
                 beta = (Real)0.0;
             }
             else
             {
-                beta = MathF.Min((Real)1.0, MathF.Max((Real)0.0, -JVector.Dot(c, w) / w.LengthSquared()));
+                beta = MathR.Min((Real)1.0, MathR.Max((Real)0.0, -JVector.Dot(c, w) / w.LengthSquared()));
                 gamma = (Real)1.0 - beta;
                 alpha = (Real)0.0;
             }
