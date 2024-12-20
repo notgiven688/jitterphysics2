@@ -133,70 +133,70 @@ public unsafe struct ConvexPolytope
         JVector.Subtract(a, b, out u);
         JVector.Subtract(a, c, out v);
 
-        float t = 1.0f / tri.NormalSq;
+        Real t = (Real)1.0 / tri.NormalSq;
 
         JVector.Cross(u, a, out tmp);
-        float gamma = JVector.Dot(tmp, tri.Normal) * t;
+        Real gamma = JVector.Dot(tmp, tri.Normal) * t;
         JVector.Cross(a, v, out tmp);
-        float beta = JVector.Dot(tmp, tri.Normal) * t;
-        float alpha = 1.0f - gamma - beta;
+        Real beta = JVector.Dot(tmp, tri.Normal) * t;
+        Real alpha = (Real)1.0 - gamma - beta;
 
         // Clamp the projected barycentric coordinates to lie within the triangle,
         // such that the clamped coordinates are closest (euclidean) to the original point.
         //
         // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
-        if (alpha >= 0.0f && beta < 0.0f)
+        if (alpha >= (Real)0.0 && beta < (Real)0.0)
         {
             t = JVector.Dot(a, u);
-            if (gamma < 0.0f && t > 0.0f)
+            if (gamma < (Real)0.0 && t > (Real)0.0)
             {
-                beta = MathF.Min(1.0f, t / u.LengthSquared());
-                alpha = 1.0f - beta;
-                gamma = 0.0f;
+                beta = MathF.Min((Real)1.0, t / u.LengthSquared());
+                alpha = (Real)1.0 - beta;
+                gamma = (Real)0.0;
             }
             else
             {
-                gamma = MathF.Min(1.0f, MathF.Max(0.0f, JVector.Dot(a, v) / v.LengthSquared()));
-                alpha = 1.0f - gamma;
-                beta = 0.0f;
+                gamma = MathF.Min((Real)1.0, MathF.Max((Real)0.0, JVector.Dot(a, v) / v.LengthSquared()));
+                alpha = (Real)1.0 - gamma;
+                beta = (Real)0.0;
             }
 
             clamped = true;
         }
-        else if (beta >= 0.0f && gamma < 0.0f)
+        else if (beta >= (Real)0.0 && gamma < (Real)0.0)
         {
             JVector.Subtract(b, c, out w);
             t = JVector.Dot(b, w);
-            if (alpha < 0.0f && t > 0.0f)
+            if (alpha < (Real)0.0 && t > (Real)0.0)
             {
-                gamma = MathF.Min(1.0f, t / w.LengthSquared());
-                beta = 1.0f - gamma;
-                alpha = 0.0f;
+                gamma = MathF.Min((Real)1.0, t / w.LengthSquared());
+                beta = (Real)1.0 - gamma;
+                alpha = (Real)0.0;
             }
             else
             {
-                alpha = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(b, u) / u.LengthSquared()));
-                beta = 1.0f - alpha;
-                gamma = 0.0f;
+                alpha = MathF.Min((Real)1.0, MathF.Max((Real)0.0, -JVector.Dot(b, u) / u.LengthSquared()));
+                beta = (Real)1.0 - alpha;
+                gamma = (Real)0.0;
             }
 
             clamped = true;
         }
-        else if (gamma >= 0.0f && alpha < 0.0f)
+        else if (gamma >= (Real)0.0 && alpha < (Real)0.0)
         {
             JVector.Subtract(b, c, out w);
             t = -JVector.Dot(c, v);
-            if (beta < 0.0f && t > 0.0f)
+            if (beta < (Real)0.0 && t > (Real)0.0)
             {
-                alpha = MathF.Min(1.0f, t / v.LengthSquared());
-                gamma = 1.0f - alpha;
-                beta = 0.0f;
+                alpha = MathF.Min((Real)1.0, t / v.LengthSquared());
+                gamma = (Real)1.0 - alpha;
+                beta = (Real)0.0;
             }
             else
             {
-                beta = MathF.Min(1.0f, MathF.Max(0.0f, -JVector.Dot(c, w) / w.LengthSquared()));
-                gamma = 1.0f - beta;
-                alpha = 0.0f;
+                beta = MathF.Min((Real)1.0, MathF.Max((Real)0.0, -JVector.Dot(c, w) / w.LengthSquared()));
+                gamma = (Real)1.0 - beta;
+                alpha = (Real)0.0;
             }
 
             clamped = true;
