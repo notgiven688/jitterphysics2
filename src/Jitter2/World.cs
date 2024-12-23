@@ -24,6 +24,7 @@
 #pragma warning disable CS8618 // InitParallelCallbacks() - https://github.com/dotnet/roslyn/issues/32358
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -103,7 +104,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     public SpanData RawData => new(this);
 
-    private readonly Dictionary<ArbiterKey, Arbiter> arbiters = new();
+    private readonly ConcurrentDictionary<ArbiterKey, Arbiter> arbiters = new();
 
     private readonly ActiveList<Island> islands = new();
     private readonly ActiveList<RigidBody> bodies = new();
@@ -366,7 +367,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body2);
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
-        arbiters.Remove(arbiter.Handle.Data.Key);
+        arbiters.TryRemove(arbiter.Handle.Data.Key, out _);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);

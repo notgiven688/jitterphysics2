@@ -69,7 +69,7 @@ public partial class Playground : RenderWindow
         var capacity = new World.Capacity
         {
             BodyCount = 64_000,
-            ContactCount = 64_000,
+            ContactCount = 128_000,
             ConstraintCount = 32_000,
             SmallConstraintCount = 32_000
         };

@@ -24,7 +24,6 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -417,19 +416,16 @@ public sealed partial class World
     public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {
         ArbiterKey arbiterKey = new(id0, id1);
+        bool exists = arbiters.TryGetValue(arbiterKey, out Arbiter? arb);
 
-        lock (arbiters)
+        if (!exists)
         {
-            ref Arbiter? arb = ref CollectionsMarshal.GetValueRefOrAddDefault(arbiters, arbiterKey, out bool exists);
-
-            if (!exists)
+            lock (memContacts)
             {
                 if (!Arbiter.Pool.TryPop(out arb))
                 {
                     arb = new Arbiter();
                 }
-
-                deferredArbiters.Add(arb);
 
                 var h = memContacts.Allocate(true);
                 arb.Handle = h;
@@ -437,10 +433,23 @@ public sealed partial class World
                 h.Data.Key = arbiterKey;
                 arb.Body1 = b0;
                 arb.Body2 = b1;
-            }
 
-            Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));
-            arbiter = arb;
+                Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));
+
+                bool success = arbiters.TryAdd(arbiterKey, arb);
+
+                if (success)
+                {
+                    deferredArbiters.Add(arb);
+                }
+                else
+                {
+                    memContacts.Free(h);
+                    Arbiter.Pool.Push(arb);
+                }
+            }
         }
+
+        arbiter = arb!;
     }
 }
