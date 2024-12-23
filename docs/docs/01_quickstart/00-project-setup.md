@@ -27,7 +27,7 @@ Next, create a new console application in this directory and add Raylib-cs and J
 ```sh
 dotnet new console
 dotnet add package Raylib-cs --version 6.1.1
-dotnet add package Jitter2 --version 2.4.9
+dotnet add package Jitter2 --version 2.5.0
 ```
 
 You have completed the setup. If you now execute the following command:

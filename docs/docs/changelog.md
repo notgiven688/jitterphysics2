@@ -4,9 +4,14 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.0 (2024-12-23)
+
+- Better utilization of multi core systems.
+- Bugfix in collision detection (possible NaN values).
+
 ### Jitter 2.4.9 (2024-12-18)
 
-- Huge improvements for the DynamicTree implementation
+- Huge improvements for the DynamicTree implementation.
 
 ### Jitter 2.4.8 (2024-11-27)
 
