@@ -427,23 +427,24 @@ public sealed partial class World
                     arb = new Arbiter();
                 }
 
+                var h = memContacts.Allocate(true);
+                arb.Handle = h;
+                h.Data.Init(b0, b1);
+                h.Data.Key = arbiterKey;
+                arb.Body1 = b0;
+                arb.Body2 = b1;
+
+                Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));
+
                 bool success = arbiters.TryAdd(arbiterKey, arb);
 
                 if (success)
                 {
-                    var h = memContacts.Allocate(true);
-                    arb.Handle = h;
-                    h.Data.Init(b0, b1);
-                    h.Data.Key = arbiterKey;
-                    arb.Body1 = b0;
-                    arb.Body2 = b1;
-
-                    Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));
-
                     deferredArbiters.Add(arb);
                 }
                 else
                 {
+                    memContacts.Free(h);
                     Arbiter.Pool.Push(arb);
                 }
             }
