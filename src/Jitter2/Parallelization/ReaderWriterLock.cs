@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace Jitter2.Parallelization;
@@ -37,6 +38,7 @@ public struct ReaderWriterLock
     /// <summary>
     /// Enters the critical read section.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnterReadLock()
     {
         while (true)
@@ -52,6 +54,7 @@ public struct ReaderWriterLock
     /// <summary>
     /// Enters the critical write section.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnterWriteLock()
     {
         SpinWait sw = new();
@@ -71,6 +74,7 @@ public struct ReaderWriterLock
     /// <summary>
     /// Exits the read section.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ExitReadLock()
     {
         Interlocked.Decrement(ref reader);
@@ -79,6 +83,7 @@ public struct ReaderWriterLock
     /// <summary>
     /// Exits the write section.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ExitWriteLock()
     {
         writer = 0;

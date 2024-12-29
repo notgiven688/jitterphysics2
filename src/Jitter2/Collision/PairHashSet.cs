@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -107,13 +106,15 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
-    public Pair[] Slots = Array.Empty<Pair>();
+    public volatile Pair[] Slots = Array.Empty<Pair>();
+    private readonly object locker = new object();
+    private volatile int count;
+
+    private uint generation = 0;
 
     // 16384*8/1024 KB = 128 KB
     public const int MinimumSize = 16384;
     public const int TrimFactor = 8;
-
-    private int count;
 
     public int Count => count;
 
@@ -140,24 +141,61 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
     private void Resize(int size)
     {
-        if (Slots.Length == size) return;
         Trace.WriteLine($"PairHashSet: Resizing {Slots.Length} -> {size}");
 
         var tmp = Slots;
-        count = 0;
 
         Slots = new Pair[size];
-
-        Interlocked.MemoryBarrier();
 
         for (int i = 0; i < tmp.Length; i++)
         {
             Pair pair = tmp[i];
             if (pair.ID != 0)
             {
-                Add(pair);
+                int hash = pair.GetHash();
+                int hash_i = FindSlot(Slots, hash, pair.ID);
+
+                if (Slots[hash_i].ID == 0)
+                {
+                    Slots[hash_i] = pair;
+                }
             }
         }
+    }
+
+    private int FindSlot(Pair[] slots, int hash, long id)
+    {
+        int lmodder = slots.Length - 1;
+
+        hash &= lmodder;
+
+        while (true)
+        {
+            if (slots[hash].ID == 0 || slots[hash].ID == id) return hash;
+            hash = (hash + 1) & lmodder;
+        }
+    }
+
+    public bool Add(Pair pair)
+    {
+        int hash = pair.GetHash();
+
+        int hash_i = FindSlot(Slots, hash, pair.ID);
+
+        if (Slots[hash_i].ID == 0)
+        {
+            Slots[hash_i] = pair;
+            count += 1;
+
+            if (Slots.Length < 2 * count)
+            {
+                Resize(PickSize(Slots.Length * 2));
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -172,71 +210,69 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     /// <returns>
     /// <c>true</c> if the pair was added successfully; <c>false</c> if it already exists.
     /// </returns>
-    public bool Add(Pair pair)
+    public void ConcurrentAdd(Pair pair)
     {
+        // One could improve this further by making the resize lock-free as well
+        // (using the new array as soon as it is initialized, i.e. making use of
+        // "double buffering"). However, getting this right without having subtle
+        // bugs is not worth the effort.
+
+        SpinWait sw = new SpinWait();
+
         int hash = pair.GetHash();
-        bool overwriteResult = false;
 
         try_again:
 
-        var originalSlots = Slots;
+        uint cgen1 = Volatile.Read(ref generation);
 
-        fixed (Pair* slotsPtr = Slots)
+        var currentSlots = Slots;
+
+        fixed (Pair* slotsPtr = currentSlots)
         {
             while (true)
             {
-                int hash_i = FindSlot(originalSlots, hash, pair.ID);
+                int hash_i = FindSlot(currentSlots, hash, pair.ID);
                 Pair* slotPtr = &slotsPtr[hash_i];
 
                 if (slotPtr->ID == pair.ID)
                 {
-                    return overwriteResult;
+                    return;
                 }
 
                 if (Interlocked.CompareExchange(ref *(long*)slotPtr,
                         *(long*)&pair, 0) == 0)
                 {
-                    if (originalSlots != Slots)
+                    uint cgen2 = Volatile.Read(ref generation);
+
+                    if (cgen1 != cgen2 || cgen1 % 2 != 0)
                     {
-                        // Item was added to the wrong array.
-                        overwriteResult = true;
+                        sw.SpinOnce();
                         goto try_again;
                     }
 
                     Interlocked.Increment(ref count);
 
-                    if (Slots.Length < 2 * Count)
+                    if (Slots.Length < 2 * count)
                     {
-                        lock (Slots)
+                        lock (locker)
                         {
+                            Interlocked.Increment(ref generation);
+
                             // check if another thread already did the work for us
-                            if (Slots.Length < 2 * Count)
+                            if (Slots.Length < 2 * count)
                             {
                                 Resize(PickSize(Slots.Length * 2));
                             }
+
+                            Interlocked.Increment(ref generation);
                         }
                     }
 
-                    return true; // Successfully added the pair
-
+                    return;
                 }
 
             } // while
         } // fixed
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int FindSlot(Pair[] slots, int hash, long id)
-    {
-        int lmodder = slots.Length - 1;
-
-        hash &= lmodder;
-
-        while (true)
-        {
-            if (Slots[hash].ID == 0 || Slots[hash].ID == id) return hash;
-            hash = (hash + 1) & lmodder;
-        }
     }
 
     public bool Remove(int slot)
@@ -273,9 +309,9 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         Slots[slot] = Pair.Zero;
         count -= 1;
 
-        if (Slots.Length > MinimumSize && Count * TrimFactor < Slots.Length)
+        if (Slots.Length > MinimumSize && count * TrimFactor < Slots.Length)
         {
-            Resize(PickSize(Count * 2));
+            Resize(PickSize(count * 2));
         }
 
         return true;

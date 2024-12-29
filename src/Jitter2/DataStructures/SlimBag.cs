@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Jitter2.DataStructures;
 
@@ -33,11 +34,14 @@ namespace Jitter2.DataStructures;
 /// decrementing by one.
 /// </summary>
 /// <typeparam name="T">The type of elements in the SlimBag.</typeparam>
-internal class SlimBag<T>
+public class SlimBag<T>
 {
-    private T[] array;
+    private volatile T[] array;
+    private uint generation;
     private int counter;
     private int nullOut;
+
+    private readonly object locker;
     private readonly IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
     /// <summary>
@@ -47,6 +51,7 @@ internal class SlimBag<T>
     public SlimBag(int initialSize = 4)
     {
         array = new T[initialSize];
+        locker = new object();
         nullOut = 0;
     }
 
@@ -82,11 +87,57 @@ internal class SlimBag<T>
     {
         if (counter == array.Length)
         {
-            Array.Resize(ref array, array.Length * 2);
+            var newArray = new T[array.Length * 2];
+            Array.Copy(array, 0, newArray, 0, array.Length);
+            array = newArray;
         }
 
         array[counter++] = item;
         nullOut = counter;
+    }
+
+    public void ConcurrentAdd(T item)
+    {
+        // One could improve this further by making the resize lock-free as well
+        // (using the new array as soon as it is initialized, i.e. making use of
+        // "double buffering"). However, getting this right without having subtle
+        // bugs is not worth the effort.
+
+        SpinWait sw = new SpinWait();
+        int ic = Interlocked.Increment(ref counter) - 1;
+
+        try_again:
+
+        uint cgen1 = Volatile.Read(ref generation);
+
+        if (ic < array.Length)
+        {
+            array[ic] = item;
+
+            uint cgen2 = Volatile.Read(ref generation);
+
+            if (cgen1 != cgen2 || cgen2 % 2 != 0)
+            {
+                sw.SpinOnce();
+                goto try_again;
+            }
+
+            return;
+        }
+
+        lock (locker)
+        {
+            if(ic >= array.Length)
+            {
+                Interlocked.Increment(ref generation);
+                var newArray = new T[array.Length * 2];
+                Array.Copy(array, 0, newArray, 0, array.Length);
+                array = newArray;
+                Interlocked.Increment(ref generation);
+            }
+
+            goto try_again;
+        }
     }
 
     /// <summary>
