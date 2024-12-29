@@ -193,34 +193,32 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
                     return overwriteResult;
                 }
 
-                if (slotPtr->ID == 0)
+                if (Interlocked.CompareExchange(ref *(long*)slotPtr,
+                        *(long*)&pair, 0) == 0)
                 {
-                    if (Interlocked.CompareExchange(ref *(long*)slotPtr,
-                            *(long*)&pair, 0) == 0)
+                    if (originalSlots != Slots)
                     {
-                        if (originalSlots != Slots)
-                        {
-                            // Item was added to the wrong array.
-                            overwriteResult = true;
-                            goto try_again;
-                        }
+                        // Item was added to the wrong array.
+                        overwriteResult = true;
+                        goto try_again;
+                    }
 
-                        Interlocked.Increment(ref count);
+                    Interlocked.Increment(ref count);
 
-                        if (Slots.Length < 2 * Count)
+                    if (Slots.Length < 2 * Count)
+                    {
+                        lock (Slots)
                         {
-                            lock (Slots)
+                            // check if another thread already did the work for us
+                            if (Slots.Length < 2 * Count)
                             {
-                                // check if another thread already did the work for us
-                                if (Slots.Length < 2 * Count)
-                                {
-                                    Resize(PickSize(Slots.Length * 2));
-                                }
+                                Resize(PickSize(Slots.Length * 2));
                             }
                         }
-
-                        return true;  // Successfully added the pair
                     }
+
+                    return true; // Successfully added the pair
+
                 }
 
             } // while
