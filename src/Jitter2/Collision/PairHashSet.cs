@@ -109,8 +109,6 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
     public Pair[] Slots = Array.Empty<Pair>();
 
-    private int modder = 1;
-
     // 16384*8/1024 KB = 128 KB
     public const int MinimumSize = 16384;
     public const int TrimFactor = 8;
@@ -152,8 +150,6 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         Interlocked.MemoryBarrier();
 
-        modder = size - 1;
-
         for (int i = 0; i < tmp.Length; i++)
         {
             Pair pair = tmp[i];
@@ -189,7 +185,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         {
             while (true)
             {
-                int hash_i = FindSlot(hash, pair.ID);
+                int hash_i = FindSlot(originalSlots, hash, pair.ID);
                 Pair* slotPtr = &slotsPtr[hash_i];
 
                 if (slotPtr->ID == pair.ID)
@@ -232,19 +228,23 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private int FindSlot(int hash, long id)
+    private int FindSlot(Pair[] slots, int hash, long id)
     {
-        hash &= modder;
+        int lmodder = slots.Length - 1;
+
+        hash &= lmodder;
 
         while (true)
         {
             if (Slots[hash].ID == 0 || Slots[hash].ID == id) return hash;
-            hash = (hash + 1) & modder;
+            hash = (hash + 1) & lmodder;
         }
     }
 
     public bool Remove(int slot)
     {
+        int lmodder = Slots.Length - 1;
+
         if (Slots[slot].ID == 0)
         {
             return false;
@@ -254,14 +254,14 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         while (true)
         {
-            hash_j = (hash_j + 1) & modder;
+            hash_j = (hash_j + 1) & lmodder;
 
             if (Slots[hash_j].ID == 0)
             {
                 break;
             }
 
-            int hash_k = Slots[hash_j].GetHash() & modder;
+            int hash_k = Slots[hash_j].GetHash() & lmodder;
 
             // https://en.wikipedia.org/wiki/Open_addressing
             if ((hash_j > slot && (hash_k <= slot || hash_k > hash_j)) ||
@@ -286,7 +286,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public bool Remove(Pair pair)
     {
         int hash = pair.GetHash();
-        int hash_i = FindSlot(hash, pair.ID);
+        int hash_i = FindSlot(Slots, hash, pair.ID);
         return Remove(hash_i);
     }
 
