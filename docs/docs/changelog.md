@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.1 (2024-12-31)
+
+- Bugfix in PairHashSet.
+
 ### Jitter 2.5.0 (2024-12-23)
 
 - Better utilization of multi core systems.
