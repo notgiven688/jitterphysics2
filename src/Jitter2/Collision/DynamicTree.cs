@@ -552,7 +552,7 @@ public partial class DynamicTree
         {
             if (node == index) return;
             if (!Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
-            PotentialPairs.Add(new PairHashSet.Pair(index, node));
+            PotentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
         }
         else
         {
