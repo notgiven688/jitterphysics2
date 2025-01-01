@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Jitter2.DataStructures;
 
@@ -87,6 +88,40 @@ internal class SlimBag<T>
 
         array[counter++] = item;
         nullOut = counter;
+    }
+
+    private Jitter2.Parallelization.ReaderWriterLock rwLock;
+
+    /// <summary>
+    /// Adds an element to the <see cref="SlimBag{T}"/>.
+    /// </summary>
+    /// <param name="item">The element to add.</param>
+    public void ConcurrentAdd(T item)
+    {
+        int lc = Interlocked.Increment(ref counter) - 1;
+
+        again:
+
+        rwLock.EnterReadLock();
+
+        if (lc < array.Length)
+        {
+            array[lc] = item;
+            rwLock.ExitReadLock();
+        }
+        else
+        {
+            rwLock.ExitReadLock();
+
+            rwLock.EnterWriteLock();
+            if (lc >= array.Length)
+            {
+                Array.Resize(ref array, array.Length * 2);
+            }
+            rwLock.ExitWriteLock();
+
+            goto again;
+        }
     }
 
     /// <summary>
@@ -160,7 +195,7 @@ internal class SlimBag<T>
     /// </summary>
     public void NullOutOne()
     {
-        if (nullOut <= counter) return;
-        array[--nullOut] = default!;
+        //if (nullOut <= counter) return;
+        //array[--nullOut] = default!;
     }
 }
