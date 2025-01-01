@@ -492,10 +492,7 @@ public sealed partial class World
             if ((cq.UsageMask & ContactData.MaskContactAll) == 0)
             {
                 var h = memContacts.GetHandle(ref cq);
-                lock (brokenArbiters)
-                {
-                    brokenArbiters.Add(h);
-                }
+                brokenArbiters.ConcurrentAdd(h);
             }
         }
     }
