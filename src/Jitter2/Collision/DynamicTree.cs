@@ -74,7 +74,7 @@ public interface IRayCastable
 /// </summary>
 public partial class DynamicTree
 {
-    private SlimBag<IDynamicTreeProxy> lists = new();
+    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
 
     private readonly ActiveList<IDynamicTreeProxy> proxies = new();
 
@@ -163,7 +163,7 @@ public partial class DynamicTree
     /// <summary>
     /// Gets the number of updated proxies.
     /// </summary>
-    public int UpdatedProxies => lists.Count;
+    public int UpdatedProxies => movedProxies.Count;
 
     /// <summary>
     /// Updates all entities that are marked as active in the active list.
@@ -191,18 +191,18 @@ public partial class DynamicTree
             proxies.ParallelForBatch(256, updateBoundingBoxes);
             SetTime(Timings.UpdateBoundingBoxes);
 
-            lists.Clear();
+            movedProxies.Clear();
             proxies.ParallelForBatch(24, scanMoved);
             SetTime(Timings.ScanMoved);
 
-            for (int i = 0; i < lists.Count; i++)
+            for (int i = 0; i < movedProxies.Count; i++)
             {
-                InternalAddRemoveProxy(lists[i]);
+                InternalAddRemoveProxy(movedProxies[i]);
             }
 
             SetTime(Timings.UpdateProxies);
 
-            lists.ParallelForBatch(24, scanOverlaps);
+            movedProxies.ParallelForBatch(24, scanOverlaps);
 
             SetTime(Timings.ScanOverlaps);
         }
@@ -212,23 +212,23 @@ public partial class DynamicTree
             UpdateBoundingBoxesCallback(batch);
             SetTime(Timings.UpdateBoundingBoxes);
 
-            lists.Clear();
+            movedProxies.Clear();
             scanMoved(batch);
             SetTime(Timings.ScanMoved);
 
-            for (int i = 0; i < lists.Count; i++)
+            for (int i = 0; i < movedProxies.Count; i++)
             {
-                InternalAddRemoveProxy(lists[i]);
+                InternalAddRemoveProxy(movedProxies[i]);
             }
 
             SetTime(Timings.UpdateProxies);
 
-            scanOverlaps(new Parallel.Batch(0, lists.Count));
+            scanOverlaps(new Parallel.Batch(0, movedProxies.Count));
 
             SetTime(Timings.ScanOverlaps);
         }
 
-        lists.TrackAndNullOutOne();
+        movedProxies.TrackAndNullOutOne();
     }
 
     private Real step_dt;
@@ -571,7 +571,7 @@ public partial class DynamicTree
             if (node.ForceUpdate || !node.ExpandedBox.Encompasses(proxy.WorldBoundingBox))
             {
                 node.ForceUpdate = false;
-                lists.ConcurrentAdd(proxy);
+                movedProxies.ConcurrentAdd(proxy);
             }
 
             // else proxy is well contained within the nodes expanded Box:
@@ -586,7 +586,7 @@ public partial class DynamicTree
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            OverlapCheckAdd(root, lists[i].NodePtr);
+            OverlapCheckAdd(root, movedProxies[i].NodePtr);
         }
     }
 
