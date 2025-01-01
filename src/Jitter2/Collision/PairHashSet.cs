@@ -31,14 +31,9 @@ using System.Threading;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// A hash set implementation optimized for thread-safe additions of (int,int)-pairs.
+/// A hash set implementation which stores pairs of (int, int) values.
+/// The implementation is based on open addressing.
 /// </summary>
-/// <remarks>
-/// - The <see cref="Add(Pair)"/> method is thread-safe and can be called concurrently
-///   from multiple threads without additional synchronization.
-/// - Other operations, such as <see cref="Remove(Pair)"/> or enumeration, are NOT thread-safe
-///   and require external synchronization if used concurrently.
-/// </remarks>
 public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
@@ -106,8 +101,8 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
-    public volatile Pair[] Slots = Array.Empty<Pair>();
-    private volatile int count;
+    public Pair[] Slots = Array.Empty<Pair>();
+    private int count;
 
     // 16384*8/1024 KB = 128 KB
     public const int MinimumSize = 16384;
@@ -150,12 +145,11 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
             if (pair.ID != 0)
             {
                 int hash = pair.GetHash();
-                int hash_i = FindSlot(newSlots, hash, pair.ID);
-                newSlots[hash_i] = pair;
+                int hashIndex = FindSlot(newSlots, hash, pair.ID);
+                newSlots[hashIndex] = pair;
             }
         }
 
-        Interlocked.MemoryBarrier();
         Slots = newSlots;
     }
 
@@ -175,11 +169,11 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public bool Add(Pair pair)
     {
         int hash = pair.GetHash();
-        int hash_i = FindSlot(Slots, hash, pair.ID);
+        int hashIndex = FindSlot(Slots, hash, pair.ID);
 
-        if (Slots[hash_i].ID == 0)
+        if (Slots[hashIndex].ID == 0)
         {
-            Slots[hash_i] = pair;
+            Slots[hashIndex] = pair;
             Interlocked.Increment(ref count);
 
             if (Slots.Length < 2 * count)
@@ -195,11 +189,14 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
     private Jitter2.Parallelization.ReaderWriterLock rwLock;
 
-    internal void ConcurrentAdd(Pair pair)
+    internal bool ConcurrentAdd(Pair pair)
     {
-        // TODO: implement a better lock-free version
-
         int hash = pair.GetHash();
+
+        // Fast path: This is a *huge* optimization for the case of frequent additions
+        // of already existing entries. Entirely bypassing any locks or synchronization.
+        int fpHashIndex = FindSlot(Slots, hash, pair.ID);
+        if (Slots[fpHashIndex].ID != 0) return false;
 
         rwLock.EnterReadLock();
 
@@ -207,37 +204,37 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         {
             while (true)
             {
-                int hash_i = FindSlot(Slots, hash, pair.ID);
-
-                Pair* slotPtr = &slotsPtr[hash_i];
+                var hashIndex = FindSlot(Slots, hash, pair.ID);
+                var slotPtr = &slotsPtr[hashIndex];
 
                 if (slotPtr->ID == pair.ID)
                 {
                     rwLock.ExitReadLock();
-                    return;
+                    return false;
                 }
 
-                if (Interlocked.CompareExchange(ref *(long*)slotPtr,
-                        *(long*)&pair, 0) == 0)
+                if (Interlocked.CompareExchange(ref *(long*)slotPtr, pair.ID, 0) != 0)
                 {
-                    Interlocked.Increment(ref count);
+                    continue;
+                }
 
-                    rwLock.ExitReadLock();
+                Interlocked.Increment(ref count);
+                rwLock.ExitReadLock();
 
+                if (Slots.Length < 2 * count)
+                {
+                    rwLock.EnterWriteLock();
+
+                    // check if another thread already performed a resize.
                     if (Slots.Length < 2 * count)
                     {
-                        rwLock.EnterWriteLock();
-                        // check if another thread already did the work for us
-                        if (Slots.Length < 2 * count)
-                        {
-                            Resize(PickSize(Slots.Length * 2));
-                        }
-                        rwLock.ExitWriteLock();
+                        Resize(PickSize(Slots.Length * 2));
                     }
 
-                    return;
+                    rwLock.ExitWriteLock();
                 }
 
+                return true;
             } // while
         } // fixed
     }
@@ -287,8 +284,8 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public bool Remove(Pair pair)
     {
         int hash = pair.GetHash();
-        int hash_i = FindSlot(Slots, hash, pair.ID);
-        return Remove(hash_i);
+        int hashIndex = FindSlot(Slots, hash, pair.ID);
+        return Remove(hashIndex);
     }
 
     public IEnumerator<Pair> GetEnumerator()
