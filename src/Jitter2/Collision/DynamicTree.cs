@@ -228,7 +228,7 @@ public partial class DynamicTree
             SetTime(Timings.ScanOverlaps);
         }
 
-        lists.NullOutOne();
+        lists.TrackAndNullOutOne();
     }
 
     private Real step_dt;
