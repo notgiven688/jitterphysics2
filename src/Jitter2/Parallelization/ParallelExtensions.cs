@@ -104,4 +104,15 @@ public static class ParallelExtensions
 
         return numTasks;
     }
+
+    internal static int ParallelForBatch<T>(this SlimBag<T> list, int taskThreshold,
+        Action<Parallel.Batch> action, bool execute = true) where T : class, IListIndex
+    {
+        int numTasks = list.Count / taskThreshold + 1;
+        numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);
+
+        Parallel.ForBatch(0, list.Count, numTasks, action, execute);
+
+        return numTasks;
+    }
 }
