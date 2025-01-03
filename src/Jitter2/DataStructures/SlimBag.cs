@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Jitter2.DataStructures;
 
@@ -86,7 +87,40 @@ internal class SlimBag<T>
         }
 
         array[counter++] = item;
-        nullOut = counter;
+    }
+
+    private Jitter2.Parallelization.ReaderWriterLock rwLock;
+
+    /// <summary>
+    /// Adds an element to the <see cref="SlimBag{T}"/>.
+    /// </summary>
+    /// <param name="item">The element to add.</param>
+    public void ConcurrentAdd(T item)
+    {
+        int lc = Interlocked.Increment(ref counter) - 1;
+
+        again:
+
+        rwLock.EnterReadLock();
+
+        if (lc < array.Length)
+        {
+            array[lc] = item;
+            rwLock.ExitReadLock();
+        }
+        else
+        {
+            rwLock.ExitReadLock();
+
+            rwLock.EnterWriteLock();
+            if (lc >= array.Length)
+            {
+                Array.Resize(ref array, array.Length * 2);
+            }
+            rwLock.ExitWriteLock();
+
+            goto again;
+        }
     }
 
     /// <summary>
@@ -147,19 +181,14 @@ internal class SlimBag<T>
     }
 
     /// <summary>
-    /// Sets unused positions in the internal array to their default values.
+    /// This should be called after adding entries to the SlimBag in order
+    /// to keep track of the largest index used within the internal array of
+    /// this datastructure. It will set this item in the array to its default value
+    /// to allow for garbage collection.
     /// </summary>
-    public void NullOut()
+    public void TrackAndNullOutOne()
     {
-        Array.Clear(array, counter, nullOut - counter);
-        nullOut = counter;
-    }
-
-    /// <summary>
-    /// Null out a single position in the internal array.
-    /// </summary>
-    public void NullOutOne()
-    {
+        nullOut = Math.Max(nullOut, counter);
         if (nullOut <= counter) return;
         array[--nullOut] = default!;
     }
