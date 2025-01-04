@@ -228,6 +228,9 @@ public partial class DynamicTree
             SetTime(Timings.ScanOverlaps);
         }
 
+        // Make sure we do not hold too many dangling references
+        // in the internal array of the SlimBag<T> data structure which might
+        // prevent GC. But do only free them one-by-one to prevent overhead.
         movedProxies.TrackAndNullOutOne();
     }
 
@@ -573,13 +576,7 @@ public partial class DynamicTree
                 node.ForceUpdate = false;
                 movedProxies.ConcurrentAdd(proxy);
             }
-
-            // else proxy is well contained within the nodes expanded Box:
         }
-
-        // Make sure we do not hold too many dangling references
-        // in the internal array of the SlimBag<T> data structure which might
-        // prevent GC. But do only free them one-by-one to prevent overhead.
     }
 
     private void ScanForOverlaps(Parallel.Batch batch)
