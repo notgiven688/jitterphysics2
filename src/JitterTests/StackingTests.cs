@@ -19,15 +19,13 @@ public class StackingTests
         world.Dispose();
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void SimpleStack(bool fullEPA)
+    [TestCase]
+    public void SimpleStack()
     {
         world.SolverIterations = (4, 4);
 
         RigidBody last = Helper.BuildSimpleStack(world);
 
-        world.UseFullEPASolver = fullEPA;
 
         Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), true);
@@ -52,13 +50,12 @@ public class StackingTests
         Assert.That(delta, Is.LessThan(1f));
     }
 
-    [TestCase(0, 0, 0, true, true)]
-    [TestCase(0, 0, 0, false, false)]
-    [TestCase(0, 0, 0, false, true)]
-    [TestCase(1000, 1000, 1000, false, true)]
-    public void PyramidStackCylinder(int x, int y, int z, bool fullEPA, bool multiThread)
+    [TestCase(0, 0, 0, true)]
+    [TestCase(0, 0, 0, false)]
+    [TestCase(0, 0, 0, true)]
+    [TestCase(1000, 1000, 1000, true)]
+    public void PyramidStackCylinder(int x, int y, int z, bool multiThread)
     {
-        world.UseFullEPASolver = fullEPA;
         world.SolverIterations = (4, 4);
 
         RigidBody last = Helper.BuildPyramidCylinder(world, new JVector(x, y, z));
@@ -70,11 +67,10 @@ public class StackingTests
         Assert.That(delta, Is.LessThan(1f));
     }
 
-    [TestCase(false, true)]
-    [TestCase(true, true)]
-    public void TowerStack(bool fullEPA, bool multiThread)
+    [TestCase(true)]
+    [TestCase(true)]
+    public void TowerStack(bool multiThread)
     {
-        world.UseFullEPASolver = fullEPA;
         world.SolverIterations = (14, 4);
 
         RigidBody last = Helper.BuildTower(world, JVector.Zero, 30);
