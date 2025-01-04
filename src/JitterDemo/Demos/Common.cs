@@ -159,6 +159,12 @@ public static class Common
             parts[(int)RagdollParts.UpperArmRight],
             new JVector(-0.42f, -0.2f, 0), JVector.UnitY, AngularLimit.FromDegree(0, 160));
 
+        // Soften the limits for the hinge joints
+        kneeLeft.HingeAngle.LimitSoftness = kneeLeft.HingeAngle.Softness = 1;
+        kneeRight.HingeAngle.LimitSoftness = kneeRight.HingeAngle.Softness = 1;
+        armLeft.HingeAngle.LimitSoftness = armLeft.HingeAngle.Softness = 1;
+        armRight.HingeAngle.LimitSoftness = armRight.HingeAngle.Softness = 1;
+
         var shoulderLeft0 =
             world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.UpperArmLeft], parts[(int)RagdollParts.Torso]);
         shoulderLeft0.Initialize(new JVector(0.20f, -0.2f, 0));
