@@ -76,13 +76,12 @@ public sealed partial class World
     public enum Timings
     {
         UpdateBodies,
-        CollisionDetect1,
-        CollisionDetect2,
-        RemoveArbiter,
+        NarrowPhase,
+        BroadPhase,
         AddArbiter,
-        SolveContacts,
+        RemoveArbiter,
+        Solve,
         UpdateContacts,
-        Integrate,
         TrimPotentialPairs,
         CheckDeactivation,
         Last
@@ -126,8 +125,6 @@ public sealed partial class World
         substep_dt = dt / ssp1;
         step_dt = dt;
 
-        SetTime(Timings.Integrate);
-
         // Signal the thread pool to spin up threads
         if (multiThread)
         {
@@ -136,11 +133,8 @@ public sealed partial class World
 
         PreStep?.Invoke(dt);
 
-        SetTime(Timings.Integrate);
-
         DetectCollisions(multiThread);
-
-        SetTime(Timings.CollisionDetect1);
+        SetTime(Timings.NarrowPhase);
 
         HandleDeferredArbiters();
         SetTime(Timings.AddArbiter);
@@ -148,15 +142,9 @@ public sealed partial class World
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
 
-        // substep_dt = -dt;
-        // Integrate(multiThread);
-
-        // Add the new arbiters to their respective rigid body.
-
         // Go through potential pairs in the collision system and remove
         // pairs which are invalid (i.e. not overlapping or inactive).
         DynamicTree.TrimInvalidPairs();
-
         SetTime(Timings.TrimPotentialPairs);
 
         // Sub-stepping
@@ -169,34 +157,26 @@ public sealed partial class World
             // we need to apply the forces each substep. we can not apply
             // them all at once since this would mess with the warm starting
             // of the solver
-            IntegrateForces(multiThread); // FAST SWEEP
-            Solve(multiThread, solverIterations); // FAST SWEEP
-            Integrate(multiThread); // FAST SWEEP
-            RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
+            IntegrateForces(multiThread);                       // FAST SWEEP
+            Solve(multiThread, solverIterations);               // FAST SWEEP
+            Integrate(multiThread);                             // FAST SWEEP
+            RelaxVelocities(multiThread, velocityRelaxations);  // FAST SWEEP
         }
 
-        SetTime(Timings.SolveContacts);
+        SetTime(Timings.Solve);
 
         RemoveBrokenArbiters();
         SetTime(Timings.RemoveArbiter);
 
-        UpdateContacts(multiThread); // FAST SWEEP
+        UpdateContacts(multiThread);                            // FAST SWEEP
         SetTime(Timings.UpdateContacts);
 
-        // substep_dt = +dt;
-        // Integrate(multiThread);
         ForeachActiveBody(multiThread);
-
         SetTime(Timings.UpdateBodies);
 
-        // Perform collision detection.
-        // In the callback:
-        // If both bodies are static we do nothing.
-        // If both bodies are inactive we do nothing.
-        // We perform narrow phase detection.
-        // New arbiters are added to deferredArbiters
+        // Perform narrow phase detection.
         DynamicTree.Update(multiThread, step_dt);
-        SetTime(Timings.CollisionDetect2);
+        SetTime(Timings.BroadPhase);
 
         PostStep?.Invoke(dt);
 
