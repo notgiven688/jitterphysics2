@@ -237,13 +237,6 @@ public sealed partial class World : IDisposable
     private Real step_dt = (Real)(1.0 / 100.0);
 
     /// <summary>
-    /// Uses a slower alternative narrow phase collision detection method, instead
-    /// of the default Minkowski Portal Refinement solver. Used mainly as a reference
-    /// to rule out that bugs are caused by the narrow phase collision.
-    /// </summary>
-    public bool UseFullEPASolver { get; set; }
-
-    /// <summary>
     /// Creates an instance of the <see cref="World"/> class with the default capacity.
     /// This initializes the world using default values for the number of bodies, contacts,
     /// constraints, and small constraints as defined in <see cref="Capacity.Default"/>.

@@ -131,11 +131,7 @@ public partial class Playground : RenderWindow
         ImGui.NextTreeNodeOpen(true);
         if (ImGui.TreeNode("Options"))
         {
-            bool ufes = World.UseFullEPASolver;
-            ImGui.Checkbox("Full EPA", ref ufes);
-            World.UseFullEPASolver = ufes;
-
-            ufes = World.AllowDeactivation;
+            bool ufes = World.AllowDeactivation;
             ImGui.Checkbox("Allow Deactivation", ref ufes);
             World.AllowDeactivation = ufes;
 
@@ -144,9 +140,6 @@ public partial class Playground : RenderWindow
             World.EnableAuxiliaryContactPoints = ufes;
 
             ImGui.Checkbox("Multithreading", ref multiThread);
-
-            ImGui.Checkbox("Persistent Threads", ref persistentThreadModel);
-            ImGui.TreePop();
         }
 
         if (ImGui.TreeNode("Debug Draw"))

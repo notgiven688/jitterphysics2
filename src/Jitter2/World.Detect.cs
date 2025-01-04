@@ -312,6 +312,7 @@ public sealed partial class World
 
         bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
 
+        /*
         if (UseFullEPASolver)
         {
             bool success = NarrowPhase.Collision(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
@@ -322,6 +323,7 @@ public sealed partial class World
             colliding = penetration >= (Real)0.0;
         }
         else
+        */
         {
             colliding = NarrowPhase.MPREPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
                 out pA, out pB, out normal, out penetration);
