@@ -113,7 +113,7 @@ public partial class DynamicTree
         public int Height;
 
         public JBBox ExpandedBox;
-        public IDynamicTreeProxy Proxy;
+        public IDynamicTreeProxy? Proxy;
 
         public bool ForceUpdate;
 
@@ -388,7 +388,7 @@ public partial class DynamicTree
 
             if (node.IsLeaf)
             {
-                if (node.Proxy.WorldBoundingBox.RayIntersect(rayOrigin, rayDirection, out _))
+                if (node.Proxy!.WorldBoundingBox.RayIntersect(rayOrigin, rayDirection, out _))
                 {
                     hits.Add(node.Proxy);
                 }
@@ -426,7 +426,7 @@ public partial class DynamicTree
 
             if (node.IsLeaf)
             {
-                if (node.Proxy.WorldBoundingBox.NotDisjoint(box))
+                if (node.Proxy!.WorldBoundingBox.NotDisjoint(box))
                 {
                     hits.Add(node.Proxy);
                 }
@@ -526,7 +526,7 @@ public partial class DynamicTree
         if (Nodes[index].IsLeaf)
         {
             if (node == index) return;
-            if (!Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
+            if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
             PotentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
         }
         else
@@ -547,7 +547,7 @@ public partial class DynamicTree
         if (Nodes[index].IsLeaf)
         {
             if (node == index) return;
-            if (!Filter(Nodes[node].Proxy, Nodes[index].Proxy)) return;
+            if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
             PotentialPairs.Remove(new PairHashSet.Pair(index, node));
         }
         else
