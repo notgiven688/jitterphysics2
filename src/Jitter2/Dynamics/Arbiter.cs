@@ -38,6 +38,11 @@ public class Arbiter
     public RigidBody Body2 = null!;
 
     public JHandle<ContactData> Handle;
+
+    public override int GetHashCode()
+    {
+        return Body1.GetHashCode() ^ Body2.GetHashCode();
+    }
 }
 
 /// <summary>
