@@ -116,6 +116,11 @@ public abstract class Constraint : IDebugDrawable
         IsEnabled = true;
     }
 
+    public override int GetHashCode()
+    {
+        return Body1.GetHashCode() ^ Body2.GetHashCode();
+    }
+
     public virtual void DebugDraw(IDebugDrawer drawer)
     {
         throw new NotImplementedException();
