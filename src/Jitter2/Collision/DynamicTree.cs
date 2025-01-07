@@ -133,6 +133,10 @@ public partial class DynamicTree
     /// </summary>
     public int UpdatedProxies => movedProxies.Count;
 
+    /// <summary>
+    /// Retrieve information of the size and filling of the internal hash set used to
+    /// store potential overlaps.
+    /// </summary>
     public (int TotalSize, int Count) HashSetInfo => (potentialPairs.Slots.Length, potentialPairs.Count);
 
     private void EnumerateOverlapsCallback(OverlapEnumerationParam parameter)
