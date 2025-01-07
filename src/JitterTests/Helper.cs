@@ -50,10 +50,9 @@ public static class Helper
         for (int i = 0; i < size; i++)
         {
             last = world.CreateRigidBody();
-            //body.AddShape(new BoxShape(1));
             last.Position = new JVector(0, (Real)0.5 + i * (Real)0.99, 0);
             last.AddShape(new BoxShape(1));
-            last.Damping = ((Real)0.002, (Real)0.002);
+            last.Damping = ((Real)0.998, (Real)0.998);
 
             if (i == 0) last.IsStatic = true;
         }
