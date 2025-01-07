@@ -123,7 +123,7 @@ public partial class DynamicTree
 
     public enum Timings
     {
-        TrimInvalidPairs,
+        PruneInvalidPairs,
         UpdateBoundingBoxes,
         ScanMoved,
         UpdateProxies,
@@ -215,7 +215,7 @@ public partial class DynamicTree
 
         PruneInvalidPairs();
 
-        SetTime(Timings.TrimInvalidPairs);
+        SetTime(Timings.PruneInvalidPairs);
 
         if (multiThread)
         {
