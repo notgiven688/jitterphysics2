@@ -4,9 +4,15 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.2 (2025-01-08)
+
+- Added enumeration method to `DynamicTree` and made `PairHashSet` internal.
+- Removed `UseFullEPASolver` option.
+- Further improved simulation performance under high lock contention scenarios.
+
 ### Jitter 2.5.1 (2024-12-31)
 
-- Bugfix in PairHashSet.
+- Bugfix in `PairHashSet`.
 
 ### Jitter 2.5.0 (2024-12-23)
 
@@ -15,7 +21,7 @@ sidebar_position: 5
 
 ### Jitter 2.4.9 (2024-12-18)
 
-- Huge improvements for the DynamicTree implementation.
+- Huge improvements for the `DynamicTree` implementation.
 
 ### Jitter 2.4.8 (2024-11-27)
 
