@@ -96,14 +96,15 @@ public sealed partial class World
         substep_dt = dt / ssp1;
         step_dt = dt;
 
-        // Signal the thread pool to spin up threads
         if (multiThread)
         {
+            // Signal the thread pool to spin up threads
             ThreadPool.Instance.SignalWait();
         }
 
         PreStep?.Invoke(dt);
 
+        // Perform narrow phase detection.
         DynamicTree.EnumerateOverlaps(Detect, multiThread);
         SetTime(Timings.NarrowPhase);
 
@@ -145,16 +146,15 @@ public sealed partial class World
         ForeachActiveBody(multiThread);
         SetTime(Timings.UpdateBodies);
 
-        // Perform narrow phase detection.
         DynamicTree.Update(multiThread, step_dt);
         SetTime(Timings.BroadPhase);
 
         PostStep?.Invoke(dt);
 
-        // Signal the thread pool that threads can go into a wait state.
         if ((ThreadModel == ThreadModelType.Regular || !multiThread)
             && ThreadPool.InstanceInitialized)
         {
+            // Signal the thread pool that threads can go into a wait state.
             ThreadPool.Instance.SignalReset();
         }
     }
