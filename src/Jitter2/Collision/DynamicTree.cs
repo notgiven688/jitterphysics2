@@ -56,6 +56,10 @@ public partial class DynamicTree
     public const int NullNode = -1;
     public const int InitialSize = 1024;
 
+    // Every update we search 1/PruningFraction of the potential pair hashset
+    // for pairs which are inactive or no longer colliding and remove them.
+    public const int PruningFraction = 128;
+
     /// <summary>
     /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
     /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * alpha, where alpha is a pseudo-random number in the range [1,2].
@@ -119,6 +123,7 @@ public partial class DynamicTree
 
     public enum Timings
     {
+        TrimInvalidPairs,
         UpdateBoundingBoxes,
         ScanMoved,
         UpdateProxies,
@@ -208,7 +213,9 @@ public partial class DynamicTree
 
         this.step_dt = dt;
 
-        SetTime(Timings.UpdateBoundingBoxes);
+        PruneInvalidPairs();
+
+        SetTime(Timings.TrimInvalidPairs);
 
         if (multiThread)
         {
@@ -360,17 +367,13 @@ public partial class DynamicTree
     /// whose expanded bounding box do not overlap any longer.
     /// Only searches a small subset of all elements per call to reduce overhead.
     /// </summary>
-    public void TrimInvalidPairs()
+    private void PruneInvalidPairs()
     {
-        // We actually only search 1/128 of the whole potentialPairs Hashset for
-        // potentially prunable contacts. No need to sweep through the whole hashset
-        // every step.
-        const int divisions = 128;
         stepper += 1;
 
-        for (int i = 0; i < potentialPairs.Slots.Length / divisions; i++)
+        for (int i = 0; i < potentialPairs.Slots.Length / PruningFraction; i++)
         {
-            int t = (int)((i * divisions + stepper) % potentialPairs.Slots.Length);
+            int t = (int)((i * PruningFraction + stepper) % potentialPairs.Slots.Length);
 
             var n = potentialPairs.Slots[t];
             if (n.ID == 0) continue;

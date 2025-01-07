@@ -53,7 +53,6 @@ public sealed partial class World
         RemoveArbiter,
         Solve,
         UpdateContacts,
-        TrimPotentialPairs,
         CheckDeactivation,
         Last
     }
@@ -113,11 +112,6 @@ public sealed partial class World
 
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
-
-        // Go through potential pairs in the collision system and remove
-        // pairs which are invalid (i.e. not overlapping or inactive).
-        DynamicTree.TrimInvalidPairs();
-        SetTime(Timings.TrimPotentialPairs);
 
         // Sub-stepping
         // TODO: comment...
