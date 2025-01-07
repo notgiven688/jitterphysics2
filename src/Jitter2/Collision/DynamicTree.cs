@@ -42,16 +42,16 @@ public partial class DynamicTree
         public Parallel.Batch Batch;
     }
 
-    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
-
     private readonly ActiveList<IDynamicTreeProxy> proxies = new();
+
+    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
 
     public ReadOnlyActiveList<IDynamicTreeProxy> Proxies => new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
     /// </summary>
-    public readonly PairHashSet PotentialPairs = new();
+    private readonly PairHashSet potentialPairs = new();
 
     public const int NullNode = -1;
     public const int InitialSize = 1024;
@@ -97,8 +97,6 @@ public partial class DynamicTree
     private readonly Action<Parallel.Batch> scanOverlaps;
     private readonly Action<Parallel.Batch> updateBoundingBoxes;
 
-    private Action<OverlapEnumerationParam> enumAction;
-
     /// <summary>
     /// Gets the root of the dynamic tree.
     /// </summary>
@@ -115,8 +113,6 @@ public partial class DynamicTree
         scanMoved = ScanForMovedProxies;
         scanOverlaps = ScanForOverlaps;
         updateBoundingBoxes = UpdateBoundingBoxesCallback;
-
-        enumAction = EnumerateOverlaps;
 
         Filter = filter;
     }
@@ -137,14 +133,15 @@ public partial class DynamicTree
     /// </summary>
     public int UpdatedProxies => movedProxies.Count;
 
+    public (int TotalSize, int Count) HashSetInfo => (potentialPairs.Slots.Length, potentialPairs.Count);
 
-    private void EnumerateOverlaps(OverlapEnumerationParam parameter)
+    private void EnumerateOverlapsCallback(OverlapEnumerationParam parameter)
     {
         var batch = parameter.Batch;
 
         for (int e = batch.Start; e < batch.End; e++)
         {
-            var node = PotentialPairs.Slots[e];
+            var node = potentialPairs.Slots[e];
             if (node.ID == 0) continue;
 
             var proxyA = Nodes[node.ID1].Proxy;
@@ -165,7 +162,7 @@ public partial class DynamicTree
         OverlapEnumerationParam overlapEnumerationParam;
         overlapEnumerationParam.Action = action;
 
-        int slotsLength = PotentialPairs.Slots.Length;
+        int slotsLength = potentialPairs.Slots.Length;
 
         if (multiThread)
         {
@@ -176,7 +173,7 @@ public partial class DynamicTree
             {
                 Parallel.GetBounds(slotsLength, threadCount, i, out int start, out int end);
                 overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
-                ThreadPool.Instance.AddTask(enumAction, overlapEnumerationParam);
+                ThreadPool.Instance.AddTask(EnumerateOverlapsCallback, overlapEnumerationParam);
             }
 
             tpi.Execute();
@@ -184,7 +181,7 @@ public partial class DynamicTree
         else
         {
             overlapEnumerationParam.Batch = new Parallel.Batch(0, slotsLength);
-            EnumerateOverlaps(overlapEnumerationParam);
+            EnumerateOverlapsCallback(overlapEnumerationParam);
         }
     }
 
@@ -355,10 +352,9 @@ public partial class DynamicTree
     private uint stepper;
 
     /// <summary>
-    /// Removes entries from <see cref="PotentialPairs"/> which are both marked as inactive or
+    /// Removes entries from the internal bookkeeping which are both marked as inactive or
     /// whose expanded bounding box do not overlap any longer.
-    /// Only searches a small subset of the pair hashset (1/128) per call to reduce
-    /// overhead.
+    /// Only searches a small subset of all elements per call to reduce overhead.
     /// </summary>
     public void TrimInvalidPairs()
     {
@@ -368,11 +364,11 @@ public partial class DynamicTree
         const int divisions = 128;
         stepper += 1;
 
-        for (int i = 0; i < PotentialPairs.Slots.Length / divisions; i++)
+        for (int i = 0; i < potentialPairs.Slots.Length / divisions; i++)
         {
-            int t = (int)((i * divisions + stepper) % PotentialPairs.Slots.Length);
+            int t = (int)((i * divisions + stepper) % potentialPairs.Slots.Length);
 
-            var n = PotentialPairs.Slots[t];
+            var n = potentialPairs.Slots[t];
             if (n.ID == 0) continue;
 
             var proxyA = Nodes[n.ID1].Proxy;
@@ -385,7 +381,7 @@ public partial class DynamicTree
                 continue;
             }
 
-            PotentialPairs.Remove(t);
+            potentialPairs.Remove(t);
             i -= 1;
         }
     }
@@ -550,7 +546,7 @@ public partial class DynamicTree
         {
             if (node == index) return;
             if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
-            PotentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
+            potentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
         }
         else
         {
@@ -571,7 +567,7 @@ public partial class DynamicTree
         {
             if (node == index) return;
             if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
-            PotentialPairs.Remove(new PairHashSet.Pair(index, node));
+            potentialPairs.Remove(new PairHashSet.Pair(index, node));
         }
         else
         {

@@ -170,8 +170,8 @@ public partial class Playground : RenderWindow
                 ImGui.Text(b.PadLeft(6));
             }
 
-            AddRow("PairHashSet Size", World.DynamicTree.PotentialPairs.Slots.Length.ToString());
-            AddRow("PairHashSet Count", World.DynamicTree.PotentialPairs.Count.ToString());
+            AddRow("PairHashSet Size", World.DynamicTree.HashSetInfo.TotalSize.ToString());
+            AddRow("PairHashSet Count", World.DynamicTree.HashSetInfo.Count.ToString());
             AddRow("Proxies updated", World.DynamicTree.UpdatedProxies.ToString());
 
             for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)

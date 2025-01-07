@@ -34,7 +34,7 @@ namespace Jitter2.Collision;
 /// A hash set implementation which stores pairs of (int, int) values.
 /// The implementation is based on open addressing.
 /// </summary>
-public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
+internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
     public readonly struct Pair
@@ -196,7 +196,7 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
     private Jitter2.Parallelization.ReaderWriterLock rwLock;
 
-    internal bool ConcurrentAdd(Pair pair)
+    public bool ConcurrentAdd(Pair pair)
     {
         int hash = pair.GetHash();
 
