@@ -97,10 +97,6 @@ public partial class DynamicTree
     private int nodePointer = -1;
     private int root = NullNode;
 
-    private readonly Action<Parallel.Batch> scanMoved;
-    private readonly Action<Parallel.Batch> scanOverlaps;
-    private readonly Action<Parallel.Batch> updateBoundingBoxes;
-
     /// <summary>
     /// Gets the root of the dynamic tree.
     /// </summary>
@@ -114,10 +110,6 @@ public partial class DynamicTree
     /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
     public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
-        scanMoved = ScanForMovedProxies;
-        scanOverlaps = ScanForOverlaps;
-        updateBoundingBoxes = UpdateBoundingBoxesCallback;
-
         Filter = filter;
     }
 
@@ -219,11 +211,11 @@ public partial class DynamicTree
 
         if (multiThread)
         {
-            proxies.ParallelForBatch(256, updateBoundingBoxes);
+            proxies.ParallelForBatch(256, UpdateBoundingBoxesCallback);
             SetTime(Timings.UpdateBoundingBoxes);
 
             movedProxies.Clear();
-            proxies.ParallelForBatch(24, scanMoved);
+            proxies.ParallelForBatch(24, ScanForMovedProxies);
             SetTime(Timings.ScanMoved);
 
             for (int i = 0; i < movedProxies.Count; i++)
@@ -233,7 +225,7 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            movedProxies.ParallelForBatch(24, scanOverlaps);
+            movedProxies.ParallelForBatch(24, ScanForOverlaps);
 
             SetTime(Timings.ScanOverlaps);
         }
@@ -244,7 +236,7 @@ public partial class DynamicTree
             SetTime(Timings.UpdateBoundingBoxes);
 
             movedProxies.Clear();
-            scanMoved(batch);
+            ScanForMovedProxies(batch);
             SetTime(Timings.ScanMoved);
 
             for (int i = 0; i < movedProxies.Count; i++)
@@ -254,7 +246,7 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            scanOverlaps(new Parallel.Batch(0, movedProxies.Count));
+            ScanForOverlaps(new Parallel.Batch(0, movedProxies.Count));
 
             SetTime(Timings.ScanOverlaps);
         }
