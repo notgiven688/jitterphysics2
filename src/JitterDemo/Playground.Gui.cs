@@ -140,6 +140,8 @@ public partial class Playground : RenderWindow
             World.EnableAuxiliaryContactPoints = ufes;
 
             ImGui.Checkbox("Multithreading", ref multiThread);
+
+            ImGui.TreePop();
         }
 
         if (ImGui.TreeNode("Debug Draw"))
