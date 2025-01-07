@@ -74,6 +74,12 @@ public interface IRayCastable
 /// </summary>
 public partial class DynamicTree
 {
+    private struct OverlapEnumerationParam
+    {
+        public Action<IDynamicTreeProxy, IDynamicTreeProxy> Action;
+        public Parallel.Batch Batch;
+    }
+
     private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
 
     private readonly ActiveList<IDynamicTreeProxy> proxies = new();
@@ -129,6 +135,8 @@ public partial class DynamicTree
     private readonly Action<Parallel.Batch> scanOverlaps;
     private readonly Action<Parallel.Batch> updateBoundingBoxes;
 
+    private Action<OverlapEnumerationParam> enumAction;
+
     /// <summary>
     /// Gets the root of the dynamic tree.
     /// </summary>
@@ -145,6 +153,8 @@ public partial class DynamicTree
         scanMoved = ScanForMovedProxies;
         scanOverlaps = ScanForOverlaps;
         updateBoundingBoxes = UpdateBoundingBoxesCallback;
+
+        enumAction = EnumerateOverlaps;
 
         Filter = filter;
     }
@@ -164,6 +174,57 @@ public partial class DynamicTree
     /// Gets the number of updated proxies.
     /// </summary>
     public int UpdatedProxies => movedProxies.Count;
+
+
+    private void EnumerateOverlaps(OverlapEnumerationParam parameter)
+    {
+        var batch = parameter.Batch;
+
+        for (int e = batch.Start; e < batch.End; e++)
+        {
+            var node = PotentialPairs.Slots[e];
+            if (node.ID == 0) continue;
+
+            var proxyA = Nodes[node.ID1].Proxy;
+            var proxyB = Nodes[node.ID2].Proxy;
+
+            if(proxyA == null || proxyB == null) continue;
+            if(!Filter(proxyA, proxyB)) continue;
+
+            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
+            {
+                parameter.Action(proxyA, proxyB);
+            }
+        }
+    }
+
+    public void EnumerateOverlaps(Action<IDynamicTreeProxy, IDynamicTreeProxy> action, bool multiThread = false)
+    {
+        OverlapEnumerationParam overlapEnumerationParam;
+        overlapEnumerationParam.Action = action;
+
+        int slotsLength = PotentialPairs.Slots.Length;
+
+        if (multiThread)
+        {
+            var tpi = ThreadPool.Instance;
+            int threadCount = tpi.ThreadCount;
+
+            for (int i = 0; i < threadCount; i++)
+            {
+                Parallel.GetBounds(slotsLength, threadCount, i, out int start, out int end);
+                overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
+                ThreadPool.Instance.AddTask(enumAction, overlapEnumerationParam);
+            }
+
+            tpi.Execute();
+        }
+        else
+        {
+            overlapEnumerationParam.Batch = new Parallel.Batch(0, slotsLength);
+            EnumerateOverlaps(overlapEnumerationParam);
+        }
+    }
 
     /// <summary>
     /// Updates all entities that are marked as active in the active list.

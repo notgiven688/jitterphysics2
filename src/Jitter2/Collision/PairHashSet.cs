@@ -166,6 +166,13 @@ public unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
+    public bool Contains(Pair pair)
+    {
+        int hash = pair.GetHash();
+        int hashIndex = FindSlot(Slots, hash, pair.ID);
+        return Slots[hashIndex].ID != 0;
+    }
+
     public bool Add(Pair pair)
     {
         int hash = pair.GetHash();

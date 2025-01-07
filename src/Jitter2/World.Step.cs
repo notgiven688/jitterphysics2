@@ -55,7 +55,6 @@ public sealed partial class World
     private Action<Parallel.Batch> prepareSmallConstraints;
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
-    private Action<Parallel.Batch> detectCollisions;
 
     private void InitParallelCallbacks()
     {
@@ -70,7 +69,6 @@ public sealed partial class World
         iterateSmallConstraints = IterateSmallConstraintsCallback;
         updateContacts = UpdateContactsCallback;
         updateBodies = UpdateBodiesCallback;
-        detectCollisions = DetectCollisionsCallback;
     }
 
     public enum Timings
@@ -133,7 +131,7 @@ public sealed partial class World
 
         PreStep?.Invoke(dt);
 
-        DetectCollisions(multiThread);
+        DynamicTree.EnumerateOverlaps(Detect, multiThread);
         SetTime(Timings.NarrowPhase);
 
         HandleDeferredArbiters();
@@ -375,28 +373,6 @@ public sealed partial class World
             LockTwoBody(ref b1, ref b2);
             c.Iterate(false);
             UnlockTwoBody(ref b1, ref b2);
-        }
-    }
-
-    private void DetectCollisionsCallback(Parallel.Batch batch)
-    {
-        PairHashSet phs = DynamicTree.PotentialPairs;
-
-        for (int e = batch.Start; e < batch.End; e++)
-        {
-            var node = phs.Slots[e];
-            if (node.ID == 0) continue;
-
-            var proxyA = DynamicTree.Nodes[node.ID1].Proxy;
-            var proxyB = DynamicTree.Nodes[node.ID2].Proxy;
-
-            if(proxyA == null || proxyB == null) continue;
-            if(!DynamicTree.Filter(proxyA, proxyB)) continue;
-
-            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
-            {
-                Detect(proxyA, proxyB);
-            }
         }
     }
 
@@ -701,18 +677,6 @@ public sealed partial class World
         else
         {
             IntegrateCallback(new Parallel.Batch(0, memRigidBodies.Active.Length));
-        }
-    }
-
-    private void DetectCollisions(bool multiThread)
-    {
-        if (multiThread)
-        {
-            DynamicTree.PotentialPairs.Slots.ParallelForBatch<PairHashSet.Pair>(1024, detectCollisions);
-        }
-        else
-        {
-            DetectCollisionsCallback(new Parallel.Batch(0, DynamicTree.PotentialPairs.Slots.Length));
         }
     }
 
