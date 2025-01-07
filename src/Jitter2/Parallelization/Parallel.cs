@@ -58,7 +58,7 @@ public static class Parallel
     /// Given the number of elements, the number of divisions into parts and a part index, returns
     /// the lower and upper bound for that part.
     /// </summary>
-    private static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
+    public static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
     {
         // Example:
         // numElements = 14, numDivisions = 4, part = {0, 1, 2, 3}

@@ -31,62 +31,34 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents an object for which the bounding box can be updated.
-/// </summary>
-public interface IUpdatableBoundingBox
-{
-    /// <summary>
-    /// Updates the bounding box.
-    /// </summary>
-    public void UpdateWorldBoundingBox(Real dt);
-}
-
-/// <summary>
-/// Represents an object that can be intersected by a ray.
-/// </summary>
-public interface IRayCastable
-{
-    /// <summary>
-    /// Performs a ray cast against the object, checking if a ray originating from a specified point
-    /// and traveling in a specified direction intersects with the object.
-    /// </summary>
-    /// <param name="origin">The starting point of the ray.</param>
-    /// <param name="direction">
-    /// The direction of the ray. This vector does not need to be normalized.
-    /// </param>
-    /// <param name="normal">
-    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
-    /// </param>
-    /// <param name="lambda">
-    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
-    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
-    /// <c>origin + lambda * direction</c>.
-    /// </param>
-    /// <returns>
-    /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
-    /// </returns>
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda);
-}
-
-/// <summary>
 /// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>)
 /// maintains a record of potential overlapping pairs.
 /// </summary>
 public partial class DynamicTree
 {
-    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
+    private struct OverlapEnumerationParam
+    {
+        public Action<IDynamicTreeProxy, IDynamicTreeProxy> Action;
+        public Parallel.Batch Batch;
+    }
 
     private readonly ActiveList<IDynamicTreeProxy> proxies = new();
+
+    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
 
     public ReadOnlyActiveList<IDynamicTreeProxy> Proxies => new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
     /// </summary>
-    public readonly PairHashSet PotentialPairs = new();
+    private readonly PairHashSet potentialPairs = new();
 
     public const int NullNode = -1;
     public const int InitialSize = 1024;
+
+    // Every update we search 1/PruningFraction of the potential pair hashset
+    // for pairs which are inactive or no longer colliding and remove them.
+    public const int PruningFraction = 128;
 
     /// <summary>
     /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
@@ -151,6 +123,7 @@ public partial class DynamicTree
 
     public enum Timings
     {
+        PruneInvalidPairs,
         UpdateBoundingBoxes,
         ScanMoved,
         UpdateProxies,
@@ -164,6 +137,62 @@ public partial class DynamicTree
     /// Gets the number of updated proxies.
     /// </summary>
     public int UpdatedProxies => movedProxies.Count;
+
+    /// <summary>
+    /// Retrieve information of the size and filling of the internal hash set used to
+    /// store potential overlaps.
+    /// </summary>
+    public (int TotalSize, int Count) HashSetInfo => (potentialPairs.Slots.Length, potentialPairs.Count);
+
+    private void EnumerateOverlapsCallback(OverlapEnumerationParam parameter)
+    {
+        var batch = parameter.Batch;
+
+        for (int e = batch.Start; e < batch.End; e++)
+        {
+            var node = potentialPairs.Slots[e];
+            if (node.ID == 0) continue;
+
+            var proxyA = Nodes[node.ID1].Proxy;
+            var proxyB = Nodes[node.ID2].Proxy;
+
+            if(proxyA == null || proxyB == null) continue;
+            if(!Filter(proxyA, proxyB)) continue;
+
+            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
+            {
+                parameter.Action(proxyA, proxyB);
+            }
+        }
+    }
+
+    public void EnumerateOverlaps(Action<IDynamicTreeProxy, IDynamicTreeProxy> action, bool multiThread = false)
+    {
+        OverlapEnumerationParam overlapEnumerationParam;
+        overlapEnumerationParam.Action = action;
+
+        int slotsLength = potentialPairs.Slots.Length;
+
+        if (multiThread)
+        {
+            var tpi = ThreadPool.Instance;
+            int threadCount = tpi.ThreadCount;
+
+            for (int i = 0; i < threadCount; i++)
+            {
+                Parallel.GetBounds(slotsLength, threadCount, i, out int start, out int end);
+                overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
+                ThreadPool.Instance.AddTask(EnumerateOverlapsCallback, overlapEnumerationParam);
+            }
+
+            tpi.Execute();
+        }
+        else
+        {
+            overlapEnumerationParam.Batch = new Parallel.Batch(0, slotsLength);
+            EnumerateOverlapsCallback(overlapEnumerationParam);
+        }
+    }
 
     /// <summary>
     /// Updates all entities that are marked as active in the active list.
@@ -184,7 +213,9 @@ public partial class DynamicTree
 
         this.step_dt = dt;
 
-        SetTime(Timings.UpdateBoundingBoxes);
+        PruneInvalidPairs();
+
+        SetTime(Timings.PruneInvalidPairs);
 
         if (multiThread)
         {
@@ -332,24 +363,19 @@ public partial class DynamicTree
     private uint stepper;
 
     /// <summary>
-    /// Removes entries from <see cref="PotentialPairs"/> which are both marked as inactive or
+    /// Removes entries from the internal bookkeeping which are both marked as inactive or
     /// whose expanded bounding box do not overlap any longer.
-    /// Only searches a small subset of the pair hashset (1/128) per call to reduce
-    /// overhead.
+    /// Only searches a small subset of all elements per call to reduce overhead.
     /// </summary>
-    public void TrimInvalidPairs()
+    private void PruneInvalidPairs()
     {
-        // We actually only search 1/128 of the whole potentialPairs Hashset for
-        // potentially prunable contacts. No need to sweep through the whole hashset
-        // every step.
-        const int divisions = 128;
         stepper += 1;
 
-        for (int i = 0; i < PotentialPairs.Slots.Length / divisions; i++)
+        for (int i = 0; i < potentialPairs.Slots.Length / PruningFraction; i++)
         {
-            int t = (int)((i * divisions + stepper) % PotentialPairs.Slots.Length);
+            int t = (int)((i * PruningFraction + stepper) % potentialPairs.Slots.Length);
 
-            var n = PotentialPairs.Slots[t];
+            var n = potentialPairs.Slots[t];
             if (n.ID == 0) continue;
 
             var proxyA = Nodes[n.ID1].Proxy;
@@ -362,7 +388,7 @@ public partial class DynamicTree
                 continue;
             }
 
-            PotentialPairs.Remove(t);
+            potentialPairs.Remove(t);
             i -= 1;
         }
     }
@@ -527,7 +553,7 @@ public partial class DynamicTree
         {
             if (node == index) return;
             if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
-            PotentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
+            potentialPairs.ConcurrentAdd(new PairHashSet.Pair(index, node));
         }
         else
         {
@@ -548,7 +574,7 @@ public partial class DynamicTree
         {
             if (node == index) return;
             if (!Filter(Nodes[node].Proxy!, Nodes[index].Proxy!)) return;
-            PotentialPairs.Remove(new PairHashSet.Pair(index, node));
+            potentialPairs.Remove(new PairHashSet.Pair(index, node));
         }
         else
         {

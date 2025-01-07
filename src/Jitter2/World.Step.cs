@@ -44,35 +44,6 @@ public sealed partial class World
     private readonly SlimBag<Arbiter> deferredArbiters = new();
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = new();
 
-    private Action<Parallel.Batch> integrate;
-    private Action<Parallel.Batch> integrateForces;
-    private Action<Parallel.Batch> prepareContacts;
-    private Action<Parallel.Batch> iterateContacts;
-    private Action<Parallel.Batch> relaxVelocities;
-    private Action<Parallel.Batch> updateContacts;
-    private Action<Parallel.Batch> prepareConstraints;
-    private Action<Parallel.Batch> iterateConstraints;
-    private Action<Parallel.Batch> prepareSmallConstraints;
-    private Action<Parallel.Batch> iterateSmallConstraints;
-    private Action<Parallel.Batch> updateBodies;
-    private Action<Parallel.Batch> detectCollisions;
-
-    private void InitParallelCallbacks()
-    {
-        integrate = IntegrateCallback;
-        integrateForces = IntegrateForcesCallback;
-        prepareContacts = PrepareContactsCallback;
-        iterateContacts = IterateContactsCallback;
-        relaxVelocities = RelaxVelocitiesCallback;
-        prepareConstraints = PrepareConstraintsCallback;
-        iterateConstraints = IterateConstraintsCallback;
-        prepareSmallConstraints = PrepareSmallConstraintsCallback;
-        iterateSmallConstraints = IterateSmallConstraintsCallback;
-        updateContacts = UpdateContactsCallback;
-        updateBodies = UpdateBodiesCallback;
-        detectCollisions = DetectCollisionsCallback;
-    }
-
     public enum Timings
     {
         UpdateBodies,
@@ -82,7 +53,6 @@ public sealed partial class World
         RemoveArbiter,
         Solve,
         UpdateContacts,
-        TrimPotentialPairs,
         CheckDeactivation,
         Last
     }
@@ -125,15 +95,16 @@ public sealed partial class World
         substep_dt = dt / ssp1;
         step_dt = dt;
 
-        // Signal the thread pool to spin up threads
         if (multiThread)
         {
+            // Signal the thread pool to spin up threads
             ThreadPool.Instance.SignalWait();
         }
 
         PreStep?.Invoke(dt);
 
-        DetectCollisions(multiThread);
+        // Perform narrow phase detection.
+        DynamicTree.EnumerateOverlaps(Detect, multiThread);
         SetTime(Timings.NarrowPhase);
 
         HandleDeferredArbiters();
@@ -141,11 +112,6 @@ public sealed partial class World
 
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
-
-        // Go through potential pairs in the collision system and remove
-        // pairs which are invalid (i.e. not overlapping or inactive).
-        DynamicTree.TrimInvalidPairs();
-        SetTime(Timings.TrimPotentialPairs);
 
         // Sub-stepping
         // TODO: comment...
@@ -174,16 +140,15 @@ public sealed partial class World
         ForeachActiveBody(multiThread);
         SetTime(Timings.UpdateBodies);
 
-        // Perform narrow phase detection.
         DynamicTree.Update(multiThread, step_dt);
         SetTime(Timings.BroadPhase);
 
         PostStep?.Invoke(dt);
 
-        // Signal the thread pool that threads can go into a wait state.
         if ((ThreadModel == ThreadModelType.Regular || !multiThread)
             && ThreadPool.InstanceInitialized)
         {
+            // Signal the thread pool that threads can go into a wait state.
             ThreadPool.Instance.SignalReset();
         }
     }
@@ -378,28 +343,6 @@ public sealed partial class World
         }
     }
 
-    private void DetectCollisionsCallback(Parallel.Batch batch)
-    {
-        PairHashSet phs = DynamicTree.PotentialPairs;
-
-        for (int e = batch.Start; e < batch.End; e++)
-        {
-            var node = phs.Slots[e];
-            if (node.ID == 0) continue;
-
-            var proxyA = DynamicTree.Nodes[node.ID1].Proxy;
-            var proxyB = DynamicTree.Nodes[node.ID2].Proxy;
-
-            if(proxyA == null || proxyB == null) continue;
-            if(!DynamicTree.Filter(proxyA, proxyB)) continue;
-
-            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
-            {
-                Detect(proxyA, proxyB);
-            }
-        }
-    }
-
     private void AssertNullBody()
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
@@ -423,7 +366,7 @@ public sealed partial class World
 
         if (multiThread)
         {
-            bodies.ParallelForBatch(256, updateBodies);
+            bodies.ParallelForBatch(256, UpdateBodiesCallback);
         }
         else
         {
@@ -615,7 +558,7 @@ public sealed partial class World
         {
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, relaxVelocities);
+                memContacts.ParallelForBatch(64, RelaxVelocitiesCallback);
             }
         }
         else
@@ -633,17 +576,17 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(64, prepareContacts, false);
-            memConstraints.ParallelForBatch(64, prepareConstraints, false);
-            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
+            memContacts.ParallelForBatch(64, PrepareContactsCallback, false);
+            memConstraints.ParallelForBatch(64, PrepareConstraintsCallback, false);
+            memSmallConstraints.ParallelForBatch(64, PrepareSmallConstraintsCallback, false);
 
             ThreadPool.Instance.Execute();
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, iterateContacts, false);
-                memConstraints.ParallelForBatch(64, iterateConstraints, false);
-                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
+                memContacts.ParallelForBatch(64, IterateContactsCallback, false);
+                memConstraints.ParallelForBatch(64, IterateConstraintsCallback, false);
+                memSmallConstraints.ParallelForBatch(64, IterateSmallConstraintsCallback, false);
 
                 ThreadPool.Instance.Execute();
             }
@@ -671,7 +614,7 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(256, updateContacts);
+            memContacts.ParallelForBatch(256, UpdateContactsCallback);
         }
         else
         {
@@ -684,7 +627,7 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memRigidBodies.ParallelForBatch(256, integrateForces);
+            memRigidBodies.ParallelForBatch(256, IntegrateForcesCallback);
         }
         else
         {
@@ -696,23 +639,11 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memRigidBodies.ParallelForBatch(256, integrate);
+            memRigidBodies.ParallelForBatch(256, IntegrateCallback);
         }
         else
         {
             IntegrateCallback(new Parallel.Batch(0, memRigidBodies.Active.Length));
-        }
-    }
-
-    private void DetectCollisions(bool multiThread)
-    {
-        if (multiThread)
-        {
-            DynamicTree.PotentialPairs.Slots.ParallelForBatch<PairHashSet.Pair>(1024, detectCollisions);
-        }
-        else
-        {
-            DetectCollisionsCallback(new Parallel.Batch(0, DynamicTree.PotentialPairs.Slots.Length));
         }
     }
 
