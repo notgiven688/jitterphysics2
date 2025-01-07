@@ -21,8 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#pragma warning disable CS8618 // InitParallelCallbacks() - https://github.com/dotnet/roslyn/issues/32358
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -254,8 +252,6 @@ public sealed partial class World : IDisposable
         memContacts = new UnmanagedActiveList<ContactData>(capacity.ContactCount);
         memConstraints = new UnmanagedActiveList<ConstraintData>(capacity.ConstraintCount);
         memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
-
-        InitParallelCallbacks();
 
         NullBody = CreateRigidBody();
         NullBody.IsStatic = true;
