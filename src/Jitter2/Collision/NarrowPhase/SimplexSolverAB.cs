@@ -23,6 +23,7 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
 using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
@@ -31,8 +32,7 @@ using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 namespace Jitter2.Collision;
 
-// This is a GJK-Implementation "by the book".
-
+[StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolverAB
 {
     const Real Epsilon = (Real)1e-8;
