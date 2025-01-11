@@ -23,14 +23,14 @@
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
 
 #pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
 
 namespace Jitter2.Collision;
 
-// This is a GJK-Implementation "by the book".
-
+[StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolver
 {
     const Real Epsilon = (Real)1e-8;

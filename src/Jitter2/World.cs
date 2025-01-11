@@ -68,27 +68,27 @@ public sealed partial class World : IDisposable
             world.memConstraints.TotalBytesAllocated +
             world.memSmallConstraints.TotalBytesAllocated;
 
-        public readonly Span<RigidBodyData> ActiveRigidBodies => world.memRigidBodies.Active;
-        public readonly Span<RigidBodyData> InactiveRigidBodies => world.memRigidBodies.Inactive;
-        public readonly Span<RigidBodyData> RigidBodies => world.memRigidBodies.Elements;
+        public Span<RigidBodyData> ActiveRigidBodies => world.memRigidBodies.Active;
+        public Span<RigidBodyData> InactiveRigidBodies => world.memRigidBodies.Inactive;
+        public Span<RigidBodyData> RigidBodies => world.memRigidBodies.Elements;
 
-        public readonly Span<ContactData> ActiveContacts => world.memContacts.Active;
-        public readonly Span<ContactData> InactiveContacts => world.memContacts.Inactive;
-        public readonly Span<ContactData> Contacts => world.memContacts.Elements;
+        public Span<ContactData> ActiveContacts => world.memContacts.Active;
+        public Span<ContactData> InactiveContacts => world.memContacts.Inactive;
+        public Span<ContactData> Contacts => world.memContacts.Elements;
 
-        public readonly Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
-        public readonly Span<ConstraintData> InactiveConstraints => world.memConstraints.Inactive;
-        public readonly Span<ConstraintData> Constraints => world.memConstraints.Elements;
+        public Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
+        public Span<ConstraintData> InactiveConstraints => world.memConstraints.Inactive;
+        public Span<ConstraintData> Constraints => world.memConstraints.Elements;
 
-        public readonly Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
-        public readonly Span<SmallConstraintData> InactiveSmallConstraints => world.memSmallConstraints.Inactive;
-        public readonly Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
+        public Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
+        public Span<SmallConstraintData> InactiveSmallConstraints => world.memSmallConstraints.Inactive;
+        public Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
 
-    private readonly UnmanagedActiveList<ContactData> memContacts;
-    private readonly UnmanagedActiveList<RigidBodyData> memRigidBodies;
-    private readonly UnmanagedActiveList<ConstraintData> memConstraints;
-    private readonly UnmanagedActiveList<SmallConstraintData> memSmallConstraints;
+    private readonly PartitionedBuffer<ContactData> memContacts;
+    private readonly PartitionedBuffer<RigidBodyData> memRigidBodies;
+    private readonly PartitionedBuffer<ConstraintData> memConstraints;
+    private readonly PartitionedBuffer<SmallConstraintData> memSmallConstraints;
 
     public delegate void WorldStep(Real dt);
 
@@ -104,8 +104,8 @@ public sealed partial class World : IDisposable
 
     private readonly ConcurrentDictionary<ArbiterKey, Arbiter> arbiters = new();
 
-    private readonly ActiveList<Island> islands = new();
-    private readonly ActiveList<RigidBody> bodies = new();
+    private readonly PartitionedSet<Island> islands = new();
+    private readonly PartitionedSet<RigidBody> bodies = new();
 
     private static ulong _idCounter;
 
@@ -144,12 +144,12 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// All collision islands in this world.
     /// </summary>
-    public ReadOnlyActiveList<Island> Islands => new(islands);
+    public ReadOnlyPartitionedSet<Island> Islands => new(islands);
 
     /// <summary>
     /// All rigid bodies in this world.
     /// </summary>
-    public ReadOnlyActiveList<RigidBody> RigidBodies => new ReadOnlyActiveList<RigidBody>(bodies);
+    public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new ReadOnlyPartitionedSet<RigidBody>(bodies);
 
     /// <summary>
     /// Access to the <see cref="DynamicTree"/> instance. The instance
@@ -248,10 +248,10 @@ public sealed partial class World : IDisposable
     /// </summary>
     public World(Capacity capacity)
     {
-        memRigidBodies = new UnmanagedActiveList<RigidBodyData>(capacity.BodyCount);
-        memContacts = new UnmanagedActiveList<ContactData>(capacity.ContactCount);
-        memConstraints = new UnmanagedActiveList<ConstraintData>(capacity.ConstraintCount);
-        memSmallConstraints = new UnmanagedActiveList<SmallConstraintData>(capacity.SmallConstraintCount);
+        memRigidBodies = new PartitionedBuffer<RigidBodyData>(capacity.BodyCount);
+        memContacts = new PartitionedBuffer<ContactData>(capacity.ContactCount);
+        memConstraints = new PartitionedBuffer<ConstraintData>(capacity.ConstraintCount);
+        memSmallConstraints = new PartitionedBuffer<SmallConstraintData>(capacity.SmallConstraintCount);
 
         NullBody = CreateRigidBody();
         NullBody.IsStatic = true;
@@ -259,6 +259,10 @@ public sealed partial class World : IDisposable
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
     }
 
+    /// <summary>
+    /// Default filter function for the DynamicTree. Returns true if both proxies are of type RigidBodyShape
+    /// and belong to different RigidBody instances.
+    /// </summary>
     public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         if (proxyA is RigidBodyShape rbsA && proxyB is RigidBodyShape rbsB)

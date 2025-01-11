@@ -9,14 +9,14 @@ public class SequentialTests
     {
     }
 
-    public class Number : IListIndex
+    public class Number : IPartitionedSetIndex
     {
-        public int ListIndex { get; set; }
+        public int SetIndex { get; set; }
         public int Value;
 
         public Number(int num)
         {
-            ListIndex = -1;
+            SetIndex = -1;
             Value = num;
         }
     }
@@ -30,7 +30,7 @@ public class SequentialTests
         var num4 = new Number(4);
         var num5 = new Number(5);
 
-        ActiveList<Number> ts = new();
+        PartitionedSet<Number> ts = new();
 
         Assert.That(ts.Count, Is.EqualTo(0));
         Assert.That(ts.ActiveCount, Is.EqualTo(0));

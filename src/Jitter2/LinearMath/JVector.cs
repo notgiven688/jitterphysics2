@@ -31,7 +31,7 @@ namespace Jitter2.LinearMath;
 /// Represents a three-dimensional vector with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 3*sizeof(Real))]
-public struct JVector
+public struct JVector : IEquatable<JVector>
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;
@@ -107,17 +107,17 @@ public struct JVector
         }
     }
 
+    /// <summary>
+    /// Returns a string representation of the <see cref="JVector"/>.
+    /// </summary>
     public readonly override string ToString()
     {
-        return $"{X:F6} {Y:F6} {Z:F6}";
+        return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}";
     }
 
     public readonly override bool Equals(object? obj)
     {
-        if (obj is not JVector) return false;
-        JVector other = (JVector)obj;
-
-        return X == other.X && Y == other.Y && Z == other.Z;
+        return obj is JVector other && Equals(other);
     }
 
     public static bool operator ==(JVector value1, JVector value2)
@@ -537,5 +537,10 @@ public struct JVector
         result.Z = value1.Z + value2.Z;
 
         return result;
+    }
+
+    public bool Equals(JVector other)
+    {
+        return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
     }
 }

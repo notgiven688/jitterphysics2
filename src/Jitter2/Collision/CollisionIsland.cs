@@ -30,7 +30,7 @@ namespace Jitter2.Collision;
 /// <summary>
 /// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
 /// </summary>
-public sealed class Island : IListIndex
+public sealed class Island : IPartitionedSetIndex
 {
     internal readonly HashSet<RigidBody> bodies = new();
     internal bool MarkedAsActive;
@@ -41,7 +41,7 @@ public sealed class Island : IListIndex
     /// </summary>
     public ReadOnlyHashSet<RigidBody> Bodies => new(bodies);
 
-    int IListIndex.ListIndex { get; set; } = -1;
+    int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Island"/> class.

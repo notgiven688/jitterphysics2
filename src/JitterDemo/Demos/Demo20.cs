@@ -108,7 +108,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
 
 public class Tester(JBBox box) : IDynamicTreeProxy
 {
-    public int ListIndex { get; set; } = -1;
+    public int SetIndex { get; set; } = -1;
     public int NodePtr { get; set; }
 
     public JVector Velocity => JVector.Zero;

@@ -22,16 +22,27 @@
  */
 
 using System;
+using System.Runtime.InteropServices;
 
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A 32-bit Realing point variable representing an angle. This structure exists to eliminate
+/// A 32-bit floating point variable representing an angle. This structure exists to eliminate
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
+[StructLayout(LayoutKind.Explicit, Size = 1*sizeof(Real))]
 public struct JAngle : IEquatable<JAngle>
 {
+    [field: FieldOffset(0*sizeof(Real))]
     public Real Radiant { get; set; }
+
+    /// <summary>
+    /// Returns a string representation of the <see cref="JAngle"/>.
+    /// </summary>
+    public readonly override string ToString()
+    {
+        return $"Radiant={Radiant}, Degree={Degree}";
+    }
 
     public readonly override bool Equals(object? obj)
     {

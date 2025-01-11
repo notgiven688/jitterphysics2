@@ -21,15 +21,22 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace Jitter2.LinearMath;
 
 /// <summary>
 /// Represents a triangle defined by three vertices.
 /// </summary>
-public struct JTriangle
+[StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
+public struct JTriangle : IEquatable<JTriangle>
 {
+    [FieldOffset(0*sizeof(Real))]
     public JVector V0;
+    [FieldOffset(3*sizeof(Real))]
     public JVector V1;
+    [FieldOffset(6*sizeof(Real))]
     public JVector V2;
 
     /// <summary>
@@ -43,5 +50,38 @@ public struct JTriangle
         V0 = v0;
         V1 = v1;
         V2 = v2;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the <see cref="JTriangle"/>.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"V0={{{V0}}}, V1={{{V1}}}, V2={{{V2}}}";
+    }
+
+    public override int GetHashCode()
+    {
+        return V0.GetHashCode() ^ V1.GetHashCode() ^ V2.GetHashCode();
+    }
+
+    public bool Equals(JTriangle other)
+    {
+        return V0.Equals(other.V0) && V1.Equals(other.V1) && V2.Equals(other.V2);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is JTriangle other && Equals(other);
+    }
+
+    public static bool operator ==(JTriangle left, JTriangle right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(JTriangle left, JTriangle right)
+    {
+        return !(left == right);
     }
 }

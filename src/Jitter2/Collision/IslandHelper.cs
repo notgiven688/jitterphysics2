@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
-using IslandList = Jitter2.DataStructures.ActiveList<Jitter2.Collision.Island>;
+using IslandSet = Jitter2.DataStructures.PartitionedSet<Jitter2.Collision.Island>;
 
 namespace Jitter2.Collision;
 
@@ -51,7 +51,7 @@ internal static class IslandHelper
         pool.Push(island);
     }
 
-    public static void ArbiterCreated(IslandList islands, Arbiter arbiter)
+    public static void ArbiterCreated(IslandSet islands, Arbiter arbiter)
     {
         RigidBody b1 = arbiter.Body1;
         RigidBody b2 = arbiter.Body2;
@@ -63,7 +63,7 @@ internal static class IslandHelper
         AddConnection(islands, b1, b2);
     }
 
-    public static void ArbiterRemoved(IslandList islands, Arbiter arbiter)
+    public static void ArbiterRemoved(IslandSet islands, Arbiter arbiter)
     {
         arbiter.Body1.contacts.Remove(arbiter);
         arbiter.Body2.contacts.Remove(arbiter);
@@ -71,7 +71,7 @@ internal static class IslandHelper
         RemoveConnection(islands, arbiter.Body1, arbiter.Body2);
     }
 
-    public static void ConstraintCreated(IslandList islands, Constraint constraint)
+    public static void ConstraintCreated(IslandSet islands, Constraint constraint)
     {
         constraint.Body1.constraints.Add(constraint);
         constraint.Body2.constraints.Add(constraint);
@@ -81,7 +81,7 @@ internal static class IslandHelper
         AddConnection(islands, constraint.Body1, constraint.Body2);
     }
 
-    public static void ConstraintRemoved(IslandList islands, Constraint constraint)
+    public static void ConstraintRemoved(IslandSet islands, Constraint constraint)
     {
         constraint.Body1.constraints.Remove(constraint);
         constraint.Body2.constraints.Remove(constraint);
@@ -89,21 +89,21 @@ internal static class IslandHelper
         RemoveConnection(islands, constraint.Body1, constraint.Body2);
     }
 
-    public static void BodyAdded(IslandList islands, RigidBody body)
+    public static void BodyAdded(IslandSet islands, RigidBody body)
     {
         body.island = GetFromPool();
         islands.Add(body.island, true);
         body.island.bodies.Add(body);
     }
 
-    public static void BodyRemoved(IslandList islands, RigidBody body)
+    public static void BodyRemoved(IslandSet islands, RigidBody body)
     {
         body.island.ClearLists();
         ReturnToPool(body.island);
         islands.Remove(body.island);
     }
 
-    private static void AddConnection(IslandList islands, RigidBody body1, RigidBody body2)
+    private static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         MergeIslands(islands, body1, body2);
 
@@ -111,7 +111,7 @@ internal static class IslandHelper
         body2.connections.Add(body1);
     }
 
-    private static void RemoveConnection(IslandList islands, RigidBody body1, RigidBody body2)
+    private static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         body1.connections.Remove(body2);
         body2.connections.Remove(body1);
@@ -126,7 +126,7 @@ internal static class IslandHelper
     private static readonly List<RigidBody> visitedBodiesLeft = new();
     private static readonly List<RigidBody> visitedBodiesRight = new();
 
-    private static void SplitIslands(IslandList islands, RigidBody body1, RigidBody body2)
+    private static void SplitIslands(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         Debug.Assert(body1.island == body2.island, "Islands not the same or null.");
 
@@ -231,7 +231,7 @@ internal static class IslandHelper
     }
 
     // Both bodies must be !static
-    private static void MergeIslands(IslandList islands, RigidBody body1, RigidBody body2)
+    private static void MergeIslands(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         if (body1.island == body2.island) return;
 
