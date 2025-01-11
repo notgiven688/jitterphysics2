@@ -115,9 +115,9 @@ public struct JVector : IEquatable<JVector>
         return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}";
     }
 
-    public readonly override bool Equals(object? obj)
+    public override bool Equals(object? obj)
     {
-        return obj is JVector other && X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        return obj is JVector other && Equals(other);
     }
 
     public static bool operator ==(JVector value1, JVector value2)
