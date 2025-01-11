@@ -475,12 +475,12 @@ public partial class DynamicTree
     public void Optimize(int sweeps = 100, Real chance = (Real)0.01)
     {
         optimizeRandom ??= new Random(0);
-        Optimize(optimizeRandom, sweeps, chance);
+        Optimize(() => optimizeRandom.NextDouble(), sweeps, chance);
     }
 
     /// <inheritdoc cref="Optimize(int, Real)" />
-    /// <param name="random">Provide an instance of a random class.</param>
-    public void Optimize(Random random, int sweeps, Real chance)
+    /// <param name="getNextRandom">Delegate to create a sequence of random numbers.</param>
+    public void Optimize(Func<double> getNextRandom, int sweeps, Real chance)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
         if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
@@ -490,7 +490,7 @@ public partial class DynamicTree
         {
             for (int i = 0; i < proxies.Count; i++)
             {
-                if (random.NextDouble() > chance) continue;
+                if (getNextRandom() > chance) continue;
 
                 var proxy = proxies[i];
                 temp.Push(proxy);
