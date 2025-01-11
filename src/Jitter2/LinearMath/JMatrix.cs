@@ -31,7 +31,7 @@ namespace Jitter2.LinearMath;
 /// Represents a three-by-three matrix with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
-public struct JMatrix
+public struct JMatrix : IEquatable<JMatrix>
 {
     [FieldOffset(0*sizeof(Real))] public Real M11;
     [FieldOffset(1*sizeof(Real))] public Real M21;
@@ -503,5 +503,53 @@ public struct JMatrix
     {
         Subtract(value1, value2, out JMatrix result);
         return result;
+    }
+
+    public bool Equals(JMatrix other)
+    {
+        return M11.Equals(other.M11) && M21.Equals(other.M21) &&
+               M31.Equals(other.M31) && M12.Equals(other.M12) &&
+               M22.Equals(other.M22) && M32.Equals(other.M32) &&
+               M13.Equals(other.M13) && M23.Equals(other.M23) &&
+               M33.Equals(other.M33);
+    }
+
+    /// <summary>
+    /// Returns a string representation of the <see cref="JMatrix"/>.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"M11={M11:F6}, M12={M12:F6}, M13={M13:F6}, " +
+               $"M21={M21:F6}, M22={M22:F6}, M23={M23:F6}, " +
+               $"M31={M31:F6}, M32={M32:F6}, M33={M33:F6}";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is JMatrix other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = M11.GetHashCode();
+        hashCode ^= M21.GetHashCode();
+        hashCode ^= M31.GetHashCode();
+        hashCode ^= M12.GetHashCode();
+        hashCode ^= M22.GetHashCode();
+        hashCode ^= M32.GetHashCode();
+        hashCode ^= M13.GetHashCode();
+        hashCode ^= M23.GetHashCode();
+        hashCode ^= M33.GetHashCode();
+        return hashCode;
+    }
+
+    public static bool operator ==(JMatrix left, JMatrix right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(JMatrix left, JMatrix right)
+    {
+        return !(left == right);
     }
 }

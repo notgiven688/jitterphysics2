@@ -23,18 +23,20 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Jitter2.LinearMath;
 
 /// <summary>
 /// Quaternion Q = Xi + Yj + Zk + W. Uses Hamilton's definition of ij=k.
 /// </summary>
-public struct JQuaternion
+[StructLayout(LayoutKind.Explicit, Size = 4*sizeof(Real))]
+public struct JQuaternion : IEquatable<JQuaternion>
 {
-    public Real X;
-    public Real Y;
-    public Real Z;
-    public Real W;
+    [FieldOffset(0*sizeof(Real))] public Real X;
+    [FieldOffset(1*sizeof(Real))] public Real Y;
+    [FieldOffset(2*sizeof(Real))] public Real Z;
+    [FieldOffset(3*sizeof(Real))] public Real W;
 
     /// <summary>
     /// Gets the identity quaternion (0, 0, 0, 1).
@@ -76,7 +78,7 @@ public struct JQuaternion
     /// <param name="quaternion2">The second quaternion.</param>
     /// <returns>The sum of the two quaternions.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JQuaternion Add(JQuaternion quaternion1, JQuaternion quaternion2)
+    public static JQuaternion Add(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
         Add(in quaternion1, in quaternion2, out JQuaternion result);
         return result;
@@ -131,10 +133,9 @@ public struct JQuaternion
     /// <summary>
     /// Returns a string that represents the current quaternion.
     /// </summary>
-    /// <returns>A string that represents the current quaternion.</returns>
     public readonly override string ToString()
     {
-        return $"{X:F6} {Y:F6} {Z:F6} {W:F6}";
+        return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}, W={W:F6}";
     }
 
     /// <summary>
@@ -528,5 +529,30 @@ public struct JQuaternion
     {
         Subtract(value1, value2, out JQuaternion result);
         return result;
+    }
+
+    public bool Equals(JQuaternion other)
+    {
+        return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z) && W.Equals(other.W);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is JQuaternion other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
+    }
+
+    public static bool operator ==(JQuaternion left, JQuaternion right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(JQuaternion left, JQuaternion right)
+    {
+        return !(left == right);
     }
 }

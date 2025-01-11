@@ -21,12 +21,16 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
+using System.Runtime.InteropServices;
+
 namespace Jitter2.LinearMath;
 
 /// <summary>
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
-public struct JBBox
+[StructLayout(LayoutKind.Explicit, Size = 6*sizeof(Real))]
+public struct JBBox : IEquatable<JBBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -37,7 +41,10 @@ public struct JBBox
         Intersects
     }
 
+    [FieldOffset(0*sizeof(Real))]
     public JVector Min;
+
+    [FieldOffset(3*sizeof(Real))]
     public JVector Max;
 
     public static readonly JBBox LargeBox;
@@ -50,6 +57,14 @@ public struct JBBox
         LargeBox.Max = new JVector(Real.MaxValue);
         SmallBox.Min = new JVector(Real.MaxValue);
         SmallBox.Max = new JVector(Real.MinValue);
+    }
+
+    /// <summary>
+    /// Returns a string representation of the <see cref="JBBox"/>.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"Min={{{Min}}}, Max={{{Max}}}";
     }
 
     public JBBox(JVector min, JVector max)
@@ -264,5 +279,20 @@ public struct JBBox
     {
         JVector len = Max - Min;
         return (Real)2.0 * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
+    }
+
+    public bool Equals(JBBox other)
+    {
+        return Min.Equals(other.Min) && Max.Equals(other.Max);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is JBBox other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Min.GetHashCode() ^ Max.GetHashCode();
     }
 }
