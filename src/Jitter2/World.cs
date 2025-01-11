@@ -259,6 +259,10 @@ public sealed partial class World : IDisposable
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
     }
 
+    /// <summary>
+    /// Default filter function for the DynamicTree. Returns true if both proxies are of type RigidBodyShape
+    /// and belong to different RigidBody instances.
+    /// </summary>
     public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         if (proxyA is RigidBodyShape rbsA && proxyB is RigidBodyShape rbsB)
