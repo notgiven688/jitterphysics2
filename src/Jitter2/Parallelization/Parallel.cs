@@ -41,66 +41,58 @@ public static class Parallel
         {
             Start = start;
             End = end;
-            BatchIndex = index;
         }
 
         public override string ToString()
         {
-            return $"Batch(Start: {Start}, End: {End}, BatchIndex: {BatchIndex})";
+            return $"Batch(Start: {Start}, End: {End})";
         }
 
         public readonly int Start;
         public readonly int End;
-        public readonly ushort BatchIndex;
     }
 
     /// <summary>
-    /// Given the number of elements, the number of divisions into parts and a part index, returns
-    /// the lower and upper bound for that part.
+    /// Given the total number of elements, the number of divisions, and a specific part index,
+    /// this method calculates the start and end indices for that part.
     /// </summary>
+    /// <param name="numElements">The total number of elements to be divided.</param>
+    /// <param name="numDivisions">The number of divisions to split the elements into.</param>
+    /// <param name="part">The index of the specific part (0-based).</param>
+    /// <param name="start">The calculated start index for the specified part (output parameter).</param>
+    /// <param name="end">The calculated end index for the specified part (output parameter).</param>
+    /// <example>
+    /// For numElements = 14, numDivisions = 4, the parts are divided as follows:
+    /// - Part 0: start = 0, end = 4
+    /// - Part 1: start = 4, end = 8
+    /// - Part 2: start = 8, end = 11
+    /// - Part 3: start = 11, end = 14
+    /// </example>
     public static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
     {
-        // Example:
-        // numElements = 14, numDivisions = 4, part = {0, 1, 2, 3}
-        // (div = 3, mod = 2)
-        //
-        //   p |   0    1    2    3
-        //   _______________________
-        //   s |   0    4    8   11
-        //   e |   4    8   11   14
         Debug.Assert(part < numDivisions);
 
-        int div = numElements / numDivisions;
-        int mod = numElements - div * numDivisions;
+        int div = Math.DivRem(numElements, numDivisions, out int mod);
 
-        // int mod = numElements % numDivisions;
-        // Maybe a candidate for Math.DivRem
-        start = div * part;
-        end = start + div;
-
-        if (part < mod)
-        {
-            start += part;
-            end += part + 1;
-        }
-        else
-        {
-            start += mod;
-            end += mod;
-        }
+        start = div * part + Math.Min(part, mod);
+        end = start + div + (part < mod ? 1 : 0);
     }
 
     private static readonly ThreadPool threadPool = ThreadPool.Instance;
 
     /// <summary>
-    /// Helper function utilizing <see cref="ThreadPool"/> to execute tasks
-    /// parallel in batches.
+    /// Executes tasks in parallel by dividing the work into batches using the <see cref="ThreadPool"/>.
     /// </summary>
-    /// <param name="lower">Inclusive lower bound.</param>
-    /// <param name="upper">Exclusive upper bound.</param>
-    /// <param name="numTasks">The number of batches which should be created.</param>
-    /// <param name="action">The callback function.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called after adding the tasks.</param>
+    /// <param name="lower">The inclusive lower bound of the range to be processed.</param>
+    /// <param name="upper">The exclusive upper bound of the range to be processed.</param>
+    /// <param name="numTasks">The number of batches to divide the work into.</param>
+    /// <param name="action">The callback function to execute for each batch.</param>
+    /// <param name="execute">Indicates whether to execute the tasks immediately after adding them to the thread pool.</param>
+    /// <remarks>
+    /// This method splits the range [lower, upper) into <paramref name="numTasks"/> batches and processes each batch in parallel.
+    /// The <paramref name="action"/> callback is invoked for each batch, which is represented by a <see cref="Batch"/> struct.
+    /// If <paramref name="execute"/> is true, the method will call <see cref="ThreadPool.Execute"/> to start executing the tasks.
+    /// </remarks>
     public static void ForBatch(int lower, int upper, int numTasks, Action<Batch> action, bool execute = true)
     {
         Debug.Assert(numTasks <= ushort.MaxValue);
