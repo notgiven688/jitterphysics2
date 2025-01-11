@@ -117,7 +117,7 @@ public struct JVector : IEquatable<JVector>
 
     public readonly override bool Equals(object? obj)
     {
-        return obj is JVector other && Equals(other);
+        return obj is JVector other && X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
     }
 
     public static bool operator ==(JVector value1, JVector value2)
