@@ -55,7 +55,7 @@ public static unsafe class MemoryHelper
     public struct MemBlock12Real { }
 
     /// <summary>
-    /// A memory block with a size equivalent to twelve instances of the <see cref="Real"/> type.
+    /// A memory block with a size equivalent to sixteen instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
     /// The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.
