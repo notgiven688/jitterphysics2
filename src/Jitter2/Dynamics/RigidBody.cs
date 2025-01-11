@@ -59,7 +59,7 @@ public struct RigidBodyData
 /// <summary>
 /// Represents the primary entity in the Jitter physics world.
 /// </summary>
-public sealed class RigidBody : IListIndex, IDebugDrawable
+public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 {
     internal JHandle<RigidBodyData> handle;
 
@@ -717,5 +717,5 @@ public sealed class RigidBody : IListIndex, IDebugDrawable
     /// </summary>
     public Real Mass => (Real)1.0 / inverseMass;
 
-    int IListIndex.ListIndex { get; set; } = -1;
+    int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 }

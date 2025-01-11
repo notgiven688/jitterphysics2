@@ -29,7 +29,7 @@ namespace Jitter2.Collision;
 /// <summary>
 /// Interface for entities which should be added to the <see cref="DynamicTree"/>.
 /// </summary>
-public interface IDynamicTreeProxy : IListIndex
+public interface IDynamicTreeProxy : IPartitionedSetIndex
 {
     /// <summary>
     /// A pointer value which should only by internally modified by the tree.

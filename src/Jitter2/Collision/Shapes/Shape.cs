@@ -36,7 +36,7 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable
 {
-    int IListIndex.ListIndex { get; set; } = -1;
+    int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
     /// <summary>
     /// A 64-bit integer representing the shape ID. This is used by algorithms that require
@@ -76,7 +76,7 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
         WorldBoundingBox = box;
     }
 
-    public bool IsRegistered => (this as IListIndex).ListIndex != -1;
+    public bool IsRegistered => (this as IPartitionedSetIndex).SetIndex != -1;
 
     [ReferenceFrame(ReferenceFrame.World)]
     public abstract JVector Velocity { get; }

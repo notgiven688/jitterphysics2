@@ -42,11 +42,11 @@ public partial class DynamicTree
         public Parallel.Batch Batch;
     }
 
-    private readonly ActiveList<IDynamicTreeProxy> proxies = new();
+    private readonly PartitionedSet<IDynamicTreeProxy> proxies = new();
 
     private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
 
-    public ReadOnlyActiveList<IDynamicTreeProxy> Proxies => new ReadOnlyActiveList<IDynamicTreeProxy>(proxies);
+    public ReadOnlyPartitionedSet<IDynamicTreeProxy> Proxies => new ReadOnlyPartitionedSet<IDynamicTreeProxy>(proxies);
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.

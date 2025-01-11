@@ -53,9 +53,9 @@ public unsafe struct JHandle<T> where T : unmanaged
 }
 
 /// <summary>
-/// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks. Each struct can either be active or inactive. Despite its name, this class does not fully mimic the behavior of a conventional list; the order of elements is not guaranteed to remain consistent. Indices of elements might change following calls to methods such as <see cref="UnmanagedActiveList{T}.Allocate(bool, bool)"/>, <see cref="UnmanagedActiveList{T}.Free(JHandle{T})"/>, <see cref="UnmanagedActiveList{T}.MoveToActive(JHandle{T})"/>, or <see cref="UnmanagedActiveList{T}.MoveToInactive(JHandle{T})"/>.
+/// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks. Each struct can either be active or inactive.
 /// </summary>
-public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmanaged
+public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
 {
     // this is a mixture of a data structure and an allocator.
 
@@ -79,7 +79,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
     /// </summary>
     /// <param name="maximumSize">The maximum number of elements that can be accommodated within this structure, as determined by the <see cref="Allocate"/> method. The preallocated memory is calculated as the product of maximumSize and IntPtr.Size (in bytes).</param>
     /// <param name="initialSize">The initial size of the contiguous memory block, denoted in the number of elements. The default value is 1024.</param>
-    public UnmanagedActiveList(int maximumSize, int initialSize = 1024)
+    public PartitionedBuffer(int maximumSize, int initialSize = 1024)
     {
         if (maximumSize < initialSize) initialSize = maximumSize;
 
@@ -135,7 +135,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
     /// <summary>
     /// Returns the handle of the object. The object has to be in this instance of
-    /// <see cref="UnmanagedMemory.UnmanagedActiveList{T}"/>. This operation is O(1).
+    /// <see cref="PartitionedBuffer{T}"/>. This operation is O(1).
     /// </summary>
     public JHandle<T> GetHandle(ref T t)
     {
@@ -144,7 +144,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
     /// <summary>
     /// Checks if the element is stored as an active element. The object has to be in this instance
-    /// of <see cref="Jitter2.UnmanagedMemory.UnmanagedActiveList{T}"/>. This operation is O(1).
+    /// of <see cref="PartitionedBuffer{T}"/>. This operation is O(1).
     /// </summary>
     public bool IsActive(JHandle<T> handle)
     {
@@ -181,7 +181,7 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
     /// <summary>
     /// Reader-writer lock. Locked by a writer when a resize (triggered by <see
-    /// cref="Jitter2.UnmanagedMemory.UnmanagedActiveList{T}.Allocate(bool, bool)"/>) occurs. Resizing does move all structs and
+    /// cref="PartitionedBuffer{T}.Allocate(bool, bool)"/>) occurs. Resizing does move all structs and
     /// their memory addresses. It is not safe to use handles (<see cref="JHandle{T}"/>) during this
     /// operation. Use a reader lock to access native data if concurrent calls to <see cref="Allocate"/>
     /// are made.
@@ -210,13 +210,13 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
 
             if (osize == maximumSize)
             {
-                throw new MaximumSizeException($"{nameof(UnmanagedActiveList<T>)} reached " +
+                throw new MaximumSizeException($"{nameof(PartitionedBuffer<T>)} reached " +
                                                $"its maximum size limit ({nameof(maximumSize)}={maximumSize}).");
             }
 
             size = Math.Min(2 * osize, maximumSize);
 
-            Trace.WriteLine($"{nameof(UnmanagedActiveList<T>)}: " +
+            Trace.WriteLine($"{nameof(PartitionedBuffer<T>)}: " +
                             $"Resizing to {size}x{typeof(T)} ({size}x{sizeof(T)} Bytes).");
 
             var oldmemory = memory;
@@ -269,14 +269,14 @@ public sealed unsafe class UnmanagedActiveList<T> : IDisposable where T : unmana
         }
     }
 
-    ~UnmanagedActiveList()
+    ~PartitionedBuffer()
     {
         FreeResources();
     }
 
     /// <summary>
     /// Call to explicitly free all unmanaged memory. Invalidates any further use of this instance
-    /// of <see cref="UnmanagedActiveList{T}"/>.
+    /// of <see cref="PartitionedBuffer{T}"/>.
     /// </summary>
     public void Dispose()
     {
