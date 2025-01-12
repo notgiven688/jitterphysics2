@@ -4,10 +4,18 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.3 (2025-01-12)
+
+- DynamicTree, `Optimize` takes a delegate now.
+- Fixed `TriangleShape` ray cast not returning a normalized normal.
+- Removed the `CollisionHelper` class.
+- Renamed `ActiveList` and `UnmanagedActiveList` to `PartitionedSet` and `PartitionedBuffer`, respectively.
+- Various smaller improvements (ToString() overloads, IEquality\<T\> implementations, XML-documentation)
+
 ### Jitter 2.5.2 (2025-01-08)
 
 - Added enumeration method to `DynamicTree` and made `PairHashSet` internal.
-- Removed `UseFullEPASolver` option.
+- **Breaking Change:** Removed `UseFullEPASolver` option.
 - Further improved simulation performance under high lock contention scenarios.
 
 ### Jitter 2.5.1 (2024-12-31)
