@@ -35,12 +35,11 @@ public class Demo05 : IDemo
 
     private bool debugDraw = false;
 
-    public List<RigidBodyShape> CreateShapes()
+    public IEnumerable<RigidBodyShape> CreateShapes()
     {
         var indices = tm.mesh.Indices;
         var vertices = tm.mesh.Vertices;
 
-        List<RigidBodyShape> shapesToAdd = new();
         List<JTriangle> triangles = new();
 
         foreach (var tvi in indices)
@@ -56,11 +55,8 @@ public class Demo05 : IDemo
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
-            FatTriangleShape ts = new FatTriangleShape(jtm, i);
-            shapesToAdd.Add(ts);
+            yield return new FatTriangleShape(jtm, i);
         }
-
-        return shapesToAdd;
     }
 
     public void Build()

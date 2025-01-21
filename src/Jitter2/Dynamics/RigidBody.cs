@@ -442,9 +442,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         foreach (RigidBodyShape shape in shapes)
         {
             AttachToShape(shape);
+            this.shapes.Add(shape);
         }
 
-        this.shapes.AddRange(shapes);
         if (setMassInertia) SetMassInertia();
     }
 
