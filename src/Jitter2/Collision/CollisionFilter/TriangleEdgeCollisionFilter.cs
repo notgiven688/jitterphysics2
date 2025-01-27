@@ -56,8 +56,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// </summary>
     public JAngle AngleThreshold
     {
-        get => JAngle.FromRadiant(MathR.Acos(cosAT));
-        set => cosAT = MathR.Cos(value.Radiant);
+        get => JAngle.FromRadian(MathR.Acos(cosAT));
+        set => cosAT = MathR.Cos(value.Radian);
     }
 
     /// <inheritdoc />

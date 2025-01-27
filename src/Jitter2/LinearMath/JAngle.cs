@@ -34,14 +34,14 @@ namespace Jitter2.LinearMath;
 public struct JAngle : IEquatable<JAngle>
 {
     [field: FieldOffset(0*sizeof(Real))]
-    public Real Radiant { get; set; }
+    public Real Radian { get; set; }
 
     /// <summary>
     /// Returns a string representation of the <see cref="JAngle"/>.
     /// </summary>
     public readonly override string ToString()
     {
-        return $"Radiant={Radiant}, Degree={Degree}";
+        return $"Radian={Radian}, Degree={Degree}";
     }
 
     public readonly override bool Equals(object? obj)
@@ -51,23 +51,23 @@ public struct JAngle : IEquatable<JAngle>
 
     public readonly bool Equals(JAngle p)
     {
-        return p.Radiant == Radiant;
+        return p.Radian == Radian;
     }
 
     public readonly override int GetHashCode()
     {
-        return Radiant.GetHashCode();
+        return Radian.GetHashCode();
     }
 
     public Real Degree
     {
-        readonly get => Radiant / MathR.PI * (Real)180.0;
-        set => Radiant = value / (Real)180.0 * MathR.PI;
+        readonly get => Radian / MathR.PI * (Real)180.0;
+        set => Radian = value / (Real)180.0 * MathR.PI;
     }
 
-    public static JAngle FromRadiant(Real rad)
+    public static JAngle FromRadian(Real rad)
     {
-        return new JAngle { Radiant = rad };
+        return new JAngle { Radian = rad };
     }
 
     public static JAngle FromDegree(Real deg)
@@ -77,22 +77,22 @@ public struct JAngle : IEquatable<JAngle>
 
     public static explicit operator JAngle(Real angle)
     {
-        return FromRadiant(angle);
+        return FromRadian(angle);
     }
 
     public static JAngle operator -(JAngle a)
     {
-        return FromRadiant(-a.Radiant);
+        return FromRadian(-a.Radian);
     }
 
     public static JAngle operator +(JAngle a, JAngle b)
     {
-        return FromRadiant(a.Radiant + b.Radiant);
+        return FromRadian(a.Radian + b.Radian);
     }
 
     public static JAngle operator -(JAngle a, JAngle b)
     {
-        return FromRadiant(a.Radiant - b.Radiant);
+        return FromRadian(a.Radian - b.Radian);
     }
 
     public static bool operator ==(JAngle l, JAngle r)
@@ -127,6 +127,6 @@ public struct JAngle : IEquatable<JAngle>
 
     public static explicit operator Real(JAngle angle)
     {
-        return angle.Radiant;
+        return angle.Radian;
     }
 }

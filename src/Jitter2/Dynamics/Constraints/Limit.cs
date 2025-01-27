@@ -32,10 +32,10 @@ public struct AngularLimit
     public JAngle To { get; set; }
 
     public static readonly AngularLimit Full =
-        new(JAngle.FromRadiant(-MathR.PI), JAngle.FromRadiant(MathR.PI));
+        new(JAngle.FromRadian(-MathR.PI), JAngle.FromRadian(MathR.PI));
 
     public static readonly AngularLimit Fixed =
-        new(JAngle.FromRadiant(+(Real)1e-6), JAngle.FromRadiant(-(Real)1e-6));
+        new(JAngle.FromRadian(+(Real)1e-6), JAngle.FromRadian(-(Real)1e-6));
 
     public static AngularLimit FromDegree(Real min, Real max)
     {
