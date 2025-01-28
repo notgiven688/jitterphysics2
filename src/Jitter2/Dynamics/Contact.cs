@@ -409,16 +409,40 @@ public struct ContactData
         [FieldOffset(4+28*sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
+        /// <summary>
+        /// Normal direction (normalized) of the contact.
+        /// Pointing from the collision point on the surface of <see cref="ContactData.Body1"/> to the collision point
+        /// on the surface of <see cref="ContactData.Body2"/>.
+        /// </summary>
+        [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0),
+            NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
 
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent1 => new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
+        /// <summary>
+        /// Tangent (normalized) to the contact <see cref="Normal"/> in the direction of the relative movement of
+        /// both bodies, at the time when the contact is created.
+        /// </summary>
+        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent1 => new JVector(NormalTangentX.GetElement(1),
+            NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
 
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent2 => new JVector(NormalTangentX.GetElement(2), NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
+        /// <summary>
+        /// A second tangent forming an orthonormal basis with <see cref="Normal"/> and <see cref="Tangent1"/>.
+        /// </summary>
+        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent2 => new JVector(NormalTangentX.GetElement(2),
+            NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
 
+        /// <summary>
+        /// The impulse applied in the normal direction which has been used to solve the contact.
+        /// </summary>
         public Real Impulse => Accumulated.GetElement(0);
 
+        /// <summary>
+        /// The impulse applied in the first tangent direction which has been used to solve the contact.
+        /// </summary>
         public Real TangentImpulse1 => Accumulated.GetElement(1);
 
+        /// <summary>
+        /// The impulse applied in the second tangent direction which has been used to solve the contact.
+        /// </summary>
         public Real TangentImpulse2 => Accumulated.GetElement(2);
 
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2, in JVector n,
