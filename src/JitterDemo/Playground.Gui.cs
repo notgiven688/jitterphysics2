@@ -71,7 +71,7 @@ public partial class Playground : RenderWindow
         ImGui.SetNextWindowsPos(new Vector2(10, 10), ImGuiCond.Once, Vector2.Zero);
         ImGui.SetNextWindowBgAlpha(0.35f);
 
-        ImGui.Begin("overlay", ref opened, windowFlags);
+        ImGui.Begin("##overlay", ref opened, windowFlags);
         ImGui.SetStyle();
 
         ImGui.Text($"{fps} fps", new Vector4(1, 1, 0, 1));
@@ -186,7 +186,7 @@ public partial class Playground : RenderWindow
 
             ImGui.Checkbox("Debug draw tree", ref debugDrawTree);
 
-            if (ImGui.Slider("##foo2", ref debugDrawTreeDepth, 1, 64, "Tree depth (%d)", ImGuiSliderFlags.None))
+            if (ImGui.Slider("##depthslider", ref debugDrawTreeDepth, 1, 64, "Tree depth (%d)", ImGuiSliderFlags.None))
             {
                 debugDrawTree = true;
             }
@@ -223,10 +223,10 @@ public partial class Playground : RenderWindow
             ImGui.EndTable();
 
             float max = physicsTime.Max();
-            ImGui.PlotHistogram(physicsTime, string.Empty, $"max. {max:f2} ms", 0, max * 1.0f, 200, 80);
+            ImGui.PlotHistogram(physicsTime, "##histogram", $"max. {max:f2} ms", 0, max * 1.0f, 200, 80);
 
             ImGui.Text($"Total: {totalTime,0:N2} ms ({1000.0d / totalTime,0:N0} fps)");
-            ImGui.Slider("##foo1", ref samplingRate, 1, 10, "sampling rate (%d)", ImGuiSliderFlags.None);
+            ImGui.Slider("##sampleslider", ref samplingRate, 1, 10, "sampling rate (%d)", ImGuiSliderFlags.None);
 
             ImGui.TreePop();
         }
