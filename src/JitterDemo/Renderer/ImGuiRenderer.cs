@@ -173,16 +173,14 @@ public class ImGuiRenderer
 
         for (int i = 0; i < pdraw_data->CmdListsCount; i++)
         {
-            ImDrawList* pcmdList = pdraw_data->CmdLists[i];
+            ImDrawList* pcmdList = (ImDrawList*)pdraw_data->CmdLists.Ref<IntPtr>(i);
 
-            ab.SetData(pcmdList->VtxBuffer.Data, pcmdList->VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>(),
-                GLC.DYNAMIC_DRAW);
+            ab.SetData(pcmdList->VtxBuffer.Data, pcmdList->VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>(), GLC.DYNAMIC_DRAW);
             eab.SetData(pcmdList->IdxBuffer.Data, pcmdList->IdxBuffer.Size * sizeof(ushort), GLC.DYNAMIC_DRAW);
 
             for (int pcmdi = 0; pcmdi < pcmdList->CmdBuffer.Size; pcmdi++)
             {
-                ImDrawCmd* cmdBuffer = (ImDrawCmd*)pcmdList->CmdBuffer.Data;
-                ImDrawCmd cmdBufferData = cmdBuffer[pcmdi];
+                ref ImDrawCmd cmdBufferData = ref pcmdList->CmdBuffer.Ref<ImDrawCmd>(pcmdi);
 
                 textures[(int)cmdBufferData.TextureId].Bind(0);
                 var clip = cmdBufferData.ClipRect;

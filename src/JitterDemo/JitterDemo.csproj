@@ -28,38 +28,16 @@
         <Optimize>true</Optimize>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(IsWindows)'=='true'">
-        <DefineConstants>Windows</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(IsOSX)'=='true'">
-        <DefineConstants>OSX</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(IsLinux)'=='true'">
-        <DefineConstants>Linux</DefineConstants>
-    </PropertyGroup>
-
-    <ItemGroup Condition="'$(IsWindows)'=='true'">
-        <ContentWithTargetPath Include="runtimes\win-x64\native\glfw3.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>glfw3.dll</TargetPath>
-        </ContentWithTargetPath>
-        <ContentWithTargetPath Include="runtimes\win-x64\native\cimgui.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>cimgui.dll</TargetPath>
-        </ContentWithTargetPath>
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(IsLinux)'=='true'">
-        <ContentWithTargetPath Include="runtimes\linux-x64\native\libcimgui.so">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <TargetPath>libcimgui.so</TargetPath>
-        </ContentWithTargetPath>
-    </ItemGroup>
-
     <ItemGroup>
         <Content Include="assets\*.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="runtimes\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <PropertyGroup>

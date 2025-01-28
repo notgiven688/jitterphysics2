@@ -38,13 +38,12 @@ public static class GLFW
         public IntPtr Pixels;
     }
 
-#if Windows
-    public const string LIBGLFW = "glfw3.dll";
-#elif OSX
-        public const string LIBGLFW = "libglfw.dylib";
-#else
-    public const string LIBGLFW = "libglfw.so";
-#endif
+    static GLFW()
+    {
+        ImportResolver.Load();
+    }
+
+    public const string LIBGLFW = "glfw3";
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void GLProcDelegate();
