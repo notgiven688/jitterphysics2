@@ -25,7 +25,7 @@ public static class Program
         }
         catch (DllNotFoundException ex)
         {
-            PrintException(ex, "Make sure GLFW (https://www.glfw.org/) is installed and available on your system.");
+            PrintException(ex, "Unable to load library.");
         }
         catch (OpenGLVersionNotSupportedException ex)
         {
