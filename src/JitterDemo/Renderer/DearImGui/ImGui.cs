@@ -183,16 +183,6 @@ public static unsafe class ImGui
         text = PopStr(1);
     }
 
-    public static void Text(string text, in Vector4 color)
-    {
-        ImGuiStyle* style = ImGuiNative.igGetStyle();
-        Vector4* colors = &style->Colors_0;
-        var orig = colors[(int)ImGuiCol.Text];
-        colors[(int)ImGuiCol.Text] = color;
-        Text(text);
-        colors[(int)ImGuiCol.Text] = orig;
-    }
-
     public static void PushStyleVar(ImGuiStyleVar var, in Vector2 vec2)
     {
         ImGuiNative.igPushStyleVar_Vec2(var, vec2);
@@ -228,6 +218,12 @@ public static unsafe class ImGui
     {
         PushStr(text, 0);
         ImGuiNative.igText(strPtr[0]);
+    }
+
+    public static void Text(string text, Vector4 color)
+    {
+        PushStr(text, 0);
+        ImGuiNative.igTextColored(color, strPtr[0]);
     }
 
     public static bool TreeNode(string label)
