@@ -1,96 +1,51 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <None Include="..\.editorconfig" Link=".editorconfig"/>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\.editorconfig" Link=".editorconfig"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Jitter2\Jitter2.csproj"/>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Jitter2\Jitter2.csproj"/>
+    </ItemGroup>
 
-  <PropertyGroup>
-    <RuntimeOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">win</RuntimeOS>
-    <RuntimeOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">linux</RuntimeOS>
-    <RuntimeOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">osx</RuntimeOS>
-
-    <RuntimeArch>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)</RuntimeArch>
-  </PropertyGroup>
-
-    <PropertyGroup Condition="'$(RuntimeOS)' == 'win'">
-        <DefineConstants>Windows</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(RuntimeOS)' == 'osx'">
-        <DefineConstants>OSX</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(RuntimeOS)' == 'linux'">
-        <DefineConstants>Linux</DefineConstants>
+    <PropertyGroup>
+        <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+        <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+        <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
     </PropertyGroup>
 
-  <PropertyGroup>
-    <OutputType Condition="'$(RuntimeOS)' == 'win'">WinExe</OutputType>
-    <OutputType Condition="'$(RuntimeOS)' != 'win'">Exe</OutputType>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>UNSAFE</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType Condition="'$(IsLinux)'=='true'">Exe</OutputType>
+        <OutputType Condition="'$(IsWindows)'=='true'">WinExe</OutputType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefineConstants>UNSAFE</DefineConstants>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DefineConstants>$(DefineConstants);RELEASE;TRACE</DefineConstants>
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DefineConstants>$(DefineConstants);RELEASE;TRACE</DefineConstants>
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>portable</DebugType>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
 
-  <!-- Copy native files to the output directory -->
-  <ItemGroup>
-    <ContentWithTargetPath Include="runtimes\win-x64\native\*.*" Condition="'$(RuntimeOS)' == 'win' And '$(RuntimeArch)' == 'x64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
+    <ItemGroup>
+        <Content Include="assets\*.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
-    <ContentWithTargetPath Include="runtimes\win-x86\native\*.*" Condition="'$(RuntimeOS)' == 'win' And '$(RuntimeArch)' == 'x86'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
+    <ItemGroup>
+      <None Include="runtimes\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 
-    <ContentWithTargetPath Include="runtimes\win-arm64\native\*.*" Condition="'$(RuntimeOS)' == 'win' And '$(RuntimeArch)' == 'arm64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-
-    <ContentWithTargetPath Include="runtimes\linux-x64\native\*.*" Condition="'$(RuntimeOS)' == 'linux' And '$(RuntimeArch)' == 'x64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-
-    <ContentWithTargetPath Include="runtimes\linux-arm64\native\*.*" Condition="'$(RuntimeOS)' == 'linux' And '$(RuntimeArch)' == 'arm64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-
-    <ContentWithTargetPath Include="runtimes\osx-x64\native\*.*" Condition="'$(RuntimeOS)' == 'osx' And '$(RuntimeArch)' == 'x64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-
-    <ContentWithTargetPath Include="runtimes\osx-arm64\native\*.*" Condition="'$(RuntimeOS)' == 'osx' And '$(RuntimeArch)' == 'arm64'">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>%(FileName)%(Extension)</TargetPath>
-    </ContentWithTargetPath>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="assets\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
 
 </Project>
-
