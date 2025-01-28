@@ -411,8 +411,8 @@ public struct ContactData
 
         /// <summary>
         /// Normal direction (normalized) of the contact.
-        /// Pointing from the collision point on the surface of <see cref="ContactData.Body1"/> to the collision point
-        /// on the surface of <see cref="ContactData.Body2"/>.
+        /// Pointing from the collision point on the surface of <see cref="ContactData.Body2"/> to the collision point
+        /// on the surface of <see cref="ContactData.Body1"/>.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0),
             NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
