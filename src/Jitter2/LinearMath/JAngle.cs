@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// A 32-bit floating point variable representing an angle. This structure exists to eliminate
+/// A floating point variable of type <see cref="Real"/> representing an angle. This structure exists to eliminate
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 1*sizeof(Real))]
