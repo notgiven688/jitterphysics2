@@ -32,7 +32,7 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Parallelization;
-using Jitter2.UnmanagedMemory;
+using Jitter2.Unmanaged;
 using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
 namespace Jitter2;

@@ -3,7 +3,7 @@ global using Jitter2.Collision;
 global using Jitter2.Dynamics;
 global using Jitter2.LinearMath;
 global using Jitter2.Parallelization;
-global using Jitter2.UnmanagedMemory;
+global using Jitter2.Unmanaged;
 global using Jitter2.Collision.Shapes;
 global using BenchmarkDotNet;
 global using BenchmarkDotNet.Attributes;

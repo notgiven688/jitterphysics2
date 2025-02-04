@@ -23,7 +23,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Jitter2.UnmanagedMemory;
+using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
 

@@ -23,7 +23,7 @@
 
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
-using Jitter2.UnmanagedMemory;
+using Jitter2.Unmanaged;
 
 [assembly: InternalsVisibleTo("JitterTests")]
 

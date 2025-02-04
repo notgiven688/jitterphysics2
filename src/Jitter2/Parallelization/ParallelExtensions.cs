@@ -23,7 +23,7 @@
 
 using System;
 using Jitter2.DataStructures;
-using Jitter2.UnmanagedMemory;
+using Jitter2.Unmanaged;
 
 namespace Jitter2.Parallelization;
 

@@ -23,7 +23,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Jitter2.UnmanagedMemory;
+namespace Jitter2.Unmanaged;
 
 public static unsafe class MemoryHelper
 {

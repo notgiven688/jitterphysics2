@@ -26,7 +26,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Jitter2.Parallelization;
 
-namespace Jitter2.UnmanagedMemory;
+namespace Jitter2.Unmanaged;
 
 /// <summary>
 /// Handle for an unmanaged object.

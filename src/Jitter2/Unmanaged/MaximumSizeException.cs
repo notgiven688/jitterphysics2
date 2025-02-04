@@ -23,7 +23,7 @@
 
 using System;
 
-namespace Jitter2.UnmanagedMemory;
+namespace Jitter2.Unmanaged;
 
 /// <summary>
 /// An exception thrown when a size limit of a data structure
