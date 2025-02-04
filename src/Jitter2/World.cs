@@ -98,7 +98,7 @@ public sealed partial class World : IDisposable
 
     /// <summary>
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Utilize
-    /// the corresponding native properties where possible to mitigate risk.
+    /// the corresponding managed properties where possible to mitigate risk.
     /// </summary>
     public SpanData RawData => new(this);
 
