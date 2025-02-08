@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.4 (2025-02-08)
+
+- Renamed `JAngle.Radiant` to `JAngle.Radian`.
+- Renamed namespace `Jitter2.UnmanagedMemory` to `Jitter2.Unmanaged`.
+- Fix `body.AddShape(IEnumerable<RigidBodyShape> shapes)` for one-time-use iterators.
+- Smaller improvements in XML-documentation.
+
 ### Jitter 2.5.3 (2025-01-12)
 
 - DynamicTree, `Optimize` takes a delegate now.
