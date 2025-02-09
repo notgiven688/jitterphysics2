@@ -55,7 +55,7 @@ public interface IUpdatableBoundingBox
     /// <summary>
     /// Updates the bounding box.
     /// </summary>
-    public void UpdateWorldBoundingBox(Real dt);
+    public void UpdateWorldBoundingBox(Real dt = (Real)0.0);
 }
 
 /// <summary>
