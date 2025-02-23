@@ -7,14 +7,14 @@ using System.Numerics;
 
 public partial struct JVector
 {
-    public static implicit operator Vector3(in JVector v) => new(v.X, v.Y, v.Z); // Unsafe.As<JVector, Vector3>(ref Unsafe.AsRef(v));
+    public static implicit operator Vector3(in JVector v) => new((float)v.X, (float)v.Y, (float)v.Z); // Unsafe.As<JVector, Vector3>(ref Unsafe.AsRef(v));
 
     public static implicit operator JVector(in Vector3 v) => new(v.X, v.Y, v.Z); // Unsafe.As<Vector3, JVector>(ref Unsafe.AsRef(v));
 }
 
 public partial struct JQuaternion
 {
-    public static implicit operator Quaternion(in JQuaternion q) => new(q.X, q.Y, q.Z, q.W); // Unsafe.As<JQuaternion, Quaternion>(ref Unsafe.AsRef(q));
+    public static implicit operator Quaternion(in JQuaternion q) => new((float)q.X, (float)q.Y, (float)q.Z, (float)q.W); // Unsafe.As<JQuaternion, Quaternion>(ref Unsafe.AsRef(q));
 
     public static implicit operator JQuaternion(in Quaternion q) => new(q.X, q.Y, q.Z, q.W); // Unsafe.As<Quaternion, JQuaternion>(ref Unsafe.AsRef(q));
 }
