@@ -31,7 +31,7 @@ namespace Jitter2.LinearMath;
 /// Represents a three-dimensional vector with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 3*sizeof(Real))]
-public struct JVector : IEquatable<JVector>
+public partial struct JVector : IEquatable<JVector>
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;

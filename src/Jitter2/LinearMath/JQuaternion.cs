@@ -31,7 +31,7 @@ namespace Jitter2.LinearMath;
 /// Quaternion Q = Xi + Yj + Zk + W. Uses Hamilton's definition of ij=k.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 4*sizeof(Real))]
-public struct JQuaternion : IEquatable<JQuaternion>
+public partial struct JQuaternion : IEquatable<JQuaternion>
 {
     [FieldOffset(0*sizeof(Real))] public Real X;
     [FieldOffset(1*sizeof(Real))] public Real Y;
