@@ -26,18 +26,18 @@ using Jitter2.DataStructures;
 
 namespace Jitter2.Dynamics.Constraints;
 
-public class Joint
+public class Joint : IDebugDrawable
 {
     private readonly List<Constraint> constraints = new(4);
     public ReadOnlyList<Constraint> Constraints => new ReadOnlyList<Constraint>(constraints);
 
     /// <summary>
-    /// Add a constraint to the internal book keeping
+    /// Add a constraint to the internal bookkeeping
     /// </summary>
     protected void Register(Constraint constraint) => constraints.Add(constraint);
 
     /// <summary>
-    /// Remove a constraint from the internal book keeping
+    /// Remove a constraint from the internal bookkeeping
     /// </summary>
     protected void Deregister(Constraint constraint) => constraints.Remove(constraint);
 
@@ -78,5 +78,13 @@ public class Joint
         }
 
         constraints.Clear();
+    }
+
+    public virtual void DebugDraw(IDebugDrawer drawer)
+    {
+        foreach (var constraint in constraints)
+        {
+            constraint.DebugDraw(drawer);
+        }
     }
 }
