@@ -337,9 +337,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     private void Move()
     {
         UpdateWorldInertia();
-        foreach (RigidBodyShape shape in shapes)
+
+        foreach (var shape in shapes)
         {
-            World.UpdateShape(shape);
+            World.DynamicTree.Update(shape);
         }
 
         World.ActivateBodyNextStep(this);

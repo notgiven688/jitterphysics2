@@ -54,7 +54,7 @@ public class LineShader : BasicShader
         ";
 
     private static readonly string fshader = @"
-        #version 420 core
+        #version 330 core
 
         uniform vec4 color;
     

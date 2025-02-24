@@ -274,6 +274,7 @@ public partial class DynamicTree
     /// <param name="proxy">The entity to update.</param>
     public void Update<T>(T proxy) where T : class, IDynamicTreeProxy
     {
+        if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox();
         OverlapCheckRemove(root, proxy.NodePtr);
         InternalRemoveProxy(proxy);
         InternalAddProxy(proxy);

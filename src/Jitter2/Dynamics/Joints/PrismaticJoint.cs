@@ -78,10 +78,4 @@ public class PrismaticJoint : Joint
             Register(Motor);
         }
     }
-
-    public void DebugDraw(IDebugDrawer drawer)
-    {
-        Slider.DebugDraw(drawer);
-        // TODO: ..
-    }
 }

@@ -370,12 +370,6 @@ public sealed partial class World : IDisposable
         arbiter.Handle = JHandle<ContactData>.Zero;
     }
 
-    internal void UpdateShape(RigidBodyShape shape)
-    {
-        shape.UpdateWorldBoundingBox();
-        DynamicTree.Update(shape);
-    }
-
     internal void ActivateBodyNextStep(RigidBody body)
     {
         body.sleepTime = 0;

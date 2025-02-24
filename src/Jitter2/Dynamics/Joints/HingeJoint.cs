@@ -66,10 +66,4 @@ public class HingeJoint : Joint
         this(world, body1, body2, hingeCenter, hingeAxis, AngularLimit.Full, hasMotor)
     {
     }
-
-    public void DebugDraw(IDebugDrawer drawer)
-    {
-        HingeAngle.DebugDraw(drawer);
-        BallSocket.DebugDraw(drawer);
-    }
 }
