@@ -66,13 +66,14 @@ public unsafe class SpringConstraint : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(SpringData) <= sizeof(ConstraintData));
+        CheckDataSize<SpringData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<SpringData>(Handle);
     }
 
-    public override bool IsSmallConstraint { get; } = sizeof(SpringData) <= SmallConstraintData.ConstraintSize;
+    public override bool IsSmallConstraint { get; } = sizeof(SpringData) <= sizeof(SmallConstraintData);
 
     /// <summary>
     /// Initializes the constraint.

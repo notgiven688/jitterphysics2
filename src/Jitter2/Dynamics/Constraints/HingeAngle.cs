@@ -70,7 +70,8 @@ public unsafe class HingeAngle : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(HingeAngleData) <= sizeof(ConstraintData));
+        CheckDataSize<HingeAngleData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<HingeAngleData>(Handle);

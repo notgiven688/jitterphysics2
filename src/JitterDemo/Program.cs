@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
@@ -17,6 +18,8 @@ public static class Program
 
     public static void Main()
     {
+        Trace.Listeners.Add(new ConsoleTraceListener());
+
         CreationSettings cs = new(1200, 800, "JitterDemo");
 
         try

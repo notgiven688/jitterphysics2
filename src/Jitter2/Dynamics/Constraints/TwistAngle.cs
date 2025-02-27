@@ -67,7 +67,8 @@ public unsafe class TwistAngle : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(TwistLimitData) <= sizeof(ConstraintData));
+        CheckDataSize<TwistLimitData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<TwistLimitData>(Handle);

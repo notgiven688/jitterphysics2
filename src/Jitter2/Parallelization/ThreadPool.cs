@@ -107,7 +107,7 @@ public sealed class ThreadPool
         // To avoid this issue, multi-threading is disabled when a debugger is attached on non-Windows systems.
         if (!OperatingSystem.IsWindows() && Debugger.IsAttached)
         {
-            System.Diagnostics.Trace.WriteLine(
+            System.Diagnostics.Debug.WriteLine(
                 "Multi-threading disabled to prevent potential hangups: Debugger attached, " +
                 ".NET version < 9.0, non-Windows system detected.");
             initialThreadCount = 1; // Forces single-threading to avoid hangups
