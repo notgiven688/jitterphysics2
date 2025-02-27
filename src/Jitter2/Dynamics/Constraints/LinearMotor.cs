@@ -62,7 +62,8 @@ public unsafe class LinearMotor : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(LinearMotorData) <= sizeof(ConstraintData));
+        CheckDataSize<LinearMotorData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);

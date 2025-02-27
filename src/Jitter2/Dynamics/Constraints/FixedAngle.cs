@@ -66,7 +66,8 @@ public unsafe class FixedAngle : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(FixedAngleData) <= sizeof(ConstraintData));
+        CheckDataSize<FixedAngleData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<FixedAngleData>(Handle);

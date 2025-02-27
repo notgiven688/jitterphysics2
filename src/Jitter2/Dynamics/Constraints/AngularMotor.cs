@@ -61,7 +61,8 @@ public unsafe class AngularMotor : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(AngularMotorData) <= sizeof(ConstraintData));
+        CheckDataSize<AngularMotorData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<AngularMotorData>(Handle);

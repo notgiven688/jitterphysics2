@@ -67,7 +67,8 @@ public unsafe class ConeLimit : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(ConeLimitData) <= sizeof(ConstraintData));
+        CheckDataSize<ConeLimitData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<ConeLimitData>(Handle);

@@ -66,7 +66,7 @@ public unsafe class BallSocket : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(BallSocketData) <= sizeof(ConstraintData));
+        CheckDataSize<BallSocketData>();
 
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;

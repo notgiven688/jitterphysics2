@@ -71,7 +71,8 @@ public unsafe class DistanceLimit : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(DistanceLimitData) <= sizeof(ConstraintData));
+        CheckDataSize<DistanceLimitData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<DistanceLimitData>(Handle);

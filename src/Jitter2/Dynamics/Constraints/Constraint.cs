@@ -27,11 +27,9 @@ using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
 
-[StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
+[StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeSmall)]
 public unsafe struct SmallConstraintData
 {
-    public const int ConstraintSize = Jitter2.Precision.ConstraintSizeSmall;
-
     internal int _internal;
     public delegate*<ref SmallConstraintData, Real, void> Iterate;
     public delegate*<ref SmallConstraintData, Real, void> PrepareForIteration;
@@ -40,11 +38,9 @@ public unsafe struct SmallConstraintData
     public JHandle<RigidBodyData> Body2;
 }
 
-[StructLayout(LayoutKind.Sequential, Size = ConstraintSize)]
+[StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeFull)]
 public unsafe struct ConstraintData
 {
-    public const int ConstraintSize = Jitter2.Precision.ConstraintSizeFull;
-
     internal int _internal;
     public delegate*<ref ConstraintData, Real, void> Iterate;
     public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
@@ -69,6 +65,17 @@ public abstract class Constraint : IDebugDrawable
     public JHandle<ConstraintData> Handle { internal set; get; }
 
     public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(Handle);
+
+    /// <summary>
+    /// Helper to check if the constraint data is small enough.
+    /// </summary>
+    protected static unsafe void CheckDataSize<T>() where T : unmanaged
+    {
+        if (sizeof(T) > sizeof(ConstraintData))
+        {
+            throw new InvalidOperationException("The size of the constraint data is too large.");
+        }
+    }
 
     /// <summary>
     /// This method must be overridden. It initializes the function pointers for

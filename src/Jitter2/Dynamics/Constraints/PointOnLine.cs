@@ -74,7 +74,8 @@ public unsafe class PointOnLine : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(PointOnLineData) <= sizeof(ConstraintData));
+        CheckDataSize<PointOnLineData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<PointOnLineData>(Handle);

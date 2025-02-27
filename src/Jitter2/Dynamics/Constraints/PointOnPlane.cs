@@ -72,7 +72,8 @@ public unsafe class PointOnPlane : Constraint
 
     protected override void Create()
     {
-        Trace.Assert(sizeof(SliderData) <= sizeof(ConstraintData));
+        CheckDataSize<SliderData>();
+
         iterate = &Iterate;
         prepareForIteration = &PrepareForIteration;
         handle = JHandle<ConstraintData>.AsHandle<SliderData>(Handle);
