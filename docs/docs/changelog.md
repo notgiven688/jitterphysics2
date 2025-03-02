@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.5 (2025-03-02)
+
+- Added implicit conversion operators for System.Numerics Vector3 and Quaternion.
+- Replaced Trace.WriteLine with Trace.Information, Warning, Error.
+
 ### Jitter 2.5.4 (2025-02-08)
 
 - Renamed `JAngle.Radiant` to `JAngle.Radian`.
