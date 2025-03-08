@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.6 (2025-03-08)
+
+- Fixed concurrency bug in `world.GetArbiter`.
+
 ### Jitter 2.5.5 (2025-03-02)
 
 - Added implicit conversion operators for System.Numerics Vector3 and Quaternion.
