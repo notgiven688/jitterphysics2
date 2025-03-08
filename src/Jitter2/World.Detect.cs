@@ -418,40 +418,36 @@ public sealed partial class World
     public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {
         ArbiterKey arbiterKey = new(id0, id1);
-        bool exists = arbiters.TryGetValue(arbiterKey, out Arbiter? arb);
+        if (arbiters.TryGetValue(arbiterKey, out arbiter!)) return;
 
-        if (!exists)
+        lock (memContacts)
         {
-            lock (memContacts)
+            if (!Arbiter.Pool.TryPop(out arbiter!))
             {
-                if (!Arbiter.Pool.TryPop(out arb))
-                {
-                    arb = new Arbiter();
-                }
-
-                var h = memContacts.Allocate(true);
-                arb.Handle = h;
-                h.Data.Init(b0, b1);
-                h.Data.Key = arbiterKey;
-                arb.Body1 = b0;
-                arb.Body2 = b1;
-
-                Debug.Assert(arb != null && memContacts.IsActive(arb.Handle));
-
-                bool success = arbiters.TryAdd(arbiterKey, arb);
-
-                if (success)
-                {
-                    deferredArbiters.Add(arb);
-                }
-                else
-                {
-                    memContacts.Free(h);
-                    Arbiter.Pool.Push(arb);
-                }
+                arbiter = new Arbiter();
             }
+
+            var handle = memContacts.Allocate(true);
+            arbiter.Handle = handle;
+            handle.Data.Init(b0, b1);
+            handle.Data.Key = arbiterKey;
+            arbiter.Body1 = b0;
+            arbiter.Body2 = b1;
+
+            var arbiterInDictionary = arbiters.GetOrAdd(arbiterKey, arbiter);
+
+            if (arbiterInDictionary != arbiter)
+            {
+                memContacts.Free(handle);
+                Arbiter.Pool.Push(arbiter);
+                arbiter = arbiterInDictionary;
+                return;
+            }
+
+            deferredArbiters.Add(arbiter);
+
+            Debug.Assert(memContacts.IsActive(arbiter.Handle));
         }
 
-        arbiter = arb!;
     }
 }
