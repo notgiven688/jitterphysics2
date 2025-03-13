@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using Jitter2;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
@@ -18,7 +18,7 @@ public static class Program
 
     public static void Main()
     {
-        Trace.Listeners.Add(new ConsoleTraceListener());
+        Logger.RegisterListener((level, message) => Console.WriteLine($"{level}: {message}"));
 
         CreationSettings cs = new(1200, 800, "JitterDemo");
 

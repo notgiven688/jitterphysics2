@@ -135,7 +135,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     {
         if (Slots.Length == size) return;
 
-        Trace.TraceInformation($"{nameof(PairHashSet)}: Resizing {Slots.Length} -> {size}");
+        Logger.Information("{0}: Resizing from {1} to {2} elements.", nameof(PairHashSet), Slots.Length, size);
 
         var newSlots = new Pair[size];
 

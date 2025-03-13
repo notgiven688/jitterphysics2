@@ -216,8 +216,8 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
             size = Math.Min(2 * osize, maximumSize);
 
-            Trace.TraceInformation($"{nameof(PartitionedBuffer<T>)}: " +
-                            $"Resizing to {size}x{typeof(T)} ({size}x{sizeof(T)} Bytes).");
+            Logger.Information("{0}: Resizing to {1} elements ({2}KB).",
+                nameof(PartitionedBuffer<T>), size, size*sizeof(T) / 1024 );
 
             var oldmemory = memory;
             memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));

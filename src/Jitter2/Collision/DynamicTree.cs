@@ -517,7 +517,7 @@ public partial class DynamicTree
         if (nodePointer == Nodes.Length)
         {
             Array.Resize(ref Nodes, Nodes.Length * 2);
-            Trace.TraceInformation($"{nameof(DynamicTree)}: Resized array of tree to {Nodes.Length} elements.");
+            Logger.Information("{0}: Resized array of tree to {1} elements.", nameof(DynamicTree), Nodes.Length);
         }
 
         return nodePointer;

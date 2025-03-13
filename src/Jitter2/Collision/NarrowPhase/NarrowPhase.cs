@@ -263,7 +263,7 @@ public static class NarrowPhase
                 }
             }
 
-            Trace.TraceWarning($"{nameof(NarrowPhase)}: EPA, Could not converge within {MaxIter} iterations.");
+            Logger.Warning("{0}: EPA, Could not converge within {1} iterations.", nameof(NarrowPhase), MaxIter);
 
             return false;
 
@@ -649,7 +649,7 @@ public static class NarrowPhase
             point1 = point2 = normal = JVector.Zero;
             penetration = (Real)0.0;
 
-            Trace.TraceWarning($"{nameof(NarrowPhase)}: EPA, Could not converge within {MaxIter} iterations.");
+            Logger.Warning("{0}: EPA, Could not converge within {1} iterations.\"", nameof(NarrowPhase), MaxIter);
 
             return false;
 
