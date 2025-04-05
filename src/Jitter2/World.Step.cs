@@ -515,7 +515,8 @@ public sealed partial class World
         {
             ref RigidBodyData rigidBody = ref span[i];
 
-            if (rigidBody.IsStatic) continue;
+            // Static bodies may also have a velocity which gets integrated.
+            // if (rigidBody.IsStatic) continue;
 
             JVector lvel = rigidBody.Velocity;
             JVector avel = rigidBody.AngularVelocity;
