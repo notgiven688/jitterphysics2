@@ -376,6 +376,47 @@ public sealed partial class World : IDisposable
         AddToActiveList(body.island);
     }
 
+    internal void MakeBodyStatic(RigidBody body)
+    {
+        if (body.IsStatic) return;
+
+        body.Data.IsStatic = true;
+
+        foreach (var constraint in body.constraints)
+        {
+            if (constraint.Body1.IsStatic && constraint.Body2.IsStatic)
+            {
+                Remove(constraint);
+            }
+        }
+
+        foreach (var arbiter in body.contacts)
+        {
+            if(arbiter.Body1.IsStatic && arbiter.Body2.IsStatic)
+            {
+                Remove(arbiter);
+            }
+        }
+
+        if (body.connections.Count > 0)
+        {
+            var connections = body.connections.ToArray();
+
+            foreach (var connection in connections)
+            {
+                IslandHelper.RemoveConnection(islands, body, connection);
+            }
+        }
+
+        Debug.Assert(body.connections.Count == 0);
+        Debug.Assert(body.island.bodies.Count == 1);
+
+        body.Data.Velocity = JVector.Zero;
+        body.Data.AngularVelocity = JVector.Zero;
+
+        DeactivateBodyNextStep(body);
+    }
+
     internal void DeactivateBodyNextStep(RigidBody body)
     {
         body.sleepTime = Real.PositiveInfinity;
