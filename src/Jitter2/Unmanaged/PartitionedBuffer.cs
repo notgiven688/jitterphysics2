@@ -31,7 +31,7 @@ namespace Jitter2.Unmanaged;
 /// <summary>
 /// Handle for an unmanaged object.
 /// </summary>
-public unsafe struct JHandle<T> where T : unmanaged
+public unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
 {
     public static readonly JHandle<T> Zero = new(null);
 
@@ -49,6 +49,31 @@ public unsafe struct JHandle<T> where T : unmanaged
     public static JHandle<K> AsHandle<K>(JHandle<T> handle) where K : unmanaged
     {
         return new JHandle<K>((K**)handle.Pointer);
+    }
+
+    public bool Equals(JHandle<T> other)
+    {
+        return Pointer == other.Pointer;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is JHandle<T> other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return ((nint)Pointer).GetHashCode();
+    }
+
+    public static bool operator ==(JHandle<T> left, JHandle<T> right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(JHandle<T> left, JHandle<T> right)
+    {
+        return !(left == right);
     }
 }
 
