@@ -419,7 +419,7 @@ public sealed partial class World
 
                 memContacts.Free(handle);
                 IslandHelper.ArbiterRemoved(islands, arb);
-                arbiters.Remove(handle.Data.Key, out _);
+                arbiters.Remove(handle.Data.Key);
 
                 arb.Body1.RaiseEndCollide(arb);
                 arb.Body2.RaiseEndCollide(arb);

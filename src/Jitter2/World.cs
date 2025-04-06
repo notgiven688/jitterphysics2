@@ -102,7 +102,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     public SpanData RawData => new(this);
 
-    private readonly ConcurrentDictionary<ArbiterKey, Arbiter> arbiters = new();
+    private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
+        new(Parallelization.ThreadPool.ThreadCountSuggestion);
 
     private readonly PartitionedSet<Island> islands = new();
     private readonly PartitionedSet<RigidBody> bodies = new();
@@ -362,7 +363,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body2);
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
-        arbiters.Remove(arbiter.Handle.Data.Key, out _);
+        arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);

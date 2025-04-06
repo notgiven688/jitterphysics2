@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using Jitter2;
 using Jitter2.Collision.Shapes;
+using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
