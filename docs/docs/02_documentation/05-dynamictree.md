@@ -15,14 +15,12 @@ Jitter automatically registers all shapes added to a rigid body (`body.AddShape`
 However, users are free to add own implementations of `IDynamicTreeProxy` to the world's tree, using `tree.AddProxy`.
 In this case the user has to implement a `BroadPhaseFilter` and register it (using `world.BroadPhaseFilter`) to handle any collisions with the custom proxy, otherwise an `InvalidCollisionTypeException` is thrown.
 
-## Potential pairs
+## Enumerate Overlaps
 
-The tree implementation in Jitter needs to be updated using `tree.Update(bool multiThread, float dt)`.
+The tree implementation in Jitter needs to be updated using `tree.Update`.
 This is done automatically for the dynamic tree owned by the world class (`world.DynamicTree`).
-This update process generates information about pairs of proxies which either start overlapping, or start to separate.
-This 'events' are used to update the `tree.PotentialPairs` hash set, which holds all overlapping pairs.
-Inactive pairs of bodies can be pruned from the hashset by calling `tree.TrimInactivePairs` (also done automatically for the dynamic tree owned by the world class).
-The Jitter `world` class internally uses the potential pairs to gather more detailed collision information of the pairs and also to generate collision response.
+Internally `UpdateWorldBoundingBox` is called for the active proxies implementing the `IUpdatableBoundingBox` interface
+and the internal book-keeping of overlapping pairs is updated. Overlaps may be queried using `tree.EnumerateOverlaps`.
 
 ## Querying the tree
 
