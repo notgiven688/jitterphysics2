@@ -4,6 +4,12 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.7 (2025-04-06)
+
+- Fixed possible crash when dynamically making bodies static.
+- Improved memory footprint and reduced GC.
+- Added `Logger` as a replacement for `Trace`.
+
 ### Jitter 2.5.6 (2025-03-08)
 
 - Fixed concurrency bug in `world.GetArbiter`.
