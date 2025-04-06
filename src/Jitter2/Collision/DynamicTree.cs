@@ -104,12 +104,15 @@ public partial class DynamicTree
 
     public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter { get; set; }
 
+    private readonly Action<OverlapEnumerationParam> enumerateOverlaps;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree"/> class.
     /// </summary>
     /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
     public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
+        enumerateOverlaps = EnumerateOverlapsCallback;
         Filter = filter;
     }
 
@@ -174,7 +177,7 @@ public partial class DynamicTree
             {
                 Parallel.GetBounds(slotsLength, threadCount, i, out int start, out int end);
                 overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
-                ThreadPool.Instance.AddTask(EnumerateOverlapsCallback, overlapEnumerationParam);
+                ThreadPool.Instance.AddTask(enumerateOverlaps, overlapEnumerationParam);
             }
 
             tpi.Execute();

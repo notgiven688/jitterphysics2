@@ -257,6 +257,8 @@ public sealed partial class World : IDisposable
         NullBody.IsStatic = true;
 
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
+
+        InitParallelCallbacks();
     }
 
     /// <summary>
@@ -360,7 +362,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body2);
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
-        arbiters.TryRemove(arbiter.Handle.Data.Key, out _);
+        arbiters.Remove(arbiter.Handle.Data.Key, out _);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);

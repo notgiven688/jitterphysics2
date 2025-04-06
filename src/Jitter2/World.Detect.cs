@@ -271,7 +271,7 @@ public sealed partial class World
     [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
+    private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         if (BroadPhaseFilter != null)
         {

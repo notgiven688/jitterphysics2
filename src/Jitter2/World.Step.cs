@@ -57,6 +57,36 @@ public sealed partial class World
         Last
     }
 
+    private Action<Parallel.Batch> integrate;
+    private Action<Parallel.Batch> integrateForces;
+    private Action<Parallel.Batch> prepareContacts;
+    private Action<Parallel.Batch> iterateContacts;
+    private Action<Parallel.Batch> relaxVelocities;
+    private Action<Parallel.Batch> updateContacts;
+    private Action<Parallel.Batch> prepareConstraints;
+    private Action<Parallel.Batch> iterateConstraints;
+    private Action<Parallel.Batch> prepareSmallConstraints;
+    private Action<Parallel.Batch> iterateSmallConstraints;
+    private Action<Parallel.Batch> updateBodies;
+    private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
+    
+
+    private void InitParallelCallbacks()
+    {
+        integrate = IntegrateCallback;
+        integrateForces = IntegrateForcesCallback;
+        prepareContacts = PrepareContactsCallback;
+        iterateContacts = IterateContactsCallback;
+        relaxVelocities = RelaxVelocitiesCallback;
+        prepareConstraints = PrepareConstraintsCallback;
+        iterateConstraints = IterateConstraintsCallback;
+        prepareSmallConstraints = PrepareSmallConstraintsCallback;
+        iterateSmallConstraints = IterateSmallConstraintsCallback;
+        updateContacts = UpdateContactsCallback;
+        updateBodies = UpdateBodiesCallback;
+        detect = DetectCallback;
+    }
+
     /// <summary>
     /// Contains timings for the stages of the last call to <see cref="World.Step(Real, bool)"/>.
     /// Array elements correspond to the enums in <see cref="Timings"/>. Can be used to identify
@@ -104,7 +134,7 @@ public sealed partial class World
         PreStep?.Invoke(dt);
 
         // Perform narrow phase detection.
-        DynamicTree.EnumerateOverlaps(Detect, multiThread);
+        DynamicTree.EnumerateOverlaps(detect, multiThread);
         SetTime(Timings.NarrowPhase);
 
         HandleDeferredArbiters();
@@ -366,7 +396,7 @@ public sealed partial class World
 
         if (multiThread)
         {
-            bodies.ParallelForBatch(256, UpdateBodiesCallback);
+            bodies.ParallelForBatch(256, updateBodies);
         }
         else
         {
@@ -389,7 +419,7 @@ public sealed partial class World
 
                 memContacts.Free(handle);
                 IslandHelper.ArbiterRemoved(islands, arb);
-                arbiters.TryRemove(handle.Data.Key, out _);
+                arbiters.Remove(handle.Data.Key, out _);
 
                 arb.Body1.RaiseEndCollide(arb);
                 arb.Body2.RaiseEndCollide(arb);
@@ -559,7 +589,7 @@ public sealed partial class World
         {
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, RelaxVelocitiesCallback);
+                memContacts.ParallelForBatch(64, relaxVelocities);
             }
         }
         else
@@ -577,17 +607,17 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(64, PrepareContactsCallback, false);
-            memConstraints.ParallelForBatch(64, PrepareConstraintsCallback, false);
-            memSmallConstraints.ParallelForBatch(64, PrepareSmallConstraintsCallback, false);
+            memContacts.ParallelForBatch(64, prepareContacts, false);
+            memConstraints.ParallelForBatch(64, prepareConstraints, false);
+            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
 
             ThreadPool.Instance.Execute();
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                memContacts.ParallelForBatch(64, IterateContactsCallback, false);
-                memConstraints.ParallelForBatch(64, IterateConstraintsCallback, false);
-                memSmallConstraints.ParallelForBatch(64, IterateSmallConstraintsCallback, false);
+                memContacts.ParallelForBatch(64, iterateContacts, false);
+                memConstraints.ParallelForBatch(64, iterateConstraints, false);
+                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
 
                 ThreadPool.Instance.Execute();
             }
@@ -615,7 +645,7 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memContacts.ParallelForBatch(256, UpdateContactsCallback);
+            memContacts.ParallelForBatch(256, updateContacts);
         }
         else
         {
@@ -628,7 +658,7 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memRigidBodies.ParallelForBatch(256, IntegrateForcesCallback);
+            memRigidBodies.ParallelForBatch(256, integrateForces);
         }
         else
         {
@@ -640,7 +670,7 @@ public sealed partial class World
     {
         if (multiThread)
         {
-            memRigidBodies.ParallelForBatch(256, IntegrateCallback);
+            memRigidBodies.ParallelForBatch(256, integrate);
         }
         else
         {
