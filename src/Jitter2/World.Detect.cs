@@ -421,7 +421,7 @@ public sealed partial class World
 
         lock (arbiters.GetLock(arbiterKey))
         {
-            if (arbiters.TryGetValue(arbiterKey, out arbiter)) return;
+            if (arbiters.TryGetValue(arbiterKey, out arbiter!)) return;
 
             lock (memContacts)
             {

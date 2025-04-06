@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -33,6 +32,8 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
+
+#pragma warning disable CS8618
 
 namespace Jitter2;
 
