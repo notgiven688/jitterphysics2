@@ -105,6 +105,9 @@ public partial class DynamicTree
     public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter { get; set; }
 
     private readonly Action<OverlapEnumerationParam> enumerateOverlaps;
+    private readonly Action<Parallel.Batch> updateBoundingBoxes;
+    private readonly Action<Parallel.Batch> scanForMovedProxies;
+    private readonly Action<Parallel.Batch> scanForOverlaps;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree"/> class.
@@ -113,6 +116,10 @@ public partial class DynamicTree
     public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
         enumerateOverlaps = EnumerateOverlapsCallback;
+        updateBoundingBoxes = UpdateBoundingBoxesCallback;
+        scanForMovedProxies = ScanForMovedProxies;
+        scanForOverlaps = ScanForOverlapsCallback;
+
         Filter = filter;
     }
 
@@ -214,11 +221,11 @@ public partial class DynamicTree
 
         if (multiThread)
         {
-            proxies.ParallelForBatch(256, UpdateBoundingBoxesCallback);
+            proxies.ParallelForBatch(256, updateBoundingBoxes);
             SetTime(Timings.UpdateBoundingBoxes);
 
             movedProxies.Clear();
-            proxies.ParallelForBatch(24, ScanForMovedProxies);
+            proxies.ParallelForBatch(24, scanForMovedProxies);
             SetTime(Timings.ScanMoved);
 
             for (int i = 0; i < movedProxies.Count; i++)
@@ -228,7 +235,7 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            movedProxies.ParallelForBatch(24, ScanForOverlaps);
+            movedProxies.ParallelForBatch(24, scanForOverlaps);
 
             SetTime(Timings.ScanOverlaps);
         }
@@ -249,7 +256,7 @@ public partial class DynamicTree
 
             SetTime(Timings.UpdateProxies);
 
-            ScanForOverlaps(new Parallel.Batch(0, movedProxies.Count));
+            ScanForOverlapsCallback(new Parallel.Batch(0, movedProxies.Count));
 
             SetTime(Timings.ScanOverlaps);
         }
@@ -601,7 +608,7 @@ public partial class DynamicTree
         }
     }
 
-    private void ScanForOverlaps(Parallel.Batch batch)
+    private void ScanForOverlapsCallback(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
