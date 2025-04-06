@@ -103,7 +103,7 @@ internal static class IslandHelper
         islands.Remove(body.island);
     }
 
-    private static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
+    public static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         MergeIslands(islands, body1, body2);
 
@@ -111,7 +111,7 @@ internal static class IslandHelper
         body2.connections.Add(body1);
     }
 
-    private static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
+    public static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         body1.connections.Remove(body2);
         body2.connections.Remove(body1);

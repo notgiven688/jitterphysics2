@@ -52,7 +52,8 @@ public partial class Playground : RenderWindow
         // new Demo19(),  // ray cast test
         new Demo20(),
         new Demo21(),
-        new Demo22()
+        new Demo22(),
+        new Demo23()
     };
 
     private IDemo? currentDemo;

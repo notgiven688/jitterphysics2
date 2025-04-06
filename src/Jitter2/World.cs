@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -33,6 +32,8 @@ using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
+
+#pragma warning disable CS8618
 
 namespace Jitter2;
 
@@ -102,7 +103,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     public SpanData RawData => new(this);
 
-    private readonly ConcurrentDictionary<ArbiterKey, Arbiter> arbiters = new();
+    private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
+        new(Parallelization.ThreadPool.ThreadCountSuggestion);
 
     private readonly PartitionedSet<Island> islands = new();
     private readonly PartitionedSet<RigidBody> bodies = new();
@@ -257,6 +259,8 @@ public sealed partial class World : IDisposable
         NullBody.IsStatic = true;
 
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
+
+        InitParallelCallbacks();
     }
 
     /// <summary>
@@ -360,7 +364,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body2);
 
         IslandHelper.ArbiterRemoved(islands, arbiter);
-        arbiters.TryRemove(arbiter.Handle.Data.Key, out _);
+        arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
@@ -374,6 +378,47 @@ public sealed partial class World : IDisposable
     {
         body.sleepTime = 0;
         AddToActiveList(body.island);
+    }
+
+    internal void MakeBodyStatic(RigidBody body)
+    {
+        if (body.IsStatic) return;
+
+        body.Data.IsStatic = true;
+
+        foreach (var constraint in body.constraints)
+        {
+            if (constraint.Body1.IsStatic && constraint.Body2.IsStatic)
+            {
+                Remove(constraint);
+            }
+        }
+
+        foreach (var arbiter in body.contacts)
+        {
+            if(arbiter.Body1.IsStatic && arbiter.Body2.IsStatic)
+            {
+                Remove(arbiter);
+            }
+        }
+
+        if (body.connections.Count > 0)
+        {
+            var connections = body.connections.ToArray();
+
+            foreach (var connection in connections)
+            {
+                IslandHelper.RemoveConnection(islands, body, connection);
+            }
+        }
+
+        Debug.Assert(body.connections.Count == 0);
+        Debug.Assert(body.island.bodies.Count == 1);
+
+        body.Data.Velocity = JVector.Zero;
+        body.Data.AngularVelocity = JVector.Zero;
+
+        DeactivateBodyNextStep(body);
     }
 
     internal void DeactivateBodyNextStep(RigidBody body)

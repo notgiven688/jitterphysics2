@@ -271,7 +271,7 @@ public sealed partial class World
     [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
+    private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         if (BroadPhaseFilter != null)
         {
@@ -418,35 +418,32 @@ public sealed partial class World
     public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
     {
         ArbiterKey arbiterKey = new(id0, id1);
-        if (arbiters.TryGetValue(arbiterKey, out arbiter!)) return;
 
-        lock (memContacts)
+        lock (arbiters.GetLock(arbiterKey))
         {
-            if (!Arbiter.Pool.TryPop(out arbiter!))
+            if (arbiters.TryGetValue(arbiterKey, out arbiter!)) return;
+
+            lock (memContacts)
             {
-                arbiter = new Arbiter();
+                if (!Arbiter.Pool.TryPop(out arbiter!))
+                {
+                    arbiter = new Arbiter();
+                }
+
+                var handle = memContacts.Allocate(true);
+                arbiter.Handle = handle;
+                handle.Data.Init(b0, b1);
+                handle.Data.Key = arbiterKey;
+                arbiter.Body1 = b0;
+                arbiter.Body2 = b1;
+
+                arbiters.Add(arbiterKey, arbiter);
+
+
+                deferredArbiters.Add(arbiter);
+
+                Debug.Assert(memContacts.IsActive(arbiter.Handle));
             }
-
-            var handle = memContacts.Allocate(true);
-            arbiter.Handle = handle;
-            handle.Data.Init(b0, b1);
-            handle.Data.Key = arbiterKey;
-            arbiter.Body1 = b0;
-            arbiter.Body2 = b1;
-
-            var arbiterInDictionary = arbiters.GetOrAdd(arbiterKey, arbiter);
-
-            if (arbiterInDictionary != arbiter)
-            {
-                memContacts.Free(handle);
-                Arbiter.Pool.Push(arbiter);
-                arbiter = arbiterInDictionary;
-                return;
-            }
-
-            deferredArbiters.Add(arbiter);
-
-            Debug.Assert(memContacts.IsActive(arbiter.Handle));
         }
 
     }

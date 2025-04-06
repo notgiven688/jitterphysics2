@@ -387,17 +387,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         set
         {
-            if ((!Data.IsStatic && value) || (Data.IsStatic && !value))
+            if (Data.IsStatic == value) return;
+
+            if (value) World.MakeBodyStatic(this);
+            else
             {
-                Data.Velocity = JVector.Zero;
-                Data.AngularVelocity = JVector.Zero;
+                Data.IsStatic = false;
+                World.ActivateBodyNextStep(this);
             }
 
-            Data.IsStatic = value;
             UpdateWorldInertia();
-
-            if (value) World.DeactivateBodyNextStep(this);
-            else World.ActivateBodyNextStep(this);
         }
         get => Data.IsStatic;
     }
