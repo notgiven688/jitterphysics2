@@ -438,8 +438,6 @@ public sealed partial class World
                 arbiter.Body2 = b1;
 
                 arbiters.Add(arbiterKey, arbiter);
-
-
                 deferredArbiters.Add(arbiter);
 
                 Debug.Assert(memContacts.IsActive(arbiter.Handle));
