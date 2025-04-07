@@ -43,7 +43,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
         var csmInstance = RenderWindow.Instance.CSMRenderer.GetInstance<T>();
         Mesh mesh = csmInstance.mesh;
 
-        float totalMass = 0.0f;
+        double totalMass = 0.0d;
 
         foreach (var group in mesh.Groups)
         {
@@ -71,7 +71,7 @@ public class ConvexDecomposition<T> where T : MultiMesh
             shapesToAdd.Add(chs);
         }
 
-        com *= 1.0f / totalMass;
+        com *= 1.0d / totalMass;
 
         foreach (Shape s in shapesToAdd)
         {
