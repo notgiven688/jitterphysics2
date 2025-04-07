@@ -25,7 +25,7 @@ public class Demo23 : IDemo
 
         rotatingBox = world.CreateRigidBody();
 
-        float size = 50;
+        double size = 50;
 
         var bs0 = new TransformedShape(new BoxShape(size, 1, size), new JVector(0, +size / 2, 0));
         var bs1 = new TransformedShape(new BoxShape(size, 1, size), new JVector(0, -size / 2, 0));
@@ -51,7 +51,7 @@ public class Demo23 : IDemo
                 for (int j = -10; j < 10; j++)
                 {
                     RigidBody rb = world.CreateRigidBody();
-                    rb.AddShape(new BoxShape(1.5f));
+                    rb.AddShape(new BoxShape(1.5d));
                     rb.Position = new JVector(i, e, j) * 2;
                 }
             }
@@ -60,6 +60,6 @@ public class Demo23 : IDemo
 
     public void Draw()
     {
-        rotatingBox.AngularVelocity = new JVector(0.14f, 0.02f, 0.03f);
+        rotatingBox.AngularVelocity = new JVector(0.14d, 0.02d, 0.03d);
     }
 }

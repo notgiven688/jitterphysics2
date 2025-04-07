@@ -14,26 +14,26 @@ public class Conversion
 
     public static Vector3 FromJitter(JVector vector)
     {
-        return new Vector3(vector.X, vector.Y, vector.Z);
+        return new Vector3((float)vector.X, (float)vector.Y, (float)vector.Z);
     }
 
     public static Matrix4 FromJitter(JMatrix jmat)
     {
         return new Matrix4
         {
-            M11 = jmat.M11,
-            M12 = jmat.M12,
-            M13 = jmat.M13,
+            M11 = (float)jmat.M11,
+            M12 = (float)jmat.M12,
+            M13 = (float)jmat.M13,
             M14 = 0,
 
-            M21 = jmat.M21,
-            M22 = jmat.M22,
-            M23 = jmat.M23,
+            M21 = (float)jmat.M21,
+            M22 = (float)jmat.M22,
+            M23 = (float)jmat.M23,
             M24 = 0,
 
-            M31 = jmat.M31,
-            M32 = jmat.M32,
-            M33 = jmat.M33,
+            M31 = (float)jmat.M31,
+            M32 = (float)jmat.M32,
+            M33 = (float)jmat.M33,
             M34 = 0,
 
             M41 = 0,
@@ -50,20 +50,20 @@ public class Conversion
         JMatrix ori = JMatrix.CreateFromQuaternion(body.Data.Orientation);
         ref JVector pos = ref body.Data.Position;
 
-        mat.M11 = ori.M11;
-        mat.M12 = ori.M12;
-        mat.M13 = ori.M13;
-        mat.M14 = pos.X;
+        mat.M11 = (float)ori.M11;
+        mat.M12 = (float)ori.M12;
+        mat.M13 = (float)ori.M13;
+        mat.M14 = (float)pos.X;
 
-        mat.M21 = ori.M21;
-        mat.M22 = ori.M22;
-        mat.M23 = ori.M23;
-        mat.M24 = pos.Y;
+        mat.M21 = (float)ori.M21;
+        mat.M22 = (float)ori.M22;
+        mat.M23 = (float)ori.M23;
+        mat.M24 = (float)pos.Y;
 
-        mat.M31 = ori.M31;
-        mat.M32 = ori.M32;
-        mat.M33 = ori.M33;
-        mat.M34 = pos.Z;
+        mat.M31 = (float)ori.M31;
+        mat.M32 = (float)ori.M32;
+        mat.M33 = (float)ori.M33;
+        mat.M34 = (float)pos.Z;
 
         mat.M41 = 0;
         mat.M42 = 0;

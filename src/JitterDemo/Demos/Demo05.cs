@@ -73,7 +73,7 @@ public class Demo05 : IDemo
         level.Tag = new RigidBodyTag(doNotDraw:true);
         level.IsStatic = true;
 
-        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
+        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3d);
 
         player = new Player(world, new JVector(-6, 7, 32));
     }
@@ -102,9 +102,9 @@ public class Demo05 : IDemo
 
         if (kb.KeyPressBegin(Keyboard.Key.O)) debugDraw = !debugDraw;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
-        else player.SetAngularInput(0.0f);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0d);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0d);
+        else player.SetAngularInput(0.0d);
 
         if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
         else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);

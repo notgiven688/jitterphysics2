@@ -19,15 +19,15 @@ public static class Heightmap
 {
     public const int Width = 100;
     public const int Height = 100;
-    public const float Amplitude = 2f;
+    public const double Amplitude = 2d;
 
-    public static float GetHeight(int x, int z)
+    public static double GetHeight(int x, int z)
     {
         // GetHeight could be implemented as an array, make sure to respect array bounds
         if (x < 0 || x >= Width || z < 0 || z >= Height)
             throw new ArgumentOutOfRangeException();
 
-        return MathF.Sin(x * 0.1f) * MathF.Cos(z * 0.1f) * Amplitude;
+        return Math.Sin(x * 0.1d) * Math.Cos(z * 0.1d) * Amplitude;
     }
 
     public static JBBox GetBoundingBox()
@@ -47,28 +47,28 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
     public JBBox WorldBoundingBox { get; } = box;
 
     private void RayCastTriangle(in JVector origin, in JVector direction,
-        in JVector a, in JVector b, in JVector c, out JVector normal, out float lambda)
+        in JVector a, in JVector b, in JVector c, out JVector normal, out double lambda)
     {
         JVector u = b - a;
         JVector v = c - a;
 
         normal = v % u;
-        float it = 1.0f / normal.LengthSquared();
-        float denominator = JVector.Dot(direction, normal);
+        double it = 1.0d / normal.LengthSquared();
+        double denominator = JVector.Dot(direction, normal);
 
-        if (Math.Abs(denominator) < 1e-06f)
+        if (Math.Abs(denominator) < 1e-06d)
         {
             // triangle and ray are parallel
-            lambda = float.MaxValue;
+            lambda = double.MaxValue;
             normal = JVector.Zero;
             return;
         }
 
         lambda = JVector.Dot(a - origin, normal);
-        if (lambda > 0.0f)
+        if (lambda > 0.0d)
         {
             // ray is pointing away from the triangle
-            lambda = float.MaxValue;
+            lambda = double.MaxValue;
             normal = JVector.Zero;
             return;
         }
@@ -80,31 +80,31 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
         JVector at = a - hitPoint;
 
         JVector.Cross(u, at, out JVector tmp);
-        float gamma = JVector.Dot(tmp, normal) * it;
+        double gamma = JVector.Dot(tmp, normal) * it;
         JVector.Cross(at, v, out tmp);
-        float beta = JVector.Dot(tmp, normal) * it;
-        float alpha = 1.0f - gamma - beta;
+        double beta = JVector.Dot(tmp, normal) * it;
+        double alpha = 1.0d - gamma - beta;
 
         if (!(alpha > 0 && beta > 0 && gamma > 0))
         {
             // point is outside the triangle
             normal = JVector.Zero;
-            lambda = float.MaxValue;
+            lambda = double.MaxValue;
             return;
         }
 
-        normal *= MathF.Sqrt(it);
+        normal *= Math.Sqrt(it);
     }
 
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
-        const float maxDistance = 100.0f;
+        const double maxDistance = 100.0d;
 
-        float dirX = direction.X;
-        float dirZ = direction.Z;
+        double dirX = direction.X;
+        double dirZ = direction.Z;
 
-        float len2 = dirX * dirX + dirZ * dirZ;
-        float ilen = 1.0f / MathF.Sqrt(len2);
+        double len2 = dirX * dirX + dirZ * dirZ;
+        double ilen = 1.0d / Math.Sqrt(len2);
 
         dirX *= ilen;
         dirZ *= ilen;
@@ -115,16 +115,16 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
         int stepX = dirX > 0 ? 1 : -1;
         int stepZ = dirZ > 0 ? 1 : -1;
 
-        float nextX = dirX > 0 ? (x + 1) - origin.X : origin.X - x;
-        float nextZ = dirZ > 0 ? (z + 1) - origin.Z : origin.Z - z;
+        double nextX = dirX > 0 ? (x + 1) - origin.X : origin.X - x;
+        double nextZ = dirZ > 0 ? (z + 1) - origin.Z : origin.Z - z;
 
-        float tMaxX = dirX != 0 ? nextX / Math.Abs(dirX) : float.PositiveInfinity;
-        float tMaxZ = dirZ != 0 ? nextZ / Math.Abs(dirZ) : float.PositiveInfinity;
+        double tMaxX = dirX != 0 ? nextX / Math.Abs(dirX) : double.PositiveInfinity;
+        double tMaxZ = dirZ != 0 ? nextZ / Math.Abs(dirZ) : double.PositiveInfinity;
 
-        float tDeltaX = direction.X != 0 ? 1f / Math.Abs(dirX) : float.PositiveInfinity;
-        float tDeltaZ = direction.Z != 0 ? 1f / Math.Abs(dirZ) : float.PositiveInfinity;
+        double tDeltaX = direction.X != 0 ? 1d / Math.Abs(dirX) : double.PositiveInfinity;
+        double tDeltaZ = direction.Z != 0 ? 1d / Math.Abs(dirZ) : double.PositiveInfinity;
 
-        float t = 0f;
+        double t = 0d;
 
         while (t <= maxDistance)
         {
@@ -139,10 +139,10 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
             var c = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
             var d = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
 
-            RayCastTriangle(origin, direction, a, b, c, out JVector normal0, out float lambda0);
-            RayCastTriangle(origin, direction, a, c, d, out JVector normal1, out float lambda1);
+            RayCastTriangle(origin, direction, a, b, c, out JVector normal0, out double lambda0);
+            RayCastTriangle(origin, direction, a, c, d, out JVector normal1, out double lambda1);
 
-            if (lambda0 < float.MaxValue || lambda1 < float.MaxValue)
+            if (lambda0 < double.MaxValue || lambda1 < double.MaxValue)
             {
                 if (lambda0 <= lambda1)
                 {
@@ -174,7 +174,7 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
             }
         }
 
-        normal = JVector.Zero; lambda = 0.0f;
+        normal = JVector.Zero; lambda = 0.0d;
         return false;
     }
 }
@@ -228,7 +228,7 @@ public class HeightmapDetection : IBroadPhaseFilter
                 JVector normal = JVector.Normalize((triangle.C - triangle.A) % (triangle.B - triangle.A));
 
                 bool hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
-                    out JVector pointA, out JVector pointB, out _, out float penetration);
+                    out JVector pointA, out JVector pointB, out _, out double penetration);
 
                 if (hit)
                 {
@@ -296,7 +296,7 @@ public class Demo25 : IDemo
             {
                 int index = j * width + i;
 
-                vertices[index].Position = new Vector3(i, Heightmap.GetHeight(i, j), j);
+                vertices[index].Position = new Vector3(i, (float)Heightmap.GetHeight(i, j), j);
                 vertices[index].Texture = new Vector2(i * 0.5f, j * 0.5f);
                 // Normals are automatically calculated within terrainRenderer.VerticesChanged();
             }
