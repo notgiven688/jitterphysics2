@@ -41,9 +41,10 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// A tweakable parameter. Collision points that are closer than this value to a triangle edge
     /// are considered as edge collisions and might be modified or discarded entirely.
     /// </summary>
-    public Real EdgeThreshold { get; set; } = (Real)0.05;
+    public Real EdgeThreshold { get; set; } = (Real)0.01;
 
-    private Real cosAT = (Real)0.99;
+    // approx 2.5°
+    private Real cosAT = (Real)0.999;
 
     /// <summary>
     /// A tweakable parameter.
@@ -73,31 +74,32 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // both shapes are triangles or both of them are not -> return
         if (c1 == c2) return true;
 
-        TriangleShape tshape;
+        TriangleShape triangleShape;
+
         JVector collP;
 
         if (c1)
         {
-            tshape = ts1!;
+            triangleShape = ts1!;
             collP = pointA;
         }
         else
         {
-            tshape = ts2!;
+            triangleShape = ts2!;
             collP = pointB;
         }
 
-        ref var triangle = ref tshape.Mesh.Indices[tshape.Index];
+        ref var triangle = ref triangleShape.Mesh.Indices[triangleShape.Index];
 
         JVector tnormal = triangle.Normal;
-        tnormal = JVector.Transform(tnormal, tshape.RigidBody!.Data.Orientation);
+        tnormal = JVector.Transform(tnormal, triangleShape.RigidBody!.Data.Orientation);
 
         if (c2) tnormal.Negate();
 
         // Make triangles penetrable from one side
         if (JVector.Dot(normal, tnormal) < -cosAT) return false;
 
-        tshape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
+        triangleShape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
         JVector n, pma;
         Real d0, d1, d2;
@@ -115,32 +117,40 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         pma = collP - b;
         d2 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
-        if (MathR.Min(MathR.Min(d0, d1), d2) > EdgeThreshold) return true;
+        if (MathR.Min(MathR.Min(d0, d1), d2) > EdgeThreshold * EdgeThreshold) return true;
 
         JVector nnormal;
 
         if (d0 < d1 && d0 < d2)
         {
             if (triangle.NeighborC == -1) return true;
-            nnormal = tshape.Mesh.Indices[triangle.NeighborC].Normal;
+            nnormal = triangleShape.Mesh.Indices[triangle.NeighborC].Normal;
         }
         else if (d1 <= d0 && d1 < d2)
         {
             if (triangle.NeighborB == -1) return true;
-            nnormal = tshape.Mesh.Indices[triangle.NeighborB].Normal;
+            nnormal = triangleShape.Mesh.Indices[triangle.NeighborB].Normal;
         }
         else
         {
             if (triangle.NeighborA == -1) return true;
-            nnormal = tshape.Mesh.Indices[triangle.NeighborA].Normal;
+            nnormal = triangleShape.Mesh.Indices[triangle.NeighborA].Normal;
         }
 
-        nnormal = JVector.Transform(nnormal, tshape.RigidBody.Data.Orientation);
+        nnormal = JVector.Transform(nnormal, triangleShape.RigidBody.Data.Orientation);
 
-        if (c2)
-        {
-            nnormal.Negate();
-        }
+        ref var b1Data = ref shapeA.RigidBody.Data;
+        ref var b2Data = ref shapeB.RigidBody.Data;
+
+        // Check collision again, but with zero epa threshold parameter.
+        // This is necessary since MPR is not exact for flat shapes, like triangles.
+        NarrowPhase.MPREPA(shapeA, shapeB,
+            b1Data.Orientation, b2Data.Orientation,
+            b1Data.Position, b2Data.Position,
+            out pointA, out pointB, out normal, out penetration,
+            epaThreshold:(Real)0.0);
+
+        if (c2) nnormal.Negate();
 
         // now the fun part
         //
@@ -158,26 +168,34 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
             if (f5 > f6)
             {
+                if (f5 < cosAT)
+                {
+#if DEBUG_EDGEFILTER
+                    Console.WriteLine($"case #1: dropping, {f5}");
+#endif
+                    return false;
+                }
+
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
-                if (f5 < ProjectionThreshold)
-                {
-                    return false;
-                }
 
                 penetration *= f5;
                 normal = nnormal;
             }
             else
             {
+                if (f6 < cosAT)
+                {
+#if DEBUG_EDGEFILTER
+                    Console.WriteLine($"case #1: dropping, {f6}");
+#endif
+                    return false;
+                }
+
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
-                if (f6 < ProjectionThreshold)
-                {
-                    return false;
-                }
 
                 penetration *= f6;
                 normal = tnormal;

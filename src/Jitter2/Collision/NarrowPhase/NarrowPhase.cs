@@ -277,7 +277,7 @@ public static class NarrowPhase
             return true;
         }
 
-        public bool SolveMPR(in MinkowskiDifference mkd,
+        public bool SolveMPR(in MinkowskiDifference mkd, Real epaThreshold,
             out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
         {
             /*
@@ -303,10 +303,6 @@ public static class NarrowPhase
             */
             const Real CollideEpsilon = (Real)1e-4;
             const int MaxIter = 34;
-
-            // If MPR reports a penetration deeper than this value we do not trust
-            // MPR to have found the global minimum and perform an EPA run.
-            const Real EPAPenetrationThreshold = (Real)0.02;
 
             Unsafe.SkipInit(out Vertex v0);
             Unsafe.SkipInit(out Vertex v1);
@@ -340,10 +336,12 @@ public static class NarrowPhase
             if (JVector.Dot(v1.V, normal) <= (Real)0.0) return false;
             JVector.Cross(v1.V, v0.V, out normal);
 
-            if (normal.LengthSquared() < NumericEpsilon)
+            const Real sphericalEpsilon = (Real)1e-12;
+            if (normal.LengthSquared() < sphericalEpsilon)
             {
+                // The origin, v0 and v1 form a line. Most probably
+                // two spheres colliding.
                 JVector.Subtract(v1.V, v0.V, out normal);
-
                 normal.Normalize();
 
                 JVector.Subtract(v1.A, v1.B, out temp1);
@@ -463,7 +461,7 @@ public static class NarrowPhase
 
                         penetration *= invnormal;
 
-                        if (penetration > EPAPenetrationThreshold)
+                        if (penetration > epaThreshold)
                         {
                             convexPolytope.InitHeap();
                             convexPolytope.GetVertex(0) = v0;
@@ -972,6 +970,12 @@ public static class NarrowPhase
     }
 
     /// <summary>
+    /// If MPR reports a penetration deeper than this value we do not trust MPR to have found the global minimum
+    /// and perform an EPA run.
+    /// </summary>
+    private const Real EPAPenetrationThreshold = (Real)0.02;
+
+    /// <summary>
     /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
     /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
     /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
@@ -991,12 +995,14 @@ public static class NarrowPhase
     /// distance (determined by the penetration depth) to avoid overlap.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
+    /// <param name="epaThreshold">The threshold parameter.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration,
+        Real epaThreshold = EPAPenetrationThreshold)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -1008,9 +1014,10 @@ public static class NarrowPhase
         JVector.ConjugatedTransform(mkd.PositionB, orientationA, out mkd.PositionB);
 
         // ..perform collision detection..
-        bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
+        bool res = solver.SolveMPR(mkd, epaThreshold, out pointA, out pointB, out normal, out penetration);
 
-        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support function is called multiple times.
+        // ..rotate back. This approach potentially saves some matrix-vector multiplication when the support
+        // function is called multiple times.
         JVector.Transform(pointA, orientationA, out pointA);
         JVector.Add(pointA, positionA, out pointA);
         JVector.Transform(pointB, orientationA, out pointB);
@@ -1024,8 +1031,8 @@ public static class NarrowPhase
     /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
     /// It assumes that support shape A is at position zero and not rotated.
     /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
-    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound surpasses
-    /// a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
+    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound
+    /// surpasses a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -1039,11 +1046,13 @@ public static class NarrowPhase
     /// distance (determined by the penetration depth) to avoid overlap.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
+    /// <param name="epaThreshold">The threshold parameter.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MPREPA(in ISupportMappable supportA, in ISupportMappable supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration,
+        Real epaThreshold = EPAPenetrationThreshold)
     {
         Unsafe.SkipInit(out MinkowskiDifference mkd);
         mkd.SupportA = supportA;
@@ -1052,7 +1061,7 @@ public static class NarrowPhase
         mkd.OrientationB = orientationB;
 
         // ..perform collision detection..
-        bool res = solver.SolveMPR(mkd, out pointA, out pointB, out normal, out penetration);
+        bool res = solver.SolveMPR(mkd, epaThreshold, out pointA, out pointB, out normal, out penetration);
 
         return res;
     }
