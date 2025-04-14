@@ -24,6 +24,7 @@
 // #define DEBUG_EDGEFILTER
 
 using System;
+using System.Runtime.CompilerServices;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
 
@@ -59,6 +60,19 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     {
         get => JAngle.FromRadian(MathR.Acos(cosAT));
         set => cosAT = MathR.Cos(value.Radian);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ProjectPointOnPlane(ref JVector point, in JVector a, in JVector b, in JVector c)
+    {
+        var ab = b - a;
+        var ac = c - a;
+        var normal = JVector.Cross(ab, ac);
+        normal.Normalize();
+
+        var ap = point - a;
+        var distance = JVector.Dot(ap, normal);
+        point -= distance * normal;
     }
 
     /// <inheritdoc />
@@ -100,6 +114,9 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         if (JVector.Dot(normal, tnormal) < -cosAT) return false;
 
         triangleShape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
+
+        // project collP onto triangle plane
+        ProjectPointOnPlane(ref collP, a, b, c);
 
         JVector n, pma;
         Real d0, d1, d2;
