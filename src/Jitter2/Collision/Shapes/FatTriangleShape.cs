@@ -66,6 +66,12 @@ public class FatTriangleShape : TriangleShape
         UpdateWorldBoundingBox();
     }
 
+    public override void GetCenter(out JVector point)
+    {
+        base.GetCenter(out point);
+        point -= Mesh.Indices[Index].Normal * (Thickness * (Real)0.5);
+    }
+
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
     {
         ref var triangle = ref Mesh.Indices[Index];
