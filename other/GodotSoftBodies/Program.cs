@@ -174,6 +174,7 @@ public class CubedSoftBody(World world) : SoftBody(world)
 			var rb = world.CreateRigidBody();
 			rb.SetMassInertia(JMatrix.Zero, 8f, true);
 			rb.Position = new JVector(vertex.X, vertex.Y, vertex.Z) * scale;
+			rb.Damping = (0.01f, 0.002f);
 			this.Vertices.Add(rb);
 		}
 
