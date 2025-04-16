@@ -6,7 +6,17 @@ namespace JitterDemo;
 
 public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
 {
-    public float Threshold { get; set; } = 0.1f;
+    /// <summary>
+    /// If the collision normal has a "forbidden" component greater
+    /// than this value, it is filtered out.
+    /// </summary>
+    public float NormalThreshold { get; set; } = 0.1f;
+
+    /// <summary>
+    /// Collision points closer than this value to a voxel edge
+    /// are subject to filtering.
+    /// </summary>
+    public float EdgeThreshold { get; set; } = 0.01f;
 
     public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pAA, ref JVector pBB, ref JVector normal,
         ref float penetration)
@@ -22,8 +32,9 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
 
         VoxelShape vshape = c1 ? vs1! : vs2!;
 
+        float closeToEdge = 0.5f - EdgeThreshold;
 
-        float trsh = Threshold;
+        float trsh = NormalThreshold;
         uint nb = vshape.Neighbours;
 
         JVector cnormal = normal;
@@ -40,44 +51,33 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         // Check if collision normal points into a specific direction.
         // If yes, check if there is a neighbouring voxel. If yes,
         // discard the collision.
-        //
-        // equivalent, but harder to debug:
 
-        /*
-        return  !((relPos.X > 0.0f && cnormal.X > trsh && (nb & 1) != 0) ||
-                (relPos.X < 0.0f && cnormal.X < -trsh && (nb & 2) != 0) ||
-                (relPos.Y > 0.0f && cnormal.Y > trsh && (nb & 4) != 0) ||
-                (relPos.Y < 0.0f && cnormal.Y < -trsh && (nb & 8) != 0) ||
-                (relPos.Z > 0.0f && cnormal.Z > trsh && (nb & 16) != 0) ||
-                (relPos.Z < 0.0f && cnormal.Z < -trsh && (nb & 32) != 0));
-        */
-
-        if (relPos.X > 0.0f && cnormal.X > trsh)
+        if (relPos.X > closeToEdge && cnormal.X > trsh)
         {
             if ((nb & 1) != 0) return false;
         }
 
-        if (relPos.X < 0.0f && cnormal.X < -trsh)
+        if (relPos.X < -closeToEdge&& cnormal.X < -trsh)
         {
             if ((nb & 2) != 0) return false;
         }
 
-        if (relPos.Y > 0.0f && cnormal.Y > trsh)
+        if (relPos.Y > closeToEdge && cnormal.Y > trsh)
         {
             if ((nb & 4) != 0) return false;
         }
 
-        if (relPos.Y < 0.0f && cnormal.Y < -trsh)
+        if (relPos.Y < -closeToEdge && cnormal.Y < -trsh)
         {
             if ((nb & 8) != 0) return false;
         }
 
-        if (relPos.Z > 0.0f && cnormal.Z > trsh)
+        if (relPos.Z > closeToEdge && cnormal.Z > trsh)
         {
             if ((nb & 16) != 0) return false;
         }
 
-        if (relPos.Z < 0.0f && cnormal.Z < -trsh)
+        if (relPos.Z < -closeToEdge && cnormal.Z < -trsh)
         {
             if ((nb & 32) != 0) return false;
         }

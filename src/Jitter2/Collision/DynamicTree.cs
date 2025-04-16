@@ -505,6 +505,7 @@ public partial class DynamicTree
 
                 var proxy = proxies[i];
                 temp.Push(proxy);
+                OverlapCheckRemove(root, proxy.NodePtr);
                 InternalRemoveProxy(proxy);
             }
 
@@ -512,6 +513,7 @@ public partial class DynamicTree
             {
                 var proxy = temp.Pop();
                 InternalAddProxy(proxy);
+                OverlapCheckAdd(root, proxy.NodePtr);
             }
         }
     }

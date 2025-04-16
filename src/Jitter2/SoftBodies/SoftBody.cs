@@ -27,40 +27,55 @@ using Jitter2.Dynamics.Constraints;
 
 namespace Jitter2.SoftBodies;
 
+/// <summary>
+/// Represents a soft body in the physics simulation. A soft body is composed of vertices (rigid bodies),
+/// springs (constraints), and shapes.
+/// </summary>
 public class SoftBody
 {
+    /// <summary>
+    /// Gets the list of vertices (rigid bodies) that make up the soft body.
+    /// </summary>
     public List<RigidBody> Vertices { get; } = new();
+
+    /// <summary>
+    /// Gets the list of springs (constraints) that connect the vertices of the soft body.
+    /// </summary>
     public List<Constraint> Springs { get; } = new();
+
+    /// <summary>
+    /// Gets the list of shapes that define the geometry of the soft body.
+    /// </summary>
     public List<SoftBodyShape> Shapes { get; } = new();
 
-    protected World world;
+    protected World World;
 
-    public bool IsActive => Vertices[0].IsActive;
+    public bool IsActive => Vertices.Count > 0 && Vertices[0].IsActive;
 
     public SoftBody(World world)
     {
-        this.world = world;
+        this.World = world;
         world.PostStep += WorldOnPostStep;
     }
 
-    public void Destroy()
+    /// <summary>
+    /// Destroys the soft body, removing all its components from the simulation world.
+    /// </summary>
+    public virtual void Destroy()
     {
-        world.PostStep -= WorldOnPostStep;
+        World.PostStep -= WorldOnPostStep;
 
         foreach (var shape in Shapes)
-        {
-            world.DynamicTree.RemoveProxy(shape);
-        }
+            World.DynamicTree.RemoveProxy(shape);
+        Shapes.Clear();
 
         foreach (var spring in Springs)
-        {
-            world.Remove(spring);
-        }
+            World.Remove(spring);
+        Springs.Clear();
 
         foreach (var point in Vertices)
-        {
-            world.Remove(point);
-        }
+            World.Remove(point);
+        Vertices.Clear();
     }
 
     private bool active = true;
@@ -74,11 +89,11 @@ public class SoftBody
         {
             if (active)
             {
-                world.DynamicTree.Activate(shape);
+                World.DynamicTree.Activate(shape);
             }
             else
             {
-                world.DynamicTree.Deactivate(shape);
+                World.DynamicTree.Deactivate(shape);
             }
         }
     }
