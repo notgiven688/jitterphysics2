@@ -174,7 +174,7 @@ public class CubedSoftBody(World world) : SoftBody(world)
 			var rb = world.CreateRigidBody();
 			rb.SetMassInertia(JMatrix.Zero, 8f, true);
 			rb.Position = new JVector(vertex.X, vertex.Y, vertex.Z) * scale;
-			rb.Damping = (0.01f, 0.002f);
+			rb.Damping = (0.02f, 0.002f);
 			this.Vertices.Add(rb);
 		}
 
@@ -428,8 +428,8 @@ public partial class Program : Node3D
 
 		// floor shape
 		RigidBody floor = world.CreateRigidBody();
-		floor.AddShape(new BoxShape(20));
-		floor.Position = new JVector(0, -10, 0);
+		floor.AddShape(new BoxShape(40));
+		floor.Position = new JVector(0, -20, 0);
 		floor.IsStatic = true;
 
 		world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
@@ -448,8 +448,23 @@ public partial class Program : Node3D
 		world.SolverIterations = (4, 1);
 	}
 
+	float accumulatedTime = 0.0f;
+
 	public override void _Process(double delta)
 	{
-		world.Step(1.0f / 100.0f, true);
+		const float fixedStep = 1.0f / 100.0f;
+		
+		int steps = 0;
+		accumulatedTime += (float)delta;
+
+		while (accumulatedTime > fixedStep)
+		{
+			world.Step(fixedStep, true);
+			accumulatedTime -= fixedStep;
+
+			// we can not keep up with the real time, i.e. the simulation
+			// is running slower than the real time is passing.
+			if (++steps >= 4) return;
+		}
 	}
 }

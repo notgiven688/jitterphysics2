@@ -87,8 +87,8 @@ public partial class Program : Node3D
 		
 		// floor shape
 		RigidBody floor = world.CreateRigidBody();
-		floor.AddShape(new BoxShape(20));
-		floor.Position = new JVector(0, -10, 0);
+		floor.AddShape(new BoxShape(40));
+		floor.Position = new JVector(0, -20, 0);
 		floor.IsStatic = true;
 		
 		for (int i = 0; i < 30; i++)
@@ -101,9 +101,23 @@ public partial class Program : Node3D
 		}
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	float accumulatedTime = 0.0f;
+
 	public override void _Process(double delta)
 	{
-		world.Step(1.0f / 100.0f);
+		const float fixedStep = 1.0f / 100.0f;
+		
+		int steps = 0;
+		accumulatedTime += (float)delta;
+
+		while (accumulatedTime > fixedStep)
+		{
+			world.Step(fixedStep, true);
+			accumulatedTime -= fixedStep;
+
+			// we can not keep up with the real time, i.e. the simulation
+			// is running slower than the real time is passing.
+			if (++steps >= 4) return;
+		}
 	}
 }
