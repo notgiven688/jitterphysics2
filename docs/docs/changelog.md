@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.8 (2025-04-16)
+
+- Fixed `DynamicTree.Optimize` messing up collision pairs.
+- Refactored `SoftBody.cs`
+- Improved `TriangleEdgeCollisionFilter`.
+- Further reduced GC.
+
 ### Jitter 2.5.7 (2025-04-06)
 
 - Fixed possible crash when dynamically making bodies static.
