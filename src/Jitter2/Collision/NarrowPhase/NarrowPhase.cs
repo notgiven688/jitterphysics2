@@ -225,7 +225,7 @@ public static class NarrowPhase
 
         private bool SolveMPREPA(in MinkowskiDifference mkd, ref JVector point1, ref JVector point2, ref JVector normal, ref Real penetration)
         {
-            const Real CollideEpsilon = (Real)1e-4;
+            const Real CollideEpsilon = (Real)1e-5;
             const int MaxIter = 85;
 
             convexPolytope.InitTetrahedron();
@@ -301,7 +301,7 @@ public static class NarrowPhase
             not be misrepresented as being the original software.
             3. This notice may not be removed or altered from any source distribution.
             */
-            const Real CollideEpsilon = (Real)1e-4;
+            const Real CollideEpsilon = (Real)1e-5;
             const int MaxIter = 34;
 
             Unsafe.SkipInit(out Vertex v0);
