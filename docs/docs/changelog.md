@@ -4,6 +4,12 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.5.9 (2025-04-17)
+
+- Use `CollideEpsilon` 1e-5 in MPREPA
+- Fix a bug in `ShardedDictionary`.
+
+
 ### Jitter 2.5.8 (2025-04-16)
 
 - Fixed `DynamicTree.Optimize` messing up collision pairs.
