@@ -51,14 +51,15 @@ internal class ShardedDictionary<T, K> where T : notnull
     {
         get
         {
-            int index = key.GetHashCode() % locks.Length;
+            int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
             return dictionaries[index][key];
         }
     }
 
     public object GetLock(T key)
     {
-        return locks[key.GetHashCode() % locks.Length];
+        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
+        return locks[index];
     }
 
     public ShardedDictionary(int threads)
@@ -77,19 +78,19 @@ internal class ShardedDictionary<T, K> where T : notnull
 
     public bool TryGetValue(T key, [MaybeNullWhen(false)] out K value)
     {
-        int index = key.GetHashCode() % locks.Length;
+        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
         return dictionaries[index].TryGetValue(key, out value);
     }
 
     public void Add(T key, K value)
     {
-        int index = key.GetHashCode() % locks.Length;
+        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
         dictionaries[index].Add(key, value);
     }
 
     public void Remove(T key)
     {
-        int index = key.GetHashCode() % locks.Length;
+        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
         dictionaries[index].Remove(key);
     }
 }
