@@ -110,7 +110,7 @@ public sealed partial class World
 
         if (dt == (Real)0.0) return; // nothing to do
 
-        long time = Stopwatch.GetTimestamp();
+        long time;
         double invFrequency = 1.0d / Stopwatch.Frequency;
 
         void SetTime(Timings type)
@@ -132,6 +132,9 @@ public sealed partial class World
         }
 
         PreStep?.Invoke(dt);
+
+        // Start timer
+        time = Stopwatch.GetTimestamp();
 
         // Perform narrow phase detection.
         DynamicTree.EnumerateOverlaps(detect, multiThread);
