@@ -23,6 +23,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace Jitter2.DataStructures;
 
@@ -47,19 +48,24 @@ internal class ShardedDictionary<T, K> where T : notnull
         return primes[^1];
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private int GetShardIndex(T key)
+    {
+        return (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
+    }
+
     public K this[T key]
     {
         get
         {
-            int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
+            int index = GetShardIndex(key);
             return dictionaries[index][key];
         }
     }
 
     public object GetLock(T key)
     {
-        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
-        return locks[index];
+        return locks[GetShardIndex(key)];
     }
 
     public ShardedDictionary(int threads)
@@ -78,19 +84,16 @@ internal class ShardedDictionary<T, K> where T : notnull
 
     public bool TryGetValue(T key, [MaybeNullWhen(false)] out K value)
     {
-        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
-        return dictionaries[index].TryGetValue(key, out value);
+        return dictionaries[GetShardIndex(key)].TryGetValue(key, out value);
     }
 
     public void Add(T key, K value)
     {
-        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
-        dictionaries[index].Add(key, value);
+        dictionaries[GetShardIndex(key)].Add(key, value);
     }
 
     public void Remove(T key)
     {
-        int index = (key.GetHashCode() & 0x7FFFFFFF) % locks.Length;
-        dictionaries[index].Remove(key);
+        dictionaries[GetShardIndex(key)].Remove(key);
     }
 }

@@ -125,7 +125,7 @@ public class TriangleMesh
     /// modified/deleted after invoking this constructor.</param>
     /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or
     /// more degenerate triangles.</exception>
-    public TriangleMesh(List<JTriangle> triangles)
+    public TriangleMesh(List<JTriangle> triangles, bool ignoreDegenerated = false)
     {
         Dictionary<JVector, int> tmpIndices = new();
         List<JVector> tmpVertices = new();
@@ -154,7 +154,18 @@ public class TriangleMesh
             int b = PushVector(tti.V1);
             int c = PushVector(tti.V2);
 
+            JVector normal = (tti.V2 - tti.V0) % (tti.V1 - tti.V0);
+
+            if (MathHelper.CloseToZero(normal, (Real)1e-12))
+            {
+                if (ignoreDegenerated) continue;
+
+                throw new DegenerateTriangleException("Degenerate triangle found in mesh. Try to clean the " +
+                                                      "mesh in the editor of your choice first.");
+            }
+
             Indices[i] = new Triangle(a, b, c);
+            JVector.Normalize(normal, out Indices[i].Normal);
         }
 
         Vertices = tmpVertices.ToArray();
@@ -180,23 +191,6 @@ public class TriangleMesh
             Indices[i].NeighborA = GetEdge(new Edge(Indices[i].IndexC, Indices[i].IndexB));
             Indices[i].NeighborB = GetEdge(new Edge(Indices[i].IndexA, Indices[i].IndexC));
             Indices[i].NeighborC = GetEdge(new Edge(Indices[i].IndexB, Indices[i].IndexA));
-        }
-
-        for (int i = 0; i < Indices.Length; i++)
-        {
-            JVector A = Vertices[Indices[i].IndexA];
-            JVector B = Vertices[Indices[i].IndexB];
-            JVector C = Vertices[Indices[i].IndexC];
-
-            JVector normal = (C - A) % (B - A);
-
-            if (MathHelper.CloseToZero(normal, (Real)1e-12))
-            {
-                throw new DegenerateTriangleException("Degenerate triangle found in mesh. Try to clean the " +
-                                                      "mesh in the editor of your choice first.");
-            }
-
-            JVector.Normalize(normal, out Indices[i].Normal);
         }
     }
 }

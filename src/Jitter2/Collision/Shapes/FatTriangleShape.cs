@@ -60,7 +60,7 @@ public class FatTriangleShape : TriangleShape
     /// </summary>
     /// <param name="mesh">The triangle mesh to which this triangle belongs.</param>
     /// <param name="index">The index representing the position of the triangle within the mesh.</param>
-    public FatTriangleShape(TriangleMesh mesh, int index, Real thickness = (Real)0.2) : base(mesh, index)
+    public FatTriangleShape(TriangleMesh mesh, int index, Real thickness) : base(mesh, index)
     {
         this.thickness = thickness;
         UpdateWorldBoundingBox();

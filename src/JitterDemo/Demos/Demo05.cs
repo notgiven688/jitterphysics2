@@ -51,11 +51,11 @@ public class Demo05 : IDemo
             triangles.Add(new JTriangle(v1, v2, v3));
         }
 
-        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles);
+        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles, true);
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
-            yield return new FatTriangleShape(jtm, i);
+            yield return new FatTriangleShape(jtm, i, 0.2f);
         }
     }
 
@@ -70,7 +70,7 @@ public class Demo05 : IDemo
 
         level = world.CreateRigidBody();
         level.AddShape(CreateShapes(), false);
-        level.Position = new JVector(0, 0, 0);
+        level.Tag = new RigidBodyTag(doNotDraw:true);
         level.IsStatic = true;
 
         Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);

@@ -60,15 +60,10 @@ public class Demo21 : IDemo
 
         world.NarrowPhaseFilter = new VoxelEdgeCollisionFilter();
 
+        Console.WriteLine($"Current cost: {(long)world.DynamicTree.CalculateCost()}");
         Console.WriteLine("Optimizing tree..");
-
-        for (int i = 0; i < 10; i++)
-        {
-            Console.WriteLine($"({i + 1}/10) Current cost: {(long)world.DynamicTree.CalculateCost()}");
-            world.DynamicTree.Optimize(100);
-        }
-
-        Console.WriteLine("Done.");
+        world.DynamicTree.Optimize(1000);
+        Console.WriteLine($"Done. Cost: {(long)world.DynamicTree.CalculateCost()}");
 
         player = new Player(world, new JVector(50, 40, 50));
     }
