@@ -51,7 +51,7 @@ public class Demo05 : IDemo
             triangles.Add(new JTriangle(v1, v2, v3));
         }
 
-        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles);
+        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles, true);
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
