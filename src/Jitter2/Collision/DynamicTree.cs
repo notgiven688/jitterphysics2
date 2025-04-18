@@ -496,25 +496,36 @@ public partial class DynamicTree
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
         if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
 
-        Stack<IDynamicTreeProxy> temp = new();
+        List<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
             for (int i = 0; i < proxies.Count; i++)
             {
-                if (getNextRandom() > chance) continue;
+                if (e != 0 && getNextRandom() > chance) continue;
 
                 var proxy = proxies[i];
-                temp.Push(proxy);
+                temp.Add(proxy);
                 OverlapCheckRemove(root, proxy.NodePtr);
                 InternalRemoveProxy(proxy);
             }
 
-            while (temp.Count > 0)
+            // Fisher-Yates shuffle
+            int n = temp.Count;
+
+            for (int i = n - 1; i > 0; i--)
             {
-                var proxy = temp.Pop();
+                double scaledValue = getNextRandom() * (i + 1);
+                int j = (int)scaledValue;
+                (temp[i], temp[j]) = (temp[j], temp[i]);
+            }
+
+            foreach (var proxy in temp)
+            {
                 InternalAddProxy(proxy);
                 OverlapCheckAdd(root, proxy.NodePtr);
             }
+
+            temp.Clear();
         }
     }
 
@@ -677,9 +688,6 @@ public partial class DynamicTree
         JBBox box = proxy.WorldBoundingBox;
 
         int index = AllocateNode();
-        Real pseudoRandomExt = GenerateRandom((ulong)index);
-
-        ExpandBoundingBox(ref box, proxy.Velocity * ExpandFactor * ((Real)1.0 + pseudoRandomExt));
 
         Nodes[index].Proxy = proxy;
         Nodes[index].Height = 1;
