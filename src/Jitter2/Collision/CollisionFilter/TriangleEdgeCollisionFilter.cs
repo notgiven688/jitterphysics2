@@ -169,6 +169,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
         if (c2) nnormal.Negate();
 
+        JVector midPoint = (Real)0.5 * (pointA + pointB);
+
         // now the fun part
         //
         // we have a collision close to an edge, with
@@ -185,36 +187,22 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
             if (f5 > f6)
             {
-                if (f5 < cosAT)
-                {
-#if DEBUG_EDGEFILTER
-                    Console.WriteLine($"case #1: dropping, {f5}");
-#endif
-                    return false;
-                }
-
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
 
-                penetration *= f5;
+                penetration = 0;
+                pointA = pointB = midPoint;
                 normal = nnormal;
             }
             else
             {
-                if (f6 < cosAT)
-                {
-#if DEBUG_EDGEFILTER
-                    Console.WriteLine($"case #1: dropping, {f6}");
-#endif
-                    return false;
-                }
-
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
 
-                penetration *= f6;
+                penetration = 0;
+                pointA = pointB = midPoint;
                 normal = tnormal;
             }
 
@@ -263,7 +251,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {nnormal}");
 
 #endif
-                penetration *= f3;
+                penetration = 0;
+                pointA = pointB = midPoint;
                 normal = nnormal;
             }
             else
@@ -271,7 +260,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {tnormal}");
 #endif
-                penetration *= f4;
+                penetration = 0;
+                pointA = pointB = midPoint;
                 normal = tnormal;
             }
         }
