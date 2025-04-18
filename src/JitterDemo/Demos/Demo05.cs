@@ -70,7 +70,7 @@ public class Demo05 : IDemo
 
         level = world.CreateRigidBody();
         level.AddShape(CreateShapes(), false);
-        level.Position = new JVector(0, 0, 0);
+        level.Tag = new RigidBodyTag(doNotDraw:true);
         level.IsStatic = true;
 
         Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
