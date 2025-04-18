@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using Jitter2.LinearMath;
 
@@ -101,14 +102,49 @@ public static class ShapeHelper
         Subdivide(support, hullCollection, h2, h3, h1, sp2, sp3, sp1, subdivisions);
     }
 
+    private readonly struct ConvexHullBuilder : ISupportMappable
+    {
+        private readonly List<JVector> vertices;
+
+        public ConvexHullBuilder(List<JVector> vertices) => this.vertices = vertices;
+
+        public void SupportMap(in JVector direction, out JVector result)
+        {
+            Real maxDotProduct = Real.MinValue;
+            result = JVector.Zero;
+
+            foreach (var vertex in vertices)
+            {
+                Real dotProduct = JVector.Dot(vertex, direction);
+                if (dotProduct < maxDotProduct) continue;
+                maxDotProduct = dotProduct;
+                result = vertex;
+            }
+        }
+
+        public void GetCenter(out JVector point) => throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Calculates the convex hull of a set of vertices.
+    /// </summary>
+    /// <param name="vertices">The vertices to use for hull generation.</param>
+    /// <param name="subdivision">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <returns>A list of triangles representing the convex hull.</returns>
+    public static List<JTriangle> MakeHull(List<JVector> vertices, int subdivision = 4)
+    {
+        var convexHullBuilder = new ConvexHullBuilder(vertices);
+        return MakeHull(convexHullBuilder, subdivision);
+    }
+
     /// <summary>
     /// Calculates the convex hull of an implicitly defined shape.
     /// </summary>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
-    /// <returns>An enumeration of triangles forming the convex hull.</returns>
+    /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>Allocates a new List and therefore generates garbage.</remarks>
-    public static IEnumerable<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
+    public static List<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 4)
     {
         List<JTriangle> triangles = new();
         MakeHull(support, triangles, subdivisions);
