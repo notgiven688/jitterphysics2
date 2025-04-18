@@ -483,15 +483,16 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="sweeps">The number of times to iterate over all proxies in the tree. Must be greater than zero.</param>
     /// <param name="chance">The chance of a proxy to be removed and re-added to the tree for each sweep. Must be between 0 and 1.</param>
-    public void Optimize(int sweeps = 100, Real chance = (Real)0.01)
+    /// <param name="incremental">If false, all entities of the tree are removed and reinserted at random order during the first sweep (chance = 1).</param>
+    public void Optimize(int sweeps = 100, Real chance = (Real)0.01, bool incremental = false)
     {
         optimizeRandom ??= new Random(0);
-        Optimize(() => optimizeRandom.NextDouble(), sweeps, chance);
+        Optimize(() => optimizeRandom.NextDouble(), sweeps, chance, incremental);
     }
 
-    /// <inheritdoc cref="Optimize(int, Real)" />
+    /// <inheritdoc cref="Optimize(int, Real, bool)" />
     /// <param name="getNextRandom">Delegate to create a sequence of random numbers.</param>
-    public void Optimize(Func<double> getNextRandom, int sweeps, Real chance)
+    public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
         if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
@@ -499,9 +500,11 @@ public partial class DynamicTree
         List<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
+            bool takeAll = (e == 0) && !incremental;
+
             for (int i = 0; i < proxies.Count; i++)
             {
-                if (e != 0 && getNextRandom() > chance) continue;
+                if (!takeAll && getNextRandom() > chance) continue;
 
                 var proxy = proxies[i];
                 temp.Add(proxy);
