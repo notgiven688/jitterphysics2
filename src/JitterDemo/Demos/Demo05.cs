@@ -37,8 +37,8 @@ public class Demo05 : IDemo
 
     public IEnumerable<RigidBodyShape> CreateShapes()
     {
-        var indices = tm.mesh.Indices;
-        var vertices = tm.mesh.Vertices;
+        var indices = tm.Mesh.Indices;
+        var vertices = tm.Mesh.Vertices;
 
         List<JTriangle> triangles = new();
 
@@ -86,11 +86,11 @@ public class Demo05 : IDemo
         {
             Playground pg = (Playground)RenderWindow.Instance;
 
-            foreach (var triangle in tm.mesh.Indices)
+            foreach (var triangle in tm.Mesh.Indices)
             {
-                var a = tm.mesh.Vertices[triangle.T1].Position;
-                var b = tm.mesh.Vertices[triangle.T2].Position;
-                var c = tm.mesh.Vertices[triangle.T3].Position;
+                var a = tm.Mesh.Vertices[triangle.T1].Position;
+                var b = tm.Mesh.Vertices[triangle.T2].Position;
+                var c = tm.Mesh.Vertices[triangle.T3].Position;
 
                 pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, a, b);
                 pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, b, c);
