@@ -87,13 +87,16 @@ public class ConvexHullShape : RigidBodyShape
     /// <summary>
     /// Initializes a new instance of the ConvexHullShape class, creating a convex hull.
     /// </summary>
-    /// <param name="triangles">A list containing all vertices defining the convex hull. The vertices must strictly lie on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm. Note that the passed triangle list is not referenced and can be modified after calling the constructor without side effects.</param>
-    public ConvexHullShape(List<JTriangle> triangles)
+    /// <param name="triangles">A list containing all vertices defining the convex hull. The vertices must strictly lie
+    /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.
+    /// Note that the passed triangle list is not referenced and can be modified after calling the constructor
+    /// without side effects.</param>
+    public ConvexHullShape(IList<JTriangle> triangles)
     {
         Build(triangles);
     }
 
-    private void Build(List<JTriangle> triangles)
+    private void Build(IList<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = new();
@@ -175,7 +178,9 @@ public class ConvexHullShape : RigidBodyShape
     /// <summary>
     /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
     /// </summary>
-    /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the original instance.</returns>
+    /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the
+    /// original instance.
+    /// </returns>
     public ConvexHullShape Clone()
     {
         ConvexHullShape result = new()
@@ -320,22 +325,68 @@ public class ConvexHullShape : RigidBodyShape
         ushort current = 0;
         Real dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
-        again:
+        main:
+        bool needsVerify = false;
+        JVector verifyDir = JVector.Arbitrary;
+
         var min = vertices[current].NeighborMinIndex;
         var max = vertices[current].NeighborMaxIndex;
+
+        const Real epsilonIncrement = 1e-12f;
 
         for (int i = min; i < max; i++)
         {
             ushort nb = neighborList[i];
             Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
-            if (nbProduct > dotProduct)
+            if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
+            {
+                verifyDir = vertices[nb].Vertex - vertices[current].Vertex;
+                needsVerify = true;
+            }
+
+            if (nbProduct > dotProduct + epsilonIncrement)
             {
                 // no need to find the "best" neighbor - as soon as we found a better
                 // candidate we move there.
                 dotProduct = nbProduct;
                 current = nb;
-                goto again;
+                goto main;
+            }
+        }
+
+        // A secondary hill climbing algorithm in case of a plateau.
+        if (needsVerify)
+        {
+            Real d0 = JVector.Dot(verifyDir, vertices[current].Vertex);
+
+            secondary:
+            min = vertices[current].NeighborMinIndex;
+            max = vertices[current].NeighborMaxIndex;
+
+            for (int i = min; i < max; i++)
+            {
+                ushort nb = neighborList[i];
+                Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
+
+                if (nbProduct > dotProduct + epsilonIncrement)
+                {
+                    dotProduct = nbProduct;
+                    current = nb;
+                    goto main;
+                }
+
+                if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
+                {
+                    Real d1 = JVector.Dot(verifyDir, vertices[nb].Vertex);
+
+                    if (d1 > d0 + epsilonIncrement)
+                    {
+                        d0 = d1;
+                        current = nb;
+                        goto secondary;
+                    }
+                }
             }
         }
 
