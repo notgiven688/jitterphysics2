@@ -133,10 +133,10 @@ public class Demo20 : IDemo, ICleanDemo
 
         var tm = RenderWindow.Instance.CSMRenderer.GetInstance<Dragon>();
 
-        var indices = tm.mesh.Indices.Select(i
+        var indices = tm.Mesh.Indices.Select(i
             => new Octree.TriangleIndices(i.T1, i.T2, i.T3)).ToArray();
 
-        var vertices = tm.mesh.Vertices.Select(v
+        var vertices = tm.Mesh.Vertices.Select(v
             => Conversion.ToJitterVector(v.Position)).ToArray();
 
         // Build the octree

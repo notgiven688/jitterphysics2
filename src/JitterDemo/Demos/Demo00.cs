@@ -5,16 +5,16 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Teapot : MultiMesh
+public class DecomposedTeapot : MultiMesh
 {
-    public Teapot() : base(Path.Combine("assets", "teapot_hull.obj"), 0.03f)
+    public DecomposedTeapot() : base(Path.Combine("assets", "teapot_hull.obj"), 0.03f)
     {
     }
 }
 
 public class Demo00 : IDemo
 {
-    private ConvexDecomposition<Teapot> teapotDecomp = null!;
+    private ConvexDecomposition<DecomposedTeapot> teapotDecomp = null!;
 
     public string Name => "Convex Decomposition";
 
@@ -25,7 +25,7 @@ public class Demo00 : IDemo
 
         pg.ResetScene();
 
-        teapotDecomp = new ConvexDecomposition<Teapot>(world);
+        teapotDecomp = new ConvexDecomposition<DecomposedTeapot>(world);
         teapotDecomp.Load();
 
         for (int i = 0; i < 6; i++)
