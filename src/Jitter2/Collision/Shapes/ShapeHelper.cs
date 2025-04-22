@@ -48,8 +48,9 @@ public static class ShapeHelper
     };
 
     /// <summary>
-    /// Calculates the convex hull of an implicitly defined shape.
+    /// Approximates the convex hull of a given set of 3D vertices.
     /// </summary>
+    /// <remarks>The hull may not be perfectly convex.</remarks>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
     /// <param name="hullCollection">An ICollection to which the triangles are added too.</param>
@@ -102,13 +103,14 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Calculates the convex hull of an implicitly defined shape.
+    /// Approximates the convex hull of a given set of 3D vertices.
     /// </summary>
+    /// <remarks>The hull may not be perfectly convex.</remarks>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
-    /// <returns>An enumeration of triangles forming the convex hull.</returns>
+    /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>Allocates a new List and therefore generates garbage.</remarks>
-    public static IEnumerable<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
+    public static List<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
     {
         List<JTriangle> triangles = new();
         MakeHull(support, triangles, subdivisions);
@@ -140,6 +142,66 @@ public static class ShapeHelper
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);
+    }
+
+    /// <summary>
+    /// Approximates the convex hull of a given set of 3D vertices by sampling support points
+    /// in uniformly distributed directions using the Fibonacci sphere method.
+    /// </summary>
+    /// <param name="vertices">The list of vertices that define the object.</param>
+    /// <param name="sampleCount">The number of directions to sample on the unit sphere. Higher values
+    /// yield better coverage of the hull.</param>
+    /// <returns>
+    /// A list of unique vertices from the input set that lie on the convex hull surface,
+    /// based on the sampled support directions.
+    /// </returns>
+    /// <remarks>
+    /// This method does not compute the exact convex hull. Instead, it returns an approximation
+    /// by finding the support point (farthest vertex) in each sampled direction.
+    /// The more samples used, the closer the result will approximate the true convex hull.
+    /// </remarks>
+    public static List<JVector> SampleHull(List<JVector> vertices, int sampleCount)
+    {
+        return SampleHull(new VertexSupportMap(vertices), sampleCount);
+    }
+
+    /// <summary>
+    /// Approximates the convex hull by sampling support points in uniformly distributed directions
+    /// using the Fibonacci sphere method.
+    /// </summary>
+    /// <param name="support">The support map.</param>
+    /// <param name="sampleCount">The number of directions to sample on the unit sphere. Higher values
+    /// yield better coverage of the hull.</param>
+    /// <returns>
+    /// A list of unique vertices from the input set that lie on or near the convex hull surface,
+    /// based on the sampled support directions.
+    /// </returns>
+    /// <remarks>
+    /// This method does not compute the exact convex hull. Instead, it returns an approximation
+    /// by finding the support point (farthest vertex) in each sampled direction.
+    /// The more samples used, the closer the result will approximate the true convex hull.
+    /// </remarks>
+    public static List<JVector> SampleHull(ISupportMappable support, int sampleCount)
+    {
+        Real goldenAngle = (Real)2.39996322972865332; // OEIS: A131988.
+
+        HashSet<JVector> hull = new HashSet<JVector>();
+
+        for (int i = 0; i < sampleCount; i++)
+        {
+            Real y = 1f - (i + 0.5f) * 2f / sampleCount; // y from 1 to -1
+            Real radius = MathR.Sqrt(1 - y * y);
+
+            Real theta = goldenAngle * i;
+
+            Real x = MathR.Cos(theta) * radius;
+            Real z = MathR.Sin(theta) * radius;
+
+            support.SupportMap(new JVector(x,y,z), out JVector v);
+            hull.Add(v);
+        }
+
+        return new List<JVector>(hull);
     }
 
     /// <summary>
@@ -176,11 +238,11 @@ public static class ShapeHelper
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
 
-            JVector tetrahedronCOM = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
+            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
 
             inertia += tetrahedronInertia;
-            centerOfMass += tetrahedronMass * tetrahedronCOM;
+            centerOfMass += tetrahedronMass * tetrahedronCom;
             mass += tetrahedronMass;
         }
 
