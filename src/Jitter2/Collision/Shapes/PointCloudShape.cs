@@ -29,8 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a generic convex hull, similar to <see cref="ConvexHullShape"/>. The shape is
 /// implicitly defined by a point cloud. It is not necessary for the points to lie on the convex hull.
-/// For performance optimization, this shape should ideally be used for a small number of points (maximum
-/// of 20-30).
+/// For performance optimization, this shape should ideally be used for a small number of points (~100).
 /// </summary>
 public class PointCloudShape : RigidBodyShape
 {
@@ -39,25 +38,33 @@ public class PointCloudShape : RigidBodyShape
     private Real cachedMass;
     private JVector cachedCenter;
 
-    private List<JVector> vertices;
+    private VertexSupportMap supportMap;
     private JVector shifted;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PointCloudShape"/> class.
     /// </summary>
     /// <param name="vertices">
-    /// A list containing all vertices that define the convex hull. The list is referenced and should
-    /// not be modified after passing it to the constructor.
+    /// A list containing all vertices that define the convex hull. The list is not referenced and can be
+    /// modified after passing it to the constructor.
     /// </param>
-    public PointCloudShape(List<JVector> vertices)
+    public PointCloudShape(IList<JVector> vertices)
     {
-        this.vertices = vertices;
+        supportMap = new VertexSupportMap(vertices);
+        UpdateShape();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PointCloudShape"/> class.
+    /// </summary>
+    public PointCloudShape(VertexSupportMap supportMap)
+    {
+        this.supportMap = supportMap;
         UpdateShape();
     }
 
     private PointCloudShape()
     {
-        vertices = null!;
     }
 
     /// <summary>
@@ -68,7 +75,7 @@ public class PointCloudShape : RigidBodyShape
     {
         PointCloudShape result = new()
         {
-            vertices = vertices,
+            supportMap = supportMap,
             cachedBoundingBox = cachedBoundingBox,
             cachedCenter = cachedCenter,
             cachedInertia = cachedInertia,
@@ -156,21 +163,8 @@ public class PointCloudShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        Real maxDotProduct = Real.MinValue;
-        int maxIndex = 0;
-        Real dotProduct;
-
-        for (int i = 0; i < vertices.Count; i++)
-        {
-            dotProduct = JVector.Dot(vertices[i], direction);
-            if (dotProduct > maxDotProduct)
-            {
-                maxDotProduct = dotProduct;
-                maxIndex = i;
-            }
-        }
-
-        result = vertices[maxIndex] + shifted;
+        supportMap.SupportMap(direction, out result);
+        result += shifted;
     }
 
     public override void GetCenter(out JVector point)
