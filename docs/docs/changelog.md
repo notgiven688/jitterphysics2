@@ -4,11 +4,20 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.0 (2025-04-24)
+
+- Add `SampleHull` and `MakeHull` to `ShapeHelper`.
+- Fix hill climbing getting stuck for `ConvexHullShape`s.
+- Add SIMD support for `PointCloudShape`s.
+- Add option to ignore degenerated triangles in `TriangleMesh`.
+- Make thickness parameter mandatory in `FatTriangleShape`.
+- Add Fisher-Yates shuffle to `DynamicTree.Optimize`.
+- Optimized `TriangleEdgeCollisionFilter`.
+
 ### Jitter 2.5.9 (2025-04-17)
 
-- Use `CollideEpsilon` 1e-5 in MPREPA
+- Use `CollideEpsilon` 1e-5 in MPREPA.
 - Fix a bug in `ShardedDictionary`.
-
 
 ### Jitter 2.5.8 (2025-04-16)
 
