@@ -50,10 +50,12 @@ public static class ShapeHelper
     /// <summary>
     /// Approximates the convex hull of a given set of 3D vertices.
     /// </summary>
-    /// <remarks>The hull may not be perfectly convex.</remarks>
     /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 2.</param>
     /// <param name="hullCollection">An ICollection to which the triangles are added too.</param>
+    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>.</remarks>
+    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static void MakeHull<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle>
     {
         for (int i = 0; i < 20; i++)
@@ -72,7 +74,7 @@ public static class ShapeHelper
 
     private static void Subdivide<T>(ISupportMappable support, T hullCollection,
         JVector v1, JVector v2, JVector v3, JVector p1, JVector p2, JVector p3,
-        int subdivisions = 3) where T : ICollection<JTriangle>
+        int subdivisions) where T : ICollection<JTriangle>
     {
         if (subdivisions <= 1)
         {
@@ -103,18 +105,33 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Approximates the convex hull of a given set of 3D vertices.
+    /// Approximates the convex hull of a support map.
     /// </summary>
-    /// <remarks>The hull may not be perfectly convex.</remarks>
-    /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <param name="support">The support map.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 2.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
-    /// <remarks>Allocates a new List and therefore generates garbage.</remarks>
+    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>.</remarks>
+    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static List<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
     {
         List<JTriangle> triangles = new();
         MakeHull(support, triangles, subdivisions);
         return triangles;
+    }
+
+    /// <summary>
+    /// Approximates the convex hull of a given set of 3D vertices.
+    /// </summary>
+    /// <param name="vertices">The vertices used to approximate the hull.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <returns>A list of triangles representing the convex hull.</returns>
+    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>.</remarks>
+    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
+    public static List<JTriangle> MakeHull(IList<JVector> vertices, int subdivisions = 3)
+    {
+        return MakeHull(new VertexSupportMap(vertices), subdivisions);
     }
 
     public static void CalculateBoundingBox(ISupportMappable support,
@@ -163,6 +180,7 @@ public static class ShapeHelper
     /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
     /// mapper to generate a hull point.
     /// </remarks>
+    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static List<JVector> SampleHull(IList<JVector> vertices, int subdivisions = 3)
     {
         return SampleHull(new VertexSupportMap(vertices), subdivisions);
@@ -189,6 +207,7 @@ public static class ShapeHelper
     /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
     /// mapper to generate a hull point.
     /// </remarks>
+    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static List<JVector> SampleHull(ISupportMappable support, int subdivisions = 3)
     {
         Stack<(JTriangle triangle, int depth)> stack = new();
@@ -207,7 +226,7 @@ public static class ShapeHelper
         {
             var (tri, depth) = stack.Pop();
 
-            if (depth == 0)
+            if (depth <= 1)
             {
                 support.SupportMap(tri.V0, out JVector sv0);
                 support.SupportMap(tri.V1, out JVector sv1);
