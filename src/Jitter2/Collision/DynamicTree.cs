@@ -31,8 +31,7 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. A hashset (refer to <see cref="PairHashSet"/>)
-/// maintains a record of potential overlapping pairs.
+/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. The tree can be queried for potential overlapping pairs.
 /// </summary>
 public partial class DynamicTree
 {

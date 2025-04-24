@@ -4,6 +4,8 @@ sidebar_position: 1
 
 # Project Setup
 
+In this project we will use Raylib and Jitter to implement a simple scene of boxes falling to the ground.
+
 ### Requirements
 
 Install the [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0).

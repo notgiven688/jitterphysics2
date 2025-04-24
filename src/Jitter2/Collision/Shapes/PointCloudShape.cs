@@ -29,7 +29,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a generic convex hull, similar to <see cref="ConvexHullShape"/>. The shape is
 /// implicitly defined by a point cloud. It is not necessary for the points to lie on the convex hull.
-/// For performance optimization, this shape should ideally be used for a small number of points (~100).
+/// For performance optimization, this shape should ideally be used for a small number of points (~300).
 /// </summary>
 public class PointCloudShape : RigidBodyShape
 {
