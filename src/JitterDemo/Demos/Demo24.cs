@@ -44,7 +44,7 @@ public class Demo24 : IDemo
             => new JVector(v.Position.X, v.Position.Y, v.Position.Z)).Distinct().ToList();
 
         // Find a few points on the convex hull of the teapot.
-        var reducedVertices = ShapeHelper.SampleHull(vertices, sampleCount: 200);
+        var reducedVertices = ShapeHelper.SampleHull(vertices, subdivisions: 3);
 
         // Use these points to create a PointCloudShape. One could also use all vertices
         // of the teapot, but this would be slower since it also includes vertices that are

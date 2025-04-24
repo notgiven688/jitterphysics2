@@ -146,59 +146,84 @@ public static class ShapeHelper
 
     /// <summary>
     /// Approximates the convex hull of a given set of 3D vertices by sampling support points
-    /// in uniformly distributed directions using the Fibonacci sphere method.
+    /// generated through recursive subdivision of an icosahedron.
     /// </summary>
     /// <param name="vertices">The list of vertices that define the object.</param>
-    /// <param name="sampleCount">The number of directions to sample on the unit sphere. Higher values
-    /// yield better coverage of the hull.</param>
+    /// <param name="subdivisions">
+    /// The number of recursive subdivisions applied to each icosahedron triangle.
+    /// Higher values produce more sampling directions and better coverage,
+    /// but increase computation. Default is 3.
+    /// </param>
     /// <returns>
-    /// A list of unique vertices from the input set that lie on the convex hull surface,
-    /// based on the sampled support directions.
+    /// A list of <see cref="JVector"/> points on the convex hull, sampled using directional support mapping from a
+    /// refined spherical distribution.
     /// </returns>
     /// <remarks>
-    /// This method does not compute the exact convex hull. Instead, it returns an approximation
-    /// by finding the support point (farthest vertex) in each sampled direction.
-    /// The more samples used, the closer the result will approximate the true convex hull.
+    /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
+    /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
+    /// mapper to generate a hull point.
     /// </remarks>
-    public static List<JVector> SampleHull(List<JVector> vertices, int sampleCount)
+    public static List<JVector> SampleHull(IList<JVector> vertices, int subdivisions = 3)
     {
-        return SampleHull(new VertexSupportMap(vertices), sampleCount);
+        return SampleHull(new VertexSupportMap(vertices), subdivisions);
     }
 
     /// <summary>
-    /// Approximates the convex hull by sampling support points in uniformly distributed directions
-    /// using the Fibonacci sphere method.
+    /// Samples a convex shape's hull by evaluating support directions generated through recursive subdivision of
+    /// an icosahedron.
     /// </summary>
-    /// <param name="support">The support map.</param>
-    /// <param name="sampleCount">The number of directions to sample on the unit sphere. Higher values
-    /// yield better coverage of the hull.</param>
+    /// <param name="support">
+    /// An object implementing <see cref="ISupportMappable"/>, representing a convex shape that can be queried
+    /// with directional support mapping.
+    /// </param>
+    /// <param name="subdivisions">
+    /// The number of recursive subdivisions applied to each icosahedron triangle. Higher values produce more sampling
+    /// directions and better coverage, but increase computation. Default is 3.
+    /// </param>
     /// <returns>
-    /// A list of unique vertices from the input set that lie on or near the convex hull surface,
-    /// based on the sampled support directions.
+    /// A list of <see cref="JVector"/> points on the convex hull, sampled using directional support mapping from a
+    /// refined spherical distribution.
     /// </returns>
     /// <remarks>
-    /// This method does not compute the exact convex hull. Instead, it returns an approximation
-    /// by finding the support point (farthest vertex) in each sampled direction.
-    /// The more samples used, the closer the result will approximate the true convex hull.
+    /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
+    /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
+    /// mapper to generate a hull point.
     /// </remarks>
-    public static List<JVector> SampleHull(ISupportMappable support, int sampleCount)
+    public static List<JVector> SampleHull(ISupportMappable support, int subdivisions = 3)
     {
-        Real goldenAngle = (Real)2.39996322972865332; // OEIS: A131988.
+        Stack<(JTriangle triangle, int depth)> stack = new();
 
-        HashSet<JVector> hull = new HashSet<JVector>();
-
-        for (int i = 0; i < sampleCount; i++)
+        for (int i = 0; i < 20; i++)
         {
-            Real y = 1f - (i + 0.5f) * 2f / sampleCount; // y from 1 to -1
-            Real radius = MathR.Sqrt(1 - y * y);
+            JVector v1 = icosahedronVertices[icosahedronIndices[i, 0]];
+            JVector v2 = icosahedronVertices[icosahedronIndices[i, 1]];
+            JVector v3 = icosahedronVertices[icosahedronIndices[i, 2]];
+            stack.Push((new JTriangle(v1, v2, v3), subdivisions));
+        }
 
-            Real theta = goldenAngle * i;
+        HashSet<JVector> hull = new();
 
-            Real x = MathR.Cos(theta) * radius;
-            Real z = MathR.Sin(theta) * radius;
+        while (stack.Count > 0)
+        {
+            var (tri, depth) = stack.Pop();
 
-            support.SupportMap(new JVector(x,y,z), out JVector v);
-            hull.Add(v);
+            if (depth == 0)
+            {
+                support.SupportMap(tri.V0, out JVector sv0);
+                support.SupportMap(tri.V1, out JVector sv1);
+                support.SupportMap(tri.V2, out JVector sv2);
+                hull.Add(sv0); hull.Add(sv1); hull.Add(sv2);
+                continue;
+            }
+
+            JVector ab = JVector.Normalize((tri.V0 + tri.V1) * 0.5f);
+            JVector bc = JVector.Normalize((tri.V1 + tri.V2) * 0.5f);
+            JVector ca = JVector.Normalize((tri.V2 + tri.V0) * 0.5f);
+
+            stack.Push((new JTriangle(tri.V0, ab, ca), depth - 1));
+            stack.Push((new JTriangle(ab, tri.V1, bc), depth - 1));
+            stack.Push((new JTriangle(ca, bc, tri.V2), depth - 1));
+            stack.Push((new JTriangle(ab, bc, ca), depth - 1));
         }
 
         return new List<JVector>(hull);
