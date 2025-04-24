@@ -51,7 +51,7 @@ public static class ShapeHelper
     /// Approximates the convex hull of a given set of 3D vertices.
     /// </summary>
     /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 2.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <param name="hullCollection">An ICollection to which the triangles are added too.</param>
     /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
@@ -108,7 +108,7 @@ public static class ShapeHelper
     /// Approximates the convex hull of a support map.
     /// </summary>
     /// <param name="support">The support map.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 2.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
@@ -124,7 +124,7 @@ public static class ShapeHelper
     /// Approximates the convex hull of a given set of 3D vertices.
     /// </summary>
     /// <param name="vertices">The vertices used to approximate the hull.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation. Defaults to 3.</param>
+    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
