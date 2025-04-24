@@ -4,7 +4,8 @@ sidebar_position: 2
 
 # Hull Sampling
 
-The teapot is a concave shape, which we will approximate using its convex hull ([Wikipedia](https://en.wikipedia.org/wiki/Convex_hull)). As a first step, we will reduce the number of vertices used to construct the convex hull.
+The teapot is a concave shape, which we will approximate using its convex hull ([Wikipedia](https://en.wikipedia.org/wiki/Convex_hull)).
+As a first step, we will reduce the number of vertices used to construct the convex hull.
 
 :::info Sampling
 We could work with the entire set of vertices, but this comes with two main disadvantages:
@@ -37,7 +38,7 @@ InitWindow(1200, 800, "TeaDrop example");
 // load the teapot model from a file
 Model teapotModel = LoadModel("teapot.obj");
 
-// Load the mesh vertices
+// load the mesh vertices
 if (teapotModel.MeshCount == 0)
     throw new Exception("Model could not be loaded!");
 
@@ -45,7 +46,7 @@ Mesh mesh;
 unsafe { mesh = teapotModel.Meshes[0]; }
 
 var allVertices = mesh.VerticesAs<JVector>().ToArray();
-var vertices = ShapeHelper.SampleHull(allVertices.ToArray(), 4);
+var vertices = ShapeHelper.SampleHull(allVertices, 4);
 
 // just for visualization -
 // we will not need to construct the explicit hull for the simulation!

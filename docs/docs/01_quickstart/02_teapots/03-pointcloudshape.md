@@ -9,10 +9,10 @@ sidebar_position: 3
 We can now create a `PointCloudShape` from the sampled vertices:
 
 ```cs Program.cs showLineNumbers
-// Find a few points on the convex hull of the teapot.
+// find a few points on the convex hull of the teapot.
 var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 
-// Use these points to create a PointCloudShape.
+// use these points to create a PointCloudShape.
 var pointCloudShape = new PointCloudShape(vertices);
 ```
 
@@ -24,19 +24,19 @@ If you open `teapot.obj` in a model editor, you'll notice that the model is not 
 To correct this, we either need to center the model manually in a model editor—or, more conveniently, use the `Shift` property of `PointCloudShape` to align the center of mass with the origin:
 
 ```cs Program.cs showLineNumbers
-// Find a few points on the convex hull of the teapot.
+// find a few points on the convex hull of the teapot.
 var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 
-// Use these points to create a PointCloudShape.
+// use these points to create a PointCloudShape.
 var pointCloudShape = new PointCloudShape(vertices);
 
-// Shift the shape so its center of mass is at the origin.
+// shift the shape so its center of mass is at the origin.
 pointCloudShape.GetCenter(out JVector centerOfMass);
 pointCloudShape.Shift = -centerOfMass;
 
 // pointCloudShape.GetCenter(out centerOfMass); // now returns (0, 0, 0)
 
-// Finally, create the rigid body for the teapot
+// finally, create the rigid body for the teapot
 var rigidBody = world.CreateRigidBody();
 rigidBody.AddShape(pointCloudShape);
 ```
@@ -106,7 +106,7 @@ SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.Diffuse, ref texture);
 // load the teapot model from file
 Model teapotModel = LoadModel("teapot.obj");
 
-// Load the mesh vertices
+// load the mesh vertices
 if (teapotModel.MeshCount == 0)
     throw new Exception("Model could not be loaded!");
 
@@ -114,17 +114,17 @@ Mesh teapotMesh;
 unsafe { teapotMesh = teapotModel.Meshes[0]; }
 var allVertices = teapotMesh.VerticesAs<JVector>();
 
-// Sample vertices on the convex hull
+// sample vertices on the convex hull
 var vertices = ShapeHelper.SampleHull(allVertices.ToArray(), 4);
 
-// Create the PointCloudShape from the reduced vertices
+// create the PointCloudShape from the reduced vertices
 var pointCloudShape = new PointCloudShape(vertices);
 
-// Shift the shape, such that the center of mass is at the origin
+// shift the shape, such that the center of mass is at the origin
 pointCloudShape.GetCenter(out JVector center);
 pointCloudShape.Shift = -center;
 
-// We need to take the transpose here, since Raylib and System.Numerics
+// we need to take the transpose here, since Raylib and System.Numerics
 // use a different convention
 Matrix4x4 shift = Matrix4x4.CreateTranslation(-center);
 shift = Matrix4x4.Transpose(shift);
