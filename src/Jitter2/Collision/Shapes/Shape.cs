@@ -54,25 +54,10 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     protected void SweptExpandBoundingBox(Real dt)
     {
-        JVector sweptDirection = dt * Velocity;
-
+        Real swept = dt * Velocity.Length();
         JBBox box = WorldBoundingBox;
-
-        Real sxa = MathR.Abs(sweptDirection.X);
-        Real sya = MathR.Abs(sweptDirection.Y);
-        Real sza = MathR.Abs(sweptDirection.Z);
-
-        Real max = MathR.Max(MathR.Max(sxa, sya), sza);
-
-        if (sweptDirection.X < (Real)0.0) box.Min.X -= max;
-        else box.Max.X += max;
-
-        if (sweptDirection.Y < (Real)0.0) box.Min.Y -= max;
-        else box.Max.Y += max;
-
-        if (sweptDirection.Z < (Real)0.0) box.Min.Z -= max;
-        else box.Max.Z += max;
-
+        box.Min -= new JVector(swept);
+        box.Max += new JVector(swept);
         WorldBoundingBox = box;
     }
 
