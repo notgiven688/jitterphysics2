@@ -1,0 +1,9 @@
+{
+  "label": "Dropping Teapots",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "A small example which shows how to simulate convex hulls from models."
+  }
+}

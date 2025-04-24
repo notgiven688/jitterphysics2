@@ -64,7 +64,7 @@ The vertices do not need to form a convex hull; however, collision detection wil
 For example, passing the 8 vertices of a cube to the constructor generates a cube shape; adding a 9th vertex at the cube's center has no effect.
 
 :::warning Number of vertices
-`PointCloudShape`s should only be used for a small to moderate number of vertices ($\approx{}30$). Larger numbers of vertices can negatively impact performance.
+`PointCloudShape`s should only be used for a small to moderate number of vertices ($\approx{}300$). Larger numbers of vertices can negatively impact performance.
 `ConvexHullShape`s are the better choice for more complex hulls.
 :::
 
