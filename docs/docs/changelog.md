@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.1 (2025-04-24)
+
+- Bugfix in `TriangleEdgeCollisionFilter` for speculative contacts
+
 ### Jitter 2.6.0 (2025-04-24)
 
 - Add `SampleHull` and `MakeHull` to `ShapeHelper`.
