@@ -16,9 +16,12 @@ var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 var pointCloudShape = new PointCloudShape(vertices);
 ```
 
-However, we need to be a bit careful here. If we add this shape to a rigid body as-is, the body may not behave as intuitively expected. This is because the center of mass of a rigid body is always located at `(0, 0, 0)` in its local coordinate frame.
+However, we need to be a bit careful here.
+If we add this shape to a rigid body as-is, the body may not behave as intuitively expected.
+This is because the center of mass of a rigid body is always located at `(0, 0, 0)` in its local coordinate frame.
 
-If you open `teapot.obj` in a model editor, you'll notice that the model is not centered around the origin. To correct this, we either need to center the model manually in a model editor—or, more conveniently, use the `Shift` property of `PointCloudShape` to align the center of mass with the origin:
+If you open `teapot.obj` in a model editor, you'll notice that the model is not centered around the origin.
+To correct this, we either need to center the model manually in a model editor—or, more conveniently, use the `Shift` property of `PointCloudShape` to align the center of mass with the origin:
 
 ```cs Program.cs showLineNumbers
 // Find a few points on the convex hull of the teapot.

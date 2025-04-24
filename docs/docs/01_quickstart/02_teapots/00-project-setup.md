@@ -4,7 +4,8 @@ sidebar_position: 1
 
 # Project Setup
 
-In the previous section, we created a simulation of falling boxes. Jitter includes several default shapes, such as capsules, cylinders, and spheres. These shapes can be transformed and/or combined, and they are already sufficient to represent many types of collidable entities.
+In the previous section, we created a simulation of falling boxes. Jitter includes several default shapes, such as capsules, cylinders, and spheres.
+These shapes can be transformed and/or combined, and they are already sufficient to represent many types of collidable entities.
 
 In this section, we will add a custom convex shape to the simulation—specifically, the famous *Utah teapot*. We'll construct this shape from its visual representation by loading a `teapot.obj` file and using its vertices to create the convex shape.
 
@@ -42,8 +43,7 @@ dotnet add package Raylib-cs --version 6.1.1
 dotnet add package Jitter2
 ```
 
-Add the following code to `TeaDrop.csproj` to allow unsafe code, and to copy teapot.obj automatically
-to the output directory:
+Add the following code to `TeaDrop.csproj` to allow unsafe code, and to copy teapot.obj automatically to the output directory:
 
 ```xml
   <PropertyGroup>
