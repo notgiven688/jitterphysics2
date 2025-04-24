@@ -159,13 +159,26 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         ref var b1Data = ref shapeA.RigidBody.Data;
         ref var b2Data = ref shapeB.RigidBody.Data;
 
-        // Check collision again, but with zero epa threshold parameter.
-        // This is necessary since MPR is not exact for flat shapes, like triangles.
-        NarrowPhase.MPREPA(shapeA, shapeB,
-            b1Data.Orientation, b2Data.Orientation,
-            b1Data.Position, b2Data.Position,
-            out pointA, out pointB, out normal, out penetration,
-            epaThreshold:(Real)0.0);
+        bool isSpeculative = penetration < (Real)0.0;
+
+        if (!isSpeculative)
+        {
+            // Check collision again (for non-speculative contacts),
+            // but with zero epa threshold parameter. This is necessary since
+            // MPR is not exact for flat shapes, like triangles.
+
+            bool result = NarrowPhase.MPREPA(shapeA, shapeB,
+                b1Data.Orientation, b2Data.Orientation,
+                b1Data.Position, b2Data.Position,
+                out pointA, out pointB, out normal, out penetration,
+                epaThreshold: (Real)0.0);
+
+            if (!result)
+            {
+                // this should not happen
+                return false;
+            }
+        }
 
         if (c2) nnormal.Negate();
 
@@ -191,8 +204,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
 #endif
 
-                penetration = 0;
-                pointA = pointB = midPoint;
+                if (!isSpeculative)
+                {
+                    penetration = 0;
+                    pointA = pointB = midPoint;
+                }
+
                 normal = nnormal;
             }
             else
@@ -201,8 +218,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
 #endif
 
-                penetration = 0;
-                pointA = pointB = midPoint;
+                if (!isSpeculative)
+                {
+                    penetration = 0;
+                    pointA = pointB = midPoint;
+                }
+
                 normal = tnormal;
             }
 
@@ -251,8 +272,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {nnormal}");
 
 #endif
-                penetration = 0;
-                pointA = pointB = midPoint;
+                if (!isSpeculative)
+                {
+                    penetration = 0;
+                    pointA = pointB = midPoint;
+                }
+
                 normal = nnormal;
             }
             else
@@ -260,8 +285,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {tnormal}");
 #endif
-                penetration = 0;
-                pointA = pointB = midPoint;
+                if (!isSpeculative)
+                {
+                    penetration = 0;
+                    pointA = pointB = midPoint;
+                }
+
                 normal = tnormal;
             }
         }
