@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -505,6 +506,39 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         Force += force;
         Torque += torque;
+    }
+
+    /// <summary>
+    /// Predicts the position of the body after a given time step using linear extrapolation.
+    /// This does not simulate forces or collisions — it assumes constant velocity.
+    /// </summary>
+    /// <param name="dt">The time step to extrapolate forward.</param>
+    /// <returns>The predicted position after <paramref name="dt"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public JVector PredictPosition(Real dt) => Data.Position + Data.Velocity * dt;
+
+    /// <summary>
+    /// Predicts the orientation of the body after a given time step using angular velocity.
+    /// This does not simulate forces or collisions — it assumes constant angular velocity.
+    /// </summary>
+    /// <param name="dt">The time step to extrapolate forward.</param>
+    /// <returns>The predicted orientation after <paramref name="dt"/>.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public JQuaternion PredictOrientation(Real dt) =>
+        JQuaternion.Normalize(MathHelper.RotationQuaternion(Data.AngularVelocity, dt) * Data.Orientation);
+
+    /// <summary>
+    /// Predicts the pose (position and orientation) of the body after a given time step using simple extrapolation.
+    /// This method is intended for rendering purposes and does not modify the simulation state.
+    /// </summary>
+    /// <param name="dt">The time step to extrapolate forward.</param>
+    /// <param name="position">The predicted position after <paramref name="dt"/>.</param>
+    /// <param name="orientation">The predicted orientation after <paramref name="dt"/>.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void PredictPose(Real dt, out JVector position, out JQuaternion orientation)
+    {
+        position = PredictPosition(dt);
+        orientation = PredictOrientation(dt);
     }
 
     /// <summary>

@@ -261,6 +261,18 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
     }
 
     /// <summary>
+    /// Creates a Quaternion from a unit vector and an angle to rotate about the vector.
+    /// </summary>
+    /// <param name="axis">The unit vector to rotate around.</param>
+    /// <param name="angle">The angle of rotation.</param>
+    public static JQuaternion CreateFromAxisAngle(in JVector axis, JAngle angle)
+    {
+        Real halfAngle = (Real)angle * (Real)0.5;
+        (Real s, Real c) = MathR.SinCos(halfAngle);
+        return new JQuaternion(axis.X * s, axis.Y * s, axis.Z * s, c);
+    }
+
+    /// <summary>
     /// Multiplies two quaternions.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
@@ -409,6 +421,26 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         Y *= num;
         Z *= num;
         W *= num;
+    }
+
+    /// <inheritdoc cref="Normalize()"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Normalize(in JQuaternion value, out JQuaternion result)
+    {
+        Real num2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
+        Real num = (Real)1.0 / MathR.Sqrt(num2);
+        result.X = value.X * num;
+        result.Y = value.Y * num;
+        result.Z = value.Z * num;
+        result.W = value.W * num;
+    }
+
+    /// <inheritdoc cref="Normalize()"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JQuaternion Normalize(in JQuaternion value)
+    {
+        Normalize(value, out JQuaternion result);
+        return result;
     }
 
     /// <summary>
