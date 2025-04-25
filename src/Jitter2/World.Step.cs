@@ -542,8 +542,6 @@ public sealed partial class World
     {
         var span = memRigidBodies.Active[batch.Start..batch.End];
 
-        double substepDouble = substep_dt;
-
         for (int i = 0; i < span.Length; i++)
         {
             ref RigidBodyData rigidBody = ref span[i];
@@ -556,33 +554,8 @@ public sealed partial class World
 
             rigidBody.Position += lvel * substep_dt;
 
-            double angle = avel.Length();
-
-            JVector axis;
-
-            if (angle < (Real)0.001)
-            {
-                // use Taylor's expansions of sync function
-                // axis = body.angularVelocity * ((Real)0.5 * timestep - (timestep * timestep * timestep) * ((Real)0.020833333333) * angle * angle);
-                JVector.Multiply(avel,
-                    (Real)(0.5d * substepDouble - substepDouble * substepDouble * substepDouble * 0.020833333333d * angle * angle),
-                    out axis);
-            }
-            else
-            {
-                // sync(fAngle) = sin(c*fAngle)/t
-                JVector.Multiply(avel, (Real)(Math.Sin(0.5d * angle * substepDouble) / angle), out axis);
-            }
-
-            JQuaternion dorn = new(axis.X, axis.Y, axis.Z, (Real)Math.Cos(angle * substepDouble * 0.5d));
-            //JQuaternion.CreateFromMatrix(rigidBody.Orientation, out JQuaternion ornA);
-            JQuaternion ornA = rigidBody.Orientation;
-
-            JQuaternion.Multiply(dorn, ornA, out dorn);
-
-            dorn.Normalize();
-            //JMatrix.CreateFromQuaternion(dorn, out rigidBody.Orientation);
-            rigidBody.Orientation = dorn;
+            JQuaternion quat = MathHelper.RotationQuaternion(avel, substep_dt);
+            rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
         }
     }
 

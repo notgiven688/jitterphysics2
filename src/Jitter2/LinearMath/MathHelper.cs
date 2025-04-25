@@ -69,6 +69,39 @@ public static class MathHelper
     */
 
     /// <summary>
+    /// Calculates the rotation quaternion corresponding to the given (constant) angular
+    /// velocity vector and time step.
+    /// </summary>
+    public static JQuaternion RotationQuaternion(in JVector omega, Real dt)
+    {
+        Real angle = omega.Length();
+
+        if (angle < (Real)0.001)
+        {
+            Real dt3 = dt * dt * dt;
+            Real angle2 = angle * angle;
+
+            Real scale = (Real)0.5 * dt - ((Real)1.0 / (Real)48.0) * dt3 * angle2;
+            JVector.Multiply(omega, scale, out var axis);
+
+            Real theta = angle * dt;
+            Real cos = (Real)1.0 - ((Real)1.0/(Real)8.0) * theta * theta;
+
+            return new JQuaternion(axis.X, axis.Y, axis.Z, cos);
+        }
+        else
+        {
+            Real halfAngleDt = (Real)0.5 * angle * dt;
+            (Real sinD, Real cosD) = MathR.SinCos(halfAngleDt);
+
+            Real scale = sinD / angle;
+            JVector.Multiply(omega, scale, out var axis);
+
+            return new JQuaternion(axis.X, axis.Y, axis.Z, cosD);
+        }
+    }
+
+    /// <summary>
     /// Checks if matrix is a pure rotation matrix.
     /// </summary>
     public static bool IsRotationMatrix(in JMatrix matrix, Real epsilon = (Real)1e-06)
