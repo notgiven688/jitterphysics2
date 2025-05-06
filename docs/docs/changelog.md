@@ -4,9 +4,16 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.2 (2025-05-06)
+
+- Use **Generics** in `NarrowPhase.cs` (avoid boxing for structs implementing the `ISupportMappable` interface).
+- Add special code paths in `Contact.cs` for static bodies (avoid unnecessary cache line invalidation).
+- Add `PredictPosition`, `PredictOrientation` and `PredictPose` to `RigidBody`.
+- Add `CreateFromAxisAngle` and `Normalize` methods in `JQuaternion`.
+
 ### Jitter 2.6.1 (2025-04-24)
 
-- Bugfix in `TriangleEdgeCollisionFilter` for speculative contacts
+- Bugfix in `TriangleEdgeCollisionFilter` for speculative contacts.
 
 ### Jitter 2.6.0 (2025-04-24)
 
