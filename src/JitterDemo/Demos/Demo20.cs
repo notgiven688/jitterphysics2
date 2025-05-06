@@ -25,7 +25,7 @@ public class Dragon : TriangleMesh
     }
 }
 
-public class CollisionTriangle : ISupportMappable
+public struct CollisionTriangle : ISupportMappable
 {
     public JVector A, B, C;
 
@@ -71,8 +71,6 @@ public class CustomCollisionDetection : IBroadPhaseFilter
     }
 
     [ThreadStatic] private static Stack<uint>? candidates;
-    [ThreadStatic] private static CollisionTriangle? collisionTriangle;
-
 
     public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)
     {
@@ -83,18 +81,18 @@ public class CustomCollisionDetection : IBroadPhaseFilter
         if (collider is not RigidBodyShape rbs || rbs.RigidBody.Data.IsStaticOrInactive) return false;
 
         candidates ??= new Stack<uint>();
-        collisionTriangle ??= new CollisionTriangle();
+        CollisionTriangle ts = new CollisionTriangle();
 
         octree.Query(candidates, collider.WorldBoundingBox);
 
         while (candidates.Count > 0)
         {
             uint index = candidates.Pop();
-            collisionTriangle.A = octree.Vertices[octree.Indices[index].IndexA];
-            collisionTriangle.B = octree.Vertices[octree.Indices[index].IndexB];
-            collisionTriangle.C = octree.Vertices[octree.Indices[index].IndexC];
+            ts.A = octree.Vertices[octree.Indices[index].IndexA];
+            ts.B = octree.Vertices[octree.Indices[index].IndexB];
+            ts.C = octree.Vertices[octree.Indices[index].IndexC];
 
-            bool hit = NarrowPhase.MPREPA(collisionTriangle, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
+            bool hit = NarrowPhase.MPREPA(ts, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
                 out JVector pointA, out JVector pointB, out JVector normal, out float penetration);
 
             if (hit)

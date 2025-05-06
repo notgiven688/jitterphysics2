@@ -27,11 +27,9 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Stores data representing the Minkowski Difference, also known as the Configuration Space Object (CSO),
-/// between two support functions: SupportA and SupportB. SupportB is transformed according to the specified
-/// OrientationB and PositionB.
+/// Provides methods for computing points on the Minkowski difference of two convex shapes.
 /// </summary>
-public struct MinkowskiDifference
+public static class MinkowskiDifference
 {
     /// <summary>
     /// Represents a vertex utilized in algorithms that operate on the Minkowski sum of two shapes.
@@ -48,28 +46,21 @@ public struct MinkowskiDifference
         }
     }
 
-    public ISupportMappable SupportA, SupportB;
-    public JQuaternion OrientationB;
-    public JVector PositionB;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly void SupportMapTransformedRelative(in JVector direction, out JVector result)
-    {
-        JVector.ConjugatedTransform(direction, OrientationB, out JVector tmp);
-        SupportB.SupportMap(tmp, out result);
-        JVector.Transform(result, OrientationB, out result);
-        JVector.Add(result, PositionB, out result);
-    }
-
     /// <summary>
     /// Calculates the support function S_{A-B}(d) = S_{A}(d) - S_{B}(-d), where "d" represents the direction.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Support(in JVector direction, out Vertex v)
+    public static void Support<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB,
+        in JVector positionB, in JVector direction, out Vertex v) where TA : ISupportMappable where TB : ISupportMappable
     {
         JVector.Negate(direction, out JVector tmp);
-        SupportA.SupportMap(direction, out v.A);
-        SupportMapTransformedRelative(tmp, out v.B);
+        supportA.SupportMap(direction, out v.A);
+
+        JVector.ConjugatedTransform(tmp, orientationB, out JVector tmp2);
+        supportB.SupportMap(tmp2, out v.B);
+        JVector.Transform(v.B, orientationB, out v.B);
+        JVector.Add(v.B, positionB, out v.B);
+
         JVector.Subtract(v.A, v.B, out v.V);
     }
 
@@ -77,12 +68,13 @@ public struct MinkowskiDifference
     /// Retrieves a point within the Minkowski Difference.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void GetCenter(out Vertex center)
+    public static void GetCenter<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB,
+        out Vertex center) where TA : ISupportMappable where TB : ISupportMappable
     {
-        SupportA.GetCenter(out center.A);
-        SupportB.GetCenter(out center.B);
-        JVector.Transform(center.B, OrientationB, out center.B);
-        JVector.Add(PositionB, center.B, out center.B);
+        supportA.GetCenter(out center.A);
+        supportB.GetCenter(out center.B);
+        JVector.Transform(center.B, orientationB, out center.B);
+        JVector.Add(positionB, center.B, out center.B);
         JVector.Subtract(center.A, center.B, out center.V);
     }
 }

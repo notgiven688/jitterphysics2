@@ -193,8 +193,6 @@ public class HeightmapDetection : IBroadPhaseFilter
         (minIndex, _) = World.RequestId(Heightmap.Width * Heightmap.Height * 2);
     }
 
-    [ThreadStatic] private static CollisionTriangle? collisionTriangle;
-
     public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)
     {
         if (shapeA != shape && shapeB != shape) return true;
@@ -207,8 +205,6 @@ public class HeightmapDetection : IBroadPhaseFilter
 
         var min = collider.WorldBoundingBox.Min;
         var max = collider.WorldBoundingBox.Max;
-
-        collisionTriangle ??= new CollisionTriangle();
 
         int minX = Math.Max(0, (int)min.X);
         int minZ = Math.Max(0, (int)min.Z);
@@ -223,13 +219,15 @@ public class HeightmapDetection : IBroadPhaseFilter
 
                 ulong index = 2 * (ulong)(x * Heightmap.Width + z);
 
-                collisionTriangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
-                collisionTriangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 0), z + 0);
-                collisionTriangle.C = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
+                CollisionTriangle triangle;
 
-                JVector normal = JVector.Normalize((collisionTriangle.C - collisionTriangle.A) % (collisionTriangle.B - collisionTriangle.A));
+                triangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
+                triangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 0), z + 0);
+                triangle.C = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
 
-                bool hit = NarrowPhase.MPREPA(collisionTriangle, rbs, body.Orientation, body.Position,
+                JVector normal = JVector.Normalize((triangle.C - triangle.A) % (triangle.B - triangle.A));
+
+                bool hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
                     out JVector pointA, out JVector pointB, out _, out float penetration);
 
                 if (hit)
@@ -241,13 +239,13 @@ public class HeightmapDetection : IBroadPhaseFilter
                 // Second triangle of the quad
 
                 index += 1;
-                collisionTriangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
-                collisionTriangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
-                collisionTriangle.C = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
+                triangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
+                triangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
+                triangle.C = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
 
-                normal = JVector.Normalize((collisionTriangle.C - collisionTriangle.A) % (collisionTriangle.B - collisionTriangle.A));
+                normal = JVector.Normalize((triangle.C - triangle.A) % (triangle.B - triangle.A));
 
-                hit = NarrowPhase.MPREPA(collisionTriangle, rbs, body.Orientation, body.Position,
+                hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
                     out pointA, out pointB, out _, out penetration);
 
                 if (hit)
