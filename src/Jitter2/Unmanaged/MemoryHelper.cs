@@ -75,6 +75,17 @@ public static unsafe class MemoryHelper
     }
 
     /// <summary>
+    /// Allocates a block of aligned unmanaged memory for an array of the specified type.
+    /// </summary>
+    /// <typeparam name="T">The unmanaged type of the elements to allocate memory for.</typeparam>
+    /// <param name="num">The number of elements to allocate memory for.</param>
+    /// <returns>A pointer to the allocated memory block.</returns>
+    public static T* AllocateHeap<T>(int num, int alignment) where T : unmanaged
+    {
+        return (T*)AllocateHeap(num * sizeof(T), alignment);
+    }
+
+    /// <summary>
     /// Frees a block of unmanaged memory previously allocated for an array of the specified type.
     /// </summary>
     /// <typeparam name="T">The unmanaged type of the elements in the memory block.</typeparam>
@@ -92,10 +103,23 @@ public static unsafe class MemoryHelper
     public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);
 
     /// <summary>
+    /// Allocates a block of aligned unmanaged memory of the specified length in bytes.
+    /// </summary>
+    /// <param name="len">The length of the memory block to allocate, in bytes.</param>
+    /// <returns>A pointer to the allocated memory block.</returns>
+    public static void* AllocateHeap(int len, int alignment) => NativeMemory.AlignedAlloc((nuint)len, (nuint)alignment);
+
+    /// <summary>
     /// Frees a block of unmanaged memory previously allocated.
     /// </summary>
     /// <param name="ptr">A pointer to the memory block to free.</param>
     public static void Free(void* ptr) => NativeMemory.Free(ptr);
+
+    /// <summary>
+    /// Frees a block of aligned unmanaged memory previously allocated.
+    /// </summary>
+    /// <param name="ptr">A pointer to the aligned memory block to free.</param>
+    public static void AlignedFree(void* ptr) => NativeMemory.AlignedFree(ptr);
 
     /// <summary>
     /// Zeros out unmanaged memory.

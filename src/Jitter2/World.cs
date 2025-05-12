@@ -250,7 +250,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     public World(Capacity capacity)
     {
-        memRigidBodies = new PartitionedBuffer<RigidBodyData>(capacity.BodyCount);
+        memRigidBodies = new PartitionedBuffer<RigidBodyData>(capacity.BodyCount, aligned64: true);
         memContacts = new PartitionedBuffer<ContactData>(capacity.ContactCount);
         memConstraints = new PartitionedBuffer<ConstraintData>(capacity.ConstraintCount);
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>(capacity.SmallConstraintCount);

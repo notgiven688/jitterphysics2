@@ -100,19 +100,41 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public int Count { get; private set; }
 
     /// <summary>
+    /// Indicates whether the allocated memory is aligned to a 64-byte boundary.
+    /// </summary>
+    public bool Aligned64 { get; }
+
+    /// <summary>
     /// Initializes a new instance of the class.
     /// </summary>
     /// <param name="maximumSize">The maximum number of elements that can be accommodated within this structure, as determined by the <see cref="Allocate"/> method. The preallocated memory is calculated as the product of maximumSize and IntPtr.Size (in bytes).</param>
     /// <param name="initialSize">The initial size of the contiguous memory block, denoted in the number of elements. The default value is 1024.</param>
-    public PartitionedBuffer(int maximumSize, int initialSize = 1024)
+    /// <param name="aligned64">Indicates whether the memory should be aligned to 64 bytes. The default value is false.</param>
+    public PartitionedBuffer(int maximumSize, int initialSize = 1024, bool aligned64 = false)
     {
         if (maximumSize < initialSize) initialSize = maximumSize;
 
         size = initialSize;
         this.maximumSize = maximumSize;
 
-        memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
         handles = (T**)MemoryHelper.AllocateHeap(maximumSize * sizeof(IntPtr));
+
+        if (aligned64)
+        {
+            try { memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T), 64); }
+            catch (OutOfMemoryException)
+            {
+                Logger.Warning("Could not allocate aligned memory. Falling back to unaligned memory.");
+                aligned64 = false;
+            }
+        }
+
+        if (!aligned64)
+        {
+            memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
+        }
+
+        this.Aligned64 = aligned64;
 
         for (int i = 0; i < size; i++)
         {
@@ -245,7 +267,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
                 nameof(PartitionedBuffer<T>), size, size*sizeof(T) / 1024 );
 
             var oldmemory = memory;
-            memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
+
+            if(Aligned64) memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T), 64);
+            else memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
 
             for (int i = 0; i < osize; i++)
             {
@@ -258,7 +282,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
                 Unsafe.AsRef<int>(&memory[i]) = i;
             }
 
-            MemoryHelper.Free(oldmemory);
+            if(Aligned64) MemoryHelper.AlignedFree(oldmemory);
+            else MemoryHelper.Free(oldmemory);
+
             ResizeLock.ExitWriteLock();
         }
 
@@ -287,7 +313,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
             MemoryHelper.Free(handles);
             handles = (T**)0;
 
-            MemoryHelper.Free(memory);
+            if(Aligned64) MemoryHelper.AlignedFree(memory);
+            else MemoryHelper.Free(memory);
+
             memory = (T*)0;
 
             disposed = true;
