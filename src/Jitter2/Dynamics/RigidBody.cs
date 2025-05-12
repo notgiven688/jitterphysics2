@@ -34,24 +34,43 @@ using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics;
 
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Explicit, Size = Precision.RigidBodyDataSize)]
 public struct RigidBodyData
 {
+    [FieldOffset(0)]
     public int _index;
+
+    [FieldOffset(4)]
     public int _lockFlag;
 
+    [FieldOffset(8 + 0*sizeof(Real))]
     public JVector Position;
+
+    [FieldOffset(8 + 3*sizeof(Real))]
     public JVector Velocity;
+
+    [FieldOffset(8 + 6*sizeof(Real))]
     public JVector AngularVelocity;
 
+    [FieldOffset(8 + 9*sizeof(Real))]
     public JVector DeltaVelocity;
+
+    [FieldOffset(8 + 12*sizeof(Real))]
     public JVector DeltaAngularVelocity;
 
+    [FieldOffset(8 + 15*sizeof(Real))]
     public JQuaternion Orientation;
+
+    [FieldOffset(8 + 19*sizeof(Real))]
     public JMatrix InverseInertiaWorld;
 
+    [FieldOffset(8 + 28*sizeof(Real))]
     public Real InverseMass;
+
+    [FieldOffset(8 + 29*sizeof(Real) + 0)]
     public bool IsActive;
+
+    [FieldOffset(8 + 29*sizeof(Real) + 1)]
     public bool IsStatic;
 
     public readonly bool IsStaticOrInactive => !IsActive || IsStatic;

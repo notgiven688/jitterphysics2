@@ -25,7 +25,7 @@
 // --------------------------------------------------------
 // #define USE_DOUBLE_PRECISION
 // --------------------------------------------------------
-// Or use command line option, e.g.
+// Or use command line option, e.g.,
 // dotnet build -c Release -p:DoublePrecision=true
 
 #if USE_DOUBLE_PRECISION
@@ -50,10 +50,12 @@ public static class Precision
     #if USE_DOUBLE_PRECISION
         public const int ConstraintSizeFull = 512;
         public const int ConstraintSizeSmall = 256;
-    #else
+        public const int RigidBodyDataSize = 256;
+#else
         public const int ConstraintSizeFull = 256;
         public const int ConstraintSizeSmall = 128;
-    #endif
+        public const int RigidBodyDataSize = 128;
+#endif
 
     /// <summary>
     /// Gets a value indicating whether the engine is configured to use double-precision floating-point numbers.
