@@ -33,13 +33,18 @@ namespace Jitter2;
 
 public sealed partial class World
 {
-    private struct ConvexHullIntersection
+    public struct ConvexHullIntersection
     {
         private JVector[] manifoldData;
 
         private int leftCount;
         private int rightCount;
         private int manifoldCount;
+
+        const Real sqrt3Over2 = (Real)0.8660254;
+
+        private static readonly Real[] hexagonVertices = new Real[]
+            {(Real)1, (Real)0, (Real)0.5, sqrt3Over2, -(Real)0.5, sqrt3Over2, -1f, (Real)0, -(Real)0.5, -sqrt3Over2, (Real)0.5, -sqrt3Over2};
 
         public Span<JVector> ManifoldA => manifoldData.AsSpan(0, manifoldCount);
         public Span<JVector> ManifoldB => manifoldData.AsSpan(6, manifoldCount);
@@ -89,7 +94,7 @@ public sealed partial class World
 
         [System.Runtime.CompilerServices.SkipLocalsInit]
         public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
-            in JVector pA, in JVector pB, in JVector normal, Real penetration)
+            in JVector pA, in JVector pB, in JVector normal)
         {
             manifoldData ??= new JVector[12];
             Reset();
@@ -107,11 +112,6 @@ public sealed partial class World
 
             Span<JVector> left = stackalloc JVector[6];
             Span<JVector> right = stackalloc JVector[6];
-
-            const Real sqrt3Over2 = (Real)0.8660254;
-
-            Span<Real> hexagonVertices = stackalloc Real[]
-                {(Real)1,(Real)0, (Real)0.5, sqrt3Over2, -(Real)0.5, sqrt3Over2, -1f,(Real)0, -(Real)0.5, -sqrt3Over2, (Real)0.5, -sqrt3Over2 };
 
             for (int e = 0; e < 6; e++)
             {
@@ -377,7 +377,7 @@ public sealed partial class World
             // may modify normal and penetration values. We need the 'correct'
             // values from the narrow phase algorithm to build a meaningful
             // contact manifold.
-            cvh.BuildManifold(sA, sB, pA, pB, normal, penetration);
+            cvh.BuildManifold(sA, sB, pA, pB, normal);
         }
 
         if (NarrowPhaseFilter != null)
