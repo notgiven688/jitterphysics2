@@ -543,8 +543,8 @@ public struct ContactData
 
             Flag &= Flags.NewContact;
 
-            if (b1.IsStatic || cd->IsSpeculative) Flag |= Flags.Body1Static;
-            if (b2.IsStatic || cd->IsSpeculative) Flag |= Flags.Body2Static;
+            if (b1.IsStatic) Flag |= Flags.Body1Static;
+            if (b2.IsStatic) Flag |= Flags.Body2Static;
 
             Real accumulatedNormalImpulse = Accumulated.GetElement(0);
             Real accumulatedTangentImpulse1 = Accumulated.GetElement(1);
@@ -594,8 +594,9 @@ public struct ContactData
                 JVector.Cross(mN1, RelativePosition1, out rantra);
                 kNormal += JVector.Dot(rantra, normal);
 
-                b1.AngularVelocity -= accumulatedNormalImpulse * mN1 + accumulatedTangentImpulse1 * mT1 +
-                                      accumulatedTangentImpulse2 * mTt1;
+                if(!cd->IsSpeculative)
+                    b1.AngularVelocity -= accumulatedNormalImpulse * mN1 + accumulatedTangentImpulse1 * mT1 +
+                                                             accumulatedTangentImpulse2 * mTt1;
                 b1.Velocity -= impulse * b1.InverseMass;
             }
 
@@ -619,8 +620,9 @@ public struct ContactData
                 JVector.Cross(mN2, RelativePosition2, out rbntrb);
                 kNormal += JVector.Dot(rbntrb, normal);
 
-                b2.AngularVelocity += accumulatedNormalImpulse * mN2 + accumulatedTangentImpulse1 * mT2 +
-                                      accumulatedTangentImpulse2 * mTt2;
+                if(!cd->IsSpeculative)
+                    b2.AngularVelocity += accumulatedNormalImpulse * mN2 + accumulatedTangentImpulse1 * mT2 +
+                                                             accumulatedTangentImpulse2 * mTt2;
                 b2.Velocity += impulse * b2.InverseMass;
             }
 
@@ -717,7 +719,7 @@ public struct ContactData
                 JVector.Cross(RelativePosition1, tangent2, out tt);
                 JVector.Transform(tt, b1.InverseInertiaWorld, out var mTt1);
 
-                b1.AngularVelocity -= normalImpulse * mN1 + tangentImpulse1 * mT1 + tangentImpulse2 * mTt1;
+                if(!cd->IsSpeculative) b1.AngularVelocity -= normalImpulse * mN1 + tangentImpulse1 * mT1 + tangentImpulse2 * mTt1;
                 b1.Velocity -= b1.InverseMass * impulse;
             }
 
@@ -732,7 +734,7 @@ public struct ContactData
                 JVector.Cross(RelativePosition2, tangent2, out tt);
                 JVector.Transform(tt, b2.InverseInertiaWorld, out var mTt2);
 
-                b2.AngularVelocity += normalImpulse * mN2 + tangentImpulse1 * mT2 + tangentImpulse2 * mTt2;
+                if(!cd->IsSpeculative) b2.AngularVelocity += normalImpulse * mN2 + tangentImpulse1 * mT2 + tangentImpulse2 * mTt2;
                 b2.Velocity += b2.InverseMass * impulse;
             }
         }
@@ -756,8 +758,8 @@ public struct ContactData
 
             Flag &= Flags.NewContact;
 
-            if (b1.IsStatic || cd->IsSpeculative) Flag |= Flags.Body1Static;
-            if (b2.IsStatic || cd->IsSpeculative) Flag |= Flags.Body2Static;
+            if (b1.IsStatic) Flag |= Flags.Body1Static;
+            if (b2.IsStatic) Flag |= Flags.Body2Static;
 
             if (!cd->IsSpeculative)
             {
@@ -806,7 +808,7 @@ public struct ContactData
                 angularImpulse1.Y = GetSum3(Vector.Multiply(Accumulated, e2));
                 angularImpulse1.Z = GetSum3(Vector.Multiply(Accumulated, e3));
 
-                b1.AngularVelocity -= angularImpulse1;
+                if(!cd->IsSpeculative) b1.AngularVelocity -= angularImpulse1;
                 b1.Velocity -= b1.InverseMass * linearImpulse;
 
                 ktnx = Vector.Subtract(Vector.Multiply(e2, rp1Z), Vector.Multiply(e3, rp1Y));
@@ -840,7 +842,7 @@ public struct ContactData
                 angularImpulse2.Y = GetSum3(Vector.Multiply(Accumulated, f2));
                 angularImpulse2.Z = GetSum3(Vector.Multiply(Accumulated, f3));
 
-                b2.AngularVelocity += angularImpulse2;
+                if(!cd->IsSpeculative) b2.AngularVelocity += angularImpulse2;
                 b2.Velocity += b2.InverseMass * linearImpulse;
 
                 ktnx = Vector.Add(ktnx, Vector.Subtract(Vector.Multiply(f2, rp2Z), Vector.Multiply(f3, rp2Y)));
@@ -927,7 +929,7 @@ public struct ContactData
                 angularImpulse1.Y = GetSum3(Vector.Multiply(impulse, e2));
                 angularImpulse1.Z = GetSum3(Vector.Multiply(impulse, e3));
 
-                b1.AngularVelocity -= angularImpulse1;
+                if(!cd->IsSpeculative) b1.AngularVelocity -= angularImpulse1;
                 b1.Velocity -= b1.InverseMass * linearImpulse;
             }
 
@@ -957,7 +959,7 @@ public struct ContactData
                 angularImpulse2.Y = GetSum3(Vector.Multiply(impulse, f2));
                 angularImpulse2.Z = GetSum3(Vector.Multiply(impulse, f3));
 
-                b2.AngularVelocity += angularImpulse2;
+                if(!cd->IsSpeculative) b2.AngularVelocity += angularImpulse2;
                 b2.Velocity += b2.InverseMass * linearImpulse;
             }
         }
