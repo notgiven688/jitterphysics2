@@ -70,6 +70,9 @@ public class CustomCollisionDetection : IBroadPhaseFilter
         (minIndex, _) = World.RequestId(octree.Indices.Length);
     }
 
+    [ThreadStatic]
+    private static World.ConvexHullIntersection cvh;
+
     [ThreadStatic] private static Stack<uint>? candidates;
 
     public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)
@@ -99,8 +102,18 @@ public class CustomCollisionDetection : IBroadPhaseFilter
             {
                 JVector normal = JVector.Normalize(JVector.Cross(ts.C - ts.A, ts.B - ts.A));
 
-                world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody,
-                    pointA, pointB, normal, penetration);
+                if (world.EnableAuxiliaryContactPoints)
+                {
+                    // Build the whole contact manifold if enabled.
+                    cvh.BuildManifold(ts, rbs, JQuaternion.Identity, rbs.RigidBody!.Orientation,
+                        JVector.Zero, rbs.RigidBody!.Position, pointA, pointB, normal);
+
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, cvh);
+                }
+                else
+                {
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, pointB, pointB, normal, penetration);
+                }
             }
         }
 
