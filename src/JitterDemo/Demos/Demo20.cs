@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -70,9 +71,6 @@ public class CustomCollisionDetection : IBroadPhaseFilter
         (minIndex, _) = World.RequestId(octree.Indices.Length);
     }
 
-    [ThreadStatic]
-    private static World.ConvexHullIntersection cvh;
-
     [ThreadStatic] private static Stack<uint>? candidates;
 
     public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)
@@ -104,11 +102,13 @@ public class CustomCollisionDetection : IBroadPhaseFilter
 
                 if (world.EnableAuxiliaryContactPoints)
                 {
+                    Unsafe.SkipInit(out World.CollisionManifold manifold);
+
                     // Build the whole contact manifold if enabled.
-                    cvh.BuildManifold(ts, rbs, JQuaternion.Identity, rbs.RigidBody!.Orientation,
+                    manifold.BuildManifold(ts, rbs, JQuaternion.Identity, rbs.RigidBody!.Orientation,
                         JVector.Zero, rbs.RigidBody!.Position, pointA, pointB, normal);
 
-                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, cvh);
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, manifold);
                 }
                 else
                 {
