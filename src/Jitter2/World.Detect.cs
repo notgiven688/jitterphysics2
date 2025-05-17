@@ -92,20 +92,15 @@ public sealed partial class World
             manifoldCount = 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [System.Runtime.CompilerServices.SkipLocalsInit]
-        public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
+        public void BuildManifold(ISupportMappable shapeA, ISupportMappable shapeB,
+            JQuaternion quaternionA, JQuaternion quaternionB,
+            JVector positionA, JVector positionB,
             in JVector pA, in JVector pB, in JVector normal)
         {
             manifoldData ??= new JVector[12];
             Reset();
-
-            static void Support(RigidBodyShape shape, in JVector direction, out JVector v)
-            {
-                JVector.ConjugatedTransform(direction, shape.RigidBody.Data.Orientation, out JVector tmp);
-                shape.SupportMap(tmp, out v);
-                JVector.Transform(v, shape.RigidBody.Data.Orientation, out v);
-                JVector.Add(v, shape.RigidBody.Data.Position, out v);
-            }
 
             JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
             JVector crossVector2 = normal % crossVector1;
@@ -118,11 +113,18 @@ public sealed partial class World
                 JVector ptNormal = normal + hexagonVertices[2 * e + 0] * (Real)0.01 * crossVector1 +
                                    hexagonVertices[2 * e + 1] * (Real)0.01 * crossVector2;
 
-                Support(shapeA, ptNormal, out JVector np1);
+                JVector.ConjugatedTransform(ptNormal, quaternionA, out JVector tmp);
+                shapeA.SupportMap(tmp, out JVector np1);
+                JVector.Transform(np1, quaternionA, out np1);
+                JVector.Add(np1, positionA, out np1);
                 PushLeft(left, np1);
 
                 ptNormal.Negate();
-                Support(shapeB, ptNormal, out JVector np2);
+
+                JVector.ConjugatedTransform(ptNormal, quaternionB, out tmp);
+                shapeB.SupportMap(tmp, out JVector np2);
+                JVector.Transform(np2, quaternionB, out np2);
+                JVector.Add(np2, positionB, out np2);
                 PushRight(right, np2);
             }
 
@@ -200,6 +202,16 @@ public sealed partial class World
                 }
             }
         } // BuildManifold
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [System.Runtime.CompilerServices.SkipLocalsInit]
+        public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
+            in JVector pA, in JVector pB, in JVector normal)
+        {
+            BuildManifold(shapeA, shapeB, shapeA.RigidBody!.Orientation, shapeB.RigidBody.Orientation,
+                shapeA.RigidBody.Position, shapeB.RigidBody.Position, pA, pB, normal);
+        }
     }
 
     public class InvalidCollisionTypeException : Exception
