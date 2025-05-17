@@ -278,7 +278,7 @@ public sealed partial class World
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
-        in CollisionManifold manifold, bool speculative = false)
+        ref CollisionManifold manifold, bool speculative = false)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
 

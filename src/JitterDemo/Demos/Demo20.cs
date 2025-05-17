@@ -108,7 +108,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
                     manifold.BuildManifold(ts, rbs, JQuaternion.Identity, rbs.RigidBody!.Orientation,
                         JVector.Zero, rbs.RigidBody!.Position, pointA, pointB, normal);
 
-                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, manifold);
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, ref manifold);
                 }
                 else
                 {
