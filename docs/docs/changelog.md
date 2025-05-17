@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.3 (2025-05-17)
+
+- Align rigid bodies (`RigidBodyData`) to a 64-byte boundary (reduce false sharing).
+- Bugfix in speculative contacts.
+
 ### Jitter 2.6.2 (2025-05-06)
 
 - Use **Generics** in `NarrowPhase.cs` (avoid boxing for structs implementing the `ISupportMappable` interface).
