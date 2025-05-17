@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -33,9 +34,9 @@ namespace Jitter2;
 
 public sealed partial class World
 {
-    public struct ConvexHullIntersection
+    public unsafe struct CollisionManifold
     {
-        private JVector[] manifoldData;
+        private fixed Real manifoldData[12*3];
 
         private int leftCount;
         private int rightCount;
@@ -46,8 +47,8 @@ public sealed partial class World
         private static readonly Real[] hexagonVertices = new Real[]
             {(Real)1, (Real)0, (Real)0.5, sqrt3Over2, -(Real)0.5, sqrt3Over2, -1f, (Real)0, -(Real)0.5, -sqrt3Over2, (Real)0.5, -sqrt3Over2};
 
-        public Span<JVector> ManifoldA => manifoldData.AsSpan(0, manifoldCount);
-        public Span<JVector> ManifoldB => manifoldData.AsSpan(6, manifoldCount);
+        public Span<JVector> ManifoldA => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), 6);
+        public Span<JVector> ManifoldB => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[18]), 6);
 
         public int Count => manifoldCount;
 
@@ -95,11 +96,10 @@ public sealed partial class World
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [System.Runtime.CompilerServices.SkipLocalsInit]
         public void BuildManifold(ISupportMappable shapeA, ISupportMappable shapeB,
-            JQuaternion quaternionA, JQuaternion quaternionB,
-            JVector positionA, JVector positionB,
+            in JQuaternion quaternionA, in JQuaternion quaternionB,
+            in JVector positionA, in JVector positionB,
             in JVector pA, in JVector pB, in JVector normal)
         {
-            manifoldData ??= new JVector[12];
             Reset();
 
             JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
@@ -128,8 +128,8 @@ public sealed partial class World
                 PushRight(right, np2);
             }
 
-            Span<JVector> mA = manifoldData.AsSpan(0);
-            Span<JVector> mB = manifoldData.AsSpan(6);
+            Span<JVector> mA = MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), 6);
+            Span<JVector> mB = MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[18]), 6);
 
             // ---
 
@@ -201,6 +201,9 @@ public sealed partial class World
                     }
                 }
             }
+
+            mA[manifoldCount] = pA;
+            mB[manifoldCount++] = pB;
         } // BuildManifold
 
 
@@ -273,14 +276,40 @@ public sealed partial class World
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
+        ref CollisionManifold manifold, bool speculative = false)
+    {
+        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+
+        lock (arbiter)
+        {
+            // Do no add contacts while contacts might be resized
+            memContacts.ResizeLock.EnterReadLock();
+
+            arbiter.Handle.Data.IsSpeculative = speculative;
+
+            for (int e = 0; e < manifold.Count; e++)
+            {
+                JVector mfA = manifold.ManifoldA[e];
+                JVector mfB = manifold.ManifoldB[e];
+
+                Real nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < (Real)0.0) continue;
+
+                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+            }
+
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
         in JVector point1, in JVector point2, in JVector normal, Real penetration, bool speculative = false)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
     }
-
-    [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -379,19 +408,6 @@ public sealed partial class World
             return;
         }
 
-        cvh.Reset();
-
-        // Auxiliary Flat Surface Contact Points
-        //
-        if (EnableAuxiliaryContactPoints)
-        {
-            // We cannot run the NarrowPhaseFilter in advance since it
-            // may modify normal and penetration values. We need the 'correct'
-            // values from the narrow phase algorithm to build a meaningful
-            // contact manifold.
-            cvh.BuildManifold(sA, sB, pA, pB, normal);
-        }
-
         if (NarrowPhaseFilter != null)
         {
             if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
@@ -402,27 +418,38 @@ public sealed partial class World
 
         GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter);
 
-        lock (arbiter)
+        if (EnableAuxiliaryContactPoints)
         {
-            // Do no add contacts while contacts might be resized
-            memContacts.ResizeLock.EnterReadLock();
+            Unsafe.SkipInit(out CollisionManifold manifold);
+            manifold.BuildManifold(sA, sB, pA, pB, normal);
 
-            arbiter.Handle.Data.IsSpeculative = false;
-
-            for (int e = 0; e < cvh.Count; e++)
+            lock (arbiter)
             {
-                JVector mfA = cvh.ManifoldA[e];
-                JVector mfB = cvh.ManifoldB[e];
+                memContacts.ResizeLock.EnterReadLock();
+                arbiter.Handle.Data.IsSpeculative = false;
 
-                Real nd = JVector.Dot(mfA - mfB, normal);
-                if (nd < (Real)0.0) continue;
+                for (int e = 0; e < manifold.Count; e++)
+                {
+                    JVector mfA = manifold.ManifoldA[e];
+                    JVector mfB = manifold.ManifoldB[e];
 
-                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+                    Real nd = JVector.Dot(mfA - mfB, normal);
+                    if (nd < (Real)0.0) continue;
+
+                    arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+                }
+                memContacts.ResizeLock.ExitReadLock();
             }
-
-            arbiter.Handle.Data.AddContact(pA, pB, normal, penetration);
-
-            memContacts.ResizeLock.ExitReadLock();
+        }
+        else
+        {
+            lock (arbiter)
+            {
+                memContacts.ResizeLock.EnterReadLock();
+                arbiter.Handle.Data.IsSpeculative = false;
+                arbiter.Handle.Data.AddContact(pA, pB, normal, penetration);
+                memContacts.ResizeLock.ExitReadLock();
+            }
         }
     }
 
