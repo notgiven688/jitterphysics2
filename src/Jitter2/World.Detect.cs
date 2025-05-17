@@ -255,7 +255,6 @@ public sealed partial class World
         lock (arbiter)
         {
             memContacts.ResizeLock.EnterReadLock();
-            arbiter.Handle.Data.IsSpeculative = speculative;
             arbiter.Handle.Data.AddContact(point1, point2, normal, penetration);
             memContacts.ResizeLock.ExitReadLock();
         }
@@ -358,7 +357,6 @@ public sealed partial class World
             lock (arbiter2)
             {
                 // (see. 1)
-                arbiter2.Handle.Data.IsSpeculative = true;
                 memContacts.ResizeLock.EnterReadLock();
                 arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
                 memContacts.ResizeLock.ExitReadLock();
@@ -394,8 +392,6 @@ public sealed partial class World
         {
             // Do no add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
-
-            arbiter.Handle.Data.IsSpeculative = false;
 
             for (int e = 0; e < cvh.Count; e++)
             {
