@@ -77,6 +77,8 @@ public struct ContactData
     public Contact Contact2;
     public Contact Contact3;
 
+    public bool IsSpeculative;
+
     public unsafe void PrepareForIteration(Real dt)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -550,7 +552,7 @@ public struct ContactData
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
 
-            bool isSpeculative = Penetration < -AllowedPenetration;
+            bool isSpeculative = cd->IsSpeculative;
 
             Real inverseMass = b1.InverseMass + b2.InverseMass;
 
@@ -675,7 +677,7 @@ public struct ContactData
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            bool isSpeculative = Penetration < -AllowedPenetration;
+            bool isSpeculative = cd->IsSpeculative;
             Real bias = (!isSpeculative && applyBias) ? MathR.Max(PenaltyBias, Bias) : Bias;
 
             Real vn = JVector.Dot(normal, dv);
@@ -762,7 +764,7 @@ public struct ContactData
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
 
-            bool isSpeculative = Penetration < -AllowedPenetration;
+            bool isSpeculative = cd->IsSpeculative;
 
             VectorReal kNormalTangent = Vector.Create(b1.InverseMass + b2.InverseMass);
 
@@ -910,7 +912,7 @@ public struct ContactData
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            bool isSpeculative = Penetration < -AllowedPenetration;
+            bool isSpeculative = cd->IsSpeculative;
             Real bias = (!isSpeculative && applyBias) ? MathR.Max(PenaltyBias, Bias) : Bias;
 
             var vdots = Vector.Add(Vector.Add(Vector.Multiply(NormalTangentX, Vector.Create(dv.X)),
