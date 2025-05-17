@@ -201,6 +201,9 @@ public sealed partial class World
                     }
                 }
             }
+
+            mA[manifoldCount] = pA;
+            mB[manifoldCount++] = pB;
         } // BuildManifold
 
 
@@ -269,6 +272,34 @@ public sealed partial class World
             memContacts.ResizeLock.EnterReadLock();
             arbiter.Handle.Data.IsSpeculative = speculative;
             arbiter.Handle.Data.AddContact(point1, point2, normal, penetration);
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
+        in ConvexHullIntersection cvh, bool speculative = false)
+    {
+        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+
+        lock (arbiter)
+        {
+            // Do no add contacts while contacts might be resized
+            memContacts.ResizeLock.EnterReadLock();
+
+            arbiter.Handle.Data.IsSpeculative = speculative;
+
+            for (int e = 0; e < cvh.Count; e++)
+            {
+                JVector mfA = cvh.ManifoldA[e];
+                JVector mfB = cvh.ManifoldB[e];
+
+                Real nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < (Real)0.0) continue;
+
+                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+            }
+
             memContacts.ResizeLock.ExitReadLock();
         }
     }
@@ -419,8 +450,6 @@ public sealed partial class World
 
                 arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
             }
-
-            arbiter.Handle.Data.AddContact(pA, pB, normal, penetration);
 
             memContacts.ResizeLock.ExitReadLock();
         }
