@@ -130,7 +130,7 @@ public class Demo06 : IDemo
     {
         var cm = RenderWindow.Instance.CSMRenderer.GetInstance<CarMesh>();
         cm.PushMatrix(Conversion.FromJitter(defaultCar.Body) *
-                      MatrixHelper.CreateTranslation(0, -0.2f, 0.8f));
+                      MatrixHelper.CreateTranslation(0, -0.3f, 0.8f));
 
         var whr = RenderWindow.Instance.CSMRenderer.GetInstance<WheelMesh>();
 

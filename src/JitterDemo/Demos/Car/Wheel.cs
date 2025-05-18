@@ -144,7 +144,7 @@ public class Wheel
         rayCast = RayCastCallback;
 
         // set some default values.
-        SideFriction = 3.2f;
+        SideFriction = 3.0f;
         ForwardFriction = 5.0f;
         Radius = radius;
         Inertia = 1.0f;

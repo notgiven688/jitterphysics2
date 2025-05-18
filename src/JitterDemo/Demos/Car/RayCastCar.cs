@@ -92,8 +92,8 @@ public class RayCastCar
 
         Body = world.CreateRigidBody();
 
-        TransformedShape tfs1 = new(new BoxShape(3.1f, 1.4f, 8f), new JVector(0, 0.6f, 0));
-        TransformedShape tfs2 = new(new BoxShape(2.4f, 0.8f, 5f), new JVector(0.0f, 1.7f, 1.1f));
+        TransformedShape tfs1 = new(new BoxShape(3.1f, 1.4f, 8f), new JVector(0, 0.4f, 0));
+        TransformedShape tfs2 = new(new BoxShape(2.4f, 0.8f, 5f), new JVector(0.0f, 1.5f, 1.1f));
 
         Body.AddShape(tfs1);
         Body.AddShape(tfs2);
@@ -115,10 +115,10 @@ public class RayCastCar
         Body.Damping = (0.0001f, 0.0001f);
 
         // create default wheels
-        Wheels[0] = new Wheel(world, Body, new JVector(-1.3f, 0.1f, -2.5f), 0.60f);
-        Wheels[1] = new Wheel(world, Body, new JVector(+1.3f, 0.1f, -2.5f), 0.60f);
-        Wheels[2] = new Wheel(world, Body, new JVector(-1.3f, 0.1f, +2.4f), 0.60f);
-        Wheels[3] = new Wheel(world, Body, new JVector(+1.3f, 0.1f, +2.4f), 0.60f);
+        Wheels[0] = new Wheel(world, Body, new JVector(-1.3f, -0.1f, -2.5f), 0.60f);
+        Wheels[1] = new Wheel(world, Body, new JVector(+1.3f, -0.1f, -2.5f), 0.60f);
+        Wheels[2] = new Wheel(world, Body, new JVector(-1.3f, -0.1f, +2.4f), 0.60f);
+        Wheels[3] = new Wheel(world, Body, new JVector(+1.3f, -0.1f, +2.4f), 0.60f);
 
         AdjustWheelValues();
     }
