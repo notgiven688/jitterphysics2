@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -99,8 +100,20 @@ public class CustomCollisionDetection : IBroadPhaseFilter
             {
                 JVector normal = JVector.Normalize(JVector.Cross(ts.C - ts.A, ts.B - ts.A));
 
-                world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody,
-                    pointA, pointB, normal, penetration);
+                if (world.EnableAuxiliaryContactPoints)
+                {
+                    Unsafe.SkipInit(out CollisionManifold manifold);
+
+                    // Build the whole contact manifold if enabled.
+                    manifold.BuildManifold(ts, rbs, JQuaternion.Identity, rbs.RigidBody!.Orientation,
+                        JVector.Zero, rbs.RigidBody!.Position, pointA, pointB, normal);
+
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, normal, ref manifold);
+                }
+                else
+                {
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, pointB, pointB, normal, penetration);
+                }
             }
         }
 
