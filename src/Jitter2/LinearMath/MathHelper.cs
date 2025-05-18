@@ -68,6 +68,18 @@ public static class MathHelper
 
     */
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int SignBit(float value)
+    {
+        return 1 | (BitConverter.SingleToInt32Bits(value) >> 31);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int SignBit(double value)
+    {
+        return 1 | (int)(BitConverter.DoubleToInt64Bits(value) >> 63);
+    }
+
     /// <summary>
     /// Calculates the rotation quaternion corresponding to the given (constant) angular
     /// velocity vector and time step.
