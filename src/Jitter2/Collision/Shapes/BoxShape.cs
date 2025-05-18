@@ -80,9 +80,9 @@ public class BoxShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        result.X = Math.Sign(direction.X) * halfSize.X;
-        result.Y = Math.Sign(direction.Y) * halfSize.Y;
-        result.Z = Math.Sign(direction.Z) * halfSize.Z;
+        result.X = MathHelper.SignBit(direction.X) * halfSize.X;
+        result.Y = MathHelper.SignBit(direction.Y) * halfSize.Y;
+        result.Z = MathHelper.SignBit(direction.Z) * halfSize.Z;
     }
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)

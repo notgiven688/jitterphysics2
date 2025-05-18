@@ -33,187 +33,6 @@ namespace Jitter2;
 
 public sealed partial class World
 {
-    public struct ConvexHullIntersection
-    {
-        private JVector[] manifoldData;
-
-        private int leftCount;
-        private int rightCount;
-        private int manifoldCount;
-
-        const Real sqrt3Over2 = (Real)0.8660254;
-
-        private static readonly Real[] hexagonVertices = new Real[]
-            {(Real)1, (Real)0, (Real)0.5, sqrt3Over2, -(Real)0.5, sqrt3Over2, -1f, (Real)0, -(Real)0.5, -sqrt3Over2, (Real)0.5, -sqrt3Over2};
-
-        public Span<JVector> ManifoldA => manifoldData.AsSpan(0, manifoldCount);
-        public Span<JVector> ManifoldB => manifoldData.AsSpan(6, manifoldCount);
-
-        public int Count => manifoldCount;
-
-        private void PushLeft(Span<JVector> left, in JVector v)
-        {
-            const Real epsilon = (Real)0.001;
-
-            if (leftCount > 0)
-            {
-                if ((left[0] - v).LengthSquared() < epsilon) return;
-            }
-
-            if (leftCount > 1)
-            {
-                if ((left[leftCount - 1] - v).LengthSquared() < epsilon) return;
-            }
-
-            left[leftCount++] = v;
-        }
-
-        private void PushRight(Span<JVector> right, in JVector v)
-        {
-            const Real epsilon = (Real)0.001;
-
-            if (rightCount > 0)
-            {
-                if ((right[0] - v).LengthSquared() < epsilon) return;
-            }
-
-            if (rightCount > 1)
-            {
-                if ((right[rightCount - 1] - v).LengthSquared() < epsilon) return;
-            }
-
-            right[rightCount++] = v;
-        }
-
-        public void Reset()
-        {
-            leftCount = 0;
-            rightCount = 0;
-            manifoldCount = 0;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Runtime.CompilerServices.SkipLocalsInit]
-        public void BuildManifold(ISupportMappable shapeA, ISupportMappable shapeB,
-            JQuaternion quaternionA, JQuaternion quaternionB,
-            JVector positionA, JVector positionB,
-            in JVector pA, in JVector pB, in JVector normal)
-        {
-            manifoldData ??= new JVector[12];
-            Reset();
-
-            JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
-            JVector crossVector2 = normal % crossVector1;
-
-            Span<JVector> left = stackalloc JVector[6];
-            Span<JVector> right = stackalloc JVector[6];
-
-            for (int e = 0; e < 6; e++)
-            {
-                JVector ptNormal = normal + hexagonVertices[2 * e + 0] * (Real)0.01 * crossVector1 +
-                                   hexagonVertices[2 * e + 1] * (Real)0.01 * crossVector2;
-
-                JVector.ConjugatedTransform(ptNormal, quaternionA, out JVector tmp);
-                shapeA.SupportMap(tmp, out JVector np1);
-                JVector.Transform(np1, quaternionA, out np1);
-                JVector.Add(np1, positionA, out np1);
-                PushLeft(left, np1);
-
-                ptNormal.Negate();
-
-                JVector.ConjugatedTransform(ptNormal, quaternionB, out tmp);
-                shapeB.SupportMap(tmp, out JVector np2);
-                JVector.Transform(np2, quaternionB, out np2);
-                JVector.Add(np2, positionB, out np2);
-                PushRight(right, np2);
-            }
-
-            Span<JVector> mA = manifoldData.AsSpan(0);
-            Span<JVector> mB = manifoldData.AsSpan(6);
-
-            // ---
-
-            if (leftCount > 2)
-            {
-                for (int e = 0; e < rightCount; e++)
-                {
-                    JVector p = right[e];
-                    JVector a = left[leftCount - 1];
-                    JVector b = left[0];
-
-                    JVector cr = (b - a) % (p - a);
-
-                    bool sameSign = true;
-
-                    for (int i = 0; i < leftCount - 1; i++)
-                    {
-                        a = left[i];
-                        b = left[i + 1];
-
-                        JVector cr2 = (b - a) % (p - a);
-
-                        sameSign = JVector.Dot(cr, cr2) > (Real)1e-3;
-                        if (!sameSign) break;
-                    }
-
-                    if (sameSign)
-                    {
-                        Real diff = JVector.Dot(p - pA, normal);
-                        mB[manifoldCount] = p;
-                        mA[manifoldCount++] = p - diff * normal;
-
-                        if (manifoldCount == 6) return;
-                    }
-                }
-            }
-
-            // ---
-            if (rightCount > 2)
-            {
-                for (int e = 0; e < leftCount; e++)
-                {
-                    JVector p = left[e];
-                    JVector a = right[rightCount - 1];
-                    JVector b = right[0];
-
-                    JVector cr = (b - a) % (p - a);
-
-                    bool sameSign = true;
-
-                    for (int i = 0; i < rightCount - 1; i++)
-                    {
-                        a = right[i];
-                        b = right[i + 1];
-
-                        JVector cr2 = (b - a) % (p - a);
-
-                        sameSign = JVector.Dot(cr, cr2) > (Real)1e-3;
-                        if (!sameSign) break;
-                    }
-
-                    if (sameSign)
-                    {
-                        Real diff = JVector.Dot(p - pB, normal);
-                        mA[manifoldCount] = p;
-                        mB[manifoldCount++] = p - diff * normal;
-
-                        if (manifoldCount == 6) return;
-                    }
-                }
-            }
-        } // BuildManifold
-
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Runtime.CompilerServices.SkipLocalsInit]
-        public void BuildManifold(RigidBodyShape shapeA, RigidBodyShape shapeB,
-            in JVector pA, in JVector pB, in JVector normal)
-        {
-            BuildManifold(shapeA, shapeB, shapeA.RigidBody!.Orientation, shapeB.RigidBody.Orientation,
-                shapeA.RigidBody.Position, shapeB.RigidBody.Position, pA, pB, normal);
-        }
-    }
-
     public class InvalidCollisionTypeException : Exception
     {
         public InvalidCollisionTypeException(Type proxyA, Type proxyB)
@@ -256,7 +75,7 @@ public sealed partial class World
     /// Speculative contacts are generated when the velocity towards an obstacle exceeds
     /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
-    /// timestep of 0.01s.
+    /// timestep of 0.01.
     /// </summary>
     public Real SpeculativeVelocityThreshold { get; set; } =(Real)10;
 
@@ -273,14 +92,41 @@ public sealed partial class World
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
+        ref CollisionManifold manifold, bool speculative = false)
+    {
+        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+
+        lock (arbiter)
+        {
+            // Do no add contacts while contacts might be resized
+            memContacts.ResizeLock.EnterReadLock();
+
+            arbiter.Handle.Data.IsSpeculative = speculative;
+
+            for (int e = 0; e < manifold.Count; e++)
+            {
+                JVector mfA = manifold.ManifoldA[e];
+                JVector mfB = manifold.ManifoldB[e];
+
+                Real nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < (Real)0.0) continue;
+
+                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+            }
+
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
         in JVector point1, in JVector point2, in JVector normal, Real penetration, bool speculative = false)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
     }
-
-    [ThreadStatic] private static ConvexHullIntersection cvh;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -303,11 +149,9 @@ public sealed partial class World
             (sA, sB) = (sB, sA);
         }
 
-        bool colliding;
         Unsafe.SkipInit(out JVector normal);
         Unsafe.SkipInit(out JVector pA);
         Unsafe.SkipInit(out JVector pB);
-        Real penetration;
 
         Debug.Assert(sA.RigidBody != sB.RigidBody);
         Debug.Assert(sA.RigidBody.World == this);
@@ -324,22 +168,8 @@ public sealed partial class World
 
         bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
 
-        /*
-        if (UseFullEPASolver)
-        {
-            bool success = NarrowPhase.Collision(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
-                out pA, out pB, out normal, out penetration);
-
-            if (!success) return;
-
-            colliding = penetration >= (Real)0.0;
-        }
-        else
-        */
-        {
-            colliding = NarrowPhase.MPREPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
-                out pA, out pB, out normal, out penetration);
-        }
+        var colliding = NarrowPhase.MPREPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
+            out pA, out pB, out normal, out var penetration);
 
         if (!colliding)
         {
@@ -350,9 +180,10 @@ public sealed partial class World
             if (dv.LengthSquared() < SpeculativeVelocityThreshold * SpeculativeVelocityThreshold) return;
 
             bool success = NarrowPhase.Sweep(sA, sB, b1.Orientation, b2.Orientation,
-                b1.Position, b2.Position,b1.Velocity, b2.Velocity,
+                b1.Position, b2.Position, b1.Velocity, b2.Velocity,
                 out pA, out pB, out normal, out Real toi);
 
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (!success || toi > step_dt || toi == (Real)0.0) return;
 
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
@@ -365,31 +196,10 @@ public sealed partial class World
                 }
             }
 
-            GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter2);
-
-            lock (arbiter2)
-            {
-                // (see. 1)
-                arbiter2.Handle.Data.IsSpeculative = true;
-                memContacts.ResizeLock.EnterReadLock();
-                arbiter2.Handle.Data.AddContact(pA, pB, normal, penetration);
-                memContacts.ResizeLock.ExitReadLock();
-            }
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
+                pA, pB, normal, penetration, speculative: true);
 
             return;
-        }
-
-        cvh.Reset();
-
-        // Auxiliary Flat Surface Contact Points
-        //
-        if (EnableAuxiliaryContactPoints)
-        {
-            // We cannot run the NarrowPhaseFilter in advance since it
-            // may modify normal and penetration values. We need the 'correct'
-            // values from the narrow phase algorithm to build a meaningful
-            // contact manifold.
-            cvh.BuildManifold(sA, sB, pA, pB, normal);
         }
 
         if (NarrowPhaseFilter != null)
@@ -400,29 +210,18 @@ public sealed partial class World
             }
         }
 
-        GetArbiter(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, out Arbiter arbiter);
-
-        lock (arbiter)
+        if (EnableAuxiliaryContactPoints)
         {
-            // Do no add contacts while contacts might be resized
-            memContacts.ResizeLock.EnterReadLock();
+            Unsafe.SkipInit(out CollisionManifold manifold);
+            manifold.BuildManifold<RigidBodyShape,RigidBodyShape>(sA, sB, pA, pB, normal);
 
-            arbiter.Handle.Data.IsSpeculative = false;
-
-            for (int e = 0; e < cvh.Count; e++)
-            {
-                JVector mfA = cvh.ManifoldA[e];
-                JVector mfB = cvh.ManifoldB[e];
-
-                Real nd = JVector.Dot(mfA - mfB, normal);
-                if (nd < (Real)0.0) continue;
-
-                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
-            }
-
-            arbiter.Handle.Data.AddContact(pA, pB, normal, penetration);
-
-            memContacts.ResizeLock.ExitReadLock();
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
+                normal, ref manifold, speculative: false);
+        }
+        else
+        {
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
+                pA, pB, normal, penetration, speculative: false);
         }
     }
 
@@ -455,6 +254,5 @@ public sealed partial class World
                 Debug.Assert(memContacts.IsActive(arbiter.Handle));
             }
         }
-
     }
 }
