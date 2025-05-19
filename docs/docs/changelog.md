@@ -7,7 +7,7 @@ sidebar_position: 5
 ### Jitter 2.6.4 (2025-05-19)
 
 - **Breaking Change:** Triangle winding order in `TriangleMesh` is now counter-clockwise (CCW) for front-facing triangles.
-*If you're using JTriangle, swap the vertex order to maintain correct normal orientation.*
+*If you're using `TriangleMesh`, swap the vertex order to maintain correct normal orientation.*
 - Add `JTriangle.RayIntersect` method.
 - Rename `ConvexHullIntersection` to `CollisionManifold`.
 - Modified support function for `BoxShape`.
