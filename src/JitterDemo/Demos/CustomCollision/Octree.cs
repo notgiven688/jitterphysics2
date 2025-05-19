@@ -163,6 +163,59 @@ public class Octree
         }
     }
 
+    public bool Raycast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    {
+        lambda = float.MaxValue;
+        normal = JVector.Zero;
+
+        return InternalRaycast(origin, direction, 0, ref normal, ref lambda);
+    }
+
+    private bool InternalRaycast(in JVector origin, in JVector direction, uint nodeIndex, ref JVector normal, ref float lambda)
+    {
+        ref var node = ref nodes[nodeIndex];
+
+        if (!node.Box.RayIntersect(origin, direction, out _))
+            return false;
+
+        bool hit = false;
+
+        if (node.Triangles != null)
+        {
+            foreach (var triIdx in node.Triangles)
+            {
+                ref var triangleIndex = ref indices[triIdx];
+
+                JTriangle tri = new JTriangle(vertices[triangleIndex.IndexA], vertices[triangleIndex.IndexB],
+                    vertices[triangleIndex.IndexC]);
+
+                if (tri.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing,
+                        out JVector currentNormal, out var currentLambda))
+                {
+                    if (currentLambda < lambda)
+                    {
+                        lambda = currentLambda;
+                        normal = currentNormal;
+                        hit = true;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+            uint childIdx = node.Neighbors[i];
+            if (childIdx == 0) continue;
+
+            if (InternalRaycast(origin, direction, childIdx,  ref normal, ref lambda))
+            {
+                hit = true;
+            }
+        }
+
+        return hit;
+    }
+
     private int TestSubdivision(in JBBox parent, uint triangle)
     {
         JBBox objBox = triangleBoxes[triangle];
