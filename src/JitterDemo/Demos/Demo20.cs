@@ -98,7 +98,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
 
             if (hit)
             {
-                JVector normal = JVector.Normalize(JVector.Cross(ts.C - ts.A, ts.B - ts.A));
+                JVector normal = JVector.Normalize(JVector.Cross(ts.B - ts.A, ts.C - ts.A));
 
                 if (world.EnableAuxiliaryContactPoints)
                 {
