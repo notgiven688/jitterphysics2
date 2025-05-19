@@ -1,3 +1,4 @@
+using System;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -30,7 +31,7 @@ public partial class Playground : RenderWindow
         Vector3 nearPoint = Unproject(nearSource, Camera.ProjectionMatrix, Camera.ViewMatrix);
         Vector3 farPoint = Unproject(farSource, Camera.ProjectionMatrix, Camera.ViewMatrix);
 
-        return farPoint - nearPoint;
+        return Vector3.Normalize(farPoint - nearPoint);
     }
 
     private RigidBody? grepBody;
@@ -42,10 +43,8 @@ public partial class Playground : RenderWindow
 
     private void Pick()
     {
-        Vector3 dir = Vector3.Normalize(RayTo((int)Mouse.Position.X, (int)Mouse.Position.Y));
-        Vector3 pos = Camera.Position;
-        JVector origin = Conversion.ToJitterVector(pos);
-        JVector jdir = Conversion.ToJitterVector(dir);
+        JVector origin = Conversion.ToJitterVector(Camera.Position);
+        JVector dir = Conversion.ToJitterVector(RayTo((int)Mouse.Position.X, (int)Mouse.Position.Y));
 
         if (grepping)
         {
@@ -54,7 +53,7 @@ public partial class Playground : RenderWindow
 
             hitDistance += ((float)Mouse.ScrollWheel.Y - hitWheelPosition);
 
-            grepConstraint.Anchor2 = origin + hitDistance * jdir;
+            grepConstraint.Anchor2 = origin + hitDistance * dir;
             grepBody.SetActivationState(true);
 
             grepBody.Data.Velocity *= 0.98f;
@@ -64,14 +63,20 @@ public partial class Playground : RenderWindow
         {
             grepBody = null;
 
-            bool result = World.DynamicTree.RayCast(origin, jdir, null, null,
-                out IDynamicTreeProxy? grepShape, out JVector _, out hitDistance);
+            bool result = World.DynamicTree.RayCast(origin, dir, null, null,
+                out IDynamicTreeProxy? grepShape, out JVector hitNormal, out hitDistance);
+
+            if (!result) return;
+
+            JVector hitPoint = origin + hitDistance * dir;
+
+            Console.WriteLine($"Ray cast, hit point: {hitPoint}; hit normal: {hitNormal}; distance: {hitDistance}");
 
             if (grepShape != null)
             {
                 if (grepShape is SoftBodyShape gs)
                 {
-                    grepBody = gs.GetClosest(origin + jdir * hitDistance);
+                    grepBody = gs.GetClosest(hitPoint);
                 }
                 else if (grepShape is RigidBodyShape rbs)
                 {
@@ -79,17 +84,15 @@ public partial class Playground : RenderWindow
                 }
             }
 
-            if (!result || grepBody == null || grepBody.IsStatic) return;
+            if (grepBody == null || grepBody.IsStatic) return;
             grepping = true;
 
             hitWheelPosition = (float)Mouse.ScrollWheel.Y;
 
             if (grepConstraint != null) World.Remove(grepConstraint);
 
-            JVector anchor = origin + hitDistance * jdir;
-
             grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
-            grepConstraint.Initialize(anchor, anchor);
+            grepConstraint.Initialize(hitPoint, hitPoint);
             grepConstraint.Softness = 0.01f;
             grepConstraint.Bias = 0.1f;
         }

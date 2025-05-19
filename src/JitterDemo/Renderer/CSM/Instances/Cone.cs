@@ -49,8 +49,8 @@ public class Cone : CSMInstance
 
         for (int i = 0; i < Tesselation; i++)
         {
-            indices.Add(new TriangleVertexIndex(1 + 3 * i, 0, 1 + (3 * i + 3) % t3));
-            indices.Add(new TriangleVertexIndex(3 + 3 * i, 2 + 3 * i, 2 + (3 * i + 3) % t3));
+            indices.Add(new TriangleVertexIndex(0, 1 + 3 * i, 1 + (3 * i + 3) % t3));
+            indices.Add(new TriangleVertexIndex(2 + 3 * i, 3 + 3 * i, 2 + (3 * i + 3) % t3));
         }
 
         return (vertices.ToArray(), indices.ToArray());

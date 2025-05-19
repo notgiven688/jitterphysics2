@@ -50,13 +50,13 @@ public class Demo17 : IDemo, ICleanDemo
 
                 if (even)
                 {
-                    tris.Add(new JTriangle(v0, v2, v1));
-                    tris.Add(new JTriangle(v2, v3, v1));
+                    tris.Add(new JTriangle(v0, v1, v2));
+                    tris.Add(new JTriangle(v3, v2, v1));
                 }
                 else
                 {
-                    tris.Add(new JTriangle(v0, v3, v1));
-                    tris.Add(new JTriangle(v0, v2, v3));
+                    tris.Add(new JTriangle(v0, v1, v2));
+                    tris.Add(new JTriangle(v3, v2, v1));
                 }
             }
         }

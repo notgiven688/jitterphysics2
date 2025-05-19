@@ -38,8 +38,8 @@ public class Sphere : CSMInstance
         {
             for (int i = 0; i < Tesselation; i++)
             {
-                indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, e * t1 + i, (e + 1) * t1 + i));
-                indices.Add(new TriangleVertexIndex((e + 1) * t1 + (i + 1) % t1, e * t1 + (i + 1) % t1,
+                indices.Add(new TriangleVertexIndex(e * t1 + i, e * t1 + (i + 1) % t1, (e + 1) * t1 + i));
+                indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, (e + 1) * t1 + (i + 1) % t1,
                     (e + 1) * t1 + i));
             }
         }
@@ -47,9 +47,9 @@ public class Sphere : CSMInstance
         for (int i = 0; i < Tesselation; i++)
         {
             int e = t1 - 1;
-            indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, e * t1 + i, t1 * t1 + 0));
+            indices.Add(new TriangleVertexIndex(e * t1 + i, e * t1 + (i + 1) % t1, t1 * t1 + 0));
             e = 0;
-            indices.Add(new TriangleVertexIndex(e * t1 + i, e * t1 + (i + 1) % t1, t1 * t1 + 1));
+            indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, e * t1 + i, t1 * t1 + 1));
         }
 
         return (vertices.ToArray(), indices.ToArray());

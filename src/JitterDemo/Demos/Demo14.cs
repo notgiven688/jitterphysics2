@@ -23,11 +23,11 @@ public class CustomSupportMapInstance<T> : CSMInstance where T : Shape, new()
 
         foreach (var triangle in ShapeHelper.MakeHull(es))
         {
-            JVector normal = -(triangle.V2 - triangle.V0) % (triangle.V1 - triangle.V0);
+            JVector normal = (triangle.V1 - triangle.V0) % (triangle.V2 - triangle.V0);
             normal.Normalize();
 
-            verts.Add(new Vertex(Conversion.FromJitter(triangle.V1), Conversion.FromJitter(normal)));
             verts.Add(new Vertex(Conversion.FromJitter(triangle.V0), Conversion.FromJitter(normal)));
+            verts.Add(new Vertex(Conversion.FromJitter(triangle.V1), Conversion.FromJitter(normal)));
             verts.Add(new Vertex(Conversion.FromJitter(triangle.V2), Conversion.FromJitter(normal)));
 
             inds.Add(new TriangleVertexIndex(idx + 0, idx + 1, idx + 2));

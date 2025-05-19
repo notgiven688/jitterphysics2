@@ -109,43 +109,12 @@ public class TriangleShape : RigidBodyShape
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
-        ref var triangle = ref Mesh.Indices[Index];
-        var a = Mesh.Vertices[triangle.IndexA];
-        var b = Mesh.Vertices[triangle.IndexB];
-        var c = Mesh.Vertices[triangle.IndexC];
+        ref var meshTriangle = ref Mesh.Indices[Index];
 
-        JVector u = b - a;
-        JVector v = c - a;
+        var triangle = new JTriangle(Mesh.Vertices[meshTriangle.IndexA],
+            Mesh.Vertices[meshTriangle.IndexB], Mesh.Vertices[meshTriangle.IndexC]);
 
-        normal = v % u;
-        Real it = (Real)1.0 / normal.LengthSquared();
-
-        Real denominator = JVector.Dot(direction, normal);
-
-        if (Math.Abs(denominator) < (Real)1e-06)
-        {
-            // triangle and ray are parallel
-            lambda = 0;
-            normal = JVector.Zero;
-            return false;
-        }
-
-        lambda = JVector.Dot(a - origin, normal);
-        if (lambda > (Real)0.0) return false;
-        lambda /= denominator;
-
-        // point where the ray intersects the plane of the triangle.
-        JVector hitPoint = origin + lambda * direction;
-        JVector at = a - hitPoint;
-
-        JVector.Cross(u, at, out JVector tmp);
-        Real gamma = JVector.Dot(tmp, normal) * it;
-        JVector.Cross(at, v, out tmp);
-        Real beta = JVector.Dot(tmp, normal) * it;
-        Real alpha = (Real)1.0 - gamma - beta;
-
-        normal *= MathR.Sqrt(it);
-        return alpha > 0 && beta > 0 && gamma > 0;
+        return triangle.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out normal, out lambda);
     }
 
     public override void GetCenter(out JVector point)

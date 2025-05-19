@@ -8,7 +8,7 @@ public class MultiMesh : CSMInstance
 
     public MultiMesh(string filename, float scale = 1.0f)
     {
-        mesh = Mesh.LoadMesh(filename, true);
+        mesh = Mesh.LoadMesh(filename, false);
         mesh.Transform(MatrixHelper.CreateScale(scale));
     }
 

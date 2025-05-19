@@ -141,6 +141,14 @@ public static class MathHelper
     }
 
     /// <summary>
+    /// Checks if a value is close to zero.
+    /// </summary>
+    public static bool IsZero(Real value, Real epsilon = (Real)1e-6)
+    {
+        return MathR.Abs(value) < epsilon;
+    }
+
+    /// <summary>
     /// Checks if all entries of a matrix are close to zero.
     /// </summary>
     public static bool UnsafeIsZero(ref JMatrix matrix, Real epsilon = (Real)1e-6)

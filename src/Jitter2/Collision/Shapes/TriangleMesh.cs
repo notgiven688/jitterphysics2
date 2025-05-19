@@ -154,7 +154,7 @@ public class TriangleMesh
             int b = PushVector(tti.V1);
             int c = PushVector(tti.V2);
 
-            JVector normal = (tti.V2 - tti.V0) % (tti.V1 - tti.V0);
+            JVector normal = (tti.V1 - tti.V0) % (tti.V2 - tti.V0);
 
             if (MathHelper.CloseToZero(normal, (Real)1e-12))
             {
