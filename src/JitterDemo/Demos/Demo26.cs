@@ -25,7 +25,7 @@ public class Demo26 : IDemo
 
         pg.ResetScene(false);
 
-        staticBar = new BoxShape(10,10,0.1f);
+        staticBar = new BoxShape(10,10,0.1d);
         dynamicBox = new BoxShape(5,1,1);
     }
 
@@ -44,8 +44,8 @@ public class Demo26 : IDemo
         Playground pg = (Playground)RenderWindow.Instance;
 
         var kb = Keyboard.Instance;
-        if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01f);
-        if(kb.IsKeyDown(Keyboard.Key.P)) position -= new JVector(0,0,0.01f);
+        if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01d);
+        if(kb.IsKeyDown(Keyboard.Key.P)) position -= new JVector(0,0,0.01d);
 
         var cr = pg.CSMRenderer.GetInstance<Cube>();
 
@@ -54,13 +54,13 @@ public class Demo26 : IDemo
         bool res = NarrowPhase.Sweep(staticBar, dynamicBox, JQuaternion.Identity, JQuaternion.Identity,
             JVector.Zero, position,
             JVector.Zero, velocity, JVector.Zero, angularVelocity, 10, 10,
-            out JVector posA, out JVector posB, out JVector normal, out float lambda);
+            out JVector posA, out JVector posB, out JVector normal, out double lambda);
 
         if (!res) return;
 
         for (int i = 0; i <= 10; i++)
         {
-            cr.PushMatrix(CreateMatrix(position, velocity, angularVelocity, i * 0.1f * lambda),
+            cr.PushMatrix(CreateMatrix(position, velocity, angularVelocity, (float)(i * 0.1d * lambda)),
                 ColorGenerator.GetColor(i*4));
         }
 
