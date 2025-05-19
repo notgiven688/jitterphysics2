@@ -53,7 +53,7 @@ public class Demo21 : IDemo
             body.AddShape(new VoxelShape(voxelGrid, voxel), false);
         }
 
-        body.SetMassInertia(JMatrix.Identity, 1.0f);
+        body.SetMassInertia(JMatrix.Identity, 1.0d);
         body.SetActivationState(false);
 
         body.Tag = new RigidBodyTag(true);
@@ -75,15 +75,15 @@ public class Demo21 : IDemo
         foreach (var voxel in voxelGrid.Voxels)
         {
             var pos = voxelGrid.PositionFromIndex(voxel);
-            cd.PushMatrix(MatrixHelper.CreateTranslation(pos.X, pos.Y, pos.Z),
+            cd.PushMatrix(MatrixHelper.CreateTranslation((float)pos.X, (float)pos.Y, (float)pos.Z),
                 ColorGenerator.GetColor(Math.Abs(voxel * voxel + voxel)));
         }
 
         Keyboard kb = Keyboard.Instance;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
-        else player.SetAngularInput(0.0f);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0d);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0d);
+        else player.SetAngularInput(0.0d);
 
         if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
         else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);

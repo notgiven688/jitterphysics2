@@ -19,7 +19,7 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
     public float EdgeThreshold { get; set; } = 0.01f;
 
     public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pAA, ref JVector pBB, ref JVector normal,
-        ref float penetration)
+        ref double penetration)
     {
         VoxelShape? vs1 = shapeA as VoxelShape;
         VoxelShape? vs2 = shapeB as VoxelShape;
