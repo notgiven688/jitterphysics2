@@ -31,8 +31,8 @@ public class Cube : CSMInstance
             vertices[4 * i + 2] = new Vertex((n + s1 + s2) * 0.5f, n);
             vertices[4 * i + 3] = new Vertex((n + s1 - s2) * 0.5f, n);
 
-            indices[2 * i + 0] = new TriangleVertexIndex(4 * i + 0, 4 * i + 1, 4 * i + 2);
-            indices[2 * i + 1] = new TriangleVertexIndex(4 * i + 0, 4 * i + 2, 4 * i + 3);
+            indices[2 * i + 0] = new TriangleVertexIndex(4 * i + 1, 4 * i + 0, 4 * i + 2);
+            indices[2 * i + 1] = new TriangleVertexIndex(4 * i + 2, 4 * i + 0, 4 * i + 3);
         }
 
         return (vertices, indices);

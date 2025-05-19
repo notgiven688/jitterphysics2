@@ -12,7 +12,7 @@ public class TriangleMesh : CSMInstance
     public TriangleMesh(string objFile, float scale = 1.0f)
     {
         string filename = Path.Combine("assets", objFile);
-        Mesh = Mesh.LoadMesh(filename, true);
+        Mesh = Mesh.LoadMesh(filename);
         Mesh.Transform(MatrixHelper.CreateScale(scale));
     }
 

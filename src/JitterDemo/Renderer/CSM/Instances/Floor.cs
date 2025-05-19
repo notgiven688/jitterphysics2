@@ -16,8 +16,8 @@ public class JitterFloor : CSMInstance
         vertices[3] = new Vertex(new Vector3(+size, 0, +size), Vector3.UnitY, new Vector2(size, size));
 
         TriangleVertexIndex[] indices = new TriangleVertexIndex[2];
-        indices[0] = new TriangleVertexIndex(1, 0, 2);
-        indices[1] = new TriangleVertexIndex(1, 2, 3);
+        indices[0] = new TriangleVertexIndex(0, 1, 2);
+        indices[1] = new TriangleVertexIndex(2, 1, 3);
 
         return (vertices, indices);
     }

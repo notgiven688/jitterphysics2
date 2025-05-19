@@ -184,7 +184,7 @@ public class CSMRenderer
 
             shadowShader.ProjectionView.Set(lightMatrices[i]);
 
-            GLDevice.SetCullFaceMode(CullMode.Back);
+            GLDevice.SetCullFaceMode(CullMode.Front);
 
             foreach (var drawable in csmInstances.Values)
             {
@@ -192,7 +192,7 @@ public class CSMRenderer
                 drawable.ShadowPass(shadowShader);
             }
 
-            GLDevice.SetCullFaceMode(CullMode.Front);
+            GLDevice.SetCullFaceMode(CullMode.Back);
         }
 
         FrameBuffer.Default.Bind();

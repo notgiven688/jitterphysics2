@@ -18,8 +18,8 @@ public class Cloth : CSMInstance
         vertices[3] = new Vertex(new Vector3(+1, 0, +1), Vector3.UnitY, new Vector2(1, 1));
 
         indices = new TriangleVertexIndex[2];
-        indices[0] = new TriangleVertexIndex(1, 0, 2);
-        indices[1] = new TriangleVertexIndex(1, 2, 3);
+        indices[0] = new TriangleVertexIndex(0, 1, 2);
+        indices[1] = new TriangleVertexIndex(2, 1, 3);
     }
 
     public Vertex[] Vertices => vertices;
@@ -57,7 +57,7 @@ public class Cloth : CSMInstance
             var p0 = v1.Position;
             var p1 = v2.Position;
             var p2 = v3.Position;
-            var n = Vector3.Cross(p2 - p1, p2 - p0);
+            var n = Vector3.Cross(p1 - p0, p2 - p0);
 
             v1.Normal += n;
             v2.Normal += n;
@@ -95,10 +95,10 @@ public class Cloth : CSMInstance
         shader.MaterialProperties.SetDefaultMaterial();
         shader.MaterialProperties.ColorMixing.Set(0.1f, 0.0f, 0.9f);
         shader.MaterialProperties.FlipNormal = true;
-        GLDevice.SetCullFaceMode(CullMode.Back);
+        GLDevice.SetCullFaceMode(CullMode.Front);
         base.LightPass(shader);
         shader.MaterialProperties.FlipNormal = false;
-        GLDevice.SetCullFaceMode(CullMode.Front);
+        GLDevice.SetCullFaceMode(CullMode.Back);
         base.LightPass(shader);
     }
 }

@@ -46,56 +46,6 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
     public JVector Velocity => JVector.Zero;
     public JBBox WorldBoundingBox { get; } = box;
 
-    private void RayCastTriangle(in JVector origin, in JVector direction,
-        in JVector a, in JVector b, in JVector c, out JVector normal, out float lambda)
-    {
-        JVector u = b - a;
-        JVector v = c - a;
-
-        normal = v % u;
-        float it = 1.0f / normal.LengthSquared();
-        float denominator = JVector.Dot(direction, normal);
-
-        if (Math.Abs(denominator) < 1e-06f)
-        {
-            // triangle and ray are parallel
-            lambda = float.MaxValue;
-            normal = JVector.Zero;
-            return;
-        }
-
-        lambda = JVector.Dot(a - origin, normal);
-        if (lambda > 0.0f)
-        {
-            // ray is pointing away from the triangle
-            lambda = float.MaxValue;
-            normal = JVector.Zero;
-            return;
-        }
-
-        lambda /= denominator;
-
-        // point where the ray intersects the plane of the triangle.
-        JVector hitPoint = origin + lambda * direction;
-        JVector at = a - hitPoint;
-
-        JVector.Cross(u, at, out JVector tmp);
-        float gamma = JVector.Dot(tmp, normal) * it;
-        JVector.Cross(at, v, out tmp);
-        float beta = JVector.Dot(tmp, normal) * it;
-        float alpha = 1.0f - gamma - beta;
-
-        if (!(alpha > 0 && beta > 0 && gamma > 0))
-        {
-            // point is outside the triangle
-            normal = JVector.Zero;
-            lambda = float.MaxValue;
-            return;
-        }
-
-        normal *= MathF.Sqrt(it);
-    }
-
     public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
         const float maxDistance = 100.0f;
@@ -133,14 +83,23 @@ public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
                 goto continue_walk;
 
             // check this quad!
-
             var a = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
             var b = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 0), z + 0);
             var c = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
             var d = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
 
-            RayCastTriangle(origin, direction, a, b, c, out JVector normal0, out float lambda0);
-            RayCastTriangle(origin, direction, a, c, d, out JVector normal1, out float lambda1);
+            //  a ----- b
+            //  | \     |
+            //  |  \    |
+            //  |   \   |
+            //  |    \  |
+            //  d ----- c
+
+            JTriangle tri0 = new JTriangle(a, c, b);
+            JTriangle tri1 = new JTriangle(a, d, c);
+
+            tri0.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal0, out float lambda0);
+            tri1.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal1, out float lambda1);
 
             if (lambda0 < float.MaxValue || lambda1 < float.MaxValue)
             {
@@ -222,10 +181,10 @@ public class HeightmapDetection : IBroadPhaseFilter
                 CollisionTriangle triangle;
 
                 triangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
-                triangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 0), z + 0);
-                triangle.C = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
+                triangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
+                triangle.C = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 0), z + 0);
 
-                JVector normal = JVector.Normalize((triangle.C - triangle.A) % (triangle.B - triangle.A));
+                JVector normal = JVector.Normalize((triangle.B - triangle.A) % (triangle.C - triangle.A));
 
                 bool hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
                     out JVector pointA, out JVector pointB, out _, out float penetration);
@@ -240,10 +199,10 @@ public class HeightmapDetection : IBroadPhaseFilter
 
                 index += 1;
                 triangle.A = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 0), z + 0);
-                triangle.B = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
-                triangle.C = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
+                triangle.B = new JVector(x + 0, Heightmap.GetHeight(x + 0, z + 1), z + 1);
+                triangle.C = new JVector(x + 1, Heightmap.GetHeight(x + 1, z + 1), z + 1);
 
-                normal = JVector.Normalize((triangle.C - triangle.A) % (triangle.B - triangle.A));
+                normal = JVector.Normalize((triangle.B - triangle.A) % (triangle.C - triangle.A));
 
                 hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
                     out pointA, out pointB, out _, out penetration);
@@ -280,8 +239,8 @@ public class Demo25 : IDemo
                 int c = (j + 1) * width + i;
                 int d = (j + 1) * width + (i + 1);
 
-                indices.Add(new TriangleVertexIndex(a, b, c)); // Triangle 1
-                indices.Add(new TriangleVertexIndex(b, d, c)); // Triangle 2
+                indices.Add(new TriangleVertexIndex(b, a, c)); // Triangle 1
+                indices.Add(new TriangleVertexIndex(d, b, c)); // Triangle 2
             }
         }
         return indices.ToArray();

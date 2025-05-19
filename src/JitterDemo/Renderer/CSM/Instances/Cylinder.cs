@@ -37,10 +37,10 @@ public class Cylinder : CSMInstance
 
         for (int i = 0; i < Tesselation; i++)
         {
-            indices.Add(new TriangleVertexIndex(2 + 4 * i, 0, 2 + (4 * i + 4) % t4));
-            indices.Add(new TriangleVertexIndex(1, 3 + 4 * i, 3 + (4 * i + 4) % t4));
-            indices.Add(new TriangleVertexIndex(5 + 4 * i, 4 + 4 * i, 4 + (4 * i + 4) % t4));
-            indices.Add(new TriangleVertexIndex(5 + (4 * i + 4) % t4, 5 + 4 * i, 4 + (4 * i + 4) % t4));
+            indices.Add(new TriangleVertexIndex(0, 2 + 4 * i, 2 + (4 * i + 4) % t4));
+            indices.Add(new TriangleVertexIndex(3 + 4 * i, 1, 3 + (4 * i + 4) % t4));
+            indices.Add(new TriangleVertexIndex(4 + 4 * i, 5 + 4 * i, 4 + (4 * i + 4) % t4));
+            indices.Add(new TriangleVertexIndex(5 + 4 * i, 5 + (4 * i + 4) % t4, 4 + (4 * i + 4) % t4));
         }
 
         return (vertices.ToArray(), indices.ToArray());

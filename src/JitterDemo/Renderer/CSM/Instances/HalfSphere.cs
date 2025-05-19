@@ -38,16 +38,15 @@ public class HalfSphere : CSMInstance
         {
             for (int i = 0; i < Tesselation; i++)
             {
-                indices.Add(new TriangleVertexIndex(e * t1 + i, e * t1 + (i + 1) % t1, (e + 1) * t1 + i));
-                indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, (e + 1) * t1 + (i + 1) % t1,
-                    (e + 1) * t1 + i));
+                indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1,e * t1 + i, (e + 1) * t1 + i));
+                indices.Add(new TriangleVertexIndex((e + 1) * t1 + (i + 1) % t1, e * t1 + (i + 1) % t1, (e + 1) * t1 + i));
             }
         }
 
         for (int i = 0; i < Tesselation; i++)
         {
             int e = td2 - 1;
-            indices.Add(new TriangleVertexIndex(e * t1 + i, e * t1 + (i + 1) % t1, td2 * t1));
+            indices.Add(new TriangleVertexIndex(e * t1 + (i + 1) % t1, e * t1 + i, td2 * t1));
         }
 
         return (vertices.ToArray(), indices.ToArray());

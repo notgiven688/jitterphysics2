@@ -34,8 +34,8 @@ public class Tube : CSMInstance
 
         for (int i = 0; i < Tesselation; i++)
         {
-            indices.Add(new TriangleVertexIndex(3 + 2 * i, 2 + 2 * i, 2 + (2 * i + 2) % t2));
-            indices.Add(new TriangleVertexIndex(3 + (2 * i + 2) % t2, 3 + 2 * i, 2 + (2 * i + 2) % t2));
+            indices.Add(new TriangleVertexIndex(2 + 2 * i, 3 + 2 * i, 2 + (2 * i + 2) % t2));
+            indices.Add(new TriangleVertexIndex(3 + 2 * i, 3 + (2 * i + 2) % t2, 2 + (2 * i + 2) % t2));
         }
 
         return (vertices.ToArray(), indices.ToArray());

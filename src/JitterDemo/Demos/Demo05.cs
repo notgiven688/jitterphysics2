@@ -66,7 +66,7 @@ public class Demo05 : IDemo
         Playground pg = (Playground)RenderWindow.Instance;
         World world = pg.World;
 
-        pg.ResetScene();
+        pg.ResetScene(false);
 
         level = world.CreateRigidBody();
         level.AddShape(CreateShapes(), false);
