@@ -1,3 +1,6 @@
+using System;
+using System.Runtime.CompilerServices;
+
 namespace Jitter2.LinearMath;
 
 using System.Numerics;
@@ -18,3 +21,41 @@ public partial struct JQuaternion
 
     public static implicit operator JQuaternion(in Quaternion q) => new(q.X, q.Y, q.Z, q.W); // Unsafe.As<Quaternion, JQuaternion>(ref Unsafe.AsRef(q));
 }
+
+#if DEBUG
+
+public static class UnsafeBase64Serializer<T> where T : unmanaged
+{
+    public static string Serialize(in T value)
+    {
+        int size = Unsafe.SizeOf<T>();
+        byte[] buffer = new byte[size];
+
+        unsafe
+        {
+            fixed (byte* ptr = buffer)
+            {
+                *(T*)ptr = value;
+            }
+        }
+
+        return Convert.ToBase64String(buffer);
+    }
+
+    public static T Deserialize(string base64)
+    {
+        byte[] buffer = Convert.FromBase64String(base64);
+        if (buffer.Length != Unsafe.SizeOf<T>())
+            throw new InvalidOperationException("Data size does not match type size.");
+
+        unsafe
+        {
+            fixed (byte* ptr = buffer)
+            {
+                return *(T*)ptr;
+            }
+        }
+    }
+}
+
+#endif
