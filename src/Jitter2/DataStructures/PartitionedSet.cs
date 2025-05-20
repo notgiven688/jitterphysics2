@@ -44,8 +44,23 @@ public readonly struct ReadOnlyPartitionedSet<T> : IEnumerable<T> where T : clas
         this.partitionedSet = partitionedSet;
     }
 
-    public int Active => partitionedSet.ActiveCount;
+    public int ActiveCount => partitionedSet.ActiveCount;
     public int Count => partitionedSet.Count;
+
+    /// <summary>
+    /// Returns a read-only span of all elements in the set.
+    /// </summary>
+    public ReadOnlySpan<T> Elements => partitionedSet.Elements;
+
+    /// <summary>
+    /// Returns a read-only span of the active elements in the set.
+    /// </summary>
+    public ReadOnlySpan<T> Active => partitionedSet.Active;
+
+    /// <summary>
+    /// Returns a read-only span of the inactive elements in the set.
+    /// </summary>
+    public ReadOnlySpan<T> Inactive => partitionedSet.Inactive;
 
     public T this[int i] => partitionedSet[i];
 
@@ -125,6 +140,12 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
     }
 
     public T this[int i] => elements[i];
+
+    public ReadOnlySpan<T> Elements => elements.AsSpan()[..Count];
+
+    public ReadOnlySpan<T> Active => elements.AsSpan()[..ActiveCount];
+
+    public ReadOnlySpan<T> Inactive => elements.AsSpan()[ActiveCount..Count];
 
     public void Clear()
     {

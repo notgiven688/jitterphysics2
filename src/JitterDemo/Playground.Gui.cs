@@ -117,12 +117,12 @@ public partial class Playground : RenderWindow
 
             World.SpanData data = World.RawData;
 
-            AddRow("Islands", $"{World.Islands.Count}", $"{World.Islands.Active}");
+            AddRow("Islands", $"{World.Islands.Count}", $"{World.Islands.ActiveCount}");
             AddRow("Bodies", $"{data.RigidBodies.Length}", $"{data.ActiveRigidBodies.Length}");
             AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
             AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
             AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
-            AddRow("Proxies", $"{World.DynamicTree.Proxies.Count}", $"{World.DynamicTree.Proxies.Active}");
+            AddRow("Proxies", $"{World.DynamicTree.Proxies.Count}", $"{World.DynamicTree.Proxies.ActiveCount}");
 
             ImGui.EndTable();
             ImGui.TreePop();
