@@ -26,7 +26,6 @@ Shape
 │   ├── PointCloudShape
 │   ├── TransformedShape
 │   └── TriangleShape
-│       └── FatTriangleShape
 └── SoftBodyShape
     ├── SoftBodyTetrahedron
     └── SoftBodyTriangle
@@ -92,13 +91,6 @@ public TriangleShape(TriangleMesh mesh, int index)
 A `TriangleMesh.Triangle` stores information about neighbour triangles.
 This information is used in the `TriangleEdgeCollisionFilter` (enabled by default) to resolve collision artifacts that occur when shapes slide over the edges between connected triangles.
 These edges are often referred to as 'internal edges' and can cause major problems when adding level geometry to a game.
-
-### FatTriangleShape
-
-`FatTriangleShape` is similiar to `TriangleShape`, but has finite volume.
-A `Thickness`-parameter can be set, which defines how much the triangle expands in the negative normal direction.
-This can help to improve simulation quality.
-`TriangleEdgeCollisionFilter` is also active for this type of shape.
 
 ### SoftBodyShape
 

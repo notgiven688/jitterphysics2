@@ -55,7 +55,7 @@ public class Demo05 : IDemo
 
         for (int i = 0; i < jtm.Indices.Length; i++)
         {
-            yield return new FatTriangleShape(jtm, i, 0.2f);
+            yield return new TriangleShape(jtm, i);
         }
     }
 
