@@ -258,7 +258,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         Real f1 = proj % nnormal * cross;
         Real f2 = proj % tnormal * cross;
 
-        bool between = f1 * f2 <= (Real)0.0;
+        bool between = f1 <= 0.0f && f2 >= 0.0f;
 
         if (!between)
         {
