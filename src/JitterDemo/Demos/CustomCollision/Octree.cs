@@ -207,6 +207,11 @@ public class Octree
             uint childIdx = node.Neighbors[i];
             if (childIdx == 0) continue;
 
+            // TODO: Optimize traversal by only visiting child nodes whose bounding boxes
+            // intersect the ray at a distance less than the current closest hit (lambda).
+            // Sort the child nodes by ray-box intersection distance to prioritize nearer hits,
+            // potentially avoiding unnecessary deeper traversal.
+
             if (InternalRaycast(origin, direction, childIdx,  ref normal, ref lambda))
             {
                 hit = true;
