@@ -377,6 +377,8 @@ public sealed partial class World : IDisposable
     internal void ActivateBodyNextStep(RigidBody body)
     {
         body.sleepTime = 0;
+
+        if (body.IsActive) return;
         AddToActiveList(body.island);
     }
 

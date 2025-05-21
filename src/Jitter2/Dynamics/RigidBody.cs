@@ -369,13 +369,29 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public JVector Velocity
     {
         get => handle.Data.Velocity;
-        set => handle.Data.Velocity = value;
+        set
+        {
+            if (!MathHelper.CloseToZero(value))
+            {
+                World.ActivateBodyNextStep(this);
+            }
+
+            handle.Data.Velocity = value;
+        }
     }
 
     public JVector AngularVelocity
     {
         get => handle.Data.AngularVelocity;
-        set => handle.Data.AngularVelocity = value;
+        set
+        {
+            if (!MathHelper.CloseToZero(value))
+            {
+                World.ActivateBodyNextStep(this);
+            }
+
+            handle.Data.AngularVelocity = value;
+        }
     }
 
     public bool AffectedByGravity { get; set; } = true;
@@ -504,6 +520,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <param name="force">The force to be applied.</param>
     public void AddForce(in JVector force)
     {
+        if (IsStatic || MathHelper.CloseToZero(force)) return;
+        SetActivationState(true);
         Force += force;
     }
 
@@ -516,10 +534,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     [ReferenceFrame(ReferenceFrame.World)]
     public void AddForce(in JVector force, in JVector position)
     {
+        if (IsStatic || MathHelper.CloseToZero(force)) return;
+
+        SetActivationState(true);
+
         ref RigidBodyData data = ref Data;
-
-        if (data.IsStatic) return;
-
         JVector.Subtract(position, data.Position, out JVector torque);
         JVector.Cross(torque, force, out torque);
 
