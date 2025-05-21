@@ -30,19 +30,11 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents an exception thrown when a degenerate triangle is detected.
 /// </summary>
-public class DegenerateTriangleException : Exception
+public sealed class DegenerateTriangleException : Exception
 {
-    public DegenerateTriangleException()
-    {
-    }
-
-    public DegenerateTriangleException(string message) : base(message)
-    {
-    }
-
-    public DegenerateTriangleException(string message, Exception inner) : base(message, inner)
-    {
-    }
+    public DegenerateTriangleException() { }
+    public DegenerateTriangleException(string message) : base(message) { }
+    public DegenerateTriangleException(string message, Exception inner) : base(message, inner) { }
 }
 
 /// <summary>
@@ -51,10 +43,10 @@ public class DegenerateTriangleException : Exception
 /// </summary>
 public class TriangleMesh
 {
-    private struct Edge : IEquatable<Edge>
+    private readonly struct Edge : IEquatable<Edge>
     {
-        public readonly int IndexA;
-        public readonly int IndexB;
+        public int IndexA { get; }
+        public int IndexB { get; }
 
         public Edge(int indexA, int indexB)
         {
@@ -62,20 +54,11 @@ public class TriangleMesh
             IndexB = indexB;
         }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Edge other && Equals(other);
-        }
+        public bool Equals(Edge other) => IndexA == other.IndexA && IndexB == other.IndexB;
 
-        public override int GetHashCode()
-        {
-            return IndexA + 228771 * IndexB;
-        }
+        public override bool Equals(object? obj) => obj is Edge other && Equals(other);
 
-        public bool Equals(Edge other)
-        {
-            return IndexA == other.IndexA && IndexB == other.IndexB;
-        }
+        public override int GetHashCode() => HashCode.Combine(IndexA, IndexB);
     }
 
     /// <summary>
@@ -84,17 +67,8 @@ public class TriangleMesh
     /// </summary>
     public struct Triangle
     {
-        public int IndexA;
-        public int IndexB;
-        public int IndexC;
-
-        public int NeighborA;
-        public int NeighborB;
-        public int NeighborC;
-
-        /// <summary>
-        /// The normalized normal of the triangle.
-        /// </summary>
+        public int IndexA, IndexB, IndexC;
+        public int NeighborA, NeighborB, NeighborC;
         public JVector Normal;
 
         public Triangle(int a, int b, int c)
@@ -105,93 +79,94 @@ public class TriangleMesh
             NeighborA = -1;
             NeighborB = -1;
             NeighborC = -1;
+            Normal = default;
         }
+
+        public bool Equals(Triangle other)
+        {
+            return IndexA == other.IndexA &&
+                   IndexB == other.IndexB &&
+                   IndexC == other.IndexC;
+        }
+
+        public override bool Equals(object? obj) => obj is Triangle t && Equals(t);
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(IndexA, IndexB, IndexC);
+        }
+
+        public static bool operator ==(Triangle left, Triangle right) => left.Equals(right);
+        public static bool operator !=(Triangle left, Triangle right) => !left.Equals(right);
     }
 
-    /// <summary>
-    /// An array containing the vertices that comprise the triangle mesh.
-    /// </summary>
     public readonly JVector[] Vertices;
-
-    /// <summary>
-    /// The triangles constituting the triangle mesh.
-    /// </summary>
     public readonly Triangle[] Indices;
 
-    /// <summary>
-    /// Initializes a new instance of the triangle mesh.
-    /// </summary>
-    /// <param name="triangles">The triangles to be added. The reference to the list can be
-    /// modified/deleted after invoking this constructor.</param>
-    /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or
-    /// more degenerate triangles.</exception>
     public TriangleMesh(IReadOnlyList<JTriangle> triangles, bool ignoreDegenerated = false)
     {
-        Dictionary<JVector, int> tmpIndices = new();
-        List<JVector> tmpVertices = new();
-        List<Triangle> tmpTriangles = new();
+        var vertexMap = new Dictionary<JVector, int>();
+        var vertexList = new List<JVector>();
+        var triangleList = new List<Triangle>();
 
-        // 1. step: build indices and vertices for triangles (JTriangle contains raw x, y, z coordinates).
-
-        int PushVector(JVector v)
+        int GetOrAddVertex(JVector v)
         {
-            if (!tmpIndices.TryGetValue(v, out int result))
+            if (!vertexMap.TryGetValue(v, out int index))
             {
-                result = tmpVertices.Count;
-                tmpIndices.Add(v, result);
-                tmpVertices.Add(v);
+                index = vertexList.Count;
+                vertexMap[v] = index;
+                vertexList.Add(v);
             }
-
-            return result;
+            return index;
         }
 
-        for (int i = 0; i < triangles.Count; i++)
+        foreach (var t in triangles)
         {
-            JTriangle tti = triangles[i];
+            int a = GetOrAddVertex(t.V0);
+            int b = GetOrAddVertex(t.V1);
+            int c = GetOrAddVertex(t.V2);
 
-            int a = PushVector(tti.V0);
-            int b = PushVector(tti.V1);
-            int c = PushVector(tti.V2);
-
-            JVector normal = (tti.V1 - tti.V0) % (tti.V2 - tti.V0);
-
+            var normal = (t.V1 - t.V0) % (t.V2 - t.V0);
             if (MathHelper.CloseToZero(normal, (Real)1e-12))
             {
-                if (ignoreDegenerated) continue;
-
-                throw new DegenerateTriangleException("Degenerate triangle found in mesh. Try to clean the " +
-                                                      "mesh in the editor of your choice first.");
+                if (ignoreDegenerated)
+                {
+                    Logger.Warning("{0}, Degenerate triangle found in mesh. Ignoring.", nameof(TriangleMesh));
+                    continue;
+                }
+                throw new DegenerateTriangleException("Degenerate triangle found in mesh. " +
+                                                      "Try to clean the mesh in the editor of your choice first.");
             }
 
-            Triangle tri = new(a, b, c);
-            JVector.Normalize(normal, out tri.Normal);
-            tmpTriangles.Add(tri);
+            var triangle = new Triangle(a, b, c);
+            JVector.Normalize(normal, out triangle.Normal);
+            triangleList.Add(triangle);
         }
 
-        Vertices = tmpVertices.ToArray();
-        Indices = tmpTriangles.ToArray(); // Finalized array with only valid entries
+        Vertices = vertexList.ToArray();
+        Indices = triangleList.ToArray();
 
-        // 2. step: Identify the neighbors.
+        AssignNeighbors();
+    }
 
-        Dictionary<Edge, int> tmpEdges = new();
+    private void AssignNeighbors()
+    {
+        var edgeToTriangle = new Dictionary<Edge, int>();
 
-        int GetEdge(Edge e)
+        for (int i = 0; i < Indices.Length; i++)
         {
-            return tmpEdges.GetValueOrDefault(e, -1);
+            var tri = Indices[i];
+            edgeToTriangle.TryAdd(new Edge(tri.IndexA, tri.IndexB), i);
+            edgeToTriangle.TryAdd(new Edge(tri.IndexB, tri.IndexC), i);
+            edgeToTriangle.TryAdd(new Edge(tri.IndexC, tri.IndexA), i);
         }
 
         for (int i = 0; i < Indices.Length; i++)
         {
-            tmpEdges.TryAdd(new Edge(Indices[i].IndexA, Indices[i].IndexB), i);
-            tmpEdges.TryAdd(new Edge(Indices[i].IndexB, Indices[i].IndexC), i);
-            tmpEdges.TryAdd(new Edge(Indices[i].IndexC, Indices[i].IndexA), i);
-        }
-
-        for (int i = 0; i < Indices.Length; i++)
-        {
-            Indices[i].NeighborA = GetEdge(new Edge(Indices[i].IndexC, Indices[i].IndexB));
-            Indices[i].NeighborB = GetEdge(new Edge(Indices[i].IndexA, Indices[i].IndexC));
-            Indices[i].NeighborC = GetEdge(new Edge(Indices[i].IndexB, Indices[i].IndexA));
+            ref var tri = ref Indices[i];
+            tri.NeighborA = edgeToTriangle.GetValueOrDefault(new Edge(tri.IndexC, tri.IndexB), -1);
+            tri.NeighborB = edgeToTriangle.GetValueOrDefault(new Edge(tri.IndexA, tri.IndexC), -1);
+            tri.NeighborC = edgeToTriangle.GetValueOrDefault(new Edge(tri.IndexB, tri.IndexA), -1);
         }
     }
 }
