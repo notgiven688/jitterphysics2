@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.5 (2025-05-21)
+
+- Rigid bodies now activate on velocity or force changes.
+- Remove FatTriangleShape.
+- Rename 'Active' to 'ActiveCount' and add span-based accessors in ReadOnlyPartitionedSet.
+- Fixed bug in TriangleEdgeCollisionFilter.
+
 ### Jitter 2.6.4 (2025-05-19)
 
 - **Breaking Change:** Triangle winding order in `TriangleMesh` is now counter-clockwise (CCW) for front-facing triangles.
