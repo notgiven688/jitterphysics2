@@ -6,6 +6,12 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
+// This demo shows how to use the VoxelGrid class to create a voxel-based world with
+// a custom edge collision filter.
+//
+// **What it does NOT show**: How to stream voxels to the physics engine dynamically.
+// This can be achieved by custom collision, see the Heightmap and the Octree demos.
+
 public class Demo21 : IDemo
 {
     public string Name => "Voxel Demo";
