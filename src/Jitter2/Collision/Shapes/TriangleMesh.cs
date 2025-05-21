@@ -129,10 +129,9 @@ public class TriangleMesh
     {
         Dictionary<JVector, int> tmpIndices = new();
         List<JVector> tmpVertices = new();
+        List<Triangle> tmpTriangles = new();
 
         // 1. step: build indices and vertices for triangles (JTriangle contains raw x, y, z coordinates).
-
-        Indices = new Triangle[triangles.Count];
 
         int PushVector(JVector v)
         {
@@ -164,11 +163,13 @@ public class TriangleMesh
                                                       "mesh in the editor of your choice first.");
             }
 
-            Indices[i] = new Triangle(a, b, c);
-            JVector.Normalize(normal, out Indices[i].Normal);
+            Triangle tri = new(a, b, c);
+            JVector.Normalize(normal, out tri.Normal);
+            tmpTriangles.Add(tri);
         }
 
         Vertices = tmpVertices.ToArray();
+        Indices = tmpTriangles.ToArray(); // Finalized array with only valid entries
 
         // 2. step: Identify the neighbors.
 
