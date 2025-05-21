@@ -36,7 +36,7 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
     private Real[] xvalues, yvalues, zvalues;
     private JVector center;
 
-    public VertexSupportMap(IList<JVector> vertices)
+    public VertexSupportMap(IReadOnlyList<JVector> vertices)
     {
         int length = vertices.Count;
 

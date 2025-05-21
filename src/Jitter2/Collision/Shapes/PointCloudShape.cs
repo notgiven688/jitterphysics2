@@ -48,7 +48,7 @@ public class PointCloudShape : RigidBodyShape
     /// A list containing all vertices that define the convex hull. The list is not referenced and can be
     /// modified after passing it to the constructor.
     /// </param>
-    public PointCloudShape(IList<JVector> vertices)
+    public PointCloudShape(IReadOnlyList<JVector> vertices)
     {
         supportMap = new VertexSupportMap(vertices);
         UpdateShape();

@@ -91,12 +91,12 @@ public class ConvexHullShape : RigidBodyShape
     /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.
     /// Note that the passed triangle list is not referenced and can be modified after calling the constructor
     /// without side effects.</param>
-    public ConvexHullShape(IList<JTriangle> triangles)
+    public ConvexHullShape(IReadOnlyList<JTriangle> triangles)
     {
         Build(triangles);
     }
 
-    private void Build(IList<JTriangle> triangles)
+    private void Build(IReadOnlyList<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = new();

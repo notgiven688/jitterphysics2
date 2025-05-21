@@ -125,7 +125,7 @@ public class TriangleMesh
     /// modified/deleted after invoking this constructor.</param>
     /// <exception cref="DegenerateTriangleException">This is thrown if the triangle mesh contains one or
     /// more degenerate triangles.</exception>
-    public TriangleMesh(IList<JTriangle> triangles, bool ignoreDegenerated = false)
+    public TriangleMesh(IReadOnlyList<JTriangle> triangles, bool ignoreDegenerated = false)
     {
         Dictionary<JVector, int> tmpIndices = new();
         List<JVector> tmpVertices = new();

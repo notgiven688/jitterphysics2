@@ -129,7 +129,7 @@ public static class ShapeHelper
     /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
     /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static List<JTriangle> MakeHull(IList<JVector> vertices, int subdivisions = 3)
+    public static List<JTriangle> MakeHull(IReadOnlyList<JVector> vertices, int subdivisions = 3)
     {
         return MakeHull(new VertexSupportMap(vertices), subdivisions);
     }
@@ -181,7 +181,7 @@ public static class ShapeHelper
     /// mapper to generate a hull point.
     /// </remarks>
     /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static List<JVector> SampleHull(IList<JVector> vertices, int subdivisions = 3)
+    public static List<JVector> SampleHull(IReadOnlyList<JVector> vertices, int subdivisions = 3)
     {
         return SampleHull(new VertexSupportMap(vertices), subdivisions);
     }
