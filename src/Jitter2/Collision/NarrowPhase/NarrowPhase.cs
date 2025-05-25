@@ -710,8 +710,8 @@ public static class NarrowPhase
     /// <param name="supportB">The support function of shape B.</param>
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
-    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
@@ -751,7 +751,7 @@ public static class NarrowPhase
                 !simplexSolver.AddVertex(w, out v))
             {
                 distance = (Real)0.0;
-                pointA = pointB = JVector.Zero;
+                simplexSolver.GetClosest(out pointA, out pointB);
                 return false;
             }
         }
@@ -771,8 +771,8 @@ public static class NarrowPhase
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionA">The position of shape A in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
-    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
@@ -788,9 +788,8 @@ public static class NarrowPhase
         JVector.Subtract(positionB, positionA, out JVector position);
         JVector.ConjugatedTransform(position, orientationA, out position);
 
-        // ..perform overlap test..
+        // ..perform distance test..
         bool result = Distance(supportA, supportB, orientation, position, out pointA, out pointB, out distance);
-        if (!result) return false;
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when
         // the support function is called multiple times.
@@ -799,7 +798,7 @@ public static class NarrowPhase
         JVector.Transform(pointB, orientationA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
 
-        return true;
+        return result;
     }
 
     /// <summary>
