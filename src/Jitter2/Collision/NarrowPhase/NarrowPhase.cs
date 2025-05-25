@@ -954,6 +954,132 @@ public static class NarrowPhase
         return solver.SolveMPR(supportA, supportB, orientationB, positionB , epaThreshold, out pointA, out pointB, out normal, out penetration);
     }
 
+
+    /// <summary>
+    /// Calculates the time of impact and the collision points in world space for two shapes with linear
+    /// velocities sweepA and sweepB and angular velocities sweepAngularA and sweepAngularB.
+    /// </summary>
+    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.
+    /// Zero if no hit is detected.</param>
+    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.
+    /// Zero if no hit is detected.</param>
+    /// <param name="lambda">Time of impact. Infinity if no hit is detected.</param>
+    /// <returns>True if the shapes hit, false otherwise.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Sweep<TA, TB>(in TA supportA, in TB supportB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
+        in JVector positionA, in JVector positionB,
+        in JVector sweepA, in JVector sweepB,
+        in JVector sweepAngularA, in JVector sweepAngularB,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+        where TA : ISupportMappable where TB : ISupportMappable
+    {
+        static void EstimateMaximumExtent(ISupportMappable support, out Real radius)
+        {
+            JMatrix oriT = JMatrix.Identity;
+            JBBox box;
+
+            support.SupportMap(oriT.UnsafeGet(0), out JVector res);
+            box.Max.X = JVector.Dot(oriT.GetColumn(0), res);
+
+            support.SupportMap(oriT.UnsafeGet(1), out res);
+            box.Max.Y = JVector.Dot(oriT.GetColumn(1), res);
+
+            support.SupportMap(oriT.UnsafeGet(2), out res);
+            box.Max.Z = JVector.Dot(oriT.GetColumn(2), res);
+
+            support.SupportMap(-oriT.UnsafeGet(0), out res);
+            box.Min.X = JVector.Dot(oriT.GetColumn(0), res);
+
+            support.SupportMap(-oriT.UnsafeGet(1), out res);
+            box.Min.Y = JVector.Dot(oriT.GetColumn(1), res);
+
+            support.SupportMap(-oriT.UnsafeGet(2), out res);
+            box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
+
+            radius = MathR.Max(box.Max.Length(), box.Min.Length());
+        }
+
+        // ..perform toi calculation
+        const Real CollideEpsilon = (Real)1e-4;
+        const int MaxIter = 64;
+
+        EstimateMaximumExtent(supportA, out var radiusA);
+        EstimateMaximumExtent(supportB, out var radiusB);
+
+        Real maxAngularSpeed = radiusA * sweepAngularA.Length() + radiusB * sweepAngularB.Length();
+
+        JVector posA = positionA;
+        JVector posB = positionB;
+
+        JQuaternion oriA = orientationA;
+        JQuaternion oriB = orientationB;
+
+        lambda = 0;
+
+        int iter = 0;
+
+        JQuaternion sweepAngularDeltaA = JQuaternion.Identity;
+        JQuaternion sweepAngularDeltaB = JQuaternion.Identity;
+
+        while (true)
+        {
+            bool res = Distance(supportA, supportB, oriA, oriB, posA, posB,
+                out pointA, out pointB, out var distance);
+
+            if (!res || distance < CollideEpsilon)
+            {
+                break;
+            }
+
+            normal = JVector.Normalize(pointB - pointA);
+            Real sweepLinearProj = JVector.Dot(normal, sweepA - sweepB);
+            Real sweepLen = sweepLinearProj + maxAngularSpeed;
+
+            if(sweepLen < NumericEpsilon)
+            {
+                normal = JVector.Zero;
+                lambda = Real.PositiveInfinity;
+                pointA = JVector.Zero; pointB = JVector.Zero;
+                return false;
+            }
+
+            Real tmpLambda = distance / sweepLen;
+
+            lambda += tmpLambda;
+
+            sweepAngularDeltaA = MathHelper.RotationQuaternion(sweepAngularA, lambda);
+            sweepAngularDeltaB = MathHelper.RotationQuaternion(sweepAngularB, lambda);
+
+            oriA = sweepAngularDeltaA * orientationA;
+            oriB = sweepAngularDeltaB * orientationB;
+
+            posA = positionA + sweepA * lambda;
+            posB = positionB + sweepB * lambda;
+
+            if (iter++ > MaxIter) break;
+        }
+
+        // Hit point found at in world space at time lambda. Transform back to time 0.
+        var linearTransformationA = sweepA * lambda;
+        var linearTransformationB = sweepB * lambda;
+
+        var deltaA = pointA - posA;
+        var deltaB = pointB - posB;
+
+        pointA -= linearTransformationA + (deltaA - JVector.TransposedTransform(deltaA, sweepAngularDeltaA));
+        pointB -= linearTransformationB + (deltaB - JVector.TransposedTransform(deltaB, sweepAngularDeltaB));
+
+        normal = pointB - pointA;
+        Real normalLength = normal.Length();
+
+        // Can this happen?
+        if (normalLength < NumericEpsilon) return false;
+
+        normal *= (Real)1.0 / normalLength;
+        return true;
+    }
+
     /// <summary>
     /// Calculates the time of impact and the collision points in world space for two shapes with velocities
     /// sweepA and sweepB.
