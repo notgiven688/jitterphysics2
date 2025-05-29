@@ -49,7 +49,8 @@ public class Demo26 : IDemo
 
         NarrowPhase.Sweep(staticBar, dynamicBox, JQuaternion.Identity, JQuaternion.Identity,
             JVector.Zero, position,
-            JVector.Zero, velocity, JVector.Zero, angularVelocity, out JVector posA, out JVector posB,
+            JVector.Zero, velocity, JVector.Zero, angularVelocity, 10, 10,
+            out JVector posA, out JVector posB,
             out JVector normal, out float lambda);
 
         for (int i = 0; i <= 10; i++)
