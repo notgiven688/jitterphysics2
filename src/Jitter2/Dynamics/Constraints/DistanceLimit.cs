@@ -108,6 +108,11 @@ public unsafe class DistanceLimit : Constraint
         (data.LimitMin, data.LimitMax) = limit;
     }
 
+    /// <summary>
+    /// Gets or sets the anchor point on the first rigid body in world space. The anchor point is
+    /// fixed in the local reference frame of the first body.
+    /// </summary>
+    [ReferenceFrame(ReferenceFrame.World)]
     public JVector Anchor1
     {
         set
@@ -127,6 +132,11 @@ public unsafe class DistanceLimit : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the anchor point on the second rigid body in world space. The anchor point is
+    /// fixed in the local reference frame of the second body.
+    /// </summary>
+    [ReferenceFrame(ReferenceFrame.World)]
     public JVector Anchor2
     {
         set

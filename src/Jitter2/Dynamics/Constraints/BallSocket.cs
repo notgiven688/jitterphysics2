@@ -93,6 +93,54 @@ public unsafe class BallSocket : Constraint
         data.Softness = (Real)0.0;
     }
 
+    /// <summary>
+    /// Gets or sets the anchor point on the first rigid body in world space. The anchor point is
+    /// fixed in the local reference frame of the first body.
+    /// </summary>
+    [ReferenceFrame(ReferenceFrame.World)]
+    public JVector Anchor1
+    {
+        set
+        {
+            ref BallSocketData data = ref handle.Data;
+            ref RigidBodyData body1 = ref data.Body1.Data;
+            JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
+            JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
+        }
+        get
+        {
+            ref BallSocketData data = ref handle.Data;
+            ref RigidBodyData body1 = ref data.Body1.Data;
+            JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector result);
+            JVector.Add(result, body1.Position, out result);
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the anchor point on the second rigid body in world space. The anchor point is
+    /// fixed in the local reference frame of the second body.
+    /// </summary>
+    [ReferenceFrame(ReferenceFrame.World)]
+    public JVector Anchor2
+    {
+        set
+        {
+            ref BallSocketData data = ref handle.Data;
+            ref RigidBodyData body2 = ref data.Body2.Data;
+            JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
+            JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
+        }
+        get
+        {
+            ref BallSocketData data = ref handle.Data;
+            ref RigidBodyData body2 = ref data.Body2.Data;
+            JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector result);
+            JVector.Add(result, body2.Position, out result);
+            return result;
+        }
+    }
+
     public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
     {
         ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
