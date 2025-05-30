@@ -43,14 +43,20 @@ public class Demo26 : IDemo
     {
         Playground pg = (Playground)RenderWindow.Instance;
 
+        var kb = Keyboard.Instance;
+        if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01f);
+        if(kb.IsKeyDown(Keyboard.Key.P)) position -= new JVector(0,0,0.01f);
+
         var cr = pg.CSMRenderer.GetInstance<Cube>();
 
         cr.PushMatrix(MatrixHelper.CreateScale(10, 10, 0.1f), new Vector3(0.2f, 0.2f, 0.2f));
 
-        NarrowPhase.Sweep(staticBar, dynamicBox, JQuaternion.Identity, JQuaternion.Identity,
+        bool res = NarrowPhase.Sweep(staticBar, dynamicBox, JQuaternion.Identity, JQuaternion.Identity,
             JVector.Zero, position,
             JVector.Zero, velocity, JVector.Zero, angularVelocity, 10, 10,
             out JVector posA, out JVector posB, out JVector normal, out float lambda);
+
+        if (!res) return;
 
         for (int i = 0; i <= 10; i++)
         {
@@ -60,9 +66,5 @@ public class Demo26 : IDemo
 
         pg.DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(posA), 2);
         pg.DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(posB), 2);
-
-        var kb = Keyboard.Instance;
-        if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01f);
-        if(kb.IsKeyDown(Keyboard.Key.P)) position -= new JVector(0,0,0.01f);
     }
 }
