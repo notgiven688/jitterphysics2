@@ -954,15 +954,21 @@ public static class NarrowPhase
         return solver.SolveMPR(supportA, supportB, orientationB, positionB , epaThreshold, out pointA, out pointB, out normal, out penetration);
     }
 
-
     /// <summary>
-    /// Calculates the time of impact and the collision points in world space for two shapes with linear
-    /// velocities sweepA and sweepB and angular velocities sweepAngularA and sweepAngularB.
+    /// Calculates the time of impact (TOI) and the collision points in world space for two shapes with linear
+    /// velocities <paramref name="sweepA"/> and <paramref name="sweepB"/> and angular velocities
+    /// <paramref name="sweepAngularA"/> and <paramref name="sweepAngularB"/>.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.</param>
-    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.</param>
-    /// <param name="lambda">Time of impact. Infinity if no hit is detected. Zero if shapes overlap.</param>
+    /// <param name="pointA">Collision point on shape A in world space at t = 0, where collision will occur.</param>
+    /// <param name="pointB">Collision point on shape B in world space at t = 0, where collision will occur.</param>
+    /// <param name="normal">Collision normal in world space at time of impact (points from A to B).</param>
+    /// <param name="lambda">Time of impact. <c>Infinity</c> if no hit is detected. Zero if shapes overlap.</param>
     /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
+    /// <remarks>
+    /// Uses conservative advancement for continuous collision detection. May fail to converge to the correct TOI
+    /// and collision points in certain edge cases due to limitations in linear motion approximation and
+    /// distance gradient estimation.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep<TA, TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
@@ -998,7 +1004,7 @@ public static class NarrowPhase
 
         if (distance < CollideEpsilon)
         {
-            // The Distance function returns false for overlapping shapes.
+            // We already overlap (or nearly overlap) at time 0.
             // In this case the Sweep function should return true. normal and lambda are set to zero.
             return true;
         }
@@ -1006,6 +1012,7 @@ public static class NarrowPhase
         while (true)
         {
             normal = JVector.Normalize(pointB - pointA);
+            Debug.Assert(!MathHelper.CloseToZero(pointB - pointA));
 
             Real sweepLinearProj = JVector.Dot(normal, sweepA - sweepB);
             Real sweepLen = sweepLinearProj + maxAngularSpeed;
