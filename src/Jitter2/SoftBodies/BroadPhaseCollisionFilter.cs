@@ -61,7 +61,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             var closestB = i2.GetClosest(pB);
 
             world.RegisterContact(closestA.RigidBodyId, closestB.RigidBodyId, closestA, closestB,
-                pA, pB, normal, penetration);
+                pA, pB, normal);
 
             return false;
         }
@@ -80,7 +80,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             var closest = i1.GetClosest(pA);
 
             world.RegisterContact(closest.RigidBodyId, rb.RigidBodyId, closest, rb,
-                pA, pB, normal, penetration, ContactData.SolveMode.AngularBody1);
+                pA, pB, normal, ContactData.SolveMode.AngularBody1);
 
             return false;
         }
@@ -99,7 +99,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             var closest = i2.GetClosest(pA);
 
             world.RegisterContact(closest.RigidBodyId, ra.RigidBodyId, closest, ra,
-                pA, pB, normal, penetration,ContactData.SolveMode.AngularBody1);
+                pA, pB, normal, ContactData.SolveMode.AngularBody1);
 
             return false;
         }

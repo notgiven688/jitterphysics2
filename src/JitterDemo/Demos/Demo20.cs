@@ -112,7 +112,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
                 }
                 else
                 {
-                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, pointB, pointB, normal, penetration);
+                    world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody, pointB, pointB, normal);
                 }
             }
         }

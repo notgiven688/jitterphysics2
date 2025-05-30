@@ -81,7 +81,7 @@ public sealed partial class World
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
-        in JVector normal, Real penetration, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
+        in JVector normal, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
     {
         lock (arbiter)
         {
@@ -121,11 +121,11 @@ public sealed partial class World
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
-        in JVector point1, in JVector point2, in JVector normal, Real penetration,
+        in JVector point1, in JVector point2, in JVector normal,
         ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
-        RegisterContact(arbiter, point1, point2, normal, penetration, removeFlags);
+        RegisterContact(arbiter, point1, point2, normal, removeFlags);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -197,7 +197,7 @@ public sealed partial class World
             }
 
             RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
-                pA, pB, normal, penetration, ContactData.SolveMode.Angular);
+                pA, pB, normal, ContactData.SolveMode.Angular);
 
             return;
         }
@@ -219,7 +219,7 @@ public sealed partial class World
         }
         else
         {
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, pA, pB, normal, penetration);
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, pA, pB, normal);
         }
     }
 

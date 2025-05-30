@@ -192,7 +192,7 @@ public class HeightmapDetection : IBroadPhaseFilter
                 if (hit)
                 {
                     world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody,
-                        pointA, pointB, normal, penetration);
+                        pointA, pointB, normal);
                 }
 
                 // Second triangle of the quad
@@ -210,7 +210,7 @@ public class HeightmapDetection : IBroadPhaseFilter
                 if (hit)
                 {
                     world.RegisterContact(rbs.ShapeId, minIndex + index, world.NullBody, rbs.RigidBody,
-                        pointA, pointB, normal, penetration);
+                        pointA, pointB, normal);
                 }
             }
         }
