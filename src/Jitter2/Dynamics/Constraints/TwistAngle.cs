@@ -95,7 +95,7 @@ public unsafe class TwistAngle : Constraint
         data.Angle1 = MathR.Sin((Real)limit.From / (Real)2.0);
         data.Angle2 = MathR.Sin((Real)limit.To / (Real)2.0);
 
-        data.B = JVector.TransposedTransform(axis2, body2.Orientation);
+        data.B = JVector.ConjugatedTransform(axis2, body2.Orientation);
 
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;

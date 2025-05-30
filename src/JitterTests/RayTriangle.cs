@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+namespace JitterTests;
+
 [TestFixture]
 public class RayIntersectTests
 {

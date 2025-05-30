@@ -513,8 +513,8 @@ public static class NarrowPhase
         where TA : ISupportMappable
     {
         // rotate the ray into the reference frame of bodyA..
-        JVector tdirection = JVector.TransposedTransform(direction, orientation);
-        JVector torigin = JVector.TransposedTransform(origin - position, orientation);
+        JVector tdirection = JVector.ConjugatedTransform(direction, orientation);
+        JVector torigin = JVector.ConjugatedTransform(origin - position, orientation);
 
         bool result = RayCast(support, torigin, tdirection, out lambda, out normal);
 
@@ -710,15 +710,15 @@ public static class NarrowPhase
     /// <param name="supportB">The support function of shape B.</param>
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
-    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out Real distance)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
         where TA : ISupportMappable where TB : ISupportMappable
     {
         // ..perform overlap test..
@@ -737,9 +737,9 @@ public static class NarrowPhase
 
         while (maxIter-- != 0)
         {
-            MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, -v, out var w);
+            if (distSq < CollideEpsilon * CollideEpsilon) goto ret_false;
 
-            distSq = v.LengthSquared();
+            MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, -v, out var w);
 
             Real deltaDist = JVector.Dot(v - w.V, v);
             if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * distSq)
@@ -747,19 +747,22 @@ public static class NarrowPhase
                 break;
             }
 
-            if (distSq < CollideEpsilon * CollideEpsilon ||
-                !simplexSolver.AddVertex(w, out v))
-            {
-                distance = (Real)0.0;
-                pointA = pointB = JVector.Zero;
-                return false;
-            }
+            if (!simplexSolver.AddVertex(w, out v)) goto ret_false;
+
+            distSq = v.LengthSquared();
         }
 
         distance = MathR.Sqrt(distSq);
+        normal = v * (-(Real)1.0 / distance);
         simplexSolver.GetClosest(out pointA, out pointB);
-
         return true;
+
+        ret_false:
+
+        distance = (Real)0.0;
+        normal = JVector.Zero;
+        simplexSolver.GetClosest(out pointA, out pointB);
+        return false;
     }
 
     /// <summary>
@@ -771,8 +774,8 @@ public static class NarrowPhase
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionA">The position of shape A in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Zero if shapes overlap.</param>
-    /// <param name="pointB">Closest point on shape B. Zero if shapes overlap.</param>
+    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
@@ -780,7 +783,7 @@ public static class NarrowPhase
     public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out Real distance)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
         where TA : ISupportMappable where TB : ISupportMappable
     {
         // rotate into the reference frame of bodyA..
@@ -788,9 +791,8 @@ public static class NarrowPhase
         JVector.Subtract(positionB, positionA, out JVector position);
         JVector.ConjugatedTransform(position, orientationA, out position);
 
-        // ..perform overlap test..
-        bool result = Distance(supportA, supportB, orientation, position, out pointA, out pointB, out distance);
-        if (!result) return false;
+        // ..perform distance test..
+        bool result = Distance(supportA, supportB, orientation, position, out pointA, out pointB, out normal, out distance);
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when
         // the support function is called multiple times.
@@ -798,8 +800,9 @@ public static class NarrowPhase
         JVector.Add(pointA, positionA, out pointA);
         JVector.Transform(pointB, orientationA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
 
-        return true;
+        return result;
     }
 
     /// <summary>
@@ -956,15 +959,120 @@ public static class NarrowPhase
     }
 
     /// <summary>
+    /// Calculates the time of impact (TOI) and the collision points in world space for two shapes with linear
+    /// velocities <paramref name="sweepA"/> and <paramref name="sweepB"/> and angular velocities
+    /// <paramref name="sweepAngularA"/> and <paramref name="sweepAngularB"/>.
+    /// </summary>
+    /// <param name="pointA">Collision point on shape A in world space at t = 0, where collision will occur.</param>
+    /// <param name="pointB">Collision point on shape B in world space at t = 0, where collision will occur.</param>
+    /// <param name="normal">Collision normal in world space at time of impact (points from A to B).</param>
+    /// <param name="lambda">Time of impact. <c>Infinity</c> if no hit is detected. Zero if shapes overlap.</param>
+    /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
+    /// <remarks>
+    /// Uses conservative advancement for continuous collision detection. May fail to converge to the correct TOI
+    /// and collision points in certain edge cases due to limitations in linear motion approximation and
+    /// distance gradient estimation.
+    /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Sweep<TA, TB>(in TA supportA, in TB supportB,
+        in JQuaternion orientationA, in JQuaternion orientationB,
+        in JVector positionA, in JVector positionB,
+        in JVector sweepA, in JVector sweepB,
+        in JVector sweepAngularA, in JVector sweepAngularB,
+        in Real extentA, in Real extentB,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+        where TA : ISupportMappable where TB : ISupportMappable
+    {
+        const Real CollideEpsilon = (Real)1e-4;
+        const int MaxIter = 64;
+
+        Real maxAngularSpeed = extentA * sweepAngularA.Length() + extentB * sweepAngularB.Length();
+        Real combinedRadius = extentA + extentB;
+
+        JVector posA = positionA;
+        JVector posB = positionB;
+
+        JQuaternion oriA = orientationA;
+        JQuaternion oriB = orientationB;
+
+        lambda = 0;
+
+        int iter = 0;
+
+        JQuaternion sweepAngularDeltaA;
+        JQuaternion sweepAngularDeltaB;
+
+        Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out normal, out var distance);
+
+        if (distance < CollideEpsilon)
+        {
+            // We already overlap (or nearly overlap) at time 0.
+            // In this case the Sweep function should return true. normal and lambda are set to zero.
+            return true;
+        }
+
+        while (true)
+        {
+            Real sweepLinearProj = JVector.Dot(normal, sweepA - sweepB);
+            Real sweepLen = sweepLinearProj + maxAngularSpeed;
+
+            if(sweepLen < NumericEpsilon || (sweepLinearProj < 0 && distance > combinedRadius))
+            {
+                normal = JVector.Zero;
+                lambda = Real.PositiveInfinity;
+                return false;
+            }
+
+            Real tmpLambda = distance / sweepLen;
+
+            lambda += tmpLambda;
+
+            Debug.Assert(!Real.IsNaN(lambda));
+
+            sweepAngularDeltaA = MathHelper.RotationQuaternion(sweepAngularA, lambda);
+            sweepAngularDeltaB = MathHelper.RotationQuaternion(sweepAngularB, lambda);
+
+            oriA = sweepAngularDeltaA * orientationA;
+            oriB = sweepAngularDeltaB * orientationB;
+
+            posA = positionA + sweepA * lambda;
+            posB = positionB + sweepB * lambda;
+
+            if (iter++ > MaxIter) break;
+
+            bool res = Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector nn, out distance);
+
+            // We are a bit in a pickle here.
+            // If the advanced shapes are slightly overlapping (Distance returns false; this can either happen if the
+            // simplex solver encompasses the origin or the closest point on the simplex is close enough to the origin),
+            // we have valid posA and posB information, but the normal is not well-defined. So we keep the old normal.
+            if(res) normal = nn;
+
+            if (distance < CollideEpsilon)
+                break;
+        }
+
+        // Hit point found at in world space at time lambda. Transform back to time 0.
+        var linearTransformationA = sweepA * lambda;
+        var linearTransformationB = sweepB * lambda;
+
+        var deltaA = pointA - posA;
+        var deltaB = pointB - posB;
+
+        pointA -= linearTransformationA + (deltaA - JVector.ConjugatedTransform(deltaA, sweepAngularDeltaA));
+        pointB -= linearTransformationB + (deltaB - JVector.ConjugatedTransform(deltaB, sweepAngularDeltaB));
+
+        return true;
+    }
+
+    /// <summary>
     /// Calculates the time of impact and the collision points in world space for two shapes with velocities
     /// sweepA and sweepB.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.
-    /// Zero if no hit is detected.</param>
-    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.
-    /// Zero if no hit is detected.</param>
-    /// <param name="lambda">Time of impact. Infinity if no hit is detected.</param>
-    /// <returns>True if the shapes hit, false otherwise.</returns>
+    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.</param>
+    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.</param>
+    /// <param name="lambda">Time of impact. Infinity if no hit is detected. Zero if shapes overlap.</param>
+    /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
@@ -1011,10 +1119,10 @@ public static class NarrowPhase
     /// Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
     /// direction.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space. Zero if no hit is detected.</param>
-    /// <param name="pointB">Collision point on shapeB in world space. Zero if no hit is detected.</param>
-    /// <param name="lambda">Time of impact. Infinity if no hit is detected.</param>
-    /// <returns>True if the shapes hit, false otherwise.</returns>
+    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.</param>
+    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.</param>
+    /// <param name="lambda">Time of impact. Infinity if no hit is detected. Zero if shapes overlap.</param>
+    /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,

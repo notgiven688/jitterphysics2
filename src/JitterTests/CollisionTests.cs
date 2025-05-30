@@ -30,7 +30,7 @@ public class CollisionTests
 
         var separated = NarrowPhase.Distance(bs, ss,
             JQuaternion.CreateRotationX((Real)0.2), JVector.UnitY * (Real)3.0,
-            out JVector pA, out JVector pB, out Real dist);
+            out JVector pA, out JVector pB, out JVector normal, out Real dist);
 
         Assert.That(!overlap);
         Assert.That(separated);
@@ -44,7 +44,7 @@ public class CollisionTests
 
         separated = NarrowPhase.Distance(bs, ss,
             JQuaternion.CreateRotationX((Real)0.2), JVector.UnitY * (Real)0.5,
-            out pA, out pB, out dist);
+            out pA, out pB, out normal, out dist);
 
         Assert.That(overlap);
         Assert.That(!separated);
@@ -56,7 +56,7 @@ public class CollisionTests
 
         separated = NarrowPhase.Distance(ss, ss,
             JQuaternion.CreateRotationX((Real)0.2), delta,
-            out pA, out pB, out dist);
+            out pA, out pB, out normal, out dist);
 
         Assert.That(!overlap);
         Assert.That(separated);

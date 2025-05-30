@@ -95,7 +95,7 @@ public unsafe class HingeAngle : Constraint
         data.MinAngle = MathR.Sin((Real)limit.From / (Real)2.0);
         data.MaxAngle = MathR.Sin((Real)limit.To / (Real)2.0);
 
-        data.Axis = JVector.TransposedTransform(axis, body2.Orientation);
+        data.Axis = JVector.ConjugatedTransform(axis, body2.Orientation);
 
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;

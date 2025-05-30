@@ -81,20 +81,20 @@ public sealed partial class World
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
-        in JVector normal, Real penetration, bool speculative = false)
+        in JVector normal, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
     {
         lock (arbiter)
         {
             memContacts.ResizeLock.EnterReadLock();
-            arbiter.Handle.Data.IsSpeculative = speculative;
-            arbiter.Handle.Data.AddContact(point1, point2, normal, penetration);
+            arbiter.Handle.Data.AddContact(point1, point2, normal);
+            arbiter.Handle.Data.Mode &= ~removeFlags;
             memContacts.ResizeLock.ExitReadLock();
         }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
-        ref CollisionManifold manifold, bool speculative = false)
+        ref CollisionManifold manifold, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
 
@@ -102,8 +102,6 @@ public sealed partial class World
         {
             // Do no add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
-
-            arbiter.Handle.Data.IsSpeculative = speculative;
 
             for (int e = 0; e < manifold.Count; e++)
             {
@@ -113,7 +111,8 @@ public sealed partial class World
                 Real nd = JVector.Dot(mfA - mfB, normal);
                 if (nd < (Real)0.0) continue;
 
-                arbiter.Handle.Data.AddContact(mfA, mfB, normal, nd);
+                arbiter.Handle.Data.AddContact(mfA, mfB, normal);
+                arbiter.Handle.Data.Mode &= ~removeFlags;
             }
 
             memContacts.ResizeLock.ExitReadLock();
@@ -122,10 +121,11 @@ public sealed partial class World
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
-        in JVector point1, in JVector point2, in JVector normal, Real penetration, bool speculative = false)
+        in JVector point1, in JVector point2, in JVector normal,
+        ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
     {
         GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
-        RegisterContact(arbiter, point1, point2, normal, penetration, speculative);
+        RegisterContact(arbiter, point1, point2, normal, removeFlags);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -197,7 +197,7 @@ public sealed partial class World
             }
 
             RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
-                pA, pB, normal, penetration, speculative: true);
+                pA, pB, normal, ContactData.SolveMode.Angular);
 
             return;
         }
@@ -215,13 +215,11 @@ public sealed partial class World
             Unsafe.SkipInit(out CollisionManifold manifold);
             manifold.BuildManifold<RigidBodyShape,RigidBodyShape>(sA, sB, pA, pB, normal);
 
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
-                normal, ref manifold, speculative: false);
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, normal, ref manifold);
         }
         else
         {
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
-                pA, pB, normal, penetration, speculative: false);
+            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, pA, pB, normal);
         }
     }
 

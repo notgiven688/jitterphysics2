@@ -214,7 +214,7 @@ public partial struct JVector : IEquatable<JVector>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JVector TransposedTransform(in JVector vector, in JQuaternion quat)
+    public static JVector ConjugatedTransform(in JVector vector, in JQuaternion quat)
     {
         ConjugatedTransform(vector, quat, out JVector result);
         return result;
