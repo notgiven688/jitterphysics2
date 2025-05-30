@@ -513,8 +513,8 @@ public static class NarrowPhase
         where TA : ISupportMappable
     {
         // rotate the ray into the reference frame of bodyA..
-        JVector tdirection = JVector.TransposedTransform(direction, orientation);
-        JVector torigin = JVector.TransposedTransform(origin - position, orientation);
+        JVector tdirection = JVector.ConjugatedTransform(direction, orientation);
+        JVector torigin = JVector.ConjugatedTransform(origin - position, orientation);
 
         bool result = RayCast(support, torigin, tdirection, out lambda, out normal);
 
@@ -1052,8 +1052,8 @@ public static class NarrowPhase
         var deltaA = pointA - posA;
         var deltaB = pointB - posB;
 
-        pointA -= linearTransformationA + (deltaA - JVector.TransposedTransform(deltaA, sweepAngularDeltaA));
-        pointB -= linearTransformationB + (deltaB - JVector.TransposedTransform(deltaB, sweepAngularDeltaB));
+        pointA -= linearTransformationA + (deltaA - JVector.ConjugatedTransform(deltaA, sweepAngularDeltaA));
+        pointB -= linearTransformationB + (deltaB - JVector.ConjugatedTransform(deltaB, sweepAngularDeltaB));
 
         return true;
     }
