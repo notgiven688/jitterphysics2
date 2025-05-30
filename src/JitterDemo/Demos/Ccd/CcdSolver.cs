@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2;
 using Jitter2.Collision;
@@ -81,9 +82,11 @@ public class CcdSolver
         // Within proxies find the one which collides with 'shape' and has the smallest time of impact (TOI).
 
         RigidBodyShape otherShape = null!;
-        JVector bestpA = JVector.Zero;
-        JVector bestpB = JVector.Zero;
-        JVector bestNormal = JVector.Zero;
+
+        Unsafe.SkipInit(out JVector bestpA);
+        Unsafe.SkipInit(out JVector bestpB);
+        Unsafe.SkipInit(out JVector bestNormal);
+
         float smallestToi = float.MaxValue;
 
         for (int i = 0; i < proxies.Count; i++)
