@@ -718,7 +718,7 @@ public static class NarrowPhase
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationB, in JVector positionB,
-        out JVector pointA, out JVector pointB, out Real distance)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
         where TA : ISupportMappable where TB : ISupportMappable
     {
         // ..perform overlap test..
@@ -737,9 +737,9 @@ public static class NarrowPhase
 
         while (maxIter-- != 0)
         {
-            MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, -v, out var w);
+            if (distSq < CollideEpsilon * CollideEpsilon) goto ret_false;
 
-            distSq = v.LengthSquared();
+            MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, -v, out var w);
 
             Real deltaDist = JVector.Dot(v - w.V, v);
             if (deltaDist * deltaDist < CollideEpsilon * CollideEpsilon * distSq)
@@ -747,19 +747,22 @@ public static class NarrowPhase
                 break;
             }
 
-            if (distSq < CollideEpsilon * CollideEpsilon ||
-                !simplexSolver.AddVertex(w, out v))
-            {
-                distance = (Real)0.0;
-                simplexSolver.GetClosest(out pointA, out pointB);
-                return false;
-            }
+            if (!simplexSolver.AddVertex(w, out v)) goto ret_false;
+
+            distSq = v.LengthSquared();
         }
 
         distance = MathR.Sqrt(distSq);
+        normal = v * (-(Real)1.0 / distance);
         simplexSolver.GetClosest(out pointA, out pointB);
-
         return true;
+
+        ret_false:
+
+        distance = (Real)0.0;
+        normal = JVector.Zero;
+        simplexSolver.GetClosest(out pointA, out pointB);
+        return false;
     }
 
     /// <summary>
@@ -780,7 +783,7 @@ public static class NarrowPhase
     public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
-        out JVector pointA, out JVector pointB, out Real distance)
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
         where TA : ISupportMappable where TB : ISupportMappable
     {
         // rotate into the reference frame of bodyA..
@@ -789,7 +792,7 @@ public static class NarrowPhase
         JVector.ConjugatedTransform(position, orientationA, out position);
 
         // ..perform distance test..
-        bool result = Distance(supportA, supportB, orientation, position, out pointA, out pointB, out distance);
+        bool result = Distance(supportA, supportB, orientation, position, out pointA, out pointB, out normal, out distance);
 
         // ..rotate back. This approach potentially saves some matrix-vector multiplication when
         // the support function is called multiple times.
@@ -797,6 +800,7 @@ public static class NarrowPhase
         JVector.Add(pointA, positionA, out pointA);
         JVector.Transform(pointB, orientationA, out pointB);
         JVector.Add(pointB, positionA, out pointB);
+        JVector.Transform(normal, orientationA, out normal);
 
         return result;
     }
@@ -998,9 +1002,7 @@ public static class NarrowPhase
         JQuaternion sweepAngularDeltaA;
         JQuaternion sweepAngularDeltaB;
 
-        normal = JVector.Zero;
-
-        Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out var distance);
+        Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out normal, out var distance);
 
         if (distance < CollideEpsilon)
         {
@@ -1011,9 +1013,6 @@ public static class NarrowPhase
 
         while (true)
         {
-            normal = JVector.Normalize(pointB - pointA);
-            Debug.Assert(!MathHelper.CloseToZero(pointB - pointA));
-
             Real sweepLinearProj = JVector.Dot(normal, sweepA - sweepB);
             Real sweepLen = sweepLinearProj + maxAngularSpeed;
 
@@ -1041,8 +1040,10 @@ public static class NarrowPhase
 
             if (iter++ > MaxIter) break;
 
-            Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out distance);
+            Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector nn, out distance);
             if (distance < CollideEpsilon) break;
+
+            normal = nn;
         }
 
         // Hit point found at in world space at time lambda. Transform back to time 0.
