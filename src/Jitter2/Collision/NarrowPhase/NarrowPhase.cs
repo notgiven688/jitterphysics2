@@ -1040,10 +1040,16 @@ public static class NarrowPhase
 
             if (iter++ > MaxIter) break;
 
-            Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector nn, out distance);
-            if (distance < CollideEpsilon) break;
+            bool res = Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector nn, out distance);
 
-            normal = nn;
+            // We are a bit in a pickle here.
+            // If the advanced shapes are slightly overlapping (Distance returns false; this can either happen if the
+            // simplex solver encompasses the origin or the closest point on the simplex is close enough to the origin),
+            // we have valid posA and posB information, but the normal is not well-defined. So we keep the old normal.
+            if(res) normal = nn;
+
+            if (distance < CollideEpsilon)
+                break;
         }
 
         // Hit point found at in world space at time lambda. Transform back to time 0.
