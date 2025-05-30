@@ -23,7 +23,7 @@ public class Demo27 : IDemo, ICleanDemo
         pg.ResetScene(true);
 
         var paddle = world.CreateRigidBody();
-        paddle.AddShape(new BoxShape(5, 1, 0.1f));
+        paddle.AddShape(new BoxShape(5, 1, 0.01f));
         paddle.Position = new JVector(0, 3, -20);
         paddle.AffectedByGravity = false;
 
