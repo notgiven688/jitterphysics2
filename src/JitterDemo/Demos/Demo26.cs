@@ -50,14 +50,16 @@ public class Demo26 : IDemo
         NarrowPhase.Sweep(staticBar, dynamicBox, JQuaternion.Identity, JQuaternion.Identity,
             JVector.Zero, position,
             JVector.Zero, velocity, JVector.Zero, angularVelocity, 10, 10,
-            out JVector posA, out JVector posB,
-            out JVector normal, out float lambda);
+            out JVector posA, out JVector posB, out JVector normal, out float lambda);
 
         for (int i = 0; i <= 10; i++)
         {
             cr.PushMatrix(CreateMatrix(position, velocity, angularVelocity, i * 0.1f * lambda),
                 ColorGenerator.GetColor(i*4));
         }
+
+        pg.DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(posA), 2);
+        pg.DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(posB), 2);
 
         var kb = Keyboard.Instance;
         if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01f);
