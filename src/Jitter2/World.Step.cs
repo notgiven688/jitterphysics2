@@ -47,14 +47,14 @@ public sealed partial class World
     public enum Timings
     {
         PreStep,
-        UpdateBodies,
         NarrowPhase,
-        BroadPhase,
         AddArbiter,
-        RemoveArbiter,
-        Solve,
-        UpdateContacts,
         CheckDeactivation,
+        Solve,
+        RemoveArbiter,
+        UpdateContacts,
+        UpdateBodies,
+        BroadPhase,
         PostStep,
         Last
     }
