@@ -6,7 +6,6 @@ namespace JitterDemo.Renderer;
 public class RenderWindow : GLFWWindow
 {
     private TexturedQuad shadowDebug;
-    private TexturedQuad logo;
 
     public CSMRenderer CSMRenderer { get; }
     public Camera Camera { get; set; }
@@ -34,7 +33,6 @@ public class RenderWindow : GLFWWindow
         skybox = new Skybox();
 
         shadowDebug = null!;
-        logo = null!;
 
         lastTime = Time;
     }
@@ -50,8 +48,6 @@ public class RenderWindow : GLFWWindow
 
         GLDevice.SetClearColor(73.0f / 255.0f, 76.0f / 255.0f, 92.0f / 255.0f, 1);
 
-        logo.Position = new Vector2(Width - 160, 10);
-
         GLDevice.Clear(ClearFlags.ColorBuffer | ClearFlags.DepthBuffer);
 
         skybox.Draw();
@@ -65,8 +61,6 @@ public class RenderWindow : GLFWWindow
             shadowDebug.Position = new Vector2(10, 10);
             shadowDebug.Draw();
         }
-
-        logo.Draw();
 
         if (Keyboard.IsKeyDown(Keyboard.Key.Escape))
         {
@@ -98,12 +92,14 @@ public class RenderWindow : GLFWWindow
 
         string filename = Path.Combine("assets", "logo.tga");
 
+        /*
         Image.LoadImage(filename).FixedData((img, data) =>
         {
             logo = new TexturedQuad(img.Width, img.Height);
             logo.Texture = new Texture2D();
             logo.Texture.LoadImage(data, img.Width, img.Height, false);
         });
+        */
 
         shadowDebug.Position = new Vector2(Width - 210, 10);
 

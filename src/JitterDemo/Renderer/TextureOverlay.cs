@@ -24,8 +24,8 @@ public class TexturedQuad
         vertices[2] = new Vector2(1, 1);
         vertices[3] = new Vector2(0, 1);
 
-        indices[0] = new TriangleVertexIndex(0, 1, 2);
-        indices[1] = new TriangleVertexIndex(0, 2, 3);
+        indices[0] = new TriangleVertexIndex(1, 0, 2);
+        indices[1] = new TriangleVertexIndex(2, 0, 3);
 
         ab0.SetData(vertices);
 
