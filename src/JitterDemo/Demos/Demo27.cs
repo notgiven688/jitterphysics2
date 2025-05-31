@@ -24,7 +24,7 @@ public class Demo27 : IDemo, ICleanDemo
 
         var paddle = world.CreateRigidBody();
         paddle.AddShape(new BoxShape(5, 1, 0.01f));
-        paddle.Position = new JVector(0, 3, -20);
+        paddle.Position = (0, 3, -20);
         paddle.AffectedByGravity = false;
 
         var hinge = new HingeJoint(world, world.NullBody, paddle, paddle.Position,
@@ -32,12 +32,12 @@ public class Demo27 : IDemo, ICleanDemo
 
         var ball = world.CreateRigidBody();
         ball.AddShape(new SphereShape(0.2f));
-        ball.Position = new JVector(+2.2f, 3, 400);
-        ball.Velocity = new JVector(0, 0, -400);
+        ball.Position = (+2.2f, 3, 400);
+        ball.Velocity = (0, 0, -400);
         ball.Damping = (0, 0);
         ball.AffectedByGravity = false;
 
-        Common.BuildRagdoll( new JVector(-2.2f, 3.5f, -19.7f), body =>
+        Common.BuildRagdoll((-2.2f, 3.5f, -19.7f), body =>
         {
             body.AffectedByGravity = false;
             ccdSolver.Add(body);
