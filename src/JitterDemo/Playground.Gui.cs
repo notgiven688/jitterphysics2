@@ -178,7 +178,7 @@ public partial class Playground : RenderWindow
 
             for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)
             {
-                AddRow($"{(DynamicTree.Timings)i} (ms)",
+                AddRow($"{(DynamicTree.Timings)i}",
                     $"{World.DynamicTree.DebugTimings[i],0:N2}");
             }
 
