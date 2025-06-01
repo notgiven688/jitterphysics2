@@ -8,11 +8,11 @@ public class CSMRenderer
 {
     private readonly Dictionary<Type, CSMInstance> csmInstances = new();
 
-    public T GetInstance<T>() where T : CSMInstance
+    public T GetInstance<T>() where T : CSMInstance, new()
     {
         if (!csmInstances.TryGetValue(typeof(T), out CSMInstance? rinst))
         {
-            rinst = Activator.CreateInstance<T>();
+            rinst = new T();
             csmInstances.Add(typeof(T), rinst);
             rinst.Load();
         }

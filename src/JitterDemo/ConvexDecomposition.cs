@@ -9,7 +9,7 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class ConvexDecomposition<T> where T : MultiMesh
+public class ConvexDecomposition<T> where T : MultiMesh, new()
 {
     private readonly World world;
     private readonly List<RigidBody> bodies = new();
