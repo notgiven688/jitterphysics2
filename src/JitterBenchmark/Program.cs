@@ -1,25 +1,25 @@
-﻿using JitterTests;
+﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Jobs;
+using JitterTests;
 using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
 BenchmarkRunner.Run<TowerStack>();
 
+[MemoryDiagnoser]
+[SimpleJob(RuntimeMoniker.HostProcess, launchCount: 1, warmupCount: 1, iterationCount: 3)]
 public class TowerStack
 {
     private World world = null!;
 
+    [Params(2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40)]
+    public int ThreadCount;
+
     [GlobalSetup]
     public void GlobalSetup()
     {
-        World.Capacity capacity = new World.Capacity
-        {
-            BodyCount = 10_000,
-            ConstraintCount = 10_000,
-            ContactCount = 10_000,
-            SmallConstraintCount = 10_000
-        };
-
-        world = new World(capacity);
-        ThreadPool.Instance.ChangeThreadCount(4);
+        world = new World();
+        ThreadPool.Instance.ChangeThreadCount(ThreadCount);
         world.AllowDeactivation = false;
     }
 
@@ -27,9 +27,10 @@ public class TowerStack
     public void Test()
     {
         world.SolverIterations = (14, 4);
+        world.SubstepCount = 4;
 
-        Helper.BuildTower(world, JVector.Zero, 30);
-        Helper.AdvanceWorld(world, 10, 1.0f / 100.0f, false);
+        Helper.BuildTower(world, JVector.Zero, 400);
+        Helper.AdvanceWorld(world, 20, 1.0f / 100.0f, true);
 
         world.Clear();
     }
