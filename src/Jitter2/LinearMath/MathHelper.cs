@@ -137,11 +137,9 @@ public static class MathHelper
     /// </summary>
     public static bool IsZero(in JVector vector, Real epsilon = (Real)1e-6)
     {
-        Real x = MathR.Abs(vector.X);
-        Real y = MathR.Abs(vector.Y);
-        Real z = MathR.Abs(vector.Z);
-
-        return MathR.Max(x, MathR.Max(y, z)) < epsilon;
+        return !(MathR.Abs(vector.X) >= epsilon) &&
+               !(MathR.Abs(vector.Y) >= epsilon) &&
+               !(MathR.Abs(vector.Z) >= epsilon);
     }
 
     /// <summary>
