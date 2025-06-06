@@ -812,36 +812,30 @@ public partial class DynamicTree
 
             double area = Nodes[sibling].ExpandedBox.GetSurfaceArea();
 
-            double combinedArea = MergedSurface(Nodes[sibling].ExpandedBox, nodeBox);
-
-            double cost = 2.0d * combinedArea;
-            double inhcost = 2.0d * (combinedArea - area);
+            double cost = 2.0d * area;
             double costl, costr;
 
             if (Nodes[left].IsLeaf)
             {
-                costl = inhcost + MergedSurface(Nodes[left].ExpandedBox, nodeBox);
+                costl = MergedSurface(Nodes[left].ExpandedBox, nodeBox);
             }
             else
             {
                 double oldArea = Nodes[left].ExpandedBox.GetSurfaceArea();
                 double newArea = MergedSurface(Nodes[left].ExpandedBox, nodeBox);
-                costl = newArea - oldArea + inhcost;
+                costl = newArea - oldArea;
             }
 
             if (Nodes[rght].IsLeaf)
             {
-                costr = inhcost + MergedSurface(Nodes[rght].ExpandedBox, nodeBox);
+                costr = MergedSurface(Nodes[rght].ExpandedBox, nodeBox);
             }
             else
             {
                 double oldArea = Nodes[rght].ExpandedBox.GetSurfaceArea();
                 double newArea = MergedSurface(Nodes[rght].ExpandedBox, nodeBox);
-                costr = newArea - oldArea + inhcost;
+                costr = newArea - oldArea;
             }
-
-            // costl /= 2;
-            // costr /= 2;
 
             // if this is true, the choice is actually the best for the current candidate
             if (cost < costl && cost < costr) break;
