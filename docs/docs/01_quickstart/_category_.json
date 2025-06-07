@@ -1,9 +1,0 @@
-{
-  "label": "Quickstart",
-  "position": 1,
-  "collapsed": false,
-  "link": {
-    "type": "generated-index",
-    "description": "Small independent examples using Raylib and Jitter."
-  }
-}

@@ -1,7 +1,0 @@
-JitterDemo is using a slightly modified version of the ImGUI.NET
-source code generator to generate a native wrapper for cimgui.
-
-Derived from
-
-commit 7cea5ef042aa7302346340653f6cf5de55dd87ec
-(HEAD -> master, tag: v1.89.4, origin/master, origin/HEAD)
