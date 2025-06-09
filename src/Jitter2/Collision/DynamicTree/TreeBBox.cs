@@ -192,10 +192,10 @@ public struct TreeBBox
     private static VectorReal AsVectorReal(in JVector v) => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in v));
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static double MergedSurface(in TreeBBox a, in TreeBBox b)
+    public static double MergedSurface(in TreeBBox first, in TreeBBox second)
     {
-        var vMin = Vector.Min(AsVectorReal(a.Min), AsVectorReal(b.Min));
-        var vMax = Vector.Max(AsVectorReal(a.Max), AsVectorReal(b.Max));
+        var vMin = Vector.Min(AsVectorReal(first.Min), AsVectorReal(second.Min));
+        var vMax = Vector.Max(AsVectorReal(first.Max), AsVectorReal(second.Max));
         var extent = Vector.Subtract(vMax, vMin);
 
         var ex = extent.GetElement(0);
@@ -226,21 +226,21 @@ public struct TreeBBox
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void CreateMerged(in TreeBBox a, in TreeBBox b, out TreeBBox c)
+    public static void CreateMerged(in TreeBBox first, in TreeBBox second, out TreeBBox result)
     {
-        Unsafe.SkipInit(out c);
-        ref var min = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in c.Min));
-        ref var max = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in c.Max));
+        Unsafe.SkipInit(out result);
+        ref var min = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in result.Min));
+        ref var max = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in result.Max));
 
-        min = Vector.Min(AsVectorReal(a.Min), AsVectorReal(b.Min));
-        max = Vector.Max(AsVectorReal(a.Max), AsVectorReal(b.Max));
+        min = Vector.Min(AsVectorReal(first.Min), AsVectorReal(second.Min));
+        max = Vector.Max(AsVectorReal(first.Max), AsVectorReal(second.Max));
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Equals(in TreeBBox left, in TreeBBox right)
+    public static bool Equals(in TreeBBox first, in TreeBBox second)
     {
-        var a = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in left), 1));
-        var b = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in right), 1));
+        var a = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in first), 1));
+        var b = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in second), 1));
         return a.SequenceEqual(b); // SIMD-accelerated in .NET ≥ 5
     }
 }
