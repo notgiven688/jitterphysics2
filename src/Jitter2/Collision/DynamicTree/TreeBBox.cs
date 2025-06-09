@@ -56,14 +56,14 @@ public struct TreeBBox
     /// reinterpreted as a SIMD vector for efficient processing.
     /// This enables vectorized operations on the bounding box's minimum corner.
     /// </summary>
-    public VectorReal VectorMin => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in Min));
+    public ref VectorReal VectorMin => ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in this.Min));
 
     /// <summary>
     /// Returns a <see cref="VectorReal"/> view of the <see cref="Max"/> vector,
     /// reinterpreted as a SIMD vector for efficient processing.
     /// This enables vectorized operations on the bounding box's maximum corner.
     /// </summary>
-    public VectorReal VectorMax => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in Max));
+    public ref VectorReal VectorMax => ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in this.Max));
 
     public TreeBBox(in JVector min, in JVector max)
     {
@@ -203,13 +203,10 @@ public struct TreeBBox
     // ─── Helper functions with SIMD support ───────────────────────────
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static VectorReal AsVectorReal(in JVector v) => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in v));
-    
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double MergedSurface(in TreeBBox first, in TreeBBox second)
     {
-        var vMin = Vector.Min(AsVectorReal(first.Min), AsVectorReal(second.Min));
-        var vMax = Vector.Max(AsVectorReal(first.Max), AsVectorReal(second.Max));
+        var vMin = Vector.Min(first.VectorMin, second.VectorMin);
+        var vMax = Vector.Max(first.VectorMax, second.VectorMax);
         var extent = Vector.Subtract(vMax, vMin);
 
         var ex = extent.GetElement(0);
@@ -222,8 +219,8 @@ public struct TreeBBox
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Encompasses(in TreeBBox outer, in TreeBBox inner)
     {
-        var leMin = Vector.LessThanOrEqual(AsVectorReal(outer.Min), AsVectorReal(inner.Min));
-        var geMax = Vector.GreaterThanOrEqual(AsVectorReal(outer.Max), AsVectorReal(inner.Max));
+        var leMin = Vector.LessThanOrEqual(outer.VectorMin, inner.VectorMin);
+        var geMax = Vector.GreaterThanOrEqual(outer.VectorMax, inner.VectorMax);
 
         var mask = Vector.BitwiseAnd(leMin, geMax);
         return Vector.EqualsAll(mask.AsInt32(), Vector.Create(-1));
@@ -232,8 +229,8 @@ public struct TreeBBox
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotDisjoint(in TreeBBox first, in TreeBBox second)
     {
-        var geMin = Vector.GreaterThanOrEqual(AsVectorReal(first.Max), AsVectorReal(second.Min));
-        var leMax = Vector.LessThanOrEqual(AsVectorReal(first.Min), AsVectorReal(second.Max));
+        var geMin = Vector.GreaterThanOrEqual(first.VectorMax, second.VectorMin);
+        var leMax = Vector.LessThanOrEqual(first.VectorMin, second.VectorMax);
 
         var mask = Vector.BitwiseAnd(geMin, leMax);
         return Vector.EqualsAll(mask.AsInt32(), Vector.Create(-1));
@@ -243,11 +240,8 @@ public struct TreeBBox
     public static void CreateMerged(in TreeBBox first, in TreeBBox second, out TreeBBox result)
     {
         Unsafe.SkipInit(out result);
-        ref var min = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in result.Min));
-        ref var max = ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in result.Max));
-
-        min = Vector.Min(AsVectorReal(first.Min), AsVectorReal(second.Min));
-        max = Vector.Max(AsVectorReal(first.Max), AsVectorReal(second.Max));
+        result.VectorMin = Vector.Min(first.VectorMin, second.VectorMin);
+        result.VectorMax = Vector.Max(first.VectorMax, second.VectorMax);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
