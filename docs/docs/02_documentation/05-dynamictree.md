@@ -46,7 +46,7 @@ while (stack.TryPop(out int id))
 {
     ref DynamicTree.Node node = ref tree.Nodes[id];
     
-    if (node.ExpandedBox.Contains(point) != JBBox.ContainmentType.Disjoint)
+    if (node.ExpandedBox.Contains(point))
     {
         if (node.IsLeaf)
         {

@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.6.7 (2025-06-09)
+
+- Introduce SIMD accelerated `TreeBox` for `DynamicTree`.
+
 ### Jitter 2.6.6 (2025-05-31)
 
 - Implicit conversion for `JVector` and `JQuaternion` from tuples, e.g. `cube.Position = (1, 2, 3);`.
