@@ -79,54 +79,6 @@ public sealed partial class World
     /// </summary>
     public Real SpeculativeVelocityThreshold { get; set; } =(Real)10;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
-        in JVector normal, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
-    {
-        lock (arbiter)
-        {
-            memContacts.ResizeLock.EnterReadLock();
-            arbiter.Handle.Data.AddContact(point1, point2, normal);
-            arbiter.Handle.Data.Mode &= ~removeFlags;
-            memContacts.ResizeLock.ExitReadLock();
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
-        ref CollisionManifold manifold, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
-    {
-        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
-
-        lock (arbiter)
-        {
-            // Do no add contacts while contacts might be resized
-            memContacts.ResizeLock.EnterReadLock();
-
-            for (int e = 0; e < manifold.Count; e++)
-            {
-                JVector mfA = manifold.ManifoldA[e];
-                JVector mfB = manifold.ManifoldB[e];
-
-                Real nd = JVector.Dot(mfA - mfB, normal);
-                if (nd < (Real)0.0) continue;
-
-                arbiter.Handle.Data.AddContact(mfA, mfB, normal);
-                arbiter.Handle.Data.Mode &= ~removeFlags;
-            }
-
-            memContacts.ResizeLock.ExitReadLock();
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
-        in JVector point1, in JVector point2, in JVector normal,
-        ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
-    {
-        GetArbiter(id0, id1, body1, body2, out Arbiter arbiter);
-        RegisterContact(arbiter, point1, point2, normal, removeFlags);
-    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -223,14 +175,146 @@ public sealed partial class World
         }
     }
 
+    /// <summary>
+    /// Registers a single contact point into an existing <see cref="Arbiter"/>.
+    /// </summary>
+    /// <remarks>
+    /// This method adds a contact point to the specified <paramref name="arbiter"/>, using the provided contact points
+    /// and normal. All input vectors must be in world space. The <paramref name="normal"/> vector must be normalized.
+    /// This method assumes that the <paramref name="arbiter"/> is already valid and mapped to the correct pair of bodies.
+    /// </remarks>
+    /// <param name="arbiter">The existing <see cref="Arbiter"/> instance to which the contact will be added.</param>
+    /// <param name="point1">The contact point on the first body, in world space.</param>
+    /// <param name="point2">The contact point on the second body, in world space.</param>
+    /// <param name="normal">The contact normal, in world space. Must be normalized.</param>
+    /// <param name="removeFlags">A bitmask of <see cref="ContactData.SolveMode"/> flags to be removed from the full
+    /// contact solution (see <see cref="ContactData.SolveMode.Full"/>).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void GetArbiter(ulong id0, ulong id1, RigidBody b0, RigidBody b1, out Arbiter arbiter)
+    public void RegisterContact(Arbiter arbiter, in JVector point1, in JVector point2,
+        in JVector normal, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
+    {
+        lock (arbiter)
+        {
+            memContacts.ResizeLock.EnterReadLock();
+            arbiter.Handle.Data.AddContact(point1, point2, normal);
+            arbiter.Handle.Data.Mode &= ~removeFlags;
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
+    /// <summary>
+    /// Registers one or more contact points between two rigid bodies using a <see cref="CollisionManifold"/>,
+    /// creating an <see cref="Arbiter"/> if one does not already exist.
+    /// </summary>
+    /// <remarks>
+    /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
+    /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
+    ///
+    /// This method is thread-safe.
+    ///
+    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// </remarks>
+    /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
+    /// <param name="id1">The second identifier associated with the contact.</param>
+    /// <param name="body1">The first rigid body involved in the contact.</param>
+    /// <param name="body2">The second rigid body involved in the contact.</param>
+    /// <param name="normal">
+    /// The contact normal, in world space. Must be a unit vector pointing from <paramref name="body1"/> toward <paramref name="body2"/>.
+    /// </param>
+    /// <param name="manifold">A <see cref="CollisionManifold"/> containing contact point pairs in world space.</param>
+    /// <param name="removeFlags">A bitmask of <see cref="ContactData.SolveMode"/> flags to be removed from the full
+    /// contact solution (see <see cref="ContactData.SolveMode.Full"/>).</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2, in JVector normal,
+        ref CollisionManifold manifold, ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
+    {
+        GetOrCreateArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+
+        lock (arbiter)
+        {
+            // Do no add contacts while contacts might be resized
+            memContacts.ResizeLock.EnterReadLock();
+
+            for (int e = 0; e < manifold.Count; e++)
+            {
+                JVector mfA = manifold.ManifoldA[e];
+                JVector mfB = manifold.ManifoldB[e];
+
+                Real nd = JVector.Dot(mfA - mfB, normal);
+                if (nd < (Real)0.0) continue;
+
+                arbiter.Handle.Data.AddContact(mfA, mfB, normal);
+                arbiter.Handle.Data.Mode &= ~removeFlags;
+            }
+
+            memContacts.ResizeLock.ExitReadLock();
+        }
+    }
+
+    /// <summary>
+    /// Registers a contact point between two rigid bodies, creating an <see cref="Arbiter"/> if one does not already exist.
+    /// </summary>
+    /// <remarks>
+    /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
+    /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
+    /// The provided contact points and normal must be in world space. The <paramref name="normal"/> vector must be normalized.
+    ///
+    /// This method is thread-safe.
+    ///
+    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// </remarks>
+    /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
+    /// <param name="id1">The second identifier associated with the contact.</param>
+    /// <param name="body1">The first rigid body involved in the contact.</param>
+    /// <param name="body2">The second rigid body involved in the contact.</param>
+    /// <param name="point1">The contact point on <paramref name="body1"/>, in world space.</param>
+    /// <param name="point2">The contact point on <paramref name="body2"/>, in world space.</param>
+    /// <param name="normal">
+    /// The contact normal, in world space. Must be a unit vector pointing from <paramref name="body1"/> toward <paramref name="body2"/>.
+    /// </param>
+    /// <param name="removeFlags">A bitmask of <see cref="ContactData.SolveMode"/> flags to be removed from the full
+    /// contact solution (see <see cref="ContactData.SolveMode.Full"/>).</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void RegisterContact(ulong id0, ulong id1, RigidBody body1, RigidBody body2,
+        in JVector point1, in JVector point2, in JVector normal,
+        ContactData.SolveMode removeFlags = ContactData.SolveMode.None)
+    {
+        GetOrCreateArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+        RegisterContact(arbiter, point1, point2, normal, removeFlags);
+    }
+
+    /// <summary>
+    /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs,
+    /// or creates a new one if none exists.
+    /// </summary>
+    /// <remarks>
+    /// This method ensures there is a unique <see cref="Arbiter"/> for each specific ordered pair of IDs.
+    /// If an arbiter already exists, it is returned via the <paramref name="arbiter"/> out parameter.
+    /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
+    /// and registered internally. The body arguments are used only when a new arbiter is created.
+    ///
+    /// This method is thread-safe.
+    ///
+    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// </remarks>
+    /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
+    /// <param name="id1">The second identifier associated with the contact.</param>
+    /// <param name="body1">The first rigid body. Used only if a new arbiter is created.</param>
+    /// <param name="body2">The second rigid body. Used only if a new arbiter is created.</param>
+    /// <param name="arbiter">The resulting <see cref="Arbiter"/> instance associated with the ID pair.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void GetOrCreateArbiter(ulong id0, ulong id1, RigidBody body1, RigidBody body2, out Arbiter arbiter)
     {
         ArbiterKey arbiterKey = new(id0, id1);
 
         lock (arbiters.GetLock(arbiterKey))
         {
-            if (arbiters.TryGetValue(arbiterKey, out arbiter!)) return;
+            if (arbiters.TryGetValue(arbiterKey, out arbiter!))
+            {
+                Debug.Assert(arbiter.Body1 == body1 && arbiter.Body2 == body2 ||
+                             arbiter.Body1 == body2 && arbiter.Body2 == body1);
+                return;
+            }
 
             lock (memContacts)
             {
@@ -241,10 +325,10 @@ public sealed partial class World
 
                 var handle = memContacts.Allocate(true);
                 arbiter.Handle = handle;
-                handle.Data.Init(b0, b1);
+                handle.Data.Init(body1, body2);
                 handle.Data.Key = arbiterKey;
-                arbiter.Body1 = b0;
-                arbiter.Body2 = b1;
+                arbiter.Body1 = body1;
+                arbiter.Body2 = body2;
 
                 arbiters.Add(arbiterKey, arbiter);
                 deferredArbiters.Add(arbiter);

@@ -137,12 +137,12 @@ public class CcdSolver
 
         if(shape.ShapeId < otherShape.ShapeId)
         {
-            world.GetArbiter(shape.ShapeId, otherShape.ShapeId, shape.RigidBody, otherShape.RigidBody, out arbiter);
+            world.GetOrCreateArbiter(shape.ShapeId, otherShape.ShapeId, shape.RigidBody, otherShape.RigidBody, out arbiter);
             world.RegisterContact(arbiter, bestpA, bestpB, bestNormal);
         }
         else
         {
-            world.GetArbiter(otherShape.ShapeId, shape.ShapeId, otherShape.RigidBody, shape.RigidBody, out arbiter);
+            world.GetOrCreateArbiter(otherShape.ShapeId, shape.ShapeId, otherShape.RigidBody, shape.RigidBody, out arbiter);
             world.RegisterContact(arbiter, bestpB, bestpA, -bestNormal);
         }
 
