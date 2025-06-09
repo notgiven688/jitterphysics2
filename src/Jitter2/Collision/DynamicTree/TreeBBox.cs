@@ -51,6 +51,20 @@ public struct TreeBBox
     [FieldOffset(4 * sizeof(Real))] public JVector Max;
     [FieldOffset(7 * sizeof(Real))] public Real MaxW;
 
+    /// <summary>
+    /// Returns a <see cref="VectorReal"/> view of the <see cref="Min"/> vector,
+    /// reinterpreted as a SIMD vector for efficient processing.
+    /// This enables vectorized operations on the bounding box's minimum corner.
+    /// </summary>
+    public VectorReal VectorMin => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in Min));
+
+    /// <summary>
+    /// Returns a <see cref="VectorReal"/> view of the <see cref="Max"/> vector,
+    /// reinterpreted as a SIMD vector for efficient processing.
+    /// This enables vectorized operations on the bounding box's maximum corner.
+    /// </summary>
+    public VectorReal VectorMax => Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in Max));
+
     public TreeBBox(in JVector min, in JVector max)
     {
         this.Min = min;
