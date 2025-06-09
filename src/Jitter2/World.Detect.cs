@@ -311,8 +311,7 @@ public sealed partial class World
         {
             if (arbiters.TryGetValue(arbiterKey, out arbiter!))
             {
-                Debug.Assert(arbiter.Body1 == body1 && arbiter.Body2 == body2 ||
-                             arbiter.Body1 == body2 && arbiter.Body2 == body1);
+                Debug.Assert(arbiter.Body1 == body1 && arbiter.Body2 == body2);
                 return;
             }
 
