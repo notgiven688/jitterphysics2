@@ -106,6 +106,8 @@ public partial class DynamicTree
     private readonly Action<Parallel.Batch> scanForMovedProxies;
     private readonly Action<Parallel.Batch> scanForOverlaps;
 
+    private readonly Random random = new Random();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree"/> class.
     /// </summary>
@@ -637,26 +639,8 @@ public partial class DynamicTree
         if (direction.Z < (Real)0.0) box.Min.Z += direction.Z;
         else box.Max.Z += direction.Z;
 
-        box.Min.X -= ExpandEps;
-        box.Min.Y -= ExpandEps;
-        box.Min.Z -= ExpandEps;
-
-        box.Max.X += ExpandEps;
-        box.Max.Y += ExpandEps;
-        box.Max.Z += ExpandEps;
-    }
-
-    private static Real GenerateRandom(ulong seed)
-    {
-        const uint a = 21_687_443;
-        const uint b = 35_253_893;
-
-        seed ^= seed << 13;
-        seed ^= seed >> 17;
-        seed ^= seed << 5;
-
-        uint randomBits = (uint)seed * a + b;
-        return MathR.Abs((Real)randomBits / uint.MaxValue);
+        box.Min -= new JVector(ExpandEps);
+        box.Max += new JVector(ExpandEps);
     }
 
     private void InternalAddRemoveProxy(IDynamicTreeProxy proxy)
@@ -666,8 +650,8 @@ public partial class DynamicTree
         int parent = RemoveLeaf(proxy.NodePtr);
 
         int index = proxy.NodePtr;
-        
-        Real pseudoRandomExt = GenerateRandom((ulong)index);
+
+        Real pseudoRandomExt = (Real)random.NextDouble();
 
         ExpandBoundingBox(ref box, proxy.Velocity * ExpandFactor * ((Real)1.0 + pseudoRandomExt));
 
