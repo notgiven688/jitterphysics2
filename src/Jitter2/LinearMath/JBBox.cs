@@ -180,13 +180,11 @@ public struct JBBox : IEquatable<JBBox>
         return true;
     }
 
-    public ContainmentType Contains(in JVector point)
+    public bool Contains(in JVector point)
     {
         return Min.X <= point.X && point.X <= Max.X &&
                Min.Y <= point.Y && point.Y <= Max.Y &&
-               Min.Z <= point.Z && point.Z <= Max.Z
-            ? ContainmentType.Contains
-            : ContainmentType.Disjoint;
+               Min.Z <= point.Z && point.Z <= Max.Z;
     }
 
     public void GetCorners(JVector[] corners)
@@ -244,14 +242,13 @@ public struct JBBox : IEquatable<JBBox>
 
     public readonly bool Disjoint(in JBBox box)
     {
-        return !(Max.X >= box.Min.X && Min.X <= box.Max.X && Max.Y >= box.Min.Y && Min.Y <= box.Max.Y &&
-                 Max.Z >= box.Min.Z && Min.Z <= box.Max.Z);
+        return Max.X < box.Min.X || Min.X > box.Max.X || Max.Y < box.Min.Y || Min.Y > box.Max.Y ||
+               Max.Z < box.Min.Z || Min.Z > box.Max.Z;
     }
 
     public readonly bool Encompasses(in JBBox box)
     {
-        return Min.X <= box.Min.X && Max.X >= box.Max.X &&
-               Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
+        return Min.X <= box.Min.X && Max.X >= box.Max.X && Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
                Min.Z <= box.Min.Z && Max.Z >= box.Max.Z;
     }
 

@@ -15,13 +15,13 @@ public partial class Playground : RenderWindow
     private bool debugDrawTree;
     private int debugDrawTreeDepth = 1;
 
-    private readonly Action<JBBox, int> drawBox;
+    private readonly Action<TreeBBox, int> drawBox;
 
-    private void DrawBox(JBBox box, int depth)
+    private void DrawBox(TreeBBox treeBBox, int depth)
     {
         if (depth != debugDrawTreeDepth) return;
-        DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(box.Min),
-            Conversion.FromJitter(box.Max));
+        DebugRenderer.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(treeBBox.Min),
+            Conversion.FromJitter(treeBBox.Max));
     }
 
     public Vector3 rayHitPoint = Vector3.Zero;
