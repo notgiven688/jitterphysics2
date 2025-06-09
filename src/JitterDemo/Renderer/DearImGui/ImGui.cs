@@ -121,12 +121,14 @@ public static unsafe class ImGui
     }
 
     public static void SetStyle(float windowBorderSize = 1.0f, float frameBordersize = 1.0f,
-        float indentSpacing = 1.0f)
+        float indentSpacing = 1.0f, float windowRounding = 6.0f, float popupRounding = 6.0f)
     {
         ImGuiStyle* style = ImGuiNative.igGetStyle();
         style->WindowBorderSize = windowBorderSize;
         style->FrameBorderSize = frameBordersize;
         style->IndentSpacing = indentSpacing;
+        style->WindowRounding = windowRounding;
+        style->PopupRounding = popupRounding;
     }
 
     public static void Separator()
