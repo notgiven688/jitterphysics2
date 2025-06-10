@@ -261,7 +261,7 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
     }
 
     /// <summary>
-    /// Creates a Quaternion from a unit vector and an angle to rotate about the vector.
+    /// Creates a Quaternion from a <b>unit</b> vector and an angle to rotate about the vector.
     /// </summary>
     /// <param name="axis">The unit vector to rotate around.</param>
     /// <param name="angle">The angle of rotation.</param>
@@ -270,6 +270,39 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         Real halfAngle = (Real)angle * (Real)0.5;
         (Real s, Real c) = MathR.SinCos(halfAngle);
         return new JQuaternion(axis.X * s, axis.Y * s, axis.Z * s, c);
+    }
+
+    /// <summary>Converts a <b>unit</b> quaternion to axis–angle form.</summary>
+    /// <remarks>
+    /// Assumes <paramref name="quaternion"/> is already normalised.
+    /// The returned <paramref name="angle"/> is clamped to the shortest arc [0 , π].
+    /// </remarks>
+    /// <param name="quaternion">Unit quaternion to decompose.</param>
+    /// <param name="axis">Receives the unit rotation axis.</param>
+    /// <param name="angle">Receives the rotation angle (radians).</param>
+    public static void ToAxisAngle(JQuaternion quaternion, out JVector axis, out Real angle)
+    {
+        Real s = MathR.Sqrt(MathR.Max((Real)0.0, (Real)1.0 - quaternion.W * quaternion.W));
+
+        const Real epsilonSingularity = (Real)1e-6;
+
+        if (s < epsilonSingularity)
+        {
+            angle = (Real)0.0;
+            axis = JVector.UnitX; // Default to X-axis for infinitesimal rotations
+            return;
+        }
+
+        Real invS = (Real)1.0 / s;
+        axis = new JVector(quaternion.X * invS, quaternion.Y * invS, quaternion.Z * invS);
+        angle = (Real)2.0 * MathR.Acos(quaternion.W);
+
+        // Enforce the shortest-arc representation (angle between 0 and PI radians).
+        if (angle > MathR.PI)
+        {
+            angle = (Real)2.0 * MathR.PI - angle;
+            axis  = -axis;
+        }
     }
 
     /// <summary>
