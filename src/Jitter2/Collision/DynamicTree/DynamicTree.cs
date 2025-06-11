@@ -160,7 +160,7 @@ public partial class DynamicTree
             if(proxyA == null || proxyB == null) continue;
             if(!Filter(proxyA, proxyB)) continue;
 
-            if (!proxyA.WorldBoundingBox.Disjoint(proxyB.WorldBoundingBox))
+            if (JBBox.NotDisjoint(proxyA.WorldBoundingBox, proxyB.WorldBoundingBox))
             {
                 parameter.Action(proxyA, proxyB);
             }
@@ -451,7 +451,7 @@ public partial class DynamicTree
 
             if (node.IsLeaf)
             {
-                if (node.Proxy!.WorldBoundingBox.NotDisjoint(box))
+                if (JBBox.NotDisjoint(node.Proxy!.WorldBoundingBox, box))
                 {
                     hits.Add(node.Proxy);
                 }

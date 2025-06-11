@@ -58,7 +58,7 @@ public partial class Playground : RenderWindow
                     if (body.Shapes.Count == 0)
                     {
                         // mass point
-                        box.AddPoint(body.Position);
+                        JBBox.AddPointInPlace(ref box, body.Position);
                     }
                     else
                     {

@@ -108,7 +108,7 @@ public class Octree
         {
             foreach (var t in tris)
             {
-                if (box.NotDisjoint(triangleBoxes[t]))
+                if (JBBox.NotDisjoint(box, triangleBoxes[t]))
                 {
                     triangles.Push(t);
                 }
@@ -139,9 +139,9 @@ public class Octree
             ref var triangle = ref indices[i];
 
             triangleBox = JBBox.SmallBox;
-            triangleBox.AddPoint(vertices[triangle.IndexA]);
-            triangleBox.AddPoint(vertices[triangle.IndexB]);
-            triangleBox.AddPoint(vertices[triangle.IndexC]);
+            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexA]);
+            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexB]);
+            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexC]);
         }
 
         JBBox box = JBBox.CreateFromPoints(vertices);

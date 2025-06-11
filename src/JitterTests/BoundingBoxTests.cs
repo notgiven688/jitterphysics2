@@ -7,7 +7,7 @@ public class BoundingBoxTests
     private static void CheckBoundingBox(RigidBodyShape shape)
     {
         JQuaternion ori = new JQuaternion(1, 2, 3, 4);
-        ori.Normalize();
+        JQuaternion.NormalizeInPlace(ref ori);
 
         JVector pos = new JVector(12, -11, 17);
 

@@ -145,7 +145,7 @@ public class ConeShape : RigidBodyShape
         box.Min = p1 - new JVector(xext, yext, zext);
         box.Max = p1 + new JVector(xext, yext, zext);
 
-        box.AddPoint(p2);
+        JBBox.AddPointInPlace(ref box, p2);
 
         box.Min += position;
         box.Max += position;

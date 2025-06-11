@@ -98,7 +98,7 @@ public unsafe class PointOnPlane : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        axis.Normalize();
+        JVector.NormalizeInPlace(ref axis);
 
         JVector.Subtract(anchor1, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor2, body2.Position, out data.LocalAnchor2);

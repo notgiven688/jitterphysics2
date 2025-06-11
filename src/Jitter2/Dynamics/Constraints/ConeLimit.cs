@@ -84,7 +84,7 @@ public unsafe class ConeLimit : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        axis.Normalize();
+        JVector.NormalizeInPlace(ref axis);
 
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis1);
         JVector.ConjugatedTransform(axis, body2.Orientation, out data.LocalAxis2);

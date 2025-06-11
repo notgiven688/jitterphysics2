@@ -68,7 +68,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         var ab = b - a;
         var ac = c - a;
         var normal = JVector.Cross(ab, ac);
-        normal.Normalize();
+        JVector.NormalizeInPlace(ref normal);
 
         var ap = point - a;
         var distance = JVector.Dot(ap, normal);
@@ -108,7 +108,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         JVector tnormal = triangle.Normal;
         tnormal = JVector.Transform(tnormal, triangleShape.RigidBody!.Data.Orientation);
 
-        if (c2) tnormal.Negate();
+        if (c2) JVector.NegateInPlace(ref tnormal);
 
         // Make triangles penetrable from one side
         if (JVector.Dot(normal, tnormal) < -cosAT) return false;
@@ -180,7 +180,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             }
         }
 
-        if (c2) nnormal.Negate();
+        if (c2) JVector.NegateInPlace(ref nnormal);
 
         JVector midPoint = (Real)0.5 * (pointA + pointB);
 

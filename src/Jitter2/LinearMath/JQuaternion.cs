@@ -442,9 +442,17 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         return (Real)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Real LengthSquared()
+    {
+        return X * X + Y * Y + Z * Z + W * W;
+    }
+
     /// <summary>
     /// Normalizes the quaternion to unit length.
     /// </summary>
+    [Obsolete($"In-place Normalize() is deprecated; " +
+              $"use the static {nameof(JQuaternion.Normalize)} method or {nameof(JQuaternion.NormalizeInPlace)}.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
@@ -454,6 +462,16 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         Y *= num;
         Z *= num;
         W *= num;
+    }
+
+    public static void NormalizeInPlace(ref JQuaternion quaternion)
+    {
+        Real num2 = quaternion.LengthSquared();
+        Real num = (Real)1.0 / MathR.Sqrt(num2);
+        quaternion.X *= num;
+        quaternion.Y *= num;
+        quaternion.Z *= num;
+        quaternion.W *= num;
     }
 
     /// <inheritdoc cref="Normalize()"/>

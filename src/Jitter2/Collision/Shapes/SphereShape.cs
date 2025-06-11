@@ -59,8 +59,7 @@ public class SphereShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        result = direction;
-        result.Normalize();
+        result = JVector.Normalize(direction);
         JVector.Multiply(result, radius, out result);
     }
 

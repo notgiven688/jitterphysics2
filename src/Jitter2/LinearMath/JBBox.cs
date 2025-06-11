@@ -59,6 +59,12 @@ public struct JBBox : IEquatable<JBBox>
         SmallBox.Max = new JVector(Real.MinValue);
     }
 
+    public JBBox(JVector min, JVector max)
+    {
+        Min = min;
+        Max = max;
+    }
+
     /// <summary>
     /// Returns a string representation of the <see cref="JBBox"/>.
     /// </summary>
@@ -67,37 +73,9 @@ public struct JBBox : IEquatable<JBBox>
         return $"Min={{{Min}}}, Max={{{Max}}}";
     }
 
-    public JBBox(JVector min, JVector max)
-    {
-        Min = min;
-        Max = max;
-    }
-
-    internal void InverseTransform(ref JVector position, ref JMatrix orientation)
-    {
-        JVector.Subtract(Max, position, out Max);
-        JVector.Subtract(Min, position, out Min);
-
-        JVector.Add(Max, Min, out JVector center);
-        center.X *= (Real)0.5;
-        center.Y *= (Real)0.5;
-        center.Z *= (Real)0.5;
-
-        JVector.Subtract(Max, Min, out JVector halfExtents);
-        halfExtents.X *= (Real)0.5;
-        halfExtents.Y *= (Real)0.5;
-        halfExtents.Z *= (Real)0.5;
-
-        JVector.TransposedTransform(center, orientation, out center);
-
-        JMatrix.Absolute(orientation, out JMatrix abs);
-        JVector.TransposedTransform(halfExtents, abs, out halfExtents);
-
-        JVector.Add(center, halfExtents, out Max);
-        JVector.Subtract(center, halfExtents, out Min);
-    }
-
-    public void Transform(ref JMatrix orientation)
+    // Prefer using CreateTransformed for clarity and to avoid mutations.
+    [Obsolete($"Use static {nameof(CreateTransformed)} instead.")]
+    public void Transform(in JMatrix orientation)
     {
         JVector halfExtents = (Real)0.5 * (Max - Min);
         JVector center = (Real)0.5 * (Max + Min);
@@ -111,7 +89,24 @@ public struct JBBox : IEquatable<JBBox>
         Min = center - halfExtents;
     }
 
-    private bool Intersect1D(Real start, Real dir, Real min, Real max,
+    public static JBBox CreateTransformed(in JBBox box, in JMatrix orientation)
+    {
+        JVector halfExtents = (Real)0.5 * (box.Max - box.Min);
+        JVector center = (Real)0.5 * (box.Max + box.Min);
+
+        JVector.Transform(center, orientation, out center);
+
+        JMatrix.Absolute(orientation, out var abs);
+        JVector.Transform(halfExtents, abs, out halfExtents);
+
+        JBBox result;
+        result.Max = center + halfExtents;
+        result.Min = center - halfExtents;
+
+        return result;
+    }
+
+    private readonly bool Intersect1D(Real start, Real dir, Real min, Real max,
         ref Real enter, ref Real exit)
     {
         if (dir * dir < Epsilon * Epsilon) return start >= min && start <= max;
@@ -131,7 +126,7 @@ public struct JBBox : IEquatable<JBBox>
         return true;
     }
 
-    public bool SegmentIntersect(in JVector origin, in JVector direction)
+    public readonly bool SegmentIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = (Real)1.0;
 
@@ -147,7 +142,7 @@ public struct JBBox : IEquatable<JBBox>
         return true;
     }
 
-    public bool RayIntersect(in JVector origin, in JVector direction)
+    public readonly bool RayIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = Real.MaxValue;
 
@@ -163,7 +158,7 @@ public struct JBBox : IEquatable<JBBox>
         return true;
     }
 
-    public bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
+    public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
     {
         enter = (Real)0.0;
         Real exit = Real.MaxValue;
@@ -180,14 +175,14 @@ public struct JBBox : IEquatable<JBBox>
         return true;
     }
 
-    public bool Contains(in JVector point)
+    public readonly bool Contains(in JVector point)
     {
         return Min.X <= point.X && point.X <= Max.X &&
                Min.Y <= point.Y && point.Y <= Max.Y &&
                Min.Z <= point.Z && point.Z <= Max.Z;
     }
 
-    public void GetCorners(JVector[] corners)
+    public readonly void GetCorners(JVector[] corners)
     {
         corners[0].Set(Min.X, Max.Y, Max.Z);
         corners[1].Set(Max.X, Max.Y, Max.Z);
@@ -199,10 +194,18 @@ public struct JBBox : IEquatable<JBBox>
         corners[7].Set(Min.X, Min.Y, Min.Z);
     }
 
+    // Marked obsolete to guide users toward the preferred static method.
+    [Obsolete($"Use static {nameof(AddPointInPlace)} instead.")]
     public void AddPoint(in JVector point)
     {
         JVector.Max(Max, point, out Max);
         JVector.Min(Min, point, out Min);
+    }
+
+    public static void AddPointInPlace(ref JBBox box, in JVector point)
+    {
+        JVector.Max(box.Max, point, out box.Max);
+        JVector.Min(box.Min, point, out box.Min);
     }
 
     public static JBBox CreateFromPoints(JVector[] points)
@@ -234,22 +237,22 @@ public struct JBBox : IEquatable<JBBox>
         return result;
     }
 
-    public readonly bool NotDisjoint(in JBBox box)
+    public static bool NotDisjoint(in JBBox left, in JBBox right)
     {
-        return Max.X >= box.Min.X && Min.X <= box.Max.X && Max.Y >= box.Min.Y && Min.Y <= box.Max.Y &&
-               Max.Z >= box.Min.Z && Min.Z <= box.Max.Z;
+        return left.Max.X >= right.Min.X && left.Min.X <= right.Max.X && left.Max.Y >= right.Min.Y && left.Min.Y <= right.Max.Y &&
+               left.Max.Z >= right.Min.Z && left.Min.Z <= right.Max.Z;
     }
 
-    public readonly bool Disjoint(in JBBox box)
+    public static bool Disjoint(in JBBox left, in JBBox right)
     {
-        return Max.X < box.Min.X || Min.X > box.Max.X || Max.Y < box.Min.Y || Min.Y > box.Max.Y ||
-               Max.Z < box.Min.Z || Min.Z > box.Max.Z;
+        return left.Max.X < right.Min.X || left.Min.X > right.Max.X || left.Max.Y < right.Min.Y || left.Min.Y > right.Max.Y ||
+               left.Max.Z < right.Min.Z || left.Min.Z > right.Max.Z;
     }
 
-    public readonly bool Encompasses(in JBBox box)
+    public static bool Encompasses(in JBBox outer, in JBBox inner)
     {
-        return Min.X <= box.Min.X && Max.X >= box.Max.X && Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
-               Min.Z <= box.Min.Z && Max.Z >= box.Max.Z;
+        return outer.Min.X <= inner.Min.X && outer.Max.X >= inner.Max.X && outer.Min.Y <= inner.Min.Y && outer.Max.Y >= inner.Max.Y &&
+               outer.Min.Z <= inner.Min.Z && outer.Max.Z >= inner.Max.Z;
     }
 
     public static JBBox CreateMerged(in JBBox original, in JBBox additional)
@@ -266,29 +269,29 @@ public struct JBBox : IEquatable<JBBox>
 
     public readonly JVector Center => (Min + Max) * ((Real)(1.0 / 2.0));
 
-    public Real GetVolume()
+    public readonly Real GetVolume()
     {
         JVector len = Max - Min;
         return len.X * len.Y * len.Z;
     }
 
-    public Real GetSurfaceArea()
+    public readonly Real GetSurfaceArea()
     {
         JVector len = Max - Min;
         return (Real)2.0 * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
     }
 
-    public bool Equals(JBBox other)
+    public readonly bool Equals(JBBox other)
     {
         return Min.Equals(other.Min) && Max.Equals(other.Max);
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JBBox other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return Min.GetHashCode() ^ Max.GetHashCode();
     }

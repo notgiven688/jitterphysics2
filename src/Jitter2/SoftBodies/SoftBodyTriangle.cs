@@ -82,9 +82,9 @@ public class SoftBodyTriangle : SoftBodyShape
 
         JBBox box = JBBox.SmallBox;
 
-        box.AddPoint(Vertex1.Position);
-        box.AddPoint(Vertex2.Position);
-        box.AddPoint(Vertex3.Position);
+        JBBox.AddPointInPlace(ref box, Vertex1.Position);
+        JBBox.AddPointInPlace(ref box, Vertex2.Position);
+        JBBox.AddPointInPlace(ref box, Vertex3.Position);
 
         // prevent a degenerate bounding box
         JVector extra = new JVector(extraMargin);

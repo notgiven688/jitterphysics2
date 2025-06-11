@@ -242,7 +242,7 @@ public unsafe struct ConvexPolytope
         if (delta < 0)
         {
             (triangle.A, triangle.B) = (triangle.B, triangle.A);
-            triangle.Normal.Negate();
+            JVector.NegateInPlace(ref triangle.Normal);
         }
 
         delta = JVector.Dot(triangle.Normal, vertices[a].V);
