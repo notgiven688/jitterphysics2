@@ -224,7 +224,7 @@ public class Wheel
         JVector wheelFwd = JVector.Transform(forward, JMatrix.CreateRotationMatrix(worldAxis, SteerAngle));
 
         JVector wheelLeft = JVector.Cross(worldAxis, wheelFwd);
-        wheelLeft.Normalize();
+        JVector.NormalizeInPlace(ref wheelLeft);
 
         JVector wheelUp = JVector.Cross(wheelFwd, wheelLeft);
 
@@ -286,7 +286,7 @@ public class Wheel
 
         // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(groundPos), 0.2f);
 
-        if (groundNormal.LengthSquared() > 0.0f) groundNormal.Normalize();
+        if (groundNormal.LengthSquared() > 0.0f) JVector.NormalizeInPlace(ref groundNormal);
 
         // System.Diagnostics.Debug.WriteLine(groundPos.ToString());
 
@@ -312,7 +312,7 @@ public class Wheel
         // side-slip friction and drive force. Work out wheel- and floor-relative coordinate frame
         JVector groundUp = groundNormal;
         JVector groundLeft = JVector.Cross(groundNormal, wheelFwd);
-        if (groundLeft.LengthSquared() > 0.0f) groundLeft.Normalize();
+        if (groundLeft.LengthSquared() > 0.0f) JVector.NormalizeInPlace(ref groundLeft);
 
         JVector groundFwd = JVector.Cross(groundLeft, groundUp);
 

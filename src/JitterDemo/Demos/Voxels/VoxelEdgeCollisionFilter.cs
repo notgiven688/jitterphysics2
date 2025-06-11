@@ -43,7 +43,7 @@ public class VoxelEdgeCollisionFilter : INarrowPhaseFilter
         if (c2)
         {
             relPos = pBB;
-            cnormal.Negate();
+            JVector.NegateInPlace(ref cnormal);
         }
 
         relPos -= vshape.Position;

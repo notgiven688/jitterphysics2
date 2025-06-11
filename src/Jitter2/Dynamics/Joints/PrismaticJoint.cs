@@ -52,7 +52,7 @@ public class PrismaticJoint : Joint
         Body1 = body1;
         Body2 = body2;
 
-        axis.Normalize();
+        JVector.NormalizeInPlace(ref axis);
 
         Slider = world.CreateConstraint<PointOnLine>(body1, body2);
         Slider.Initialize(axis, center, center, limit);

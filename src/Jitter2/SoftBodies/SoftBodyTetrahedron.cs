@@ -106,10 +106,10 @@ public class SoftBodyTetrahedron : SoftBodyShape
         const Real extraMargin = (Real)0.01;
 
         JBBox box = JBBox.SmallBox;
-        box.AddPoint(Vertices[0].Position);
-        box.AddPoint(Vertices[1].Position);
-        box.AddPoint(Vertices[2].Position);
-        box.AddPoint(Vertices[3].Position);
+        JBBox.AddPointInPlace(ref box, Vertices[0].Position);
+        JBBox.AddPointInPlace(ref box, Vertices[1].Position);
+        JBBox.AddPointInPlace(ref box, Vertices[2].Position);
+        JBBox.AddPointInPlace(ref box, Vertices[3].Position);
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;

@@ -184,7 +184,7 @@ public unsafe class SpringConstraint : Constraint
         Real error = dp.Length() - data.Distance;
 
         JVector n = p2 - p1;
-        if (n.LengthSquared() != (Real)0.0) n.Normalize();
+        if (n.LengthSquared() != (Real)0.0) JVector.NormalizeInPlace(ref n);
 
         data.Jacobian = n;
         data.EffectiveMass = body1.InverseMass + body2.InverseMass;

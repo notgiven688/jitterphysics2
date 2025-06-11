@@ -43,8 +43,8 @@ public class UniversalJoint : Joint
         Body1 = body1;
         Body2 = body2;
 
-        rotateAxis1.Normalize();
-        rotateAxis2.Normalize();
+        JVector.NormalizeInPlace(ref rotateAxis1);
+        JVector.NormalizeInPlace(ref rotateAxis2);
 
         TwistAngle = world.CreateConstraint<TwistAngle>(body1, body2);
         TwistAngle.Initialize(rotateAxis1, rotateAxis2);

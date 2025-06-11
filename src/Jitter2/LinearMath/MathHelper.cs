@@ -244,7 +244,7 @@ public static class MathHelper
             result.X = 0;
         }
 
-        result.Normalize();
+        JVector.NormalizeInPlace(ref result);
 
         Debug.Assert(MathR.Abs(JVector.Dot(result, vec)) < (Real)1e-6);
 

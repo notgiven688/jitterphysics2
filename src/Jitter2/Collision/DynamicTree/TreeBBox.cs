@@ -41,7 +41,7 @@ namespace Jitter2.Collision;
 /// <seealso cref="JBBox"/>
 /// <seealso cref="JVector"/>
 [StructLayout(LayoutKind.Explicit, Size = 8*sizeof(Real))]
-public struct TreeBBox
+public struct TreeBBox : IEquatable<TreeBBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -82,8 +82,6 @@ public struct TreeBBox
     }
 
     public JBBox AsJBBox() => new JBBox(Min, Max);
-
-    public static TreeBBox FromJBBox(JBBox box) => new TreeBBox(box.Min, box.Max);
 
     // ─── Helper functions 1:1 like in JBBox ───────────────────────────
 
@@ -250,5 +248,20 @@ public struct TreeBBox
         var a = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in first), 1));
         var b = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref Unsafe.AsRef(in second), 1));
         return a.SequenceEqual(b); // SIMD-accelerated in .NET ≥ 5
+    }
+
+    public bool Equals(TreeBBox other)
+    {
+        return Equals(this, other);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TreeBBox other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Min, MinW, Max, MaxW);
     }
 }

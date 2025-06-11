@@ -89,8 +89,9 @@ public unsafe class TwistAngle : Constraint
         data.Softness = (Real)0.0001;
         data.BiasFactor = (Real)0.2;
 
-        axis1.Normalize();
-        axis2.Normalize();
+        JVector.NormalizeInPlace(ref axis1);
+        JVector.NormalizeInPlace(ref axis2);
+
 
         data.Angle1 = MathR.Sin((Real)limit.From / (Real)2.0);
         data.Angle2 = MathR.Sin((Real)limit.To / (Real)2.0);

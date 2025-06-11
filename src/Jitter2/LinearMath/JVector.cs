@@ -115,7 +115,7 @@ public partial struct JVector : IEquatable<JVector>
         return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}";
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JVector other && Equals(other);
     }
@@ -176,14 +176,6 @@ public partial struct JVector : IEquatable<JVector>
         result.X = value1.X > value2.X ? value1.X : value2.X;
         result.Y = value1.Y > value2.Y ? value1.Y : value2.Y;
         result.Z = value1.Z > value2.Z ? value1.Z : value2.Z;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void MakeZero()
-    {
-        X = (Real)0.0;
-        Y = (Real)0.0;
-        Z = (Real)0.0;
     }
 
     /// <summary>
@@ -372,12 +364,21 @@ public partial struct JVector : IEquatable<JVector>
         return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
     }
 
+    [Obsolete($"Use static {nameof(NegateInPlace)} instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Negate()
     {
         X = -X;
         Y = -Y;
         Z = -Z;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void NegateInPlace(ref JVector vector)
+    {
+        vector.X = -vector.X;
+        vector.Y = -vector.Y;
+        vector.Z = -vector.Z;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -406,6 +407,8 @@ public partial struct JVector : IEquatable<JVector>
         return result;
     }
 
+    [Obsolete($"In-place Normalize() is deprecated; " +
+              $"use the static {nameof(JVector.Normalize)} method or {nameof(JVector.NormalizeInPlace)}.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
@@ -414,6 +417,15 @@ public partial struct JVector : IEquatable<JVector>
         X *= num;
         Y *= num;
         Z *= num;
+    }
+
+    public static void NormalizeInPlace(ref JVector toNormalize)
+    {
+        Real num2 = toNormalize.LengthSquared();
+        Real num = (Real)1.0 / MathR.Sqrt(num2);
+        toNormalize.X *= num;
+        toNormalize.Y *= num;
+        toNormalize.Z *= num;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -449,14 +461,6 @@ public partial struct JVector : IEquatable<JVector>
     {
         Multiply(value1, scaleFactor, out JVector result);
         return result;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Multiply(Real factor)
-    {
-        X *= factor;
-        Y *= factor;
-        Z *= factor;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -539,7 +543,7 @@ public partial struct JVector : IEquatable<JVector>
         return result;
     }
 
-    public bool Equals(JVector other)
+    public readonly bool Equals(JVector other)
     {
         return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
     }

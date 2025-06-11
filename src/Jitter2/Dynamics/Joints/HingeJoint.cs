@@ -43,7 +43,7 @@ public class HingeJoint : Joint
         Body1 = body1;
         Body2 = body2;
 
-        hingeAxis.Normalize();
+        JVector.NormalizeInPlace(ref hingeAxis);
 
         HingeAngle = world.CreateConstraint<HingeAngle>(body1, body2);
         HingeAngle.Initialize(hingeAxis, angle);

@@ -97,9 +97,9 @@ public class TriangleShape : RigidBodyShape
 
         box = JBBox.SmallBox;
 
-        box.AddPoint(a);
-        box.AddPoint(b);
-        box.AddPoint(c);
+        JBBox.AddPointInPlace(ref box, a);
+        JBBox.AddPointInPlace(ref box, b);
+        JBBox.AddPointInPlace(ref box, c);
 
         // prevent a degenerate bounding box
         JVector extra = new JVector(extraMargin);

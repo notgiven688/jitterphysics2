@@ -115,7 +115,7 @@ public unsafe struct CollisionManifold
             JVector.Add(np1, positionA, out np1);
             PushLeft(left, np1);
 
-            ptNormal.Negate();
+            JVector.NegateInPlace(ref ptNormal);
 
             JVector.ConjugatedTransform(ptNormal, quaternionB, out tmp);
             shapeB.SupportMap(tmp, out JVector np2);

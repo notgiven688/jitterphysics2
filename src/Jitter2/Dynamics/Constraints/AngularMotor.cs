@@ -79,8 +79,8 @@ public unsafe class AngularMotor : Constraint
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        axis1.Normalize();
-        axis2.Normalize();
+        JVector.NormalizeInPlace(ref axis1);
+        JVector.NormalizeInPlace(ref axis2);
 
         JVector.ConjugatedTransform(axis1, body1.Orientation, out data.LocalAxis1);
         JVector.ConjugatedTransform(axis2, body2.Orientation, out data.LocalAxis2);

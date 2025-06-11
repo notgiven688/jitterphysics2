@@ -221,7 +221,7 @@ public unsafe class DistanceLimit : Constraint
         }
 
         JVector n = p2 - p1;
-        if (n.LengthSquared() != (Real)0.0) n.Normalize();
+        if (n.LengthSquared() != (Real)0.0) JVector.NormalizeInPlace(ref n);
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 

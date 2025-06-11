@@ -167,7 +167,7 @@ public static class NarrowPhase
                 // The origin, v0 and v1 form a line. Most probably
                 // two spheres colliding.
                 JVector.Subtract(v1.V, v0.V, out normal);
-                normal.Normalize();
+                JVector.NormalizeInPlace(ref normal);
 
                 JVector.Subtract(v1.A, v1.B, out temp1);
                 penetration = JVector.Dot(temp1, normal);
@@ -374,7 +374,7 @@ public static class NarrowPhase
                 JVector searchDir = ctri.ClosestToOrigin;
                 Real searchDirSq = ctri.ClosestToOriginSq;
 
-                if (!convexPolytope.OriginEnclosed) searchDir.Negate();
+                if (!convexPolytope.OriginEnclosed) JVector.NegateInPlace(ref searchDir);
 
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
@@ -1181,7 +1181,7 @@ public static class NarrowPhase
                 goto converged;
             }
 
-            v.Negate();
+            JVector.NegateInPlace(ref v);
 
             distSq = v.LengthSquared();
         }

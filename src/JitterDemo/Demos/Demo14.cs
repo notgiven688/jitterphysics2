@@ -24,7 +24,7 @@ public class CustomSupportMapInstance<T> : CSMInstance where T : Shape, new()
         foreach (var triangle in ShapeHelper.MakeHull(es))
         {
             JVector normal = (triangle.V1 - triangle.V0) % (triangle.V2 - triangle.V0);
-            normal.Normalize();
+            JVector.NormalizeInPlace(ref normal);
 
             verts.Add(new Vertex(Conversion.FromJitter(triangle.V0), Conversion.FromJitter(normal)));
             verts.Add(new Vertex(Conversion.FromJitter(triangle.V1), Conversion.FromJitter(normal)));
@@ -58,7 +58,7 @@ public class EllipsoidShape : RigidBodyShape
         dir.Y *= 1.2f;
         dir.Z *= 0.4f;
         result = dir;
-        result.Normalize();
+        JVector.NormalizeInPlace(ref result);
         result.X *= 0.8f;
         result.Y *= 1.2f;
         result.Z *= 0.4f;
