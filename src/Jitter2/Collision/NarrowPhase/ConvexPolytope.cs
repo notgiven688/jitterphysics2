@@ -53,16 +53,10 @@ public unsafe struct ConvexPolytope
         public Real ClosestToOriginSq;
     }
 
-    private readonly struct Edge
+    private readonly struct Edge(short a, short b)
     {
-        public readonly short A;
-        public readonly short B;
-
-        public Edge(short a, short b)
-        {
-            A = a;
-            B = b;
-        }
+        public readonly short A = a;
+        public readonly short B = b;
 
         public static bool Equals(in Edge a, in Edge b)
         {

@@ -34,15 +34,9 @@ public interface IPartitionedSetIndex
     int SetIndex { get; set; }
 }
 
-public readonly struct ReadOnlyPartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSetIndex
+public readonly struct ReadOnlyPartitionedSet<T>(PartitionedSet<T> partitionedSet) : IEnumerable<T>
+    where T : class, IPartitionedSetIndex
 {
-    private readonly PartitionedSet<T> partitionedSet;
-
-    internal ReadOnlyPartitionedSet(PartitionedSet<T> partitionedSet)
-    {
-        this.partitionedSet = partitionedSet;
-    }
-
     public int ActiveCount => partitionedSet.ActiveCount;
     public int Count => partitionedSet.Count;
 

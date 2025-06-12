@@ -29,15 +29,8 @@ namespace Jitter2.DataStructures;
 /// <summary>
 /// Implements a wrapper for <see cref="List{T}"/>, eliminating garbage collection (GC) overhead during enumeration.
 /// </summary>
-public readonly struct ReadOnlyList<T> : IReadOnlyCollection<T>
+public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyCollection<T>
 {
-    private readonly List<T> list;
-
-    public ReadOnlyList(List<T> list)
-    {
-        this.list = list;
-    }
-
     public T this[int i] => list[i];
 
     public List<T>.Enumerator GetEnumerator()

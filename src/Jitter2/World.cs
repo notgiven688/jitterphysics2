@@ -51,15 +51,8 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Provides access to objects in unmanaged memory. This operation is potentially unsafe.
     /// </summary>
-    public readonly struct SpanData
+    public readonly struct SpanData(World world)
     {
-        private readonly World world;
-
-        public SpanData(World world)
-        {
-            this.world = world;
-        }
-
         /// <summary>
         /// Returns the total amount of unmanaged memory allocated in bytes.
         /// </summary>

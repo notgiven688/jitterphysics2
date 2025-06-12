@@ -30,7 +30,7 @@ namespace Jitter2.LinearMath;
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 6*sizeof(Real))]
-public struct JBoundingBox : IEquatable<JBoundingBox>
+public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -42,10 +42,10 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
     }
 
     [FieldOffset(0*sizeof(Real))]
-    public JVector Min;
+    public JVector Min = min;
 
     [FieldOffset(3*sizeof(Real))]
-    public JVector Max;
+    public JVector Max = max;
 
     public static readonly JBoundingBox LargeBox;
 
@@ -57,12 +57,6 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
         LargeBox.Max = new JVector(Real.MaxValue);
         SmallBox.Min = new JVector(Real.MaxValue);
         SmallBox.Max = new JVector(Real.MinValue);
-    }
-
-    public JBoundingBox(JVector min, JVector max)
-    {
-        Min = min;
-        Max = max;
     }
 
     /// <summary>

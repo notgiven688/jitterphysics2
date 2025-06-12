@@ -31,17 +31,18 @@ namespace Jitter2.LinearMath;
 /// Represents a three-by-three matrix with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
-public struct JMatrix : IEquatable<JMatrix>
+public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23, Real m31, Real m32, Real m33)
+    : IEquatable<JMatrix>
 {
-    [FieldOffset(0*sizeof(Real))] public Real M11;
-    [FieldOffset(1*sizeof(Real))] public Real M21;
-    [FieldOffset(2*sizeof(Real))] public Real M31;
-    [FieldOffset(3*sizeof(Real))] public Real M12;
-    [FieldOffset(4*sizeof(Real))] public Real M22;
-    [FieldOffset(5*sizeof(Real))] public Real M32;
-    [FieldOffset(6*sizeof(Real))] public Real M13;
-    [FieldOffset(7*sizeof(Real))] public Real M23;
-    [FieldOffset(8*sizeof(Real))] public Real M33;
+    [FieldOffset(0*sizeof(Real))] public Real M11 = m11;
+    [FieldOffset(1*sizeof(Real))] public Real M21 = m21;
+    [FieldOffset(2*sizeof(Real))] public Real M31 = m31;
+    [FieldOffset(3*sizeof(Real))] public Real M12 = m12;
+    [FieldOffset(4*sizeof(Real))] public Real M22 = m22;
+    [FieldOffset(5*sizeof(Real))] public Real M32 = m32;
+    [FieldOffset(6*sizeof(Real))] public Real M13 = m13;
+    [FieldOffset(7*sizeof(Real))] public Real M23 = m23;
+    [FieldOffset(8*sizeof(Real))] public Real M33 = m33;
 
     public static readonly JMatrix Identity;
     public static readonly JMatrix Zero;
@@ -56,19 +57,6 @@ public struct JMatrix : IEquatable<JMatrix>
             M22 = (Real)1.0,
             M33 = (Real)1.0
         };
-    }
-
-    public JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23, Real m31, Real m32, Real m33)
-    {
-        M11 = m11;
-        M12 = m12;
-        M13 = m13;
-        M21 = m21;
-        M22 = m22;
-        M23 = m23;
-        M31 = m31;
-        M32 = m32;
-        M33 = m33;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

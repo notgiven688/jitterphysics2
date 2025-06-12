@@ -64,15 +64,9 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
-    public struct Enumerator : IEnumerator<Pair>
+    public struct Enumerator(PairHashSet hashSet) : IEnumerator<Pair>
     {
-        private readonly PairHashSet hashSet;
         private int index = -1;
-
-        public Enumerator(PairHashSet hashSet)
-        {
-            this.hashSet = hashSet;
-        }
 
         public readonly Pair Current => hashSet.Slots[index];
 

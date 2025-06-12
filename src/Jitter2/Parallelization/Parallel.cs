@@ -35,21 +35,15 @@ public static class Parallel
     /// Represents a batch defined by a start index, an end index, and a batch index.
     /// This struct is utilized in <see cref="ForBatch"/> to facilitate multithreaded batch processing within a for-loop.
     /// </summary>
-    public readonly struct Batch
+    public readonly struct Batch(int start, int end)
     {
-        public Batch(int start, int end)
-        {
-            Start = start;
-            End = end;
-        }
-
         public override string ToString()
         {
             return $"Batch(Start: {Start}, End: {End})";
         }
 
-        public readonly int Start;
-        public readonly int End;
+        public readonly int Start = start;
+        public readonly int End = end;
     }
 
     /// <summary>

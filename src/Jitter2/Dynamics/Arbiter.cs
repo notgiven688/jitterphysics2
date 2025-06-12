@@ -45,16 +45,10 @@ public class Arbiter
 /// <summary>
 /// Look-up key for stored <see cref="Arbiter"/>.
 /// </summary>
-public readonly struct ArbiterKey : IEquatable<ArbiterKey>
+public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable<ArbiterKey>
 {
-    public readonly ulong Key1;
-    public readonly ulong Key2;
-
-    public ArbiterKey(ulong key1, ulong key2)
-    {
-        Key1 = key1;
-        Key2 = key2;
-    }
+    public readonly ulong Key1 = key1;
+    public readonly ulong Key2 = key2;
 
     public bool Equals(ArbiterKey other)
     {

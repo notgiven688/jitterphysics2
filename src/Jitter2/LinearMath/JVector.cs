@@ -31,14 +31,14 @@ namespace Jitter2.LinearMath;
 /// Represents a three-dimensional vector with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 3*sizeof(Real))]
-public partial struct JVector : IEquatable<JVector>
+public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;
 
-    [FieldOffset(0*sizeof(Real))] public Real X;
-    [FieldOffset(1*sizeof(Real))] public Real Y;
-    [FieldOffset(2*sizeof(Real))] public Real Z;
+    [FieldOffset(0*sizeof(Real))] public Real X = x;
+    [FieldOffset(1*sizeof(Real))] public Real Y = y;
+    [FieldOffset(2*sizeof(Real))] public Real Z = z;
 
     public static readonly JVector Zero;
     public static readonly JVector UnitX;
@@ -61,13 +61,6 @@ public partial struct JVector : IEquatable<JVector>
         InternalZero = Zero;
     }
 
-    public JVector(Real x, Real y, Real z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
-
     public void Set(Real x, Real y, Real z)
     {
         X = x;
@@ -75,11 +68,8 @@ public partial struct JVector : IEquatable<JVector>
         Z = z;
     }
 
-    public JVector(Real xyz)
+    public JVector(Real xyz) : this(xyz, xyz, xyz)
     {
-        X = xyz;
-        Y = xyz;
-        Z = xyz;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
