@@ -407,6 +407,22 @@ public partial struct JVector : IEquatable<JVector>
         return result;
     }
 
+
+    /// <summary>
+    /// Normalizes <paramref name="value"/>; returns <see cref="JVector.Zero"/> when its squared-length is below <paramref name="epsilonSquared"/>.
+    /// </summary>
+    /// <param name="value">Vector to normalize.</param>
+    /// <param name="epsilonSquared">Cut-off for <c>‖value‖²</c>; default is <c>1 × 10⁻¹⁶</c>.</param>
+    /// <returns>Unit vector or zero.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector NormalizeSafe(in JVector value, Real epsilonSquared = (Real)1e-16)
+    {
+        Real len2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
+        if (len2 < epsilonSquared) return JVector.Zero;
+
+        return ((Real)1.0 / MathR.Sqrt(len2)) * value;
+    }
+
     [Obsolete($"In-place Normalize() is deprecated; " +
               $"use the static {nameof(JVector.Normalize)} method or {nameof(JVector.NormalizeInPlace)}.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
