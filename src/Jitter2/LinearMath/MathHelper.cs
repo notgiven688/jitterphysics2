@@ -29,7 +29,6 @@ namespace Jitter2.LinearMath;
 
 public static class MathHelper
 {
-
     /// <summary>
     /// Gets the sign of <paramref name="value"/> purely from its IEEE-754 sign bit.
     /// </summary>
