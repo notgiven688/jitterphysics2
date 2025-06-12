@@ -29,12 +29,23 @@ namespace Jitter2.LinearMath;
 
 public static class MathHelper
 {
+
+    /// <summary>
+    /// Gets the sign of <paramref name="value"/> purely from its IEEE-754 sign bit.
+    /// </summary>
+    /// <param name="value">The number to test.</param>
+    /// <returns>
+    /// <c>+1</c> when the sign bit is clear (positive, +0, or a positive-sign NaN),
+    /// <c>-1</c> when the sign bit is set (negative, −0, or a negative-sign NaN).
+    /// Never returns <c>0</c>, unlike <see cref="Math.Sign(float)"/>.
+    /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int SignBit(float value)
     {
         return 1 | (BitConverter.SingleToInt32Bits(value) >> 31);
     }
 
+    /// <inheritdoc cref="SignBit(float)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int SignBit(double value)
     {
