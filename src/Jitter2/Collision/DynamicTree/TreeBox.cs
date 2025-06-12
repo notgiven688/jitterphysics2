@@ -235,6 +235,18 @@ public struct TreeBox : IEquatable<TreeBox>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool Disjoint(in TreeBox first, in TreeBox second)
+    {
+        // If first.Max < second.Min OR first.Min > second.Max on any axis,
+        // the two boxes cannot overlap.
+        var ltMin = Vector.LessThan(first.VectorMax, second.VectorMin);
+        var gtMax = Vector.GreaterThan(first.VectorMin, second.VectorMax);
+
+        var mask = Vector.BitwiseOr(ltMin, gtMax);
+        return !Vector.EqualsAll(mask.AsInt32(), Vector.Create(0));
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateMerged(in TreeBox first, in TreeBox second, out TreeBox result)
     {
         Unsafe.SkipInit(out result);

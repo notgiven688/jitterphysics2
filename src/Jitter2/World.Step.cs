@@ -673,7 +673,7 @@ public sealed partial class World
 
                     foreach (var s in body.InternalShapes)
                     {
-                        DynamicTree.Deactivate(s);
+                        DynamicTree.DeactivateProxy(s);
                     }
                 }
                 else
@@ -706,7 +706,7 @@ public sealed partial class World
 
                     foreach (var s in body.InternalShapes)
                     {
-                        DynamicTree.Activate(s);
+                        DynamicTree.ActivateProxy(s);
                     }
                 }
             }

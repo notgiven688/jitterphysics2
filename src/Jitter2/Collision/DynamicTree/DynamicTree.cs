@@ -135,9 +135,9 @@ public partial class DynamicTree
     public readonly double[] DebugTimings = new double[(int)Timings.Last];
 
     /// <summary>
-    /// Gets the number of updated proxies.
+    /// Gets the number of updated proxies during the last call to <see cref="Update"/>.
     /// </summary>
-    public int UpdatedProxies => movedProxies.Count;
+    public int UpdatedProxyCount => movedProxies.Count;
 
     /// <summary>
     /// Retrieve information of the size and filling of the internal hash set used to
@@ -314,7 +314,10 @@ public partial class DynamicTree
         return proxies.IsActive(proxy);
     }
 
-    public void Activate<T>(T proxy) where T : class, IDynamicTreeProxy
+    /// <summary>
+    /// The tree actively tracks the proxy.
+    /// </summary>
+    public void ActivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         if (proxies.MoveToActive(proxy))
         {
@@ -322,7 +325,11 @@ public partial class DynamicTree
         }
     }
 
-    public void Deactivate<T>(T proxy) where T : class, IDynamicTreeProxy
+    /// <summary>
+    /// The tree assumes that the proxy is not active, i.e., it does not move out
+    /// of its expanded bounding box.
+    /// </summary>
+    public void DeactivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         proxies.MoveToInactive(proxy);
     }
@@ -330,8 +337,17 @@ public partial class DynamicTree
     /// <summary>
     /// Removes an entity from the tree.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the specified <paramref name="proxy"/> is not registered with the tree.
+    /// </exception>
     public void RemoveProxy(IDynamicTreeProxy proxy)
     {
+        if (!proxies.Contains(proxy))
+        {
+            throw new InvalidOperationException(
+                $"The proxy '{proxy}' is not registered with this tree instance.");
+        }
+
         OverlapCheckRemove(root, proxy.NodePtr);
         InternalRemoveProxy(proxy);
         proxy.NodePtr = NullNode;

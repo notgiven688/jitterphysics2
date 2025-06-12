@@ -63,10 +63,9 @@ public readonly struct ReadOnlyPartitionedSet<T> : IEnumerable<T> where T : clas
 
     public T this[int i] => partitionedSet[i];
 
-    public bool IsActive(T element)
-    {
-        return partitionedSet.IsActive(element);
-    }
+    public bool Contains(T element) => partitionedSet.Contains(element);
+
+    public bool IsActive(T element) => partitionedSet.IsActive(element);
 
     public PartitionedSet<T>.Enumerator GetEnumerator()
     {

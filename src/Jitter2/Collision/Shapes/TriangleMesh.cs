@@ -28,21 +28,21 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents an exception thrown when a degenerate triangle is detected.
-/// </summary>
-public sealed class DegenerateTriangleException : Exception
-{
-    public DegenerateTriangleException() { }
-    public DegenerateTriangleException(string message) : base(message) { }
-    public DegenerateTriangleException(string message, Exception inner) : base(message, inner) { }
-}
-
-/// <summary>
 /// Encapsulates the data of a triangle mesh. An instance of this can be supplied to the <see cref="Jitter2.Collision.Shapes.TriangleShape"/>.
 /// The triangles within this class contain indices pointing to neighboring triangles.
 /// </summary>
 public class TriangleMesh
 {
+    /// <summary>
+    /// Represents an exception thrown when a degenerate triangle is detected.
+    /// </summary>
+    public sealed class DegenerateTriangleException : Exception
+    {
+        public DegenerateTriangleException() { }
+        public DegenerateTriangleException(string message) : base(message) { }
+        public DegenerateTriangleException(string message, Exception inner) : base(message, inner) { }
+    }
+
     private readonly struct Edge : IEquatable<Edge>
     {
         public int IndexA { get; }

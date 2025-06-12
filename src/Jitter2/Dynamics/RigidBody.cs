@@ -151,7 +151,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Contains all bodies this body is in contact with.
+    /// Contains all bodies this body is in contact with or shares a constraint with.
     /// </summary>
     public ReadOnlyList<RigidBody> Connections => new(InternalConnections);
 

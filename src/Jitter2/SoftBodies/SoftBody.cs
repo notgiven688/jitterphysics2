@@ -89,11 +89,11 @@ public class SoftBody
         {
             if (active)
             {
-                World.DynamicTree.Activate(shape);
+                World.DynamicTree.ActivateProxy(shape);
             }
             else
             {
-                World.DynamicTree.Deactivate(shape);
+                World.DynamicTree.DeactivateProxy(shape);
             }
         }
     }

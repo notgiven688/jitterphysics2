@@ -174,7 +174,7 @@ public partial class Playground : RenderWindow
 
             AddRow("PairHashSet Size", World.DynamicTree.HashSetInfo.TotalSize.ToString());
             AddRow("PairHashSet Count", World.DynamicTree.HashSetInfo.Count.ToString());
-            AddRow("Proxies updated", World.DynamicTree.UpdatedProxies.ToString());
+            AddRow("Proxies updated", World.DynamicTree.UpdatedProxyCount.ToString());
 
             for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)
             {

@@ -60,7 +60,7 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
         WorldBoundingBox = box;
     }
 
-    public bool IsRegistered => (this as IPartitionedSetIndex).SetIndex != -1;
+    internal bool IsRegistered => (this as IPartitionedSetIndex).SetIndex != -1;
 
     [ReferenceFrame(ReferenceFrame.World)]
     public abstract JVector Velocity { get; }
