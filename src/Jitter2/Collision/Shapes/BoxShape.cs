@@ -94,13 +94,13 @@ public class BoxShape : RigidBodyShape
     /// Thrown when <paramref name="length"/>, <paramref name="height"/>, or <paramref name="width"/> is less than
     /// or equal to zero.
     /// </exception>
-    public BoxShape(Real length, Real height, Real width)
+    public BoxShape(Real width, Real height, Real length)
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(length, nameof(length));
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width,  nameof(width));
 
-        halfSize = (Real)0.5 * new JVector(length, height, width);
+        halfSize = (Real)0.5 * new JVector(width, height, length);
         UpdateWorldBoundingBox();
     }
 
