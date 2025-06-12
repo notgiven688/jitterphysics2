@@ -32,12 +32,13 @@ namespace Jitter2.Collision.Shapes;
 public static class ShapeHelper
 {
     private const Real GoldenRatio = (Real)1.6180339887498948482045;
-    private static readonly JVector[] icosahedronVertices = new JVector[12]
-    {
+    private static readonly JVector[] icosahedronVertices =
+    [
         new(0, +1, +GoldenRatio), new(0, -1, +GoldenRatio), new(0, +1, -GoldenRatio), new(0, -1, -GoldenRatio),
         new(+1, +GoldenRatio, 0), new(+1, -GoldenRatio, 0), new(-1, +GoldenRatio, 0), new(-1, -GoldenRatio, 0),
         new(+GoldenRatio, 0, +1), new(+GoldenRatio, 0, -1), new(-GoldenRatio, 0, +1), new(-GoldenRatio, 0, -1)
-    };
+    ];
+
     private static readonly int[,] icosahedronIndices = new int[20, 3]
     {
         { 1, 0, 10 }, { 0, 1, 8 }, { 0, 4, 6 }, { 4, 0, 8 }, { 0, 6, 10 }, { 5, 1, 7 }, { 1, 5, 8 }, { 7, 1, 10 },
