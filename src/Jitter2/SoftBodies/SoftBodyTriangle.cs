@@ -21,13 +21,12 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTriangle : SoftBodyShape
+public sealed class SoftBodyTriangle : SoftBodyShape
 {
     private readonly RigidBody v1;
     private readonly RigidBody v2;
@@ -80,14 +79,14 @@ public class SoftBodyTriangle : SoftBodyShape
     {
         Real extraMargin = MathR.Max(halfThickness, (Real)0.01);
 
-        JBBox box = JBBox.SmallBox;
+        JBoundingBox box = JBoundingBox.SmallBox;
 
-        JBBox.AddPointInPlace(ref box, Vertex1.Position);
-        JBBox.AddPointInPlace(ref box, Vertex2.Position);
-        JBBox.AddPointInPlace(ref box, Vertex3.Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertex1.Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertex2.Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertex3.Position);
 
         // prevent a degenerate bounding box
-        JVector extra = new JVector(extraMargin);
+        JVector extra = new(extraMargin);
         box.Min -= extra;
         box.Max += extra;
 

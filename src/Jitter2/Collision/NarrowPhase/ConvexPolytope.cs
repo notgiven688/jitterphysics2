@@ -53,7 +53,7 @@ public unsafe struct ConvexPolytope
         public Real ClosestToOriginSq;
     }
 
-    private struct Edge
+    private readonly struct Edge
     {
         public readonly short A;
         public readonly short B;
@@ -88,7 +88,7 @@ public unsafe struct ConvexPolytope
 
     private JVector center;
 
-    public Span<Triangle> HullTriangles => new(triangles, tPointer);
+    public readonly Span<Triangle> HullTriangles => new(triangles, tPointer);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref Vertex GetVertex(int index)
@@ -142,7 +142,7 @@ public unsafe struct ConvexPolytope
         Real alpha = (Real)1.0 - gamma - beta;
 
         // Clamp the projected barycentric coordinates to lie within the triangle,
-        // such that the clamped coordinates are closest (euclidean) to the original point.
+        // such that the clamped coordinates are closest (Euclidean) to the original point.
         //
         // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
         if (alpha >= (Real)0.0 && beta < (Real)0.0)
@@ -351,7 +351,7 @@ public unsafe struct ConvexPolytope
     /// the return value of this method.
     /// </summary>
     /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
-    [System.Runtime.CompilerServices.SkipLocalsInit]
+    [SkipLocalsInit]
     public bool AddVertex(in Vertex vertex)
     {
         Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");

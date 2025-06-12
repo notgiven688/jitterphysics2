@@ -81,7 +81,7 @@ public struct RigidBodyData
 /// </summary>
 public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 {
-    internal JHandle<RigidBodyData> handle;
+    private JHandle<RigidBodyData> handle;
 
     public readonly ulong RigidBodyId;
 
@@ -91,7 +91,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Due to performance considerations, the data used to simulate this body (e.g., velocity or position)
     /// is stored within a contiguous block of unmanaged memory. This refers to the raw memory location
-    /// and should seldom, if ever, be utilized outside of the engine. Instead, use the properties provided
+    /// and should seldom, if ever, be utilized outside the engine. Instead, use the properties provided
     /// by the <see cref="RigidBody"/> class itself.
     /// </summary>
     public ref RigidBodyData Data => ref handle.Data;
@@ -99,22 +99,27 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Gets the handle to the rigid body data, see <see cref="Data"/>.
     /// </summary>
-    public JHandle<RigidBodyData> Handle => handle;
-
-    internal readonly List<RigidBodyShape> shapes = new(1);
+    public JHandle<RigidBodyData> Handle
+    {
+        get => handle; internal set => handle = value;
+    }
 
     // There is only one way to create a body: world.CreateRigidBody. There, we add an island
     // to the new body. This should never be null.
-    internal Island island = null!;
+    internal Island InternalIsland = null!;
+
+    internal readonly List<RigidBodyShape> InternalShapes = new(1);
+    internal readonly List<RigidBody> InternalConnections = new(0);
+    internal readonly HashSet<Arbiter> InternalContacts = new(0);
+    internal readonly HashSet<Constraint> InternalConstraints = new(0);
+
+    internal int InternalIslandMarker;
+    internal Real InternalSleepTime = (Real)0.0;
 
     /// <summary>
     /// Gets the collision island associated with this rigid body.
     /// </summary>
-    public Island Island => island;
-
-    internal readonly List<RigidBody> connections = new(0);
-    internal readonly HashSet<Arbiter> contacts = new(0);
-    internal readonly HashSet<Constraint> constraints = new(0);
+    public Island Island => InternalIsland;
 
     /// <summary>
     /// Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.
@@ -148,36 +153,32 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Contains all bodies this body is in contact with.
     /// </summary>
-    public ReadOnlyList<RigidBody> Connections => new(connections);
+    public ReadOnlyList<RigidBody> Connections => new(InternalConnections);
 
     /// <summary>
     /// Contains all contacts in which this body is involved.
     /// </summary>
-    public ReadOnlyHashSet<Arbiter> Contacts => new(contacts);
+    public ReadOnlyHashSet<Arbiter> Contacts => new(InternalContacts);
 
     /// <summary>
     /// Contains all constraints connected to this body.
     /// </summary>
-    public ReadOnlyHashSet<Constraint> Constraints => new(constraints);
+    public ReadOnlyHashSet<Constraint> Constraints => new(InternalConstraints);
 
     /// <summary>
     /// Gets the list of shapes added to this rigid body.
     /// </summary>
-    public ReadOnlyList<RigidBodyShape> Shapes => new(shapes);
+    public ReadOnlyList<RigidBodyShape> Shapes => new(InternalShapes);
 
-    internal int islandMarker;
+    private Real inactiveThresholdLinearSq = (Real)0.1;
+    private Real inactiveThresholdAngularSq = (Real)0.1;
+    private Real deactivationTimeThreshold = (Real)1.0;
 
-    internal Real sleepTime = (Real)0.0;
+    private Real linearDampingMultiplier = (Real)0.998;
+    private Real angularDampingMultiplier = (Real)0.995;
 
-    internal Real inactiveThresholdLinearSq = (Real)0.1;
-    internal Real inactiveThresholdAngularSq = (Real)0.1;
-    internal Real deactivationTimeThreshold = (Real)1.0;
-
-    internal Real linearDampingMultiplier = (Real)0.998;
-    internal Real angularDampingMultiplier = (Real)0.995;
-
-    internal JMatrix inverseInertia = JMatrix.Identity;
-    internal Real inverseMass = (Real)1.0;
+    private JMatrix inverseInertia = JMatrix.Identity;
+    private Real inverseMass = (Real)1.0;
 
     /// <remarks>
     /// The friction coefficient determines the resistance to sliding motion.
@@ -358,12 +359,57 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         UpdateWorldInertia();
 
-        foreach (var shape in shapes)
+        foreach (var shape in InternalShapes)
         {
             World.DynamicTree.Update(shape);
         }
 
         World.ActivateBodyNextStep(this);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void Update(Real stepDt, Real substepDt)
+    {
+        ref RigidBodyData rigidBody = ref Data;
+
+        if (rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
+            rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq)
+        {
+            InternalSleepTime += stepDt;
+        }
+        else
+        {
+            InternalSleepTime = 0;
+        }
+
+        if (InternalSleepTime < deactivationTimeThreshold)
+        {
+            InternalIsland.MarkedAsActive = true;
+        }
+
+        if (!rigidBody.IsStaticOrInactive)
+        {
+            rigidBody.AngularVelocity *= angularDampingMultiplier;
+            rigidBody.Velocity *= linearDampingMultiplier;
+
+            rigidBody.DeltaVelocity = Force * rigidBody.InverseMass * substepDt;
+            rigidBody.DeltaAngularVelocity = JVector.Transform(Torque, rigidBody.InverseInertiaWorld) * substepDt;
+
+            if (AffectedByGravity)
+            {
+                rigidBody.DeltaVelocity += World.Gravity * substepDt;
+            }
+
+            Force = JVector.Zero;
+            Torque = JVector.Zero;
+
+            var bodyOrientation = JMatrix.CreateFromQuaternion(rigidBody.Orientation);
+
+            JMatrix.Multiply(bodyOrientation, inverseInertia, out rigidBody.InverseInertiaWorld);
+            JMatrix.MultiplyTransposed(rigidBody.InverseInertiaWorld, bodyOrientation, out rigidBody.InverseInertiaWorld);
+
+            rigidBody.InverseMass = inverseMass;
+        }
     }
 
     public JVector Velocity
@@ -478,7 +524,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         foreach (RigidBodyShape shape in shapes)
         {
             AttachToShape(shape);
-            this.shapes.Add(shape);
+            this.InternalShapes.Add(shape);
         }
 
         if (setMassInertia) SetMassInertia();
@@ -498,7 +544,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         AttachToShape(shape);
-        shapes.Add(shape);
+        InternalShapes.Add(shape);
         if (setMassInertia) SetMassInertia();
     }
 
@@ -587,13 +633,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
     public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
     {
-        if (!shapes.Remove(shape))
+        if (!InternalShapes.Remove(shape))
         {
             throw new ArgumentException(
                 "Shape is not part of this body.");
         }
 
-        foreach (var arbiter in contacts)
+        foreach (var arbiter in InternalContacts)
         {
             if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
             {
@@ -617,7 +663,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
     public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
     {
-        HashSet<ulong> sids = new HashSet<ulong>();
+        HashSet<ulong> sids = new();
 
         foreach (var shape in shapes)
         {
@@ -629,7 +675,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             sids.Add(shape.ShapeId);
         }
 
-        foreach (var arbiter in contacts)
+        foreach (var arbiter in InternalContacts)
         {
             if (sids.Contains(arbiter.Handle.Data.Key.Key1) || sids.Contains(arbiter.Handle.Data.Key.Key2))
             {
@@ -639,15 +685,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
         }
 
-        for (int i = this.shapes.Count; i-- > 0;)
+        for (int i = this.InternalShapes.Count; i-- > 0;)
         {
-            var shape = this.shapes[i];
+            var shape = this.InternalShapes[i];
 
             if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
                 shape.RigidBody = null!;
-                this.shapes.RemoveAt(i);
+                this.InternalShapes.RemoveAt(i);
             }
         }
 
@@ -664,7 +710,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     [Obsolete($"{nameof(ClearShapes)} is deprecated, please use {nameof(RemoveShape)} instead.")]
     public void ClearShapes(bool setMassInertia = true)
     {
-        RemoveShape(shapes, setMassInertia);
+        RemoveShape(InternalShapes, setMassInertia);
     }
 
     /// <summary>
@@ -672,7 +718,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     public void SetMassInertia()
     {
-        if (shapes.Count == 0)
+        if (InternalShapes.Count == 0)
         {
             inverseInertia = JMatrix.Identity;
             Data.InverseMass = (Real)1.0;
@@ -682,9 +728,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         JMatrix inertia = JMatrix.Zero;
         Real mass = (Real)0.0;
 
-        for (int i = 0; i < shapes.Count; i++)
+        for (int i = 0; i < InternalShapes.Count; i++)
         {
-            shapes[i].CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
+            InternalShapes[i].CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
 
             inertia += shapeInertia;
             mass += shapeMass;
@@ -755,7 +801,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         UpdateWorldInertia();
     }
 
-    private static List<JTriangle>? debugTriangles;
+    private static List<JTriangle>? _debugTriangles;
 
     /// <summary>
     /// Generates a rough triangle approximation of the shapes of the body.
@@ -764,13 +810,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     public void DebugDraw(IDebugDrawer drawer)
     {
-        debugTriangles ??= new List<JTriangle>();
+        _debugTriangles ??= new List<JTriangle>();
 
-        foreach (var shape in shapes)
+        foreach (var shape in InternalShapes)
         {
-            ShapeHelper.MakeHull(shape, debugTriangles);
+            ShapeHelper.MakeHull(shape, _debugTriangles);
 
-            foreach (var tri in debugTriangles)
+            foreach (var tri in _debugTriangles)
             {
                 drawer.DrawTriangle(
                     JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
@@ -779,7 +825,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
         }
 
-        debugTriangles.Clear();
+        _debugTriangles.Clear();
     }
 
     /// <summary>

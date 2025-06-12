@@ -77,11 +77,11 @@ public sealed partial class World
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01.
     /// </summary>
-    public Real SpeculativeVelocityThreshold { get; set; } =(Real)10;
+    public Real SpeculativeVelocityThreshold { get; set; } =(Real)10.0;
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void DetectCallback(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
+    private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         if (BroadPhaseFilter != null)
         {
@@ -101,10 +101,6 @@ public sealed partial class World
             (sA, sB) = (sB, sA);
         }
 
-        Unsafe.SkipInit(out JVector normal);
-        Unsafe.SkipInit(out JVector pA);
-        Unsafe.SkipInit(out JVector pB);
-
         Debug.Assert(sA.RigidBody != sB.RigidBody);
         Debug.Assert(sA.RigidBody.World == this);
         Debug.Assert(sB.RigidBody.World == this);
@@ -120,8 +116,8 @@ public sealed partial class World
 
         bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
 
-        var colliding = NarrowPhase.MPREPA(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
-            out pA, out pB, out normal, out var penetration);
+        var colliding = NarrowPhase.MprEpa(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
+            out JVector pA, out JVector pB, out JVector normal, out var penetration);
 
         if (!colliding)
         {
@@ -136,7 +132,7 @@ public sealed partial class World
                 out pA, out pB, out normal, out Real toi);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (!success || toi > step_dt || toi == (Real)0.0) return;
+            if (!success || toi > stepDt || toi == (Real)0.0) return;
 
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
 
@@ -165,7 +161,7 @@ public sealed partial class World
         if (EnableAuxiliaryContactPoints)
         {
             Unsafe.SkipInit(out CollisionManifold manifold);
-            manifold.BuildManifold<RigidBodyShape,RigidBodyShape>(sA, sB, pA, pB, normal);
+            manifold.BuildManifold(sA, sB, pA, pB, normal);
 
             RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, normal, ref manifold);
         }

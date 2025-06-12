@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Jitter2.Unmanaged;
 
 namespace Jitter2.DataStructures;
 

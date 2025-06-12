@@ -75,18 +75,18 @@ public sealed partial class World
 
     private void InitParallelCallbacks()
     {
-        integrate = IntegrateCallback;
-        integrateForces = IntegrateForcesCallback;
-        prepareContacts = PrepareContactsCallback;
-        iterateContacts = IterateContactsCallback;
-        relaxVelocities = RelaxVelocitiesCallback;
-        prepareConstraints = PrepareConstraintsCallback;
-        iterateConstraints = IterateConstraintsCallback;
-        prepareSmallConstraints = PrepareSmallConstraintsCallback;
-        iterateSmallConstraints = IterateSmallConstraintsCallback;
-        updateContacts = UpdateContactsCallback;
-        updateBodies = UpdateBodiesCallback;
-        detect = DetectCallback;
+        integrate = Integrate;
+        integrateForces = IntegrateForces;
+        prepareContacts = PrepareContacts;
+        iterateContacts = IterateContacts;
+        relaxVelocities = RelaxVelocities;
+        prepareConstraints = PrepareConstraints;
+        iterateConstraints = IterateConstraints;
+        prepareSmallConstraints = PrepareSmallConstraints;
+        iterateSmallConstraints = IterateSmallConstraints;
+        updateContacts = UpdateContacts;
+        updateBodies = UpdateBodies;
+        detect = Detect;
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public sealed partial class World
             throw new ArgumentException("Time step cannot be negative.", nameof(dt));
         }
 
-        if (dt == (Real)0.0) return; // nothing to do
+        if (dt < Real.Epsilon) return; // nothing to do
 
         long time;
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -124,8 +124,8 @@ public sealed partial class World
         }
 
         int ssp1 = substeps;
-        substep_dt = dt / ssp1;
-        step_dt = dt;
+        substepDt = dt / ssp1;
+        stepDt = dt;
 
         if (multiThread)
         {
@@ -176,7 +176,7 @@ public sealed partial class World
         ForeachActiveBody(multiThread);
         SetTime(Timings.UpdateBodies);
 
-        DynamicTree.Update(multiThread, step_dt);
+        DynamicTree.Update(multiThread, stepDt);
         SetTime(Timings.BroadPhase);
 
         PostStep?.Invoke(dt);
@@ -190,57 +190,17 @@ public sealed partial class World
         }
     }
 
-    private void UpdateBodiesCallback(Parallel.Batch batch)
+    private void UpdateBodies(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            RigidBody body = bodies[i];
-            ref RigidBodyData rigidBody = ref body.Data;
-
-            if (rigidBody.AngularVelocity.LengthSquared() < body.inactiveThresholdAngularSq &&
-                rigidBody.Velocity.LengthSquared() < body.inactiveThresholdLinearSq)
-            {
-                body.sleepTime += step_dt;
-            }
-            else
-            {
-                body.sleepTime = 0;
-            }
-
-            if (body.sleepTime < body.deactivationTimeThreshold)
-            {
-                body.island.MarkedAsActive = true;
-            }
-
-            if (!rigidBody.IsStatic && rigidBody.IsActive)
-            {
-                rigidBody.AngularVelocity *= body.angularDampingMultiplier;
-                rigidBody.Velocity *= body.linearDampingMultiplier;
-
-                rigidBody.DeltaVelocity = body.Force * rigidBody.InverseMass * substep_dt;
-                rigidBody.DeltaAngularVelocity = JVector.Transform(body.Torque, rigidBody.InverseInertiaWorld) * substep_dt;
-
-                if (body.AffectedByGravity)
-                {
-                    rigidBody.DeltaVelocity += gravity * substep_dt;
-                }
-
-                body.Force = JVector.Zero;
-                body.Torque = JVector.Zero;
-
-                var bodyOrientation = JMatrix.CreateFromQuaternion(rigidBody.Orientation);
-
-                JMatrix.Multiply(bodyOrientation, body.inverseInertia, out rigidBody.InverseInertiaWorld);
-                JMatrix.MultiplyTransposed(rigidBody.InverseInertiaWorld, bodyOrientation, out rigidBody.InverseInertiaWorld);
-
-                rigidBody.InverseMass = body.inverseMass;
-            }
+            bodies[i].Update(stepDt, substepDt);
         }
     }
 
-    private void PrepareContactsCallback(Parallel.Batch batch)
+    private void PrepareContacts(Parallel.Batch batch)
     {
-        Real istep_dt = (Real)1.0 / step_dt;
+        Real invStepDt = (Real)1.0 / stepDt;
 
         var span = memContacts.Active[batch.Start..batch.End];
 
@@ -259,14 +219,14 @@ public sealed partial class World
             // move with 'bias' velocity along their normal after solving.
             // Since collision detection is happening at a rate of step_dt
             // and not substep_dt the penetration magnitude can be large.
-            c.PrepareForIteration(istep_dt);
+            c.PrepareForIteration(invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private unsafe void PrepareSmallConstraintsCallback(Parallel.Batch batch)
+    private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
     {
-        Real istep_dt = (Real)1.0 / step_dt;
+        Real invStepDt = (Real)1.0 / stepDt;
 
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
@@ -281,14 +241,14 @@ public sealed partial class World
             Debug.Assert(!b1.IsStatic || !b2.IsStatic);
 
             LockTwoBody(ref b1, ref b2);
-            constraint.PrepareForIteration(ref constraint, istep_dt);
+            constraint.PrepareForIteration(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateSmallConstraintsCallback(Parallel.Batch batch)
+    private unsafe void IterateSmallConstraints(Parallel.Batch batch)
     {
-        Real istep_dt = (Real)1.0 / step_dt;
+        Real invStepDt = (Real)1.0 / stepDt;
 
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
@@ -301,14 +261,14 @@ public sealed partial class World
             if (constraint.Iterate == null) continue;
 
             LockTwoBody(ref b1, ref b2);
-            constraint.Iterate(ref constraint, istep_dt);
+            constraint.Iterate(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private unsafe void PrepareConstraintsCallback(Parallel.Batch batch)
+    private unsafe void PrepareConstraints(Parallel.Batch batch)
     {
-        Real istep_dt = (Real)1.0 / step_dt;
+        Real invStepDt = (Real)1.0 / stepDt;
 
         var span = memConstraints.Active[batch.Start..batch.End];
 
@@ -323,14 +283,14 @@ public sealed partial class World
             Debug.Assert(!b1.IsStatic || !b2.IsStatic);
 
             LockTwoBody(ref b1, ref b2);
-            constraint.PrepareForIteration(ref constraint, istep_dt);
+            constraint.PrepareForIteration(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateConstraintsCallback(Parallel.Batch batch)
+    private unsafe void IterateConstraints(Parallel.Batch batch)
     {
-        Real istep_dt = (Real)1.0 / step_dt;
+        Real invStepDt = (Real)1.0 / stepDt;
 
         var span = memConstraints.Active[batch.Start..batch.End];
 
@@ -343,12 +303,12 @@ public sealed partial class World
             if (constraint.Iterate == null) continue;
 
             LockTwoBody(ref b1, ref b2);
-            constraint.Iterate(ref constraint, istep_dt);
+            constraint.Iterate(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private void IterateContactsCallback(Parallel.Batch batch)
+    private void IterateContacts(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
 
@@ -364,7 +324,7 @@ public sealed partial class World
         }
     }
 
-    private void RelaxVelocitiesCallback(Parallel.Batch batch)
+    private void RelaxVelocities(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
 
@@ -384,7 +344,7 @@ public sealed partial class World
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.IsStatic);
-        Debug.Assert(rigidBody.InverseMass == (Real)0.0);
+        Debug.Assert(rigidBody.InverseMass < Real.Epsilon);
         Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
     }
 
@@ -395,8 +355,8 @@ public sealed partial class World
         {
             if (body.IsStatic)
             {
-                System.Diagnostics.Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
-                System.Diagnostics.Debug.Assert(body.Data.InverseMass == (Real)0.0);
+                Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
+                Debug.Assert(body.Data.InverseMass < Real.Epsilon);
             }
         }
 #endif
@@ -408,7 +368,7 @@ public sealed partial class World
         else
         {
             Parallel.Batch batch = new(0, bodies.ActiveCount);
-            UpdateBodiesCallback(batch);
+            UpdateBodies(batch);
         }
     }
 
@@ -421,8 +381,8 @@ public sealed partial class World
             {
                 Arbiter arb = arbiters[handle.Data.Key];
 
-                AddToActiveList(arb.Body1.island);
-                AddToActiveList(arb.Body2.island);
+                AddToActiveList(arb.Body1.InternalIsland);
+                AddToActiveList(arb.Body2.InternalIsland);
 
                 memContacts.Free(handle);
                 IslandHelper.ArbiterRemoved(islands, arb);
@@ -439,7 +399,7 @@ public sealed partial class World
         brokenArbiters.Clear();
     }
 
-    private void UpdateContactsCallback(Parallel.Batch batch)
+    private void UpdateContacts(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
 
@@ -464,8 +424,8 @@ public sealed partial class World
             Arbiter arb = deferredArbiters[i];
             IslandHelper.ArbiterCreated(islands, arb);
 
-            AddToActiveList(arb.Body1.island);
-            AddToActiveList(arb.Body2.island);
+            AddToActiveList(arb.Body1.InternalIsland);
+            AddToActiveList(arb.Body2.InternalIsland);
 
             arb.Body1.RaiseBeginCollide(arb);
             arb.Body2.RaiseBeginCollide(arb);
@@ -528,7 +488,7 @@ public sealed partial class World
         }
     }
 
-    private void IntegrateForcesCallback(Parallel.Batch batch)
+    private void IntegrateForces(Parallel.Batch batch)
     {
         var span = memRigidBodies.Active[batch.Start..batch.End];
 
@@ -542,7 +502,7 @@ public sealed partial class World
         }
     }
 
-    private void IntegrateCallback(Parallel.Batch batch)
+    private void Integrate(Parallel.Batch batch)
     {
         var span = memRigidBodies.Active[batch.Start..batch.End];
 
@@ -553,12 +513,12 @@ public sealed partial class World
             // Static bodies may also have a velocity which gets integrated.
             // if (rigidBody.IsStatic) continue;
 
-            JVector lvel = rigidBody.Velocity;
-            JVector avel = rigidBody.AngularVelocity;
+            JVector linearVelocity = rigidBody.Velocity;
+            JVector angularVelocity = rigidBody.AngularVelocity;
 
-            rigidBody.Position += lvel * substep_dt;
+            rigidBody.Position += linearVelocity * substepDt;
 
-            JQuaternion quat = MathHelper.RotationQuaternion(avel, substep_dt);
+            JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
         }
     }
@@ -578,7 +538,7 @@ public sealed partial class World
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                RelaxVelocitiesCallback(batchContacts);
+                RelaxVelocities(batchContacts);
             }
         }
     }
@@ -608,15 +568,15 @@ public sealed partial class World
             Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
             Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
 
-            PrepareContactsCallback(batchContacts);
-            PrepareConstraintsCallback(batchConstraints);
-            PrepareSmallConstraintsCallback(batchSmallConstraints);
+            PrepareContacts(batchContacts);
+            PrepareConstraints(batchConstraints);
+            PrepareSmallConstraints(batchSmallConstraints);
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                IterateContactsCallback(batchContacts);
-                IterateConstraintsCallback(batchConstraints);
-                IterateSmallConstraintsCallback(batchSmallConstraints);
+                IterateContacts(batchContacts);
+                IterateConstraints(batchConstraints);
+                IterateSmallConstraints(batchSmallConstraints);
             }
         }
     }
@@ -630,7 +590,7 @@ public sealed partial class World
         else
         {
             Parallel.Batch batch = new(0, memContacts.Active.Length);
-            UpdateContactsCallback(batch);
+            UpdateContacts(batch);
         }
     }
 
@@ -642,7 +602,7 @@ public sealed partial class World
         }
         else
         {
-            IntegrateForcesCallback(new Parallel.Batch(0, memRigidBodies.Active.Length));
+            IntegrateForces(new Parallel.Batch(0, memRigidBodies.Active.Length));
         }
     }
 
@@ -654,7 +614,7 @@ public sealed partial class World
         }
         else
         {
-            IntegrateCallback(new Parallel.Batch(0, memRigidBodies.Active.Length));
+            Integrate(new Parallel.Batch(0, memRigidBodies.Active.Length));
         }
     }
 
@@ -678,7 +638,7 @@ public sealed partial class World
 
             island.NeedsUpdate = false;
 
-            foreach (RigidBody body in island.bodies)
+            foreach (RigidBody body in island.InternalBodies)
             {
                 ref RigidBodyData rigidBody = ref body.Data;
 
@@ -688,17 +648,17 @@ public sealed partial class World
                 {
                     rigidBody.IsActive = false;
 
-                    memRigidBodies.MoveToInactive(body.handle);
+                    memRigidBodies.MoveToInactive(body.Handle);
                     bodies.MoveToInactive(body);
 
                     if (!body.Data.IsStatic)
                     {
-                        foreach (var c in body.contacts)
+                        foreach (var c in body.InternalContacts)
                         {
                             memContacts.MoveToInactive(c.Handle);
                         }
 
-                        foreach (var c in body.constraints)
+                        foreach (var c in body.InternalConstraints)
                         {
                             if (c.IsSmallConstraint)
                             {
@@ -711,7 +671,7 @@ public sealed partial class World
                         }
                     }
 
-                    foreach (var s in body.shapes)
+                    foreach (var s in body.InternalShapes)
                     {
                         DynamicTree.Deactivate(s);
                     }
@@ -722,17 +682,17 @@ public sealed partial class World
 
                     rigidBody.IsActive = true;
 
-                    body.sleepTime = 0;
+                    body.InternalSleepTime = 0;
 
-                    memRigidBodies.MoveToActive(body.handle);
+                    memRigidBodies.MoveToActive(body.Handle);
                     bodies.MoveToActive(body);
 
-                    foreach (var c in body.contacts)
+                    foreach (var c in body.InternalContacts)
                     {
                         memContacts.MoveToActive(c.Handle);
                     }
 
-                    foreach (var c in body.constraints)
+                    foreach (var c in body.InternalConstraints)
                     {
                         if (c.IsSmallConstraint)
                         {
@@ -744,7 +704,7 @@ public sealed partial class World
                         }
                     }
 
-                    foreach (var s in body.shapes)
+                    foreach (var s in body.InternalShapes)
                     {
                         DynamicTree.Activate(s);
                     }

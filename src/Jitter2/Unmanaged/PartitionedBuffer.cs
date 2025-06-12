@@ -44,24 +44,24 @@ public unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
         Pointer = ptr;
     }
 
-    public bool IsZero => Pointer == null;
+    public readonly bool IsZero => Pointer == null;
 
-    public static JHandle<K> AsHandle<K>(JHandle<T> handle) where K : unmanaged
+    public static JHandle<TConvert> AsHandle<TConvert>(JHandle<T> handle) where TConvert : unmanaged
     {
-        return new JHandle<K>((K**)handle.Pointer);
+        return new JHandle<TConvert>((TConvert**)handle.Pointer);
     }
 
-    public bool Equals(JHandle<T> other)
+    public readonly bool Equals(JHandle<T> other)
     {
         return Pointer == other.Pointer;
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JHandle<T> other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return ((nint)Pointer).GetHashCode();
     }
@@ -242,48 +242,46 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <param name="clear">Write zeros into the object's memory.</param>
     /// <returns>A native handle.</returns>
     /// <exception cref="MaximumSizeException">Raised when the maximum size limit
-    /// of the datastructure is exceeded.</exception>
+    /// of the data structure is exceeded.</exception>
     public JHandle<T> Allocate(bool active = false, bool clear = false)
     {
         Debug.Assert(!disposed);
-
-        JHandle<T> handle;
 
         if (Count == size)
         {
             ResizeLock.EnterWriteLock();
 
-            int osize = size;
+            int originalSize = size;
 
-            if (osize == maximumSize)
+            if (originalSize == maximumSize)
             {
                 throw new MaximumSizeException($"{nameof(PartitionedBuffer<T>)} reached " +
                                                $"its maximum size limit ({nameof(maximumSize)}={maximumSize}).");
             }
 
-            size = Math.Min(2 * osize, maximumSize);
+            size = Math.Min(2 * originalSize, maximumSize);
 
             Logger.Information("{0}: Resizing to {1} elements ({2}KB).",
                 nameof(PartitionedBuffer<T>), size, size*sizeof(T) / 1024 );
 
-            var oldmemory = memory;
+            var oldMemory = memory;
 
             if(Aligned64) memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T), 64);
             else memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
 
-            for (int i = 0; i < osize; i++)
+            for (int i = 0; i < originalSize; i++)
             {
-                memory[i] = oldmemory[i];
+                memory[i] = oldMemory[i];
                 handles[Unsafe.Read<int>(&memory[i])] = &memory[i];
             }
 
-            for (int i = osize; i < size; i++)
+            for (int i = originalSize; i < size; i++)
             {
                 Unsafe.AsRef<int>(&memory[i]) = i;
             }
 
-            if(Aligned64) MemoryHelper.AlignedFree(oldmemory);
-            else MemoryHelper.Free(oldmemory);
+            if(Aligned64) MemoryHelper.AlignedFree(oldMemory);
+            else MemoryHelper.Free(oldMemory);
 
             ResizeLock.ExitWriteLock();
         }
@@ -291,7 +289,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
         int hdl = Unsafe.Read<int>(&memory[Count]);
         handles[hdl] = &memory[Count];
 
-        handle = new JHandle<T>(&handles[hdl]);
+        var handle = new JHandle<T>(&handles[hdl]);
 
         if (clear)
         {

@@ -55,8 +55,8 @@ internal static class IslandHelper
     {
         RigidBody b1 = arbiter.Body1;
         RigidBody b2 = arbiter.Body2;
-        b1.contacts.Add(arbiter);
-        b2.contacts.Add(arbiter);
+        b1.InternalContacts.Add(arbiter);
+        b2.InternalContacts.Add(arbiter);
 
         if (b1.Data.IsStatic || b2.Data.IsStatic) return;
 
@@ -65,16 +65,16 @@ internal static class IslandHelper
 
     public static void ArbiterRemoved(IslandSet islands, Arbiter arbiter)
     {
-        arbiter.Body1.contacts.Remove(arbiter);
-        arbiter.Body2.contacts.Remove(arbiter);
+        arbiter.Body1.InternalContacts.Remove(arbiter);
+        arbiter.Body2.InternalContacts.Remove(arbiter);
 
         RemoveConnection(islands, arbiter.Body1, arbiter.Body2);
     }
 
     public static void ConstraintCreated(IslandSet islands, Constraint constraint)
     {
-        constraint.Body1.constraints.Add(constraint);
-        constraint.Body2.constraints.Add(constraint);
+        constraint.Body1.InternalConstraints.Add(constraint);
+        constraint.Body2.InternalConstraints.Add(constraint);
 
         if (constraint.Body1.Data.IsStatic || constraint.Body2.Data.IsStatic) return;
 
@@ -83,40 +83,40 @@ internal static class IslandHelper
 
     public static void ConstraintRemoved(IslandSet islands, Constraint constraint)
     {
-        constraint.Body1.constraints.Remove(constraint);
-        constraint.Body2.constraints.Remove(constraint);
+        constraint.Body1.InternalConstraints.Remove(constraint);
+        constraint.Body2.InternalConstraints.Remove(constraint);
 
         RemoveConnection(islands, constraint.Body1, constraint.Body2);
     }
 
     public static void BodyAdded(IslandSet islands, RigidBody body)
     {
-        body.island = GetFromPool();
-        islands.Add(body.island, true);
-        body.island.bodies.Add(body);
+        body.InternalIsland = GetFromPool();
+        islands.Add(body.InternalIsland, true);
+        body.InternalIsland.InternalBodies.Add(body);
     }
 
     public static void BodyRemoved(IslandSet islands, RigidBody body)
     {
-        body.island.ClearLists();
-        ReturnToPool(body.island);
-        islands.Remove(body.island);
+        body.InternalIsland.ClearLists();
+        ReturnToPool(body.InternalIsland);
+        islands.Remove(body.InternalIsland);
     }
 
     public static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         MergeIslands(islands, body1, body2);
 
-        body1.connections.Add(body2);
-        body2.connections.Add(body1);
+        body1.InternalConnections.Add(body2);
+        body2.InternalConnections.Add(body1);
     }
 
     public static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
-        body1.connections.Remove(body2);
-        body2.connections.Remove(body1);
+        body1.InternalConnections.Remove(body2);
+        body2.InternalConnections.Remove(body1);
 
-        if (body1.island == body2.island)
+        if (body1.InternalIsland == body2.InternalIsland)
             SplitIslands(islands, body1, body2);
     }
 
@@ -128,7 +128,7 @@ internal static class IslandHelper
 
     private static void SplitIslands(IslandSet islands, RigidBody body1, RigidBody body2)
     {
-        Debug.Assert(body1.island == body2.island, "Islands not the same or null.");
+        Debug.Assert(body1.InternalIsland == body2.InternalIsland, "Islands not the same or null.");
 
         leftSearchQueue.Enqueue(body1);
         rightSearchQueue.Enqueue(body2);
@@ -136,25 +136,25 @@ internal static class IslandHelper
         visitedBodiesLeft.Add(body1);
         visitedBodiesRight.Add(body2);
 
-        body1.islandMarker = 1;
-        body2.islandMarker = 2;
+        body1.InternalIslandMarker = 1;
+        body2.InternalIslandMarker = 2;
 
         while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
         {
             RigidBody currentNode = leftSearchQueue.Dequeue();
             if (!currentNode.Data.IsStatic)
             {
-                for (int i = 0; i < currentNode.connections.Count; i++)
+                for (int i = 0; i < currentNode.InternalConnections.Count; i++)
                 {
-                    RigidBody connectedNode = currentNode.connections[i];
+                    RigidBody connectedNode = currentNode.InternalConnections[i];
 
-                    if (connectedNode.islandMarker == 0)
+                    if (connectedNode.InternalIslandMarker == 0)
                     {
                         leftSearchQueue.Enqueue(connectedNode);
                         visitedBodiesLeft.Add(connectedNode);
-                        connectedNode.islandMarker = 1;
+                        connectedNode.InternalIslandMarker = 1;
                     }
-                    else if (connectedNode.islandMarker == 2)
+                    else if (connectedNode.InternalIslandMarker == 2)
                     {
                         leftSearchQueue.Clear();
                         rightSearchQueue.Clear();
@@ -166,17 +166,17 @@ internal static class IslandHelper
             currentNode = rightSearchQueue.Dequeue();
             if (!currentNode.Data.IsStatic)
             {
-                for (int i = 0; i < currentNode.connections.Count; i++)
+                for (int i = 0; i < currentNode.InternalConnections.Count; i++)
                 {
-                    RigidBody connectedNode = currentNode.connections[i];
+                    RigidBody connectedNode = currentNode.InternalConnections[i];
 
-                    if (connectedNode.islandMarker == 0)
+                    if (connectedNode.InternalIslandMarker == 0)
                     {
                         rightSearchQueue.Enqueue(connectedNode);
                         visitedBodiesRight.Add(connectedNode);
-                        connectedNode.islandMarker = 2;
+                        connectedNode.InternalIslandMarker = 2;
                     }
-                    else if (connectedNode.islandMarker == 1)
+                    else if (connectedNode.InternalIslandMarker == 1)
                     {
                         leftSearchQueue.Clear();
                         rightSearchQueue.Clear();
@@ -194,9 +194,9 @@ internal static class IslandHelper
             for (int i = 0; i < visitedBodiesLeft.Count; i++)
             {
                 RigidBody body = visitedBodiesLeft[i];
-                body2.island.bodies.Remove(body);
-                island.bodies.Add(body);
-                body.island = island;
+                body2.InternalIsland.InternalBodies.Remove(body);
+                island.InternalBodies.Add(body);
+                body.InternalIsland = island;
             }
 
             rightSearchQueue.Clear();
@@ -206,9 +206,9 @@ internal static class IslandHelper
             for (int i = 0; i < visitedBodiesRight.Count; i++)
             {
                 RigidBody body = visitedBodiesRight[i];
-                body1.island.bodies.Remove(body);
-                island.bodies.Add(body);
-                body.island = island;
+                body1.InternalIsland.InternalBodies.Remove(body);
+                island.InternalBodies.Add(body);
+                body.InternalIsland = island;
             }
 
             leftSearchQueue.Clear();
@@ -218,12 +218,12 @@ internal static class IslandHelper
 
         for (int i = 0; i < visitedBodiesLeft.Count; i++)
         {
-            visitedBodiesLeft[i].islandMarker = 0;
+            visitedBodiesLeft[i].InternalIslandMarker = 0;
         }
 
         for (int i = 0; i < visitedBodiesRight.Count; i++)
         {
-            visitedBodiesRight[i].islandMarker = 0;
+            visitedBodiesRight[i].InternalIslandMarker = 0;
         }
 
         visitedBodiesLeft.Clear();
@@ -233,12 +233,12 @@ internal static class IslandHelper
     // Both bodies must be !static
     private static void MergeIslands(IslandSet islands, RigidBody body1, RigidBody body2)
     {
-        if (body1.island == body2.island) return;
+        if (body1.InternalIsland == body2.InternalIsland) return;
 
         // merge smaller into larger
         RigidBody smallIslandOwner, largeIslandOwner;
 
-        if (body1.island.bodies.Count > body2.island.bodies.Count)
+        if (body1.InternalIsland.InternalBodies.Count > body2.InternalIsland.InternalBodies.Count)
         {
             smallIslandOwner = body2;
             largeIslandOwner = body1;
@@ -249,15 +249,15 @@ internal static class IslandHelper
             largeIslandOwner = body2;
         }
 
-        Island giveBackIsland = smallIslandOwner.island;
+        Island giveBackIsland = smallIslandOwner.InternalIsland;
 
         ReturnToPool(giveBackIsland);
         islands.Remove(giveBackIsland);
 
-        foreach (RigidBody b in giveBackIsland.bodies)
+        foreach (RigidBody b in giveBackIsland.InternalBodies)
         {
-            b.island = largeIslandOwner.island;
-            largeIslandOwner.island.bodies.Add(b);
+            b.InternalIsland = largeIslandOwner.InternalIsland;
+            largeIslandOwner.InternalIsland.InternalBodies.Add(b);
         }
 
         giveBackIsland.ClearLists();

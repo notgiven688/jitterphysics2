@@ -472,7 +472,7 @@ public struct JMatrix : IEquatable<JMatrix>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Real Trace()
+    public readonly Real Trace()
     {
         return M11 + M22 + M33;
     }
@@ -505,7 +505,7 @@ public struct JMatrix : IEquatable<JMatrix>
         return result;
     }
 
-    public bool Equals(JMatrix other)
+    public readonly bool Equals(JMatrix other)
     {
         return M11.Equals(other.M11) && M21.Equals(other.M21) &&
                M31.Equals(other.M31) && M12.Equals(other.M12) &&
@@ -517,19 +517,19 @@ public struct JMatrix : IEquatable<JMatrix>
     /// <summary>
     /// Returns a string representation of the <see cref="JMatrix"/>.
     /// </summary>
-    public override string ToString()
+    public readonly override string ToString()
     {
         return $"M11={M11:F6}, M12={M12:F6}, M13={M13:F6}, " +
                $"M21={M21:F6}, M22={M22:F6}, M23={M23:F6}, " +
                $"M31={M31:F6}, M32={M32:F6}, M33={M33:F6}";
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JMatrix other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         var hashCode = M11.GetHashCode();
         hashCode ^= M21.GetHashCode();

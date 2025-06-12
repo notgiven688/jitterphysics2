@@ -21,8 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -69,8 +67,8 @@ public unsafe class TwistAngle : Constraint
     {
         CheckDataSize<TwistLimitData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateTwistAngle;
+        PrepareForIteration = &PrepareForIterationTwistAngle;
         handle = JHandle<ConstraintData>.AsHandle<TwistLimitData>(Handle);
     }
 
@@ -124,7 +122,7 @@ public unsafe class TwistAngle : Constraint
         Initialize(axis1, axis2, AngularLimit.Fixed);
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationTwistAngle(ref ConstraintData constraint, Real idt)
     {
         ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
 
@@ -214,13 +212,9 @@ public unsafe class TwistAngle : Constraint
 
     public override void DebugDraw(IDebugDrawer drawer)
     {
-        ref var data = ref handle.Data;
-
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
     }
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateTwistAngle(ref ConstraintData constraint, Real idt)
     {
         ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

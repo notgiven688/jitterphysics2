@@ -40,8 +40,8 @@ public static class ParallelExtensions
     /// one batch is generated.</param>
     /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
     /// <returns>The number of batches(/tasks) generated.</returns>
-    public static int ParallelForBatch<T>(this Array array, int taskThreshold,
-        Action<Parallel.Batch> action, bool execute = true) where T : unmanaged
+    public static int ParallelForBatch(this Array array, int taskThreshold,
+        Action<Parallel.Batch> action, bool execute = true)
     {
         int numTasks = array.Length / taskThreshold + 1;
         numTasks = Math.Min(numTasks, ThreadPool.Instance.ThreadCount);

@@ -33,7 +33,7 @@ public class Octree
 
         #endregion
 
-        public JBBox Box;
+        public JBoundingBox Box;
         public NeighborIndices Neighbors;
 
         public List<uint>? Triangles;
@@ -56,13 +56,13 @@ public class Octree
     private readonly TriangleIndices[] indices;
     private readonly JVector[] vertices;
 
-    private readonly JBBox[] triangleBoxes;
+    private readonly JBoundingBox[] triangleBoxes;
     private Node[] nodes;
     private uint nodeCount;
 
     private int numLeafs;
 
-    public JBBox Dimensions => nodes[0].Box;
+    public JBoundingBox Dimensions => nodes[0].Box;
 
     public JVector[] Vertices => vertices;
     public TriangleIndices[] Indices => indices;
@@ -72,7 +72,7 @@ public class Octree
         this.indices = indices;
         this.vertices = vertices;
         nodes = new Node[1024];
-        triangleBoxes = new JBBox[indices.Length];
+        triangleBoxes = new JBoundingBox[indices.Length];
 
         var sw = Stopwatch.StartNew();
 
@@ -82,7 +82,7 @@ public class Octree
                           $" in {sw.ElapsedMilliseconds} ms.");
     }
 
-    private uint AllocateNode(in JBBox size)
+    private uint AllocateNode(in JBoundingBox size)
     {
         if (nodes.Length == nodeCount)
         {
@@ -93,11 +93,11 @@ public class Octree
         return nodeCount++;
     }
 
-    private void InternalQuery(Stack<uint> triangles, in JBBox box, uint nodeIndex)
+    private void InternalQuery(Stack<uint> triangles, in JBoundingBox box, uint nodeIndex)
     {
         ref var node = ref nodes[nodeIndex];
 
-        if (node.Box.Contains(box) == JBBox.ContainmentType.Disjoint)
+        if (node.Box.Contains(box) == JBoundingBox.ContainmentType.Disjoint)
         {
             return;
         }
@@ -108,7 +108,7 @@ public class Octree
         {
             foreach (var t in tris)
             {
-                if (JBBox.NotDisjoint(box, triangleBoxes[t]))
+                if (JBoundingBox.NotDisjoint(box, triangleBoxes[t]))
                 {
                     triangles.Push(t);
                 }
@@ -126,7 +126,7 @@ public class Octree
         }
     }
 
-    public void Query(Stack<uint> triangles, in JBBox box)
+    public void Query(Stack<uint> triangles, in JBoundingBox box)
     {
         InternalQuery(triangles, box, 0);
     }
@@ -135,16 +135,16 @@ public class Octree
     {
         for (int i = 0; i < indices.Length; i++)
         {
-            ref JBBox triangleBox = ref triangleBoxes[i];
+            ref JBoundingBox triangleBox = ref triangleBoxes[i];
             ref var triangle = ref indices[i];
 
-            triangleBox = JBBox.SmallBox;
-            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexA]);
-            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexB]);
-            JBBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexC]);
+            triangleBox = JBoundingBox.SmallBox;
+            JBoundingBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexA]);
+            JBoundingBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexB]);
+            JBoundingBox.AddPointInPlace(ref triangleBox, vertices[triangle.IndexC]);
         }
 
-        JBBox box = JBBox.CreateFromPoints(vertices);
+        JBoundingBox box = JBoundingBox.CreateFromPoints(vertices);
 
         JVector delta = box.Max - box.Min;
         JVector center = box.Center;
@@ -221,9 +221,9 @@ public class Octree
         return hit;
     }
 
-    private int TestSubdivision(in JBBox parent, uint triangle)
+    private int TestSubdivision(in JBoundingBox parent, uint triangle)
     {
-        JBBox objBox = triangleBoxes[triangle];
+        JBoundingBox objBox = triangleBoxes[triangle];
         JVector center = parent.Center;
 
         int bits = 0;
@@ -240,7 +240,7 @@ public class Octree
         return bits;
     }
 
-    private void GetSubdivison(in JBBox parent, int index, out JBBox result)
+    private void GetSubdivison(in JBoundingBox parent, int index, out JBoundingBox result)
     {
         JVector.Subtract(parent.Max, parent.Min, out var dims);
         JVector.Multiply(dims, 0.5f, out dims);
@@ -290,7 +290,7 @@ public class Octree
 
                 if (newNode == 0)
                 {
-                    GetSubdivison(nn.Box, index, out JBBox newBox);
+                    GetSubdivison(nn.Box, index, out JBoundingBox newBox);
                     newNode = AllocateNode(newBox);
                     nodes[node].Neighbors[index] = newNode;
                 }

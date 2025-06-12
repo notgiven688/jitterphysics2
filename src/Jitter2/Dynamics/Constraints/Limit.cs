@@ -21,7 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Dynamics.Constraints;

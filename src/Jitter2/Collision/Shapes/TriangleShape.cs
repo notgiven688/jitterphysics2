@@ -82,7 +82,7 @@ public class TriangleShape : RigidBodyShape
         c += position;
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         const Real extraMargin = (Real)0.01;
 
@@ -95,11 +95,11 @@ public class TriangleShape : RigidBodyShape
         JVector.Transform(b, orientation, out b);
         JVector.Transform(c, orientation, out c);
 
-        box = JBBox.SmallBox;
+        box = JBoundingBox.SmallBox;
 
-        JBBox.AddPointInPlace(ref box, a);
-        JBBox.AddPointInPlace(ref box, b);
-        JBBox.AddPointInPlace(ref box, c);
+        JBoundingBox.AddPointInPlace(ref box, a);
+        JBoundingBox.AddPointInPlace(ref box, b);
+        JBoundingBox.AddPointInPlace(ref box, c);
 
         // prevent a degenerate bounding box
         JVector extra = new JVector(extraMargin);

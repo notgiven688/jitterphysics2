@@ -93,7 +93,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
             ts.B = octree.Vertices[octree.Indices[index].IndexB];
             ts.C = octree.Vertices[octree.Indices[index].IndexC];
 
-            bool hit = NarrowPhase.MPREPA(ts, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
+            bool hit = NarrowPhase.MprEpa(ts, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
                 out JVector pointA, out JVector pointB, out _, out float penetration);
 
             if (hit)
@@ -127,7 +127,7 @@ public class Tester(Octree tree) : IDynamicTreeProxy, IRayCastable
     public int NodePtr { get; set; }
 
     public JVector Velocity => JVector.Zero;
-    public JBBox WorldBoundingBox { get; } = tree.Dimensions;
+    public JBoundingBox WorldBoundingBox { get; } = tree.Dimensions;
 
     public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {

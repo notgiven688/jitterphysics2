@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -76,8 +75,8 @@ public unsafe class PointOnLine : Constraint
     {
         CheckDataSize<PointOnLineData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IteratePointOnLine;
+        PrepareForIteration = &PrepareForIterationPointOnLine;
         handle = JHandle<ConstraintData>.AsHandle<PointOnLineData>(Handle);
     }
 
@@ -126,22 +125,22 @@ public unsafe class PointOnLine : Constraint
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
-            JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector R1);
-            JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector R2);
+            JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
+            JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
 
-            JVector.Add(body1.Position, R1, out JVector p1);
-            JVector.Add(body2.Position, R2, out JVector p2);
+            JVector.Add(body1.Position, r1, out JVector p1);
+            JVector.Add(body2.Position, r2, out JVector p2);
 
-            JVector U = p2 - p1;
+            JVector u = p2 - p1;
 
             JVector.Transform(data.LocalAxis, body1.Orientation, out JVector aw);
 
-            return JVector.Dot(U, aw);
+            return JVector.Dot(u, aw);
         }
     }
 
-    [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    [SkipLocalsInit]
+    public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, Real idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -154,34 +153,34 @@ public unsafe class PointOnLine : Constraint
 
         JVector n2 = aw % n1;
 
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector R1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector R2);
+        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
+        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
 
-        JVector.Add(body1.Position, R1, out JVector p1);
-        JVector.Add(body2.Position, R2, out JVector p2);
+        JVector.Add(body1.Position, r1, out JVector p1);
+        JVector.Add(body2.Position, r2, out JVector p2);
 
         data.Clamp = 0;
 
-        JVector U = p2 - p1;
+        JVector u = p2 - p1;
 
         Span<JVector> jacobian = stackalloc JVector[12];
 
         jacobian[0] = -n1;
-        jacobian[1] = -((R1 + U) % n1);
+        jacobian[1] = -((r1 + u) % n1);
         jacobian[2] = n1;
-        jacobian[3] = R2 % n1;
+        jacobian[3] = r2 % n1;
 
         jacobian[4] = -n2;
-        jacobian[5] = -((R1 + U) % n2);
+        jacobian[5] = -((r1 + u) % n2);
         jacobian[6] = n2;
-        jacobian[7] = R2 % n2;
+        jacobian[7] = r2 % n2;
 
         jacobian[8] = -aw;
-        jacobian[9] = -((R1 + U) % aw);
+        jacobian[9] = -((r1 + u) % aw);
         jacobian[10] = aw;
-        jacobian[11] = R2 % aw;
+        jacobian[11] = r2 % aw;
 
-        var error = new JVector(JVector.Dot(U, n1), JVector.Dot(U, n2), JVector.Dot(U, aw));
+        var error = new JVector(JVector.Dot(u, n1), JVector.Dot(u, n2), JVector.Dot(u, aw));
 
         data.EffectiveMass = JMatrix.Identity;
 
@@ -279,8 +278,8 @@ public unsafe class PointOnLine : Constraint
         set => handle.Data.LimitBias = value;
     }
 
-    [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    [SkipLocalsInit]
+    public static void IteratePointOnLine(ref ConstraintData constraint, Real idt)
     {
         ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -293,30 +292,30 @@ public unsafe class PointOnLine : Constraint
 
         JVector n2 = aw % n1;
 
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector R1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector R2);
+        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
+        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
 
-        JVector.Add(body1.Position, R1, out JVector p1);
-        JVector.Add(body2.Position, R2, out JVector p2);
+        JVector.Add(body1.Position, r1, out JVector p1);
+        JVector.Add(body2.Position, r2, out JVector p2);
 
-        JVector U = p2 - p1;
+        JVector u = p2 - p1;
 
         Span<JVector> jacobian = stackalloc JVector[12];
 
         jacobian[0] = -n1;
-        jacobian[1] = -((R1 + U) % n1);
+        jacobian[1] = -((r1 + u) % n1);
         jacobian[2] = n1;
-        jacobian[3] = R2 % n1;
+        jacobian[3] = r2 % n1;
 
         jacobian[4] = -n2;
-        jacobian[5] = -((R1 + U) % n2);
+        jacobian[5] = -((r1 + u) % n2);
         jacobian[6] = n2;
-        jacobian[7] = R2 % n2;
+        jacobian[7] = r2 % n2;
 
         jacobian[8] = -aw;
-        jacobian[9] = -((R1 + U) % aw);
+        jacobian[9] = -((r1 + u) % aw);
         jacobian[10] = aw;
-        jacobian[11] = R2 % aw;
+        jacobian[11] = r2 % aw;
 
         JVector jv;
         jv.X = jacobian[0] * body1.Velocity + jacobian[1] * body1.AngularVelocity + jacobian[2] * body2.Velocity +

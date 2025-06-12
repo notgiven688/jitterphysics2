@@ -37,7 +37,7 @@ public class VoxelShape : RigidBodyShape
         point = Position;
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         // NOTE: We do not support any transformation of the body here.
         Debug.Assert(orientation.W > 0.999f, "Voxel shape can not be attached to a transformed body.");

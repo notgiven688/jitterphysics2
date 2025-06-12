@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -69,8 +68,8 @@ public unsafe class ConeLimit : Constraint
     {
         CheckDataSize<ConeLimitData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateConeLimit;
+        PrepareForIteration = &PrepareForIterationConeLimit;
         handle = JHandle<ConstraintData>.AsHandle<ConeLimitData>(Handle);
     }
 
@@ -115,7 +114,7 @@ public unsafe class ConeLimit : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
 
@@ -180,7 +179,7 @@ public unsafe class ConeLimit : Constraint
 
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateConeLimit(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -198,7 +197,7 @@ public unsafe class ConeLimit : Constraint
 
         Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        Real oldacc = data.AccumulatedImpulse;
+        Real oldAccumulated = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
@@ -211,7 +210,7 @@ public unsafe class ConeLimit : Constraint
             data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }
 
-        lambda = data.AccumulatedImpulse - oldacc;
+        lambda = data.AccumulatedImpulse - oldAccumulated;
 
         body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
         body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);

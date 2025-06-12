@@ -196,7 +196,7 @@ public partial struct JVector : IEquatable<JVector>
     }
 
     /// <summary>
-    /// Calculates matrix^\mathrf{T} \times vector, where vector is a column vector.
+    /// Calculates transposed(matrix) times vector, where vector is a column vector.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector TransposedTransform(in JVector vector, in JMatrix matrix)
@@ -228,7 +228,7 @@ public partial struct JVector : IEquatable<JVector>
     }
 
     /// <summary>
-    /// Calculates matrix^\mathrf{T} \times vector, where vector is a column vector.
+    /// Calculates transposed(matrix) times vector, where vector is a column vector.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void TransposedTransform(in JVector vector, in JMatrix matrix, out JVector result)
@@ -248,17 +248,17 @@ public partial struct JVector : IEquatable<JVector>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Transform(in JVector vector, in JQuaternion quaternion, out JVector result)
     {
-        Real numx = (Real)2.0 * (quaternion.Y * vector.Z - quaternion.Z * vector.Y);
-        Real numy = (Real)2.0 * (quaternion.Z * vector.X - quaternion.X * vector.Z);
-        Real numz = (Real)2.0 * (quaternion.X * vector.Y - quaternion.Y * vector.X);
+        Real num0 = (Real)2.0 * (quaternion.Y * vector.Z - quaternion.Z * vector.Y);
+        Real num1 = (Real)2.0 * (quaternion.Z * vector.X - quaternion.X * vector.Z);
+        Real num2 = (Real)2.0 * (quaternion.X * vector.Y - quaternion.Y * vector.X);
 
-        Real num00 = quaternion.Y * numz - quaternion.Z * numy;
-        Real num11 = quaternion.Z * numx - quaternion.X * numz;
-        Real num22 = quaternion.X * numy - quaternion.Y * numx;
+        Real num00 = quaternion.Y * num2 - quaternion.Z * num1;
+        Real num11 = quaternion.Z * num0 - quaternion.X * num2;
+        Real num22 = quaternion.X * num1 - quaternion.Y * num0;
 
-        result.X = vector.X + quaternion.W * numx + num00;
-        result.Y = vector.Y + quaternion.W * numy + num11;
-        result.Z = vector.Z + quaternion.W * numz + num22;
+        result.X = vector.X + quaternion.W * num0 + num00;
+        result.Y = vector.Y + quaternion.W * num1 + num11;
+        result.Z = vector.Z + quaternion.W * num2 + num22;
     }
 
     /// <summary>
@@ -267,17 +267,17 @@ public partial struct JVector : IEquatable<JVector>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ConjugatedTransform(in JVector vector, in JQuaternion quaternion, out JVector result)
     {
-        Real numx = (Real)2.0 * (quaternion.Z * vector.Y - quaternion.Y * vector.Z);
-        Real numy = (Real)2.0 * (quaternion.X * vector.Z - quaternion.Z * vector.X);
-        Real numz = (Real)2.0 * (quaternion.Y * vector.X - quaternion.X * vector.Y);
+        Real num0 = (Real)2.0 * (quaternion.Z * vector.Y - quaternion.Y * vector.Z);
+        Real num1 = (Real)2.0 * (quaternion.X * vector.Z - quaternion.Z * vector.X);
+        Real num2 = (Real)2.0 * (quaternion.Y * vector.X - quaternion.X * vector.Y);
 
-        Real num00 = quaternion.Z * numy - quaternion.Y * numz;
-        Real num11 = quaternion.X * numz - quaternion.Z * numx;
-        Real num22 = quaternion.Y * numx - quaternion.X * numy;
+        Real num00 = quaternion.Z * num1 - quaternion.Y * num2;
+        Real num11 = quaternion.X * num2 - quaternion.Z * num0;
+        Real num22 = quaternion.Y * num0 - quaternion.X * num1;
 
-        result.X = vector.X + quaternion.W * numx + num00;
-        result.Y = vector.Y + quaternion.W * numy + num11;
-        result.Z = vector.Z + quaternion.W * numz + num22;
+        result.X = vector.X + quaternion.W * num0 + num00;
+        result.Y = vector.Y + quaternion.W * num1 + num11;
+        result.Z = vector.Z + quaternion.W * num2 + num22;
     }
 
     /// <summary>

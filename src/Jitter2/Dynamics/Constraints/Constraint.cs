@@ -85,8 +85,8 @@ public abstract class Constraint : IDebugDrawable
     {
     }
 
-    protected unsafe delegate*<ref ConstraintData, Real, void> iterate = null;
-    protected unsafe delegate*<ref ConstraintData, Real, void> prepareForIteration = null;
+    protected unsafe delegate*<ref ConstraintData, Real, void> Iterate = null;
+    protected unsafe delegate*<ref ConstraintData, Real, void> PrepareForIteration = null;
 
     /// <summary>
     /// Enables or disables this constraint temporarily. For a complete removal of the constraint,
@@ -97,8 +97,8 @@ public abstract class Constraint : IDebugDrawable
         get => Handle.Data.Iterate != null;
         set
         {
-            Handle.Data.Iterate = value ? iterate : null;
-            Handle.Data.PrepareForIteration = value ? prepareForIteration : null;
+            Handle.Data.Iterate = value ? Iterate : null;
+            Handle.Data.PrepareForIteration = value ? PrepareForIteration : null;
         }
     }
 
@@ -115,17 +115,12 @@ public abstract class Constraint : IDebugDrawable
         Body2 = body2;
         Handle = handle;
 
-        handle.Data.Body1 = body1.handle;
-        handle.Data.Body2 = body2.handle;
+        handle.Data.Body1 = body1.Handle;
+        handle.Data.Body2 = body2.Handle;
 
         Create();
 
         IsEnabled = true;
-    }
-
-    public override int GetHashCode()
-    {
-        return Body1.GetHashCode() ^ Body2.GetHashCode();
     }
 
     public virtual void DebugDraw(IDebugDrawer drawer)

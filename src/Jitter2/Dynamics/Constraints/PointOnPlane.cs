@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -74,8 +73,8 @@ public unsafe class PointOnPlane : Constraint
     {
         CheckDataSize<SliderData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IteratePointOnPlane;
+        PrepareForIteration = &PrepareForIterationPointOnPlane;
         handle = JHandle<ConstraintData>.AsHandle<SliderData>(Handle);
     }
 
@@ -114,7 +113,7 @@ public unsafe class PointOnPlane : Constraint
         (data.Min, data.Max) = limit;
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationPointOnPlane(ref ConstraintData constraint, Real idt)
     {
         ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -122,24 +121,24 @@ public unsafe class PointOnPlane : Constraint
 
         JVector.Transform(data.LocalAxis, body1.Orientation, out JVector axis);
 
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector R1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector R2);
+        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
+        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
 
-        JVector.Add(body1.Position, R1, out JVector p1);
-        JVector.Add(body2.Position, R2, out JVector p2);
+        JVector.Add(body1.Position, r1, out JVector p1);
+        JVector.Add(body2.Position, r2, out JVector p2);
 
         data.Clamp = 0;
 
-        JVector U = p2 - p1;
+        JVector u = p2 - p1;
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 
         jacobian[0] = -axis;
-        jacobian[1] = -((R1 + U) % axis);
+        jacobian[1] = -((r1 + u) % axis);
         jacobian[2] = axis;
-        jacobian[3] = R2 % axis;
+        jacobian[3] = r2 % axis;
 
-        Real error = JVector.Dot(U, axis);
+        Real error = JVector.Dot(u, axis);
 
         data.EffectiveMass = (Real)1.0;
 
@@ -191,7 +190,7 @@ public unsafe class PointOnPlane : Constraint
 
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IteratePointOnPlane(ref ConstraintData constraint, Real idt)
     {
         ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

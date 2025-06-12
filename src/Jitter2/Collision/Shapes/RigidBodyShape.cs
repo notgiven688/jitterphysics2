@@ -37,7 +37,7 @@ public abstract class RigidBodyShape : Shape
 
     public sealed override void UpdateWorldBoundingBox(Real dt = (Real)0.0)
     {
-        JBBox box;
+        JBoundingBox box;
 
         if (RigidBody == null)
         {
@@ -52,7 +52,7 @@ public abstract class RigidBodyShape : Shape
         if (RigidBody.EnableSpeculativeContacts) SweptExpandBoundingBox(dt);
     }
 
-    public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         ShapeHelper.CalculateBoundingBox(this, orientation, position, out box);
     }
@@ -100,10 +100,10 @@ public abstract class RigidBodyShape : Shape
         ref var data = ref RigidBody.Data;
 
         // rotate the ray into the reference frame of bodyA..
-        JVector tdirection = JVector.ConjugatedTransform(direction, data.Orientation);
-        JVector torigin = JVector.ConjugatedTransform(origin - data.Position, data.Orientation);
+        JVector transformedDir = JVector.ConjugatedTransform(direction, data.Orientation);
+        JVector transformedOrigin = JVector.ConjugatedTransform(origin - data.Position, data.Orientation);
 
-        bool result = LocalRayCast(torigin, tdirection, out normal, out lambda);
+        bool result = LocalRayCast(transformedOrigin, transformedDir, out normal, out lambda);
 
         // ..rotate back.
         JVector.Transform(normal, data.Orientation, out normal);

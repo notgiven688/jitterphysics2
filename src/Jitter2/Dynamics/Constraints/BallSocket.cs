@@ -21,7 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -68,8 +67,8 @@ public unsafe class BallSocket : Constraint
     {
         CheckDataSize<BallSocketData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateBallSocket;
+        PrepareForIteration = &PrepareForIterationBallSocket;
         handle = JHandle<ConstraintData>.AsHandle<BallSocketData>(Handle);
     }
 
@@ -141,7 +140,7 @@ public unsafe class BallSocket : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationBallSocket(ref ConstraintData constraint, Real idt)
     {
         ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -194,7 +193,7 @@ public unsafe class BallSocket : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateBallSocket(ref ConstraintData constraint, Real idt)
     {
         ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

@@ -115,7 +115,7 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         if (type == TransformationType.General)
         {

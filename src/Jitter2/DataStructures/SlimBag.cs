@@ -39,7 +39,7 @@ internal class SlimBag<T>
     private T[] array;
     private int counter;
     private int nullOut;
-    private readonly IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
+    private readonly EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SlimBag{T}"/> class with a specified initial size.
@@ -183,7 +183,7 @@ internal class SlimBag<T>
     /// <summary>
     /// This should be called after adding entries to the SlimBag in order
     /// to keep track of the largest index used within the internal array of
-    /// this datastructure. It will set this item in the array to its default value
+    /// this data structure. It will set this item in the array to its default value
     /// to allow for garbage collection.
     /// </summary>
     public void TrackAndNullOutOne()
