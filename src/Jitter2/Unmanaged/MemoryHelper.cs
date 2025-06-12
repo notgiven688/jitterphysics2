@@ -80,9 +80,9 @@ public static unsafe class MemoryHelper
     /// <typeparam name="T">The unmanaged type of the elements to allocate memory for.</typeparam>
     /// <param name="num">The number of elements to allocate memory for.</param>
     /// <returns>A pointer to the allocated memory block.</returns>
-    public static T* AllocateHeap<T>(int num, int alignment) where T : unmanaged
+    public static T* AlignedAllocateHeap<T>(int num, int alignment) where T : unmanaged
     {
-        return (T*)AllocateHeap(num * sizeof(T), alignment);
+        return (T*)AlignedAllocateHeap(num * sizeof(T), alignment);
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public static unsafe class MemoryHelper
     /// </summary>
     /// <param name="len">The length of the memory block to allocate, in bytes.</param>
     /// <returns>A pointer to the allocated memory block.</returns>
-    public static void* AllocateHeap(int len, int alignment) => NativeMemory.AlignedAlloc((nuint)len, (nuint)alignment);
+    public static void* AlignedAllocateHeap(int len, int alignment) => NativeMemory.AlignedAlloc((nuint)len, (nuint)alignment);
 
     /// <summary>
     /// Frees a block of unmanaged memory previously allocated.
