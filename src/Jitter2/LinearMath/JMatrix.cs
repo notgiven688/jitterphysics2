@@ -531,16 +531,11 @@ public struct JMatrix : IEquatable<JMatrix>
 
     public readonly override int GetHashCode()
     {
-        var hashCode = M11.GetHashCode();
-        hashCode ^= M21.GetHashCode();
-        hashCode ^= M31.GetHashCode();
-        hashCode ^= M12.GetHashCode();
-        hashCode ^= M22.GetHashCode();
-        hashCode ^= M32.GetHashCode();
-        hashCode ^= M13.GetHashCode();
-        hashCode ^= M23.GetHashCode();
-        hashCode ^= M33.GetHashCode();
-        return hashCode;
+        var hc = new HashCode();
+        hc.Add(M11); hc.Add(M21); hc.Add(M31);
+        hc.Add(M12); hc.Add(M22); hc.Add(M32);
+        hc.Add(M13); hc.Add(M23); hc.Add(M33);
+        return hc.ToHashCode();
     }
 
     public static bool operator ==(JMatrix left, JMatrix right)

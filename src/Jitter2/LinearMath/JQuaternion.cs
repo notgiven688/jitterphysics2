@@ -624,10 +624,7 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         return obj is JQuaternion other && Equals(other);
     }
 
-    public readonly override int GetHashCode()
-    {
-        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(X, Y, Z, W);
 
     public static bool operator ==(JQuaternion left, JQuaternion right)
     {

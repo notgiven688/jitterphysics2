@@ -359,10 +359,7 @@ public partial struct JVector : IEquatable<JVector>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode()
-    {
-        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
     [Obsolete($"Use static {nameof(NegateInPlace)} instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

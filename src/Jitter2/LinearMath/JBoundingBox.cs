@@ -291,10 +291,7 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
         return obj is JBoundingBox other && Equals(other);
     }
 
-    public readonly override int GetHashCode()
-    {
-        return Min.GetHashCode() ^ Max.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(Min, Max);
 
     public static bool operator ==(JBoundingBox left, JBoundingBox right)
     {

@@ -136,10 +136,7 @@ public struct JTriangle : IEquatable<JTriangle>
         return $"V0={{{V0}}}, V1={{{V1}}}, V2={{{V2}}}";
     }
 
-    public readonly override int GetHashCode()
-    {
-        return V0.GetHashCode() ^ V1.GetHashCode() ^ V2.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(V0, V1, V2);
 
     public readonly bool Equals(JTriangle other)
     {

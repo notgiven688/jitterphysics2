@@ -39,10 +39,7 @@ public class Arbiter
 
     public JHandle<ContactData> Handle;
 
-    public override int GetHashCode()
-    {
-        return Body1.GetHashCode() ^ Body2.GetHashCode();
-    }
+    public override int GetHashCode() => HashCode.Combine(Body1, Body2);
 }
 
 /// <summary>

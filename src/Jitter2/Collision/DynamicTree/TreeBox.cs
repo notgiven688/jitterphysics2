@@ -276,6 +276,7 @@ public struct TreeBox : IEquatable<TreeBox>
     {
         return HashCode.Combine(Min, MinW, Max, MaxW);
     }
+
     public static bool operator ==(TreeBox left, TreeBox right)
     {
         return left.Equals(right);
