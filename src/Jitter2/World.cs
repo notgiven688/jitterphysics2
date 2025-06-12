@@ -222,9 +222,9 @@ public sealed partial class World : IDisposable
 
     // Make this global since it is used by nearly every method called
     // in World.Step.
-    private volatile int solverIterations = 6;
-    private volatile int velocityRelaxations = 4;
-    private volatile int substeps = 1;
+    private int solverIterations = 6;
+    private int velocityRelaxations = 4;
+    private int substeps = 1;
 
     private Real substepDt = (Real)(1.0 / 100.0);
     private Real stepDt = (Real)(1.0 / 100.0);
