@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -36,11 +37,15 @@ public class ConeShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the radius of the cone at its base.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when radius is less than or equal to zero.
+    /// </exception>
     public Real Radius
     {
         get => radius;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
@@ -49,11 +54,15 @@ public class ConeShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cone.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Height
     {
         get => height;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Height));
             height = value;
             UpdateWorldBoundingBox();
         }
@@ -64,8 +73,14 @@ public class ConeShape : RigidBodyShape
     /// </summary>
     /// <param name="radius">The radius of the cone at its base.</param>
     /// <param name="height">The height of the cone.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="radius"/> or <paramref name="height"/> is less than or equal to zero.
+    /// </exception>
     public ConeShape(Real radius = (Real)0.5, Real height = (Real)1.0)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
+
         this.radius = radius;
         this.height = height;
         UpdateWorldBoundingBox();

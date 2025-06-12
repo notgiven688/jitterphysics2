@@ -37,11 +37,15 @@ public class CylinderShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the radius of the cylinder.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Radius
     {
         get => radius;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
@@ -50,23 +54,34 @@ public class CylinderShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cylinder.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Height
     {
         get => height;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Height));
             height = value;
             UpdateWorldBoundingBox();
         }
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CylinderShape"/> class, creating a cylinder shape with the specified height and radius. The symmetry axis of the cylinder is aligned along the y-axis.
+    /// Initializes a new instance of the <see cref="CylinderShape"/> class, creating a cylinder shape with the specified
+    /// height and radius. The symmetry axis of the cylinder is aligned along the y-axis.
     /// </summary>
     /// <param name="height">The height of the cylinder.</param>
     /// <param name="radius">The radius of the cylinder at its base.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="height"/> or <paramref name="radius"/> is less than or equal to zero.
+    /// </exception>
     public CylinderShape(Real height, Real radius)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+
         this.radius = radius;
         this.height = height;
         UpdateWorldBoundingBox();

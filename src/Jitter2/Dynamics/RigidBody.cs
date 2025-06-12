@@ -108,10 +108,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     // to the new body. This should never be null.
     internal Island InternalIsland = null!;
 
-    internal readonly List<RigidBodyShape> InternalShapes = new(1);
-    internal readonly List<RigidBody> InternalConnections = new(0);
-    internal readonly HashSet<Arbiter> InternalContacts = new(0);
-    internal readonly HashSet<Constraint> InternalConstraints = new(0);
+    internal readonly List<RigidBodyShape> InternalShapes = new(capacity: 1);
+    internal readonly List<RigidBody> InternalConnections = new(capacity: 0);
+    internal readonly HashSet<Arbiter> InternalContacts = new(capacity: 0);
+    internal readonly HashSet<Constraint> InternalConstraints = new(capacity: 0);
 
     internal int InternalIslandMarker;
     internal Real InternalSleepTime = (Real)0.0;

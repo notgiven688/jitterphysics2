@@ -106,8 +106,8 @@ public sealed partial class World : IDisposable
     private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
         new(Parallelization.ThreadPool.ThreadCountSuggestion);
 
-    private readonly PartitionedSet<Island> islands = new();
-    private readonly PartitionedSet<RigidBody> bodies = new();
+    private readonly PartitionedSet<Island> islands = [];
+    private readonly PartitionedSet<RigidBody> bodies = [];
 
     private static ulong _idCounter;
 

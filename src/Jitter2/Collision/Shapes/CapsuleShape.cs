@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -36,11 +37,15 @@ public class CapsuleShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the radius of the capsule.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Radius
     {
         get => radius;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
@@ -49,11 +54,15 @@ public class CapsuleShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the length of the cylindrical part of the capsule, excluding the half-spheres on both ends.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is negative.
+    /// </exception>
     public Real Length
     {
         get => (Real)2.0 * halfLength;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(Length));
             halfLength = value / (Real)2.0;
             UpdateWorldBoundingBox();
         }
@@ -64,8 +73,14 @@ public class CapsuleShape : RigidBodyShape
     /// </summary>
     /// <param name="radius">The radius of the capsule.</param>
     /// <param name="length">The length of the cylindrical part of the capsule, excluding the half-spheres at both ends.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="radius"/> is less than or equal to zero or when <paramref name="length"/> is negative.
+    /// </exception>
     public CapsuleShape(Real radius = (Real)0.5, Real length = (Real)1.0)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+        ArgumentOutOfRangeException.ThrowIfNegative(length, nameof(length));
+
         this.radius = radius;
         halfLength = (Real)0.5 * length;
         UpdateWorldBoundingBox();
