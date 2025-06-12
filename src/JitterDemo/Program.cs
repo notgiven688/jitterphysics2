@@ -17,7 +17,21 @@ public static class Program
 
     public static void Main()
     {
-        Jitter2.Logger.Listener = (level, message) => Console.WriteLine($"{level}: {message}");
+        Jitter2.Logger.Listener = (level, message) =>
+        {
+            string colorCode = level switch
+            {
+                Jitter2.Logger.LogLevel.Information => "\e[32m", // Green
+                Jitter2.Logger.LogLevel.Warning     => "\e[33m", // Yellow
+                Jitter2.Logger.LogLevel.Error       => "\e[31m", // Red
+                _                                   => "\e[0m",  // Reset
+            };
+
+            const string bold = "\e[1m";
+            const string reset = "\e[0m";
+
+            Console.WriteLine($"{colorCode}{bold}[Jitter] {level}{reset}: {message}");
+        };
 
         CreationSettings cs = new(1200, 800, "JitterDemo");
 
