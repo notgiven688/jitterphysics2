@@ -91,7 +91,7 @@ public sealed partial class World
 
     /// <summary>
     /// Contains timings for the stages of the last call to <see cref="World.Step(Real, bool)"/>.
-    /// Array elements correspond to the enums in <see cref="Timings"/>. Can be used to identify
+    /// Array elements correspond to the enums in <see cref="Timings"/>. It can be used to identify
     /// bottlenecks.
     /// </summary>
     public double[] DebugTimings { get; } = new double[(int)Timings.Last];
@@ -105,12 +105,13 @@ public sealed partial class World
     {
         AssertNullBody();
 
-        if (dt < (Real)0.0)
+        switch (dt)
         {
-            throw new ArgumentException("Time step cannot be negative.", nameof(dt));
+            case < (Real)0.0:
+                throw new ArgumentException("Time step cannot be negative.", nameof(dt));
+            case < Real.Epsilon:
+                return; // nothing to do
         }
-
-        if (dt < Real.Epsilon) return; // nothing to do
 
         long time;
         double invFrequency = 1.0d / Stopwatch.Frequency;

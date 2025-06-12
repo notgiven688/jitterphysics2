@@ -82,6 +82,23 @@ public unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
 /// </summary>
 public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
 {
+    public class MaximumSizeException : Exception
+    {
+        public MaximumSizeException()
+        {
+        }
+
+        public MaximumSizeException(string message)
+            : base(message)
+        {
+        }
+
+        public MaximumSizeException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+
     // this is a mixture of a data structure and an allocator.
 
     // layout:
