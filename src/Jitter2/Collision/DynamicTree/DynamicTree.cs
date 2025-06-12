@@ -293,8 +293,17 @@ public partial class DynamicTree
     /// <summary>
     /// Add an entity to the tree.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the specified <paramref name="proxy"/> has already been added to this tree.
+    /// </exception>
     public void AddProxy<T>(T proxy, bool active = true) where T : class, IDynamicTreeProxy
     {
+        if (proxies.Contains(proxy))
+        {
+            throw new InvalidOperationException(
+                $"The proxy '{proxy}' has already been added to this tree instance.");
+        }
+
         InternalAddProxy(proxy);
         OverlapCheckAdd(root, proxy.NodePtr);
         proxies.Add(proxy, active);

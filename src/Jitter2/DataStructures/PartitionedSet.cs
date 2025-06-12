@@ -217,6 +217,12 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         return true;
     }
 
+    public bool Contains(T element)
+    {
+        if(element.SetIndex >= Count || element.SetIndex < 0) return false;
+        return (elements[element.SetIndex] == element);
+    }
+
     public void Remove(T element)
     {
         Debug.Assert(element.SetIndex != -1);
