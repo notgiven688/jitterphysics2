@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Jitter2.LinearMath;
@@ -202,18 +203,16 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         JVector.Min(box.Min, point, out box.Min);
     }
 
-    public static JBoundingBox CreateFromPoints(JVector[] points)
+    public static JBoundingBox CreateFromPoints(IEnumerable<JVector> points)
     {
-        JVector vector3 = new (Real.MaxValue);
-        JVector vector2 = new (Real.MinValue);
+        JBoundingBox box = SmallBox;
 
-        for (int i = 0; i < points.Length; i++)
+        foreach (var point in points)
         {
-            vector3 = JVector.Min(vector3, points[i]);
-            vector2 = JVector.Max(vector2, points[i]);
+            AddPointInPlace(ref box, point);
         }
 
-        return new JBoundingBox(vector3, vector2);
+        return box;
     }
 
     public readonly ContainmentType Contains(in JBoundingBox box)
