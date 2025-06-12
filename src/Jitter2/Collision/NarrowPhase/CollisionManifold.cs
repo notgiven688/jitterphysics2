@@ -42,16 +42,16 @@ public unsafe struct CollisionManifold
     private int rightCount;
     private int manifoldCount;
 
-    const Real sqrt3Over2 = (Real)0.86602540378;
-    const Real perturbation = (Real)0.01;
+    private const Real Sqrt3Over2 = (Real)0.86602540378;
+    private const Real Perturbation = (Real)0.01;
 
-    private static readonly Real[] hexagonVertices = new Real[]
-        {(Real)1, (Real)0, (Real)0.5, sqrt3Over2, -(Real)0.5, sqrt3Over2, -1f, (Real)0, -(Real)0.5, -sqrt3Over2, (Real)0.5, -sqrt3Over2};
+    private static readonly Real[] hexagonVertices = new[]
+        {(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2, -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2};
 
     public Span<JVector> ManifoldA => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), 6);
     public Span<JVector> ManifoldB => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[18]), 6);
 
-    public int Count => manifoldCount;
+    public readonly int Count => manifoldCount;
 
     private void PushLeft(Span<JVector> left, in JVector v)
     {
@@ -88,7 +88,7 @@ public unsafe struct CollisionManifold
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [System.Runtime.CompilerServices.SkipLocalsInit]
+    [SkipLocalsInit]
     public void BuildManifold<TA,TB>(TA shapeA, TB shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
         in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal)
         where TA : ISupportMappable where TB : ISupportMappable
@@ -106,8 +106,8 @@ public unsafe struct CollisionManifold
 
         for (int e = 0; e < 6; e++)
         {
-            JVector ptNormal = normal + hexagonVertices[2 * e + 0] * perturbation * crossVector1 +
-                               hexagonVertices[2 * e + 1] * perturbation * crossVector2;
+            JVector ptNormal = normal + hexagonVertices[2 * e + 0] * Perturbation * crossVector1 +
+                               hexagonVertices[2 * e + 1] * Perturbation * crossVector2;
 
             JVector.ConjugatedTransform(ptNormal, quaternionA, out JVector tmp);
             shapeA.SupportMap(tmp, out JVector np1);
@@ -204,11 +204,11 @@ public unsafe struct CollisionManifold
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [System.Runtime.CompilerServices.SkipLocalsInit]
-    public void BuildManifold<TA,TB>(RigidBodyShape shapeA, RigidBodyShape shapeB,
-        in JVector pA, in JVector pB, in JVector normal) where TA : ISupportMappable where TB : ISupportMappable
+    [SkipLocalsInit]
+    public void BuildManifold<TA,TB>(TA shapeA, TB shapeB,
+        in JVector pA, in JVector pB, in JVector normal) where TA : RigidBodyShape where TB : RigidBodyShape
     {
-        BuildManifold(shapeA, shapeB, shapeA.RigidBody!.Orientation, shapeB.RigidBody.Orientation,
+        BuildManifold(shapeA, shapeB, shapeA.RigidBody.Orientation, shapeB.RigidBody.Orientation,
             shapeA.RigidBody.Position, shapeB.RigidBody.Position, pA, pB, normal);
     }
 }

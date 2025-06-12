@@ -181,7 +181,7 @@ public unsafe struct SimplexSolverAB
     private JVector ClosestTetrahedron(ref Barycentric bc, out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
+        static Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
         {
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
@@ -250,7 +250,7 @@ public unsafe struct SimplexSolverAB
             {
                 bc = b0;
                 mask = m;
-                bestDistance = dist;
+                // bestDistance = dist;
                 closestPt = closest;
             }
         }

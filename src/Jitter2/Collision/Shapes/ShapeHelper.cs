@@ -32,14 +32,12 @@ namespace Jitter2.Collision.Shapes;
 public static class ShapeHelper
 {
     private const Real GoldenRatio = (Real)1.6180339887498948482045;
-
     private static readonly JVector[] icosahedronVertices = new JVector[12]
     {
         new(0, +1, +GoldenRatio), new(0, -1, +GoldenRatio), new(0, +1, -GoldenRatio), new(0, -1, -GoldenRatio),
         new(+1, +GoldenRatio, 0), new(+1, -GoldenRatio, 0), new(-1, +GoldenRatio, 0), new(-1, -GoldenRatio, 0),
         new(+GoldenRatio, 0, +1), new(+GoldenRatio, 0, -1), new(-GoldenRatio, 0, +1), new(-GoldenRatio, 0, -1)
     };
-
     private static readonly int[,] icosahedronIndices = new int[20, 3]
     {
         { 1, 0, 10 }, { 0, 1, 8 }, { 0, 4, 6 }, { 4, 0, 8 }, { 0, 6, 10 }, { 5, 1, 7 }, { 1, 5, 8 }, { 7, 1, 10 },
@@ -135,7 +133,7 @@ public static class ShapeHelper
     }
 
     public static void CalculateBoundingBox(ISupportMappable support,
-        in JQuaternion orientation, in JVector position, out JBBox box)
+        in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
 
@@ -263,7 +261,7 @@ public static class ShapeHelper
         mass = 0;
 
         const Real a = (Real)(1.0 / 60.0), b = (Real)(1.0 / 120.0);
-        JMatrix C = new(a, b, b, b, a, b, b, b, a);
+        JMatrix canonicalInertia = new(a, b, b, b, a, b, b, b, a);
 
         foreach (JTriangle triangle in MakeHull(support, subdivisions))
         {
@@ -271,16 +269,16 @@ public static class ShapeHelper
             JVector column1 = triangle.V1;
             JVector column2 = triangle.V2;
 
-            JMatrix A = new(
+            JMatrix transformation = new(
                 column0.X, column1.X, column2.X,
                 column0.Y, column1.Y, column2.Y,
                 column0.Z, column1.Z, column2.Z);
 
-            Real detA = A.Determinant();
+            Real detA = transformation.Determinant();
 
             // now transform this canonical tetrahedron to the target tetrahedron
             // inertia by a linear transformation A
-            JMatrix tetrahedronInertia = JMatrix.Multiply(A * C * JMatrix.Transpose(A), detA);
+            JMatrix tetrahedronInertia = JMatrix.Multiply(transformation * canonicalInertia * JMatrix.Transpose(transformation), detA);
 
             JVector tetrahedronCom = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;

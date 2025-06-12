@@ -124,17 +124,17 @@ public partial class DynamicTree
             return false;
         }
 
-        stack ??= new Stack<int>(256);
+        _stack ??= new Stack<int>(256);
 
-        stack.Push(root);
+        _stack.Push(root);
 
         bool globalHit = false;
 
         result.Lambda = ray.Lambda;
 
-        while (stack.Count > 0)
+        while (_stack.Count > 0)
         {
-            int pop = stack.Pop();
+            int pop = _stack.Pop();
 
             ref Node node = ref Nodes[pop];
 
@@ -171,19 +171,19 @@ public partial class DynamicTree
             {
                 if (lEnter < rEnter)
                 {
-                    stack.Push(node.Right);
-                    stack.Push(node.Left);
+                    _stack.Push(node.Right);
+                    _stack.Push(node.Left);
                 }
                 else
                 {
-                    stack.Push(node.Left);
-                    stack.Push(node.Right);
+                    _stack.Push(node.Left);
+                    _stack.Push(node.Right);
                 }
             }
             else
             {
-                if (lRes) stack.Push(node.Left);
-                if (rRes) stack.Push(node.Right);
+                if (lRes) _stack.Push(node.Left);
+                if (rRes) _stack.Push(node.Right);
             }
         }
 

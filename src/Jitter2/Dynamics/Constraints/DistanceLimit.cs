@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -73,8 +72,8 @@ public unsafe class DistanceLimit : Constraint
     {
         CheckDataSize<DistanceLimitData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateFixedAngle;
+        PrepareForIteration = &PrepareForIterationFixedAngle;
         handle = JHandle<ConstraintData>.AsHandle<DistanceLimitData>(Handle);
     }
 
@@ -186,7 +185,7 @@ public unsafe class DistanceLimit : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
     {
         ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -221,7 +220,7 @@ public unsafe class DistanceLimit : Constraint
         }
 
         JVector n = p2 - p1;
-        if (n.LengthSquared() != (Real)0.0) JVector.NormalizeInPlace(ref n);
+        if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 
@@ -262,7 +261,7 @@ public unsafe class DistanceLimit : Constraint
 
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
     {
         ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -282,7 +281,7 @@ public unsafe class DistanceLimit : Constraint
 
         Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
-        Real oldacc = data.AccumulatedImpulse;
+        Real oldAccumulated = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
@@ -295,7 +294,7 @@ public unsafe class DistanceLimit : Constraint
             data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }
 
-        lambda = data.AccumulatedImpulse - oldacc;
+        lambda = data.AccumulatedImpulse - oldAccumulated;
 
         body1.Velocity += body1.InverseMass * lambda * jacobian[0];
         body1.AngularVelocity += JVector.Transform(lambda * jacobian[1], body1.InverseInertiaWorld);

@@ -65,7 +65,7 @@ internal unsafe struct QMatrix
             m[0x7], m[0xB], m[0xF]);
     }
 
-    public static QMatrix CreateLM(in JQuaternion quat)
+    public static QMatrix CreateLeftMatrix(in JQuaternion quat)
     {
         Unsafe.SkipInit(out QMatrix result);
         Real* q = result.Pointer;
@@ -90,7 +90,7 @@ internal unsafe struct QMatrix
         return result;
     }
 
-    public static QMatrix CreateRM(in JQuaternion quat)
+    public static QMatrix CreateRightMatrix(in JQuaternion quat)
     {
         Unsafe.SkipInit(out QMatrix result);
         Real* q = result.Pointer;

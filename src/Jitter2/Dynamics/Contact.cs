@@ -174,8 +174,8 @@ public struct ContactData
 
     public void Init(RigidBody body1, RigidBody body2)
     {
-        Body1 = body1.handle;
-        Body2 = body2.handle;
+        Body1 = body1.Handle;
+        Body2 = body2.Handle;
 
         Friction = MathR.Max(body1.Friction, body2.Friction);
         Restitution = MathR.Max(body1.Restitution, body2.Restitution);
@@ -334,36 +334,36 @@ public struct ContactData
         ref Contact cref = ref Contact0;
         uint index = 0;
 
-        Real clsq = CalcArea4Points(rp1, Contact1.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
+        Real area = CalcArea4Points(rp1, Contact1.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
 
-        if (clsq > biggestArea + epsilon)
+        if (area > biggestArea + epsilon)
         {
-            biggestArea = clsq;
+            biggestArea = area;
             cref = ref Contact0;
             index = MaskContact0;
         }
 
-        clsq = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
+        area = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact2.RelativePosition1, Contact3.RelativePosition1);
 
-        if (clsq > biggestArea + epsilon)
+        if (area > biggestArea + epsilon)
         {
-            biggestArea = clsq;
+            biggestArea = area;
             cref = ref Contact1;
             index = MaskContact1;
         }
 
-        clsq = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact1.RelativePosition1, Contact3.RelativePosition1);
+        area = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact1.RelativePosition1, Contact3.RelativePosition1);
 
-        if (clsq > biggestArea + epsilon)
+        if (area > biggestArea + epsilon)
         {
-            biggestArea = clsq;
+            biggestArea = area;
             cref = ref Contact2;
             index = MaskContact2;
         }
 
-        clsq = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact1.RelativePosition1, Contact2.RelativePosition1);
+        area = CalcArea4Points(rp1, Contact0.RelativePosition1, Contact1.RelativePosition1, Contact2.RelativePosition1);
 
-        if (clsq > biggestArea + epsilon)
+        if (area > biggestArea + epsilon)
         {
             cref = ref Contact3;
             index = MaskContact3;
@@ -428,36 +428,36 @@ public struct ContactData
         /// Pointing from the collision point on the surface of <see cref="ContactData.Body2"/> to the collision point
         /// on the surface of <see cref="ContactData.Body1"/>.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Normal => new JVector(NormalTangentX.GetElement(0),
+        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Normal => new (NormalTangentX.GetElement(0),
             NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
 
         /// <summary>
         /// Tangent (normalized) to the contact <see cref="Normal"/> in the direction of the relative movement of
         /// both bodies, at the time when the contact is created.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent1 => new JVector(NormalTangentX.GetElement(1),
+        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Tangent1 => new (NormalTangentX.GetElement(1),
             NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
 
         /// <summary>
         /// A second tangent forming an orthonormal basis with <see cref="Normal"/> and <see cref="Tangent1"/>.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public JVector Tangent2 => new JVector(NormalTangentX.GetElement(2),
+        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Tangent2 => new JVector(NormalTangentX.GetElement(2),
             NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
 
         /// <summary>
         /// The impulse applied in the normal direction which has been used to solve the contact.
         /// </summary>
-        public Real Impulse => Accumulated.GetElement(0);
+        public readonly Real Impulse => Accumulated.GetElement(0);
 
         /// <summary>
         /// The impulse applied in the first tangent direction which has been used to solve the contact.
         /// </summary>
-        public Real TangentImpulse1 => Accumulated.GetElement(1);
+        public readonly Real TangentImpulse1 => Accumulated.GetElement(1);
 
         /// <summary>
         /// The impulse applied in the second tangent direction which has been used to solve the contact.
         /// </summary>
-        public Real TangentImpulse2 => Accumulated.GetElement(2);
+        public readonly Real TangentImpulse2 => Accumulated.GetElement(2);
 
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2,
             in JVector n, bool newContact, Real restitution)
@@ -509,7 +509,7 @@ public struct ContactData
             NormalTangentZ = Vector.Create(n.Z, tangent1.Z, tangent2.Z, 0);
         }
 
-        public unsafe bool UpdatePosition(ContactData* cd)
+        public unsafe readonly bool UpdatePosition(ContactData* cd)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
@@ -655,7 +655,7 @@ public struct ContactData
             Real massTangent2 = (Real)1.0 / kTangent2;
             Real massNormal = (Real)1.0 / kNormal;
 
-            JVector mass = new JVector(massNormal, massTangent1, massTangent2);
+            JVector mass = new (massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
 
             PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);

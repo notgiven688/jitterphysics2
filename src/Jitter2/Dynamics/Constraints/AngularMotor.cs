@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -63,8 +62,8 @@ public unsafe class AngularMotor : Constraint
     {
         CheckDataSize<AngularMotorData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateAngularMotor;
+        PrepareForIteration = &PrepareForIterationAngularMotor;
         handle = JHandle<ConstraintData>.AsHandle<AngularMotorData>(Handle);
     }
 
@@ -118,7 +117,7 @@ public unsafe class AngularMotor : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)
     {
         ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
 
@@ -138,7 +137,7 @@ public unsafe class AngularMotor : Constraint
         body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
     }
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateAngularMotor(ref ConstraintData constraint, Real idt)
     {
         ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -151,13 +150,13 @@ public unsafe class AngularMotor : Constraint
 
         Real lambda = -(jv - data.Velocity) * data.EffectiveMass;
 
-        Real olda = data.AccumulatedImpulse;
+        Real oldAccumulated = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         data.AccumulatedImpulse = Math.Clamp(data.AccumulatedImpulse, -data.MaxLambda, data.MaxLambda);
 
-        lambda = data.AccumulatedImpulse - olda;
+        lambda = data.AccumulatedImpulse - oldAccumulated;
 
         body1.AngularVelocity -= JVector.Transform(j1 * lambda, body1.InverseInertiaWorld);
         body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);

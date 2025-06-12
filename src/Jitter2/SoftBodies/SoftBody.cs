@@ -48,7 +48,7 @@ public class SoftBody
     /// </summary>
     public List<SoftBodyShape> Shapes { get; } = new();
 
-    protected World World;
+    public World World { get; }
 
     public bool IsActive => Vertices.Count > 0 && Vertices[0].IsActive;
 

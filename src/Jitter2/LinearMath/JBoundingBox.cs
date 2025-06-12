@@ -30,7 +30,7 @@ namespace Jitter2.LinearMath;
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 6*sizeof(Real))]
-public struct JBBox : IEquatable<JBBox>
+public struct JBoundingBox : IEquatable<JBoundingBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -47,11 +47,11 @@ public struct JBBox : IEquatable<JBBox>
     [FieldOffset(3*sizeof(Real))]
     public JVector Max;
 
-    public static readonly JBBox LargeBox;
+    public static readonly JBoundingBox LargeBox;
 
-    public static readonly JBBox SmallBox;
+    public static readonly JBoundingBox SmallBox;
 
-    static JBBox()
+    static JBoundingBox()
     {
         LargeBox.Min = new JVector(Real.MinValue);
         LargeBox.Max = new JVector(Real.MaxValue);
@@ -59,16 +59,16 @@ public struct JBBox : IEquatable<JBBox>
         SmallBox.Max = new JVector(Real.MinValue);
     }
 
-    public JBBox(JVector min, JVector max)
+    public JBoundingBox(JVector min, JVector max)
     {
         Min = min;
         Max = max;
     }
 
     /// <summary>
-    /// Returns a string representation of the <see cref="JBBox"/>.
+    /// Returns a string representation of the <see cref="JBoundingBox"/>.
     /// </summary>
-    public override string ToString()
+    public readonly override string ToString()
     {
         return $"Min={{{Min}}}, Max={{{Max}}}";
     }
@@ -89,7 +89,7 @@ public struct JBBox : IEquatable<JBBox>
         Min = center - halfExtents;
     }
 
-    public static JBBox CreateTransformed(in JBBox box, in JMatrix orientation)
+    public static JBoundingBox CreateTransformed(in JBoundingBox box, in JMatrix orientation)
     {
         JVector halfExtents = (Real)0.5 * (box.Max - box.Min);
         JVector center = (Real)0.5 * (box.Max + box.Min);
@@ -99,14 +99,14 @@ public struct JBBox : IEquatable<JBBox>
         JMatrix.Absolute(orientation, out var abs);
         JVector.Transform(halfExtents, abs, out halfExtents);
 
-        JBBox result;
+        JBoundingBox result;
         result.Max = center + halfExtents;
         result.Min = center - halfExtents;
 
         return result;
     }
 
-    private readonly bool Intersect1D(Real start, Real dir, Real min, Real max,
+    private static bool Intersect1D(Real start, Real dir, Real min, Real max,
         ref Real enter, ref Real exit)
     {
         if (dir * dir < Epsilon * Epsilon) return start >= min && start <= max;
@@ -202,27 +202,27 @@ public struct JBBox : IEquatable<JBBox>
         JVector.Min(Min, point, out Min);
     }
 
-    public static void AddPointInPlace(ref JBBox box, in JVector point)
+    public static void AddPointInPlace(ref JBoundingBox box, in JVector point)
     {
         JVector.Max(box.Max, point, out box.Max);
         JVector.Min(box.Min, point, out box.Min);
     }
 
-    public static JBBox CreateFromPoints(JVector[] points)
+    public static JBoundingBox CreateFromPoints(JVector[] points)
     {
-        JVector vector3 = new JVector(Real.MaxValue);
-        JVector vector2 = new JVector(Real.MinValue);
+        JVector vector3 = new (Real.MaxValue);
+        JVector vector2 = new (Real.MinValue);
 
         for (int i = 0; i < points.Length; i++)
         {
-            JVector.Min(vector3, points[i], out vector3);
-            JVector.Max(vector2, points[i], out vector2);
+            vector3 = JVector.Min(vector3, points[i]);
+            vector2 = JVector.Max(vector2, points[i]);
         }
 
-        return new JBBox(vector3, vector2);
+        return new JBoundingBox(vector3, vector2);
     }
 
-    public readonly ContainmentType Contains(in JBBox box)
+    public readonly ContainmentType Contains(in JBoundingBox box)
     {
         ContainmentType result = ContainmentType.Disjoint;
         if (Max.X >= box.Min.X && Min.X <= box.Max.X && Max.Y >= box.Min.Y && Min.Y <= box.Max.Y &&
@@ -237,31 +237,31 @@ public struct JBBox : IEquatable<JBBox>
         return result;
     }
 
-    public static bool NotDisjoint(in JBBox left, in JBBox right)
+    public static bool NotDisjoint(in JBoundingBox left, in JBoundingBox right)
     {
         return left.Max.X >= right.Min.X && left.Min.X <= right.Max.X && left.Max.Y >= right.Min.Y && left.Min.Y <= right.Max.Y &&
                left.Max.Z >= right.Min.Z && left.Min.Z <= right.Max.Z;
     }
 
-    public static bool Disjoint(in JBBox left, in JBBox right)
+    public static bool Disjoint(in JBoundingBox left, in JBoundingBox right)
     {
         return left.Max.X < right.Min.X || left.Min.X > right.Max.X || left.Max.Y < right.Min.Y || left.Min.Y > right.Max.Y ||
                left.Max.Z < right.Min.Z || left.Min.Z > right.Max.Z;
     }
 
-    public static bool Encompasses(in JBBox outer, in JBBox inner)
+    public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)
     {
         return outer.Min.X <= inner.Min.X && outer.Max.X >= inner.Max.X && outer.Min.Y <= inner.Min.Y && outer.Max.Y >= inner.Max.Y &&
                outer.Min.Z <= inner.Min.Z && outer.Max.Z >= inner.Max.Z;
     }
 
-    public static JBBox CreateMerged(in JBBox original, in JBBox additional)
+    public static JBoundingBox CreateMerged(in JBoundingBox original, in JBoundingBox additional)
     {
-        CreateMerged(original, additional, out JBBox result);
+        CreateMerged(original, additional, out JBoundingBox result);
         return result;
     }
 
-    public static void CreateMerged(in JBBox original, in JBBox additional, out JBBox result)
+    public static void CreateMerged(in JBoundingBox original, in JBoundingBox additional, out JBoundingBox result)
     {
         JVector.Min(original.Min, additional.Min, out result.Min);
         JVector.Max(original.Max, additional.Max, out result.Max);
@@ -281,18 +281,28 @@ public struct JBBox : IEquatable<JBBox>
         return (Real)2.0 * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
     }
 
-    public readonly bool Equals(JBBox other)
+    public readonly bool Equals(JBoundingBox other)
     {
         return Min.Equals(other.Min) && Max.Equals(other.Max);
     }
 
     public readonly override bool Equals(object? obj)
     {
-        return obj is JBBox other && Equals(other);
+        return obj is JBoundingBox other && Equals(other);
     }
 
     public readonly override int GetHashCode()
     {
         return Min.GetHashCode() ^ Max.GetHashCode();
+    }
+
+    public static bool operator ==(JBoundingBox left, JBoundingBox right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(JBoundingBox left, JBoundingBox right)
+    {
+        return !(left == right);
     }
 }

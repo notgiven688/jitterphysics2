@@ -33,11 +33,11 @@ public static class Parallel
 {
     /// <summary>
     /// Represents a batch defined by a start index, an end index, and a batch index.
-    /// This struct is utilized in <see cref="ForBatch"/> to facilitate multi-threaded batch processing within a for-loop.
+    /// This struct is utilized in <see cref="ForBatch"/> to facilitate multithreaded batch processing within a for-loop.
     /// </summary>
     public readonly struct Batch
     {
-        public Batch(int start, int end, ushort index = 0)
+        public Batch(int start, int end)
         {
             Start = start;
             End = end;
@@ -99,7 +99,7 @@ public static class Parallel
         for (int i = 0; i < numTasks; i++)
         {
             GetBounds(upper - lower, numTasks, i, out int start, out int end);
-            threadPool.AddTask(action, new Batch(start + lower, end + lower, (ushort)i));
+            threadPool.AddTask(action, new Batch(start + lower, end + lower));
         }
 
         if (execute) threadPool.Execute();

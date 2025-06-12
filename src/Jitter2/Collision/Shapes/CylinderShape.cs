@@ -95,7 +95,7 @@ public class CylinderShape : RigidBodyShape
         }
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         const Real zeroEpsilon = (Real)1e-12;
 

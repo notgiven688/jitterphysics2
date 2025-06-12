@@ -23,7 +23,6 @@
 
 // #define DEBUG_EDGEFILTER
 
-using System;
 using System.Runtime.CompilerServices;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
@@ -45,7 +44,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     public Real EdgeThreshold { get; set; } = (Real)0.01;
 
     // approx 2.5°
-    private Real cosAT = (Real)0.999;
+    private Real cosAngle = (Real)0.999;
 
     /// <summary>
     /// A tweakable parameter.
@@ -58,8 +57,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// </summary>
     public JAngle AngleThreshold
     {
-        get => JAngle.FromRadian(MathR.Acos(cosAT));
-        set => cosAT = MathR.Cos(value.Radian);
+        get => JAngle.FromRadian(MathR.Acos(cosAngle));
+        set => cosAngle = MathR.Cos(value.Radian);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -106,12 +105,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         ref var triangle = ref triangleShape.Mesh.Indices[triangleShape.Index];
 
         JVector tnormal = triangle.Normal;
-        tnormal = JVector.Transform(tnormal, triangleShape.RigidBody!.Data.Orientation);
+        tnormal = JVector.Transform(tnormal, triangleShape.RigidBody.Data.Orientation);
 
         if (c2) JVector.NegateInPlace(ref tnormal);
 
         // Make triangles penetrable from one side
-        if (JVector.Dot(normal, tnormal) < -cosAT) return false;
+        if (JVector.Dot(normal, tnormal) < -cosAngle) return false;
 
         triangleShape.GetWorldVertices(out JVector a, out JVector b, out JVector c);
 
@@ -167,7 +166,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             // but with zero epa threshold parameter. This is necessary since
             // MPR is not exact for flat shapes, like triangles.
 
-            bool result = NarrowPhase.MPREPA(shapeA, shapeB,
+            bool result = NarrowPhase.MprEpa(shapeA, shapeB,
                 b1Data.Orientation, b2Data.Orientation,
                 b1Data.Position, b2Data.Position,
                 out pointA, out pointB, out normal, out penetration,
@@ -191,7 +190,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // tnormal -> the triangle normal where collision occurred
         // nnormal -> the normal of neighbouring triangle
         // normal  -> the collision normal
-        if (JVector.Dot(tnormal, nnormal) > cosAT)
+        if (JVector.Dot(tnormal, nnormal) > cosAngle)
         {
             // tnormal and nnormal are the same
             // --------------------------------

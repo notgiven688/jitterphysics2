@@ -43,30 +43,30 @@ public sealed class ThreadPool
 
     private sealed class Task<T> : ITask
     {
-        public Action<T> action = null!;
-        public T parameter = default!;
+        public Action<T> Action = null!;
+        public T Parameter = default!;
 
         public void Perform()
         {
-            counter = total;
-            action(parameter);
+            _counter = _total;
+            Action(Parameter);
         }
 
         private static readonly List<Task<T>> pool = new(32);
 
-        private static volatile int counter;
-        private static volatile int total;
+        private static int _counter;
+        private static int _total;
 
         public static Task<T> GetFree()
         {
-            if (counter == 0)
+            if (_counter == 0)
             {
-                counter++;
-                total++;
+                _counter++;
+                _total++;
                 pool.Add(new Task<T>());
             }
 
-            return pool[^counter--];
+            return pool[^_counter--];
         }
     }
 
@@ -81,12 +81,12 @@ public sealed class ThreadPool
     private readonly SlimBag<ITask> taskList = new();
     private readonly ConcurrentQueue<ITask> taskQueue = new();
 
-    private static volatile bool running = true;
+    private volatile bool running = true;
 
     private volatile int tasksLeft;
-    internal int threadCount;
+    private int threadCount;
 
-    private static ThreadPool? instance;
+    private static ThreadPool? _instance;
 
     /// <summary>
     /// Get the number of threads used by the ThreadManager to execute
@@ -107,7 +107,7 @@ public sealed class ThreadPool
         // To avoid this issue, multi-threading is disabled when a debugger is attached on non-Windows systems.
         if (!OperatingSystem.IsWindows() && Debugger.IsAttached)
         {
-            System.Diagnostics.Debug.WriteLine(
+            Debug.WriteLine(
                 "Multi-threading disabled to prevent potential hangups: Debugger attached, " +
                 ".NET version < 9.0, non-Windows system detected.");
             initialThreadCount = 1; // Forces single-threading to avoid hangups
@@ -164,8 +164,8 @@ public sealed class ThreadPool
     public void AddTask<T>(Action<T> action, T parameter)
     {
         var instance = Task<T>.GetFree();
-        instance.action = action;
-        instance.parameter = parameter;
+        instance.Action = action;
+        instance.Parameter = parameter;
         taskList.Add(instance);
     }
 
@@ -173,7 +173,7 @@ public sealed class ThreadPool
     /// Indicates whether the <see cref="ThreadPool"/> instance is initialized.
     /// </summary>
     /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
-    public static bool InstanceInitialized => instance != null;
+    public static bool InstanceInitialized => _instance != null;
 
     /// <summary>
     /// Implements the singleton pattern to provide a single instance of the ThreadPool.
@@ -182,8 +182,8 @@ public sealed class ThreadPool
     {
         get
         {
-            instance ??= new ThreadPool();
-            return instance;
+            _instance ??= new ThreadPool();
+            return _instance;
         }
     }
 

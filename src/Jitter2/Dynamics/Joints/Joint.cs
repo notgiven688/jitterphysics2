@@ -29,7 +29,7 @@ namespace Jitter2.Dynamics.Constraints;
 public class Joint : IDebugDrawable
 {
     private readonly List<Constraint> constraints = new(4);
-    public ReadOnlyList<Constraint> Constraints => new ReadOnlyList<Constraint>(constraints);
+    public ReadOnlyList<Constraint> Constraints => new (constraints);
 
     /// <summary>
     /// Add a constraint to the internal bookkeeping

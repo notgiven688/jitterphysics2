@@ -21,7 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -48,14 +47,14 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// The bounding box of the shape in world space. It is automatically updated when the position or
     /// orientation of the corresponding instance of <see cref="RigidBody"/> changes.
     /// </summary>
-    public JBBox WorldBoundingBox { get; protected set; }
+    public JBoundingBox WorldBoundingBox { get; protected set; }
 
     int IDynamicTreeProxy.NodePtr { get; set; }
 
     protected void SweptExpandBoundingBox(Real dt)
     {
         Real swept = dt * Velocity.Length();
-        JBBox box = WorldBoundingBox;
+        JBoundingBox box = WorldBoundingBox;
         box.Min -= new JVector(swept);
         box.Max += new JVector(swept);
         WorldBoundingBox = box;

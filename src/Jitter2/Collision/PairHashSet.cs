@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -45,7 +44,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         [FieldOffset(4)] public readonly int ID2;
 
-        public static Pair Zero = new Pair();
+        public static Pair Zero = new();
 
         public Pair(int id1, int id2)
         {
@@ -153,7 +152,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         Slots = newSlots;
     }
 
-    private int FindSlot(Pair[] slots, int hash, long id)
+    private static int FindSlot(Pair[] slots, int hash, long id)
     {
         int modder = slots.Length - 1;
 
@@ -255,25 +254,25 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
             return false;
         }
 
-        int hash_j = slot;
+        int hashJ = slot;
 
         while (true)
         {
-            hash_j = (hash_j + 1) & modder;
+            hashJ = (hashJ + 1) & modder;
 
-            if (Slots[hash_j].ID == 0)
+            if (Slots[hashJ].ID == 0)
             {
                 break;
             }
 
-            int hash_k = Slots[hash_j].GetHash() & modder;
+            int hashK = Slots[hashJ].GetHash() & modder;
 
             // https://en.wikipedia.org/wiki/Open_addressing
-            if ((hash_j > slot && (hash_k <= slot || hash_k > hash_j)) ||
-                (hash_j < slot && hash_k <= slot && hash_k > hash_j))
+            if ((hashJ > slot && (hashK <= slot || hashK > hashJ)) ||
+                (hashJ < slot && hashK <= slot && hashK > hashJ))
             {
-                Slots[slot] = Slots[hash_j];
-                slot = hash_j;
+                Slots[slot] = Slots[hashJ];
+                slot = hashJ;
             }
         }
 

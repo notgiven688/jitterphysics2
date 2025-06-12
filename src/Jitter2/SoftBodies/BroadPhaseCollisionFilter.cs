@@ -51,9 +51,9 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
             if (!i1.SoftBody.IsActive && !i2.SoftBody.IsActive) return false;
 
-            bool colliding = NarrowPhase.MPREPA(i1, i2,
+            bool colliding = NarrowPhase.MprEpa(i1, i2,
                 JQuaternion.Identity, JVector.Zero,
-                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
+                out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 
@@ -68,12 +68,12 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
         if (i1 != null)
         {
-            var rb = (proxyB as RigidBodyShape)!.RigidBody!;
+            var rb = (proxyB as RigidBodyShape)!.RigidBody;
 
             if (!i1.SoftBody.IsActive && !rb.Data.IsActive) return false;
 
-            bool colliding = NarrowPhase.MPREPA(i1, (proxyB as RigidBodyShape)!, rb.Orientation, rb.Position,
-                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
+            bool colliding = NarrowPhase.MprEpa(i1, (proxyB as RigidBodyShape)!, rb.Orientation, rb.Position,
+                out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 
@@ -87,12 +87,12 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
         if (i2 != null)
         {
-            var ra = (proxyA as RigidBodyShape)!.RigidBody!;
+            var ra = (proxyA as RigidBodyShape)!.RigidBody;
 
             if (!i2.SoftBody.IsActive && !ra.Data.IsActive) return false;
 
-            bool colliding = NarrowPhase.MPREPA(i2, (proxyA as RigidBodyShape)!, ra.Orientation, ra.Position,
-                out JVector pA, out JVector pB, out JVector normal, out Real penetration);
+            bool colliding = NarrowPhase.MprEpa(i2, (proxyA as RigidBodyShape)!, ra.Orientation, ra.Position,
+                out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 

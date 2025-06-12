@@ -153,7 +153,7 @@ public unsafe struct SimplexSolver
     private JVector ClosestTetrahedron(out uint mask)
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
+        static Real Determinant(in JVector a, in JVector b, in JVector c, in JVector d)
         {
             return JVector.Dot(b - a, JVector.Cross(c - a, d - a));
         }
@@ -217,7 +217,7 @@ public unsafe struct SimplexSolver
             if (dist < bestDistance)
             {
                 mask = m;
-                bestDistance = dist;
+                // bestDistance = dist;
                 closestPt = closest;
             }
         }

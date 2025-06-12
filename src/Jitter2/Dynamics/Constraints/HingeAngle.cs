@@ -21,8 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -72,8 +70,8 @@ public unsafe class HingeAngle : Constraint
     {
         CheckDataSize<HingeAngleData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateHingeAngle;
+        PrepareForIteration = &PrepareForIterationHingeAngle;
         handle = JHandle<ConstraintData>.AsHandle<HingeAngleData>(Handle);
     }
 
@@ -113,7 +111,7 @@ public unsafe class HingeAngle : Constraint
         }
     }
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, Real idt)
     {
         ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
 
@@ -153,18 +151,18 @@ public unsafe class HingeAngle : Constraint
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.LimitSoftness * idt;
 
-        Real maxa = data.MaxAngle;
-        Real mina = data.MinAngle;
+        Real maxA = data.MaxAngle;
+        Real minA = data.MinAngle;
 
-        if (error.Z > maxa)
+        if (error.Z > maxA)
         {
             data.Clamp = 1;
-            error.Z -= maxa;
+            error.Z -= maxA;
         }
-        else if (error.Z < mina)
+        else if (error.Z < minA)
         {
             data.Clamp = 2;
-            error.Z -= mina;
+            error.Z -= minA;
         }
         else
         {
@@ -235,7 +233,7 @@ public unsafe class HingeAngle : Constraint
 
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
     {
         ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;

@@ -22,7 +22,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -64,8 +63,8 @@ public unsafe class LinearMotor : Constraint
     {
         CheckDataSize<LinearMotorData>();
 
-        iterate = &Iterate;
-        prepareForIteration = &PrepareForIteration;
+        Iterate = &IterateLinearMotor;
+        PrepareForIteration = &PrepareForIterationLinearMotor;
         handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);
     }
 
@@ -124,7 +123,7 @@ public unsafe class LinearMotor : Constraint
 
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
-    public static void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, Real idt)
     {
         ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
 
@@ -144,13 +143,9 @@ public unsafe class LinearMotor : Constraint
 
     public override void DebugDraw(IDebugDrawer drawer)
     {
-        ref var data = ref handle.Data;
-
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
     }
 
-    public static void Iterate(ref ConstraintData constraint, Real idt)
+    public static void IterateLinearMotor(ref ConstraintData constraint, Real idt)
     {
         ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -163,13 +158,13 @@ public unsafe class LinearMotor : Constraint
 
         Real lambda = -(jv - data.Velocity) * data.EffectiveMass;
 
-        Real olda = data.AccumulatedImpulse;
+        Real oldAccumulated = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
         data.AccumulatedImpulse = Math.Clamp(data.AccumulatedImpulse, -data.MaxLambda, data.MaxLambda);
 
-        lambda = data.AccumulatedImpulse - olda;
+        lambda = data.AccumulatedImpulse - oldAccumulated;
 
         body1.Velocity -= j1 * lambda * body1.InverseMass;
         body2.Velocity += j2 * lambda * body2.InverseMass;

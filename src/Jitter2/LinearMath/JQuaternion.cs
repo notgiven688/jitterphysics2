@@ -614,17 +614,17 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         return result;
     }
 
-    public bool Equals(JQuaternion other)
+    public readonly bool Equals(JQuaternion other)
     {
         return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z) && W.Equals(other.W);
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JQuaternion other && Equals(other);
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
     }

@@ -33,7 +33,7 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class PointCloudShape : RigidBodyShape
 {
-    private JBBox cachedBoundingBox;
+    private JBoundingBox cachedBoundingBox;
     private JMatrix cachedInertia;
     private Real cachedMass;
     private JVector cachedCenter;
@@ -117,7 +117,7 @@ public class PointCloudShape : RigidBodyShape
         mass = cachedMass;
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JVector halfSize = (Real)0.5 * (cachedBoundingBox.Max - cachedBoundingBox.Min);
         JVector center = (Real)0.5 * (cachedBoundingBox.Max + cachedBoundingBox.Min);

@@ -15,8 +15,8 @@ public class MathTests
         JQuaternion jq1 = new((Real)0.2, (Real)0.3, (Real)0.4, (Real)0.5);
         JQuaternion jq2 = new((Real)0.1, (Real)0.7, (Real)0.1, (Real)0.8);
 
-        var qm1 = QMatrix.CreateLM(jq1);
-        var qm2 = QMatrix.CreateRM(jq2);
+        var qm1 = QMatrix.CreateLeftMatrix(jq1);
+        var qm2 = QMatrix.CreateRightMatrix(jq2);
 
         JMatrix res1 = QMatrix.Multiply(ref qm1, ref qm2).Projection();
         JMatrix res2 = QMatrix.ProjectMultiplyLeftRight(jq1, jq2);

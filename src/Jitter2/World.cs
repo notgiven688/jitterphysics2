@@ -151,7 +151,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// All rigid bodies in this world.
     /// </summary>
-    public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new ReadOnlyPartitionedSet<RigidBody>(bodies);
+    public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new(bodies);
 
     /// <summary>
     /// Access to the <see cref="DynamicTree"/> instance. The instance
@@ -199,7 +199,7 @@ public sealed partial class World : IDisposable
 
     /// <summary>
     /// The number of substeps for each call to <see cref="World.Step(Real, bool)"/>.
-    /// Substepping is deactivated when set to one.
+    /// Sub-stepping is deactivated when set to one.
     /// </summary>
     public int SubstepCount
     {
@@ -233,8 +233,8 @@ public sealed partial class World : IDisposable
     private volatile int velocityRelaxations = 4;
     private volatile int substeps = 1;
 
-    private Real substep_dt = (Real)(1.0 / 100.0);
-    private Real step_dt = (Real)(1.0 / 100.0);
+    private Real substepDt = (Real)(1.0 / 100.0);
+    private Real stepDt = (Real)(1.0 / 100.0);
 
     /// <summary>
     /// Creates an instance of the <see cref="World"/> class with the default capacity.
@@ -301,7 +301,7 @@ public sealed partial class World : IDisposable
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
         // This comes in very handy for us.
 
-        foreach (var constraint in body.constraints)
+        foreach (var constraint in body.InternalConstraints)
         {
             Remove(constraint);
         }
@@ -312,19 +312,19 @@ public sealed partial class World : IDisposable
             shape.RigidBody = null!;
         }
 
-        foreach (var contact in body.contacts)
+        foreach (var contact in body.InternalContacts)
         {
             Remove(contact);
         }
 
         if (body == NullBody) return;
 
-        memRigidBodies.Free(body.handle);
+        memRigidBodies.Free(body.Handle);
 
-        // we must be our own island..
-        Debug.Assert(body.island is { bodies.Count: 1 });
+        // We must be our own island.
+        Debug.Assert(body.InternalIsland is { InternalBodies.Count: 1 });
 
-        body.handle = JHandle<RigidBodyData>.Zero;
+        body.Handle = JHandle<RigidBodyData>.Zero;
 
         IslandHelper.BodyRemoved(islands, body);
 
@@ -376,10 +376,10 @@ public sealed partial class World : IDisposable
 
     internal void ActivateBodyNextStep(RigidBody body)
     {
-        body.sleepTime = 0;
+        body.InternalSleepTime = 0;
 
         if (body.IsActive) return;
-        AddToActiveList(body.island);
+        AddToActiveList(body.InternalIsland);
     }
 
     internal void MakeBodyStatic(RigidBody body)
@@ -388,7 +388,7 @@ public sealed partial class World : IDisposable
 
         body.Data.IsStatic = true;
 
-        foreach (var constraint in body.constraints)
+        foreach (var constraint in body.InternalConstraints)
         {
             if (constraint.Body1.IsStatic && constraint.Body2.IsStatic)
             {
@@ -396,7 +396,7 @@ public sealed partial class World : IDisposable
             }
         }
 
-        foreach (var arbiter in body.contacts)
+        foreach (var arbiter in body.InternalContacts)
         {
             if(arbiter.Body1.IsStatic && arbiter.Body2.IsStatic)
             {
@@ -404,9 +404,9 @@ public sealed partial class World : IDisposable
             }
         }
 
-        if (body.connections.Count > 0)
+        if (body.InternalConnections.Count > 0)
         {
-            var connections = body.connections.ToArray();
+            var connections = body.InternalConnections.ToArray();
 
             foreach (var connection in connections)
             {
@@ -414,8 +414,8 @@ public sealed partial class World : IDisposable
             }
         }
 
-        Debug.Assert(body.connections.Count == 0);
-        Debug.Assert(body.island.bodies.Count == 1);
+        Debug.Assert(body.InternalConnections.Count == 0);
+        Debug.Assert(body.InternalIsland.InternalBodies.Count == 1);
 
         body.Data.Velocity = JVector.Zero;
         body.Data.AngularVelocity = JVector.Zero;
@@ -425,7 +425,7 @@ public sealed partial class World : IDisposable
 
     internal void DeactivateBodyNextStep(RigidBody body)
     {
-        body.sleepTime = Real.PositiveInfinity;
+        body.InternalSleepTime = Real.PositiveInfinity;
     }
 
     /// <summary>
@@ -450,8 +450,8 @@ public sealed partial class World : IDisposable
 
         IslandHelper.ConstraintCreated(islands, constraint);
 
-        AddToActiveList(body1.island);
-        AddToActiveList(body2.island);
+        AddToActiveList(body1.InternalIsland);
+        AddToActiveList(body2.InternalIsland);
 
         return constraint;
     }
@@ -476,7 +476,7 @@ public sealed partial class World : IDisposable
 
         IslandHelper.BodyAdded(islands, body);
 
-        AddToActiveList(body.island);
+        AddToActiveList(body.InternalIsland);
 
         return body;
     }

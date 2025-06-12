@@ -33,7 +33,7 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
 {
-    private Real[] xvalues, yvalues, zvalues;
+    private readonly Real[] xvalues, yvalues, zvalues;
     private JVector center;
 
     public VertexSupportMap(IReadOnlyList<JVector> vertices)
@@ -55,16 +55,16 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
             center.Z += vertices[i].Z;
         }
 
-        center *= ((Real)1.0 / (Real)length);
+        center *= (Real)1.0 / length;
     }
 
-    public void SupportMap(in JVector direction, out JVector result)
+    public readonly void SupportMap(in JVector direction, out JVector result)
     {
         if (Vector.IsHardwareAccelerated) SupportMapAccelerated(direction, out result);
         else SupportMapScalar(direction, out result);
     }
 
-    private void SupportMapAccelerated(in JVector direction, out JVector result)
+    private readonly void SupportMapAccelerated(in JVector direction, out JVector result)
     {
         Real maxDotProduct = Real.MinValue;
         int length = xvalues.Length;
@@ -112,7 +112,7 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
         result = new JVector(xvalues[index], yvalues[index], zvalues[index]);
     }
 
-    private void SupportMapScalar(in JVector direction, out JVector result)
+    private readonly void SupportMapScalar(in JVector direction, out JVector result)
     {
         Real maxDotProduct = Real.MinValue;
         int length = xvalues.Length;
@@ -132,13 +132,22 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
         result = new JVector(xvalues[index], yvalues[index], zvalues[index]);
     }
 
-    public void GetCenter(out JVector point) => point = center;
+    public readonly void GetCenter(out JVector point) => point = center;
 
-    public bool Equals(VertexSupportMap other) => xvalues.Equals(other.xvalues) &&
+    public readonly bool Equals(VertexSupportMap other) => xvalues.Equals(other.xvalues) &&
                                                   yvalues.Equals(other.yvalues) &&
                                                   zvalues.Equals(other.zvalues);
 
-    public override bool Equals(object? obj) => obj is VertexSupportMap other && Equals(other);
+    public readonly override bool Equals(object? obj) => obj is VertexSupportMap other && Equals(other);
 
-    public override int GetHashCode() => HashCode.Combine(xvalues, yvalues, zvalues);
+    public readonly override int GetHashCode() => HashCode.Combine(xvalues, yvalues, zvalues);
+    public static bool operator ==(VertexSupportMap left, VertexSupportMap right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(VertexSupportMap left, VertexSupportMap right)
+    {
+        return !(left == right);
+    }
 }

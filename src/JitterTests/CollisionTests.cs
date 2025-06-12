@@ -181,7 +181,7 @@ public class CollisionTests
 
         // -----------------------------------------------
 
-        NarrowPhase.MPREPA(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-(Real)0.25, 0, 0), new JVector(+(Real)0.25, 0, 0),
+        NarrowPhase.MprEpa(s1, s2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-(Real)0.25, 0, 0), new JVector(+(Real)0.25, 0, 0),
             out JVector pointA, out JVector pointB, out JVector normal, out Real penetration);
 
         // pointA is on s1 and pointB is on s2
@@ -214,7 +214,7 @@ public class CollisionTests
         BoxShape b1 = new(1);
         BoxShape b2 = new(1);
 
-        NarrowPhase.MPREPA(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-(Real)0.25, (Real)0.1, 0), new JVector(+(Real)0.25, -(Real)0.1, 0),
+        NarrowPhase.MprEpa(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-(Real)0.25, (Real)0.1, 0), new JVector(+(Real)0.25, -(Real)0.1, 0),
             out pointA, out pointB, out normal, out penetration);
 
         // pointA is on s1 and pointB is on s2

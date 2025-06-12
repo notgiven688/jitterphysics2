@@ -26,7 +26,7 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
-public class SoftBodyTetrahedron : SoftBodyShape
+public sealed class SoftBodyTetrahedron : SoftBodyShape
 {
     public SoftBodyTetrahedron(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3, RigidBody v4)
     {
@@ -105,11 +105,11 @@ public class SoftBodyTetrahedron : SoftBodyShape
     {
         const Real extraMargin = (Real)0.01;
 
-        JBBox box = JBBox.SmallBox;
-        JBBox.AddPointInPlace(ref box, Vertices[0].Position);
-        JBBox.AddPointInPlace(ref box, Vertices[1].Position);
-        JBBox.AddPointInPlace(ref box, Vertices[2].Position);
-        JBBox.AddPointInPlace(ref box, Vertices[3].Position);
+        JBoundingBox box = JBoundingBox.SmallBox;
+        JBoundingBox.AddPointInPlace(ref box, Vertices[0].Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertices[1].Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertices[2].Position);
+        JBoundingBox.AddPointInPlace(ref box, Vertices[3].Position);
 
         box.Min -= JVector.One * extraMargin;
         box.Max += JVector.One * extraMargin;

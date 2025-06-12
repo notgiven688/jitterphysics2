@@ -77,7 +77,7 @@ public struct JTriangle : IEquatable<JTriangle>
         V2 = v2;
     }
 
-    public bool RayIntersect(in JVector origin, in JVector direction, CullMode cullMode,
+    public readonly bool RayIntersect(in JVector origin, in JVector direction, CullMode cullMode,
         out JVector normal, out Real lambda)
     {
         JVector u = V0 - V1;
@@ -131,22 +131,22 @@ public struct JTriangle : IEquatable<JTriangle>
     /// <summary>
     /// Returns a string representation of the <see cref="JTriangle"/>.
     /// </summary>
-    public override string ToString()
+    public readonly override string ToString()
     {
         return $"V0={{{V0}}}, V1={{{V1}}}, V2={{{V2}}}";
     }
 
-    public override int GetHashCode()
+    public readonly override int GetHashCode()
     {
         return V0.GetHashCode() ^ V1.GetHashCode() ^ V2.GetHashCode();
     }
 
-    public bool Equals(JTriangle other)
+    public readonly bool Equals(JTriangle other)
     {
         return V0.Equals(other.V0) && V1.Equals(other.V1) && V2.Equals(other.V2);
     }
 
-    public override bool Equals(object? obj)
+    public readonly override bool Equals(object? obj)
     {
         return obj is JTriangle other && Equals(other);
     }

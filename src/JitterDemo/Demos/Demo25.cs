@@ -30,21 +30,21 @@ public static class Heightmap
         return MathF.Sin(x * 0.1f) * MathF.Cos(z * 0.1f) * Amplitude;
     }
 
-    public static JBBox GetBoundingBox()
+    public static JBoundingBox GetBoundingBox()
     {
         JVector min = new JVector(0, -Amplitude, 0);
         JVector max = new JVector(Width - 1, Amplitude, Height - 1);
-        return new JBBox(min, max);
+        return new JBoundingBox(min, max);
     }
 }
 
-public class HeightmapTester(JBBox box) : IDynamicTreeProxy, IRayCastable
+public class HeightmapTester(JBoundingBox box) : IDynamicTreeProxy, IRayCastable
 {
     public int SetIndex { get; set; } = -1;
     public int NodePtr { get; set; }
 
     public JVector Velocity => JVector.Zero;
-    public JBBox WorldBoundingBox { get; } = box;
+    public JBoundingBox WorldBoundingBox { get; } = box;
 
     public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
     {
@@ -186,7 +186,7 @@ public class HeightmapDetection : IBroadPhaseFilter
 
                 JVector normal = JVector.Normalize((triangle.B - triangle.A) % (triangle.C - triangle.A));
 
-                bool hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
+                bool hit = NarrowPhase.MprEpa(triangle, rbs, body.Orientation, body.Position,
                     out JVector pointA, out JVector pointB, out _, out float penetration);
 
                 if (hit)
@@ -204,7 +204,7 @@ public class HeightmapDetection : IBroadPhaseFilter
 
                 normal = JVector.Normalize((triangle.B - triangle.A) % (triangle.C - triangle.A));
 
-                hit = NarrowPhase.MPREPA(triangle, rbs, body.Orientation, body.Position,
+                hit = NarrowPhase.MprEpa(triangle, rbs, body.Orientation, body.Position,
                     out pointA, out pointB, out _, out penetration);
 
                 if (hit)

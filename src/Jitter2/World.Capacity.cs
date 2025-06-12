@@ -47,7 +47,7 @@ public partial class World
         /// </summary>
         public int BodyCount
         {
-            get => DefaultBodyCount + bodyCountOffset;
+            readonly get => DefaultBodyCount + bodyCountOffset;
             set
             {
                 if (value <= 0)
@@ -68,14 +68,14 @@ public partial class World
         /// <item>SmallConstraintCount: 32,768</item>
         /// </list>
         /// </remarks>
-        public static Capacity Default => new Capacity();
+        public static Capacity Default => new();
 
         /// <summary>
         /// Gets or sets the total number of contacts.
         /// </summary>
         public int ContactCount
         {
-            get => DefaultContactCount + contactCountOffset;
+            readonly get => DefaultContactCount + contactCountOffset;
             set
             {
                 if (value <= 0)
@@ -89,7 +89,7 @@ public partial class World
         /// </summary>
         public int ConstraintCount
         {
-            get => DefaultConstraintCount + constraintCountOffset;
+            readonly get => DefaultConstraintCount + constraintCountOffset;
             set
             {
                 if (value <= 0)
@@ -103,7 +103,7 @@ public partial class World
         /// </summary>
         public int SmallConstraintCount
         {
-            get => DefaultSmallConstraintCount + smallConstraintCountOffset;
+            readonly get => DefaultSmallConstraintCount + smallConstraintCountOffset;
             set
             {
                 if (value <= 0)
@@ -116,7 +116,7 @@ public partial class World
         /// Returns a string representation of the <see cref="Capacity"/>.
         /// </summary>
         /// <returns>A string that represents the current state of the <see cref="Capacity"/>.</returns>
-        public override string ToString()
+        public  readonly override string ToString()
         {
             return $"BodyCount: {BodyCount}, ContactCount: {ContactCount}, ConstraintCount: {ConstraintCount}, SmallConstraintCount: {SmallConstraintCount}";
         }
@@ -126,7 +126,7 @@ public partial class World
         /// </summary>
         /// <param name="other">The <see cref="Capacity"/> to compare with the current <see cref="Capacity"/>.</param>
         /// <returns><c>true</c> if the specified <see cref="Capacity"/> is equal to the current <see cref="Capacity"/>; otherwise, <c>false</c>.</returns>
-        public bool Equals(Capacity other)
+        public readonly bool Equals(Capacity other)
         {
             return BodyCount == other.BodyCount &&
                    ContactCount == other.ContactCount &&
@@ -139,7 +139,7 @@ public partial class World
         /// </summary>
         /// <param name="obj">The object to compare with the current <see cref="Capacity"/>.</param>
         /// <returns><c>true</c> if the specified object is equal to the current <see cref="Capacity"/>; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object? obj)
+        public readonly override bool Equals(object? obj)
         {
             return obj is Capacity other && Equals(other);
         }
@@ -148,7 +148,7 @@ public partial class World
         /// Returns a hash code for the current <see cref="Capacity"/>.
         /// </summary>
         /// <returns>A hash code for the current <see cref="Capacity"/>.</returns>
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             return HashCode.Combine(BodyCount, ContactCount, ConstraintCount, SmallConstraintCount);
         }

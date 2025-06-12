@@ -29,45 +29,6 @@ namespace Jitter2.LinearMath;
 
 public static class MathHelper
 {
-    /*
-
-    // Given two lines return closest points on both lines
-    // Line 1: p1 + (p2 - p1)*mua
-    // Line 2: p3 + (p4 - p3)*mub
-
-    public static bool LineLineIntersect(in JVector p1, in JVector p2, in JVector p3, in JVector P4,  out JVector Pa, out JVector Pb, out Real mua, out Real mub)
-    {
-        const Real Epsilon = (Real)1e-12;
-
-        Pa = Pb = JVector.Zero;
-        mua = mub = 0;
-
-        JVector p13 = p1 - p3;
-        JVector p43 = P4 - p3;
-        JVector p21 = p2 - p1;
-
-        Real d1343 = p13 * p43;
-        Real d4321 = p43 * p21;
-        Real d1321 = p13 * p21;
-        Real d4343 = p43 * p43;
-        Real d2121 = p21 * p21;
-
-        Real denom = d2121 * d4343 - d4321 * d4321;
-        if (Math.Abs(denom) < Epsilon) return false;
-
-        Real numer = d1343 * d4321 - d1321 * d4343;
-
-        mua = numer / denom;
-        mub = (d1343 + d4321 * mua) / d4343;
-
-        Pa = p1 + (p21 * mua);
-        Pb = p3 + (p43 * mub);
-
-        return true;
-    }
-
-    */
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int SignBit(float value)
     {
@@ -167,13 +128,14 @@ public static class MathHelper
     /// <param name="sweeps">The number of Jacobi iterations.</param>
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
-        Real phi, cp, sp;
         Unsafe.SkipInit(out JMatrix r);
 
         JMatrix rotation = JMatrix.Identity;
 
         for (int i = 0; i < sweeps; i++)
         {
+            Real phi, cp, sp;
+
             // M32
             if (MathR.Abs(m.M23) > (Real)1e-6)
             {
@@ -208,7 +170,7 @@ public static class MathHelper
             }
         }
 
-        JMatrix d = new JMatrix((Real)1.0 / MathR.Sqrt(m.M11), 0, 0,
+        JMatrix d = new((Real)1.0 / MathR.Sqrt(m.M11), 0, 0,
             0, (Real)1.0 / MathR.Sqrt(m.M22), 0,
             0, 0, (Real)1.0 / MathR.Sqrt(m.M33));
 

@@ -82,16 +82,16 @@ public class TriangleMesh
             Normal = default;
         }
 
-        public bool Equals(Triangle other)
+        public readonly bool Equals(Triangle other)
         {
             return IndexA == other.IndexA &&
                    IndexB == other.IndexB &&
                    IndexC == other.IndexC;
         }
 
-        public override bool Equals(object? obj) => obj is Triangle t && Equals(t);
+        public readonly override bool Equals(object? obj) => obj is Triangle t && Equals(t);
 
-        public override int GetHashCode()
+        public readonly override int GetHashCode()
         {
             return HashCode.Combine(IndexA, IndexB, IndexC);
         }

@@ -32,7 +32,7 @@ namespace Jitter2.Dynamics;
 /// </summary>
 public class Arbiter
 {
-    internal static Stack<Arbiter> Pool = new();
+    internal static readonly Stack<Arbiter> Pool = new();
 
     public RigidBody Body1 = null!;
     public RigidBody Body2 = null!;

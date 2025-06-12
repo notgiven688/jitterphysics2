@@ -32,14 +32,14 @@ namespace Jitter2.Collision;
 /// </summary>
 public sealed class Island : IPartitionedSetIndex
 {
-    internal readonly HashSet<RigidBody> bodies = new();
+    internal readonly HashSet<RigidBody> InternalBodies = new();
     internal bool MarkedAsActive;
     internal bool NeedsUpdate;
 
     /// <summary>
     /// Gets a collection of all the bodies present in this island.
     /// </summary>
-    public ReadOnlyHashSet<RigidBody> Bodies => new(bodies);
+    public ReadOnlyHashSet<RigidBody> Bodies => new(InternalBodies);
 
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
@@ -55,6 +55,6 @@ public sealed class Island : IPartitionedSetIndex
     /// </summary>
     internal void ClearLists()
     {
-        bodies.Clear();
+        InternalBodies.Clear();
     }
 }

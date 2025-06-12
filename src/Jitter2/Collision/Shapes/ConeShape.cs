@@ -21,7 +21,6 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -74,7 +73,7 @@ public class ConeShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        const Real ZeroEpsilon = (Real)1e-12;
+        const Real zeroEpsilon = (Real)1e-12;
         // cone = disk + point
 
         // center of mass of a cone is at 0.25 height
@@ -82,7 +81,7 @@ public class ConeShape : RigidBodyShape
         ndir.Y = (Real)0.0;
         Real ndir2 = ndir.LengthSquared();
 
-        if (ndir2 > ZeroEpsilon)
+        if (ndir2 > zeroEpsilon)
         {
             ndir *= radius / MathR.Sqrt(ndir2);
         }
@@ -105,9 +104,9 @@ public class ConeShape : RigidBodyShape
         point = JVector.Zero;
     }
 
-    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+    public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
-        const Real ZeroEpsilon = (Real)1e-12;
+        const Real zeroEpsilon = (Real)1e-12;
 
         JVector upa = orientation.GetBasisY();
 
@@ -121,19 +120,19 @@ public class ConeShape : RigidBodyShape
 
         Real xext = 0, yext = 0, zext = 0;
 
-        if (l1 > ZeroEpsilon)
+        if (l1 > zeroEpsilon)
         {
             Real sl = (Real)1.0 / MathR.Sqrt(l1);
             xext = (yy + zz) * sl * radius;
         }
 
-        if (l2 > ZeroEpsilon)
+        if (l2 > zeroEpsilon)
         {
             Real sl = (Real)1.0 / MathR.Sqrt(l2);
             yext = (xx + zz) * sl * radius;
         }
 
-        if (l3 > ZeroEpsilon)
+        if (l3 > zeroEpsilon)
         {
             Real sl = (Real)1.0 / MathR.Sqrt(l3);
             zext = (xx + yy) * sl * radius;
@@ -145,7 +144,7 @@ public class ConeShape : RigidBodyShape
         box.Min = p1 - new JVector(xext, yext, zext);
         box.Max = p1 + new JVector(xext, yext, zext);
 
-        JBBox.AddPointInPlace(ref box, p2);
+        JBoundingBox.AddPointInPlace(ref box, p2);
 
         box.Min += position;
         box.Max += position;

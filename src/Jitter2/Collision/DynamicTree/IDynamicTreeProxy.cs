@@ -44,7 +44,7 @@ public interface IDynamicTreeProxy : IPartitionedSetIndex
     /// <summary>
     /// The world bounding box of the entity.
     /// </summary>
-    JBBox WorldBoundingBox { get; }
+    JBoundingBox WorldBoundingBox { get; }
 }
 
 /// <summary>
