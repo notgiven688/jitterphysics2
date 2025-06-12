@@ -123,8 +123,7 @@ public sealed partial class World
             time = ctime;
         }
 
-        int ssp1 = substeps;
-        substepDt = dt / ssp1;
+        substepDt = dt / substeps;
         stepDt = dt;
 
         if (multiThread)
@@ -150,15 +149,8 @@ public sealed partial class World
         SetTime(Timings.CheckDeactivation);
 
         // Sub-stepping
-        // TODO: comment...
-        // -> prepare for iteration does calculate new positions, but only linear
-        // -> inertia is not transformed in the substeps.
-        //
-        for (int i = 0; i < ssp1; i++)
+        for (int i = 0; i < substeps; i++)
         {
-            // we need to apply the forces each substep. we can not apply
-            // them all at once since this would mess with the warm starting
-            // of the solver
             IntegrateForces(multiThread);                       // FAST SWEEP
             Solve(multiThread, solverIterations);               // FAST SWEEP
             Integrate(multiThread);                             // FAST SWEEP
