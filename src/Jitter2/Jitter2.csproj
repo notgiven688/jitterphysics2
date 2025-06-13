@@ -15,11 +15,11 @@
     <Description>Jitter Physics 2, the evolution of Jitter Physics, is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
     </Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://jitterphysics.com</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>physics engine;collision;csharp;dotnet</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Authors>notgiven688</Authors>
     <RepositoryUrl>https://github.com/notgiven688/jitterphysics2.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -30,8 +30,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="./../../publish/readme.md" Pack="true" PackagePath="" />
+    <None Include="./../../publish/README.md" Pack="true" PackagePath="" />
     <None Include="./../../publish/icon.png" Pack="true" PackagePath="" />
+    <None Include="./../../LICENSE" Pack="true" PackagePath=""/>
   </ItemGroup>
 
   <!-- Default settings for Release build -->
