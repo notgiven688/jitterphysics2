@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -36,11 +37,15 @@ public class ConeShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the radius of the cone at its base.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when radius is less than or equal to zero.
+    /// </exception>
     public Real Radius
     {
         get => radius;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
@@ -49,11 +54,15 @@ public class ConeShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the height of the cone.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Height
     {
         get => height;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Height));
             height = value;
             UpdateWorldBoundingBox();
         }
@@ -64,8 +73,14 @@ public class ConeShape : RigidBodyShape
     /// </summary>
     /// <param name="radius">The radius of the cone at its base.</param>
     /// <param name="height">The height of the cone.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="radius"/> or <paramref name="height"/> is less than or equal to zero.
+    /// </exception>
     public ConeShape(Real radius = (Real)0.5, Real height = (Real)1.0)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
+
         this.radius = radius;
         this.height = height;
         UpdateWorldBoundingBox();
@@ -76,22 +91,16 @@ public class ConeShape : RigidBodyShape
         const Real zeroEpsilon = (Real)1e-12;
         // cone = disk + point
 
-        // center of mass of a cone is at 0.25 height
-        JVector ndir = direction;
-        ndir.Y = (Real)0.0;
-        Real ndir2 = ndir.LengthSquared();
+        // The center of mass is at 0.25 height.
+        JVector baseDir = new JVector(direction.X, (Real)0.0, direction.Z);
+        baseDir = JVector.NormalizeSafe(baseDir, zeroEpsilon) * radius;
 
-        if (ndir2 > zeroEpsilon)
+        baseDir.Y = -(Real)0.25 * height;
+
+        // disk support point vs. (0, 0.75 * height, 0)
+        if (JVector.Dot(direction, baseDir) >= direction.Y * (Real)0.75 * height)
         {
-            ndir *= radius / MathR.Sqrt(ndir2);
-        }
-
-        ndir.Y = -(Real)0.25 * height;
-
-        // disk support point vs (0, 0.75 * height, 0)
-        if (JVector.Dot(direction, ndir) >= direction.Y * (Real)0.75 * height)
-        {
-            result = ndir;
+            result = baseDir;
         }
         else
         {

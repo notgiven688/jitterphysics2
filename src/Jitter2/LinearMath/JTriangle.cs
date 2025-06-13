@@ -30,7 +30,7 @@ namespace Jitter2.LinearMath;
 /// Represents a triangle defined by three vertices.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
-public struct JTriangle : IEquatable<JTriangle>
+public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatable<JTriangle>
 {
     /// <summary>
     /// Specifies the face culling mode for triangles based on their winding order.
@@ -57,25 +57,9 @@ public struct JTriangle : IEquatable<JTriangle>
         None
     }
 
-    [FieldOffset(0*sizeof(Real))]
-    public JVector V0;
-    [FieldOffset(3*sizeof(Real))]
-    public JVector V1;
-    [FieldOffset(6*sizeof(Real))]
-    public JVector V2;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JTriangle"/> structure with the specified vertices.
-    /// </summary>
-    /// <param name="v0">The first vertex of the triangle.</param>
-    /// <param name="v1">The second vertex of the triangle.</param>
-    /// <param name="v2">The third vertex of the triangle.</param>
-    public JTriangle(in JVector v0, in JVector v1, in JVector v2)
-    {
-        V0 = v0;
-        V1 = v1;
-        V2 = v2;
-    }
+    [FieldOffset(0 * sizeof(Real))] public JVector V0 = v0;
+    [FieldOffset(3 * sizeof(Real))] public JVector V1 = v1;
+    [FieldOffset(6 * sizeof(Real))] public JVector V2 = v2;
 
     public readonly bool RayIntersect(in JVector origin, in JVector direction, CullMode cullMode,
         out JVector normal, out Real lambda)
@@ -136,10 +120,7 @@ public struct JTriangle : IEquatable<JTriangle>
         return $"V0={{{V0}}}, V1={{{V1}}}, V2={{{V2}}}";
     }
 
-    public readonly override int GetHashCode()
-    {
-        return V0.GetHashCode() ^ V1.GetHashCode() ^ V2.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(V0, V1, V2);
 
     public readonly bool Equals(JTriangle other)
     {

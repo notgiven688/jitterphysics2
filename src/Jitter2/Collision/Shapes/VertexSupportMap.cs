@@ -141,6 +141,7 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
     public readonly override bool Equals(object? obj) => obj is VertexSupportMap other && Equals(other);
 
     public readonly override int GetHashCode() => HashCode.Combine(xvalues, yvalues, zvalues);
+
     public static bool operator ==(VertexSupportMap left, VertexSupportMap right)
     {
         return left.Equals(right);

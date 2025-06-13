@@ -31,12 +31,12 @@ namespace Jitter2.LinearMath;
 /// Quaternion Q = Xi + Yj + Zk + W. Uses Hamilton's definition of ij=k.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 4*sizeof(Real))]
-public partial struct JQuaternion : IEquatable<JQuaternion>
+public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<JQuaternion>
 {
-    [FieldOffset(0*sizeof(Real))] public Real X;
-    [FieldOffset(1*sizeof(Real))] public Real Y;
-    [FieldOffset(2*sizeof(Real))] public Real Z;
-    [FieldOffset(3*sizeof(Real))] public Real W;
+    [FieldOffset(0*sizeof(Real))] public Real X = x;
+    [FieldOffset(1*sizeof(Real))] public Real Y = y;
+    [FieldOffset(2*sizeof(Real))] public Real Z = z;
+    [FieldOffset(3*sizeof(Real))] public Real W = w;
 
     /// <summary>
     /// Gets the identity quaternion (0, 0, 0, 1).
@@ -46,29 +46,10 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
     /// <summary>
     /// Initializes a new instance of the <see cref="JQuaternion"/> struct.
     /// </summary>
-    /// <param name="x">The X component.</param>
-    /// <param name="y">The Y component.</param>
-    /// <param name="z">The Z component.</param>
-    /// <param name="w">The W component.</param>
-    public JQuaternion(Real x, Real y, Real z, Real w)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-        W = w;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="JQuaternion"/> struct.
-    /// </summary>
     /// <param name="w">The W component.</param>
     /// <param name="v">The vector component.</param>
-    public JQuaternion(Real w, in JVector v)
+    public JQuaternion(Real w, in JVector v) : this(v.X, v.Y, v.Z, w)
     {
-        X = v.X;
-        Y = v.Y;
-        Z = v.Z;
-        W = w;
     }
 
     /// <summary>
@@ -624,10 +605,7 @@ public partial struct JQuaternion : IEquatable<JQuaternion>
         return obj is JQuaternion other && Equals(other);
     }
 
-    public readonly override int GetHashCode()
-    {
-        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(X, Y, Z, W);
 
     public static bool operator ==(JQuaternion left, JQuaternion right)
     {

@@ -37,7 +37,7 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
 
     private static int ShardSuggestion(int threads)
     {
-        int[] primes = { 3, 5, 7, 11, 17, 23, 29, 37, 47, 59, 71 };
+        int[] primes = [3, 5, 7, 11, 17, 23, 29, 37, 47, 59, 71];
 
         foreach (int prime in primes)
         {

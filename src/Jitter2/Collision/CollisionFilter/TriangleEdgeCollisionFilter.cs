@@ -118,20 +118,18 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         ProjectPointOnPlane(ref collP, a, b, c);
 
         JVector n, pma;
-        Real d0, d1, d2;
 
-        // TODO: this can be optimized
         n = b - a;
         pma = collP - a;
-        d0 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
+        var d0 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         n = c - a;
         pma = collP - a;
-        d1 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
+        var d1 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         n = c - b;
         pma = collP - b;
-        d2 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
+        var d2 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         if (MathR.Min(MathR.Min(d0, d1), d2) > EdgeThreshold * EdgeThreshold) return true;
 
@@ -188,7 +186,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // we have a collision close to an edge, with
         //
         // tnormal -> the triangle normal where collision occurred
-        // nnormal -> the normal of neighbouring triangle
+        // nnormal -> the normal of neighboring triangle
         // normal  -> the collision normal
         if (JVector.Dot(tnormal, nnormal) > cosAngle)
         {

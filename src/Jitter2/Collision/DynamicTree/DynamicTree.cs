@@ -41,16 +41,16 @@ public partial class DynamicTree
         public Parallel.Batch Batch;
     }
 
-    private readonly PartitionedSet<IDynamicTreeProxy> proxies = new();
+    private readonly PartitionedSet<IDynamicTreeProxy> proxies = [];
 
-    private readonly SlimBag<IDynamicTreeProxy> movedProxies = new();
+    private readonly SlimBag<IDynamicTreeProxy> movedProxies = [];
 
     public ReadOnlyPartitionedSet<IDynamicTreeProxy> Proxies => new(proxies);
 
     /// <summary>
     /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
     /// </summary>
-    private readonly PairHashSet potentialPairs = new();
+    private readonly PairHashSet potentialPairs = [];
 
     public const int NullNode = -1;
     public const int InitialSize = 1024;
@@ -90,7 +90,7 @@ public partial class DynamicTree
     }
 
     public Node[] Nodes = new Node[InitialSize];
-    private readonly Stack<int> freeNodes = new();
+    private readonly Stack<int> freeNodes = [];
     private int nodePointer = -1;
     private int root = NullNode;
 
@@ -497,8 +497,6 @@ public partial class DynamicTree
         _stack.Clear();
     }
 
-    private Random? optimizeRandom;
-
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
     /// </summary>
@@ -507,8 +505,7 @@ public partial class DynamicTree
     /// <param name="incremental">If false, all entities of the tree are removed and reinserted at random order during the first sweep (chance = 1).</param>
     public void Optimize(int sweeps = 100, Real chance = (Real)0.01, bool incremental = false)
     {
-        optimizeRandom ??= new Random(0);
-        Optimize(() => optimizeRandom.NextDouble(), sweeps, chance, incremental);
+        Optimize(() => random.NextDouble(), sweeps, chance, incremental);
     }
 
     /// <inheritdoc cref="Optimize(int, Real, bool)" />

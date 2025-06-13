@@ -32,7 +32,7 @@ namespace Jitter2.Collision;
 /// </summary>
 public sealed class Island : IPartitionedSetIndex
 {
-    internal readonly HashSet<RigidBody> InternalBodies = new();
+    internal readonly HashSet<RigidBody> InternalBodies = [];
     internal bool MarkedAsActive;
     internal bool NeedsUpdate;
 

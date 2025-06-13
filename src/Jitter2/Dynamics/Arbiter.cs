@@ -39,25 +39,16 @@ public class Arbiter
 
     public JHandle<ContactData> Handle;
 
-    public override int GetHashCode()
-    {
-        return Body1.GetHashCode() ^ Body2.GetHashCode();
-    }
+    public override int GetHashCode() => HashCode.Combine(Body1, Body2);
 }
 
 /// <summary>
 /// Look-up key for stored <see cref="Arbiter"/>.
 /// </summary>
-public readonly struct ArbiterKey : IEquatable<ArbiterKey>
+public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable<ArbiterKey>
 {
-    public readonly ulong Key1;
-    public readonly ulong Key2;
-
-    public ArbiterKey(ulong key1, ulong key2)
-    {
-        Key1 = key1;
-        Key2 = key2;
-    }
+    public readonly ulong Key1 = key1;
+    public readonly ulong Key2 = key2;
 
     public bool Equals(ArbiterKey other)
     {
@@ -71,7 +62,7 @@ public readonly struct ArbiterKey : IEquatable<ArbiterKey>
 
     public override int GetHashCode()
     {
-        return (int)Key1 + 2281 * (int)Key2;
+        return HashCode.Combine(Key1, Key2);
     }
 
     public static bool operator ==(ArbiterKey left, ArbiterKey right)

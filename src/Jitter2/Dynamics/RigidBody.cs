@@ -108,10 +108,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     // to the new body. This should never be null.
     internal Island InternalIsland = null!;
 
-    internal readonly List<RigidBodyShape> InternalShapes = new(1);
-    internal readonly List<RigidBody> InternalConnections = new(0);
-    internal readonly HashSet<Arbiter> InternalContacts = new(0);
-    internal readonly HashSet<Constraint> InternalConstraints = new(0);
+    internal readonly List<RigidBodyShape> InternalShapes = new(capacity: 1);
+    internal readonly List<RigidBody> InternalConnections = new(capacity: 0);
+    internal readonly HashSet<Arbiter> InternalContacts = new(capacity: 0);
+    internal readonly HashSet<Constraint> InternalConstraints = new(capacity: 0);
 
     internal int InternalIslandMarker;
     internal Real InternalSleepTime = (Real)0.0;
@@ -186,20 +186,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Higher values represent strong friction or adhesion effects.
     /// Default is 0.2.
     /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if the value is negative.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is negative.</exception>
     public Real Friction
     {
         get => friction;
         set
         {
-            if (value < (Real)0.0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    "Friction must be non-negative.");
-            }
-
+            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
             friction = value;
         }
     }
@@ -213,14 +206,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Values between 0 and 1 create a partially elastic collision effect.
     /// Default is 0.0.
     /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if the value is not between 0 and 1.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is not between 0 and 1.</exception>
     public Real Restitution
     {
         get => restitution;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, (Real)1.0, nameof(value));
+
             if (value < (Real)0.0 || value > (Real)1.0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
@@ -277,16 +271,20 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, the body is deactivated.
     /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
+    /// <remarks>
+    /// Values must be non-negative. This property stores the squared thresholds internally,
+    /// so the input values are automatically squared when set.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if either the linear or angular threshold is negative.
+    /// </exception>
     public (Real angular, Real linear) DeactivationThreshold
     {
         get => (MathR.Sqrt(inactiveThresholdAngularSq), MathR.Sqrt(inactiveThresholdLinearSq));
         set
         {
-            if (value.linear < 0 || value.angular < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    "Both linear and angular thresholds must be non-negative.");
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value));
 
             inactiveThresholdLinearSq = value.linear * value.linear;
             inactiveThresholdAngularSq = value.angular * value.angular;
@@ -303,18 +301,21 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <see cref="World.Step(Real, bool)"/> results in increased damping.
     /// </summary>
     /// <remarks>
-    /// The damping factors should be within the range [0, 1].
+    /// The damping factors must be within the range [0, 1].
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if either the linear or angular damping value is less than 0 or greater than 1.
+    /// </exception>
     public (Real linear, Real angular) Damping
     {
         get => ((Real)1.0 - linearDampingMultiplier, (Real)1.0 - angularDampingMultiplier);
         set
         {
-            if (value.linear < (Real)0.0 || value.linear > (Real)1.0 || value.angular < (Real)0.0 || value.angular > (Real)1.0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value),
-                    "Damping multiplier has to be within [0, 1].");
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.linear, (Real)1.0, nameof(value));
+
+            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.angular, (Real)1.0, nameof(value));
 
             linearDampingMultiplier = (Real)1.0 - value.linear;
             angularDampingMultiplier = (Real)1.0 - value.angular;
@@ -536,11 +537,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <param name="shape">The shape to be added.</param>
     /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's
     /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the shape is already registered elsewhere.
+    /// </exception>
     public void AddShape(RigidBodyShape shape, bool setMassInertia = true)
     {
         if (shape.IsRegistered)
         {
-            throw new ArgumentException("Shape can not be added. Is the shape already registered?");
+            throw new ArgumentException("Shape can not be added. Shape already registered elsewhere.", nameof(shape));
         }
 
         AttachToShape(shape);
@@ -631,12 +635,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shape">The shape to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the specified shape is not part of this rigid body.
+    /// </exception>
     public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
     {
         if (!InternalShapes.Remove(shape))
         {
-            throw new ArgumentException(
-                "Shape is not part of this body.");
+            throw new ArgumentException("Shape is not part of this body.", nameof(shape));
         }
 
         foreach (var arbiter in InternalContacts)
@@ -661,6 +667,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shapes">The shapes to remove from the rigid body.</param>
     /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
+    /// <exception cref="ArgumentException">Thrown if at least one shape is not part of this rigid body.</exception>
     public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
     {
         HashSet<ulong> sids = new();
@@ -716,6 +723,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Utilizes the mass properties of the shape to determine the mass properties of the rigid body.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the computed inertia matrix is not invertible. This may occur if a shape has invalid mass properties.
+    /// </exception>
     public void SetMassInertia()
     {
         if (InternalShapes.Count == 0)
@@ -751,6 +761,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Sets a new mass value and scales the inertia according to the ratio of the old mass to the new mass.
     /// </summary>
+    /// <exception cref="ArgumentException">Thrown if the specified mass is zero or negative.</exception>
     public void SetMassInertia(Real mass)
     {
         if (mass <= (Real)0.0)
@@ -770,7 +781,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Sets the new mass properties of this body by specifying both inertia and mass directly.
     /// </summary>
     /// <param name="setAsInverse">Set the inverse values.</param>
-    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown if:
+    /// <list type="bullet">
+    /// <item><description><paramref name="mass"/> is zero or negative when <paramref name="setAsInverse"/> is false.</description></item>
+    /// <item><description><paramref name="mass"/> is negative or infinite when <paramref name="setAsInverse"/> is true.</description></item>
+    /// <item><description><paramref name="inertia"/> is not invertible when <paramref name="setAsInverse"/> is false.</description></item>
+    /// </list>
+    /// </exception>
     public void SetMassInertia(in JMatrix inertia, Real mass, bool setAsInverse = false)
     {
         if (setAsInverse)

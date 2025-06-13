@@ -34,18 +34,11 @@ namespace Jitter2.Collision.Shapes;
 /// </summary>
 public class ConvexHullShape : RigidBodyShape
 {
-    private struct CHullVector : IEquatable<CHullVector>
+    private struct CHullVector(in JVector vertex) : IEquatable<CHullVector>
     {
-        public readonly JVector Vertex;
-        public ushort NeighborMinIndex;
-        public ushort NeighborMaxIndex;
-
-        public CHullVector(in JVector vertex)
-        {
-            Vertex = vertex;
-            NeighborMaxIndex = 0;
-            NeighborMinIndex = 0;
-        }
+        public readonly JVector Vertex = vertex;
+        public ushort NeighborMinIndex = 0;
+        public ushort NeighborMaxIndex = 0;
 
         public readonly override bool Equals(object? obj)
         {
@@ -63,18 +56,11 @@ public class ConvexHullShape : RigidBodyShape
         }
     }
 
-    private readonly struct CHullTriangle
+    private readonly struct CHullTriangle(ushort a, ushort b, ushort c)
     {
-        public readonly ushort IndexA;
-        public readonly ushort IndexB;
-        public readonly ushort IndexC;
-
-        public CHullTriangle(ushort a, ushort b, ushort c)
-        {
-            IndexA = a;
-            IndexB = b;
-            IndexC = c;
-        }
+        public readonly ushort IndexA = a;
+        public readonly ushort IndexB = b;
+        public readonly ushort IndexC = c;
     }
 
     private JBoundingBox cachedBoundingBox;
@@ -103,7 +89,7 @@ public class ConvexHullShape : RigidBodyShape
     private void Build(IReadOnlyList<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
-        List<CHullVector> tmpVertices = new();
+        List<CHullVector> tmpVertices = [];
 
         ushort PushVector(CHullVector v)
         {

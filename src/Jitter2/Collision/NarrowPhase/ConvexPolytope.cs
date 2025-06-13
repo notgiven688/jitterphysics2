@@ -53,16 +53,10 @@ public unsafe struct ConvexPolytope
         public Real ClosestToOriginSq;
     }
 
-    private readonly struct Edge
+    private readonly struct Edge(short a, short b)
     {
-        public readonly short A;
-        public readonly short B;
-
-        public Edge(short a, short b)
-        {
-            A = a;
-            B = b;
-        }
+        public readonly short A = a;
+        public readonly short B = b;
 
         public static bool Equals(in Edge a, in Edge b)
         {
@@ -211,8 +205,8 @@ public unsafe struct ConvexPolytope
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private readonly bool IsLit(int candidate, int w)
     {
-        // Checks if the triangle would be lit, if there would
-        // be a light at the origin.
+        // Checks if the triangle normal points to the same side as
+        // the vertex w.
         ref Triangle tr = ref triangles[candidate];
         JVector deltaA = vertices[w].V - vertices[tr.A].V;
         return JVector.Dot(deltaA, tr.Normal) > 0;

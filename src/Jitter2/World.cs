@@ -51,15 +51,8 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Provides access to objects in unmanaged memory. This operation is potentially unsafe.
     /// </summary>
-    public readonly struct SpanData
+    public readonly struct SpanData(World world)
     {
-        private readonly World world;
-
-        public SpanData(World world)
-        {
-            this.world = world;
-        }
-
         /// <summary>
         /// Returns the total amount of unmanaged memory allocated in bytes.
         /// </summary>
@@ -106,8 +99,8 @@ public sealed partial class World : IDisposable
     private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
         new(Parallelization.ThreadPool.ThreadCountSuggestion);
 
-    private readonly PartitionedSet<Island> islands = new();
-    private readonly PartitionedSet<RigidBody> bodies = new();
+    private readonly PartitionedSet<Island> islands = [];
+    private readonly PartitionedSet<RigidBody> bodies = [];
 
     private static ulong _idCounter;
 
@@ -229,9 +222,9 @@ public sealed partial class World : IDisposable
 
     // Make this global since it is used by nearly every method called
     // in World.Step.
-    private volatile int solverIterations = 6;
-    private volatile int velocityRelaxations = 4;
-    private volatile int substeps = 1;
+    private int solverIterations = 6;
+    private int velocityRelaxations = 4;
+    private int substeps = 1;
 
     private Real substepDt = (Real)(1.0 / 100.0);
     private Real stepDt = (Real)(1.0 / 100.0);
@@ -435,6 +428,7 @@ public sealed partial class World : IDisposable
     /// <param name="body1">The first rigid body involved in the constraint.</param>
     /// <param name="body2">The second rigid body involved in the constraint.</param>
     /// <returns>A new instance of the specified constraint type.</returns>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
         T constraint = new();
@@ -467,6 +461,7 @@ public sealed partial class World : IDisposable
     /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
     /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public RigidBody CreateRigidBody()
     {
         RigidBody body = new(memRigidBodies.Allocate(true, true), this);

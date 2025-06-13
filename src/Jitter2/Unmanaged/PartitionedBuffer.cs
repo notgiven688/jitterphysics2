@@ -82,6 +82,23 @@ public unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
 /// </summary>
 public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
 {
+    public class MaximumSizeException : Exception
+    {
+        public MaximumSizeException()
+        {
+        }
+
+        public MaximumSizeException(string message)
+            : base(message)
+        {
+        }
+
+        public MaximumSizeException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
+
     // this is a mixture of a data structure and an allocator.
 
     // layout:
@@ -121,7 +138,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
         if (aligned64)
         {
-            try { memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T), 64); }
+            try { memory = (T*)MemoryHelper.AlignedAllocateHeap(size * sizeof(T), 64); }
             catch (OutOfMemoryException)
             {
                 Logger.Warning("Could not allocate aligned memory. Falling back to unaligned memory.");
@@ -266,7 +283,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
             var oldMemory = memory;
 
-            if(Aligned64) memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T), 64);
+            if(Aligned64) memory = (T*)MemoryHelper.AlignedAllocateHeap(size * sizeof(T), 64);
             else memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
 
             for (int i = 0; i < originalSize; i++)

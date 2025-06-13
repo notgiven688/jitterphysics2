@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -34,8 +35,37 @@ namespace Jitter2.DataStructures;
 /// decrementing by one.
 /// </summary>
 /// <typeparam name="T">The type of elements in the SlimBag.</typeparam>
-internal class SlimBag<T>
+internal class SlimBag<T> : IEnumerable<T>
 {
+    /// <summary>Lightweight struct enumerator. NOT safe if the bag is
+    /// mutated while enumeration is in progress.
+    /// </summary>
+    public struct Enumerator : IEnumerator<T>
+    {
+        private readonly SlimBag<T> owner;
+        private int index;
+
+        internal Enumerator(SlimBag<T> owner)
+        {
+            this.owner = owner;
+            index = -1;
+        }
+
+        public T Current => owner.array[index];
+        object? IEnumerator.Current => Current;
+
+        public bool MoveNext()
+        {
+            // advance and check against the number of valid items, not array.Length
+            return ++index < owner.counter;
+        }
+
+        // No resources to release
+        public void Dispose() { }
+
+        public void Reset() => index = -1;
+    }
+
     private T[] array;
     private int counter;
     private int nullOut;
@@ -181,7 +211,7 @@ internal class SlimBag<T>
     }
 
     /// <summary>
-    /// This should be called after adding entries to the SlimBag in order
+    /// This should be called after adding entries to the SlimBag
     /// to keep track of the largest index used within the internal array of
     /// this data structure. It will set this item in the array to its default value
     /// to allow for garbage collection.
@@ -192,4 +222,9 @@ internal class SlimBag<T>
         if (nullOut <= counter) return;
         array[--nullOut] = default!;
     }
+
+    public Enumerator GetEnumerator() => new Enumerator(this);
+
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

@@ -120,11 +120,11 @@ internal static class IslandHelper
             SplitIslands(islands, body1, body2);
     }
 
-    private static readonly Queue<RigidBody> leftSearchQueue = new();
-    private static readonly Queue<RigidBody> rightSearchQueue = new();
+    private static readonly Queue<RigidBody> leftSearchQueue = [];
+    private static readonly Queue<RigidBody> rightSearchQueue = [];
 
-    private static readonly List<RigidBody> visitedBodiesLeft = new();
-    private static readonly List<RigidBody> visitedBodiesRight = new();
+    private static readonly List<RigidBody> visitedBodiesLeft = [];
+    private static readonly List<RigidBody> visitedBodiesRight = [];
 
     private static void SplitIslands(IslandSet islands, RigidBody body1, RigidBody body2)
     {

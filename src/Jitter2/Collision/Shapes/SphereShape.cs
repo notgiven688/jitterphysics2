@@ -21,6 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -35,11 +36,15 @@ public class SphereShape : RigidBodyShape
     /// <summary>
     /// Gets or sets the radius of the sphere.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is less than or equal to zero.
+    /// </exception>
     public Real Radius
     {
         get => radius;
         set
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
@@ -50,8 +55,13 @@ public class SphereShape : RigidBodyShape
     /// The default radius is 1.0 units.
     /// </summary>
     /// <param name="radius">The radius of the sphere. Defaults to (Real)1.0.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="radius"/> is less than or equal to zero.
+    /// </exception>
     public SphereShape(Real radius = (Real)1.0)
     {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+
         this.radius = radius;
         UpdateWorldBoundingBox();
     }

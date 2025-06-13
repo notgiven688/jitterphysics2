@@ -22,6 +22,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace Jitter2.LinearMath;
@@ -30,7 +31,7 @@ namespace Jitter2.LinearMath;
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 6*sizeof(Real))]
-public struct JBoundingBox : IEquatable<JBoundingBox>
+public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -42,10 +43,10 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
     }
 
     [FieldOffset(0*sizeof(Real))]
-    public JVector Min;
+    public JVector Min = min;
 
     [FieldOffset(3*sizeof(Real))]
-    public JVector Max;
+    public JVector Max = max;
 
     public static readonly JBoundingBox LargeBox;
 
@@ -57,12 +58,6 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
         LargeBox.Max = new JVector(Real.MaxValue);
         SmallBox.Min = new JVector(Real.MaxValue);
         SmallBox.Max = new JVector(Real.MinValue);
-    }
-
-    public JBoundingBox(JVector min, JVector max)
-    {
-        Min = min;
-        Max = max;
     }
 
     /// <summary>
@@ -208,18 +203,16 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
         JVector.Min(box.Min, point, out box.Min);
     }
 
-    public static JBoundingBox CreateFromPoints(JVector[] points)
+    public static JBoundingBox CreateFromPoints(IEnumerable<JVector> points)
     {
-        JVector vector3 = new (Real.MaxValue);
-        JVector vector2 = new (Real.MinValue);
+        JBoundingBox box = SmallBox;
 
-        for (int i = 0; i < points.Length; i++)
+        foreach (var point in points)
         {
-            vector3 = JVector.Min(vector3, points[i]);
-            vector2 = JVector.Max(vector2, points[i]);
+            AddPointInPlace(ref box, point);
         }
 
-        return new JBoundingBox(vector3, vector2);
+        return box;
     }
 
     public readonly ContainmentType Contains(in JBoundingBox box)
@@ -291,10 +284,7 @@ public struct JBoundingBox : IEquatable<JBoundingBox>
         return obj is JBoundingBox other && Equals(other);
     }
 
-    public readonly override int GetHashCode()
-    {
-        return Min.GetHashCode() ^ Max.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(Min, Max);
 
     public static bool operator ==(JBoundingBox left, JBoundingBox right)
     {

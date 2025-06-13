@@ -43,16 +43,10 @@ public class TriangleMesh
         public DegenerateTriangleException(string message, Exception inner) : base(message, inner) { }
     }
 
-    private readonly struct Edge : IEquatable<Edge>
+    private readonly struct Edge(int indexA, int indexB) : IEquatable<Edge>
     {
-        public int IndexA { get; }
-        public int IndexB { get; }
-
-        public Edge(int indexA, int indexB)
-        {
-            IndexA = indexA;
-            IndexB = indexB;
-        }
+        public int IndexA { get; } = indexA;
+        public int IndexB { get; } = indexB;
 
         public bool Equals(Edge other) => IndexA == other.IndexA && IndexB == other.IndexB;
 
@@ -65,22 +59,11 @@ public class TriangleMesh
     /// This structure encapsulates vertex indices along with indices pointing to
     /// neighboring triangles.
     /// </summary>
-    public struct Triangle
+    public struct Triangle(int a, int b, int c)
     {
-        public int IndexA, IndexB, IndexC;
-        public int NeighborA, NeighborB, NeighborC;
-        public JVector Normal;
-
-        public Triangle(int a, int b, int c)
-        {
-            IndexA = a;
-            IndexB = b;
-            IndexC = c;
-            NeighborA = -1;
-            NeighborB = -1;
-            NeighborC = -1;
-            Normal = default;
-        }
+        public int IndexA = a, IndexB = b, IndexC = c;
+        public int NeighborA = -1, NeighborB = -1, NeighborC = -1;
+        public JVector Normal = default;
 
         public readonly bool Equals(Triangle other)
         {

@@ -27,17 +27,10 @@ using System.Collections.Generic;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// Implements a wrapper for <see cref="HashSet{T}"/>, eliminating garbage collection (GC) overhead during enumeration.
+/// Implements a read-only wrapper for <see cref="HashSet{T}"/>.
 /// </summary>
-public readonly struct ReadOnlyHashSet<T> : IReadOnlyCollection<T>
+public readonly struct ReadOnlyHashSet<T>(HashSet<T> hashset) : IReadOnlyCollection<T>
 {
-    private readonly HashSet<T> hashset;
-
-    public ReadOnlyHashSet(HashSet<T> hashset)
-    {
-        this.hashset = hashset;
-    }
-
     public HashSet<T>.Enumerator GetEnumerator()
     {
         return hashset.GetEnumerator();

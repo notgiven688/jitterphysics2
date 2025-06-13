@@ -31,14 +31,14 @@ namespace Jitter2.LinearMath;
 /// Represents a three-dimensional vector with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 3*sizeof(Real))]
-public partial struct JVector : IEquatable<JVector>
+public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;
 
-    [FieldOffset(0*sizeof(Real))] public Real X;
-    [FieldOffset(1*sizeof(Real))] public Real Y;
-    [FieldOffset(2*sizeof(Real))] public Real Z;
+    [FieldOffset(0*sizeof(Real))] public Real X = x;
+    [FieldOffset(1*sizeof(Real))] public Real Y = y;
+    [FieldOffset(2*sizeof(Real))] public Real Z = z;
 
     public static readonly JVector Zero;
     public static readonly JVector UnitX;
@@ -61,13 +61,6 @@ public partial struct JVector : IEquatable<JVector>
         InternalZero = Zero;
     }
 
-    public JVector(Real x, Real y, Real z)
-    {
-        X = x;
-        Y = y;
-        Z = z;
-    }
-
     public void Set(Real x, Real y, Real z)
     {
         X = x;
@@ -75,11 +68,8 @@ public partial struct JVector : IEquatable<JVector>
         Z = z;
     }
 
-    public JVector(Real xyz)
+    public JVector(Real xyz) : this(xyz, xyz, xyz)
     {
-        X = xyz;
-        Y = xyz;
-        Z = xyz;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -359,10 +349,7 @@ public partial struct JVector : IEquatable<JVector>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly override int GetHashCode()
-    {
-        return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
-    }
+    public readonly override int GetHashCode() => HashCode.Combine(X, Y, Z);
 
     [Obsolete($"Use static {nameof(NegateInPlace)} instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -405,6 +392,22 @@ public partial struct JVector : IEquatable<JVector>
     {
         Normalize(value, out JVector result);
         return result;
+    }
+
+
+    /// <summary>
+    /// Normalizes <paramref name="value"/>; returns <see cref="JVector.Zero"/> when its squared-length is below <paramref name="epsilonSquared"/>.
+    /// </summary>
+    /// <param name="value">Vector to normalize.</param>
+    /// <param name="epsilonSquared">Cut-off for <c>‖value‖²</c>; default is <c>1 × 10⁻¹⁶</c>.</param>
+    /// <returns>Unit vector or zero.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector NormalizeSafe(in JVector value, Real epsilonSquared = (Real)1e-16)
+    {
+        Real len2 = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
+        if (len2 < epsilonSquared) return JVector.Zero;
+
+        return ((Real)1.0 / MathR.Sqrt(len2)) * value;
     }
 
     [Obsolete($"In-place Normalize() is deprecated; " +

@@ -45,8 +45,8 @@ public unsafe struct CollisionManifold
     private const Real Sqrt3Over2 = (Real)0.86602540378;
     private const Real Perturbation = (Real)0.01;
 
-    private static readonly Real[] hexagonVertices = new[]
-        {(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2, -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2};
+    private static readonly Real[] hexagonVertices = [(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2,
+        -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2];
 
     public Span<JVector> ManifoldA => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), 6);
     public Span<JVector> ManifoldB => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[18]), 6);
@@ -201,7 +201,6 @@ public unsafe struct CollisionManifold
         mA[manifoldCount] = pA;
         mB[manifoldCount++] = pB;
     } // BuildManifold
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]

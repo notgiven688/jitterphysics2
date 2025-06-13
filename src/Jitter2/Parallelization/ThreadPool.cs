@@ -76,9 +76,9 @@ public sealed class ThreadPool
     // mainResetEvent.Wait() is a 'fallthrough' for the persistent threading model in Jitter.
     // Here the performance improvement of ManualResetEvent is mostly visible.
     private readonly ManualResetEventSlim mainResetEvent;
-    private Thread[] threads = Array.Empty<Thread>();
+    private Thread[] threads = [];
 
-    private readonly SlimBag<ITask> taskList = new();
+    private readonly SlimBag<ITask> taskList = [];
     private readonly ConcurrentQueue<ITask> taskQueue = new();
 
     private volatile bool running = true;
