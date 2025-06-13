@@ -428,6 +428,7 @@ public sealed partial class World : IDisposable
     /// <param name="body1">The first rigid body involved in the constraint.</param>
     /// <param name="body2">The second rigid body involved in the constraint.</param>
     /// <returns>A new instance of the specified constraint type.</returns>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
         T constraint = new();
@@ -460,6 +461,7 @@ public sealed partial class World : IDisposable
     /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
     /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public RigidBody CreateRigidBody()
     {
         RigidBody body = new(memRigidBodies.Allocate(true, true), this);

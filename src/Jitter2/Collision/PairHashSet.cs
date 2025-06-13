@@ -60,7 +60,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         public int GetHash()
         {
-            return (ID1 + 2281 * ID2) & 0x7FFFFFFF;
+            return HashCode.Combine(ID1, ID2);
         }
     }
 
@@ -94,7 +94,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
-    public Pair[] Slots = Array.Empty<Pair>();
+    public Pair[] Slots = [];
     private int count;
 
     // 16384*8/1024 KB = 128 KB

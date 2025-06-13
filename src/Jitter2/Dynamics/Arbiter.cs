@@ -62,7 +62,7 @@ public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable<ArbiterKe
 
     public override int GetHashCode()
     {
-        return (int)Key1 + 2281 * (int)Key2;
+        return HashCode.Combine(Key1, Key2);
     }
 
     public static bool operator ==(ArbiterKey left, ArbiterKey right)

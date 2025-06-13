@@ -41,8 +41,8 @@ public sealed partial class World
 {
     // Note: A SlimBag of the reference type 'Arbiter' does not introduce GC problems (not setting
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
-    private readonly SlimBag<Arbiter> deferredArbiters = new();
-    private readonly SlimBag<JHandle<ContactData>> brokenArbiters = new();
+    private readonly SlimBag<Arbiter> deferredArbiters = [];
+    private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
 
     public enum Timings
     {

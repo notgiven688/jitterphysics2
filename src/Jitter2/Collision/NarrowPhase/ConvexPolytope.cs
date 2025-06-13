@@ -205,8 +205,8 @@ public unsafe struct ConvexPolytope
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private readonly bool IsLit(int candidate, int w)
     {
-        // Checks if the triangle would be lit, if there would
-        // be a light at the origin.
+        // Checks if the triangle normal points to the same side as
+        // the vertex w.
         ref Triangle tr = ref triangles[candidate];
         JVector deltaA = vertices[w].V - vertices[tr.A].V;
         return JVector.Dot(deltaA, tr.Normal) > 0;

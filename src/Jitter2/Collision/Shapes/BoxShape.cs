@@ -72,7 +72,7 @@ public class BoxShape : RigidBodyShape
 
     /// <summary>
     /// </summary>
-    /// <param name="size">The length of each side of the cube.</param>
+    /// <param name="size">The length of each side.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="size"/> is less than or equal to zero.
     /// </exception>

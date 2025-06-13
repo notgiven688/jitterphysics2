@@ -91,10 +91,9 @@ public class CapsuleShape : RigidBodyShape
         // capsule = segment + sphere
 
         // sphere
-        JVector.Normalize(direction, out JVector ndir);
-        result = ndir * radius;
+        result = JVector.Normalize(direction) * radius;
 
-        // two endpoint of the segment are
+        // two endpoints of the segment are
         // p_1 = (0, +length/2, 0)
         // p_2 = (0, -length/2, 0)
 

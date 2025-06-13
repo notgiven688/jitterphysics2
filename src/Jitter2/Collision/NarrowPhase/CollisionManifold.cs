@@ -202,7 +202,6 @@ public unsafe struct CollisionManifold
         mB[manifoldCount++] = pB;
     } // BuildManifold
 
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]
     public void BuildManifold<TA,TB>(TA shapeA, TB shapeB,

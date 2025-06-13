@@ -395,6 +395,8 @@ public struct ContactData
 
         [FieldOffset(4 + 1 * sizeof(Real))] public Real PenaltyBias;
 
+        // ―――――― The following 4-component vectors overlap ――――――――――――――――――――――――――――――
+
         [FieldOffset(4 + 2 * sizeof(Real))] internal VectorReal NormalTangentX;
 
         [FieldOffset(4 + 5 * sizeof(Real))] internal VectorReal NormalTangentY;
@@ -509,7 +511,7 @@ public struct ContactData
             NormalTangentZ = Vector.Create(n.Z, tangent1.Z, tangent2.Z, 0);
         }
 
-        public unsafe readonly bool UpdatePosition(ContactData* cd)
+        public readonly unsafe bool UpdatePosition(ContactData* cd)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;

@@ -91,22 +91,16 @@ public class ConeShape : RigidBodyShape
         const Real zeroEpsilon = (Real)1e-12;
         // cone = disk + point
 
-        // center of mass of a cone is at 0.25 height
-        JVector ndir = direction;
-        ndir.Y = (Real)0.0;
-        Real ndir2 = ndir.LengthSquared();
+        // The center of mass is at 0.25 height.
+        JVector baseDir = new JVector(direction.X, (Real)0.0, direction.Z);
+        baseDir = JVector.NormalizeSafe(baseDir, zeroEpsilon);
 
-        if (ndir2 > zeroEpsilon)
+        baseDir.Y = -(Real)0.25 * height;
+
+        // disk support point vs. (0, 0.75 * height, 0)
+        if (JVector.Dot(direction, baseDir) >= direction.Y * (Real)0.75 * height)
         {
-            ndir *= radius / MathR.Sqrt(ndir2);
-        }
-
-        ndir.Y = -(Real)0.25 * height;
-
-        // disk support point vs (0, 0.75 * height, 0)
-        if (JVector.Dot(direction, ndir) >= direction.Y * (Real)0.75 * height)
-        {
-            result = ndir;
+            result = baseDir;
         }
         else
         {
