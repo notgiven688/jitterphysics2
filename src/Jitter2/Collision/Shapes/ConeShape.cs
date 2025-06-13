@@ -93,7 +93,7 @@ public class ConeShape : RigidBodyShape
 
         // The center of mass is at 0.25 height.
         JVector baseDir = new JVector(direction.X, (Real)0.0, direction.Z);
-        baseDir = JVector.NormalizeSafe(baseDir, zeroEpsilon);
+        baseDir = JVector.NormalizeSafe(baseDir, zeroEpsilon) * radius;
 
         baseDir.Y = -(Real)0.25 * height;
 
