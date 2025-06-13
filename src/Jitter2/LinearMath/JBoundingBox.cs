@@ -160,16 +160,16 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
                Min.Z <= point.Z && point.Z <= Max.Z;
     }
 
-    public readonly void GetCorners(JVector[] corners)
+    public readonly void GetCorners(Span<JVector> destination)
     {
-        corners[0].Set(Min.X, Max.Y, Max.Z);
-        corners[1].Set(Max.X, Max.Y, Max.Z);
-        corners[2].Set(Max.X, Min.Y, Max.Z);
-        corners[3].Set(Min.X, Min.Y, Max.Z);
-        corners[4].Set(Min.X, Max.Y, Min.Z);
-        corners[5].Set(Max.X, Max.Y, Min.Z);
-        corners[6].Set(Max.X, Min.Y, Min.Z);
-        corners[7].Set(Min.X, Min.Y, Min.Z);
+        destination[0] = new(Min.X, Max.Y, Max.Z);
+        destination[1] = new(Max.X, Max.Y, Max.Z);
+        destination[2] = new(Max.X, Min.Y, Max.Z);
+        destination[3] = new(Min.X, Min.Y, Max.Z);
+        destination[4] = new(Min.X, Max.Y, Min.Z);
+        destination[5] = new(Max.X, Max.Y, Min.Z);
+        destination[6] = new(Max.X, Min.Y, Min.Z);
+        destination[7] = new(Min.X, Min.Y, Min.Z);
     }
 
     // Marked obsolete to guide users toward the preferred static method.

@@ -44,6 +44,7 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
         InternalZero = Zero;
     }
 
+    [Obsolete($"Do not use any longer.")]
     public void Set(Real x, Real y, Real z)
     {
         X = x;
