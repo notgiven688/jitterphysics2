@@ -19,17 +19,13 @@ public class TriangleMesh
     /// <summary>
     /// Represents an exception thrown when a degenerate triangle is detected.
     /// </summary>
-    public sealed class DegenerateTriangleException : Exception
-    {
-        public DegenerateTriangleException() { }
-        public DegenerateTriangleException(string message) : base(message) { }
-        public DegenerateTriangleException(string message, Exception inner) : base(message, inner) { }
-    }
+    public sealed class DegenerateTriangleException(JTriangle triangle) :
+        Exception($"Degenerate triangle found: {triangle}.");
 
     private readonly struct Edge(int indexA, int indexB) : IEquatable<Edge>
     {
-        public int IndexA { get; } = indexA;
-        public int IndexB { get; } = indexB;
+        public readonly int IndexA = indexA;
+        public readonly int IndexB = indexB;
 
         public bool Equals(Edge other) => IndexA == other.IndexA && IndexB == other.IndexB;
 
@@ -44,7 +40,7 @@ public class TriangleMesh
     /// </summary>
     public struct Triangle(int a, int b, int c)
     {
-        public int IndexA = a, IndexB = b, IndexC = c;
+        public readonly int IndexA = a, IndexB = b, IndexC = c;
         public int NeighborA = -1, NeighborB = -1, NeighborC = -1;
         public JVector Normal = default;
 
@@ -86,13 +82,13 @@ public class TriangleMesh
             return index;
         }
 
-        foreach (var t in triangles)
+        foreach (var tri in triangles)
         {
-            int a = GetOrAddVertex(t.V0);
-            int b = GetOrAddVertex(t.V1);
-            int c = GetOrAddVertex(t.V2);
+            int a = GetOrAddVertex(tri.V0);
+            int b = GetOrAddVertex(tri.V1);
+            int c = GetOrAddVertex(tri.V2);
 
-            var normal = (t.V1 - t.V0) % (t.V2 - t.V0);
+            var normal = (tri.V1 - tri.V0) % (tri.V2 - tri.V0);
             if (MathHelper.CloseToZero(normal, (Real)1e-12))
             {
                 if (ignoreDegenerated)
@@ -100,8 +96,7 @@ public class TriangleMesh
                     Logger.Warning("{0}, Degenerate triangle found in mesh. Ignoring.", nameof(TriangleMesh));
                     continue;
                 }
-                throw new DegenerateTriangleException("Degenerate triangle found in mesh. " +
-                                                      "Try to clean the mesh in the editor of your choice first.");
+                throw new DegenerateTriangleException(tri);
             }
 
             var triangle = new Triangle(a, b, c);

@@ -13,7 +13,6 @@ namespace Jitter2;
 /// </summary>
 public static class Logger
 {
-
     /// <summary>
     /// Gets or sets a listener which receives log messages.
     /// </summary>

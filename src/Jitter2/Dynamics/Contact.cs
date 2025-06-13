@@ -23,7 +23,6 @@ namespace Jitter2.Dynamics;
 [StructLayout(LayoutKind.Sequential)]
 public struct ContactData
 {
-
     [Flags]
     public enum SolveMode
     {
@@ -38,7 +37,6 @@ public struct ContactData
         Angular = AngularBody1 | AngularBody2,
         Full = Linear | Angular,
     }
-
 
     public const uint MaskContact0 = 0b0001;
     public const uint MaskContact1 = 0b0010;
@@ -81,24 +79,23 @@ public struct ContactData
     public Contact Contact2;
     public Contact Contact3;
 
-
-    public unsafe void PrepareForIteration(Real dt)
+    public unsafe void PrepareForIteration(Real idt)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
         if (Vector.IsHardwareAccelerated)
         {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, dt);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, dt);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, dt);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, dt);
+            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, idt);
+            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, idt);
+            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, idt);
+            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, idt);
         }
         else
         {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, dt);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, dt);
+            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, idt);
+            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, idt);
+            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, idt);
+            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, idt);
         }
     }
 

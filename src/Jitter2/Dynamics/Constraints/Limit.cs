@@ -8,10 +8,10 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.Dynamics.Constraints;
 
-public struct AngularLimit
+public struct AngularLimit(JAngle from, JAngle to)
 {
-    public JAngle From { get; set; }
-    public JAngle To { get; set; }
+    public JAngle From { get; set; } = from;
+    public JAngle To { get; set; } = to;
 
     public static readonly AngularLimit Full =
         new(JAngle.FromRadian(-MathR.PI), JAngle.FromRadian(MathR.PI));
@@ -24,12 +24,6 @@ public struct AngularLimit
         return new AngularLimit(JAngle.FromDegree(min), JAngle.FromDegree(max));
     }
 
-    public AngularLimit(JAngle from, JAngle to)
-    {
-        From = from;
-        To = to;
-    }
-
     public readonly void Deconstruct(out JAngle limitMin, out JAngle limitMax)
     {
         limitMin = From;
@@ -37,22 +31,16 @@ public struct AngularLimit
     }
 }
 
-public struct LinearLimit
+public struct LinearLimit(Real from, Real to)
 {
-    public Real From { get; set; }
-    public Real To { get; set; }
+    public Real From { get; set; } = from;
+    public Real To { get; set; } = to;
 
     public static readonly LinearLimit Full =
         new(Real.NegativeInfinity, Real.PositiveInfinity);
 
     public static readonly LinearLimit Fixed =
         new((Real)1e-6, -(Real)1e-6);
-
-    public LinearLimit(Real from, Real to)
-    {
-        From = from;
-        To = to;
-    }
 
     public static LinearLimit FromMinMax(Real min, Real max)
     {

@@ -107,6 +107,7 @@ public sealed partial class World
             time = ctime;
         }
 
+        invStepDt = (Real)1.0 / stepDt;
         substepDt = dt / substeps;
         stepDt = dt;
 
@@ -176,8 +177,6 @@ public sealed partial class World
 
     private void PrepareContacts(Parallel.Batch batch)
     {
-        Real invStepDt = (Real)1.0 / stepDt;
-
         var span = memContacts.Active[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
@@ -188,13 +187,6 @@ public sealed partial class World
 
             LockTwoBody(ref b1, ref b2);
 
-            // Why step_dt and not substep_dt?
-            // The contact uses the time to calculate the bias from dt:
-            // bias = bias_factor x constraint_error / dt
-            // The contact is solved in such a way that the contact points
-            // move with 'bias' velocity along their normal after solving.
-            // Since collision detection is happening at a rate of step_dt
-            // and not substep_dt the penetration magnitude can be large.
             c.PrepareForIteration(invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
@@ -202,8 +194,6 @@ public sealed partial class World
 
     private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
     {
-        Real invStepDt = (Real)1.0 / stepDt;
-
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
@@ -224,8 +214,6 @@ public sealed partial class World
 
     private unsafe void IterateSmallConstraints(Parallel.Batch batch)
     {
-        Real invStepDt = (Real)1.0 / stepDt;
-
         var span = memSmallConstraints.Active[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
@@ -244,8 +232,6 @@ public sealed partial class World
 
     private unsafe void PrepareConstraints(Parallel.Batch batch)
     {
-        Real invStepDt = (Real)1.0 / stepDt;
-
         var span = memConstraints.Active[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)
@@ -266,8 +252,6 @@ public sealed partial class World
 
     private unsafe void IterateConstraints(Parallel.Batch batch)
     {
-        Real invStepDt = (Real)1.0 / stepDt;
-
         var span = memConstraints.Active[batch.Start..batch.End];
 
         for (int i = 0; i < span.Length; i++)

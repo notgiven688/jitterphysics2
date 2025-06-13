@@ -70,15 +70,9 @@ public readonly struct ReadOnlyPartitionedSet<T>(PartitionedSet<T> partitionedSe
 /// </remarks>
 public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSetIndex
 {
-    public struct Enumerator : IEnumerator<T>
+    public struct Enumerator(PartitionedSet<T> partitionedSet) : IEnumerator<T>
     {
-        private readonly PartitionedSet<T> partitionedSet;
         private int index = -1;
-
-        public Enumerator(PartitionedSet<T> partitionedSet)
-        {
-            this.partitionedSet = partitionedSet;
-        }
 
         public readonly T Current => (index >= 0 ? partitionedSet[index] : null)!;
 

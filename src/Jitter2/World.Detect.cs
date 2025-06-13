@@ -16,14 +16,9 @@ namespace Jitter2;
 
 public sealed partial class World
 {
-    public class InvalidCollisionTypeException : Exception
-    {
-        public InvalidCollisionTypeException(Type proxyA, Type proxyB)
-            : base($"Don't know how to handle collision between {proxyA} and {proxyB}." +
-                   $" Register a BroadPhaseFilter to handle and/or filter out these collision types.")
-        {
-        }
-    }
+    public class InvalidCollisionTypeException(Type proxyA, Type proxyB) : Exception(
+        $"Don't know how to handle collision between {proxyA} and {proxyB}." +
+        $" Register a BroadPhaseFilter to handle and/or filter out these collision types.");
 
     /// <summary>
     /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
