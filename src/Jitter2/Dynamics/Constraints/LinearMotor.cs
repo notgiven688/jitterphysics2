@@ -112,11 +112,7 @@ public unsafe class LinearMotor : Constraint
         get => handle.Data.MaxForce;
         set
         {
-            if (value < (Real)0.0)
-            {
-                throw new ArgumentException("Maximum force must not be negative.");
-            }
-
+            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
             handle.Data.MaxForce = value;
         }
     }
