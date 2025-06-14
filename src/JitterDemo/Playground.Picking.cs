@@ -38,8 +38,8 @@ public partial class Playground : RenderWindow
     private bool grepping;
 
     private DistanceLimit? grepConstraint;
-    private float hitDistance;
-    private float hitWheelPosition;
+    private double hitDistance;
+    private double hitWheelPosition;
 
     private void Pick()
     {
