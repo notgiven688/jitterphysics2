@@ -33,9 +33,47 @@ public partial class World
             readonly get => DefaultBodyCount + bodyCountOffset;
             set
             {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), $"{nameof(value)} must be a positive integer.");
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
                 bodyCountOffset = value - DefaultBodyCount;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the total number of contacts.
+        /// </summary>
+        public int ContactCount
+        {
+            readonly get => DefaultContactCount + contactCountOffset;
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+                contactCountOffset = value - DefaultContactCount;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the total number of constraints.
+        /// </summary>
+        public int ConstraintCount
+        {
+            readonly get => DefaultConstraintCount + constraintCountOffset;
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+                constraintCountOffset = value - DefaultConstraintCount;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the total number of small constraints.
+        /// </summary>
+        public int SmallConstraintCount
+        {
+            readonly get => DefaultSmallConstraintCount + smallConstraintCountOffset;
+            set
+            {
+                ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(value));
+                smallConstraintCountOffset = value - DefaultSmallConstraintCount;
             }
         }
 
@@ -54,52 +92,10 @@ public partial class World
         public static Capacity Default => new();
 
         /// <summary>
-        /// Gets or sets the total number of contacts.
-        /// </summary>
-        public int ContactCount
-        {
-            readonly get => DefaultContactCount + contactCountOffset;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), $"{nameof(value)} must be a positive integer.");
-                contactCountOffset = value - DefaultContactCount;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the total number of constraints.
-        /// </summary>
-        public int ConstraintCount
-        {
-            readonly get => DefaultConstraintCount + constraintCountOffset;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), $"{nameof(value)} must be a positive integer.");
-                constraintCountOffset = value - DefaultConstraintCount;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the total number of small constraints.
-        /// </summary>
-        public int SmallConstraintCount
-        {
-            readonly get => DefaultSmallConstraintCount + smallConstraintCountOffset;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(value), $"{nameof(value)} must be a positive integer.");
-                smallConstraintCountOffset = value - DefaultSmallConstraintCount;
-            }
-        }
-
-        /// <summary>
         /// Returns a string representation of the <see cref="Capacity"/>.
         /// </summary>
         /// <returns>A string that represents the current state of the <see cref="Capacity"/>.</returns>
-        public  readonly override string ToString()
+        public readonly override string ToString()
         {
             return $"BodyCount: {BodyCount}, ContactCount: {ContactCount}, ConstraintCount: {ConstraintCount}, SmallConstraintCount: {SmallConstraintCount}";
         }
