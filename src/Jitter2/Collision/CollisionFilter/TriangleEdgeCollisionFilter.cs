@@ -123,7 +123,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             if (triangle.NeighborC == -1) return true;
             nnormal = triangleShape.Mesh.Indices[triangle.NeighborC].Normal;
         }
-        else if (d1 <= d0 && d1 < d2)
+        else if (d1 < d2)
         {
             if (triangle.NeighborB == -1) return true;
             nnormal = triangleShape.Mesh.Indices[triangle.NeighborB].Normal;

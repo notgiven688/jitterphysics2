@@ -208,8 +208,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
     }
 
-    private readonly int hashCode;
-
     /// <summary>
     /// Gets or sets the world assigned to this body.
     /// </summary>
@@ -224,17 +222,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         SetDefaultMassInertia();
 
         RigidBodyId = World.RequestId();
-        uint h = (uint)RigidBodyId;
-
-        // The rigid body is used in hash-based data structures, provide a
-        // good hash - Thomas Wang, Jan 1997
-        h = h ^ 61 ^ (h >> 16);
-        h += h << 3;
-        h ^= h >> 4;
-        h *= 0x27d4eb2d;
-        h ^= h >> 15;
-
-        hashCode = unchecked((int)h);
 
         Data._lockFlag = 0;
     }
@@ -250,7 +237,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the deactivation threshold. If the magnitudes of both the angular and linear velocity of the rigid body
+    /// Gets or sets the deactivation threshold. If the magnitudes of both the angular and linear velocity
     /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, the body is deactivated.
     /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
@@ -266,8 +253,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => (MathR.Sqrt(inactiveThresholdAngularSq), MathR.Sqrt(inactiveThresholdLinearSq));
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value));
-            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value.linear));
+            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value.angular));
 
             inactiveThresholdLinearSq = value.linear * value.linear;
             inactiveThresholdAngularSq = value.angular * value.angular;
@@ -275,17 +262,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the damping factors for linear and angular motion.
-    /// A damping factor of 0 means the body is not damped, while 1 brings
-    /// the body to a halt immediately. Damping is applied when calling
-    /// <see cref="World.Step(Real, bool)"/>. Jitter multiplies the respective
-    /// velocity each step by 1 minus the damping factor. Note that the values
-    /// are not scaled by time; a smaller time-step in
-    /// <see cref="World.Step(Real, bool)"/> results in increased damping.
+    /// Gets or sets the damping factors for linear and angular motion. A damping factor of 0 means the body is not
+    /// damped, while 1 brings the body to a halt immediately. Damping is applied when calling
+    /// <see cref="World.Step(Real, bool)"/>. Jitter multiplies the respective velocity each step by 1 minus the damping
+    /// factor. Note that the values are not scaled by time; a smaller time-step in <see cref="World.Step(Real, bool)"/>
+    /// results in increased damping.
     /// </summary>
-    /// <remarks>
-    /// The damping factors must be within the range [0, 1].
-    /// </remarks>
+    /// <remarks>The damping factors must be within the range [0, 1].</remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular damping value is less than 0 or greater than 1.
     /// </exception>
@@ -294,20 +277,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => ((Real)1.0 - linearDampingMultiplier, (Real)1.0 - angularDampingMultiplier);
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value));
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.linear, (Real)1.0, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value.linear, nameof(value.linear));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.linear, (Real)1.0, nameof(value.linear));
 
-            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value));
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.angular, (Real)1.0, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value.angular, nameof(value.angular));
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value.angular, (Real)1.0, nameof(value.angular));
 
             linearDampingMultiplier = (Real)1.0 - value.linear;
             angularDampingMultiplier = (Real)1.0 - value.angular;
         }
-    }
-
-    public override int GetHashCode()
-    {
-        return hashCode;
     }
 
     private void SetDefaultMassInertia()
@@ -811,7 +789,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     public void DebugDraw(IDebugDrawer drawer)
     {
-        _debugTriangles ??= new List<JTriangle>();
+        _debugTriangles ??= [];
 
         foreach (var shape in InternalShapes)
         {

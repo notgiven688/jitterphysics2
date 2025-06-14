@@ -21,12 +21,7 @@ internal static class IslandHelper
 
     private static Island GetFromPool()
     {
-        if (pool.Count > 0)
-        {
-            return pool.Pop();
-        }
-
-        return new Island();
+        return pool.Count > 0 ? pool.Pop() : new Island();
     }
 
     private static void ReturnToPool(Island island)
@@ -38,6 +33,7 @@ internal static class IslandHelper
     {
         RigidBody b1 = arbiter.Body1;
         RigidBody b2 = arbiter.Body2;
+
         b1.InternalContacts.Add(arbiter);
         b2.InternalContacts.Add(arbiter);
 

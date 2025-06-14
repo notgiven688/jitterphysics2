@@ -45,17 +45,8 @@ public sealed class SoftBodyTriangle : SoftBodyShape
         Real len2 = (pos - v2.Position).LengthSquared();
         Real len3 = (pos - v3.Position).LengthSquared();
 
-        if (len1 < len2 && len1 < len3)
-        {
-            return v1;
-        }
-
-        if (len2 < len3 && len2 <= len1)
-        {
-            return v2;
-        }
-
-        return v3;
+        return (len1 < len2 && len1 < len3) ? v1 :
+            (len2 < len3) ? v2 : v3;
     }
 
     public override void UpdateWorldBoundingBox(Real dt = (Real)0.0)
