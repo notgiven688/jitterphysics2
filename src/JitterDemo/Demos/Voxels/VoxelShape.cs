@@ -47,7 +47,7 @@ public class VoxelShape : RigidBodyShape
         box.Max = Position + JVector.One * 0.5f;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out double mass)
     {
         // Do not try to calculate mass properties here.
         mass = 1;
