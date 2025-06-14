@@ -4,9 +4,16 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.0 (2025-06-14)
+
+- **Dropped .NET7 support**
+- Added `JQuaternion.ToAxisAngle` method
+- Renamed `JBBox` to `JBoundingBox`and `TreeBBox` to `TreeBox`.
+- Various smaller API changes.
+
 ### Jitter 2.6.7 (2025-06-09)
 
-- Introduce SIMD accelerated `TreeBox` for `DynamicTree`.
+- Introduced SIMD accelerated `TreeBBox` for `DynamicTree`.
 
 ### Jitter 2.6.6 (2025-05-31)
 
@@ -23,29 +30,29 @@ sidebar_position: 5
 ### Jitter 2.6.5 (2025-05-21)
 
 - Rigid bodies now activate on velocity or force changes.
-- Remove FatTriangleShape.
-- Rename 'Active' to 'ActiveCount' and add span-based accessors in ReadOnlyPartitionedSet.
+- Removed FatTriangleShape.
+- Renamed 'Active' to 'ActiveCount' and add span-based accessors in ReadOnlyPartitionedSet.
 - Fixed bug in TriangleEdgeCollisionFilter.
 
 ### Jitter 2.6.4 (2025-05-19)
 
 - **Breaking Change:** Triangle winding order in `TriangleMesh` is now counter-clockwise (CCW) for front-facing triangles.
 *If you're using `TriangleMesh`, swap the vertex order to maintain correct normal orientation.*
-- Add `JTriangle.RayIntersect` method.
-- Rename `ConvexHullIntersection` to `CollisionManifold`.
+- Added `JTriangle.RayIntersect` method.
+- Renamed `ConvexHullIntersection` to `CollisionManifold`.
 - Modified support function for `BoxShape`.
 
 ### Jitter 2.6.3 (2025-05-17)
 
-- Align rigid bodies (`RigidBodyData`) to a 64-byte boundary (reduce false sharing).
+- Aligned rigid bodies (`RigidBodyData`) to a 64-byte boundary (reduce false sharing).
 - Bugfix in speculative contacts.
 
 ### Jitter 2.6.2 (2025-05-06)
 
 - Use **Generics** in `NarrowPhase.cs` (avoid boxing for structs implementing the `ISupportMappable` interface).
-- Add special code paths in `Contact.cs` for static bodies (avoid unnecessary cache line invalidation).
-- Add `PredictPosition`, `PredictOrientation` and `PredictPose` to `RigidBody`.
-- Add `CreateFromAxisAngle` and `Normalize` methods in `JQuaternion`.
+- Added special code paths in `Contact.cs` for static bodies (avoid unnecessary cache line invalidation).
+- Added `PredictPosition`, `PredictOrientation` and `PredictPose` to `RigidBody`.
+- Added `CreateFromAxisAngle` and `Normalize` methods in `JQuaternion`.
 
 ### Jitter 2.6.1 (2025-04-24)
 
@@ -53,18 +60,18 @@ sidebar_position: 5
 
 ### Jitter 2.6.0 (2025-04-24)
 
-- Add `SampleHull` and `MakeHull` to `ShapeHelper`.
-- Fix hill climbing getting stuck for `ConvexHullShape`s.
-- Add SIMD support for `PointCloudShape`s.
-- Add option to ignore degenerated triangles in `TriangleMesh`.
-- Make thickness parameter mandatory in `FatTriangleShape`.
-- Add Fisher-Yates shuffle to `DynamicTree.Optimize`.
+- Added `SampleHull` and `MakeHull` to `ShapeHelper`.
+- Fixed hill climbing getting stuck for `ConvexHullShape`s.
+- Added SIMD support for `PointCloudShape`s.
+- Added option to ignore degenerated triangles in `TriangleMesh`.
+- Made thickness parameter mandatory in `FatTriangleShape`.
+- Added Fisher-Yates shuffle to `DynamicTree.Optimize`.
 - Optimized `TriangleEdgeCollisionFilter`.
 
 ### Jitter 2.5.9 (2025-04-17)
 
 - Use `CollideEpsilon` 1e-5 in MPREPA.
-- Fix a bug in `ShardedDictionary`.
+- Fixed a bug in `ShardedDictionary`.
 
 ### Jitter 2.5.8 (2025-04-16)
 
@@ -92,7 +99,7 @@ sidebar_position: 5
 
 - Renamed `JAngle.Radiant` to `JAngle.Radian`.
 - Renamed namespace `Jitter2.UnmanagedMemory` to `Jitter2.Unmanaged`.
-- Fix `body.AddShape(IEnumerable<RigidBodyShape> shapes)` for one-time-use iterators.
+- Fixed `body.AddShape(IEnumerable<RigidBodyShape> shapes)` for one-time-use iterators.
 - Smaller improvements in XML-documentation.
 
 ### Jitter 2.5.3 (2025-01-12)
@@ -176,8 +183,8 @@ sidebar_position: 5
 - Implemented analytical box and sphere ray casting.
 - Made Restitution and Friction public in Contact.
 - Improved DynamicTree interface.
-- Add Debug.Asserts in ActiveList.
-- Mark ArbiterKey as readonly.
+- Added Debug.Asserts in ActiveList.
+- Marked ArbiterKey as readonly.
 - Added enumerator to PairHashSet.
 - Changed ShapeHelper.MakeHull to take a generic of type ICollection.
 
