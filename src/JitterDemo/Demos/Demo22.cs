@@ -13,16 +13,16 @@ public class Demo22 : IDemo
 {
     private static class Curve
     {
-        public static JVector Path(float time)
+        public static JVector Path(double time)
         {
-            return new JVector(8.5f * MathF.Sin((float)time * 0.5f),
-                14 + MathF.Cos(time * 0.5f) * 5.0f, 0);
+            return new JVector(8.5d * Math.Sin(time * 0.5d),
+                14 + Math.Cos(time * 0.5d) * 5.0d, 0);
         }
 
-        public static JVector Derivative(float time)
+        public static JVector Derivative(double time)
         {
-            return new JVector(4.25f * MathF.Cos((float)time * 0.5f),
-                -2.5f * MathF.Sin(time * 0.5f), 0);
+            return new JVector(4.25d * Math.Cos(time * 0.5d),
+                -2.5d * Math.Sin(time * 0.5d), 0);
         }
     }
 
@@ -42,11 +42,11 @@ public class Demo22 : IDemo
         pg.ResetScene(true);
 
         var leftPlank = world.CreateRigidBody();
-        leftPlank.AddShape(new BoxShape(20,0.1f,6));
+        leftPlank.AddShape(new BoxShape(20, 0.1d, 6));
         leftPlank.IsStatic = true;
 
         var rightPlank = world.CreateRigidBody();
-        rightPlank.AddShape(new BoxShape(20,0.1f,6));
+        rightPlank.AddShape(new BoxShape(20, 0.1d, 6));
         rightPlank.IsStatic = true;
 
         leftPlank.Position = new JVector(-21, 13, 0);
@@ -59,14 +59,14 @@ public class Demo22 : IDemo
         // and an immovable object (e.g., a static object).
 
         platform = world.CreateRigidBody();
-        platform.AddShape(new BoxShape(4,0.1f,6));
-        platform.AddShape(new SphereShape(0.2f)); // guide to the eye
-        platform.SetMassInertia(JMatrix.Zero, 0.01f, true); // (*)
+        platform.AddShape(new BoxShape(4, 0.1d, 6));
+        platform.AddShape(new SphereShape(0.2d)); // guide to the eye
+        platform.SetMassInertia(JMatrix.Zero, 0.01d, true); // (*)
         platform.AffectedByGravity = false;
         platform.Position = new JVector(0, 12, 0);
 
         player = new Player(world, new JVector(-20, 15, 0));
-        player.Body.Orientation = JQuaternion.CreateRotationY(-MathF.PI / 2.0f);
+        player.Body.Orientation = JQuaternion.CreateRotationY(-MathF.PI / 2.0d);
     }
 
     public void Draw()
@@ -102,12 +102,12 @@ public class Demo22 : IDemo
         // Draw the curve
 
         const int stepMax = 100;
-        const float maxTime = 4.0f * MathF.PI;
+        const double maxTime = 4.0d * MathF.PI;
 
         for (int step = 0; step < stepMax; step++)
         {
-            float ta = maxTime / stepMax * step;
-            float tb = maxTime / stepMax * (step + 1);
+            double ta = maxTime / stepMax * step;
+            double tb = maxTime / stepMax * (step + 1);
 
             pg.DebugRenderer.PushLine(DebugRenderer.Color.Green,
                 Conversion.FromJitter(Curve.Path(ta)),
@@ -118,9 +118,9 @@ public class Demo22 : IDemo
 
         Keyboard kb = Keyboard.Instance;
 
-        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
-        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);
-        else player.SetAngularInput(0.0f);
+        if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0d);
+        else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0d);
+        else player.SetAngularInput(0.0d);
 
         if (kb.IsKeyDown(Keyboard.Key.Up)) player.SetLinearInput(-JVector.UnitZ);
         else if (kb.IsKeyDown(Keyboard.Key.Down)) player.SetLinearInput(JVector.UnitZ);

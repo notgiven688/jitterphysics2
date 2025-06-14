@@ -42,7 +42,7 @@ public class Demo01 : IDemo
                 if (i == 0)
                 {
                     var hinge = new HingeJoint(world, world.NullBody, nbody,
-                        startPos + new JVector(i * 0.8f - 0.7f, 0, 0), JVector.UnitZ);
+                        startPos + new JVector(i * 0.8d - 0.7d, 0, 0), JVector.UnitZ);
                 }
                 else
                 {
