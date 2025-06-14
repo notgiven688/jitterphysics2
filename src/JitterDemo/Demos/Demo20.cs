@@ -33,8 +33,8 @@ public struct CollisionTriangle : ISupportMappable
 
     public void SupportMap(in JVector direction, out JVector result)
     {
-        float min = JVector.Dot(A, direction);
-        float dot = JVector.Dot(B, direction);
+        double min = JVector.Dot(A, direction);
+        double dot = JVector.Dot(B, direction);
 
         result = A;
         if (dot > min)
@@ -96,7 +96,7 @@ public class CustomCollisionDetection : IBroadPhaseFilter
             ts.C = octree.Vertices[octree.Indices[index].IndexC];
 
             bool hit = NarrowPhase.MprEpa(ts, rbs, rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
-                out JVector pointA, out JVector pointB, out _, out float penetration);
+                out JVector pointA, out JVector pointB, out _, out double penetration);
 
             if (hit)
             {
@@ -131,7 +131,7 @@ public class Tester(Octree tree) : IDynamicTreeProxy, IRayCastable
     public JVector Velocity => JVector.Zero;
     public JBoundingBox WorldBoundingBox { get; } = tree.Dimensions;
 
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
         return tree.Raycast(origin,direction, out normal, out lambda);
     }

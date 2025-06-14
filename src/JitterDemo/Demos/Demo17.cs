@@ -32,7 +32,7 @@ public class Demo17 : IDemo, ICleanDemo
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
 
         const int len = 40;
-        const float scale = 0.2f;
+        const double scale = 0.2d;
         const int leno2 = len / 2;
 
         List<JTriangle> tris = new();
@@ -70,16 +70,16 @@ public class Demo17 : IDemo, ICleanDemo
         var b0 = world.CreateRigidBody();
         b0.Position = new JVector(-1, 10, 0);
         b0.AddShape(new BoxShape(1));
-        b0.Orientation = JQuaternion.CreateRotationX(0.4f);
+        b0.Orientation = JQuaternion.CreateRotationX(0.4d);
 
         var b1 = world.CreateRigidBody();
         b1.Position = new JVector(0, 10, 0);
-        b1.AddShape(new CapsuleShape(0.4f));
+        b1.AddShape(new CapsuleShape(0.4d));
         b1.Orientation = JQuaternion.CreateRotationX(1f);
 
         var b2 = world.CreateRigidBody();
         b2.Position = new JVector(1, 11, 0);
-        b2.AddShape(new SphereShape(0.5f));
+        b2.AddShape(new SphereShape(0.5d));
 
         RigidBody fb0 = cloth.Vertices.OrderByDescending(item => +item.Position.X + item.Position.Z).First();
         var c0 = world.CreateConstraint<BallSocket>(fb0, world.NullBody);
@@ -108,7 +108,7 @@ public class Demo17 : IDemo, ICleanDemo
         for (int i = 0; i < cloth.Vertices.Count; i++)
         {
             ref var pos = ref cloth.Vertices[i].Data.Position;
-            vertices[i].Texture = new Vector2(pos.X, pos.Z);
+            vertices[i].Texture = new Vector2((float)pos.X, (float)pos.Z);
         }
     }
 

@@ -60,7 +60,7 @@ public class Demo24 : IDemo
         // pcs.GetCenter(out JVector ctr); <- this would now return (0,0,0)
 
         // also shift the visual representation of the teapot
-        shift = MatrixHelper.CreateTranslation(-ctr.X, -ctr.Y, -ctr.Z);
+        shift = MatrixHelper.CreateTranslation(-(float)ctr.X, -(float)ctr.Y, -(float)ctr.Z);
 
         for (int i = 0; i < 16; i++)
         {

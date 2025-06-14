@@ -34,7 +34,7 @@ public class SoftBodyCube : SoftBody
         for (int i = 0; i < 8; i++)
         {
             var rb = world.CreateRigidBody();
-            rb.SetMassInertia(JMatrix.Zero, 5.0f, true);
+            rb.SetMassInertia(JMatrix.Zero, 5.0d, true);
             rb.Position = vertices[i] + offset;
             Vertices.Add(rb);
         }
@@ -55,7 +55,7 @@ public class SoftBodyCube : SoftBody
 
         Center = world.CreateRigidBody();
         Center.Position = offset;
-        Center.SetMassInertia(JMatrix.Identity * 0.05f, 0.1f);
+        Center.SetMassInertia(JMatrix.Identity * 0.05d, 0.1d);
 
         for (int i = 0; i < 8; i++)
         {
