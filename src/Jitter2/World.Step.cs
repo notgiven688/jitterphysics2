@@ -462,24 +462,6 @@ public sealed partial class World
         }
     }
 
-    /// <summary>
-    /// Enables the implicit gyroscopic–torque solver for this <c>World</c>.
-    /// </summary>
-    /// <remarks>
-    /// When <see langword="true"/>, every sub-step performs an extra Newton iteration to solve
-    /// <c>ω × (I ω)</c> implicitly.
-    ///
-    /// The benefit becomes noticeable for bodies with a high inertia anisotropy or very fast
-    /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
-    /// whose principal inertias differ by an order of magnitude. In those cases the flag eliminates artificial
-    /// precession.
-    /// </remarks>
-    /// <value>
-    /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
-    /// <see langword="false"/> (default).
-    /// </value>
-    public bool EnableGyroscopicIntegration { get; set; } = false;
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static JVector SolveGyroscopic(in JQuaternion q, in JMatrix inertiaWorld, in JVector omega, Real dt)
     {
@@ -531,7 +513,7 @@ public sealed partial class World
             JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
 
-            if (!EnableGyroscopicIntegration) continue;
+            if (!rigidBody.EnableGyroscopicForces) continue;
 
             // Note: We do not perform a symplectic Euler update here (i.e. we calculate the new orientation
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
