@@ -462,6 +462,56 @@ public sealed partial class World
         }
     }
 
+    /// <summary>
+    /// Enables the implicit gyroscopic–torque solver for this <c>World</c>.
+    /// </summary>
+    /// <remarks>
+    /// When <see langword="true"/>, every sub-step performs an extra Newton iteration to solve
+    /// <c>ω × (I ω)</c> implicitly.
+    ///
+    /// The benefit becomes noticeable for bodies with a high inertia anisotropy or very fast
+    /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
+    /// whose principal inertias differ by an order of magnitude. In those cases the flag eliminates artificial
+    /// precession.
+    /// </remarks>
+    /// <value>
+    /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
+    /// <see langword="false"/> (default).
+    /// </value>
+    public bool EnableGyroscopicIntegration { get; set; } = false;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static JVector SolveGyroscopic(in JQuaternion q, in JMatrix inertiaWorld, in JVector omega, Real dt)
+    {
+        // The equation which we solve for ω_{n+1} in this method with a single Newton iteration:
+        // I_{n+1}(ω_{n+1} - ω_{n}) + h ω_{n+1} x (I_{n+1}ω_{n+1})=0
+
+        // Based on Erin Catto’s “Numerical Methods” (GDC 2015) slides.
+        // Catto integrates the gyroscopic term in **body space** where the inertia
+        // tensor I_b is constant, then transforms the updated angular velocity ω′
+        // back to world space with the *previous* orientation R_n.
+
+        // In this implementation we keep only the world-space inverse inertia, so
+        // we solve the same implicit equation directly in **world space** using
+        //   I_w = R_n I_b R_nᵀ  (assembled from the orientation at t_n).
+        //
+        // The two approaches are algebraically equivalent:           -
+        //   • Catto:  keep I_b fixed, rotate ω′ with R_n             |
+        //   • Here:   keep I_w fixed (= R_n I_b R_nᵀ) while solving  |
+        // Both introduce the same first-order O(h) approximation - either “freeze”
+        // the inertia tensor (our method) or rotate ω′ with an orientation that is one
+        // step out of date (Catto).
+
+        JVector f = dt * (omega % JVector.Transform(omega, inertiaWorld));
+
+        JMatrix jacobian = inertiaWorld + dt * (JMatrix.CreateCrossProduct(omega) * inertiaWorld -
+                                               JMatrix.CreateCrossProduct(JVector.Transform(omega, inertiaWorld)));
+
+        if (!JMatrix.Inverse(jacobian, out var invJacobian)) return omega;
+
+        return omega - JVector.Transform(f, invJacobian);
+    }
+
     private void Integrate(Parallel.Batch batch)
     {
         var span = memRigidBodies.Active[batch.Start..batch.End];
@@ -480,6 +530,14 @@ public sealed partial class World
 
             JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
+
+            if (!EnableGyroscopicIntegration) continue;
+
+            // Note: We do not perform a symplectic Euler update here (i.e. we calculate the new orientation
+            // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
+            // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
+            JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
+            rigidBody.AngularVelocity = SolveGyroscopic(rigidBody.Orientation, inertiaWorld, angularVelocity, substepDt);
         }
     }
 
