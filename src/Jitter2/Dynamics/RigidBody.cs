@@ -56,6 +56,9 @@ public struct RigidBodyData
     [FieldOffset(8 + 29*sizeof(Real) + 1)]
     public bool IsStatic;
 
+    [FieldOffset(8 + 29*sizeof(Real) + 2)]
+    public bool EnableGyroscopicForces;
+
     public readonly bool IsStaticOrInactive => !IsActive || IsStatic;
 }
 
@@ -490,6 +493,28 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         if (setMassInertia) SetMassInertia();
+    }
+
+    /// <summary>
+    /// Enables the implicit gyroscopic–torque solver for this <see cref="RigidBody"/>.
+    /// </summary>
+    /// <remarks>
+    /// When <see langword="true"/>, every sub-step performs an extra Newton iteration to solve
+    /// <c>ω × (I ω)</c> implicitly.
+    ///
+    /// The benefit becomes noticeable for bodies with a high inertia anisotropy or very fast
+    /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
+    /// whose principal inertias differ by an order of magnitude. In those cases the flag eliminates artificial
+    /// precession.
+    /// </remarks>
+    /// <value>
+    /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
+    /// <see langword="false"/> (default).
+    /// </value>
+    public bool EnableGyroscopicForces
+    {
+        get => Data.EnableGyroscopicForces;
+        set => Data.EnableGyroscopicForces = value;
     }
 
     /// <summary>
