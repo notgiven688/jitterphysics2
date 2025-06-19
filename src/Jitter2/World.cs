@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -377,11 +378,21 @@ public sealed partial class World : IDisposable
 
         if (body.InternalConnections.Count > 0)
         {
-            var connections = body.InternalConnections.ToArray();
+            int count = body.InternalConnections.Count;
+            var connections = ArrayPool<RigidBody>.Shared.Rent(count);
 
-            foreach (var connection in connections)
+            try
             {
-                IslandHelper.RemoveConnection(islands, body, connection);
+                body.InternalConnections.CopyTo(connections, 0);
+
+                for (int i = 0; i < count; i++)
+                {
+                    IslandHelper.RemoveConnection(islands, body, connections[i]);
+                }
+            }
+            finally
+            {
+                ArrayPool<RigidBody>.Shared.Return(connections, clearArray: true);
             }
         }
 

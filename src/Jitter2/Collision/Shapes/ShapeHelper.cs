@@ -42,6 +42,7 @@ public static class ShapeHelper
     {
         for (int i = 0; i < 20; i++)
         {
+            // (*)
             JVector v1 = icosahedronVertices[icosahedronIndices[i, 0]];
             JVector v2 = icosahedronVertices[icosahedronIndices[i, 1]];
             JVector v3 = icosahedronVertices[icosahedronIndices[i, 2]];
@@ -70,6 +71,9 @@ public static class ShapeHelper
             return;
         }
 
+        // There is a re-project onto the sphere missing here and here (*)
+        // The quality of the points does not suffer that badly from it, and
+        // we get rid of many, many normalize-calls. So we keep it like this.
         JVector h1 = (v1 + v2) * (Real)0.5;
         JVector h2 = (v2 + v3) * (Real)0.5;
         JVector h3 = (v3 + v1) * (Real)0.5;

@@ -30,7 +30,7 @@ global using VectorReal = System.Runtime.Intrinsics.Vector128<System.Single>;
 namespace Jitter2;
 public static class Precision
 {
-    #if USE_DOUBLE_PRECISION
+#if USE_DOUBLE_PRECISION
         public const int ConstraintSizeFull = 512;
         public const int ConstraintSizeSmall = 256;
         public const int RigidBodyDataSize = 256;
