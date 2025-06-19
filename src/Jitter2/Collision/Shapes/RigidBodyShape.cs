@@ -82,13 +82,13 @@ public abstract class RigidBodyShape : Shape
     {
         ref var data = ref RigidBody.Data;
 
-        // rotate the ray into the reference frame of bodyA..
+        // rotate the ray into the reference frame of the body...
         JVector transformedDir = JVector.ConjugatedTransform(direction, data.Orientation);
         JVector transformedOrigin = JVector.ConjugatedTransform(origin - data.Position, data.Orientation);
 
         bool result = LocalRayCast(transformedOrigin, transformedDir, out normal, out lambda);
 
-        // ..rotate back.
+        // ...rotate back.
         JVector.Transform(normal, data.Orientation, out normal);
 
         return result;

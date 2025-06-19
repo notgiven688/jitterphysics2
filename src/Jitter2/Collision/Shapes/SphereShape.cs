@@ -62,12 +62,8 @@ public class SphereShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
-        box.Min.X = -radius;
-        box.Min.Y = -radius;
-        box.Min.Z = -radius;
-        box.Max.X = +radius;
-        box.Max.Y = +radius;
-        box.Max.Z = +radius;
+        box.Min = new JVector(-radius);
+        box.Max = new JVector(+radius);
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);

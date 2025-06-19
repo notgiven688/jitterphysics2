@@ -43,7 +43,6 @@ public unsafe class DistanceLimit : Constraint
         public Real AccumulatedImpulse;
         public Real Bias;
 
-
         public MemoryHelper.MemBlock12Real J0;
 
         public short Clamp;
