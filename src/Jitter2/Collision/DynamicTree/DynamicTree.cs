@@ -31,7 +31,7 @@ public partial class DynamicTree
     public ReadOnlyPartitionedSet<IDynamicTreeProxy> Proxies => new(proxies);
 
     /// <summary>
-    /// Gets the PairHashSet that contains pairs representing potential collisions. This should not be modified directly.
+    /// The PairHashSet that contains pairs representing potential collisions.
     /// </summary>
     private readonly PairHashSet potentialPairs = [];
 
@@ -94,7 +94,8 @@ public partial class DynamicTree
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree"/> class.
     /// </summary>
-    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging to the same body. The collision is filtered out if the function returns false.</param>
+    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging
+    /// to the same body. The collision is filtered out if the function returns false.</param>
     public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
         enumerateOverlaps = EnumerateOverlapsCallback;
@@ -480,6 +481,8 @@ public partial class DynamicTree
         _stack.Clear();
     }
 
+    readonly List<IDynamicTreeProxy> tempList = new();
+
     /// <summary>
     /// Randomly removes and adds entities to the tree to facilitate optimization.
     /// </summary>
@@ -496,9 +499,8 @@ public partial class DynamicTree
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
-        if (chance < 0 || chance > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
+        if (chance is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
 
-        List<IDynamicTreeProxy> temp = new();
         for (int e = 0; e < sweeps; e++)
         {
             bool takeAll = (e == 0) && !incremental;
@@ -508,28 +510,36 @@ public partial class DynamicTree
                 if (!takeAll && getNextRandom() > chance) continue;
 
                 var proxy = proxies[i];
-                temp.Add(proxy);
+                tempList.Add(proxy);
                 OverlapCheckRemove(root, proxy.NodePtr);
                 InternalRemoveProxy(proxy);
             }
 
             // Fisher-Yates shuffle
-            int n = temp.Count;
+            int n = tempList.Count;
 
             for (int i = n - 1; i > 0; i--)
             {
                 double scaledValue = getNextRandom() * (i + 1);
                 int j = (int)scaledValue;
-                (temp[i], temp[j]) = (temp[j], temp[i]);
+                (tempList[i], tempList[j]) = (tempList[j], tempList[i]);
             }
 
-            foreach (var proxy in temp)
+            foreach (var proxy in tempList)
             {
                 InternalAddProxy(proxy);
                 OverlapCheckAdd(root, proxy.NodePtr);
             }
 
-            temp.Clear();
+            tempList.Clear();
+        }
+
+        if (!incremental)
+        {
+            // In non-incremental mode, the first sweep processes all proxies and may
+            // cause tempList to grow significantly. Since we're unlikely to need that
+            // capacity again, we trim the excess to reduce memory usage.
+            tempList.TrimExcess();
         }
     }
 
