@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.1 (2025-06-28)
+
+- Added `RigidBody.EnableGyroscopicForces` to include gyroscopic forces.
+
 ### Jitter 2.7.0 (2025-06-14)
 
 - **Dropped .NET7 support**
