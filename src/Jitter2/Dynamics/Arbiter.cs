@@ -21,8 +21,6 @@ public class Arbiter
     public RigidBody Body2 = null!;
 
     public JHandle<ContactData> Handle;
-
-    public override int GetHashCode() => HashCode.Combine(Body1, Body2);
 }
 
 /// <summary>
