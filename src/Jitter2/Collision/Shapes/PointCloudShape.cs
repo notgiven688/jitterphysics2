@@ -14,7 +14,7 @@ namespace Jitter2.Collision.Shapes;
 /// implicitly defined by a point cloud. It is not necessary for the points to lie on the convex hull.
 /// For performance optimization, this shape should ideally be used for a small number of points (~300).
 /// </summary>
-public class PointCloudShape : RigidBodyShape
+public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
 {
     private JBoundingBox cachedBoundingBox;
     private JMatrix cachedInertia;

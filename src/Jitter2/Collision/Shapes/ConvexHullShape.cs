@@ -15,7 +15,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Represents a generic convex shape.
 /// </summary>
-public class ConvexHullShape : RigidBodyShape
+public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 {
     private struct CHullVector(in JVector vertex) : IEquatable<CHullVector>
     {
