@@ -100,9 +100,9 @@ public class SoftBodySphere : SoftBodyCloth
                 force *= 1.0f / MathF.Sqrt(fl2) * maxForce;
             }
 
-            sbt.Vertex1.AddForce(force);
-            sbt.Vertex2.AddForce(force);
-            sbt.Vertex3.AddForce(force);
+            sbt.Vertex1.AddForce(force, false);
+            sbt.Vertex2.AddForce(force, false);
+            sbt.Vertex3.AddForce(force, false);
         }
     }
 }
