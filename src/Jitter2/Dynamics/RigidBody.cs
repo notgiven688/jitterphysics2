@@ -551,13 +551,24 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public JVector Torque { get; set; }
 
     /// <summary>
-    /// Applies a force to the rigid body, thereby altering its velocity. This force is effective for a single frame only and is reset to zero during the next call to <see cref="World.Step(Real, bool)"/>.
+    /// Applies a force to the rigid body, thereby altering its velocity.
     /// </summary>
-    /// <param name="force">The force to be applied.</param>
-    public void AddForce(in JVector force)
+    /// <param name="force">
+    /// The force to be applied. This force is effective for a single frame only and is reset
+    /// to zero during the next call to <see cref="World.Step(Real, bool)"/>.
+    /// </param>
+    /// <param name="wakeup">
+    /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
+    /// If <c>false</c>, the force is only applied if the body is already active; sleeping
+    /// bodies will remain asleep and ignore the force.
+    /// </param>
+    public void AddForce(in JVector force, bool wakeup = true)
     {
         if (IsStatic || MathHelper.CloseToZero(force)) return;
-        SetActivationState(true);
+
+        if(wakeup) SetActivationState(true);
+        else if (!IsActive) return;
+
         Force += force;
     }
 
@@ -567,12 +578,18 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>
+    /// <param name="wakeup">
+    /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
+    /// If <c>false</c>, the force is only applied if the body is already active; sleeping
+    /// bodies will remain asleep and ignore the force.
+    /// </param>
     [ReferenceFrame(ReferenceFrame.World)]
-    public void AddForce(in JVector force, in JVector position)
+    public void AddForce(in JVector force, in JVector position, bool wakeup = true)
     {
         if (IsStatic || MathHelper.CloseToZero(force)) return;
 
-        SetActivationState(true);
+        if(wakeup) SetActivationState(true);
+        else if (!IsActive) return;
 
         ref RigidBodyData data = ref Data;
         JVector.Subtract(position, data.Position, out JVector torque);
