@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.2 (2025-09-21)
+
+- Reduce GC in `DynamicTree.Optimize`.
+- Default to LocalRayCast if body is not set for `RigidBodyShape`.
+- Add wakeup parameter to `AddForce` overloads for finer activation state control.
+- Add generic `ICloneableShape<T>` interface for type-safe shape cloning.
+
 ### Jitter 2.7.1 (2025-06-28)
 
 - Added `RigidBody.EnableGyroscopicForces` to include gyroscopic forces.
