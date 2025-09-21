@@ -13,7 +13,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents an axis-aligned bounding box with SIMD-friendly memory layout,used for spatial partitioning in
+/// Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in
 /// acceleration structures such as <see cref="DynamicTree"/>.
 /// </summary>
 /// <remarks>

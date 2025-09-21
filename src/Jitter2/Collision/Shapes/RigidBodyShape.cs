@@ -80,6 +80,11 @@ public abstract class RigidBodyShape : Shape
     [ReferenceFrame(ReferenceFrame.World)]
     public sealed override bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
+        if (RigidBody == null)
+        {
+            return LocalRayCast(origin, direction, out normal, out lambda);
+        }
+
         ref var data = ref RigidBody.Data;
 
         // rotate the ray into the reference frame of the body...
