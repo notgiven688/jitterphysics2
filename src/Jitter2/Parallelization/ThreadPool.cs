@@ -13,6 +13,68 @@ using Jitter2.DataStructures;
 
 namespace Jitter2.Parallelization;
 
+/*
+ * ---------------------------------------------------------------------------
+ *  Jitter2 ThreadPool – Persistent Worker Thread Model
+ * ---------------------------------------------------------------------------
+ *
+ *  This thread pool is built around the idea of keeping a fixed set of worker
+ *  threads alive for the entire lifetime of the simulation. Workers are kept
+ *  in a tight loop, only parking when explicitly instructed. This avoids the
+ *  cost of repeatedly waking threads during each simulation step.
+ *
+ *  ┌──────────────────────┐
+ *  │   Main Thread        │
+ *  └──────────────────────┘
+ *           │
+ *           ▼
+ *  [ 1. Queue Tasks ]
+ *      Tasks are added to a temporary list via AddTask(). Tasks are lightweight
+ *      objects wrapping an Action<T> and parameter, pooled for reuse.
+ *
+ *  [ 2. Execute ]
+ *      When Execute() is called, all staged tasks are distributed to
+ *      per-thread queues in a round-robin fashion.
+ *
+ *      The main thread then participates in task execution as "worker 0",
+ *      draining its own queue and stealing work from others until all tasks
+ *      are completed.
+ *
+ *  ┌──────────────────────┐     ┌──────────────────────┐
+ *  │  Worker Thread 1     │ ... │  Worker Thread N     │
+ *  └──────────────────────┘     └──────────────────────┘
+ *       │      │                      │      │
+ *       ▼      ▼                      ▼      ▼
+ *  [ 3. Worker Loop ]
+ *      Each worker thread repeatedly:
+ *
+ *        - Drains its own queue fully.
+ *        - If it did any work, attempts to steal tasks from other queues
+ *          (draining each queue it visits).
+ *        - If no work is available, spins briefly and waits on a ManualResetEventSlim.
+ *
+ *      Workers stay in this loop permanently. When the event is set
+ *      (via ResumeWorkers), they run; when reset (via PauseWorkers),
+ *      they block once they have no work left.
+ *
+ *  [ 4. Completion ]
+ *      Execute() blocks until all tasks have finished (tasksLeft == 0),
+ *      but the threads themselves remain hot. The simulation loop can
+ *      run multiple Execute() calls per step without waking threads.
+ *
+ *      At the end of the simulation step, PauseWorkers() is called to
+ *      park the threads until the next step.
+ *
+ *  ---------------------------------------------------------------------------
+ *  Why this design?
+ *  ---------------------------------------------------------------------------
+ *  - No thread wake-up overhead during simulation steps (threads are persistent).
+ *  - Tasks tend to be picked up by the same thread each simulation step, improving
+ *    cache locality.
+ *  - Work stealing improves load balancing.
+ * ---------------------------------------------------------------------------
+ */
+
 /// <summary>
 /// Manages worker threads, which can run arbitrary delegates <see cref="Action"/>
 /// multiThreaded.
@@ -55,14 +117,12 @@ public sealed class ThreadPool
 
     public const float ThreadsPerProcessor = 0.9f;
 
-    // ManualResetEventSlim performs much better than the regular ManualResetEvent.
-    // mainResetEvent.Wait() is a 'fallthrough' for the persistent threading model in Jitter.
-    // Here the performance improvement of ManualResetEvent is mostly visible.
     private readonly ManualResetEventSlim mainResetEvent;
     private Thread[] threads = [];
 
     private readonly SlimBag<ITask> taskList = [];
-    private readonly ConcurrentQueue<ITask> taskQueue = new();
+
+    private ConcurrentQueue<ITask>[] queues = [];
 
     private volatile bool running = true;
 
@@ -120,16 +180,22 @@ public sealed class ThreadPool
         running = true;
         threadCount = numThreads;
 
+        queues = new ConcurrentQueue<ITask>[threadCount];
+        for (int i = 0; i < threadCount; i++)
+            queues[i] = new ConcurrentQueue<ITask>();
+
         threads = new Thread[threadCount - 1];
 
         var initWaitHandle = new AutoResetEvent(false);
 
         for (int i = 0; i < threadCount - 1; i++)
         {
+            int index = i;
+
             threads[i] = new Thread(() =>
             {
                 initWaitHandle.Set();
-                ThreadProc();
+                ThreadProc(index + 1);
             });
 
             threads[i].IsBackground = true;
@@ -137,7 +203,7 @@ public sealed class ThreadPool
             initWaitHandle.WaitOne();
         }
 
-        SignalReset();
+        PauseWorkers();
     }
 
     /// <summary>
@@ -171,34 +237,54 @@ public sealed class ThreadPool
     }
 
     /// <summary>
-    /// Initiates the execution of tasks or allows worker threads to wait for new tasks in a continuous loop.
+    /// Resumes all worker threads so they can process queued tasks.
+    /// This is called automatically by <see cref="Execute"/>.
     /// </summary>
-    public void SignalWait()
+    public void ResumeWorkers()
     {
         mainResetEvent.Set();
     }
 
     /// <summary>
-    /// Instructs all worker threads to pause after completing all current tasks. Call <see cref="SignalWait"/> to resume processing new tasks.
+    /// Pauses all worker threads after they finish their current tasks.
     /// </summary>
-    public void SignalReset()
+    public void PauseWorkers()
     {
         mainResetEvent.Reset();
     }
 
-    private void ThreadProc()
+    private void ThreadProc(int index)
     {
+        var myQueue = queues[index];
+
         while (running)
         {
-            if (taskQueue.TryDequeue(out ITask? result))
+            int performedTasks = 0;
+
+            while (myQueue.TryDequeue(out var task))
             {
-                result.Perform();
+                task.Perform();
                 Interlocked.Decrement(ref tasksLeft);
+                performedTasks++;
             }
-            else
+
+            // done performing all own tasks. only now try to steal work from others.
+            if (performedTasks > 0)
             {
-                mainResetEvent.Wait();
+                // steal from other queues
+                for (int i = 1; i < queues.Length; i++)
+                {
+                    int queueIndex = (i + index) % queues.Length;
+
+                    while (queues[queueIndex].TryDequeue(out var task))
+                    {
+                        task.Perform();
+                        Interlocked.Decrement(ref tasksLeft);
+                    }
+                }
             }
+
+            mainResetEvent.Wait();
         }
     }
 
@@ -207,22 +293,37 @@ public sealed class ThreadPool
     /// </summary>
     public void Execute()
     {
-        SignalWait();
+        ResumeWorkers();
 
         int totalTasks = taskList.Count;
         tasksLeft = totalTasks;
 
+        Debug.Assert(totalTasks <= ThreadCount);
+
         for (int i = 0; i < totalTasks; i++)
         {
-            taskQueue.Enqueue(taskList[i]);
+            queues[i % this.ThreadCount].Enqueue(taskList[i]);
         }
 
         taskList.Clear();
 
-        while (taskQueue.TryDequeue(out ITask? result))
+        // the main threads queue.
+        var myQueue = queues[0];
+
+        while (myQueue.TryDequeue(out var task))
         {
-            result.Perform();
+            task.Perform();
             Interlocked.Decrement(ref tasksLeft);
+        }
+
+        // steal from other queues
+        for (int i = 1; i < queues.Length; i++)
+        {
+            while (queues[i].TryDequeue(out var task))
+            {
+                task.Perform();
+                Interlocked.Decrement(ref tasksLeft);
+            }
         }
 
         while (tasksLeft > 0)

@@ -114,7 +114,7 @@ public sealed partial class World
         if (multiThread)
         {
             // Signal the thread pool to spin up threads
-            ThreadPool.Instance.SignalWait();
+            ThreadPool.Instance.ResumeWorkers();
         }
 
         // Start timer
@@ -163,7 +163,7 @@ public sealed partial class World
             && ThreadPool.InstanceInitialized)
         {
             // Signal the thread pool that threads can go into a wait state.
-            ThreadPool.Instance.SignalReset();
+            ThreadPool.Instance.PauseWorkers();
         }
     }
 
