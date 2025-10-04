@@ -21,13 +21,10 @@ namespace Jitter2.Parallelization;
  *  This thread pool is built around the idea of keeping a fixed set of worker
  *  threads alive for the entire lifetime of the simulation. Workers are kept
  *  in a tight loop, only parking when explicitly instructed. This avoids the
- *  cost of repeatedly waking threads during each simulation step.
+ *  cost of repeatedly waking threads *during* each simulation step.
  *
- *  ┌──────────────────────┐
- *  │   Main Thread        │
- *  └──────────────────────┘
- *           │
- *           ▼
+ * Main Thread:
+ *
  *  [ 1. Queue Tasks ]
  *      Tasks are added to a temporary list via AddTask(). Tasks are lightweight
  *      objects wrapping an Action<T> and parameter, pooled for reuse.
@@ -40,11 +37,8 @@ namespace Jitter2.Parallelization;
  *      draining its own queue and stealing work from others until all tasks
  *      are completed.
  *
- *  ┌──────────────────────┐     ┌──────────────────────┐
- *  │  Worker Thread 1     │ ... │  Worker Thread N     │
- *  └──────────────────────┘     └──────────────────────┘
- *       │      │                      │      │
- *       ▼      ▼                      ▼      ▼
+ * Worker Threads:
+ *
  *  [ 3. Worker Loop ]
  *      Each worker thread repeatedly:
  *
