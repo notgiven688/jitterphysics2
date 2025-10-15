@@ -86,6 +86,8 @@ public sealed partial class World
     /// <param name="multiThread">Indicates whether multithreading should be utilized. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
     public void Step(Real dt, bool multiThread = true)
     {
+        Tracer.ProfileBegin(TraceName.Step);
+
         AssertNullBody();
 
         switch (dt)
@@ -124,14 +126,22 @@ public sealed partial class World
         SetTime(Timings.PreStep);
 
         // Perform narrow phase detection.
+        Tracer.ProfileBegin(TraceName.NarrowPhase);
         DynamicTree.EnumerateOverlaps(detect, multiThread);
+        Tracer.ProfileEnd(TraceName.NarrowPhase);
         SetTime(Timings.NarrowPhase);
 
+        Tracer.ProfileBegin(TraceName.AddArbiter);
         HandleDeferredArbiters();
         SetTime(Timings.AddArbiter);
+        Tracer.ProfileEnd(TraceName.AddArbiter);
 
+        Tracer.ProfileBegin(TraceName.CheckDeactivation);
         CheckDeactivation();
         SetTime(Timings.CheckDeactivation);
+        Tracer.ProfileEnd(TraceName.CheckDeactivation);
+
+        Tracer.ProfileBegin(TraceName.Solve);
 
         // Sub-stepping
         for (int i = 0; i < substeps; i++)
@@ -142,19 +152,28 @@ public sealed partial class World
             RelaxVelocities(multiThread, velocityRelaxations);  // FAST SWEEP
         }
 
+        Tracer.ProfileEnd(TraceName.Solve);
         SetTime(Timings.Solve);
 
+        Tracer.ProfileBegin(TraceName.RemoveArbiter);
         RemoveBrokenArbiters();
+        Tracer.ProfileEnd(TraceName.RemoveArbiter);
         SetTime(Timings.RemoveArbiter);
 
+        Tracer.ProfileBegin(TraceName.UpdateContacts);
         UpdateContacts(multiThread);                            // FAST SWEEP
+        Tracer.ProfileEnd(TraceName.UpdateContacts);
         SetTime(Timings.UpdateContacts);
 
+        Tracer.ProfileBegin(TraceName.UpdateBodies);
         ForeachActiveBody(multiThread);
+        Tracer.ProfileEnd(TraceName.UpdateBodies);
         SetTime(Timings.UpdateBodies);
 
+        Tracer.ProfileBegin(TraceName.BroadPhase);
         DynamicTree.Update(multiThread, stepDt);
         SetTime(Timings.BroadPhase);
+        Tracer.ProfileEnd(TraceName.BroadPhase);
 
         PostStep?.Invoke(dt);
         SetTime(Timings.PostStep);
@@ -165,6 +184,8 @@ public sealed partial class World
             // Signal the thread pool that threads can go into a wait state.
             ThreadPool.Instance.PauseWorkers();
         }
+
+        Tracer.ProfileEnd(TraceName.Step);
     }
 
     private void UpdateBodies(Parallel.Batch batch)
