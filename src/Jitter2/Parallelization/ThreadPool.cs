@@ -281,6 +281,7 @@ public sealed class ThreadPool
                 }
             }
 
+            Thread.Sleep(0);
             mainResetEvent.Wait();
         }
     }
