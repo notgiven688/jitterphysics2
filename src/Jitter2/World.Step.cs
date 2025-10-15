@@ -188,17 +188,58 @@ public sealed partial class World
         Tracer.ProfileEnd(TraceName.Step);
     }
 
-    private void UpdateBodies(Parallel.Batch batch)
-    {
-        for (int i = batch.Start; i < batch.End; i++)
-        {
-            bodies[i].Update(stepDt, substepDt);
-        }
-    }
+       #region Prepare and Solve Contacts and Constraints
+
+    private readonly ThreadLocal<Queue<int>> deferredContacts = new(() => new Queue<int>());
+    private readonly ThreadLocal<Queue<int>> deferredConstraints = new(() => new Queue<int>());
+    private readonly ThreadLocal<Queue<int>> deferredSmallConstraints = new(() => new Queue<int>());
 
     private void PrepareContacts(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
+        var localQueue = deferredContacts.Value!;
+
+        for (int i = 0; i < span.Length; i++)
+        {
+            ref ContactData contact = ref span[i];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            contact.PrepareForIteration(invStepDt);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        Tracer.ProfileScopeBegin();
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref ContactData contact = ref span[i];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            contact.PrepareForIteration(invStepDt);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
+    }
+
+    private void IterateContacts(Parallel.Batch batch)
+    {
+        var span = memContacts.Active[batch.Start..batch.End];
+        var localQueue = deferredContacts.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -206,16 +247,41 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            LockTwoBody(ref b1, ref b2);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
 
-            c.PrepareForIteration(invStepDt);
+            c.Iterate(true);
             UnlockTwoBody(ref b1, ref b2);
         }
+
+        Tracer.ProfileScopeBegin();
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref ContactData c = ref span[i];
+            ref RigidBodyData b1 = ref c.Body1.Data;
+            ref RigidBodyData b2 = ref c.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            c.Iterate(true);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
     private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
+        var localQueue = deferredSmallConstraints.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -225,9 +291,28 @@ public sealed partial class World
 
             if (constraint.PrepareForIteration == null) continue;
 
-            Debug.Assert(!b1.IsStatic || !b2.IsStatic);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
 
-            LockTwoBody(ref b1, ref b2);
+            constraint.PrepareForIteration(ref constraint, invStepDt);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref SmallConstraintData constraint = ref span[i];
+            ref RigidBodyData b1 = ref constraint.Body1.Data;
+            ref RigidBodyData b2 = ref constraint.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
             constraint.PrepareForIteration(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
@@ -236,6 +321,7 @@ public sealed partial class World
     private unsafe void IterateSmallConstraints(Parallel.Batch batch)
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
+        var localQueue = deferredSmallConstraints.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -245,15 +331,38 @@ public sealed partial class World
 
             if (constraint.Iterate == null) continue;
 
-            LockTwoBody(ref b1, ref b2);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            constraint.Iterate(ref constraint, invStepDt);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref SmallConstraintData constraint = ref span[i];
+            ref RigidBodyData b1 = ref constraint.Body1.Data;
+            ref RigidBodyData b2 = ref constraint.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
             constraint.Iterate(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
 
+
     private unsafe void PrepareConstraints(Parallel.Batch batch)
     {
         var span = memConstraints.Active[batch.Start..batch.End];
+        var localQueue = deferredConstraints.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -265,7 +374,28 @@ public sealed partial class World
 
             Debug.Assert(!b1.IsStatic || !b2.IsStatic);
 
-            LockTwoBody(ref b1, ref b2);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            constraint.PrepareForIteration(ref constraint, invStepDt);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref ConstraintData constraint = ref span[i];
+            ref RigidBodyData b1 = ref constraint.Body1.Data;
+            ref RigidBodyData b2 = ref constraint.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
             constraint.PrepareForIteration(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
@@ -274,6 +404,7 @@ public sealed partial class World
     private unsafe void IterateConstraints(Parallel.Batch batch)
     {
         var span = memConstraints.Active[batch.Start..batch.End];
+        var localQueue = deferredConstraints.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -283,24 +414,29 @@ public sealed partial class World
 
             if (constraint.Iterate == null) continue;
 
-            LockTwoBody(ref b1, ref b2);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
             constraint.Iterate(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
-    }
 
-    private void IterateContacts(Parallel.Batch batch)
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-
-        for (int i = 0; i < span.Length; i++)
+        while (localQueue.TryDequeue(out int i))
         {
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
+            ref ConstraintData constraint = ref span[i];
+            ref RigidBodyData b1 = ref constraint.Body1.Data;
+            ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            LockTwoBody(ref b1, ref b2);
-            c.Iterate(true);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            constraint.Iterate(ref constraint, invStepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -308,6 +444,7 @@ public sealed partial class World
     private void RelaxVelocities(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
+        var localQueue = deferredContacts.Value!;
 
         for (int i = 0; i < span.Length; i++)
         {
@@ -315,9 +452,44 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            LockTwoBody(ref b1, ref b2);
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
             c.Iterate(false);
             UnlockTwoBody(ref b1, ref b2);
+        }
+
+        Tracer.ProfileScopeBegin();
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref ContactData c = ref span[i];
+            ref RigidBodyData b1 = ref c.Body1.Data;
+            ref RigidBodyData b2 = ref c.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            c.Iterate(false);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
+    }
+
+    #endregion
+
+    private void UpdateBodies(Parallel.Batch batch)
+    {
+        for (int i = batch.Start; i < batch.End; i++)
+        {
+            bodies[i].Update(stepDt, substepDt);
         }
     }
 
@@ -413,6 +585,74 @@ public sealed partial class World
         }
 
         deferredArbiters.Clear();
+    }
+
+        /// <summary>
+    /// Attempts to lock two bodies. Briefly waits on contention, then backs off if unsuccessful.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryLockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
+    {
+        const int spinCount = 10;
+
+        if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
+        {
+            if (!b1.IsStatic)
+            {
+                if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(spinCount);
+                    if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (!b2.IsStatic)
+            {
+                if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(spinCount);
+                    if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                    {
+                        // back off
+                        Volatile.Write(ref b1._lockFlag, 0);
+                        return false;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (!b2.IsStatic)
+            {
+                if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(spinCount);
+                    if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (!b1.IsStatic)
+            {
+                if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                {
+                    Thread.SpinWait(spinCount);
+                    if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
+                    {
+                        // back off
+                        Volatile.Write(ref b2._lockFlag, 0);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     /// <summary>
