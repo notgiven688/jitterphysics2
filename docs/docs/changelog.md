@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.3 (2025-10-19)
+
+- Improved multi-threading performance.
+
 ### Jitter 2.7.2 (2025-09-21)
 
 - Reduce GC in `DynamicTree.Optimize`.
