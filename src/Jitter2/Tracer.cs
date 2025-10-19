@@ -56,7 +56,9 @@ internal enum TraceName : long
     UpdateContacts,
     UpdateBodies,
     BroadPhase,
-    Queue
+    Queue,
+    PreStep,
+    PostStep,
 }
 
 internal enum TracePhase : byte

@@ -122,7 +122,9 @@ public sealed partial class World
         // Start timer
         time = Stopwatch.GetTimestamp();
 
+        Tracer.ProfileScopeBegin();
         PreStep?.Invoke(dt);
+        Tracer.ProfileScopeEnd(TraceName.PreStep);
         SetTime(Timings.PreStep);
 
         // Perform narrow phase detection.
@@ -133,13 +135,13 @@ public sealed partial class World
 
         Tracer.ProfileBegin(TraceName.AddArbiter);
         HandleDeferredArbiters();
-        SetTime(Timings.AddArbiter);
         Tracer.ProfileEnd(TraceName.AddArbiter);
+        SetTime(Timings.AddArbiter);
 
         Tracer.ProfileBegin(TraceName.CheckDeactivation);
         CheckDeactivation();
-        SetTime(Timings.CheckDeactivation);
         Tracer.ProfileEnd(TraceName.CheckDeactivation);
+        SetTime(Timings.CheckDeactivation);
 
         Tracer.ProfileBegin(TraceName.Solve);
 
@@ -172,10 +174,12 @@ public sealed partial class World
 
         Tracer.ProfileBegin(TraceName.BroadPhase);
         DynamicTree.Update(multiThread, stepDt);
-        SetTime(Timings.BroadPhase);
         Tracer.ProfileEnd(TraceName.BroadPhase);
+        SetTime(Timings.BroadPhase);
 
+        Tracer.ProfileScopeBegin();
         PostStep?.Invoke(dt);
+        Tracer.ProfileScopeEnd(TraceName.PostStep);
         SetTime(Timings.PostStep);
 
         if ((ThreadModel == ThreadModelType.Regular || !multiThread)
@@ -188,7 +192,7 @@ public sealed partial class World
         Tracer.ProfileEnd(TraceName.Step);
     }
 
-       #region Prepare and Solve Contacts and Constraints
+    #region Prepare and Solve Contacts and Constraints
 
     private readonly ThreadLocal<Queue<int>> deferredContacts = new(() => new Queue<int>());
     private readonly ThreadLocal<Queue<int>> deferredConstraints = new(() => new Queue<int>());
