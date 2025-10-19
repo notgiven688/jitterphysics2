@@ -164,11 +164,16 @@ public partial class DynamicTree
         if (multiThread)
         {
             var tpi = ThreadPool.Instance;
-            int threadCount = tpi.ThreadCount;
 
-            for (int i = 0; i < threadCount; i++)
+            // Typically, this is the first multithreaded phase of a simulation step.
+            // Threads may still be asleep, so we use multiple tasks per thread
+            // to improve load distribution as they wake up.
+            const int taskMultiplier = 6;
+            int taskCount = tpi.ThreadCount * taskMultiplier;
+
+            for (int i = 0; i < taskCount; i++)
             {
-                Parallel.GetBounds(slotsLength, threadCount, i, out int start, out int end);
+                Parallel.GetBounds(slotsLength, taskCount, i, out int start, out int end);
                 overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
                 ThreadPool.Instance.AddTask(enumerateOverlaps, overlapEnumerationParam);
             }
@@ -201,49 +206,62 @@ public partial class DynamicTree
 
         this.stepDt = dt;
 
+        Tracer.ProfileBegin(TraceName.PruneInvalidPairs);
         PruneInvalidPairs();
-
+        Tracer.ProfileEnd(TraceName.PruneInvalidPairs);
         SetTime(Timings.PruneInvalidPairs);
 
         if (multiThread)
         {
+            Tracer.ProfileBegin(TraceName.UpdateBoundingBoxes);
             proxies.ParallelForBatch(256, updateBoundingBoxes);
+            Tracer.ProfileEnd(TraceName.UpdateBoundingBoxes);
             SetTime(Timings.UpdateBoundingBoxes);
 
+            Tracer.ProfileBegin(TraceName.ScanMoved);
             movedProxies.Clear();
             proxies.ParallelForBatch(24, scanForMovedProxies);
+            Tracer.ProfileEnd(TraceName.ScanMoved);
             SetTime(Timings.ScanMoved);
 
+            Tracer.ProfileBegin(TraceName.UpdateProxies);
             for (int i = 0; i < movedProxies.Count; i++)
             {
                 InternalAddRemoveProxy(movedProxies[i]);
             }
-
+            Tracer.ProfileEnd(TraceName.UpdateProxies);
             SetTime(Timings.UpdateProxies);
 
+            Tracer.ProfileBegin(TraceName.ScanOverlaps);
             movedProxies.ParallelForBatch(24, scanForOverlaps);
-
+            Tracer.ProfileEnd(TraceName.ScanOverlaps);
             SetTime(Timings.ScanOverlaps);
         }
         else
         {
+            Tracer.ProfileBegin(TraceName.UpdateBoundingBoxes);
             var batch = new Parallel.Batch(0, proxies.ActiveCount);
             UpdateBoundingBoxesCallback(batch);
+            Tracer.ProfileEnd(TraceName.UpdateBoundingBoxes);
             SetTime(Timings.UpdateBoundingBoxes);
 
+            Tracer.ProfileBegin(TraceName.ScanMoved);
             movedProxies.Clear();
             ScanForMovedProxies(batch);
+            Tracer.ProfileEnd(TraceName.ScanMoved);
             SetTime(Timings.ScanMoved);
 
+            Tracer.ProfileBegin(TraceName.UpdateProxies);
             for (int i = 0; i < movedProxies.Count; i++)
             {
                 InternalAddRemoveProxy(movedProxies[i]);
             }
-
+            Tracer.ProfileEnd(TraceName.UpdateProxies);
             SetTime(Timings.UpdateProxies);
 
+            Tracer.ProfileBegin(TraceName.ScanOverlaps);
             ScanForOverlapsCallback(new Parallel.Batch(0, movedProxies.Count));
-
+            Tracer.ProfileEnd(TraceName.ScanOverlaps);
             SetTime(Timings.ScanOverlaps);
         }
 

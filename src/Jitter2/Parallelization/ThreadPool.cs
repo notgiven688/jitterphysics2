@@ -88,7 +88,10 @@ public sealed class ThreadPool
         public void Perform()
         {
             _counter = _total;
+
+            Tracer.ProfileBegin(Action);
             Action(Parameter);
+            Tracer.ProfileEnd(Action);
         }
 
         private static readonly List<Task<T>> pool = new(32);
@@ -278,6 +281,7 @@ public sealed class ThreadPool
                 }
             }
 
+            Thread.Sleep(0);
             mainResetEvent.Wait();
         }
     }
