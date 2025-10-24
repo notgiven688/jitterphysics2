@@ -26,6 +26,9 @@ internal static class IslandHelper
 
     private static void ReturnToPool(Island island)
     {
+        island.NeedsUpdate = false;
+        island.MarkedAsActive = false;
+
         pool.Push(island);
     }
 
@@ -36,8 +39,6 @@ internal static class IslandHelper
 
         b1.InternalContacts.Add(arbiter);
         b2.InternalContacts.Add(arbiter);
-
-        if (b1.Data.IsStatic || b2.Data.IsStatic) return;
 
         AddConnection(islands, b1, b2);
     }
@@ -54,8 +55,6 @@ internal static class IslandHelper
     {
         constraint.Body1.InternalConstraints.Add(constraint);
         constraint.Body2.InternalConstraints.Add(constraint);
-
-        if (constraint.Body1.Data.IsStatic || constraint.Body2.Data.IsStatic) return;
 
         AddConnection(islands, constraint.Body1, constraint.Body2);
     }
@@ -84,10 +83,21 @@ internal static class IslandHelper
 
     public static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
-        MergeIslands(islands, body1, body2);
+        bool needsUpdate = (!islands.IsActive(body1.Island) || !islands.IsActive(body2.Island));
+        bool bothDynamic = !body1.Data.IsStatic && !body2.Data.IsStatic;
 
-        body1.InternalConnections.Add(body2);
-        body2.InternalConnections.Add(body1);
+        if (bothDynamic)
+        {
+            MergeIslands(islands, body1, body2);
+            body1.InternalConnections.Add(body2);
+            body2.InternalConnections.Add(body1);
+        }
+
+        if (needsUpdate)
+        {
+            if(!body1.Data.IsStatic) body1.Island.NeedsUpdate = true;
+            if(!body2.Data.IsStatic) body2.Island.NeedsUpdate = true;
+        }
     }
 
     public static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
@@ -96,7 +106,9 @@ internal static class IslandHelper
         body2.InternalConnections.Remove(body1);
 
         if (body1.InternalIsland == body2.InternalIsland)
+        {
             SplitIslands(islands, body1, body2);
+        }
     }
 
     private static readonly Queue<RigidBody> leftSearchQueue = [];

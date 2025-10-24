@@ -352,6 +352,8 @@ public sealed partial class World : IDisposable
 
         if (body.IsActive) return;
         AddToActiveList(body.InternalIsland);
+
+        body.Island.NeedsUpdate = true;
     }
 
     internal void MakeBodyStatic(RigidBody body)
@@ -442,7 +444,6 @@ public sealed partial class World : IDisposable
     private void AddToActiveList(Island island)
     {
         island.MarkedAsActive = true;
-        island.NeedsUpdate = true;
         islands.MoveToActive(island);
     }
 

@@ -296,8 +296,6 @@ public sealed class ThreadPool
         int totalTasks = taskList.Count;
         tasksLeft = totalTasks;
 
-        Debug.Assert(totalTasks <= ThreadCount);
-
         for (int i = 0; i < totalTasks; i++)
         {
             queues[i % this.ThreadCount].Enqueue(taskList[i]);

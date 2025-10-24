@@ -32,6 +32,7 @@ public sealed partial class World
         PreStep,
         NarrowPhase,
         AddArbiter,
+        ReorderContacts,
         CheckDeactivation,
         Solve,
         RemoveArbiter,
@@ -137,6 +138,11 @@ public sealed partial class World
         HandleDeferredArbiters();
         Tracer.ProfileEnd(TraceName.AddArbiter);
         SetTime(Timings.AddArbiter);
+
+        Tracer.ProfileBegin(TraceName.ReorderContacts);
+        ReorderContacts();
+        Tracer.ProfileEnd(TraceName.ReorderContacts);
+        SetTime(Timings.ReorderContacts);
 
         Tracer.ProfileBegin(TraceName.CheckDeactivation);
         CheckDeactivation();
@@ -494,6 +500,87 @@ public sealed partial class World
         for (int i = batch.Start; i < batch.End; i++)
         {
             bodies[i].Update(stepDt, substepDt);
+        }
+    }
+
+    private int sortCounter = 0;
+    private JHandle<RigidBodyData> lastVisited = JHandle<RigidBodyData>.Zero;
+
+    /// <summary>
+    /// This method gradually improves the memory layout of <see cref="memContacts"/>, moving connected contacts
+    /// next to each other. This improves cache coherence.
+    /// </summary>
+    private void ReorderContacts()
+    {
+        int activeCount = memContacts.Active.Length;
+
+        // Don't even bother with sorting contacts when the set is small.
+        if (activeCount < 1024) return;
+
+        const int fraction = 1024;
+
+        // The basic idea here is to gradually improve the spatial locality of the contact array.
+        // Each frame, only a small fraction of contacts (1/1024th of the total) are visited.
+        // For each visited contact, the algorithm checks whether it is already adjacent to another
+        // contact that shares one of its bodies. If not, it attempts to move contacts that
+        // involve the same bodies forward in memory, grouping connected contacts together.
+
+        int iterations = activeCount / fraction;
+
+        for (int iter = 0; iter < iterations; iter++)
+        {
+            if (sortCounter > activeCount - 2) sortCounter = 0;
+
+            ref var current = ref memContacts.Active[sortCounter];
+            ref var next = ref memContacts.Active[sortCounter + 1];
+
+            if (current.Body1 == next.Body1 || current.Body1 == next.Body2)
+            {
+                lastVisited = current.Body1;
+                sortCounter += 1;
+                continue;
+            }
+
+            if (current.Body2 == next.Body1 || current.Body2 == next.Body2)
+            {
+                lastVisited = current.Body2;
+                sortCounter += 1;
+                continue;
+            }
+
+            int swaps = 0;
+
+            if (arbiters.TryGetValue(current.Key, out var arbiter))
+            {
+                if (lastVisited != arbiter.Body1.Handle)
+                {
+                    foreach (var arb in arbiter.Body1.Contacts)
+                    {
+                        int index = memContacts.GetIndex(arb.Handle);
+                        if (index <= sortCounter || index >= activeCount) continue;
+
+                        swaps++;
+                        memContacts.Swap(sortCounter + swaps, index);
+                    }
+
+                    lastVisited = arbiter.Body1.Handle;
+                }
+                else
+                {
+                    foreach (var arb in arbiter.Body2.Contacts)
+                    {
+                        int index = memContacts.GetIndex(arb.Handle);
+                        if (index <= sortCounter || index >= activeCount) continue;
+
+                        swaps++;
+                        memContacts.Swap(sortCounter + swaps, index);
+                    }
+
+                    lastVisited = arbiter.Body2.Handle;
+                }
+            }
+
+            sortCounter += Math.Max(1, swaps);
         }
     }
 
@@ -899,15 +986,20 @@ public sealed partial class World
             // MarkedAsActive back to true;
             island.MarkedAsActive = false;
 
-            if (!deactivateIsland && !island.NeedsUpdate) continue;
-
+            bool needsUpdate = island.NeedsUpdate;
             island.NeedsUpdate = false;
+
+            if (!deactivateIsland && !needsUpdate) continue;
 
             foreach (RigidBody body in island.InternalBodies)
             {
                 ref RigidBodyData rigidBody = ref body.Data;
 
-                if (rigidBody.IsActive != deactivateIsland) continue;
+                if (rigidBody.IsActive != deactivateIsland)
+                {
+                    if (!needsUpdate) break;
+                    continue;
+                }
 
                 if (deactivateIsland)
                 {
