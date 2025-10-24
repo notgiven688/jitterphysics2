@@ -17,6 +17,11 @@ public sealed class Island : IPartitionedSetIndex
 {
     internal readonly HashSet<RigidBody> InternalBodies = [];
     internal bool MarkedAsActive;
+
+    /// <summary>
+    /// Has to be set if an island is active but might contain inactive bodies.
+    /// This happens, for example, if an inactive and an active island are merged.
+    /// </summary>
     internal bool NeedsUpdate;
 
     /// <summary>

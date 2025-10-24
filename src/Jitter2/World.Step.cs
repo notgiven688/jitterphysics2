@@ -899,15 +899,20 @@ public sealed partial class World
             // MarkedAsActive back to true;
             island.MarkedAsActive = false;
 
-            if (!deactivateIsland && !island.NeedsUpdate) continue;
-
+            bool needsUpdate = island.NeedsUpdate;
             island.NeedsUpdate = false;
+
+            if (!deactivateIsland && !needsUpdate) continue;
 
             foreach (RigidBody body in island.InternalBodies)
             {
                 ref RigidBodyData rigidBody = ref body.Data;
 
-                if (rigidBody.IsActive != deactivateIsland) continue;
+                if (rigidBody.IsActive != deactivateIsland)
+                {
+                    if (!needsUpdate) break;
+                    continue;
+                }
 
                 if (deactivateIsland)
                 {
