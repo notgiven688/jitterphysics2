@@ -50,6 +50,7 @@ internal enum TraceName : long
     Step,
     NarrowPhase,
     AddArbiter,
+    ReorderContacts,
     CheckDeactivation,
     Solve,
     RemoveArbiter,

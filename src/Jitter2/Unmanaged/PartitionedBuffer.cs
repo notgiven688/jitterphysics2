@@ -227,6 +227,25 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
+    /// Swap two entries based on their index. Adjusts handles accordingly.
+    /// </summary>
+    public void Swap(int i, int j)
+    {
+        (memory[i], memory[j]) = (memory[j], memory[i]);
+
+        handles[Unsafe.Read<int>(&memory[i])] = &memory[i];
+        handles[Unsafe.Read<int>(&memory[j])] = &memory[j];
+    }
+
+    /// <summary>
+    /// Retrieves the target index of the handle.
+    /// </summary>
+    public int GetIndex(JHandle<T> handle)
+    {
+        return (int)(((nint)(*handle.Pointer) - (nint)memory) / sizeof(T));
+    }
+
+    /// <summary>
     /// Reader-writer lock. Locked by a writer when a resize (triggered by <see
     /// cref="PartitionedBuffer{T}.Allocate(bool, bool)"/>) occurs. Resizing does move all structs and
     /// their memory addresses. It is not safe to use handles (<see cref="JHandle{T}"/>) during this
