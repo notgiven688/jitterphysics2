@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Jitter2.DataStructures;
+using Jitter2.Unmanaged;
 
 namespace Jitter2.Parallelization;
 
@@ -123,7 +124,7 @@ public sealed class ThreadPool
 
     private volatile bool running = true;
 
-    private volatile int tasksLeft;
+    private MemoryHelper.IsolatedInt tasksLeft;
     private int threadCount;
 
     private static ThreadPool? _instance;
@@ -261,7 +262,7 @@ public sealed class ThreadPool
             while (myQueue.TryDequeue(out var task))
             {
                 task.Perform();
-                Interlocked.Decrement(ref tasksLeft);
+                Interlocked.Decrement(ref tasksLeft.Value);
                 performedTasks++;
             }
 
@@ -276,7 +277,7 @@ public sealed class ThreadPool
                     while (queues[queueIndex].TryDequeue(out var task))
                     {
                         task.Perform();
-                        Interlocked.Decrement(ref tasksLeft);
+                        Interlocked.Decrement(ref tasksLeft.Value);
                     }
                 }
             }
@@ -294,7 +295,7 @@ public sealed class ThreadPool
         ResumeWorkers();
 
         int totalTasks = taskList.Count;
-        tasksLeft = totalTasks;
+        Volatile.Write(ref tasksLeft.Value, totalTasks);
 
         for (int i = 0; i < totalTasks; i++)
         {
@@ -309,7 +310,7 @@ public sealed class ThreadPool
         while (myQueue.TryDequeue(out var task))
         {
             task.Perform();
-            Interlocked.Decrement(ref tasksLeft);
+            Interlocked.Decrement(ref tasksLeft.Value);
         }
 
         // steal from other queues
@@ -318,11 +319,11 @@ public sealed class ThreadPool
             while (queues[i].TryDequeue(out var task))
             {
                 task.Perform();
-                Interlocked.Decrement(ref tasksLeft);
+                Interlocked.Decrement(ref tasksLeft.Value);
             }
         }
 
-        while (tasksLeft > 0)
+        while (Volatile.Read(ref tasksLeft.Value) > 0)
         {
             Thread.SpinWait(1);
         }

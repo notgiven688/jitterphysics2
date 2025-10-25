@@ -11,6 +11,23 @@ namespace Jitter2.Unmanaged;
 public static unsafe class MemoryHelper
 {
     /// <summary>
+    /// Represents an integer value isolated in memory to prevent false sharing
+    /// between multiple threads operating on adjacent data.
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit, Size = 132)]
+    public unsafe struct IsolatedInt
+    {
+        [FieldOffset(0)]
+        private fixed byte pad0[64];
+
+        [FieldOffset(64)]
+        public int Value;
+
+        [FieldOffset(68)]
+        private fixed byte pad1[64];
+    }
+
+    /// <summary>
     /// A memory block with a size equivalent to six instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
