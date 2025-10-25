@@ -233,6 +233,8 @@ public sealed partial class World : IDisposable
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
 
         InitParallelCallbacks();
+
+        Logger.Information($"Created new world with capacity: {capacity}");
     }
 
     /// <summary>
