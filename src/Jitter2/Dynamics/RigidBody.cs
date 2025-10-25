@@ -457,6 +457,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
     }
 
+    /// <summary>
+    /// Marks the body as static (infinite mass) or dynamic.
+    /// </summary>
+    /// <remarks>
+    /// Static bodies can still have velocity and are integrated normally,
+    /// meaning their position is updated each step.
+    /// Switching to dynamic reactivates the body next step.
+    /// </remarks>
     public bool IsStatic
     {
         set

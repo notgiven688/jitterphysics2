@@ -1035,8 +1035,6 @@ public sealed partial class World
                 }
                 else
                 {
-                    if (rigidBody.IsStatic) continue;
-
                     rigidBody.IsActive = true;
 
                     body.InternalSleepTime = 0;
