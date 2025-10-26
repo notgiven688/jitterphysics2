@@ -21,14 +21,19 @@ internal static class IslandHelper
 
     private static Island GetFromPool()
     {
-        return pool.Count > 0 ? pool.Pop() : new Island();
+        if (!pool.TryPop(out var island))
+        {
+            island = new Island();
+        }
+
+        island.MarkedAsActive = true;
+        island.NeedsUpdate = false;
+
+        return island;
     }
 
     private static void ReturnToPool(Island island)
     {
-        island.NeedsUpdate = false;
-        island.MarkedAsActive = false;
-
         pool.Push(island);
     }
 
@@ -182,6 +187,8 @@ internal static class IslandHelper
 
         if (leftSearchQueue.Count == 0)
         {
+            island.NeedsUpdate = body2.InternalIsland.NeedsUpdate;
+
             for (int i = 0; i < visitedBodiesLeft.Count; i++)
             {
                 RigidBody body = visitedBodiesLeft[i];
@@ -194,6 +201,8 @@ internal static class IslandHelper
         }
         else if (rightSearchQueue.Count == 0)
         {
+            island.NeedsUpdate = body1.InternalIsland.NeedsUpdate;
+
             for (int i = 0; i < visitedBodiesRight.Count; i++)
             {
                 RigidBody body = visitedBodiesRight[i];
