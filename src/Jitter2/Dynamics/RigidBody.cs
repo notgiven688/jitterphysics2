@@ -50,14 +50,41 @@ public struct RigidBodyData
     [FieldOffset(8 + 28*sizeof(Real))]
     public Real InverseMass;
 
-    [FieldOffset(8 + 29*sizeof(Real) + 0)]
-    public bool IsActive;
+    [FieldOffset(8 + 29*sizeof(Real))]
+    public int Flags;
 
-    [FieldOffset(8 + 29*sizeof(Real) + 1)]
-    public bool IsStatic;
+    public bool IsActive
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => (Flags & 1) != 0;
+        set
+        {
+            if (value) Flags |= 1;
+            else Flags &= ~1;
+        }
+    }
 
-    [FieldOffset(8 + 29*sizeof(Real) + 2)]
-    public bool EnableGyroscopicForces;
+    public bool IsStatic
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => (Flags & 2) != 0;
+        set
+        {
+            if (value) Flags |= 2;
+            else Flags &= ~2;
+        }
+    }
+
+    public bool EnableGyroscopicForces
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => (Flags & 4) != 0;
+        set
+        {
+            if (value) Flags |= 4;
+            else Flags &= ~4;
+        }
+    }
 
     public readonly bool IsStaticOrInactive => !IsActive || IsStatic;
 }
