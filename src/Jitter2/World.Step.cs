@@ -1008,7 +1008,9 @@ public sealed partial class World
                     memRigidBodies.MoveToInactive(body.Handle);
                     bodies.MoveToInactive(body);
 
-                    // TODO: comment this
+                    // Static bodies have contacts and constraints, but they do not form
+                    // collision islands. Do not deactivate contacts or constraint
+                    // of static bodies, as the island of the static body goes to sleep.
                     if (body.MotionType != MotionType.Static)
                     {
                         foreach (var c in body.InternalContacts)
@@ -1036,7 +1038,7 @@ public sealed partial class World
                 }
                 else
                 {
-                    // TODO: comment this
+                    // Don't activate static bodies at all.
                     if (rigidBody.MotionType == MotionType.Static) continue;
 
                     rigidBody.IsActive = true;
