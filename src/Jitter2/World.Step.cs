@@ -84,7 +84,7 @@ public sealed partial class World
     /// Performs a single simulation step.
     /// </summary>
     /// <param name="dt">The duration of time to simulate. This should remain fixed and not exceed 1/60 of a second.</param>
-    /// <param name="multiThread">Indicates whether multithreading should be utilized. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
+    /// <param name="multiThread">Indicates whether multithreading should be used. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
     public void Step(Real dt, bool multiThread = true)
     {
         Tracer.ProfileBegin(TraceName.Step);
@@ -867,7 +867,7 @@ public sealed partial class World
 
             if (!rigidBody.EnableGyroscopicForces) continue;
 
-            // Note: We do not perform a symplectic Euler update here (i.e. we calculate the new orientation
+            // Note: We do not perform a symplectic Euler update here (i.e., we calculate the new orientation
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
             JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);

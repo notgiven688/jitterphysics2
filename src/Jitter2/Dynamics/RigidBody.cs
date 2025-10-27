@@ -690,7 +690,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
     /// <summary>
     /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is
-    /// reset to zero with the subsequent call to <see cref="World.Step(Real, bool)"/>.
+    /// reset to zero with the following call to <see cref="World.Step(Real, bool)"/>.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>

@@ -29,5 +29,9 @@ public readonly struct ReadOnlyHashSet<T>(HashSet<T> hashset) : IReadOnlyCollect
         return hashset.GetEnumerator();
     }
 
+    public void CopyTo(T[] array) => hashset.CopyTo(array);
+
+    public void CopyTo(T[] array, int arrayIndex) => hashset.CopyTo(array, arrayIndex);
+
     public int Count => hashset.Count;
 }

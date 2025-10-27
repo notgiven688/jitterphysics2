@@ -75,7 +75,7 @@ public sealed partial class World : IDisposable
     public event WorldStep? PostStep;
 
     /// <summary>
-    /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Utilize
+    /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use
     /// the corresponding managed properties where possible to mitigate risk.
     /// </summary>
     public SpanData RawData => new(this);
@@ -217,11 +217,13 @@ public sealed partial class World : IDisposable
     public World() : this(Capacity.Default) { }
 
     /// <summary>
-    /// Creates an instance of the World class. As Jitter utilizes a distinct memory model, it is necessary to specify
+    /// Creates an instance of the World class. As Jitter uses a distinct memory model, it is necessary to specify
     /// the capacity of the world in advance.
     /// </summary>
     public World(Capacity capacity)
     {
+        Logger.Information($"Creating new world with capacity: {capacity}");
+
         memRigidBodies = new PartitionedBuffer<RigidBodyData>(capacity.BodyCount, aligned64: true);
         memContacts = new PartitionedBuffer<ContactData>(capacity.ContactCount);
         memConstraints = new PartitionedBuffer<ConstraintData>(capacity.ConstraintCount);
@@ -233,8 +235,6 @@ public sealed partial class World : IDisposable
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
 
         InitParallelCallbacks();
-
-        Logger.Information($"Created new world with capacity: {capacity}");
     }
 
     /// <summary>

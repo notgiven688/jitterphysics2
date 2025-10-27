@@ -231,15 +231,15 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <param name="angle">The angle of rotation.</param>
     public static JQuaternion CreateFromAxisAngle(in JVector axis, Real angle)
     {
-        Real halfAngle = (Real)angle * (Real)0.5;
+        Real halfAngle = angle * (Real)0.5;
         (Real s, Real c) = MathR.SinCos(halfAngle);
         return new JQuaternion(axis.X * s, axis.Y * s, axis.Z * s, c);
     }
 
     /// <summary>Converts a <b>unit</b> quaternion to axis–angle form.</summary>
     /// <remarks>
-    /// Assumes <paramref name="quaternion"/> is already normalised.
-    /// The returned <paramref name="angle"/> is clamped to the shortest arc [0 , π].
+    /// Assumes <paramref name="quaternion"/> is already normalized.
+    /// The returned <paramref name="angle"/> is clamped to the shortest arc [0, π].
     /// </remarks>
     /// <param name="quaternion">Unit quaternion to decompose.</param>
     /// <param name="axis">Receives the unit rotation axis.</param>

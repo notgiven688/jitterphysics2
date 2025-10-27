@@ -45,7 +45,7 @@ public sealed partial class World
     /// an obstacle within one frame. The <see cref="SpeculativeRelaxationFactor"/> scales the
     /// slowdown, ranging from 0 (where the body stops immediately during this frame) to 1 (where the body and the
     /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
-    /// might be sufficient to trigger another speculative contact in the next frame.
+    /// might be enough to trigger another speculative contact in the next frame.
     /// </summary>
     public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
 
@@ -208,7 +208,7 @@ public sealed partial class World
 
         lock (arbiter)
         {
-            // Do no add contacts while contacts might be resized
+            // Do not add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
 
             for (int e = 0; e < manifold.Count; e++)
@@ -264,7 +264,7 @@ public sealed partial class World
     /// or creates a new one if none exists.
     /// </summary>
     /// <remarks>
-    /// This method ensures there is a unique <see cref="Arbiter"/> for each specific ordered pair of IDs.
+    /// This method ensures there is a unique <see cref="Arbiter"/> for each ordered pair of IDs.
     /// If an arbiter already exists, it is returned via the <paramref name="arbiter"/> out parameter.
     /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
     /// and registered internally. The body arguments are used only when a new arbiter is created.
