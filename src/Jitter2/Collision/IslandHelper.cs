@@ -89,9 +89,9 @@ internal static class IslandHelper
     public static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
         bool needsUpdate = (!islands.IsActive(body1.Island) || !islands.IsActive(body2.Island));
-        bool bothDynamic = !body1.Data.IsStatic && !body2.Data.IsStatic;
+        bool bothNotStatic = body1.Data.MotionType != MotionType.Static && body2.Data.MotionType != MotionType.Static;
 
-        if (bothDynamic)
+        if (bothNotStatic)
         {
             MergeIslands(islands, body1, body2);
             body1.InternalConnections.Add(body2);
@@ -100,15 +100,25 @@ internal static class IslandHelper
 
         if (needsUpdate)
         {
-            if(!body1.Data.IsStatic) body1.Island.NeedsUpdate = true;
-            if(!body2.Data.IsStatic) body2.Island.NeedsUpdate = true;
+            if(body1.Data.MotionType != MotionType.Static) body1.Island.NeedsUpdate = true;
+            if(body2.Data.MotionType != MotionType.Static) body2.Island.NeedsUpdate = true;
         }
     }
 
     public static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
     {
-        body1.InternalConnections.Remove(body2);
-        body2.InternalConnections.Remove(body1);
+        static void RemoveRef(List<RigidBody> list, RigidBody body)
+        {
+            int index = list.IndexOf(body);
+            if (index < 0) return;
+
+            int last = list.Count - 1;
+            list[index] = list[last];
+            list.RemoveAt(last);
+        }
+
+        RemoveRef(body1.InternalConnections, body2);
+        RemoveRef(body2.InternalConnections, body1);
 
         if (body1.InternalIsland == body2.InternalIsland)
         {
@@ -138,7 +148,7 @@ internal static class IslandHelper
         while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
         {
             RigidBody currentNode = leftSearchQueue.Dequeue();
-            if (!currentNode.Data.IsStatic)
+            if (currentNode.Data.MotionType != MotionType.Static)
             {
                 for (int i = 0; i < currentNode.InternalConnections.Count; i++)
                 {
@@ -160,7 +170,7 @@ internal static class IslandHelper
             }
 
             currentNode = rightSearchQueue.Dequeue();
-            if (!currentNode.Data.IsStatic)
+            if (currentNode.Data.MotionType != MotionType.Static)
             {
                 for (int i = 0; i < currentNode.InternalConnections.Count; i++)
                 {

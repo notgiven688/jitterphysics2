@@ -228,7 +228,7 @@ public sealed partial class World : IDisposable
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>(capacity.SmallConstraintCount);
 
         NullBody = CreateRigidBody();
-        NullBody.IsStatic = true;
+        NullBody.MotionType = MotionType.Static;
 
         DynamicTree = new DynamicTree(DefaultDynamicTreeFilter);
 
@@ -353,20 +353,31 @@ public sealed partial class World : IDisposable
         body.InternalSleepTime = 0;
 
         if (body.IsActive) return;
+
         AddToActiveList(body.InternalIsland);
+
+        if (body.MotionType == MotionType.Static)
+        {
+            foreach (var c in body.Constraints)
+            {
+                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+            }
+
+            foreach (var c in body.Contacts)
+            {
+                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+            }
+        }
 
         body.Island.NeedsUpdate = true;
     }
 
-    internal void MakeBodyStatic(RigidBody body)
+    internal void RemoveStaticStaticConstraints(RigidBody body)
     {
-        if (body.IsStatic) return;
-
-        body.Data.IsStatic = true;
-
         foreach (var constraint in body.InternalConstraints)
         {
-            if (constraint.Body1.IsStatic && constraint.Body2.IsStatic)
+            if (constraint.Body1.Data.MotionType != MotionType.Dynamic &&
+                constraint.Body2.Data.MotionType != MotionType.Dynamic)
             {
                 Remove(constraint);
             }
@@ -374,12 +385,29 @@ public sealed partial class World : IDisposable
 
         foreach (var arbiter in body.InternalContacts)
         {
-            if(arbiter.Body1.IsStatic && arbiter.Body2.IsStatic)
+            if (arbiter.Body1.Data.MotionType != MotionType.Dynamic &&
+                arbiter.Body2.Data.MotionType != MotionType.Dynamic)
             {
                 Remove(arbiter);
             }
         }
+    }
 
+    internal void BuildConnectionsFromExistingContacts(RigidBody body)
+    {
+        foreach (var constraint in body.InternalConstraints)
+        {
+            IslandHelper.AddConnection(islands, constraint.Body1, constraint.Body2);
+        }
+
+        foreach (var contact in body.InternalContacts)
+        {
+            IslandHelper.AddConnection(islands, contact.Body1, contact.Body2);
+        }
+    }
+
+    internal void RemoveConnections(RigidBody body)
+    {
         if (body.InternalConnections.Count > 0)
         {
             int count = body.InternalConnections.Count;
@@ -387,7 +415,7 @@ public sealed partial class World : IDisposable
 
             try
             {
-                body.InternalConnections.CopyTo(connections, 0);
+                body.InternalConnections.CopyTo(connections);
 
                 for (int i = 0; i < count; i++)
                 {
@@ -402,11 +430,6 @@ public sealed partial class World : IDisposable
 
         Debug.Assert(body.InternalConnections.Count == 0);
         Debug.Assert(body.InternalIsland.InternalBodies.Count == 1);
-
-        body.Data.Velocity = JVector.Zero;
-        body.Data.AngularVelocity = JVector.Zero;
-
-        DeactivateBodyNextStep(body);
     }
 
     internal void DeactivateBodyNextStep(RigidBody body)
@@ -424,6 +447,8 @@ public sealed partial class World : IDisposable
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
+        if(body1 == body2) throw new ArgumentException("body1 and body2 cannot be the same");
+
         T constraint = new();
 
         if (constraint.IsSmallConstraint)

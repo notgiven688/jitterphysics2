@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -79,10 +80,11 @@ public class CustomCollisionDetection : IBroadPhaseFilter
 
         var collider = shapeA == shape ? shapeB : shapeA;
 
-        if (collider is not RigidBodyShape rbs || rbs.RigidBody.Data.IsStaticOrInactive) return false;
+        if (collider is not RigidBodyShape rbs || rbs.RigidBody.MotionType != MotionType.Dynamic
+                                               || !rbs.RigidBody.IsActive) return false;
 
         candidates ??= new Stack<uint>();
-        CollisionTriangle ts = new CollisionTriangle();
+        CollisionTriangle ts = new();
 
         octree.Query(candidates, collider.WorldBoundingBox);
 

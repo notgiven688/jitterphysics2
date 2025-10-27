@@ -87,7 +87,9 @@ public sealed partial class World
         Debug.Assert(sB.RigidBody != null);
 
         if (!sA.RigidBody.Data.IsActive && !sB.RigidBody.Data.IsActive) return;
-        if (sA.RigidBody.Data.IsStatic && sB.RigidBody.Data.IsStatic) return;
+
+        if ((sA.RigidBody.Data.MotionType != MotionType.Dynamic) &&
+            (sB.RigidBody.Data.MotionType != MotionType.Dynamic)) return;
 
         ref RigidBodyData b1 = ref sA.RigidBody.Data;
         ref RigidBodyData b2 = ref sB.RigidBody.Data;

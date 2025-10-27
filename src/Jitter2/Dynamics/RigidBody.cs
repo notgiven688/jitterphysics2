@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.Collision;
@@ -16,6 +17,29 @@ using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics;
+
+/// <summary>
+/// Specifies how a rigid body participates in the simulation.
+/// </summary>
+public enum MotionType
+{
+    /// <summary>
+    /// Fully simulated; responds to forces, impulses, contacts and constraints.
+    /// </summary>
+    Dynamic = 0,
+
+    /// <summary>
+    /// Treated as having infinite mass in collisions and constraint solving. May have a non-zero velocity.
+    /// Takes part in collision island building.
+    /// </summary>
+    Kinematic = 1,
+
+    /// <summary>
+    /// Immovable (zero velocity), but its position may be changed directly by user code.
+    /// Treated as having infinite mass in collisions and constraint solving.
+    /// </summary>
+    Static = 2
+}
 
 [StructLayout(LayoutKind.Explicit, Size = Precision.RigidBodyDataSize)]
 public struct RigidBodyData
@@ -56,28 +80,6 @@ public struct RigidBodyData
     public bool IsActive
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => (Flags & 1) != 0;
-        set
-        {
-            if (value) Flags |= 1;
-            else Flags &= ~1;
-        }
-    }
-
-    public bool IsStatic
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => (Flags & 2) != 0;
-        set
-        {
-            if (value) Flags |= 2;
-            else Flags &= ~2;
-        }
-    }
-
-    public bool EnableGyroscopicForces
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         readonly get => (Flags & 4) != 0;
         set
         {
@@ -86,7 +88,27 @@ public struct RigidBodyData
         }
     }
 
-    public readonly bool IsStaticOrInactive => !IsActive || IsStatic;
+    public bool EnableGyroscopicForces
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => (Flags & 8) != 0;
+        set
+        {
+            if (value) Flags |= 8;
+            else Flags &= ~8;
+        }
+    }
+
+    [Obsolete($"Use {nameof(MotionType)} directly.")]
+    public bool IsStaticOrInactive => MotionType != MotionType.Dynamic || !IsActive;
+
+    public MotionType MotionType
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => (MotionType)(Flags & 0b11);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set => Flags = (Flags & ~0b11) | (int)value;
+    }
 }
 
 /// <summary>
@@ -379,7 +401,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             InternalIsland.MarkedAsActive = true;
         }
 
-        if (!rigidBody.IsStaticOrInactive)
+        if (rigidBody.MotionType == MotionType.Dynamic)
         {
             rigidBody.AngularVelocity *= angularDampingMultiplier;
             rigidBody.Velocity *= linearDampingMultiplier;
@@ -404,11 +426,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
     }
 
+    /// <summary>Gets or sets the linear velocity of the rigid body.</summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item><description>Setting a zero velocity has no effect.</description></item>
+    /// <item><description>If the body is inactive and the velocity is non-zero, it will be scheduled for activation in the next simulation step.</description></item>
+    /// <item><description>This property has no effect on static bodies.</description></item>
+    /// </list>
+    /// </remarks>
     public JVector Velocity
     {
         get => handle.Data.Velocity;
         set
         {
+            Debug.Assert(handle.Data.MotionType != MotionType.Static);
+            if (handle.Data.MotionType == MotionType.Static) return;
+
             if (!MathHelper.CloseToZero(value))
             {
                 World.ActivateBodyNextStep(this);
@@ -418,11 +451,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
     }
 
+    /// <summary>Gets or sets the angular velocity of the rigid body.</summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item><description>Setting a zero angular velocity has no effect.</description></item>
+    /// <item><description>If the body is inactive and the angular velocity is non-zero, it will be scheduled for activation in the next simulation step.</description></item>
+    /// <item><description>This property has no effect on static bodies.</description></item>
+    /// </list>
+    /// </remarks>
     public JVector AngularVelocity
     {
         get => handle.Data.AngularVelocity;
         set
         {
+            Debug.Assert(handle.Data.MotionType != MotionType.Static);
+            if (handle.Data.MotionType == MotionType.Static) return;
+
             if (!MathHelper.CloseToZero(value))
             {
                 World.ActivateBodyNextStep(this);
@@ -443,36 +487,81 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
     private void UpdateWorldInertia()
     {
-        if (Data.IsStatic)
-        {
-            Data.InverseInertiaWorld = JMatrix.Zero;
-            Data.InverseMass = (Real)0.0;
-        }
-        else
+        if (Data.MotionType == MotionType.Dynamic)
         {
             var bodyOrientation = JMatrix.CreateFromQuaternion(Data.Orientation);
             JMatrix.Multiply(bodyOrientation, inverseInertia, out Data.InverseInertiaWorld);
             JMatrix.MultiplyTransposed(Data.InverseInertiaWorld, bodyOrientation, out Data.InverseInertiaWorld);
             Data.InverseMass = inverseMass;
         }
+        else
+        {
+            Data.InverseInertiaWorld = JMatrix.Zero;
+            Data.InverseMass = (Real)0.0;
+            Data.InverseMass = (Real)0.0;
+        }
     }
 
-    public bool IsStatic
+    /// <summary>
+    /// Specifies how the rigid body participates in the simulation.
+    /// </summary>
+    public MotionType MotionType
     {
+        get => Data.MotionType;
         set
         {
-            if (Data.IsStatic == value) return;
+            if (Data.MotionType == value) return;
 
-            if (value) World.MakeBodyStatic(this);
-            else
+            switch (value)
             {
-                Data.IsStatic = false;
-                World.ActivateBodyNextStep(this);
-            }
+                case MotionType.Static:
+                    // Switch to static
+                    World.RemoveConnections(this);
+                    Data.MotionType = MotionType.Static;
+                    World.RemoveStaticStaticConstraints(this);
+                    World.DeactivateBodyNextStep(this);
+                    Data.Velocity = JVector.Zero;
+                    Data.AngularVelocity = JVector.Zero;
+                    UpdateWorldInertia();
+                    break;
+                case MotionType.Kinematic:
+                {
+                    // Switch to kinematic
+                    if (Data.MotionType == MotionType.Static)
+                    {
+                        World.BuildConnectionsFromExistingContacts(this);
+                    }
 
-            UpdateWorldInertia();
+                    Data.MotionType = MotionType.Kinematic;
+                    World.RemoveStaticStaticConstraints(this);
+                    World.ActivateBodyNextStep(this);
+                    UpdateWorldInertia();
+                    break;
+                }
+                case MotionType.Dynamic:
+                {
+                    // Switch to dynamic
+                    if (Data.MotionType == MotionType.Static)
+                    {
+                        Data.MotionType = MotionType.Dynamic;
+                        World.BuildConnectionsFromExistingContacts(this);
+                    }
+
+                    Data.MotionType = MotionType.Dynamic;
+                    World.ActivateBodyNextStep(this);
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            }
         }
-        get => Data.IsStatic;
+    }
+
+    [Obsolete($"Use the {nameof(MotionType)} property instead.")]
+    public bool IsStatic
+    {
+        set => MotionType = value ? MotionType.Static : MotionType.Dynamic;
+        get => MotionType == MotionType.Static;
     }
 
     /// <summary>
@@ -591,7 +680,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </param>
     public void AddForce(in JVector force, bool wakeup = true)
     {
-        if (IsStatic || MathHelper.CloseToZero(force)) return;
+        if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(force)) return;
 
         if(wakeup) SetActivationState(true);
         else if (!IsActive) return;
@@ -613,7 +702,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     [ReferenceFrame(ReferenceFrame.World)]
     public void AddForce(in JVector force, in JVector position, bool wakeup = true)
     {
-        if (IsStatic || MathHelper.CloseToZero(force)) return;
+        if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(force)) return;
 
         if(wakeup) SetActivationState(true);
         else if (!IsActive) return;

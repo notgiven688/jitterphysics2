@@ -1,5 +1,6 @@
 using System;
 using Jitter2;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -52,7 +53,7 @@ public class Demo21 : IDemo
         }
 
         var body = world.CreateRigidBody();
-        body.IsStatic = true;
+        body.MotionType = MotionType.Static;
 
         foreach (var voxel in voxelGrid.Voxels)
         {

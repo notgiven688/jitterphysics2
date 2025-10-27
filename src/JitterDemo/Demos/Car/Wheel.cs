@@ -397,7 +397,7 @@ public class Wheel
         RenderWindow.Instance.DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(groundPos), 0.2f);
 
         // add force to the world
-        if (!worldBody.IsStatic)
+        if (worldBody.MotionType == MotionType.Dynamic)
         {
             const float maxOtherBodyAcc = 500.0f;
             float maxOtherBodyForce = maxOtherBodyAcc * worldBody.Mass;

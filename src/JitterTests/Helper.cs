@@ -36,7 +36,7 @@ public static class Helper
 
                 orientation *= fullRotationStep;
 
-                if (e == 0) last.IsStatic = true;
+                if (e == 0) last.MotionType = MotionType.Static;
             }
         }
 
@@ -54,7 +54,7 @@ public static class Helper
             last.AddShape(new BoxShape(1));
             last.Damping = ((Real)0.998, (Real)0.998);
 
-            if (i == 0) last.IsStatic = true;
+            if (i == 0) last.MotionType = MotionType.Static;
         }
 
         return last;
@@ -72,7 +72,7 @@ public static class Helper
                 var shape = new BoxShape(1);
                 last.AddShape(shape);
 
-                if (i == 0) last.IsStatic = true;
+                if (i == 0) last.MotionType = MotionType.Static;
             }
         }
 
@@ -91,7 +91,7 @@ public static class Helper
                 var shape = new CylinderShape((Real)1.0, (Real)0.5);
                 last.AddShape(shape);
 
-                if (i == 0) last.IsStatic = true;
+                if (i == 0) last.MotionType = MotionType.Static;
             }
         }
 

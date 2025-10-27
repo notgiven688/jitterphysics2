@@ -71,7 +71,7 @@ public class Demo05 : IDemo
         level = world.CreateRigidBody();
         level.AddShape(CreateShapes(), false);
         level.Tag = new RigidBodyTag(doNotDraw:true);
-        level.IsStatic = true;
+        level.MotionType = MotionType.Static;
 
         Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
 

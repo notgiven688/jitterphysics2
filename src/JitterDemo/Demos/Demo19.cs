@@ -52,6 +52,6 @@ public class Demo19 : IDemo
         box = world.CreateRigidBody();
         box.AddShape(new BoxShape(1));
         box.Position = new JVector(0, 0.5f, -6);
-        box.IsStatic = true;
+        box.MotionType = MotionType.Static;
     }
 }

@@ -299,7 +299,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the product of the conjugate of the first quaternion and the second quaternion.</param>
+    /// <param name="result">When the method completes, contains the product of the conjugate of the first quaternion
+    /// and the second quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
