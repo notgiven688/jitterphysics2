@@ -431,8 +431,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <list type="bullet">
     /// <item><description>Setting a zero velocity has no effect.</description></item>
     /// <item><description>If the body is inactive and the velocity is non-zero, it will be scheduled for activation in the next simulation step.</description></item>
-    /// <item><description>This property has no effect on static bodies.</description></item>
     /// </list>
+    /// <exception cref="InvalidOperationException">The setter will throw an exception if used with static bodies.</exception>
     /// </remarks>
     public JVector Velocity
     {
@@ -440,7 +440,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         set
         {
             Debug.Assert(handle.Data.MotionType != MotionType.Static);
-            if (handle.Data.MotionType == MotionType.Static) return;
+
+            if (handle.Data.MotionType == MotionType.Static)
+            {
+                // Throw an exception here, since we change the behaviour of the engine with version 2.7.4.
+                // Maybe return to assert-only later.
+                throw new InvalidOperationException(
+                    $"Can not set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
+            }
 
             if (!MathHelper.CloseToZero(value))
             {
@@ -456,8 +463,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <list type="bullet">
     /// <item><description>Setting a zero angular velocity has no effect.</description></item>
     /// <item><description>If the body is inactive and the angular velocity is non-zero, it will be scheduled for activation in the next simulation step.</description></item>
-    /// <item><description>This property has no effect on static bodies.</description></item>
     /// </list>
+    /// <exception cref="InvalidOperationException">The setter will throw an exception if used with static bodies.</exception>
     /// </remarks>
     public JVector AngularVelocity
     {
@@ -465,7 +472,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         set
         {
             Debug.Assert(handle.Data.MotionType != MotionType.Static);
-            if (handle.Data.MotionType == MotionType.Static) return;
+
+            if (handle.Data.MotionType == MotionType.Static)
+            {
+                // Throw an exception here, since we change the behaviour of the engine with version 2.7.4.
+                // Maybe return to assert-only later.
+                throw new InvalidOperationException(
+                    $"Can not set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
+            }
 
             if (!MathHelper.CloseToZero(value))
             {
