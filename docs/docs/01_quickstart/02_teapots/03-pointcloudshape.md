@@ -141,7 +141,7 @@ world.SubstepCount = 4;
 RigidBody planeBody = world.CreateRigidBody();
 planeBody.AddShape(new BoxShape(20));
 planeBody.Position = new JVector(0, -10, 0);
-planeBody.IsStatic = true;
+planeBody.MotionType = MotionType.Static;
 
 // add numberOfTeapots teapots
 for(int i = 0; i < numberOfTeapots; i++)
