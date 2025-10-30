@@ -512,7 +512,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         {
             Data.InverseInertiaWorld = JMatrix.Zero;
             Data.InverseMass = (Real)0.0;
-            Data.InverseMass = (Real)0.0;
         }
     }
 

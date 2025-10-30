@@ -447,7 +447,8 @@ public sealed partial class World : IDisposable
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
-        if(body1 == body2) throw new ArgumentException("body1 and body2 cannot be the same");
+        if (ReferenceEquals(body1, body2))
+            throw new ArgumentException($"{nameof(body1)} and {nameof(body2)} must be different.");
 
         T constraint = new();
 

@@ -10,6 +10,32 @@ public class MotionTypeTests
         SmallConstraintCount = 32
     };
 
+    [TestCase]
+    public void CheckInternalMass()
+    {
+        var world = new World(smallCapacity);
+
+        var sphere = world.CreateRigidBody();
+        sphere.AddShape(new SphereShape(1));
+
+        var sphereMass = sphere.Mass;
+
+        sphere.MotionType = MotionType.Kinematic;
+
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(0));
+        Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
+
+        sphere.MotionType = MotionType.Dynamic;
+
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(1 / sphereMass));
+        Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
+
+        sphere.MotionType = MotionType.Static;
+
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(0));
+        Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
+    }
+
     private void PrepareTwoStack(World world, out RigidBody platform, out List<RigidBody> boxes)
     {
         // Create a static body
