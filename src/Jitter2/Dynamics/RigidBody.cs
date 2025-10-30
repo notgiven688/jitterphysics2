@@ -543,6 +543,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     // Switch to kinematic
                     if (Data.MotionType == MotionType.Static)
                     {
+                        Data.MotionType = MotionType.Kinematic;
                         World.BuildConnectionsFromExistingContacts(this);
                     }
 
@@ -563,6 +564,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
                     Data.MotionType = MotionType.Dynamic;
                     World.ActivateBodyNextStep(this);
+                    UpdateWorldInertia();
                     break;
                 }
                 default:
