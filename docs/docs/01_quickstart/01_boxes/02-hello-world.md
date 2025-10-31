@@ -63,7 +63,7 @@ world.SubstepCount = 4;
 RigidBody planeBody = world.CreateRigidBody();
 planeBody.AddShape(new BoxShape(10));
 planeBody.Position = new JVector(0, -5, 0);
-planeBody.IsStatic = true;
+planeBody.MotionType = MotionType.Static;
 
 // add NumberOfBoxes cubes
 for(int i = 0; i < NumberOfBoxes; i++)

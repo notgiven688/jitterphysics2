@@ -158,7 +158,8 @@ public class HeightmapDetection : IBroadPhaseFilter
 
         var collider = shapeA == shape ? shapeB : shapeA;
 
-        if (collider is not RigidBodyShape rbs || rbs.RigidBody.Data.IsStaticOrInactive) return false;
+        if (collider is not RigidBodyShape rbs || rbs.RigidBody.MotionType != MotionType.Dynamic
+                                               || !rbs.RigidBody.IsActive) return false;
 
         ref RigidBodyData body = ref rbs.RigidBody!.Data;
 

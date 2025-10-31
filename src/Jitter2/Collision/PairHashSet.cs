@@ -176,7 +176,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     {
         int hash = pair.GetHash();
 
-        // Fast path: This is a *huge* optimization for the case of frequent additions
+        // Fast path: This is a *huge* optimization in case of frequent additions
         // of already existing entries. Entirely bypassing any locks or synchronization.
         int fpHashIndex = FindSlot(Slots, hash, pair.ID);
         if (Slots[fpHashIndex].ID != 0) return false;

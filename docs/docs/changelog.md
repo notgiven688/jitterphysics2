@@ -4,16 +4,23 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.4 (2025-10-29)
+
+- Add `MotionType` property to `RigidBody` instances. Bodies might me `Dynamic`, `Static` or `Kinematic`.
+Static bodies with non-zero velocity are no longer supported, kinematic bodies must be used instead.
+- The contact graph information is used to optimize the memory layout for contacts (`ReorderContacts` step). This makes the solver more cache friendly.
+- Reduced overhead of `CheckDeactivation` step in the engine.
+
 ### Jitter 2.7.3 (2025-10-19)
 
 - Improved multi-threading performance.
 
 ### Jitter 2.7.2 (2025-09-21)
 
-- Reduce GC in `DynamicTree.Optimize`.
+- Reduced GC in `DynamicTree.Optimize`.
 - Default to LocalRayCast if body is not set for `RigidBodyShape`.
-- Add wakeup parameter to `AddForce` overloads for finer activation state control.
-- Add generic `ICloneableShape<T>` interface for type-safe shape cloning.
+- Added wakeup parameter to `AddForce` overloads for finer activation state control.
+- Added generic `ICloneableShape<T>` interface for type-safe shape cloning.
 
 ### Jitter 2.7.1 (2025-06-28)
 

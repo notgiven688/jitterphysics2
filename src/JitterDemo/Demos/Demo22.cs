@@ -43,11 +43,11 @@ public class Demo22 : IDemo
 
         var leftPlank = world.CreateRigidBody();
         leftPlank.AddShape(new BoxShape(20,0.1f,6));
-        leftPlank.IsStatic = true;
+        leftPlank.MotionType = MotionType.Static;
 
         var rightPlank = world.CreateRigidBody();
         rightPlank.AddShape(new BoxShape(20,0.1f,6));
-        rightPlank.IsStatic = true;
+        rightPlank.MotionType = MotionType.Static;
 
         leftPlank.Position = new JVector(-21, 13, 0);
         rightPlank.Position = new JVector(21, 16, 0);

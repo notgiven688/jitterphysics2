@@ -39,7 +39,7 @@ public class Demo23 : IDemo
         rotatingBox.AddShape([bs0, bs1, bs2, bs3, bs4, bs5]);
         rotatingBox.Tag = new RigidBodyTag(true);
 
-        rotatingBox.IsStatic = true;
+        rotatingBox.MotionType = MotionType.Kinematic;
 
         rotatingBox.DeactivationTime = TimeSpan.MaxValue;
         rotatingBox.SetActivationState(true);

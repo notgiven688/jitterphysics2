@@ -93,7 +93,7 @@ public partial class Playground : RenderWindow
             RigidBody body = World.CreateRigidBody();
             floorShape = new BoxShape(200, 200, 200);
             body.Position = new JVector(0, -100, 0f);
-            body.IsStatic = true;
+            body.MotionType = MotionType.Static;
             body.AddShape(floorShape);
         }
 

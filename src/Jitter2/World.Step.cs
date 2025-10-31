@@ -84,7 +84,7 @@ public sealed partial class World
     /// Performs a single simulation step.
     /// </summary>
     /// <param name="dt">The duration of time to simulate. This should remain fixed and not exceed 1/60 of a second.</param>
-    /// <param name="multiThread">Indicates whether multithreading should be utilized. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
+    /// <param name="multiThread">Indicates whether multithreading should be used. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
     public void Step(Real dt, bool multiThread = true)
     {
         Tracer.ProfileBegin(TraceName.Step);
@@ -382,7 +382,7 @@ public sealed partial class World
 
             if (constraint.PrepareForIteration == null) continue;
 
-            Debug.Assert(!b1.IsStatic || !b2.IsStatic);
+            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic);
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -503,8 +503,8 @@ public sealed partial class World
         }
     }
 
-    private int sortCounter = 0;
     private JHandle<RigidBodyData> lastVisited = JHandle<RigidBodyData>.Zero;
+    private int sortCounter;
 
     /// <summary>
     /// This method gradually improves the memory layout of <see cref="memContacts"/>, moving connected contacts
@@ -587,7 +587,7 @@ public sealed partial class World
     private void AssertNullBody()
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
-        Debug.Assert(rigidBody.IsStatic);
+        Debug.Assert(rigidBody.MotionType == MotionType.Static);
         Debug.Assert(rigidBody.InverseMass < Real.Epsilon);
         Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
     }
@@ -597,7 +597,7 @@ public sealed partial class World
 #if DEBUG
         foreach (var body in bodies)
         {
-            if (body.IsStatic)
+            if (body.Data.MotionType != MotionType.Dynamic)
             {
                 Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
                 Debug.Assert(body.Data.InverseMass < Real.Epsilon);
@@ -678,7 +678,7 @@ public sealed partial class World
         deferredArbiters.Clear();
     }
 
-        /// <summary>
+    /// <summary>
     /// Attempts to lock two bodies. Briefly waits on contention, then backs off if unsuccessful.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -688,7 +688,7 @@ public sealed partial class World
 
         if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
         {
-            if (!b1.IsStatic)
+            if (b1.MotionType == MotionType.Dynamic)
             {
                 if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
                 {
@@ -700,7 +700,7 @@ public sealed partial class World
                 }
             }
 
-            if (!b2.IsStatic)
+            if (b2.MotionType == MotionType.Dynamic)
             {
                 if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
                 {
@@ -716,7 +716,7 @@ public sealed partial class World
         }
         else
         {
-            if (!b2.IsStatic)
+            if (b2.MotionType == MotionType.Dynamic)
             {
                 if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
                 {
@@ -728,7 +728,7 @@ public sealed partial class World
                 }
             }
 
-            if (!b1.IsStatic)
+            if (b1.MotionType == MotionType.Dynamic)
             {
                 if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
                 {
@@ -754,13 +754,13 @@ public sealed partial class World
     {
         if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
         {
-            if (!b1.IsStatic)
+            if (b1.MotionType == MotionType.Dynamic)
                 while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
                 {
                     Thread.SpinWait(10);
                 }
 
-            if (!b2.IsStatic)
+            if (b2.MotionType == MotionType.Dynamic)
                 while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
                 {
                     Thread.SpinWait(10);
@@ -768,13 +768,13 @@ public sealed partial class World
         }
         else
         {
-            if (!b2.IsStatic)
+            if (b2.MotionType == MotionType.Dynamic)
                 while (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
                 {
                     Thread.SpinWait(10);
                 }
 
-            if (!b1.IsStatic)
+            if (b1.MotionType == MotionType.Dynamic)
                 while (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
                 {
                     Thread.SpinWait(10);
@@ -790,13 +790,13 @@ public sealed partial class World
     {
         if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
         {
-            if (!b2.IsStatic) Interlocked.Decrement(ref b2._lockFlag);
-            if (!b1.IsStatic) Interlocked.Decrement(ref b1._lockFlag);
+            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
+            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
         }
         else
         {
-            if (!b1.IsStatic) Interlocked.Decrement(ref b1._lockFlag);
-            if (!b2.IsStatic) Interlocked.Decrement(ref b2._lockFlag);
+            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
+            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
         }
     }
 
@@ -807,7 +807,7 @@ public sealed partial class World
         for (int i = 0; i < span.Length; i++)
         {
             ref RigidBodyData rigidBody = ref span[i];
-            if (rigidBody.IsStaticOrInactive) continue;
+            if (rigidBody.MotionType != MotionType.Dynamic) continue;
 
             rigidBody.AngularVelocity += rigidBody.DeltaAngularVelocity;
             rigidBody.Velocity += rigidBody.DeltaVelocity;
@@ -815,7 +815,7 @@ public sealed partial class World
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static JVector SolveGyroscopic(in JQuaternion q, in JMatrix inertiaWorld, in JVector omega, Real dt)
+    private static JVector SolveGyroscopic(in JMatrix inertiaWorld, in JVector omega, Real dt)
     {
         // The equation which we solve for ω_{n+1} in this method with a single Newton iteration:
         // I_{n+1}(ω_{n+1} - ω_{n}) + h ω_{n+1} x (I_{n+1}ω_{n+1})=0
@@ -825,9 +825,9 @@ public sealed partial class World
         // tensor I_b is constant, then transforms the updated angular velocity ω′
         // back to world space with the *previous* orientation R_n.
 
-        // In this implementation we keep only the world-space inverse inertia, so
+        // In this implementation, we keep only the world-space inverse inertia, so
         // we solve the same implicit equation directly in **world space** using
-        //   I_w = R_n I_b R_nᵀ  (assembled from the orientation at t_n).
+        //   I_w = R_n I_b R_nᵀ (assembled from the orientation at t_n).
         //
         // The two approaches are algebraically equivalent:           -
         //   • Catto:  keep I_b fixed, rotate ω′ with R_n             |
@@ -854,8 +854,8 @@ public sealed partial class World
         {
             ref RigidBodyData rigidBody = ref span[i];
 
-            // Static bodies may also have a velocity which gets integrated.
-            // if (rigidBody.IsStatic) continue;
+            // only dynamic and kinematic objects have a velocity
+            if(rigidBody.MotionType == MotionType.Static) continue;
 
             JVector linearVelocity = rigidBody.Velocity;
             JVector angularVelocity = rigidBody.AngularVelocity;
@@ -867,11 +867,11 @@ public sealed partial class World
 
             if (!rigidBody.EnableGyroscopicForces) continue;
 
-            // Note: We do not perform a symplectic Euler update here (i.e. we calculate the new orientation
+            // Note: We do not perform a symplectic Euler update here (i.e., we calculate the new orientation
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
             JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
-            rigidBody.AngularVelocity = SolveGyroscopic(rigidBody.Orientation, inertiaWorld, angularVelocity, substepDt);
+            rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, substepDt);
         }
     }
 
@@ -1008,7 +1008,10 @@ public sealed partial class World
                     memRigidBodies.MoveToInactive(body.Handle);
                     bodies.MoveToInactive(body);
 
-                    if (!body.Data.IsStatic)
+                    // Static bodies have contacts and constraints, but they do not form
+                    // collision islands. Do not deactivate contacts or constraint
+                    // of static bodies, as the island of the static body goes to sleep.
+                    if (body.MotionType != MotionType.Static)
                     {
                         foreach (var c in body.InternalContacts)
                         {
@@ -1035,7 +1038,8 @@ public sealed partial class World
                 }
                 else
                 {
-                    if (rigidBody.IsStatic) continue;
+                    // Don't activate static bodies at all.
+                    if (rigidBody.MotionType == MotionType.Static) continue;
 
                     rigidBody.IsActive = true;
 

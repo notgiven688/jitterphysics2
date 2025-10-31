@@ -188,7 +188,7 @@ public class Player
 
             Body.Velocity = new JVector(Body.Velocity.X, newYVel, Body.Velocity.Z);
 
-            if (floorBody != null && floorBody.IsStatic)
+            if (floorBody != null && floorBody.MotionType == MotionType.Dynamic)
             {
                 float force = Body.Mass * deltaVel * 100.0f;
                 floorBody.SetActivationState(true);

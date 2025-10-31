@@ -1,5 +1,6 @@
 using Jitter2;
 using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 
@@ -21,7 +22,7 @@ public class Demo08 : IDemo
         var body = world.CreateRigidBody();
         body.AddShape(new BoxShape(new JVector(5, 0.5f, 0.5f)));
         body.Position = new JVector(0, 1, 0);
-        body.IsStatic = true;
+        body.MotionType = MotionType.Static;
 
         var body2 = world.CreateRigidBody();
         body2.AddShape(new CylinderShape(0.5f, 3.0f));

@@ -164,8 +164,8 @@ public struct ContactData
 
         Debug.Assert(body1.World == body2.World);
 
-        Mode = (!body1.IsStatic) ? SolveMode.FullBody1 : 0;
-        Mode |= (!body2.IsStatic) ? SolveMode.FullBody2 : 0;
+        Mode = (body1.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody1 : 0;
+        Mode |= (body2.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody2 : 0;
 
         UsageMask = 0;
     }

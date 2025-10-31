@@ -459,7 +459,7 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     }
 
     /// <summary>
-    /// Calculates the cross product.
+    /// Calculates the cross-product.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector operator %(in JVector vector1, in JVector vector2)

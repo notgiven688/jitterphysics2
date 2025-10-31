@@ -84,7 +84,7 @@ public partial class Playground : RenderWindow
                 }
             }
 
-            if (grepBody == null || grepBody.IsStatic) return;
+            if (grepBody == null || grepBody.MotionType != MotionType.Dynamic) return;
             grepping = true;
 
             hitWheelPosition = (float)Mouse.ScrollWheel.Y;

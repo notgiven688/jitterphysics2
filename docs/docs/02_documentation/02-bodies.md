@@ -122,32 +122,17 @@ Calling e.g. `body.SetActivationState(false)` on a falling body with a velocity 
 
 ## Static bodies
 
-Static bodies have infinite mass and therefore are not affected by collisions or constraints.
+Static bodies (`body.BodyType == BodyType.Static`) have infinite mass and therefore are not affected by collisions or constraints.
 They also do not join islands.
 Static bodies do not generate collisions with other static or inactive bodies.
 Because of this, the position of static bodies should not be altered while in contact with other bodies.
 
 ## Kinematic bodies
 
-There is no explicit concept of kinematic bodies in Jitter.
-In game physics kinematic bodies are bodies which can have a velocity and therefore change their position.
-They act similiar to static bodies during collisions - their velocity is not changed when colliding with a regular body.
-Their velocity if often set directly using `body.Velocity`.
-In Jitter kinematic bodies are just regular rigid bodies with infinite (or very high) mass.
-This can be achieved using `body.SetMassInertia` like in this example:
-
-```cs
-body.SetMassInertia(JMatrix.Zero, 1e-3f, setAsInverse: true);
-```
-
-Additionaly, damping can be disabled:
-
-```cs
-body.Damping = (linear: 0.0f, angular: 0.0f);
-```
+In Jitter kinematic bodies (`body.BodyType == BodyType.Kinematic`) are bodies which can have a velocity and therefore change their position.
+They act similar to static bodies during collisions - their velocity is not changed when colliding with a regular body. They do take part in collision islands.
 
 :::danger Kinematic bodies
-Setting the mass of a rigid body to infinity makes a body unstoppable.
 Having an unstoppable object colliding with a static (immovable object) or another unstoppable object might crash the solver.
 It must be ensured that no contact points are generated in such cases.
 :::
