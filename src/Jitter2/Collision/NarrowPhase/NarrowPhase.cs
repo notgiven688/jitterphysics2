@@ -89,6 +89,9 @@ public static class NarrowPhase
             where TA : ISupportMappable where TB : ISupportMappable
         {
             /*
+            This method is adapted from XenoCollide.
+            Modified from the original version.
+
             XenoCollide is available under the zlib license:
 
             XenoCollide Collision Detection and Physics Library

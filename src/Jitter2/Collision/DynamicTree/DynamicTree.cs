@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 using Jitter2.Parallelization;
@@ -89,7 +90,7 @@ public partial class DynamicTree
     private readonly Action<Parallel.Batch> scanForMovedProxies;
     private readonly Action<Parallel.Batch> scanForOverlaps;
 
-    private readonly Random random = new();
+    private readonly Random random = new(1234);
     private readonly Func<double> rndFunc;
 
     /// <summary>
@@ -682,7 +683,9 @@ public partial class DynamicTree
     private void InternalAddRemoveProxy(IDynamicTreeProxy proxy)
     {
         JBoundingBox box = proxy.WorldBoundingBox;
-        
+
+        // We store the parent of the node which gets removed. This
+        // information is later used to reinsert the node *keeping updates local*.
         int parent = RemoveLeaf(proxy.NodePtr);
 
         int index = proxy.NodePtr;
@@ -696,6 +699,9 @@ public partial class DynamicTree
 
         Nodes[index].ExpandedBox = new TreeBox(box);
 
+        // InsertLeaf takes 'where' as a hint, i.e. it still walks up the tree until
+        // the new node is fully contained. Note: The insertion node could also be found when searching
+        // from the root, since the search always descents into child nodes fully containing the new node.
         InsertLeaf(index, parent);
     }
 
@@ -766,6 +772,259 @@ public partial class DynamicTree
         return grandParent;
     }
 
+    private readonly PriorityQueue<int, double> priorityQueue = new();
+
+    /// <summary>
+    /// Finds the exact best insertion point for <paramref name="node"/> in the BVH,
+    /// starting from <paramref name="where"/>, using a priority-queue driven
+    /// Surface Area Heuristic (SAH) search. This method guarantees the same
+    /// result as a brute-force search, unlike the faster greedy version <see cref="FindBestGreedy"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private int FindBest(int node, int where)
+    {
+        ref Node nb = ref Nodes[node];
+
+        double rootMergedArea = TreeBox.MergedSurface(Nodes[where].ExpandedBox, nb.ExpandedBox);
+
+        double bestCost = double.MaxValue;
+        int currentBest = where;
+
+        // value = node index, priority = full cost at that node
+        priorityQueue.Enqueue(where, rootMergedArea);
+
+        while (priorityQueue.TryDequeue(out int currentIndex, out double cost))
+        {
+            ref Node cn = ref Nodes[currentIndex];
+
+            // Reconstruct inherited cost *before* this node:
+            // cost = inhCostBefore + SA(merge(node, nb))
+            double mergedHere = TreeBox.MergedSurface(cn.ExpandedBox, nb.ExpandedBox);
+            double inhCostBeforeNode = cost - mergedHere;
+
+            // Prune: even the lower bound is already worse than best
+            if (inhCostBeforeNode > bestCost)
+                continue;
+
+            // This node is a candidate insertion position
+            if (cost < bestCost)
+            {
+                bestCost = cost;
+                currentBest = currentIndex;
+            }
+
+            if (cn.IsLeaf) continue;
+
+            double oldSurface = cn.ExpandedBox.GetSurfaceArea();
+
+            // Inherited cost *after* this node
+            double inhCostAfterNode = cost - oldSurface;
+
+            // Expand to children
+            double leftMerged  = TreeBox.MergedSurface(Nodes[cn.Left].ExpandedBox, nb.ExpandedBox);
+            double rightMerged = TreeBox.MergedSurface(Nodes[cn.Right].ExpandedBox, nb.ExpandedBox);
+
+            double leftCost  = inhCostAfterNode + leftMerged;
+            double rightCost = inhCostAfterNode + rightMerged;
+
+            // Store only index + full cost; inhCost will be reconstructed on pop
+            priorityQueue.Enqueue(cn.Left,  leftCost);
+            priorityQueue.Enqueue(cn.Right, rightCost);
+        }
+
+        return currentBest;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private int FindBestGreedy(int node, int where)
+    {
+        /*
+        This method is adapted from Box2D.
+        https://github.com/erincatto/box2d/blob/3a4f0da8374af61293a03021c9a0b3ebcfe67948/src/dynamic_tree.c#L187
+        Modified from the original version.
+
+        Box2D is available under the MIT license:
+
+        MIT License
+
+        Copyright (c) 2022 Erin Catto
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        */
+
+        ref TreeBox nodeTreeBox = ref Nodes[node].ExpandedBox;
+
+        double areaD = Nodes[node].ExpandedBox.GetSurfaceArea();
+        double areaBase = Nodes[where].ExpandedBox.GetSurfaceArea();
+        double directCost = TreeBox.MergedSurface(Nodes[where].ExpandedBox, nodeTreeBox);
+        double inheritedCost = 0.0d;
+
+        int bestSibling = where;
+        double bestCost = directCost;
+
+        while (!Nodes[where].IsLeaf)
+        {
+            int left = Nodes[where].Left;
+            int right = Nodes[where].Right;
+
+            double cost = directCost + inheritedCost;
+
+            if (cost < bestCost)
+            {
+                bestSibling = where;
+                bestCost = cost;
+            }
+
+            inheritedCost += directCost - areaBase;
+
+            //
+            // Cost of descending into left child
+            //
+            double lowerCostLeft = double.MaxValue;
+            double directCostLeft = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
+            double areaLeft = 0.0d;
+
+            if (Nodes[left].IsLeaf)
+            {
+                // Left child is a leaf
+                // Cost of creating new node and increasing area of node P
+                double costLeft = directCostLeft + inheritedCost;
+
+                // Need this here due to while condition above
+                if (costLeft < bestCost)
+                {
+                    bestSibling = left;
+                    bestCost = costLeft;
+                }
+            }
+            else
+            {
+                // Left child is an internal node
+                areaLeft = Nodes[left].ExpandedBox.GetSurfaceArea();
+
+                // Lower bound cost of inserting under left child.
+                lowerCostLeft = inheritedCost + directCostLeft + double.Min(areaD - areaLeft, 0.0d);
+            }
+
+            //
+            // Cost of descending into right child
+            //
+            double lowerCostRight = double.MaxValue;
+            double directCostRight = TreeBox.MergedSurface(Nodes[right].ExpandedBox, nodeTreeBox);
+            double areaRight = 0.0d;
+
+            if (Nodes[right].IsLeaf)
+            {
+                // Right child is a leaf
+                double costRight = directCostRight + inheritedCost;
+
+                if (costRight < bestCost)
+                {
+                    bestSibling = right;
+                    bestCost = costRight;
+                }
+            }
+            else
+            {
+                // Right child is an internal node
+                areaRight = Nodes[right].ExpandedBox.GetSurfaceArea();
+                lowerCostRight = inheritedCost + directCostRight + double.Min(areaD - areaRight, 0.0d);
+            }
+
+            // If neither subtree offers improvement, stop descending.
+            if (bestCost <= lowerCostLeft && bestCost <= lowerCostRight)
+                break;
+
+            // Tie-break by proximity to the new node's center
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (lowerCostLeft == lowerCostRight)
+            {
+                var center = nodeTreeBox.Center;
+                lowerCostLeft = (Nodes[left].ExpandedBox.Center - center).LengthSquared();
+                lowerCostRight = (Nodes[right].ExpandedBox.Center - center).LengthSquared();
+            }
+
+            // Descend into whichever child is better
+            if (lowerCostLeft < lowerCostRight)
+            {
+                where = left;
+                areaBase = areaLeft;
+                directCost = directCostLeft;
+            }
+            else
+            {
+                where = right;
+                areaBase = areaRight;
+                directCost = directCostRight;
+            }
+        }
+
+        return bestSibling;
+    }
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    private int FindBestHeuristic(int node, int where)
+    {
+        ref TreeBox nodeTreeBox = ref Nodes[node].ExpandedBox;
+
+        while (!Nodes[where].IsLeaf)
+        {
+            int left = Nodes[where].Left;
+            int rght = Nodes[where].Right;
+
+            double cost = 2.0d * Nodes[where].ExpandedBox.GetSurfaceArea();
+
+            double leftCost, rightCost;
+
+            if (Nodes[left].IsLeaf)
+            {
+                // cost of additional node
+                leftCost = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
+            }
+            else
+            {
+                // cost of ascending
+                double oldArea = Nodes[left].ExpandedBox.GetSurfaceArea();
+                double newArea = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
+                leftCost = newArea - oldArea;
+            }
+
+            if (Nodes[rght].IsLeaf)
+            {
+                rightCost = TreeBox.MergedSurface(Nodes[rght].ExpandedBox, nodeTreeBox);
+            }
+            else
+            {
+                double oldArea = Nodes[rght].ExpandedBox.GetSurfaceArea();
+                double newArea = TreeBox.MergedSurface(Nodes[rght].ExpandedBox, nodeTreeBox);
+                rightCost = newArea - oldArea;
+            }
+
+            if (cost < leftCost && cost < rightCost) break;
+
+            where = leftCost < rightCost ? left : rght;
+        }
+
+        return where;
+    }
+
     private void InsertLeaf(int node, int where)
     {
         if (root == NullNode)
@@ -790,45 +1049,7 @@ public partial class DynamicTree
         int insertionParent = Nodes[where].Parent;
 
         // search for the best sibling
-        int sibling = where;
-
-        while (!Nodes[sibling].IsLeaf)
-        {
-            int left = Nodes[sibling].Left;
-            int rght = Nodes[sibling].Right;
-
-            double area = Nodes[sibling].ExpandedBox.GetSurfaceArea();
-
-            double cost = 2.0d * area;
-            double costl, costr;
-
-            if (Nodes[left].IsLeaf)
-            {
-                costl = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
-            }
-            else
-            {
-                double oldArea = Nodes[left].ExpandedBox.GetSurfaceArea();
-                double newArea = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
-                costl = newArea - oldArea;
-            }
-
-            if (Nodes[rght].IsLeaf)
-            {
-                costr = TreeBox.MergedSurface(Nodes[rght].ExpandedBox, nodeTreeBox);
-            }
-            else
-            {
-                double oldArea = Nodes[rght].ExpandedBox.GetSurfaceArea();
-                double newArea = TreeBox.MergedSurface(Nodes[rght].ExpandedBox, nodeTreeBox);
-                costr = newArea - oldArea;
-            }
-
-            // if this is true, the choice is actually the best for the current candidate
-            if (cost < costl && cost < costr) break;
-
-            sibling = costl < costr ? left : rght;
-        }
+        int sibling = FindBestGreedy(node, where);
 
         // create a new parent
         int oldParent = Nodes[sibling].Parent;
