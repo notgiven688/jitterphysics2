@@ -4,6 +4,10 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.5 (2025-11-16)
+
+- Improved cost heuristic for `DynamicTree`.
+
 ### Jitter 2.7.4 (2025-10-29)
 
 - Add `MotionType` property to `RigidBody` instances. Bodies might me `Dynamic`, `Static` or `Kinematic`.
