@@ -8,7 +8,7 @@ In this project we will use Raylib and Jitter to implement a simple scene of box
 
 ### Requirements
 
-Install the [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0).
+Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
 Ensure that dotnet is correctly set up by executing the following command:
 
