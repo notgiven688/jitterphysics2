@@ -12,7 +12,7 @@ In this section, we will add a custom convex shape to the simulation—specifica
 
 ### Requirements
 
-Install the [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0).
+Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
 Ensure that dotnet is correctly set up by executing the following command:
 
