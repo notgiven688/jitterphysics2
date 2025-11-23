@@ -60,8 +60,7 @@ public class CSMRenderer
 
     private Matrix4 GetLightSpaceMatrix(float nearPlane, float farPlane)
     {
-        float width = RenderWindow.Instance.Width;
-        float height = RenderWindow.Instance.Height;
+        (float width, float height) = RenderWindow.Instance.FramebufferSize;
 
         Camera camera = RenderWindow.Instance.Camera;
 
@@ -202,7 +201,8 @@ public class CSMRenderer
             depthMap[i].Bind(i);
         }
 
-        GLDevice.SetViewport(0, 0, RenderWindow.Instance.Width, RenderWindow.Instance.Height);
+        (int width, int height) = RenderWindow.Instance.FramebufferSize;
+        GLDevice.SetViewport(0, 0, width, height);
 
         phongShader.Use();
         phongShader.MaterialProperties.SetDefaultMaterial();

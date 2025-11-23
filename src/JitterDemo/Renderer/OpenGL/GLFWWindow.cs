@@ -69,6 +69,16 @@ public class GLFWWindow
     private int width;
     private int height;
 
+    public (int Width, int Height) FramebufferSize
+    {
+        get
+        {
+            int fbw = 0, fbh = 0;
+            GLFW.GetFramebufferSize(Handle, ref fbw, ref fbh);
+            return (fbw, fbh);
+        }
+    }
+
     public int Width
     {
         get => width;

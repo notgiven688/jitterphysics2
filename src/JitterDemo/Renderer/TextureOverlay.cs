@@ -46,8 +46,7 @@ public class TexturedQuad
         vao.Bind();
         shader.Use();
 
-        float w = RenderWindow.Instance.Width;
-        float h = RenderWindow.Instance.Height;
+        (int w, int h) = RenderWindow.Instance.FramebufferSize;
 
         Matrix4 m = MatrixHelper.CreateOrthographicOffCenter(0.0f, w, h, 0, +1f, -1f);
 

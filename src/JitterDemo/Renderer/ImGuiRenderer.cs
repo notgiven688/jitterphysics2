@@ -105,8 +105,8 @@ public class ImGuiRenderer
 
         ImGuiIO* io = ImGuiNative.igGetIO();
         io->DeltaTime = 0;
-        var r = RenderWindow.Instance;
-        io->DisplaySize = new Vector2(r.Width, r.Height);
+        (int fbw, int fbh) = RenderWindow.Instance.FramebufferSize;
+        io->DisplaySize = new Vector2(fbw, fbh);
 
         ImGui.DisableIni();
     }
@@ -117,8 +117,14 @@ public class ImGuiRenderer
 
         pio->DeltaTime = deltaTime;
 
+        var r = RenderWindow.Instance;
+        var rr = r.FramebufferSize;
+        
+        float scaleX = (float)rr.Width / (float)r.Width;
+        float scaleY = (float)rr.Height / (float)r.Height;
+
         Mouse m = Mouse.Instance;
-        ImGuiNative.ImGuiIO_AddMousePosEvent(pio, (float)m.Position.X, (float)m.Position.Y);
+        ImGuiNative.ImGuiIO_AddMousePosEvent(pio, (float)m.Position.X * scaleX, (float)m.Position.Y * scaleY);
         ImGuiNative.ImGuiIO_AddMouseButtonEvent(pio, 0, Convert.ToByte(m.IsButtonDown(Mouse.Button.Left)));
         ImGuiNative.ImGuiIO_AddMouseButtonEvent(pio, 1, Convert.ToByte(m.IsButtonDown(Mouse.Button.Right)));
         ImGuiNative.ImGuiIO_AddMouseButtonEvent(pio, 2, Convert.ToByte(m.IsButtonDown(Mouse.Button.Middle)));
@@ -151,15 +157,13 @@ public class ImGuiRenderer
         WantsCaptureKeyboard = Convert.ToBoolean(pio->WantCaptureKeyboard);
         WantsCaptureMouse = Convert.ToBoolean(pio->WantCaptureMouse);
 
-        var r = RenderWindow.Instance;
-
-        pio->DisplaySize = new Vector2(r.Width, r.Height);
+        pio->DisplaySize = new Vector2(rr.Width, rr.Height);
         pio->DisplayFramebufferScale = new Vector2(1, 1);
 
         vao.Bind();
         shader.Use();
 
-        Matrix4 pm = MatrixHelper.CreateOrthographicOffCenter(0.0f, r.Width, r.Height, 0, -1f, +1f);
+        Matrix4 pm = MatrixHelper.CreateOrthographicOffCenter(0.0f, rr.Width, rr.Height, 0, -1f, +1f);
         shader.Projection.Set(pm);
 
         GLDevice.Enable(Capability.Blend);
@@ -184,7 +188,7 @@ public class ImGuiRenderer
 
                 textures[(int)cmdBufferData.TextureId].Bind(0);
                 var clip = cmdBufferData.ClipRect;
-                GL.Scissor((int)clip.X, r.Height - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
+                GL.Scissor((int)clip.X, rr.Height - (int)clip.W, (int)(clip.Z - clip.X), (int)(clip.W - clip.Y));
                 GLDevice.DrawElementsBaseVertex(DrawMode.Triangles, (int)cmdBufferData.ElemCount,
                     IndexType.UnsignedShort, (int)cmdBufferData.IdxOffset * sizeof(ushort),
                     (int)cmdBufferData.VtxOffset);

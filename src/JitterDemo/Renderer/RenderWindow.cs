@@ -101,8 +101,6 @@ public class RenderWindow : GLFWWindow
         });
         */
 
-        shadowDebug.Position = new Vector2(Width - 210, 10);
-
         Camera.Position = new Vector3(0, 4, 8);
 
         Camera.Update();
