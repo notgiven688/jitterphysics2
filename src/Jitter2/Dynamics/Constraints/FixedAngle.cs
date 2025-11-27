@@ -31,8 +31,7 @@ public unsafe class FixedAngle : Constraint
 
         public Real BiasFactor;
         public Real Softness;
-
-        public JVector Axis;
+        
         public JQuaternion Q0;
 
         public JVector AccumulatedImpulse;
