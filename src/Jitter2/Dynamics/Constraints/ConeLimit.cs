@@ -187,6 +187,27 @@ public unsafe class ConeLimit : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the angular limit of the cone.
+    /// </summary>
+    public AngularLimit Limit
+    {
+        get
+        {
+            ref ConeLimitData data = ref handle.Data;
+            return new AngularLimit(JAngle.FromRadian(data.LimitLow), JAngle.FromRadian(data.LimitHigh));
+        }
+        set
+        {
+            ArgumentOutOfRangeException.ThrowIfNegative((Real)value.From);
+            ArgumentOutOfRangeException.ThrowIfLessThan((Real)value.To, (Real)value.From);
+
+            ref ConeLimitData data = ref handle.Data;
+            data.LimitLow = (Real)value.From;
+            data.LimitHigh = (Real)value.To;
+        }
+    }
+
     public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
