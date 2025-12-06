@@ -13,8 +13,9 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements the ConeLimit constraint, which restricts the tilt of one body relative to
-/// another body.
+/// A constraint that limits the relative tilt between two bodies. 
+/// The allowed motion forms a cone defined by a minimum and maximum angle
+/// around an initial reference axis.
 /// </summary>
 public unsafe class ConeLimit : Constraint
 {
@@ -57,19 +58,28 @@ public unsafe class ConeLimit : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the cone limit using two world-space axes and an angular range.
     /// </summary>
-    /// <param name="axis">The axis in world space.</param>
-    public void Initialize(JVector axis, AngularLimit limit)
+    /// <param name="axisBody1">The reference axis for body 1 in world space.</param>
+    /// <param name="axisBody2">The reference axis for body 2 in world space.</param>
+    /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
+    /// <remarks>
+    /// This overload allows specifying an initial angular offset between the bodies.
+    /// Each axis is stored as a local axis on the corresponding body. The constraint
+    /// then measures the angle between these axes (transformed back into world space)
+    /// and restricts it to the range given by the angular limit.
+    /// </remarks>
+    public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
         ref ConeLimitData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        JVector.NormalizeInPlace(ref axis);
+        JVector.NormalizeInPlace(ref axisBody1);
+        JVector.NormalizeInPlace(ref axisBody2);
 
-        JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis1);
-        JVector.ConjugatedTransform(axis, body2.Orientation, out data.LocalAxis2);
+        JVector.ConjugatedTransform(axisBody1, body1.Orientation, out data.LocalAxis1);
+        JVector.ConjugatedTransform(axisBody2, body2.Orientation, out data.LocalAxis2);
 
         data.Softness = (Real)0.001;
         data.BiasFactor = (Real)0.2;
@@ -77,8 +87,35 @@ public unsafe class ConeLimit : Constraint
         Real lower = (Real)limit.From;
         Real upper = (Real)limit.To;
 
-        data.LimitLow = MathR.Cos(lower);
+        data.LimitLow  = MathR.Cos(lower);
         data.LimitHigh = MathR.Cos(upper);
+    }
+
+    /// <summary>
+    /// Initializes the cone limit using a world-space axis and an angular range.
+    /// </summary>
+    /// <param name="axis">The reference axis in world space for the initial pose.</param>
+    /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
+    /// <remarks>
+    /// When initialized, the given world-space axis is stored as a local axis
+    /// on each body. The constraint then measures the angle between these two
+    /// axes (transformed back into world space) and restricts it to the range
+    /// specified by the angular limit.
+    /// </remarks>
+    public void Initialize(JVector axis, AngularLimit limit)
+    {
+        if (limit.From > (JAngle)0.0)
+        {
+            Logger.Warning(
+                "{0}.{1}(): The lower limit is larger 0 but this overload initializes both body axes " +
+                "from the same world-space axis (rest angle = 0). Use the two-axis overload " +
+                "if you need a non-zero minimum angle.",
+                nameof(ConeLimit),
+                nameof(Initialize));
+        }
+
+        // Same axis for both bodies → rest angle is zero.
+        Initialize(axis, axis, limit);
     }
 
     public JAngle Angle
