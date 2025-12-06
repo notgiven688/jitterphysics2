@@ -13,7 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A constraint that limits the relative tilt between two bodies. 
+/// A constraint that limits the relative tilt between two bodies.
 /// The allowed motion forms a cone defined by a minimum and maximum angle
 /// around an initial reference axis.
 /// </summary>
@@ -71,6 +71,9 @@ public unsafe class ConeLimit : Constraint
     /// </remarks>
     public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative((Real)limit.From);
+        ArgumentOutOfRangeException.ThrowIfLessThan((Real)limit.To, (Real)limit.From);
+
         ref ConeLimitData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -87,7 +90,7 @@ public unsafe class ConeLimit : Constraint
         Real lower = (Real)limit.From;
         Real upper = (Real)limit.To;
 
-        data.LimitLow  = MathR.Cos(lower);
+        data.LimitLow = MathR.Cos(lower);
         data.LimitHigh = MathR.Cos(upper);
     }
 
