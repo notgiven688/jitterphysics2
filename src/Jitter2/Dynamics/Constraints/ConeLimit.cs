@@ -137,6 +137,56 @@ public unsafe class ConeLimit : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the reference axis of body 1 in world space.
+    /// </summary>
+    public JVector AxisBody1
+    {
+        get
+        {
+            ref ConeLimitData data = ref handle.Data;
+            ref RigidBodyData body1 = ref data.Body1.Data;
+
+            JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis);
+            return axis;
+        }
+        set
+        {
+            ref ConeLimitData data = ref handle.Data;
+            ref RigidBodyData body1 = ref data.Body1.Data;
+
+            JVector normalized = value;
+            JVector.NormalizeInPlace(ref normalized);
+
+            JVector.ConjugatedTransform(normalized, body1.Orientation, out data.LocalAxis1);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the reference axis of body 2 in world space.
+    /// </summary>
+    public JVector AxisBody2
+    {
+        get
+        {
+            ref ConeLimitData data = ref handle.Data;
+            ref RigidBodyData body2 = ref data.Body2.Data;
+
+            JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis);
+            return axis;
+        }
+        set
+        {
+            ref ConeLimitData data = ref handle.Data;
+            ref RigidBodyData body2 = ref data.Body2.Data;
+
+            JVector normalized = value;
+            JVector.NormalizeInPlace(ref normalized);
+
+            JVector.ConjugatedTransform(normalized, body2.Orientation, out data.LocalAxis2);
+        }
+    }
+
     public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
         ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
