@@ -4,10 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
 using Jitter2.LinearMath;
-using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
 
