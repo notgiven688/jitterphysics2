@@ -209,25 +209,16 @@ public sealed partial class World : IDisposable
     private Real invStepDt = (Real)100.0;
 
     /// <summary>
-    /// Creates an instance of the <see cref="World"/> class with the default capacity.
-    /// This initializes the world using default values for the number of bodies, contacts,
-    /// constraints, and small constraints as defined in <see cref="Capacity.Default"/>.
+    /// Creates an instance of the World class.
     /// </summary>
-    /// <seealso cref="World(Capacity)"/>
-    public World() : this(Capacity.Default) { }
-
-    /// <summary>
-    /// Creates an instance of the World class. As Jitter uses a distinct memory model, it is necessary to specify
-    /// the capacity of the world in advance.
-    /// </summary>
-    public World(Capacity capacity)
+    public World()
     {
-        Logger.Information($"Creating new world with capacity: {capacity}");
+        Logger.Information($"Creating new world.");
 
-        memRigidBodies = new PartitionedBuffer<RigidBodyData>(capacity.BodyCount, aligned64: true);
-        memContacts = new PartitionedBuffer<ContactData>(capacity.ContactCount);
-        memConstraints = new PartitionedBuffer<ConstraintData>(capacity.ConstraintCount);
-        memSmallConstraints = new PartitionedBuffer<SmallConstraintData>(capacity.SmallConstraintCount);
+        memRigidBodies = new PartitionedBuffer<RigidBodyData>(aligned64: true);
+        memContacts = new PartitionedBuffer<ContactData>();
+        memConstraints = new PartitionedBuffer<ConstraintData>();
+        memSmallConstraints = new PartitionedBuffer<SmallConstraintData>();
 
         NullBody = CreateRigidBody();
         NullBody.MotionType = MotionType.Static;
