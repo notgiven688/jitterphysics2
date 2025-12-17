@@ -73,16 +73,28 @@ public unsafe class TwistAngle : Constraint
         JVector.NormalizeInPlace(ref axis1);
         JVector.NormalizeInPlace(ref axis2);
 
-
         data.Angle1 = MathR.Sin((Real)limit.From / (Real)2.0);
         data.Angle2 = MathR.Sin((Real)limit.To / (Real)2.0);
 
+        // Calculate local axes
+        JVector u1 = JVector.ConjugatedTransform(axis1, body1.Orientation);
         data.B = JVector.ConjugatedTransform(axis2, body2.Orientation);
 
+        // 1. Calculate the initial relative orientation (Body1 -> Body2)
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
+        JQuaternion qRel = q2.Conjugate() * q1;
 
-        data.Q0 = q2.Conjugate() * q1;
+        // 2. Map u1 into Body2 space using the initial orientation
+        JVector u1InB2 = JVector.Transform(u1, qRel);
+
+        // 3. Calculate the correction rotation to align u1_in_B2 to data.B (u2)
+        // This calculates the 'swing' offset between the two axes
+        JQuaternion qCorrection = JQuaternion.CreateFromToRotation(u1InB2, data.B);
+
+        // 4. Apply correction to Q0.
+        // Q0 now represents a reference orientation where the axes are perfectly aligned.
+        data.Q0 = qCorrection * qRel;
     }
 
     public AngularLimit Limit

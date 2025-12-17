@@ -1,3 +1,4 @@
+using System;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics.Constraints;
@@ -62,6 +63,30 @@ public class Demo13 : IDemo
                 Common.BuildRagdoll(new JVector(-4, 5 + i * 3, 0));
         }
 
+        {
+            float angle = (float)JAngle.FromDegree(90);
+            JVector rot1Axis = JVector.Transform(JVector.UnitZ, JQuaternion.CreateRotationY(angle));
+
+            // two free rotating wheels
+            var b0 = world.CreateRigidBody();
+            b0.Position = new JVector(5, 4, 0);
+            b0.Orientation = JQuaternion.CreateRotationX(MathF.PI / 2);
+            b0.AddShape(new CylinderShape(0.4f, 2.0f));
+
+            var b1 = world.CreateRigidBody();
+            b1.AddShape(new CylinderShape(0.4f, 2.0f));
+            b1.Position = new JVector(9.2f, 4, 0);
+            b1.Orientation = JQuaternion.CreateRotationY(angle) * JQuaternion.CreateRotationX(MathF.PI / 2);
+
+            HingeJoint hj1 = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitZ, AngularLimit.Full);
+            HingeJoint hj2 = new HingeJoint(world, world.NullBody, b1, b1.Position, rot1Axis, AngularLimit.Full);
+            hj1.HingeAngle.Softness = 0;
+            hj2.HingeAngle.Softness = 0;
+
+            // constraint them to have the same rotation
+            var relative = world.CreateConstraint<TwistAngle>(b0, b1);
+            relative.Initialize(JVector.UnitZ, rot1Axis);
+        }
 
         world.SolverIterations = (4, 2);
         world.SubstepCount = 3;
