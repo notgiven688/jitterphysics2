@@ -58,6 +58,7 @@ public partial class Playground : RenderWindow
         new Demo25(),
         // new Demo26(), // angular sweep
         new Demo27(),
+        new Demo28(),
     };
 
     private IDemo? currentDemo;
