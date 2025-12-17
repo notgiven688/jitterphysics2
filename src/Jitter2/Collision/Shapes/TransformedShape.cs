@@ -25,24 +25,33 @@ public class TransformedShape : RigidBodyShape
     private TransformationType type;
 
     /// <summary>
-    /// Constructs a transformed shape through an affine transformation define by
+    /// Constructs a transformed shape through an affine transformation defined by
     /// a linear map and a translation.
     /// </summary>
-    /// <param name="shape">The original shape which should be transformed.</param>
-    /// <param name="translation">Shape is translated by this vector.</param>
-    /// <param name="transform">A linear map (may include sheer and scale) of the transformation.</param>
     public TransformedShape(RigidBodyShape shape, in JVector translation, in JMatrix transform)
     {
         OriginalShape = shape;
         this.translation = translation;
-        transformation = transform;
+        this.transformation = transform;
 
         AnalyzeTransformation();
         UpdateWorldBoundingBox();
     }
 
+    /// <summary>
+    /// Constructs a transformed shape with a translation (offset), assuming identity rotation/scale.
+    /// </summary>
     public TransformedShape(RigidBodyShape shape, JVector translation) :
         this(shape, translation, JMatrix.Identity)
+    {
+    }
+
+    /// <summary>
+    /// Constructs a transformed shape with a linear transformation (rotation, scale, or shear),
+    /// assuming zero translation.
+    /// </summary>
+    public TransformedShape(RigidBodyShape shape, JMatrix transform) :
+        this(shape, JVector.Zero, transform)
     {
     }
 
