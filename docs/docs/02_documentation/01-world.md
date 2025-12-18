@@ -2,38 +2,6 @@
 
 An instance of the Jitter `World` class contains all entities in the physics simulation and provides the `World.Step` method to advance the simulation by a single time step.
 
-## Creating the World
-
-In Jitter, the user must decide in advance the maximum number of physical entities to be added to the world.
-
-```cs
-var capacity = new World.Capacity
-{
-    BodyCount = 64_000,
-    ContactCount = 64_000,
-    ConstraintCount = 32_000,
-    SmallConstraintCount = 32_000
-};
-
-var world = new World(capacity);
-```
-
-- **BodyCount**: The maximum number of bodies that can be added to the world.
-- **ContactCount**: The maximum number of contacts which can be created. A single contact contains up to four contact points. In Jitter each
-shape can generate a contact with each other shape.
-- **ConstraintCount**: The maximum number of constraints.
-- **SmallConstraintCount**: The maximum number of small constraints. These are constraints of smaller size which are used in soft body simulations for example.
-
-:::info Initial allocation cost
-The initial values are used to create fixed arrays of pointers which take a total size of:
-
-$$$
-\left(\mathrm{BodyCount}+\mathrm{ContactCount}+\mathrm{ConstraintCount}+\mathrm{SmallConstraintCount}\right)\times{}\mathrm{IntPtr.Size}
-$$$
-
-For a typical 64-bit system the example above allocates arrays with a total size of about $1.5\,\mathrm{MB}$.
-:::
-
 ## World.Step
 
 Forward the world by a single time step using
