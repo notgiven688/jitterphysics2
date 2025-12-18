@@ -4,6 +4,13 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.6 (2025-12-18)
+
+- Removed `World.Capacity`. Number of entities in `World` no longer have to be specified in advance.
+- Fixed a bug in `TwistAngle`.
+- Added `WeldJoint`.
+- Exposed more properties in `ConeLimit`.
+
 ### Jitter 2.7.5 (2025-11-16)
 
 - Improved cost heuristic for `DynamicTree`.
