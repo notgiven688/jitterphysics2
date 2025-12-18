@@ -2,18 +2,10 @@ namespace JitterTests;
 
 public class SleepTests
 {
-    private readonly World.Capacity smallCapacity = new()
-    {
-        BodyCount = 32,
-        ConstraintCount = 32,
-        ContactCount = 32,
-        SmallConstraintCount = 32
-    };
-
     [TestCase]
     public void StaticBodySleepingAndWake()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         // Create a static body
         var body = world.CreateRigidBody();
@@ -46,7 +38,7 @@ public class SleepTests
     [TestCase]
     public void DeactivationTime()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
         world.Gravity = JVector.Zero;
 
         var body = world.CreateRigidBody();
@@ -94,7 +86,7 @@ public class SleepTests
     [TestCase]
     public void KinematicTriggerWake()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
         world.Gravity = JVector.Zero;
 
         // Static (infinite mass) body acting as a moving platform.
@@ -133,7 +125,7 @@ public class SleepTests
     [TestCase]
     public void StackedSleeping()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         List<RigidBody> bodies = new();
 
@@ -178,7 +170,7 @@ public class SleepTests
     [TestCase]
     public void StackedWakeOnRemoval()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         List<RigidBody> bodies = new();
 
@@ -219,7 +211,7 @@ public class SleepTests
     [TestCase]
     public void StaticBaseMovementWakesDynamic()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         // Bottom body: static (infinite mass) base
         var bottom = world.CreateRigidBody();

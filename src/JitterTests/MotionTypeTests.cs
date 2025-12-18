@@ -2,18 +2,10 @@ namespace JitterTests;
 
 public class MotionTypeTests
 {
-    private readonly World.Capacity smallCapacity = new()
-    {
-        BodyCount = 32,
-        ConstraintCount = 32,
-        ContactCount = 32,
-        SmallConstraintCount = 32
-    };
-
     [TestCase]
     public void CheckInternalMass()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         var sphere = world.CreateRigidBody();
         sphere.AddShape(new SphereShape(1));
@@ -74,7 +66,7 @@ public class MotionTypeTests
     [TestCase]
     public void CheckContactGraph()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         PrepareTwoStack(world, out var platform, out var boxes);
 
@@ -145,7 +137,7 @@ public class MotionTypeTests
     [TestCase]
     public void CheckNoStaticKinematicContacts()
     {
-        var world = new World(smallCapacity);
+        var world = new World();
 
         PrepareTwoStack(world, out var platform, out var boxes);
 

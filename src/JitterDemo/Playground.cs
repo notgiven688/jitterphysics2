@@ -58,6 +58,7 @@ public partial class Playground : RenderWindow
         new Demo25(),
         // new Demo26(), // angular sweep
         new Demo27(),
+        new Demo28()
     };
 
     private IDemo? currentDemo;
@@ -71,15 +72,7 @@ public partial class Playground : RenderWindow
 
     public Playground()
     {
-        var capacity = new World.Capacity
-        {
-            BodyCount = 64_000,
-            ContactCount = 128_000,
-            ConstraintCount = 32_000,
-            SmallConstraintCount = 32_000
-        };
-
-        world = new World(capacity);
+        world = new World();
         world.NullBody.Tag = new RigidBodyTag();
         drawBox = DrawBox;
     }

@@ -49,6 +49,35 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
+    /// Creates a quaternion that rotates the unit vector <paramref name="from"/> into
+    /// the unit vector <paramref name="to"/>.
+    /// </summary>
+    /// <param name="from">Source direction (must be unit length).</param>
+    /// <param name="to">Target direction (must be unit length).</param>
+    /// <returns>
+    /// A unit quaternion representing the shortest rotation from <paramref name="from"/>
+    /// to <paramref name="to"/>.
+    /// </returns>
+    public static JQuaternion CreateFromToRotation(JVector from, JVector to)
+    {
+        const Real epsilon = (Real)1e-6;
+        Real dot = JVector.Dot(from, to);
+
+        // Vectors are opposite (Singularity)
+        if (dot < (Real)(-1 + epsilon))
+        {
+            JVector axis = MathHelper.CreateOrthonormal(from);
+            return new JQuaternion(axis.X, axis.Y, axis.Z, 0);
+        }
+
+        Real s = MathR.Sqrt(((Real)1 + dot) * (Real)2);
+        Real invS = (Real)1 / s;
+
+        JVector c = JVector.Cross(from, to);
+        return new JQuaternion(s * (Real)0.5, c * invS);
+    }
+
+    /// <summary>
     /// Adds two quaternions.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
