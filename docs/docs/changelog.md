@@ -6,7 +6,7 @@ sidebar_position: 5
 
 ### Jitter 2.7.6 (2025-12-18)
 
-- Removed `World.Capacity`. Number of entities in `World` no longer have to be specified in advance.
+- Removed `World.Capacity`. Number of entities in `World` no longer has to be specified in advance.
 - Fixed a bug in `TwistAngle`.
 - Added `WeldJoint`.
 - Exposed more properties in `ConeLimit`.
