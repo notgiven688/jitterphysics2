@@ -8,6 +8,12 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
+#if NET9_0_OR_GREATER
+using Lock = System.Threading.Lock;
+#else
+using Lock = System.Object;
+#endif
+
 namespace Jitter2.DataStructures;
 
 // The System.Collections.Concurrent.ConcurrentDictionary produces too much garbage.
@@ -15,7 +21,7 @@ namespace Jitter2.DataStructures;
 
 internal class ShardedDictionary<TKey, TValue> where TKey : notnull
 {
-    private readonly object[] locks;
+    private readonly Lock[] locks;
     private readonly Dictionary<TKey, TValue>[] dictionaries;
 
     private static int ShardSuggestion(int threads)
@@ -46,7 +52,7 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
         }
     }
 
-    public object GetLock(TKey key)
+    public Lock GetLock(TKey key)
     {
         return locks[GetShardIndex(key)];
     }
@@ -55,12 +61,12 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
     {
         int count = ShardSuggestion(threads);
 
-        locks = new object[count];
+        locks = new Lock[count];
         dictionaries = new Dictionary<TKey, TValue>[count];
 
         for (int i = 0; i < count; i++)
         {
-            locks[i] = new object();
+            locks[i] = new Lock();
             dictionaries[i] = new Dictionary<TKey, TValue>();
         }
     }
