@@ -178,32 +178,54 @@ public static class MathHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector CreateOrthonormal(in JVector vec)
     {
-        JVector result = vec;
+        Debug.Assert(!CloseToZero(vec), "Cannot create orthonormal of a zero vector");
 
-        Debug.Assert(!CloseToZero(vec));
+        Real ax = Math.Abs(vec.X);
+        Real ay = Math.Abs(vec.Y);
+        Real az = Math.Abs(vec.Z);
 
-        Real xa = Math.Abs(vec.X);
-        Real ya = Math.Abs(vec.Y);
-        Real za = Math.Abs(vec.Z);
+        JVector r;
 
-        if ((xa > ya && xa > za) || (ya > xa && ya > za))
+        if (ax <= ay && ax <= az)
         {
-            result.X = vec.Y;
-            result.Y = -vec.X;
-            result.Z = 0;
+            // (0, z, -y)
+            Real y = vec.Z;
+            Real z = -vec.Y;
+
+            // invLen = 1 / sqrt(y*y + z*z)
+            Real invLen = (Real)1 / MathR.Sqrt(y * y + z * z);
+
+            r.X = 0;
+            r.Y = y * invLen;
+            r.Z = z * invLen;
+        }
+        else if (ay <= az)
+        {
+            // (-z, 0, x)
+            Real x = -vec.Z;
+            Real z = vec.X;
+
+            Real invLen = (Real)1 / MathR.Sqrt(x * x + z * z);
+
+            r.X = x * invLen;
+            r.Y = 0;
+            r.Z = z * invLen;
         }
         else
         {
-            result.Y = vec.Z;
-            result.Z = -vec.Y;
-            result.X = 0;
+            // (y, -x, 0)
+            Real x = vec.Y;
+            Real y = -vec.X;
+
+            Real invLen = (Real)1 / MathR.Sqrt(x * x + y * y);
+
+            r.X = x * invLen;
+            r.Y = y * invLen;
+            r.Z = 0;
         }
 
-        JVector.NormalizeInPlace(ref result);
-
-        Debug.Assert(MathR.Abs(JVector.Dot(result, vec)) < (Real)1e-6);
-
-        return result;
+        Debug.Assert(MathR.Abs(JVector.Dot(r, vec)) < (Real)1e-6);
+        return r;
     }
 
     /// <summary>
