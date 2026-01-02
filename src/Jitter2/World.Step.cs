@@ -383,7 +383,8 @@ public sealed partial class World
 
             if (constraint.PrepareForIteration == null) continue;
 
-            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic);
+            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
+                "Invalid constraint: both bodies are non-dynamic.");
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
