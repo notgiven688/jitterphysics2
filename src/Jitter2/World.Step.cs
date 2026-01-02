@@ -55,7 +55,6 @@ public sealed partial class World
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
-    
 
     private void InitParallelCallbacks()
     {
@@ -154,10 +153,12 @@ public sealed partial class World
         // Sub-stepping
         for (int i = 0; i < substeps; i++)
         {
+            PreSubStep?.Invoke(substepDt);
             IntegrateForces(multiThread);                       // FAST SWEEP
             Solve(multiThread, solverIterations);               // FAST SWEEP
             Integrate(multiThread);                             // FAST SWEEP
             RelaxVelocities(multiThread, velocityRelaxations);  // FAST SWEEP
+            PostSubStep?.Invoke(substepDt);
         }
 
         Tracer.ProfileEnd(TraceName.Solve);
