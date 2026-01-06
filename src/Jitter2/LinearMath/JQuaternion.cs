@@ -22,6 +22,24 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     [FieldOffset(3*sizeof(Real))] public Real W = w;
 
     /// <summary>
+    /// Gets the vector part (X, Y, Z) of the quaternion.
+    /// </summary>
+    public JVector Vector
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Unsafe.As<JQuaternion, JVector>(ref this);
+    }
+
+    /// <summary>
+    /// Gets the scalar part (Real part) of the quaternion. Alias for W.
+    /// </summary>
+    public Real Scalar
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => W;
+    }
+
+    /// <summary>
     /// Gets the identity quaternion (0, 0, 0, 1).
     /// </summary>
     public static JQuaternion Identity => new(0, 0, 0, 1);
