@@ -11,23 +11,32 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// Represents a three-by-three matrix with components of type <see cref="Real"/>.
+/// Represents a 3x3 matrix with components of type <see cref="Real"/>.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
-public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23, Real m31, Real m32, Real m33)
-    : IEquatable<JMatrix>
+[StructLayout(LayoutKind.Explicit, Size = 9 * sizeof(Real))]
+public struct JMatrix(
+    Real m11, Real m12, Real m13,
+    Real m21, Real m22, Real m23,
+    Real m31, Real m32, Real m33) : IEquatable<JMatrix>
 {
-    [FieldOffset(0*sizeof(Real))] public Real M11 = m11;
-    [FieldOffset(1*sizeof(Real))] public Real M21 = m21;
-    [FieldOffset(2*sizeof(Real))] public Real M31 = m31;
-    [FieldOffset(3*sizeof(Real))] public Real M12 = m12;
-    [FieldOffset(4*sizeof(Real))] public Real M22 = m22;
-    [FieldOffset(5*sizeof(Real))] public Real M32 = m32;
-    [FieldOffset(6*sizeof(Real))] public Real M13 = m13;
-    [FieldOffset(7*sizeof(Real))] public Real M23 = m23;
-    [FieldOffset(8*sizeof(Real))] public Real M33 = m33;
+    [FieldOffset(0 * sizeof(Real))] public Real M11 = m11;
+    [FieldOffset(1 * sizeof(Real))] public Real M21 = m21;
+    [FieldOffset(2 * sizeof(Real))] public Real M31 = m31;
+    [FieldOffset(3 * sizeof(Real))] public Real M12 = m12;
+    [FieldOffset(4 * sizeof(Real))] public Real M22 = m22;
+    [FieldOffset(5 * sizeof(Real))] public Real M32 = m32;
+    [FieldOffset(6 * sizeof(Real))] public Real M13 = m13;
+    [FieldOffset(7 * sizeof(Real))] public Real M23 = m23;
+    [FieldOffset(8 * sizeof(Real))] public Real M33 = m33;
 
+    /// <summary>
+    /// The identity matrix.
+    /// </summary>
     public static readonly JMatrix Identity;
+
+    /// <summary>
+    /// The zero matrix.
+    /// </summary>
     public static readonly JMatrix Zero;
 
     static JMatrix()
@@ -42,6 +51,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         };
     }
 
+    /// <summary>
+    /// Creates a matrix from three column vectors.
+    /// </summary>
+    /// <param name="col1">The first column vector.</param>
+    /// <param name="col2">The second column vector.</param>
+    /// <param name="col3">The third column vector.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix FromColumns(in JVector col1, in JVector col2, in JVector col3)
     {
@@ -52,6 +67,10 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return res;
     }
 
+    /// <summary>
+    /// Gets a reference to a column vector by index using unsafe pointer arithmetic.
+    /// </summary>
+    /// <param name="index">The zero-based index of the column (0, 1, or 2).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe ref JVector UnsafeGet(int index)
     {
@@ -59,6 +78,10 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return ref ptr[index];
     }
 
+    /// <summary>
+    /// Gets a column vector by index.
+    /// </summary>
+    /// <param name="index">The zero-based index of the column (0, 1, or 2).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe JVector GetColumn(int index)
     {
@@ -69,6 +92,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         }
     }
 
+    /// <summary>
+    /// Multiplies two matrices.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <returns>The product of the two matrices.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Multiply(in JMatrix matrix1, in JMatrix matrix2)
     {
@@ -76,6 +105,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Calculates <c>matrix1 * transpose(matrix2)</c>.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix (which will be transposed during multiplication).</param>
+    /// <returns>The result of the multiplication.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2)
     {
@@ -83,6 +118,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Calculates <c>transpose(matrix1) * matrix2</c>.
+    /// </summary>
+    /// <param name="matrix1">The first matrix (which will be transposed during multiplication).</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <returns>The result of the multiplication.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2)
     {
@@ -90,6 +131,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Creates a rotation matrix from an axis and an angle.
+    /// </summary>
+    /// <param name="axis">The axis to rotate around.</param>
+    /// <param name="angle">The angle of rotation in radians.</param>
+    /// <returns>The rotation matrix.</returns>
     public static JMatrix CreateRotationMatrix(JVector axis, Real angle)
     {
         Real c = MathR.Cos(angle / (Real)2.0);
@@ -100,6 +147,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Multiplies two matrices.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <param name="result">Output: The product of the two matrices.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
@@ -124,6 +177,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = num8;
     }
 
+    /// <summary>
+    /// Adds two matrices.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <returns>The sum of the two matrices.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)
     {
@@ -132,8 +191,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
     }
 
     /// <summary>
-    /// Calculates matrix1 \times matrix2^\mathrm{T}.
+    /// Calculates <c>matrix1 * matrix2ᵀ</c> (multiplying matrix1 by the transpose of matrix2).
     /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix (transposed during operation).</param>
+    /// <param name="result">Output: The result of the multiplication.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
@@ -158,6 +220,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = num8;
     }
 
+    /// <summary>
+    /// Creates a rotation matrix around the X-axis.
+    /// </summary>
+    /// <param name="radians">The angle of rotation in radians.</param>
+    /// <returns>The rotation matrix.</returns>
     public static JMatrix CreateRotationX(Real radians)
     {
         JMatrix result = Identity;
@@ -176,6 +243,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Creates a rotation matrix around the Y-axis.
+    /// </summary>
+    /// <param name="radians">The angle of rotation in radians.</param>
+    /// <returns>The rotation matrix.</returns>
     public static JMatrix CreateRotationY(Real radians)
     {
         JMatrix result = Identity;
@@ -194,6 +266,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Creates a rotation matrix around the Z-axis.
+    /// </summary>
+    /// <param name="radians">The angle of rotation in radians.</param>
+    /// <returns>The rotation matrix.</returns>
     public static JMatrix CreateRotationZ(Real radians)
     {
         JMatrix result = Identity;
@@ -213,9 +290,10 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
     }
 
     /// <summary>
-    /// Create a scaling matrix.
+    /// Creates a scaling matrix.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="scale">The scaling vector.</param>
+    /// <returns>The scaling matrix.</returns>
     public static JMatrix CreateScale(in JVector scale)
     {
         JMatrix result = Zero;
@@ -228,17 +306,23 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
     }
 
     /// <summary>
-    /// Create a scaling matrix.
+    /// Creates a scaling matrix.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="x">Scaling factor on the X-axis.</param>
+    /// <param name="y">Scaling factor on the Y-axis.</param>
+    /// <param name="z">Scaling factor on the Z-axis.</param>
+    /// <returns>The scaling matrix.</returns>
     public static JMatrix CreateScale(Real x, Real y, Real z)
     {
         return CreateScale(new JVector(x, y, z));
     }
 
     /// <summary>
-    /// Calculates matrix1^\mathrm{T} \times matrix2.
+    /// Calculates <c>matrix1ᵀ * matrix2</c> (multiplying the transpose of matrix1 by matrix2).
     /// </summary>
+    /// <param name="matrix1">The first matrix (transposed during operation).</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <param name="result">Output: The result of the multiplication.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
@@ -263,6 +347,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = num8;
     }
 
+    /// <summary>
+    /// Adds two matrices component-wise.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <param name="result">Output: The sum of the two matrices.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
@@ -277,6 +367,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = matrix1.M33 + matrix2.M33;
     }
 
+    /// <summary>
+    /// Subtracts the second matrix from the first component-wise.
+    /// </summary>
+    /// <param name="matrix1">The first matrix.</param>
+    /// <param name="matrix2">The second matrix.</param>
+    /// <param name="result">Output: The difference of the two matrices.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Subtract(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)
     {
@@ -291,6 +387,10 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = matrix1.M33 - matrix2.M33;
     }
 
+    /// <summary>
+    /// Calculates the determinant of the matrix.
+    /// </summary>
+    /// <returns>The determinant.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Real Determinant()
     {
@@ -298,6 +398,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
                M31 * M22 * M13 - M32 * M23 * M11 - M33 * M21 * M12;
     }
 
+    /// <summary>
+    /// Calculates the inverse of the matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix to invert.</param>
+    /// <param name="result">Output: The inverted matrix, or a zero matrix if the determinant is zero.</param>
+    /// <returns><c>true</c> if the matrix can be inverted; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
     {
@@ -334,6 +440,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return true;
     }
 
+    /// <summary>
+    /// Multiplies a matrix by a scalar factor.
+    /// </summary>
+    /// <param name="matrix1">The matrix.</param>
+    /// <param name="scaleFactor">The scalar factor.</param>
+    /// <returns>The scaled matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Multiply(JMatrix matrix1, Real scaleFactor)
     {
@@ -341,6 +453,12 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Multiplies a matrix by a scalar factor.
+    /// </summary>
+    /// <param name="matrix1">The matrix.</param>
+    /// <param name="scaleFactor">The scalar factor.</param>
+    /// <param name="result">Output: The scaled matrix.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, Real scaleFactor, out JMatrix result)
     {
@@ -356,6 +474,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = matrix1.M33 * num;
     }
 
+    /// <summary>
+    /// Creates a rotation matrix from a quaternion.
+    /// </summary>
+    /// <param name="quaternion">The quaternion representing the rotation.</param>
+    /// <returns>The rotation matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
     {
@@ -363,6 +486,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Creates a matrix where each component is the absolute value of the input matrix component.
+    /// </summary>
+    /// <param name="matrix">The input matrix.</param>
+    /// <param name="result">Output: The absolute matrix.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Absolute(in JMatrix matrix, out JMatrix result)
     {
@@ -377,6 +505,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = Math.Abs(matrix.M33);
     }
 
+    /// <summary>
+    /// Creates a rotation matrix from a quaternion.
+    /// </summary>
+    /// <param name="quaternion">The quaternion representing the rotation.</param>
+    /// <param name="result">Output: The rotation matrix.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)
     {
@@ -396,6 +529,11 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = (Real)1.0 - (Real)2.0 * (i * i + j * j);
     }
 
+    /// <summary>
+    /// Transposes a matrix.
+    /// </summary>
+    /// <param name="matrix">The matrix to transpose.</param>
+    /// <returns>The transposed matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix Transpose(in JMatrix matrix)
     {
@@ -404,8 +542,18 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
     }
 
     /// <summary>
-    /// Returns JMatrix(0, -vec.Z, vec.Y, vec.Z, 0, -vec.X, -vec.Y, vec.X, 0)-
+    /// Creates a skew-symmetric matrix from a vector, representing the cross product operation.
     /// </summary>
+    /// <remarks>
+    /// Result is equivalent to:
+    /// <code>
+    /// [  0  -z   y ]
+    /// [  z   0  -x ]
+    /// [ -y   x   0 ]
+    /// </code>
+    /// </remarks>
+    /// <param name="vec">The vector.</param>
+    /// <returns>The skew-symmetric matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix CreateCrossProduct(in JVector vec)
     {
@@ -426,6 +574,9 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         result.M33 = matrix.M33;
     }
 
+    /// <summary>
+    /// Multiplies two matrices.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(in JMatrix matrix1, in JMatrix matrix2)
     {
@@ -442,12 +593,19 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Calculates the trace (sum of diagonal elements) of the matrix.
+    /// </summary>
+    /// <returns>The trace of the matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Real Trace()
     {
         return M11 + M22 + M33;
     }
 
+    /// <summary>
+    /// Scales a matrix by a factor.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(Real factor, in JMatrix matrix)
     {
@@ -455,6 +613,9 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Scales a matrix by a factor.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator *(in JMatrix matrix, Real factor)
     {
@@ -462,6 +623,9 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Adds two matrices.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator +(in JMatrix value1, in JMatrix value2)
     {
@@ -469,6 +633,9 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
         return result;
     }
 
+    /// <summary>
+    /// Subtracts the second matrix from the first.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix operator -(in JMatrix value1, in JMatrix value2)
     {
@@ -485,9 +652,6 @@ public struct JMatrix(Real m11, Real m12, Real m13, Real m21, Real m22, Real m23
                M33.Equals(other.M33);
     }
 
-    /// <summary>
-    /// Returns a string representation of the <see cref="JMatrix"/>.
-    /// </summary>
     public readonly override string ToString()
     {
         return $"M11={M11:F6}, M12={M12:F6}, M13={M13:F6}, " +
