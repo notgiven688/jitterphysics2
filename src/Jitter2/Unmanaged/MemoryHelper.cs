@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Jitter2.Unmanaged;
@@ -126,11 +127,5 @@ public static unsafe class MemoryHelper
     /// </summary>
     /// <param name="buffer">A pointer to the memory block to zero out.</param>
     /// <param name="len">The length of the memory block to zero out, in bytes.</param>
-    public static void MemSet(void* buffer, int len)
-    {
-        for (int i = 0; i < len; i++)
-        {
-            *((byte*)buffer + i) = 0;
-        }
-    }
+    public static void MemSet(void* buffer, int len)  => Unsafe.InitBlock(buffer, 0, (uint)len);
 }
