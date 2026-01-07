@@ -142,12 +142,27 @@ public class Demo22 : IDemo, ICleanDemo
 
             Curve.GetState(d, out JVector targetPos, out JVector targetVel, out float targetAngVelY);
 
-            // Linear Motion Control
-            // Using a "Spring" (Proportional controller) to pull the body to the exact target position
-            // while Feed-Forwarding the target velocity.
+            // Motion Control Logic
+            //
+            // We want the platform to follow a path p(t) and orientation. Setting the position/orientation
+            // directly results in teleportation, which prevents proper physics simulation.
+            //
+            // Instead, we use a control scheme that combines Feed-Forward (target velocity)
+            // with a Proportional Controller (position error correction) to drive the body velocity v(t)
+            // towards the target:
+            //
+            // v(t) = alpha * (k(t) - x(t))
+            //
+            // where x(t) is the current position and alpha is a gain constant.
+            // By choosing k(t) = p(t) + 1/alpha * p'(t), the differential equation solves to:
+            //
+            // x(t) = C * exp(-alpha * t) + p(t)
+            //
+            // This means the body's position x(t) exponentially converges to the target path p(t).
+            //
+            // We apply this same logic to both Linear Velocity (below) and Angular Velocity.
             plank.Body.Velocity = targetVel + (targetPos - plank.Body.Position) * 10.0f;
 
-            // Angular Motion Control
             JVector currentForward = plank.Body.Orientation.GetBasisZ();
             JVector targetForward = JVector.Normalize(targetVel);
 
