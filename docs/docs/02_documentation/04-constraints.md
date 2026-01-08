@@ -15,7 +15,7 @@ AngularMotor, BallSocket, ConeLimit, DistanceLimit, FixedAngle, HingeAngle, Line
 Available joints:
 
 ```text
-HingeJoint, PrismaticJoint, UniversalJoint
+HingeJoint, PrismaticJoint, UniversalJoint, Weld
 ```
 
 ## Creating constraints
