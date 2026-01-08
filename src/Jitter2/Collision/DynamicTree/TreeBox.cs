@@ -77,18 +77,6 @@ public struct TreeBox : IEquatable<TreeBox>
 
     public readonly JVector Center => (Min + Max) * ((Real)(1.0 / 2.0));
 
-    public readonly Real GetVolume()
-    {
-        JVector len = Max - Min;
-        return len.X * len.Y * len.Z;
-    }
-
-    public readonly Real GetSurfaceArea()
-    {
-        JVector len = Max - Min;
-        return (Real)2.0 * (len.X * len.Y + len.Y * len.Z + len.Z * len.X);
-    }
-
     public readonly bool NotDisjoint(in JBoundingBox box)
     {
         return Max.X >= box.Min.X && Min.X <= box.Max.X && Max.Y >= box.Min.Y && Min.Y <= box.Max.Y &&
@@ -184,19 +172,31 @@ public struct TreeBox : IEquatable<TreeBox>
     // ─── Helper functions with SIMD support ───────────────────────────
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly double GetSurfaceArea()
+    {
+        var extent = Vector.Subtract(VectorMax, VectorMin);
+
+        double ex = extent.GetElement(0);
+        double ey = extent.GetElement(1);
+        double ez = extent.GetElement(2);
+
+        return 2.0 * (ex * ey + ey * ez + ez * ex);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double MergedSurface(in TreeBox first, in TreeBox second)
     {
         var vMin = Vector.Min(first.VectorMin, second.VectorMin);
         var vMax = Vector.Max(first.VectorMax, second.VectorMax);
         var extent = Vector.Subtract(vMax, vMin);
 
-        var ex = extent.GetElement(0);
-        var ey = extent.GetElement(1);
-        var ez = extent.GetElement(2);
+        double ex = extent.GetElement(0);
+        double ey = extent.GetElement(1);
+        double ez = extent.GetElement(2);
 
-        return (Real)2.0 * (ex * ey + ex * ez + ey * ez);
+        return 2.0d * (ex * ey + ex * ez + ey * ez);
     }
-    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Encompasses(in TreeBox outer, in TreeBox inner)
     {

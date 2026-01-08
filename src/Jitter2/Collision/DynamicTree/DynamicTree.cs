@@ -310,6 +310,18 @@ public partial class DynamicTree
                 $"The proxy '{proxy}' has already been added to this tree instance.");
         }
 
+        // 2^53 (approx 9e15) is the limit where double-precision values lose integer precision
+        // (i.e., x + 1.0 == x). Beyond this surface area, the Surface Area Heuristic (SAH)
+        // cannot detect small changes, causing the tree balancing to degrade.
+        //
+        // Note: Since TreeBox calculates surface area using 'double', this assertion
+        // is valid and necessary for both Single (float) and Double (double) precision builds.
+        if (proxy.WorldBoundingBox.GetSurfaceArea() > 9.007e15)
+        {
+            throw new InvalidOperationException(
+                $"Added extremely large proxy to dynamic tree. Surface Area exceeds double precision limits (2^53).");
+        }
+
         InternalAddProxy(proxy);
         OverlapCheckAdd(root, proxy.NodePtr);
         proxies.Add(proxy, active);
@@ -592,7 +604,6 @@ public partial class DynamicTree
     {
         if (node.IsLeaf)
         {
-            Debug.Assert(node.ExpandedBox.GetSurfaceArea() < 1e8);
             return node.ExpandedBox.GetSurfaceArea();
         }
 
@@ -1035,7 +1046,7 @@ public partial class DynamicTree
         }
 
         ref TreeBox nodeTreeBox = ref Nodes[node].ExpandedBox;
-        
+
         while (where != root)
         {
             if (TreeBox.Encompasses(Nodes[where].ExpandedBox,nodeTreeBox))
@@ -1045,7 +1056,7 @@ public partial class DynamicTree
 
             where = Nodes[where].Parent;
         }
-        
+
         int insertionParent = Nodes[where].Parent;
 
         // search for the best sibling
@@ -1083,7 +1094,7 @@ public partial class DynamicTree
             int rgt = Nodes[index].Right;
 
             TreeBox.CreateMerged(Nodes[lft].ExpandedBox, Nodes[rgt].ExpandedBox, out Nodes[index].ExpandedBox);
-            
+
             index = Nodes[index].Parent;
         }
     }
