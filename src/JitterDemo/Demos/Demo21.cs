@@ -169,7 +169,7 @@ public class VoxelWorld : IDynamicTreeProxy, IRayCastable
 
     // IBroadPhaseProxy implementation
     public JVector Velocity => JVector.Zero;
-    public JBoundingBox WorldBoundingBox => JBoundingBox.LargeBox; // Infinite Bounds
+    public JBoundingBox WorldBoundingBox => new (new JVector(-1e10f), new JVector(1e10f));
     public int NodePtr { get; set; }
     public int SetIndex { get; set; } = -1;
 
