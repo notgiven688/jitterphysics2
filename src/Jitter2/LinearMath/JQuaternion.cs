@@ -11,32 +11,52 @@ using System.Runtime.InteropServices;
 namespace Jitter2.LinearMath;
 
 /// <summary>
-/// Quaternion Q = Xi + Yj + Zk + W. Uses Hamilton's definition of ij=k.
+/// A structure representing a Quaternion: <c>Q = x*i + y*j + z*k + w</c>.
+/// <br/>
+/// Uses the Hamilton convention where <c>i² = j² = k² = ijk = -1</c>.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 4*sizeof(Real))]
+[StructLayout(LayoutKind.Explicit, Size = 4 * sizeof(Real))]
 public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<JQuaternion>
 {
-    [FieldOffset(0*sizeof(Real))] public Real X = x;
-    [FieldOffset(1*sizeof(Real))] public Real Y = y;
-    [FieldOffset(2*sizeof(Real))] public Real Z = z;
-    [FieldOffset(3*sizeof(Real))] public Real W = w;
+    [FieldOffset(0 * sizeof(Real))] public Real X = x;
+    [FieldOffset(1 * sizeof(Real))] public Real Y = y;
+    [FieldOffset(2 * sizeof(Real))] public Real Z = z;
+    [FieldOffset(3 * sizeof(Real))] public Real W = w;
 
     /// <summary>
-    /// Gets the identity quaternion (0, 0, 0, 1).
+    /// Gets the vector part <c>(x, y, z)</c> of the quaternion.
+    /// </summary>
+    public JVector Vector
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => Unsafe.As<JQuaternion, JVector>(ref this);
+    }
+
+    /// <summary>
+    /// Gets the scalar part <c>(w)</c> of the quaternion.
+    /// </summary>
+    public Real Scalar
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => W;
+    }
+
+    /// <summary>
+    /// Gets the identity quaternion <c>(0, 0, 0, 1)</c>.
     /// </summary>
     public static JQuaternion Identity => new(0, 0, 0, 1);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="JQuaternion"/> struct.
     /// </summary>
-    /// <param name="w">The W component.</param>
-    /// <param name="v">The vector component.</param>
+    /// <param name="w">The scalar (W) component.</param>
+    /// <param name="v">The vector (X, Y, Z) component.</param>
     public JQuaternion(Real w, in JVector v) : this(v.X, v.Y, v.Z, w)
     {
     }
 
     /// <summary>
-    /// Adds two quaternions.
+    /// Adds two quaternions component-wise.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
@@ -52,12 +72,15 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion that rotates the unit vector <paramref name="from"/> into
     /// the unit vector <paramref name="to"/>.
     /// </summary>
+    /// <remarks>
+    /// This calculation relies on the half-angle formula.
+    /// If the vectors are parallel (<c>dot ≈ 1</c>), Identity is returned.
+    /// If the vectors are opposite (<c>dot ≈ -1</c>), a rotation of 180° (π radians)
+    /// around an arbitrary orthogonal axis is returned.
+    /// </remarks>
     /// <param name="from">Source direction (must be unit length).</param>
     /// <param name="to">Target direction (must be unit length).</param>
-    /// <returns>
-    /// A unit quaternion representing the shortest rotation from <paramref name="from"/>
-    /// to <paramref name="to"/>.
-    /// </returns>
+    /// <returns>A unit quaternion representing the shortest rotation.</returns>
     public static JQuaternion CreateFromToRotation(JVector from, JVector to)
     {
         const Real epsilon = (Real)1e-6;
@@ -78,11 +101,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Adds two quaternions.
+    /// Adds two quaternions component-wise.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the sum of the two quaternions.</param>
+    /// <param name="result">Output: The sum of the two quaternions.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Add(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
@@ -95,6 +118,10 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <summary>
     /// Returns the conjugate of a quaternion.
     /// </summary>
+    /// <remarks>
+    /// The conjugate is defined as <c>(-x, -y, -z, w)</c>.
+    /// For unit quaternions, the conjugate is equivalent to the inverse.
+    /// </remarks>
     /// <param name="value">The quaternion to conjugate.</param>
     /// <returns>The conjugate of the quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -111,6 +138,9 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <summary>
     /// Returns the conjugate of the quaternion.
     /// </summary>
+    /// <remarks>
+    /// The conjugate is defined as <c>(-x, -y, -z, w)</c>.
+    /// </remarks>
     /// <returns>The conjugate of the quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly JQuaternion Conjugate()
@@ -124,7 +154,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Returns a string that represents the current quaternion.
+    /// Returns a string representing the quaternion in the format <c>X=..., Y=..., Z=..., W=...</c>.
     /// </summary>
     public readonly override string ToString()
     {
@@ -132,7 +162,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Subtracts one quaternion from another.
+    /// Subtracts the second quaternion from the first component-wise.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
@@ -145,11 +175,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Subtracts one quaternion from another.
+    /// Subtracts the second quaternion from the first component-wise.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the difference of the two quaternions.</param>
+    /// <param name="result">Output: The difference of the two quaternions.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
@@ -160,8 +190,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Multiplies two quaternions.
+    /// Multiplies two quaternions (Hamilton Product).
     /// </summary>
+    /// <remarks>
+    /// Non-commutative. <c>Q1 * Q2</c> represents the rotation Q2 followed by Q1 (local frame) or Q1 followed by Q2 (global frame).
+    /// </remarks>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
     /// <returns>The product of the two quaternions.</returns>
@@ -173,47 +206,53 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Calculates the transformation of (1,0,0)^T by the quaternion.
+    /// Calculates the transformation of the X-axis <c>(1, 0, 0)</c> by this quaternion.
     /// </summary>
+    /// <remarks>
+    /// Mathematically equivalent to <c>q · (1,0,0) · q⁻¹</c>.<br/>
+    /// Result: <c>[1 - 2(y² + z²), 2(xy + zw), 2(xz - yw)]</c>
+    /// </remarks>
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisX()
     {
         JVector result;
-
         result.X = (Real)1.0 - (Real)2.0 * (Y * Y + Z * Z);
         result.Y = (Real)2.0 * (X * Y + Z * W);
         result.Z = (Real)2.0 * (X * Z - Y * W);
-
         return result;
     }
 
     /// <summary>
-    /// Calculates the transformation of (0,1,0)^T by the quaternion.
+    /// Calculates the transformation of the Y-axis <c>(0, 1, 0)</c> by this quaternion.
     /// </summary>
+    /// <remarks>
+    /// Mathematically equivalent to <c>q · (0,1,0) · q⁻¹</c>.<br/>
+    /// Result: <c>[2(xy - zw), 1 - 2(x² + z²), 2(yz + xw)]</c>
+    /// </remarks>
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisY()
     {
         JVector result;
-
         result.X = (Real)2.0 * (X * Y - Z * W);
         result.Y = (Real)1.0 - (Real)2.0 * (X * X + Z * Z);
         result.Z = (Real)2.0 * (Y * Z + X * W);
-
         return result;
     }
 
     /// <summary>
-    /// Calculates the transformation of (0,0,1)^T by the quaternion.
+    /// Calculates the transformation of the Z-axis <c>(0, 0, 1)</c> by this quaternion.
     /// </summary>
+    /// <remarks>
+    /// Mathematically equivalent to <c>q · (0,0,1) · q⁻¹</c>.<br/>
+    /// Result: <c>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</c>
+    /// </remarks>
     /// <returns>The transformed vector.</returns>
     public readonly JVector GetBasisZ()
     {
         JVector result;
-
         result.X = (Real)2.0 * (X * Z + Y * W);
         result.Y = (Real)2.0 * (Y * Z - X * W);
         result.Z = (Real)1.0 - (Real)2.0 * (X * X + Y * Y);
-
         return result;
     }
 
@@ -221,7 +260,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion representing a rotation around the X-axis.
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
-    /// <returns>A quaternion representing the rotation.</returns>
+    /// <returns>The resulting quaternion.</returns>
     public static JQuaternion CreateRotationX(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
@@ -233,7 +272,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion representing a rotation around the Y-axis.
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
-    /// <returns>A quaternion representing the rotation.</returns>
+    /// <returns>The resulting quaternion.</returns>
     public static JQuaternion CreateRotationY(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
@@ -245,7 +284,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion representing a rotation around the Z-axis.
     /// </summary>
     /// <param name="radians">The angle of rotation in radians.</param>
-    /// <returns>A quaternion representing the rotation.</returns>
+    /// <returns>The resulting quaternion.</returns>
     public static JQuaternion CreateRotationZ(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
@@ -254,10 +293,10 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Creates a Quaternion from a <b>unit</b> vector and an angle to rotate about the vector.
+    /// Creates a Quaternion from a unit axis and an angle.
     /// </summary>
     /// <param name="axis">The unit vector to rotate around.</param>
-    /// <param name="angle">The angle of rotation.</param>
+    /// <param name="angle">The angle of rotation in radians.</param>
     public static JQuaternion CreateFromAxisAngle(in JVector axis, Real angle)
     {
         Real halfAngle = angle * (Real)0.5;
@@ -265,14 +304,16 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         return new JQuaternion(axis.X * s, axis.Y * s, axis.Z * s, c);
     }
 
-    /// <summary>Converts a <b>unit</b> quaternion to axis–angle form.</summary>
+    /// <summary>
+    /// Decomposes a unit quaternion into an axis and an angle.
+    /// </summary>
     /// <remarks>
-    /// Assumes <paramref name="quaternion"/> is already normalized.
-    /// The returned <paramref name="angle"/> is clamped to the shortest arc [0, π].
+    /// Assumes <paramref name="quaternion"/> is normalized.
+    /// Returns the shortest arc (angle in [0, π]).
     /// </remarks>
-    /// <param name="quaternion">Unit quaternion to decompose.</param>
-    /// <param name="axis">Receives the unit rotation axis.</param>
-    /// <param name="angle">Receives the rotation angle (radians).</param>
+    /// <param name="quaternion">The unit quaternion to decompose.</param>
+    /// <param name="axis">Output: The unit rotation axis.</param>
+    /// <param name="angle">Output: The rotation angle (radians).</param>
     public static void ToAxisAngle(JQuaternion quaternion, out JVector axis, out Real angle)
     {
         Real s = MathR.Sqrt(MathR.Max((Real)0.0, (Real)1.0 - quaternion.W * quaternion.W));
@@ -282,7 +323,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         if (s < epsilonSingularity)
         {
             angle = (Real)0.0;
-            axis = JVector.UnitX; // Default to X-axis for infinitesimal rotations
+            axis = JVector.UnitX;
             return;
         }
 
@@ -290,11 +331,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         axis = new JVector(quaternion.X * invS, quaternion.Y * invS, quaternion.Z * invS);
         angle = (Real)2.0 * MathR.Acos(quaternion.W);
 
-        // Enforce the shortest-arc representation (angle between 0 and PI radians).
+        // Enforce the shortest-arc representation (angle between 0 and PI)
         if (angle > MathR.PI)
         {
             angle = (Real)2.0 * MathR.PI - angle;
-            axis  = -axis;
+            axis = -axis;
         }
     }
 
@@ -303,7 +344,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the product of the two quaternions.</param>
+    /// <param name="result">Output: The product of the two quaternions.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
@@ -324,12 +365,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Calculates quaternion1* \times quaternion2.
+    /// Calculates <c>conjugate(Q1) * Q2</c>.
     /// </summary>
-    /// <param name="quaternion1">The first quaternion.</param>
+    /// <param name="quaternion1">The quaternion to conjugate and then multiply.</param>
     /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the product of the conjugate of the first quaternion
-    /// and the second quaternion.</param>
+    /// <param name="result">Output: The resulting quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
@@ -349,11 +389,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         result.Z = r1 * k2 + r2 * k1 + i1 * j2 - j1 * i2;
     }
 
-    /// <summary>
-    /// Calculates quaternion1* \times quaternion2.
-    /// </summary>
-    /// <param name="quaternion1">The first quaternion.</param>
-    /// <param name="quaternion2">The second quaternion.</param>
+    /// <inheritdoc cref="ConjugateMultiply(in JQuaternion, in JQuaternion, out JQuaternion)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
@@ -362,11 +398,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Calculates quaternion1 \times quaternion2*.
+    /// Calculates <c>Q1 * conjugate(Q2)</c>.
     /// </summary>
     /// <param name="quaternion1">The first quaternion.</param>
-    /// <param name="quaternion2">The second quaternion.</param>
-    /// <param name="result">When the method completes, contains the product of the first quaternion and the conjugate of the second quaternion.</param>
+    /// <param name="quaternion2">The quaternion to conjugate.</param>
+    /// <param name="result">Output: The resulting quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)
     {
@@ -386,11 +422,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         result.Z = r1 * k2 + r2 * k1 + i1 * j2 - j1 * i2;
     }
 
-    /// <summary>
-    /// Calculates quaternion1 \times quaternion2*.
-    /// </summary>
-    /// <param name="quaternion1">The first quaternion.</param>
-    /// <param name="quaternion2">The second quaternion.</param>
+    /// <inheritdoc cref="MultiplyConjugate(in JQuaternion, in JQuaternion, out JQuaternion)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2)
     {
@@ -401,7 +433,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <summary>
     /// Multiplies a quaternion by a scalar factor.
     /// </summary>
-    /// <param name="quaternion1">The quaternion to multiply.</param>
+    /// <param name="quaternion1">The quaternion.</param>
     /// <param name="scaleFactor">The scalar factor.</param>
     /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -414,9 +446,9 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <summary>
     /// Multiplies a quaternion by a scalar factor.
     /// </summary>
-    /// <param name="quaternion1">The quaternion to multiply.</param>
+    /// <param name="quaternion1">The quaternion.</param>
     /// <param name="scaleFactor">The scalar factor.</param>
-    /// <param name="result">When the method completes, contains the scaled quaternion.</param>
+    /// <param name="result">Output: The scaled quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JQuaternion quaternion1, Real scaleFactor, out JQuaternion result)
     {
@@ -427,15 +459,19 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Calculates the length of the quaternion.
+    /// Calculates the Euclidean length of the quaternion.
     /// </summary>
-    /// <returns>The length of the quaternion.</returns>
+    /// <returns>The length (magnitude).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Real Length()
     {
         return (Real)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
+    /// <summary>
+    /// Calculates the squared Euclidean length of the quaternion.
+    /// </summary>
+    /// <returns>The squared length.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Real LengthSquared()
     {
@@ -458,6 +494,10 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         W *= num;
     }
 
+    /// <summary>
+    /// Normalizes the provided quaternion structure in place.
+    /// </summary>
+    /// <param name="quaternion">The quaternion to normalize.</param>
     public static void NormalizeInPlace(ref JQuaternion quaternion)
     {
         Real num2 = quaternion.LengthSquared();
@@ -468,7 +508,11 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         quaternion.W *= num;
     }
 
-    /// <inheritdoc cref="Normalize()"/>
+    /// <summary>
+    /// Returns a normalized version of the quaternion.
+    /// </summary>
+    /// <param name="value">The source quaternion.</param>
+    /// <param name="result">Output: The normalized unit quaternion.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Normalize(in JQuaternion value, out JQuaternion result)
     {
@@ -480,7 +524,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         result.W = value.W * num;
     }
 
-    /// <inheritdoc cref="Normalize()"/>
+    /// <inheritdoc cref="Normalize(in JQuaternion, out JQuaternion)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion Normalize(in JQuaternion value)
     {
@@ -492,7 +536,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion from a rotation matrix.
     /// </summary>
     /// <param name="matrix">The rotation matrix.</param>
-    /// <returns>A quaternion representing the rotation.</returns>
+    /// <returns>The quaternion representing the rotation.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion CreateFromMatrix(in JMatrix matrix)
     {
@@ -504,7 +548,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Creates a quaternion from a rotation matrix.
     /// </summary>
     /// <param name="matrix">The rotation matrix.</param>
-    /// <param name="result">When the method completes, contains the quaternion representing the rotation.</param>
+    /// <param name="result">Output: The quaternion representing the rotation.</param>
     public static void CreateFromMatrix(in JMatrix matrix, out JQuaternion result)
     {
         Real t;
@@ -544,11 +588,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Multiplies two quaternions.
+    /// Multiplies two quaternions (Hamilton Product).
     /// </summary>
-    /// <param name="value1">The first quaternion.</param>
-    /// <param name="value2">The second quaternion.</param>
-    /// <returns>The product of the two quaternions.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(in JQuaternion value1, in JQuaternion value2)
     {
@@ -557,11 +598,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Multiplies a quaternion by a scalar factor.
+    /// scales a quaternion by a factor.
     /// </summary>
-    /// <param name="value1">The scalar factor.</param>
-    /// <param name="value2">The quaternion to multiply.</param>
-    /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(Real value1, in JQuaternion value2)
     {
@@ -570,11 +608,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Multiplies a quaternion by a scalar factor.
+    /// scales a quaternion by a factor.
     /// </summary>
-    /// <param name="value1">The quaternion to multiply.</param>
-    /// <param name="value2">The scalar factor.</param>
-    /// <returns>The scaled quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(in JQuaternion value1, Real value2)
     {
@@ -583,11 +618,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Adds two quaternions.
+    /// Adds two quaternions component-wise.
     /// </summary>
-    /// <param name="value1">The first quaternion.</param>
-    /// <param name="value2">The second quaternion.</param>
-    /// <returns>The sum of the two quaternions.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator +(in JQuaternion value1, in JQuaternion value2)
     {
@@ -596,11 +628,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Subtracts one quaternion from another.
+    /// Subtracts the second quaternion from the first component-wise.
     /// </summary>
-    /// <param name="value1">The first quaternion.</param>
-    /// <param name="value2">The second quaternion.</param>
-    /// <returns>The result of subtracting the second quaternion from the first.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator -(in JQuaternion value1, in JQuaternion value2)
     {

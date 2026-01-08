@@ -43,7 +43,7 @@ public sealed partial class World
         Last
     }
 
-    private Action<Parallel.Batch> integrate;
+    private Action<Parallel.Batch> integrateVelocities;
     private Action<Parallel.Batch> integrateForces;
     private Action<Parallel.Batch> prepareContacts;
     private Action<Parallel.Batch> iterateContacts;
@@ -55,11 +55,10 @@ public sealed partial class World
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
-    
 
     private void InitParallelCallbacks()
     {
-        integrate = Integrate;
+        integrateVelocities = IntegrateVelocities;
         integrateForces = IntegrateForces;
         prepareContacts = PrepareContacts;
         iterateContacts = IterateContacts;
@@ -154,10 +153,12 @@ public sealed partial class World
         // Sub-stepping
         for (int i = 0; i < substeps; i++)
         {
+            PreSubStep?.Invoke(substepDt);
             IntegrateForces(multiThread);                       // FAST SWEEP
-            Solve(multiThread, solverIterations);               // FAST SWEEP
-            Integrate(multiThread);                             // FAST SWEEP
+            SolveVelocities(multiThread, solverIterations);     // FAST SWEEP
+            IntegrateVelocities(multiThread);                   // FAST SWEEP
             RelaxVelocities(multiThread, velocityRelaxations);  // FAST SWEEP
+            PostSubStep?.Invoke(substepDt);
         }
 
         Tracer.ProfileEnd(TraceName.Solve);
@@ -382,7 +383,8 @@ public sealed partial class World
 
             if (constraint.PrepareForIteration == null) continue;
 
-            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic);
+            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
+                "Invalid constraint: both bodies are non-dynamic.");
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -846,7 +848,7 @@ public sealed partial class World
         return omega - JVector.Transform(f, invJacobian);
     }
 
-    private void Integrate(Parallel.Batch batch)
+    private void IntegrateVelocities(Parallel.Batch batch)
     {
         var span = memRigidBodies.Active[batch.Start..batch.End];
 
@@ -895,7 +897,7 @@ public sealed partial class World
         }
     }
 
-    private void Solve(bool multiThread, int iterations)
+    private void SolveVelocities(bool multiThread, int iterations)
     {
         if (multiThread)
         {
@@ -958,15 +960,15 @@ public sealed partial class World
         }
     }
 
-    private void Integrate(bool multiThread)
+    private void IntegrateVelocities(bool multiThread)
     {
         if (multiThread)
         {
-            memRigidBodies.ParallelForBatch(256, integrate);
+            memRigidBodies.ParallelForBatch(256, integrateVelocities);
         }
         else
         {
-            Integrate(new Parallel.Batch(0, memRigidBodies.Active.Length));
+            IntegrateVelocities(new Parallel.Batch(0, memRigidBodies.Active.Length));
         }
     }
 

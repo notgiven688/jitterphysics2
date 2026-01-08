@@ -55,8 +55,7 @@ public sealed partial class World
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01.
     /// </summary>
-    public Real SpeculativeVelocityThreshold { get; set; } =(Real)10.0;
-
+    public Real SpeculativeVelocityThreshold { get; set; } = (Real)10.0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)

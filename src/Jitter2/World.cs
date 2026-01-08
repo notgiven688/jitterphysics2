@@ -71,8 +71,49 @@ public sealed partial class World : IDisposable
     public delegate void WorldStep(Real dt);
 
     // Post- and Pre-step
+
+    /// <summary>
+    /// Raised at the beginning of a simulation step, before any collision detection,
+    /// constraint solving, or integration is performed.
+    /// </summary>
+    /// <remarks>
+    /// This event is invoked once per call to <see cref="Step"/> and receives the full
+    /// step time <c>dt</c>. It can be used to apply external forces, modify bodies,
+    /// or gather per-step diagnostics before the simulation advances.
+    /// </remarks>
     public event WorldStep? PreStep;
+
+    /// <summary>
+    /// Raised at the end of a simulation step, after all substeps, collision handling,
+    /// and integration have completed.
+    /// </summary>
+    /// <remarks>
+    /// This event is invoked once per call to <see cref="Step"/> and receives the full
+    /// step time <c>dt</c>. At this point, all body states represent the final results
+    /// of the step.
+    /// </remarks>
     public event WorldStep? PostStep;
+
+    /// <summary>
+    /// Raised at the beginning of each substep during a simulation step.
+    /// </summary>
+    /// <remarks>
+    /// A simulation step may be divided into multiple substeps for stability.
+    /// This event is invoked once per substep and receives the substep duration
+    /// (<c>dt / substepCount</c>). It is called immediately before force integration
+    /// and constraint solving for the substep.
+    /// </remarks>
+    public event WorldStep? PreSubStep;
+
+    /// <summary>
+    /// Raised at the end of each substep during a simulation step.
+    /// </summary>
+    /// <remarks>
+    /// This event is invoked once per substep and receives the substep duration.
+    /// It is called after integration and constraint solving for the substep
+    /// have completed.
+    /// </remarks>
+    public event WorldStep? PostSubStep;
 
     /// <summary>
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use

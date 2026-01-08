@@ -139,7 +139,7 @@ public class Tester(Octree tree) : IDynamicTreeProxy, IRayCastable
 
 public class Demo20 : IDemo, ICleanDemo
 {
-    public string Name => "Custom Collision (Octree)";
+    public string Name => "Octree (Custom Collision)";
 
     private Playground pg = null!;
     private World world = null!;

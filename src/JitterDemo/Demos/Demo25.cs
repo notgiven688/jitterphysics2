@@ -222,7 +222,7 @@ public class HeightmapDetection : IBroadPhaseFilter
 
 public class Demo25 : IDemo
 {
-    public string Name => "Custom Collision (Heightmap)";
+    public string Name => "Heightmap (Custom Collision)";
 
     private Cloth terrainRenderer = null!;
 
