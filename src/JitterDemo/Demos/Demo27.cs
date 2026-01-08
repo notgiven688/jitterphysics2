@@ -23,7 +23,7 @@ public class Demo27 : IDemo, ICleanDemo
         pg.ResetScene(true);
 
         var paddle = world.CreateRigidBody();
-        paddle.AddShape(new BoxShape(5, 1, 0.01f));
+        paddle.AddShape(new BoxShape(5, 1, 0.01d));
         paddle.Position = (0, 3, -20);
         paddle.AffectedByGravity = false;
 
@@ -31,13 +31,13 @@ public class Demo27 : IDemo, ICleanDemo
             JVector.UnitY, AngularLimit.Full, false);
 
         var ball = world.CreateRigidBody();
-        ball.AddShape(new SphereShape(0.2f));
-        ball.Position = (+2.2f, 3, 400);
+        ball.AddShape(new SphereShape(0.2d));
+        ball.Position = (+2.2d, 3, 400);
         ball.Velocity = (0, 0, -400);
         ball.Damping = (0, 0);
         ball.AffectedByGravity = false;
 
-        Common.BuildRagdoll((-2.2f, 3.5f, -19.7f), body =>
+        Common.BuildRagdoll((-2.2d, 3.5d, -19.7d), body =>
         {
             body.AffectedByGravity = false;
             ccdSolver.Add(body);
@@ -46,7 +46,7 @@ public class Demo27 : IDemo, ICleanDemo
         ccdSolver.Add(paddle);
         ccdSolver.Add(ball);
 
-        world.SpeculativeRelaxationFactor = 0.5f;
+        world.SpeculativeRelaxationFactor = 0.5d;
     }
 
     public void Draw()

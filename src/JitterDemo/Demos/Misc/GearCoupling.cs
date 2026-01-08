@@ -56,9 +56,9 @@ public class GearCoupling
 
     private readonly World world;
 
-    private float prevAngle1, prevAngle2;
+    private double prevAngle1, prevAngle2;
 
-    public float GearRatio { get; private set; }
+    public double GearRatio { get; private set; }
 
     // Accumulators for full rotations
     public int Rotations1 { get; private set; }
@@ -102,8 +102,8 @@ public class GearCoupling
 
         // Calculate Ratio based on radius to contact point
         // Ratio = r1 / r2
-        float r1 = (body1.Position - contactPoint).Length();
-        float r2 = (body2.Position - contactPoint).Length();
+        double r1 = (body1.Position - contactPoint).Length();
+        double r2 = (body2.Position - contactPoint).Length();
         this.GearRatio = r1 / r2;
 
         // 4. Initialize Angles immediately to prevent "spin on spawn"
@@ -117,13 +117,13 @@ public class GearCoupling
     /// <summary>
     /// Calculates the signed twist angle relative to the initial orientation.
     /// </summary>
-    private static float GetTwistAngle(RigidBody body, JQuaternion initialOrientation, JVector localAxis)
+    private static double GetTwistAngle(RigidBody body, JQuaternion initialOrientation, JVector localAxis)
     {
         JQuaternion q = JQuaternion.MultiplyConjugate(body.Orientation, initialOrientation);
         JVector ax = JVector.Transform(localAxis, body.Orientation);
 
-        float y = JVector.Dot(q.Vector, ax);
-        float x = q.Scalar;
+        double y = JVector.Dot(q.Vector, ax);
+        double x = q.Scalar;
 
         // Double-cover check
         if (x < 0)
@@ -132,42 +132,42 @@ public class GearCoupling
             y = -y;
         }
 
-        return 2.0f * MathF.Atan2(y, x);
+        return 2.0f * Math.Atan2(y, x);
     }
 
-    public float GearAngle1 => GetTwistAngle(Body1, initialOrientation1, localAxis1);
-    public float GearAngle2 => GetTwistAngle(Body2, initialOrientation2, localAxis2);
+    public double GearAngle1 => GetTwistAngle(Body1, initialOrientation1, localAxis1);
+    public double GearAngle2 => GetTwistAngle(Body2, initialOrientation2, localAxis2);
 
-    public float TrackDeltaAngle()
+    public double TrackDeltaAngle()
     {
-        float angle1 = GearAngle1;
-        float angle2 = GearAngle2;
+        double angle1 = GearAngle1;
+        double angle2 = GearAngle2;
 
-        float deltaAngle1 = angle1 - prevAngle1;
-        float deltaAngle2 = angle2 - prevAngle2;
+        double deltaAngle1 = angle1 - prevAngle1;
+        double deltaAngle2 = angle2 - prevAngle2;
 
         // Phase Unwrapping
-        if (MathF.Abs(deltaAngle1) > MathF.PI)
-            Rotations1 -= MathF.Sign(deltaAngle1);
+        if (Math.Abs(deltaAngle1) > Math.PI)
+            Rotations1 -= Math.Sign(deltaAngle1);
 
-        if (MathF.Abs(deltaAngle2) > MathF.PI)
-            Rotations2 -= MathF.Sign(deltaAngle2);
+        if (Math.Abs(deltaAngle2) > Math.PI)
+            Rotations2 -= Math.Sign(deltaAngle2);
 
         prevAngle1 = angle1;
         prevAngle2 = angle2;
 
-        float totRot1 = Rotations1 * MathF.PI * 2.0f + angle1;
-        float totRot2 = Rotations2 * MathF.PI * 2.0f + angle2;
+        double totRot1 = Rotations1 * Math.PI * 2.0f + angle1;
+        double totRot2 = Rotations2 * Math.PI * 2.0f + angle2;
 
         // Constraint: Theta2 - Ratio * Theta1 = 0
         // We return the error (delta)
         return totRot2 + GearRatio * totRot1; // Note: Usually '+' if gears rotate opposite directions!
     }
 
-    private void OnPreStep(float dt)
+    private void OnPreStep(double dt)
     {
         // 1. Calculate the Error
-        float error = TrackDeltaAngle();
+        double error = TrackDeltaAngle();
 
         // Optional: Clamp error to prevent explosions if physics glitched hard
         error = Math.Clamp(error, -0.1f, 0.1f);
@@ -186,7 +186,7 @@ public class GearCoupling
         // We shift the anchor points along the tangent to compensate for the angular error.
         // The factor '0.5' splits the correction between both bodies.
         // 'r2' (radius) acts as the lever arm converter (Angle -> Arc Length).
-        float radius2 = (Body2.Position - ContactPoint).Length();
+        double radius2 = (Body2.Position - ContactPoint).Length();
         JVector offset = tangent * (error * radius2 * 0.5f);
 
         DistanceLimit.Anchor1 = ContactPoint + offset;

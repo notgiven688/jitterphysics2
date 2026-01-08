@@ -34,7 +34,7 @@ public class CcdSolver
 
     public bool Enabled { get; set; } = true;
 
-    private void PreStep(float dt)
+    private void PreStep(double dt)
     {
         if (!Enabled) return;
 
@@ -77,7 +77,7 @@ public class CcdSolver
         }
     }
 
-    private void CreateAndSolve(List<IDynamicTreeProxy> proxies, RigidBodyShape shape, float dt)
+    private void CreateAndSolve(List<IDynamicTreeProxy> proxies, RigidBodyShape shape, double dt)
     {
         // Within proxies find the one which collides with 'shape' and has the smallest time of impact (TOI).
 
@@ -87,7 +87,7 @@ public class CcdSolver
         Unsafe.SkipInit(out JVector bestpB);
         Unsafe.SkipInit(out JVector bestNormal);
 
-        float smallestToi = float.MaxValue;
+        double smallestToi = double.MaxValue;
 
         for (int i = 0; i < proxies.Count; i++)
         {
@@ -99,18 +99,18 @@ public class CcdSolver
             ref var data = ref shape.RigidBody.Data;
             ref var pdata = ref pshape.RigidBody.Data;
 
-            float extentA = MathF.Max((shape.WorldBoundingBox.Max - shape.RigidBody.Position).Length(),
+            double extentA = Math.Max((shape.WorldBoundingBox.Max - shape.RigidBody.Position).Length(),
                 (shape.WorldBoundingBox.Min - shape.RigidBody.Position).Length());
 
-            float extentB = MathF.Max((pshape.WorldBoundingBox.Max - pshape.RigidBody.Position).Length(),
+            double extentB = Math.Max((pshape.WorldBoundingBox.Max - pshape.RigidBody.Position).Length(),
                 (pshape.WorldBoundingBox.Min - pshape.RigidBody.Position).Length());
 
             bool success = NarrowPhase.Sweep(shape, pshape, data.Orientation, pdata.Orientation,
                 data.Position, pdata.Position, data.Velocity, pdata.Velocity,
                 data.AngularVelocity, pdata.AngularVelocity, extentA, extentB,
-                out JVector pA, out JVector pB, out JVector normal, out float toi);
+                out JVector pA, out JVector pB, out JVector normal, out double toi);
 
-            if (!success || toi > dt || toi == (float)0.0) continue;
+            if (!success || toi > dt || toi == (double)0.0) continue;
 
             if (world.NarrowPhaseFilter != null)
             {
@@ -128,7 +128,7 @@ public class CcdSolver
             }
         }
 
-        if (!(smallestToi < float.MaxValue)) return;
+        if (!(smallestToi < double.MaxValue)) return;
 
         // Create an arbiter and register the contact. Perform one iteration of the solver.
         // This updates the velocities of the rigid bodies and prepares them for the next iteration.
@@ -146,7 +146,7 @@ public class CcdSolver
             world.RegisterContact(arbiter, bestpB, bestpA, -bestNormal);
         }
 
-        arbiter.Handle.Data.PrepareForIteration((float)1.0 / dt);
+        arbiter.Handle.Data.PrepareForIteration((double)1.0 / dt);
         arbiter.Handle.Data.Iterate(false);
     }
 

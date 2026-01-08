@@ -22,30 +22,30 @@ public class Demo22 : IDemo, ICleanDemo
     private struct BeltPlank
     {
         public RigidBody Body;
-        public float DistanceOffset;
+        public double DistanceOffset;
     }
 
     private List<BeltPlank> planks = new();
 
     private static class Curve
     {
-        public const float Speed = 2f;
-        public const float StraightLength = 12.0f;
-        public const float Radius = 6.0f;
+        public const double Speed = 2f;
+        public const double StraightLength = 12.0f;
+        public const double Radius = 6.0f;
 
-        public static float TotalLength => (StraightLength * 2.0f) + (MathF.PI * Radius * 2.0f);
+        public static double TotalLength => (StraightLength * 2.0f) + (Math.PI * Radius * 2.0f);
 
-        public static void GetState(float distance, out JVector pos, out JVector vel, out float angVelY)
+        public static void GetState(double distance, out JVector pos, out JVector vel, out double angVelY)
         {
             distance = distance % TotalLength;
             if (distance < 0) distance += TotalLength;
 
-            float curveLen = MathF.PI * Radius;
+            double curveLen = Math.PI * Radius;
 
             // 1. Bottom Straight
             if (distance < StraightLength)
             {
-                float t = distance;
+                double t = distance;
                 pos = new JVector(-StraightLength * 0.5f + t, 4.0f, -Radius);
                 vel = new JVector(Speed, 0, 0);
                 angVelY = 0;
@@ -53,16 +53,16 @@ public class Demo22 : IDemo, ICleanDemo
             // 2. Right Turn
             else if (distance < StraightLength + curveLen)
             {
-                float t = distance - StraightLength;
-                float angle = -MathF.PI * 0.5f + (t / Radius);
-                pos = new JVector(StraightLength * 0.5f + MathF.Cos(angle) * Radius, 4.0f, MathF.Sin(angle) * Radius);
-                vel = new JVector(-MathF.Sin(angle), 0, MathF.Cos(angle)) * Speed;
+                double t = distance - StraightLength;
+                double angle = -Math.PI * 0.5f + (t / Radius);
+                pos = new JVector(StraightLength * 0.5f + Math.Cos(angle) * Radius, 4.0f, Math.Sin(angle) * Radius);
+                vel = new JVector(-Math.Sin(angle), 0, Math.Cos(angle)) * Speed;
                 angVelY = Speed / Radius;
             }
             // 3. Top Straight
             else if (distance < (StraightLength * 2.0f) + curveLen)
             {
-                float t = distance - (StraightLength + curveLen);
+                double t = distance - (StraightLength + curveLen);
                 pos = new JVector(StraightLength * 0.5f - t, 4.0f, Radius);
                 vel = new JVector(-Speed, 0, 0);
                 angVelY = 0;
@@ -70,10 +70,10 @@ public class Demo22 : IDemo, ICleanDemo
             // 4. Left Turn
             else
             {
-                float t = distance - ((StraightLength * 2.0f) + curveLen);
-                float angle = MathF.PI * 0.5f + (t / Radius);
-                pos = new JVector(-StraightLength * 0.5f + MathF.Cos(angle) * Radius, 4.0f, MathF.Sin(angle) * Radius);
-                vel = new JVector(-MathF.Sin(angle), 0, MathF.Cos(angle)) * Speed;
+                double t = distance - ((StraightLength * 2.0f) + curveLen);
+                double angle = Math.PI * 0.5f + (t / Radius);
+                pos = new JVector(-StraightLength * 0.5f + Math.Cos(angle) * Radius, 4.0f, Math.Sin(angle) * Radius);
+                vel = new JVector(-Math.Sin(angle), 0, Math.Cos(angle)) * Speed;
                 angVelY = Speed / Radius;
             }
         }
@@ -90,9 +90,9 @@ public class Demo22 : IDemo, ICleanDemo
         // Subscribe to the physics step event
         world.PreSubStep += OnPreStep;
 
-        float plankWidth = 0.6f;
+        double plankWidth = 0.6f;
         int plankCount = (int)(Curve.TotalLength / plankWidth);
-        float distStep = Curve.TotalLength / plankCount;
+        double distStep = Curve.TotalLength / plankCount;
 
         for (int i = 0; i < plankCount; i++)
         {
@@ -101,8 +101,8 @@ public class Demo22 : IDemo, ICleanDemo
             body.MotionType = MotionType.Kinematic;
             body.Friction = 1.0f;
 
-            float dist = i * distStep;
-            Curve.GetState(dist, out JVector pos, out JVector vel, out float w);
+            double dist = i * distStep;
+            Curve.GetState(dist, out JVector pos, out JVector vel, out double w);
 
             body.Position = pos;
 
@@ -131,16 +131,16 @@ public class Demo22 : IDemo, ICleanDemo
     }
 
     // Called automatically by Jitter before every physics sub-step
-    private void OnPreStep(float dt)
+    private void OnPreStep(double dt)
     {
         physicsTime += dt;
-        float globalDist = (float)physicsTime * Curve.Speed;
+        double globalDist = (double)physicsTime * Curve.Speed;
 
         foreach (var plank in planks)
         {
-            float d = globalDist + plank.DistanceOffset;
+            double d = globalDist + plank.DistanceOffset;
 
-            Curve.GetState(d, out JVector targetPos, out JVector targetVel, out float targetAngVelY);
+            Curve.GetState(d, out JVector targetPos, out JVector targetVel, out double targetAngVelY);
 
             // Motion Control Logic
             //
@@ -167,9 +167,9 @@ public class Demo22 : IDemo, ICleanDemo
             JVector targetForward = JVector.Normalize(targetVel);
 
             // Calculate angle sine error (Cross Product Y-component)
-            float angleError = (currentForward.Z * targetForward.X - currentForward.X * targetForward.Z);
+            double angleError = (currentForward.Z * targetForward.X - currentForward.X * targetForward.Z);
 
-            float correction = angleError * 20.0f;
+            double correction = angleError * 20.0f;
             plank.Body.AngularVelocity = new JVector(0, targetAngVelY + correction, 0);
         }
     }
@@ -178,12 +178,12 @@ public class Demo22 : IDemo, ICleanDemo
     {
         // Only drawing logic remains here
         const int stepMax = 200;
-        float totalLen = Curve.TotalLength;
+        double totalLen = Curve.TotalLength;
 
         for (int step = 0; step < stepMax; step++)
         {
-            float d1 = totalLen / stepMax * step;
-            float d2 = totalLen / stepMax * (step + 1);
+            double d1 = totalLen / stepMax * step;
+            double d2 = totalLen / stepMax * (step + 1);
             Curve.GetState(d1, out JVector p1, out _, out _);
             Curve.GetState(d2, out JVector p2, out _, out _);
             pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, Conversion.FromJitter(p1), Conversion.FromJitter(p2));

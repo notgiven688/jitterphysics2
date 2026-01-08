@@ -19,9 +19,9 @@ public static class Heightmap
 {
     public const int Width = 100;
     public const int Height = 100;
-    public const float Amplitude = 2f;
+    public const double Amplitude = 2f;
 
-    public static float GetHeight(int x, int z)
+    public static double GetHeight(int x, int z)
     {
         // GetHeight could be implemented as an array, make sure to respect array bounds
         if (x < 0 || x >= Width || z < 0 || z >= Height)
@@ -46,15 +46,15 @@ public class HeightmapTester(JBoundingBox box) : IDynamicTreeProxy, IRayCastable
     public JVector Velocity => JVector.Zero;
     public JBoundingBox WorldBoundingBox { get; } = box;
 
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
-        const float maxDistance = 100.0f;
+        const double maxDistance = 100.0f;
 
-        float dirX = direction.X;
-        float dirZ = direction.Z;
+        double dirX = direction.X;
+        double dirZ = direction.Z;
 
-        float len2 = dirX * dirX + dirZ * dirZ;
-        float ilen = 1.0f / MathF.Sqrt(len2);
+        double len2 = dirX * dirX + dirZ * dirZ;
+        double ilen = 1.0f / Math.Sqrt(len2);
 
         dirX *= ilen;
         dirZ *= ilen;
@@ -65,16 +65,16 @@ public class HeightmapTester(JBoundingBox box) : IDynamicTreeProxy, IRayCastable
         int stepX = dirX > 0 ? 1 : -1;
         int stepZ = dirZ > 0 ? 1 : -1;
 
-        float nextX = dirX > 0 ? (x + 1) - origin.X : origin.X - x;
-        float nextZ = dirZ > 0 ? (z + 1) - origin.Z : origin.Z - z;
+        double nextX = dirX > 0 ? (x + 1) - origin.X : origin.X - x;
+        double nextZ = dirZ > 0 ? (z + 1) - origin.Z : origin.Z - z;
 
-        float tMaxX = dirX != 0 ? nextX / Math.Abs(dirX) : float.PositiveInfinity;
-        float tMaxZ = dirZ != 0 ? nextZ / Math.Abs(dirZ) : float.PositiveInfinity;
+        double tMaxX = dirX != 0 ? nextX / Math.Abs(dirX) : double.PositiveInfinity;
+        double tMaxZ = dirZ != 0 ? nextZ / Math.Abs(dirZ) : double.PositiveInfinity;
 
-        float tDeltaX = direction.X != 0 ? 1f / Math.Abs(dirX) : float.PositiveInfinity;
-        float tDeltaZ = direction.Z != 0 ? 1f / Math.Abs(dirZ) : float.PositiveInfinity;
+        double tDeltaX = direction.X != 0 ? 1f / Math.Abs(dirX) : double.PositiveInfinity;
+        double tDeltaZ = direction.Z != 0 ? 1f / Math.Abs(dirZ) : double.PositiveInfinity;
 
-        float t = 0f;
+        double t = 0f;
 
         while (t <= maxDistance)
         {
@@ -98,10 +98,10 @@ public class HeightmapTester(JBoundingBox box) : IDynamicTreeProxy, IRayCastable
             JTriangle tri0 = new JTriangle(a, c, b);
             JTriangle tri1 = new JTriangle(a, d, c);
 
-            tri0.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal0, out float lambda0);
-            tri1.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal1, out float lambda1);
+            tri0.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal0, out double lambda0);
+            tri1.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out JVector normal1, out double lambda1);
 
-            if (lambda0 < float.MaxValue || lambda1 < float.MaxValue)
+            if (lambda0 < double.MaxValue || lambda1 < double.MaxValue)
             {
                 if (lambda0 <= lambda1)
                 {
@@ -188,7 +188,7 @@ public class HeightmapDetection : IBroadPhaseFilter
                 JVector normal = JVector.Normalize((triangle.B - triangle.A) % (triangle.C - triangle.A));
 
                 bool hit = NarrowPhase.MprEpa(triangle, rbs, body.Orientation, body.Position,
-                    out JVector pointA, out JVector pointB, out _, out float penetration);
+                    out JVector pointA, out JVector pointB, out _, out double penetration);
 
                 if (hit)
                 {
@@ -256,7 +256,7 @@ public class Demo25 : IDemo
             {
                 int index = j * width + i;
 
-                vertices[index].Position = new Vector3(i, Heightmap.GetHeight(i, j), j);
+                vertices[index].Position = new Vector3(i, (float)Heightmap.GetHeight(i, j), j);
                 vertices[index].Texture = new Vector2(i * 0.5f, j * 0.5f);
                 // Normals are automatically calculated within terrainRenderer.VerticesChanged();
             }
