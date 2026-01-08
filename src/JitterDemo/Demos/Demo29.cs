@@ -82,7 +82,7 @@ public class Demo29 : IDemo, ICleanDemo
 
         foreach (var coupling in couplings)
         {
-            pg.DebugRenderer.PushPoint(DebugRenderer.Color.Green, coupling.ContactPoint.UnsafeAs<Vector3>());
+            pg.DebugRenderer.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(coupling.ContactPoint));
         }
     }
 
