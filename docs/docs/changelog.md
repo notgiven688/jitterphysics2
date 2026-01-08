@@ -4,6 +4,11 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.7 (2026-01-08)
+
+- Add `vector.UnsafeAs<T>` and `JVector.UnsafeFrom<T>`. Same for `JQuaternion`.
+- Added `world.PreSubStep` and `world.PostSubStep` events.
+
 ### Jitter 2.7.6 (2025-12-18)
 
 - Removed `World.Capacity`. Number of entities in `World` no longer has to be specified in advance.
