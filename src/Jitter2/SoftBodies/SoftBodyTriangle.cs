@@ -9,24 +9,48 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
+/// <summary>
+/// Represents a triangular shape in a soft body simulation.
+/// </summary>
 public sealed class SoftBodyTriangle : SoftBodyShape
 {
     private readonly RigidBody v1;
     private readonly RigidBody v2;
     private readonly RigidBody v3;
 
+    /// <summary>
+    /// Gets the first vertex (rigid body) of the triangle.
+    /// </summary>
     public RigidBody Vertex1 => v1;
+
+    /// <summary>
+    /// Gets the second vertex (rigid body) of the triangle.
+    /// </summary>
     public RigidBody Vertex2 => v2;
+
+    /// <summary>
+    /// Gets the third vertex (rigid body) of the triangle.
+    /// </summary>
     public RigidBody Vertex3 => v3;
 
     private Real halfThickness = (Real)0.05;
 
+    /// <summary>
+    /// Gets or sets the thickness of the triangle.
+    /// </summary>
     public Real Thickness
     {
         get => halfThickness * (Real)2.0;
         set => halfThickness = value * (Real)0.5;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SoftBodyTriangle"/> class.
+    /// </summary>
+    /// <param name="body">The soft body this shape belongs to.</param>
+    /// <param name="v1">The first vertex.</param>
+    /// <param name="v2">The second vertex.</param>
+    /// <param name="v3">The third vertex.</param>
     public SoftBodyTriangle(SoftBody body, RigidBody v1, RigidBody v2, RigidBody v3)
     {
         this.v1 = v1;
@@ -37,8 +61,10 @@ public sealed class SoftBodyTriangle : SoftBodyShape
         UpdateWorldBoundingBox();
     }
 
+    /// <inheritdoc/>
     public override JVector Velocity => (Real)(1.0 / 3.0) * (v1.Data.Velocity + v2.Data.Velocity + v3.Data.Velocity);
 
+    /// <inheritdoc/>
     public override RigidBody GetClosest(in JVector pos)
     {
         Real len1 = (pos - v1.Position).LengthSquared();
@@ -49,6 +75,7 @@ public sealed class SoftBodyTriangle : SoftBodyShape
             (len2 < len3) ? v2 : v3;
     }
 
+    /// <inheritdoc/>
     public override void UpdateWorldBoundingBox(Real dt = (Real)0.0)
     {
         Real extraMargin = MathR.Max(halfThickness, (Real)0.01);
@@ -67,6 +94,7 @@ public sealed class SoftBodyTriangle : SoftBodyShape
         WorldBoundingBox = box;
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         JVector a = v1.Position;
@@ -94,6 +122,7 @@ public sealed class SoftBodyTriangle : SoftBodyShape
         result += JVector.Normalize(direction) * halfThickness;
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = ((Real)(1.0 / 3.0)) * (Vertex1.Position + Vertex2.Position + Vertex3.Position);

@@ -14,9 +14,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.SoftBodies;
 
 /// <summary>
-/// Constrains the distance between a fixed point in the reference frame of one body and a fixed
-/// point in the reference frame of another body. This constraint removes one translational degree
-/// of freedom. For a distance of zero, use the <see cref="BallSocket"/> constraint.
+/// A constraint that acts like a spring, connecting two bodies.
+/// It applies forces to maintain a target distance between two anchor points.
 /// </summary>
 public unsafe class SpringConstraint : Constraint
 {
@@ -46,6 +45,7 @@ public unsafe class SpringConstraint : Constraint
 
     private JHandle<SpringData> handle;
 
+    /// <inheritdoc/>
     protected override void Create()
     {
         CheckDataSize<SpringData>();
@@ -55,6 +55,7 @@ public unsafe class SpringConstraint : Constraint
         handle = JHandle<ConstraintData>.AsHandle<SpringData>(Handle);
     }
 
+    /// <inheritdoc/>
     public override bool IsSmallConstraint { get; } = sizeof(SpringData) <= sizeof(SmallConstraintData);
 
     /// <summary>
@@ -76,6 +77,34 @@ public unsafe class SpringConstraint : Constraint
         data.Distance = (anchor2 - anchor1).Length();
     }
 
+    /// <summary>
+    /// Sets the spring parameters using physical properties. This method calculates and sets
+    /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
+    /// of the involved bodies and the timestep size does not change.
+    /// </summary>
+    /// <param name="frequency">The frequency in Hz.</param>
+    /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
+    /// <param name="dt">The timestep of the simulation.</param>
+    public void SetSpringParameters(Real frequency, Real damping, Real dt)
+    {
+        ref SpringData data = ref handle.Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        Real effectiveMass = (Real)1.0 / (body1.InverseMass + body2.InverseMass);
+
+        Real omega = (Real)2.0 * MathR.PI * frequency;
+        Real d = (Real)2.0 * effectiveMass * damping * omega;
+        Real k = effectiveMass * omega * omega;
+
+        Real h = dt;
+        data.Softness = (Real)1.0 / (d + h * k);
+        data.BiasFactor = h * k * data.Softness;
+    }
+
+    /// <summary>
+    /// Gets the accumulated impulse applied by the spring.
+    /// </summary>
     public Real Impulse
     {
         get
@@ -85,6 +114,9 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the anchor point on the first body in world space.
+    /// </summary>
     public JVector Anchor1
     {
         set
@@ -102,6 +134,9 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the anchor point on the second body in world space.
+    /// </summary>
     public JVector Anchor2
     {
         set
@@ -119,6 +154,9 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the target resting distance of the spring.
+    /// </summary>
     public Real TargetDistance
     {
         set
@@ -129,6 +167,9 @@ public unsafe class SpringConstraint : Constraint
         get => handle.Data.Distance;
     }
 
+    /// <summary>
+    /// Gets the current distance between the anchor points.
+    /// </summary>
     public Real Distance
     {
         get
@@ -179,12 +220,18 @@ public unsafe class SpringConstraint : Constraint
         body2.Velocity += body2.InverseMass * data.AccumulatedImpulse * data.Jacobian;
     }
 
+    /// <summary>
+    /// Gets or sets the softness of the spring.
+    /// </summary>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor of the spring.
+    /// </summary>
     public Real Bias
     {
         get => handle.Data.BiasFactor;

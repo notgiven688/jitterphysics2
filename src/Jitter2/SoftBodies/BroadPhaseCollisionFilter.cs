@@ -11,15 +11,25 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.SoftBodies;
 
+/// <summary>
+/// A broad-phase filter that handles collisions involving soft body shapes.
+/// It delegates collision detection to the narrow phase and registers contacts with the
+/// closest rigid body vertices of the soft body.
+/// </summary>
 public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 {
     private readonly World world;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BroadPhaseCollisionFilter"/> class.
+    /// </summary>
+    /// <param name="world">The world instance.</param>
     public BroadPhaseCollisionFilter(World world)
     {
         this.world = world;
     }
 
+    /// <inheritdoc/>
     public bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
         SoftBodyShape? i1 = proxyA as SoftBodyShape;
