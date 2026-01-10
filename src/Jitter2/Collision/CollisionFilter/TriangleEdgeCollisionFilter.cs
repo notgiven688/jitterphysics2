@@ -85,7 +85,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             collP = pointB;
         }
 
-        ref var triangle = ref triangleShape.Mesh.Indices[triangleShape.Index];
+        ref readonly var triangle = ref triangleShape.Mesh.Indices[triangleShape.Index];
 
         JVector tnormal = triangle.Normal;
         tnormal = JVector.Transform(tnormal, triangleShape.RigidBody.Data.Orientation);

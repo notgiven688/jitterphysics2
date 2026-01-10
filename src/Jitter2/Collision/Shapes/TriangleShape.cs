@@ -46,7 +46,7 @@ public class TriangleShape : RigidBodyShape
     /// <param name="c">The transformed coordinate of the third vertex.</param>
     public void GetWorldVertices(out JVector a, out JVector b, out JVector c)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
         a = Mesh.Vertices[triangle.IndexA];
         b = Mesh.Vertices[triangle.IndexB];
         c = Mesh.Vertices[triangle.IndexC];
@@ -69,7 +69,7 @@ public class TriangleShape : RigidBodyShape
     {
         const Real extraMargin = (Real)0.01;
 
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
         var b = Mesh.Vertices[triangle.IndexB];
         var c = Mesh.Vertices[triangle.IndexC];
@@ -92,7 +92,7 @@ public class TriangleShape : RigidBodyShape
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
-        ref var meshTriangle = ref Mesh.Indices[Index];
+        ref readonly var meshTriangle = ref Mesh.Indices[Index];
 
         var triangle = new JTriangle(Mesh.Vertices[meshTriangle.IndexA],
             Mesh.Vertices[meshTriangle.IndexB], Mesh.Vertices[meshTriangle.IndexC]);
@@ -102,7 +102,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
 
         JVector a = Mesh.Vertices[triangle.IndexA];
         JVector b = Mesh.Vertices[triangle.IndexB];
@@ -113,7 +113,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
 
         JVector a = Mesh.Vertices[triangle.IndexA];
         JVector b = Mesh.Vertices[triangle.IndexB];
