@@ -588,6 +588,127 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
+    /// Calculates the dot product of two quaternions.
+    /// </summary>
+    /// <param name="quaternion1">The first quaternion.</param>
+    /// <param name="quaternion2">The second quaternion.</param>
+    /// <returns>The dot product.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Real Dot(in JQuaternion quaternion1, in JQuaternion quaternion2)
+    {
+        return quaternion1.X * quaternion2.X +
+               quaternion1.Y * quaternion2.Y +
+               quaternion1.Z * quaternion2.Z +
+               quaternion1.W * quaternion2.W;
+    }
+
+    /// <summary>
+    /// Returns the inverse of a quaternion.
+    /// </summary>
+    /// <remarks>
+    /// Unlike <see cref="Conjugate(in JQuaternion)"/>, this handles non-unit quaternions correctly
+    /// by dividing by the squared length.
+    /// </remarks>
+    public static JQuaternion Inverse(in JQuaternion value)
+    {
+        Real lengthSq = value.LengthSquared();
+        if (lengthSq < (Real)1e-12) return Identity;
+
+        Real invLengthSq = (Real)1.0 / lengthSq;
+        return new JQuaternion(
+            -value.X * invLengthSq,
+            -value.Y * invLengthSq,
+            -value.Z * invLengthSq,
+            value.W * invLengthSq);
+    }
+
+    /// <summary>
+    /// Linearly interpolates between two quaternions and normalizes the result.
+    /// </summary>
+    /// <param name="quaternion1">Source quaternion.</param>
+    /// <param name="quaternion2">Target quaternion.</param>
+    /// <param name="amount">Weight of the interpolation.</param>
+    /// <returns>The interpolated unit quaternion.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JQuaternion Lerp(in JQuaternion quaternion1, in JQuaternion quaternion2, Real amount)
+    {
+        Real inverse = (Real)1.0 - amount;
+        JQuaternion result;
+
+        if (Dot(quaternion1, quaternion2) >= (Real)0.0)
+        {
+            result.X = inverse * quaternion1.X + amount * quaternion2.X;
+            result.Y = inverse * quaternion1.Y + amount * quaternion2.Y;
+            result.Z = inverse * quaternion1.Z + amount * quaternion2.Z;
+            result.W = inverse * quaternion1.W + amount * quaternion2.W;
+        }
+        else
+        {
+            // Flip sign of the second quaternion to ensure shortest path
+            result.X = inverse * quaternion1.X - amount * quaternion2.X;
+            result.Y = inverse * quaternion1.Y - amount * quaternion2.Y;
+            result.Z = inverse * quaternion1.Z - amount * quaternion2.Z;
+            result.W = inverse * quaternion1.W - amount * quaternion2.W;
+        }
+
+        Normalize(result, out result);
+        return result;
+    }
+
+    /// <summary>
+    /// Interpolates between two quaternions using Spherical Linear Interpolation (SLERP).
+    /// </summary>
+    /// <param name="quaternion1">Source quaternion.</param>
+    /// <param name="quaternion2">Target quaternion.</param>
+    /// <param name="amount">Weight of the interpolation.</param>
+    /// <returns>The interpolated quaternion.</returns>
+    public static JQuaternion Slerp(in JQuaternion quaternion1, in JQuaternion quaternion2, Real amount)
+    {
+        Real dot = Dot(quaternion1, quaternion2);
+        JQuaternion target = quaternion2;
+
+        // If the dot product is negative, the quaternions are pointing in opposite directions.
+        // Reversing one ensures we take the shortest path around the sphere.
+        if (dot < (Real)0.0)
+        {
+            dot = -dot;
+            target = -target;
+        }
+
+        const Real epsilon = (Real)1e-6;
+        Real scale0, scale1;
+
+        // If the quaternions are very close, linear interpolation is faster and safe.
+        if (dot > (Real)1.0 - epsilon)
+        {
+            scale0 = (Real)1.0 - amount;
+            scale1 = amount;
+        }
+        else
+        {
+            Real omega = MathR.Acos(dot);
+            Real invSinOmega = (Real)1.0 / MathR.Sin(omega);
+            scale0 = MathR.Sin(((Real)1.0 - amount) * omega) * invSinOmega;
+            scale1 = MathR.Sin(amount * omega) * invSinOmega;
+        }
+
+        return new JQuaternion(
+            scale0 * quaternion1.X + scale1 * target.X,
+            scale0 * quaternion1.Y + scale1 * target.Y,
+            scale0 * quaternion1.Z + scale1 * target.Z,
+            scale0 * quaternion1.W + scale1 * target.W);
+    }
+
+    /// <summary>
+    /// Flips the sign of each component of the quaternion.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JQuaternion operator -(in JQuaternion value)
+    {
+        return new JQuaternion(-value.X, -value.Y, -value.Z, -value.W);
+    }
+
+    /// <summary>
     /// Multiplies two quaternions (Hamilton Product).
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
