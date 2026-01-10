@@ -19,17 +19,17 @@ public class SoftBody
     /// <summary>
     /// Gets the list of vertices (rigid bodies) that make up the soft body.
     /// </summary>
-    public List<RigidBody> Vertices { get; } = new();
+    public List<RigidBody> Vertices { get; } = [];
 
     /// <summary>
     /// Gets the list of springs (constraints) that connect the vertices of the soft body.
     /// </summary>
-    public List<Constraint> Springs { get; } = new();
+    public List<Constraint> Springs { get; } = [];
 
     /// <summary>
     /// Gets the list of shapes that define the geometry of the soft body.
     /// </summary>
-    public List<SoftBodyShape> Shapes { get; } = new();
+    public List<SoftBodyShape> Shapes { get; } = [];
 
     /// <summary>
     /// Gets the world in which the soft body exists.
