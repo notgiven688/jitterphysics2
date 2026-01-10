@@ -148,7 +148,7 @@ public partial class DynamicTree
             if(proxyA == null || proxyB == null) continue;
             if(!Filter(proxyA, proxyB)) continue;
 
-            if (JBoundingBox.NotDisjoint(proxyA.WorldBoundingBox, proxyB.WorldBoundingBox))
+            if (!JBoundingBox.Disjoint(proxyA.WorldBoundingBox, proxyB.WorldBoundingBox))
             {
                 parameter.Action(proxyA, proxyB);
             }
@@ -422,7 +422,7 @@ public partial class DynamicTree
             var proxyB = Nodes[n.ID2].Proxy;
 
             if (proxyA != null && proxyB != null &&
-                TreeBox.NotDisjoint(Nodes[proxyA.NodePtr].ExpandedBox, Nodes[proxyB.NodePtr].ExpandedBox) &&
+                !TreeBox.Disjoint(Nodes[proxyA.NodePtr].ExpandedBox, Nodes[proxyB.NodePtr].ExpandedBox) &&
                 (IsActive(proxyA) || IsActive(proxyB)))
             {
                 continue;
@@ -494,7 +494,7 @@ public partial class DynamicTree
 
             if (node.IsLeaf)
             {
-                if (JBoundingBox.NotDisjoint(node.Proxy!.WorldBoundingBox, box))
+                if (!JBoundingBox.Disjoint(node.Proxy!.WorldBoundingBox, box))
                 {
                     hits.Add(node.Proxy);
                 }
@@ -504,10 +504,10 @@ public partial class DynamicTree
                 int child1 = Nodes[index].Left;
                 int child2 = Nodes[index].Right;
 
-                if (TreeBox.NotDisjoint(Nodes[child1].ExpandedBox, sbox))
+                if (!TreeBox.Disjoint(Nodes[child1].ExpandedBox, sbox))
                     _stack.Push(child1);
 
-                if (TreeBox.NotDisjoint(Nodes[child2].ExpandedBox, sbox))
+                if (!TreeBox.Disjoint(Nodes[child2].ExpandedBox, sbox))
                     _stack.Push(child2);
             }
         }
@@ -623,10 +623,10 @@ public partial class DynamicTree
             int child1 = Nodes[index].Left;
             int child2 = Nodes[index].Right;
 
-            if (TreeBox.NotDisjoint(Nodes[child1].ExpandedBox, Nodes[node].ExpandedBox))
+            if (!TreeBox.Disjoint(Nodes[child1].ExpandedBox, Nodes[node].ExpandedBox))
                 OverlapCheckAdd(child1, node);
 
-            if (TreeBox.NotDisjoint(Nodes[child2].ExpandedBox, Nodes[node].ExpandedBox))
+            if (!TreeBox.Disjoint(Nodes[child2].ExpandedBox, Nodes[node].ExpandedBox))
                 OverlapCheckAdd(child2, node);
         }
     }
@@ -644,10 +644,10 @@ public partial class DynamicTree
             int child1 = Nodes[index].Left;
             int child2 = Nodes[index].Right;
 
-            if (TreeBox.NotDisjoint(Nodes[child1].ExpandedBox, Nodes[node].ExpandedBox))
+            if (!TreeBox.Disjoint(Nodes[child1].ExpandedBox, Nodes[node].ExpandedBox))
                 OverlapCheckRemove(child1, node);
 
-            if (TreeBox.NotDisjoint(Nodes[child2].ExpandedBox, Nodes[node].ExpandedBox))
+            if (!TreeBox.Disjoint(Nodes[child2].ExpandedBox, Nodes[node].ExpandedBox))
                 OverlapCheckRemove(child2, node);
         }
     }
@@ -660,7 +660,7 @@ public partial class DynamicTree
 
             ref var node = ref Nodes[proxy.NodePtr];
 
-            if (node.ForceUpdate || !node.ExpandedBox.Encompasses(proxy.WorldBoundingBox))
+            if (node.ForceUpdate || !node.ExpandedBox.Contains(proxy.WorldBoundingBox))
             {
                 node.ForceUpdate = false;
                 movedProxies.ConcurrentAdd(proxy);
@@ -1049,7 +1049,7 @@ public partial class DynamicTree
 
         while (where != root)
         {
-            if (TreeBox.Encompasses(Nodes[where].ExpandedBox,nodeTreeBox))
+            if (TreeBox.Contains(Nodes[where].ExpandedBox,nodeTreeBox))
             {
                 break;
             }

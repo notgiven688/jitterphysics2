@@ -13,26 +13,52 @@ namespace Jitter2.LinearMath;
 /// <summary>
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 6*sizeof(Real))]
+[StructLayout(LayoutKind.Explicit, Size = 6 * sizeof(Real))]
 public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
 {
     public const Real Epsilon = (Real)1e-12;
 
+    /// <summary>
+    /// Describes how one bounding box relates to another spatially.
+    /// </summary>
     public enum ContainmentType
     {
+        /// <summary>
+        /// The two boxes are completely separated and do not touch or overlap.
+        /// </summary>
         Disjoint,
+
+        /// <summary>
+        /// The other box is completely inside this box.
+        /// </summary>
         Contains,
+
+        /// <summary>
+        /// The boxes overlap, but neither completely contains the other.
+        /// </summary>
         Intersects
     }
 
-    [FieldOffset(0*sizeof(Real))]
+    /// <summary>
+    /// The minimum corner of the bounding box (smallest X, Y, Z coordinates).
+    /// </summary>
+    [FieldOffset(0 * sizeof(Real))]
     public JVector Min = min;
 
-    [FieldOffset(3*sizeof(Real))]
+    /// <summary>
+    /// The maximum corner of the bounding box (largest X, Y, Z coordinates).
+    /// </summary>
+    [FieldOffset(3 * sizeof(Real))]
     public JVector Max = max;
 
+    /// <summary>
+    /// A bounding box covering the entire valid range of coordinates.
+    /// </summary>
     public static readonly JBoundingBox LargeBox;
 
+    /// <summary>
+    /// An inverted bounding box initialized with Min > Max, useful for growing a box from scratch.
+    /// </summary>
     public static readonly JBoundingBox SmallBox;
 
     static JBoundingBox()
@@ -67,6 +93,10 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         Min = center - halfExtents;
     }
 
+    /// <summary>
+    /// Creates a new AABB that encloses the original box after it has been rotated by the given orientation matrix.
+    /// Note that rotating an AABB usually results in a larger AABB to fit the rotated geometry.
+    /// </summary>
     public static JBoundingBox CreateTransformed(in JBoundingBox box, in JMatrix orientation)
     {
         JVector halfExtents = (Real)0.5 * (box.Max - box.Min);
@@ -104,6 +134,12 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if a finite line segment intersects this bounding box.
+    /// </summary>
+    /// <param name="origin">The start point of the segment.</param>
+    /// <param name="direction">The vector from start to end (End = Origin + Direction).</param>
+    /// <returns><c>true</c> if the segment passes through the box; otherwise, <c>false</c>.</returns>
     public readonly bool SegmentIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = (Real)1.0;
@@ -120,6 +156,12 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if an infinite ray intersects this bounding box.
+    /// </summary>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
+    /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = Real.MaxValue;
@@ -136,6 +178,13 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if an infinite ray intersects this bounding box and calculates the entry distance.
+    /// </summary>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
+    /// <param name="enter">Outputs the distance along the direction vector where the ray enters the box. Returns 0 if the origin is inside.</param>
+    /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
     {
         enter = (Real)0.0;
@@ -153,6 +202,9 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return true;
     }
 
+    /// <summary>
+    /// Determines whether the bounding box contains the specified point.
+    /// </summary>
     public readonly bool Contains(in JVector point)
     {
         return Min.X <= point.X && point.X <= Max.X &&
@@ -160,6 +212,10 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
                Min.Z <= point.Z && point.Z <= Max.Z;
     }
 
+    /// <summary>
+    /// Retrieves the 8 corners of the bounding box.
+    /// </summary>
+    /// <param name="destination">A span of at least 8 JVectors to hold the corners.</param>
     public readonly void GetCorners(Span<JVector> destination)
     {
         destination[0] = new(Min.X, Max.Y, Max.Z);
@@ -180,12 +236,18 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         JVector.Min(Min, point, out Min);
     }
 
+    /// <summary>
+    /// Expands the bounding box to include the specified point.
+    /// </summary>
     public static void AddPointInPlace(ref JBoundingBox box, in JVector point)
     {
         JVector.Max(box.Max, point, out box.Max);
         JVector.Min(box.Min, point, out box.Min);
     }
 
+    /// <summary>
+    /// Creates a bounding box that exactly encompasses a collection of points.
+    /// </summary>
     public static JBoundingBox CreateFromPoints(IEnumerable<JVector> points)
     {
         JBoundingBox box = SmallBox;
@@ -198,6 +260,16 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return box;
     }
 
+
+
+    /// <summary>
+    /// Determines the relationship between this box and another box.
+    /// </summary>
+    /// <returns>
+    /// <see cref="ContainmentType.Disjoint"/> if they do not touch.<br/>
+    /// <see cref="ContainmentType.Contains"/> if <paramref name="box"/> is strictly inside this box.<br/>
+    /// <see cref="ContainmentType.Intersects"/> if they overlap but one does not strictly contain the other.
+    /// </returns>
     public readonly ContainmentType Contains(in JBoundingBox box)
     {
         ContainmentType result = ContainmentType.Disjoint;
@@ -213,44 +285,83 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return result;
     }
 
+    /// <summary>
+    /// Determines whether the two boxes intersect or overlap.
+    /// </summary>
+    /// <returns><c>true</c> if the boxes overlap; <c>false</c> if they are disjoint.</returns>
+    [Obsolete($"Use !{nameof(Disjoint)} instead.")]
     public static bool NotDisjoint(in JBoundingBox left, in JBoundingBox right)
     {
         return left.Max.X >= right.Min.X && left.Min.X <= right.Max.X && left.Max.Y >= right.Min.Y && left.Min.Y <= right.Max.Y &&
                left.Max.Z >= right.Min.Z && left.Min.Z <= right.Max.Z;
     }
 
+    /// <summary>
+    /// Determines whether the two boxes are completely separated (disjoint).
+    /// </summary>
+    /// <returns><c>true</c> if there is a gap between the boxes on at least one axis; <c>false</c> if they touch or overlap.</returns>
     public static bool Disjoint(in JBoundingBox left, in JBoundingBox right)
     {
         return left.Max.X < right.Min.X || left.Min.X > right.Max.X || left.Max.Y < right.Min.Y || left.Min.Y > right.Max.Y ||
                left.Max.Z < right.Min.Z || left.Min.Z > right.Max.Z;
     }
 
+    /// <summary>
+    /// Determines whether the <paramref name="outer"/> box completely contains the <paramref name="inner"/> box.
+    /// </summary>
+    /// <returns><c>true</c> if <paramref name="inner"/> is entirely within the boundaries of <paramref name="outer"/>.</returns>
+    public static bool Contains(in JBoundingBox outer, in JBoundingBox inner)
+    {
+        return outer.Min.X <= inner.Min.X && outer.Max.X >= inner.Max.X && outer.Min.Y <= inner.Min.Y && outer.Max.Y >= inner.Max.Y &&
+               outer.Min.Z <= inner.Min.Z && outer.Max.Z >= inner.Max.Z;
+    }
+
+    /// <summary>
+    /// Determines whether the <paramref name="outer"/> box completely contains the <paramref name="inner"/> box.
+    /// </summary>
+    /// <remarks>This is an alias for <see cref="Contains(in JBoundingBox, in JBoundingBox)"/>.</remarks>
+    [Obsolete($"Use {nameof(Contains)} instead.")]
     public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)
     {
         return outer.Min.X <= inner.Min.X && outer.Max.X >= inner.Max.X && outer.Min.Y <= inner.Min.Y && outer.Max.Y >= inner.Max.Y &&
                outer.Min.Z <= inner.Min.Z && outer.Max.Z >= inner.Max.Z;
     }
 
+    /// <summary>
+    /// Creates a new bounding box that is the union of two other bounding boxes.
+    /// </summary>
     public static JBoundingBox CreateMerged(in JBoundingBox original, in JBoundingBox additional)
     {
         CreateMerged(original, additional, out JBoundingBox result);
         return result;
     }
 
+    /// <summary>
+    /// Creates a new bounding box that is the union of two other bounding boxes.
+    /// </summary>
     public static void CreateMerged(in JBoundingBox original, in JBoundingBox additional, out JBoundingBox result)
     {
         JVector.Min(original.Min, additional.Min, out result.Min);
         JVector.Max(original.Max, additional.Max, out result.Max);
     }
 
+    /// <summary>
+    /// Gets the center point of the bounding box.
+    /// </summary>
     public readonly JVector Center => (Min + Max) * ((Real)(1.0 / 2.0));
 
+    /// <summary>
+    /// Calculates the volume of the bounding box.
+    /// </summary>
     public readonly Real GetVolume()
     {
         JVector len = Max - Min;
         return len.X * len.Y * len.Z;
     }
 
+    /// <summary>
+    /// Calculates the surface area of the bounding box.
+    /// </summary>
     public readonly Real GetSurfaceArea()
     {
         JVector len = Max - Min;

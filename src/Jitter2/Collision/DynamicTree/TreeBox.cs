@@ -23,7 +23,7 @@ namespace Jitter2.Collision;
 /// </remarks>
 /// <seealso cref="JBoundingBox"/>
 /// <seealso cref="JVector"/>
-[StructLayout(LayoutKind.Explicit, Size = 8*sizeof(Real))]
+[StructLayout(LayoutKind.Explicit, Size = 8 * sizeof(Real))]
 public struct TreeBox : IEquatable<TreeBox>
 {
     public const Real Epsilon = (Real)1e-12;
@@ -68,6 +68,11 @@ public struct TreeBox : IEquatable<TreeBox>
 
     // ─── Helper functions 1:1 like in JBox ───────────────────────────
 
+    /// <summary>
+    /// Determines whether this box contains the specified point.
+    /// </summary>
+    /// <param name="point">The point to check.</param>
+    /// <returns><c>true</c> if the point is within the boundaries of this box; otherwise, <c>false</c>.</returns>
     public readonly bool Contains(in JVector point)
     {
         return Min.X <= point.X && point.X <= Max.X &&
@@ -75,20 +80,50 @@ public struct TreeBox : IEquatable<TreeBox>
                Min.Z <= point.Z && point.Z <= Max.Z;
     }
 
+    /// <summary>
+    /// Gets the center point of the bounding box.
+    /// </summary>
     public readonly JVector Center => (Min + Max) * ((Real)(1.0 / 2.0));
 
+    /// <summary>
+    /// Determines whether this box intersects with or overlaps the specified box.
+    /// </summary>
+    /// <param name="box">The box to check against.</param>
+    /// <returns><c>true</c> if the boxes overlap; <c>false</c> if they are completely separated.</returns>
+    [Obsolete($"Use !{nameof(Disjoint)} instead.")]
     public readonly bool NotDisjoint(in JBoundingBox box)
     {
         return Max.X >= box.Min.X && Min.X <= box.Max.X && Max.Y >= box.Min.Y && Min.Y <= box.Max.Y &&
                Max.Z >= box.Min.Z && Min.Z <= box.Max.Z;
     }
 
+    /// <summary>
+    /// Determines whether this box is completely separated from (does not overlap) the specified box.
+    /// </summary>
+    /// <param name="box">The box to check against.</param>
+    /// <returns><c>true</c> if the boxes are separated by a gap on at least one axis; otherwise, <c>false</c>.</returns>
     public readonly bool Disjoint(in JBoundingBox box)
     {
         return Max.X < box.Min.X || Min.X > box.Max.X || Max.Y < box.Min.Y || Min.Y > box.Max.Y ||
                Max.Z < box.Min.Z || Min.Z > box.Max.Z;
     }
 
+    /// <summary>
+    /// Determines whether this box completely encloses the specified box.
+    /// </summary>
+    /// <param name="box">The box to check for containment.</param>
+    /// <returns><c>true</c> if the <paramref name="box"/> is entirely inside this box; otherwise, <c>false</c>.</returns>
+    public readonly bool Contains(in JBoundingBox box)
+    {
+        return Min.X <= box.Min.X && Max.X >= box.Max.X && Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
+               Min.Z <= box.Min.Z && Max.Z >= box.Max.Z;
+    }
+
+    /// <summary>
+    /// Determines whether this box completely encloses the specified box.
+    /// </summary>
+    /// <remarks>This is an alias for <see cref="Contains(in JBoundingBox)"/>.</remarks>
+    [Obsolete($"Use {nameof(Contains)} instead.")]
     public readonly bool Encompasses(in JBoundingBox box)
     {
         return Min.X <= box.Min.X && Max.X >= box.Max.X && Min.Y <= box.Min.Y && Max.Y >= box.Max.Y &&
@@ -115,6 +150,12 @@ public struct TreeBox : IEquatable<TreeBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if a finite line segment intersects this bounding box.
+    /// </summary>
+    /// <param name="origin">The start point of the segment.</param>
+    /// <param name="direction">The vector defining the direction and length of the segment (End Point = Origin + Direction).</param>
+    /// <returns><c>true</c> if the segment passes through the box; otherwise, <c>false</c>.</returns>
     public readonly bool SegmentIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = (Real)1.0;
@@ -131,6 +172,12 @@ public struct TreeBox : IEquatable<TreeBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if an infinite ray intersects this bounding box.
+    /// </summary>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
+    /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction)
     {
         Real enter = (Real)0.0, exit = Real.MaxValue;
@@ -147,6 +194,13 @@ public struct TreeBox : IEquatable<TreeBox>
         return true;
     }
 
+    /// <summary>
+    /// Checks if an infinite ray intersects this bounding box and calculates the entry distance.
+    /// </summary>
+    /// <param name="origin">The origin of the ray.</param>
+    /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
+    /// <param name="enter">Outputs the scalar distance along the direction vector where the ray enters the box. If inside, this is 0.</param>
+    /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
     {
         enter = (Real)0.0;
@@ -171,6 +225,24 @@ public struct TreeBox : IEquatable<TreeBox>
 
     // ─── Helper functions with SIMD support ───────────────────────────
 
+    /// <summary>
+    /// Determines whether this box is completely separated from the specified <see cref="TreeBox"/>.
+    /// </summary>
+    /// <param name="box">The box to check against.</param>
+    /// <returns><c>true</c> if the boxes do not overlap; <c>false</c> if they touch or overlap.</returns>
+    public readonly bool Disjoint(in TreeBox box) => TreeBox.Disjoint(this, box);
+
+    /// <summary>
+    /// Determines whether this box completely encloses the specified <see cref="TreeBox"/>.
+    /// </summary>
+    /// <param name="box">The box to check for containment.</param>
+    /// <returns><c>true</c> if the <paramref name="box"/> is entirely inside this box.</returns>
+    public readonly bool Contains(in TreeBox box) => TreeBox.Contains(this, box);
+
+    /// <summary>
+    /// Calculates the surface area of the bounding box.
+    /// </summary>
+    /// <returns>The total surface area ($2(xy + yz + zx)$).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly double GetSurfaceArea()
     {
@@ -183,6 +255,12 @@ public struct TreeBox : IEquatable<TreeBox>
         return 2.0 * (ex * ey + ey * ez + ez * ex);
     }
 
+    /// <summary>
+    /// Calculates the surface area of a hypothetical box that would result from merging the two specified boxes.
+    /// </summary>
+    /// <param name="first">The first box.</param>
+    /// <param name="second">The second box.</param>
+    /// <returns>The surface area of the union box. Used for SAH (Surface Area Heuristic) costs.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double MergedSurface(in TreeBox first, in TreeBox second)
     {
@@ -197,8 +275,14 @@ public struct TreeBox : IEquatable<TreeBox>
         return 2.0d * (ex * ey + ex * ez + ey * ez);
     }
 
+    /// <summary>
+    /// Determines whether the outer box completely contains the inner box using SIMD instructions.
+    /// </summary>
+    /// <param name="outer">The potential container box.</param>
+    /// <param name="inner">The box to check for inclusion.</param>
+    /// <returns><c>true</c> if <paramref name="inner"/> is fully inside <paramref name="outer"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Encompasses(in TreeBox outer, in TreeBox inner)
+    public static bool Contains(in TreeBox outer, in TreeBox inner)
     {
         var leMin = Vector.LessThanOrEqual(outer.VectorMin, inner.VectorMin);
         var geMax = Vector.GreaterThanOrEqual(outer.VectorMax, inner.VectorMax);
@@ -207,6 +291,13 @@ public struct TreeBox : IEquatable<TreeBox>
         return Vector.EqualsAll(mask.AsInt32(), Vector.Create(-1));
     }
 
+    /// <summary>
+    /// Determines whether two boxes overlap using SIMD instructions.
+    /// </summary>
+    /// <param name="first">The first box.</param>
+    /// <param name="second">The second box.</param>
+    /// <returns><c>true</c> if the boxes intersect; <c>false</c> if they are disjoint.</returns>
+    [Obsolete($"Use !{nameof(Disjoint)} instead.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotDisjoint(in TreeBox first, in TreeBox second)
     {
@@ -217,6 +308,12 @@ public struct TreeBox : IEquatable<TreeBox>
         return Vector.EqualsAll(mask.AsInt32(), Vector.Create(-1));
     }
 
+    /// <summary>
+    /// Determines whether two boxes are completely separated (disjoint) using SIMD instructions.
+    /// </summary>
+    /// <param name="first">The first box.</param>
+    /// <param name="second">The second box.</param>
+    /// <returns><c>true</c> if the boxes do not overlap on any axis; <c>false</c> if they touch or intersect.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Disjoint(in TreeBox first, in TreeBox second)
     {
@@ -229,6 +326,12 @@ public struct TreeBox : IEquatable<TreeBox>
         return !Vector.EqualsAll(mask.AsInt32(), Vector.Create(0));
     }
 
+    /// <summary>
+    /// Creates a new box that encompasses both input boxes.
+    /// </summary>
+    /// <param name="first">The first box.</param>
+    /// <param name="second">The second box.</param>
+    /// <param name="result">The resulting union box.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateMerged(in TreeBox first, in TreeBox second, out TreeBox result)
     {
