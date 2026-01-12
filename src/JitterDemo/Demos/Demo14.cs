@@ -21,7 +21,7 @@ public class CustomSupportMapInstance<T> : CSMInstance where T : Shape, new()
 
         int idx = 0;
 
-        foreach (var triangle in ShapeHelper.MakeHull(es))
+        foreach (var triangle in ShapeHelper.Tessellate(es))
         {
             JVector normal = (triangle.V1 - triangle.V0) % (triangle.V2 - triangle.V0);
             JVector.NormalizeInPlace(ref normal);

@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -28,6 +29,18 @@ public class TriangleShape : RigidBodyShape
         Index = index;
 
         UpdateWorldBoundingBox();
+    }
+
+    /// <summary>
+    /// Creates and returns all instances of type <see cref="TriangleShape"/>
+    /// for as given <see cref="TriangleMesh"/>.
+    /// </summary>
+    public static IEnumerable<TriangleShape> CreateAllShapes(TriangleMesh mesh)
+    {
+        for (int index = 0; index < mesh.Indices.Length; index++)
+        {
+            yield return new TriangleShape(mesh, index);
+        }
     }
 
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)

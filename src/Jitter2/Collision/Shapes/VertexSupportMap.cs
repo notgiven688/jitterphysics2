@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Intrinsics;
+using Jitter2.Internal;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -19,9 +20,9 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
     private readonly Real[] xvalues, yvalues, zvalues;
     private JVector center;
 
-    public VertexSupportMap(IReadOnlyList<JVector> vertices)
+    public VertexSupportMap(ReadOnlySpan<JVector> vertices)
     {
-        int length = vertices.Count;
+        int length = vertices.Length;
 
         xvalues = new Real[length];
         yvalues = new Real[length];
@@ -39,6 +40,12 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
         }
 
         center *= (Real)1.0 / length;
+    }
+
+    public VertexSupportMap(IEnumerable<JVector> vertices) :
+        this(GeometryInput.AsReadOnlySpan(vertices, out _))
+    {
+
     }
 
     public readonly void SupportMap(in JVector direction, out JVector result)

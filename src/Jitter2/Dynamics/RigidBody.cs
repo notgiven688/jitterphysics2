@@ -966,7 +966,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         foreach (var shape in InternalShapes)
         {
-            ShapeHelper.MakeHull(shape, _debugTriangles);
+            ShapeHelper.Tessellate(shape, _debugTriangles);
 
             foreach (var tri in _debugTriangles)
             {

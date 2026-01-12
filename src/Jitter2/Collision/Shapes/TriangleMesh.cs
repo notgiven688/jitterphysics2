@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Jitter2.Internal;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -42,24 +43,15 @@ public class TriangleMesh
     /// <summary>
     /// Creates a mesh from a "soup" of triangles. Vertices are automatically identified and deduplicated.
     /// </summary>
-    public TriangleMesh(IEnumerable<JTriangle> soup, bool ignoreDegenerated = false)
-    {
-        ReadOnlySpan<JTriangle> span = soup switch
-        {
-            List<JTriangle> list => CollectionsMarshal.AsSpan(list),
-            JTriangle[] array => array,
-            _ => CollectionsMarshal.AsSpan([..soup])
-        };
-
-        BuildFromSoup(span, ignoreDegenerated);
-    }
-
-    /// <summary>
-    /// Creates a mesh from a span of triangles. Vertices are automatically identified and deduplicated.
-    /// </summary>
     public TriangleMesh(ReadOnlySpan<JTriangle> soup, bool ignoreDegenerated = false)
     {
         BuildFromSoup(soup, ignoreDegenerated);
+    }
+
+    /// <inheritdoc cref="TriangleMesh(ReadOnlySpan{JTriangle}, bool)"/>
+    public TriangleMesh(IEnumerable<JTriangle> soup, bool ignoreDegenerated = false) :
+        this(GeometryInput.AsReadOnlySpan(soup, out _), ignoreDegenerated)
+    {
     }
 
     /// <summary>
@@ -72,7 +64,7 @@ public class TriangleMesh
         BuildFromIndexed(vertices, indices, ignoreDegenerated);
     }
 
-    // Overload for ushort indices (common in graphics)
+    /// <inheritdoc cref="TriangleMesh(ReadOnlySpan{JVector}, ReadOnlySpan{int}, bool)"/>
     public TriangleMesh(ReadOnlySpan<JVector> vertices, ReadOnlySpan<ushort> indices, bool ignoreDegenerated = false)
     {
         // Convert ushort indices to int on the fly
@@ -82,7 +74,7 @@ public class TriangleMesh
         BuildFromIndexed(vertices, intIndices, ignoreDegenerated);
     }
 
-    // Overload for uint indices
+    /// <inheritdoc cref="TriangleMesh(ReadOnlySpan{JVector}, ReadOnlySpan{int}, bool)"/>
     public TriangleMesh(ReadOnlySpan<JVector> vertices, ReadOnlySpan<uint> indices, bool ignoreDegenerated = false)
     {
         int[] intIndices = new int[indices.Length];
@@ -92,21 +84,7 @@ public class TriangleMesh
     }
 
     /// <summary>
-    /// Creates a mesh from a span of custom struct triangles (e.g. MyTriangle).
-    /// <typeparamref name="T"/> must be binary compatible with <see cref="JTriangle"/>.
-    /// </summary>
-    public static TriangleMesh Create<T>(ReadOnlySpan<T> triangleSoup, bool ignoreDegenerated = false)
-        where T : unmanaged
-    {
-        if (Unsafe.SizeOf<T>() != Unsafe.SizeOf<JTriangle>())
-            throw new ArgumentException($"Size mismatch: {typeof(T).Name} is not {Unsafe.SizeOf<JTriangle>()} bytes.");
-
-        var castSoup = MemoryMarshal.Cast<T, JTriangle>(triangleSoup);
-        return new TriangleMesh(castSoup, ignoreDegenerated);
-    }
-
-    /// <summary>
-    /// Creates a mesh from custom vertices (e.g. System.Numerics.Vector3) and int indices.
+    /// Creates a mesh from custom vertices (e.g. System.Numerics.Vector3) and indices.
     /// </summary>
     public static TriangleMesh Create<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<int> indices,
         bool ignoreDegenerated = false) where TVertex : unmanaged
@@ -114,18 +92,14 @@ public class TriangleMesh
         return new TriangleMesh(CastVertices(vertices), indices, ignoreDegenerated);
     }
 
-    /// <summary>
-    /// Creates a mesh from custom vertices and uint indices.
-    /// </summary>
+    /// <inheritdoc cref="Create{TVertex}(ReadOnlySpan{TVertex}, ReadOnlySpan{int}, bool)"/>
     public static TriangleMesh Create<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices,
         bool ignoreDegenerated = false) where TVertex : unmanaged
     {
         return new TriangleMesh(CastVertices(vertices), indices, ignoreDegenerated);
     }
 
-    /// <summary>
-    /// Creates a mesh from custom vertices and ushort indices.
-    /// </summary>
+    /// <inheritdoc cref="Create{TVertex}(ReadOnlySpan{TVertex}, ReadOnlySpan{int}, bool)"/>
     public static TriangleMesh Create<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<ushort> indices,
         bool ignoreDegenerated = false) where TVertex : unmanaged
     {

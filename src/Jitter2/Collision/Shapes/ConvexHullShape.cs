@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Jitter2.Internal;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -60,16 +61,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     /// <summary>
     /// Initializes a new instance of the ConvexHullShape class, creating a convex hull.
     /// </summary>
-    /// <param name="triangles">A list containing all vertices defining the convex hull. The vertices must strictly lie
-    /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.
-    /// Note that the passed triangle list is not referenced and can be modified after calling the constructor
-    /// without side effects.</param>
-    public ConvexHullShape(IReadOnlyList<JTriangle> triangles)
-    {
-        Build(triangles);
-    }
-
-    private void Build(IReadOnlyList<JTriangle> triangles)
+    /// <param name="triangles">All vertices defining the convex hull. The vertices must strictly lie
+    /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.</param>
+    public ConvexHullShape(ReadOnlySpan<JTriangle> triangles)
     {
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = [];
@@ -99,9 +93,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         }
 
         var tmpNeighbors = new List<ushort>[tmpVertices.Count];
-        indices = new CHullTriangle[triangles.Count];
+        indices = new CHullTriangle[triangles.Length];
 
-        for (int i = 0; i < triangles.Count; i++)
+        for (int i = 0; i < triangles.Length; i++)
         {
             JTriangle tti = triangles[i];
 
@@ -142,6 +136,12 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         tmpVertices.Clear();
 
         UpdateShape();
+    }
+
+    /// <inheritdoc cref="ConvexHullShape(ReadOnlySpan{JTriangle})"/>
+    public ConvexHullShape(IEnumerable<JTriangle> triangles) :
+        this(GeometryInput.AsReadOnlySpan(triangles, out _))
+    {
     }
 
     private ConvexHullShape()
