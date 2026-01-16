@@ -108,7 +108,7 @@ public class Octree
         {
             foreach (var t in tris)
             {
-                if (JBoundingBox.NotDisjoint(box, triangleBoxes[t]))
+                if (!JBoundingBox.Disjoint(box, triangleBoxes[t]))
                 {
                     triangles.Push(t);
                 }
