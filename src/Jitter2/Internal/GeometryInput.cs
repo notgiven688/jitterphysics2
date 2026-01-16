@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace Jitter2.Internal;
 
-public static class GeometryInput
+internal static class GeometryInput
 {
     public static ReadOnlySpan<T> AsReadOnlySpan<T>(IEnumerable<T> elements, out T[]? backingArray) where T : struct
     {
