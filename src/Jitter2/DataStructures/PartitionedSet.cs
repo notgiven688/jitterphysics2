@@ -65,7 +65,7 @@ public readonly struct ReadOnlyPartitionedSet<T>(PartitionedSet<T> partitionedSe
 /// </summary>
 /// <typeparam name="T">The type of elements in the set, which must implement <see cref="IPartitionedSetIndex"/>.</typeparam>
 /// <remarks>
-/// The methods <see cref="Add(T, bool)"/>, <see cref="Remove(T)"/>, <see cref="IsActive(T)"/>,
+/// The methods <see cref="Add(T, bool)"/>, <see cref="Remove(T)"/>, <see cref="Contains(T)"/>, <see cref="IsActive(T)"/>,
 /// <see cref="MoveToActive(T)"/>, and <see cref="MoveToInactive(T)"/> all operate in O(1) time complexity.
 /// </remarks>
 public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSetIndex
