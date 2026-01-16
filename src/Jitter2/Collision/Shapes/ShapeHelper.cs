@@ -263,10 +263,23 @@ public static class ShapeHelper
     /// <summary>
     /// Calculates the mass properties of an implicitly defined shape, assuming unit mass density.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The shape is approximated via surface tessellation using the specified number of <paramref name="subdivisions"/>.
+    /// </para>
+    /// <para>
+    /// <b>Note on Reference Frame:</b>
+    /// The calculated <paramref name="inertia"/> tensor is expressed relative to the <b>coordinate system origin (0,0,0)</b>,
+    /// <em>not</em> the calculated <paramref name="centerOfMass"/>.
+    /// </para>
+    /// </remarks>
     /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="inertia">Output parameter for the calculated inertia matrix.</param>
-    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
-    /// <param name="mass">Output parameter for the calculated mass.</param>
+    /// <param name="inertia">
+    /// Output parameter for the inertia tensor calculated relative to the <b>Origin (0,0,0)</b>.
+    /// </param>
+    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector (relative to the Origin).</param>
+    /// <param name="mass">Output parameter for the calculated mass (Volume * density 1.0).</param>
+    /// <param name="subdivisions">The recursion depth for the surface tessellation (default 4).</param>
     public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass,
         out Real mass, int subdivisions = 4)
     {
@@ -279,22 +292,14 @@ public static class ShapeHelper
 
         foreach (JTriangle triangle in Tessellate(support, subdivisions))
         {
-            JVector column0 = triangle.V0;
-            JVector column1 = triangle.V1;
-            JVector column2 = triangle.V2;
-
-            JMatrix transformation = new(
-                column0.X, column1.X, column2.X,
-                column0.Y, column1.Y, column2.Y,
-                column0.Z, column1.Z, column2.Z);
-
+            JMatrix transformation = JMatrix.FromColumns(triangle.V0, triangle.V1, triangle.V2);
             Real detA = transformation.Determinant();
 
             // now transform this canonical tetrahedron to the target tetrahedron
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(transformation * canonicalInertia * JMatrix.Transpose(transformation), detA);
 
-            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
+            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (triangle.V0 + triangle.V1 + triangle.V2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
 
             inertia += tetrahedronInertia;
