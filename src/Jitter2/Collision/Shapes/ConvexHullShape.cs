@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Jitter2.Internal;
 using Jitter2.LinearMath;
@@ -54,7 +53,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
     private CHullVector[] vertices = null!;
     private CHullTriangle[] indices = null!;
-    private List<ushort> neighborList = null!;
+    private ushort[] neighborList = null!;
 
     private JVector shifted;
 
@@ -72,10 +71,10 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         {
             if (tmpIndices.TryGetValue(v, out ushort result)) return result;
 
-            if (tmpVertices.Count > ushort.MaxValue)
+            if (tmpVertices.Count >= ushort.MaxValue)
             {
                 throw new InvalidOperationException(
-                    $"The convex hull consists of too many triangles (>{ushort.MaxValue})");
+                    $"The convex hull consists of too many vertices (>{ushort.MaxValue})");
             }
 
             result = (ushort)tmpVertices.Count;
@@ -105,32 +104,34 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
             indices[i] = new CHullTriangle(a, b, c);
 
-            tmpNeighbors[a] ??= new List<ushort>();
-            tmpNeighbors[b] ??= new List<ushort>();
-            tmpNeighbors[c] ??= new List<ushort>();
-
-            tmpNeighbors[a].Add(b);
+            (tmpNeighbors[a] ??= []).Add(b);
             tmpNeighbors[a].Add(c);
-            tmpNeighbors[b].Add(a);
+
+            (tmpNeighbors[b] ??= []).Add(a);
             tmpNeighbors[b].Add(c);
-            tmpNeighbors[c].Add(a);
+
+            (tmpNeighbors[c] ??= []).Add(a);
             tmpNeighbors[c].Add(b);
         }
 
-        neighborList = new List<ushort>();
+        // Estimate capacity to avoid resizing (Euler characteristic ~ 6 neighbors per vertex)
+        var finalNeighbors = new List<ushort>(tmpVertices.Count * 6);
 
         var tmpVerticesSpan = CollectionsMarshal.AsSpan(tmpVertices);
 
         for (int i = 0; i < tmpVerticesSpan.Length; i++)
         {
             ref var element = ref tmpVerticesSpan[i];
-            element.NeighborMinIndex = (ushort)neighborList.Count;
-            neighborList.AddRange(tmpNeighbors[i].Distinct());
-            element.NeighborMaxIndex = (ushort)neighborList.Count;
-            tmpNeighbors[i].Clear();
+            element.NeighborMinIndex = (ushort)finalNeighbors.Count;
+            AddDistinct(tmpNeighbors[i], finalNeighbors);
+            element.NeighborMaxIndex = (ushort)finalNeighbors.Count;
+
+            // Help GC
+            tmpNeighbors[i] = null!;
         }
 
         vertices = tmpVertices.ToArray();
+        neighborList = finalNeighbors.ToArray();
 
         tmpIndices.Clear();
         tmpVertices.Clear();
@@ -146,6 +147,30 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
     private ConvexHullShape()
     {
+    }
+
+    /// <summary>
+    /// Helper to sort and add unique elements from source to destination.
+    /// Replaces LINQ Distinct() for better performance and zero allocations.
+    /// </summary>
+    private static void AddDistinct(List<ushort> source, List<ushort> destination)
+    {
+        if (source == null || source.Count == 0) return;
+
+        source.Sort();
+
+        ushort previous = source[0];
+        destination.Add(previous);
+
+        for (int i = 1; i < source.Count; i++)
+        {
+            ushort current = source[i];
+            if (current != previous)
+            {
+                destination.Add(current);
+                previous = current;
+            }
+        }
     }
 
     /// <summary>
