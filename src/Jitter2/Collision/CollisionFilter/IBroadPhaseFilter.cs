@@ -17,5 +17,6 @@ public interface IBroadPhaseFilter
     /// Filters out pairs of shapes that should not generate contacts.
     /// </summary>
     /// <returns>False if the collision should be filtered out; true otherwise.</returns>
+    [CallbackThread(ThreadContext.Any)]
     bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB);
 }

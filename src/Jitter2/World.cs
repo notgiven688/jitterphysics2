@@ -81,6 +81,7 @@ public sealed partial class World : IDisposable
     /// step time <c>dt</c>. It can be used to apply external forces, modify bodies,
     /// or gather per-step diagnostics before the simulation advances.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreStep;
 
     /// <summary>
@@ -92,6 +93,7 @@ public sealed partial class World : IDisposable
     /// step time <c>dt</c>. At this point, all body states represent the final results
     /// of the step.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostStep;
 
     /// <summary>
@@ -103,6 +105,7 @@ public sealed partial class World : IDisposable
     /// (<c>dt / substepCount</c>). It is called immediately before force integration
     /// and constraint solving for the substep.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreSubStep;
 
     /// <summary>
@@ -113,6 +116,7 @@ public sealed partial class World : IDisposable
     /// It is called after integration and constraint solving for the substep
     /// have completed.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
 
     /// <summary>

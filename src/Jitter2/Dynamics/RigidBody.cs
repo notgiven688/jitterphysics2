@@ -163,6 +163,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
     /// Use this event to handle logic that should occur at the start of a collision between two bodies.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? BeginCollide;
 
     /// <summary>
@@ -173,6 +174,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision that has ended.
     /// Use this event to handle logic that should occur when the collision between two bodies ends.
     /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? EndCollide;
 
     internal void RaiseBeginCollide(Arbiter arbiter)

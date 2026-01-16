@@ -20,6 +20,7 @@ public interface INarrowPhaseFilter
     /// Refer to the corresponding <see cref="NarrowPhase"/> methods for details on the parameters.
     /// </summary>
     /// <returns>False if the collision should be filtered out, true otherwise.</returns>
+    [CallbackThread(ThreadContext.Any)]
     bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
         ref JVector pointA, ref JVector pointB,
         ref JVector normal, ref Real penetration);

@@ -21,7 +21,7 @@ public enum ReferenceFrame
 /// Attribute to specify the reference frame of a member.
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
-public class ReferenceFrameAttribute : Attribute
+public sealed class ReferenceFrameAttribute : Attribute
 {
     /// <summary>
     /// Gets or sets the reference frame.
@@ -36,4 +36,34 @@ public class ReferenceFrameAttribute : Attribute
     {
         Frame = frame;
     }
+}
+
+public enum ThreadContext
+{
+    /// <summary>
+    /// Called from the main thread (or the thread calling World.Step).
+    /// Safe to access global state.
+    /// </summary>
+    MainThread,
+
+    /// <summary>
+    /// Called from background worker threads.
+    /// Code must be thread-safe and lock-free.
+    /// </summary>
+    ParallelWorker,
+
+    /// <summary>
+    /// Could be called from either. Handle with care.
+    /// </summary>
+    Any
+}
+
+/// <summary>
+/// Indicates the thread context in which a callback or event is expected to be invoked.
+/// This attribute is primarily informational and used for documentation purposes.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method | AttributeTargets.Event)]
+public sealed class CallbackThreadAttribute(ThreadContext context) : Attribute
+{
+    public ThreadContext Context { get; } = context;
 }
