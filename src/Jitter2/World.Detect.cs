@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -256,6 +257,21 @@ public sealed partial class World
     {
         GetOrCreateArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, removeFlags);
+    }
+
+    /// <summary>
+    /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs.
+    /// </summary>
+    /// <remarks>For arbiters created by the engine itself <see cref="id0"/> &lt; <see cref="id1"/> holds for
+    /// <see cref="RigidBodyShape"/>s.</remarks>
+    public bool GetArbiter(ulong id0, ulong id1, [MaybeNullWhen(false)] out Arbiter arbiter)
+    {
+        ArbiterKey arbiterKey = new(id0, id1);
+
+        lock (arbiters.GetLock(arbiterKey))
+        {
+            return arbiters.TryGetValue(arbiterKey, out arbiter!);
+        }
     }
 
     /// <summary>
