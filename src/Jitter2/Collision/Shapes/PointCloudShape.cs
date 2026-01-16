@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Jitter2.Internal;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -28,7 +28,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
 
     /// <inheritdoc cref="PointCloudShape(ReadOnlySpan{JVector})"/>
     public PointCloudShape(IEnumerable<JVector> vertices) :
-        this(GeometryInput.AsReadOnlySpan(vertices, out _))
+        this(SpanHelper.AsReadOnlySpan(vertices, out _))
     {
     }
 

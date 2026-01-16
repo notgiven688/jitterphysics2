@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Jitter2.Internal;
+namespace Jitter2.DataStructures;
 
-internal static class GeometryInput
+internal static class SpanHelper
 {
     public static ReadOnlySpan<T> AsReadOnlySpan<T>(IEnumerable<T> elements, out T[]? backingArray) where T : struct
     {

@@ -17,6 +17,10 @@
     <None Include="_package\LICENSE"   Pack="true" PackagePath="" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Internal\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <Description>Jitter Physics 2, the evolution of Jitter Physics, is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
     </Description>

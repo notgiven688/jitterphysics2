@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Jitter2.Internal;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -117,7 +117,7 @@ public static class ShapeHelper
     /// <inheritdoc cref="Tessellate(System.ReadOnlySpan{Jitter2.LinearMath.JVector},int)"/>
     public static List<JTriangle> Tessellate(IEnumerable<JVector> vertices, int subdivisions = 3)
     {
-        return Tessellate(new VertexSupportMap(GeometryInput.AsReadOnlySpan(vertices, out _)), subdivisions);
+        return Tessellate(new VertexSupportMap(SpanHelper.AsReadOnlySpan(vertices, out _)), subdivisions);
     }
 
     #region Obsolete MakeHull - Use Tessellate instead

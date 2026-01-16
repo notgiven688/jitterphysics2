@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Jitter2.Internal;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -141,7 +141,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
     /// <inheritdoc cref="ConvexHullShape(ReadOnlySpan{JTriangle})"/>
     public ConvexHullShape(IEnumerable<JTriangle> triangles) :
-        this(GeometryInput.AsReadOnlySpan(triangles, out _))
+        this(SpanHelper.AsReadOnlySpan(triangles, out _))
     {
     }
 

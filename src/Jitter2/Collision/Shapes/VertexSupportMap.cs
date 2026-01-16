@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Intrinsics;
-using Jitter2.Internal;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -43,7 +43,7 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
     }
 
     public VertexSupportMap(IEnumerable<JVector> vertices) :
-        this(GeometryInput.AsReadOnlySpan(vertices, out _))
+        this(SpanHelper.AsReadOnlySpan(vertices, out _))
     {
 
     }

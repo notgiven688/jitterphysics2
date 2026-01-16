@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Jitter2.Internal;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -50,7 +50,7 @@ public class TriangleMesh
 
     /// <inheritdoc cref="TriangleMesh(ReadOnlySpan{JTriangle}, bool)"/>
     public TriangleMesh(IEnumerable<JTriangle> soup, bool ignoreDegenerated = false) :
-        this(GeometryInput.AsReadOnlySpan(soup, out _), ignoreDegenerated)
+        this(SpanHelper.AsReadOnlySpan(soup, out _), ignoreDegenerated)
     {
     }
 
