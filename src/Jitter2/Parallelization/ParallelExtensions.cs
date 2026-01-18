@@ -11,8 +11,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Provides a ParallelForBatch extension for <see cref="PartitionedBuffer{T}"/> and <see
-/// cref="PartitionedBuffer{T}"/>.
+/// Provides ParallelForBatch extension methods for collections used by the physics engine.
 /// </summary>
 public static class ParallelExtensions
 {
@@ -88,6 +87,13 @@ public static class ParallelExtensions
         return numTasks;
     }
 
+    /// <summary>
+    /// Loop in batches over the elements of the <see cref="SlimBag{T}"/>.
+    /// </summary>
+    /// <param name="taskThreshold">If the number of elements is less than this value, only
+    /// one batch is generated.</param>
+    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
+    /// <returns>The number of batches(/tasks) generated.</returns>
     internal static int ParallelForBatch<T>(this SlimBag<T> list, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : class, IPartitionedSetIndex
     {

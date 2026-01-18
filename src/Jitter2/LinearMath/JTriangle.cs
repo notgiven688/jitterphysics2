@@ -41,8 +41,13 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
         None
     }
 
+    /// <summary>The first vertex of the triangle.</summary>
     [FieldOffset(0 * sizeof(Real))] public JVector V0 = v0;
+
+    /// <summary>The second vertex of the triangle.</summary>
     [FieldOffset(3 * sizeof(Real))] public JVector V1 = v1;
+
+    /// <summary>The third vertex of the triangle.</summary>
     [FieldOffset(6 * sizeof(Real))] public JVector V2 = v2;
 
     /// <summary>

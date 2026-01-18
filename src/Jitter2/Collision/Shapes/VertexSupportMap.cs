@@ -22,6 +22,11 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
 
     public VertexSupportMap(ReadOnlySpan<JVector> vertices)
     {
+        if (vertices.Length == 0)
+        {
+            throw new ArgumentException("Vertex set must contain at least one vertex.", nameof(vertices));
+        }
+
         int length = vertices.Length;
 
         xvalues = new Real[length];

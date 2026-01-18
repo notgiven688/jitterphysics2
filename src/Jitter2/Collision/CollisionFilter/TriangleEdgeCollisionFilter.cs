@@ -13,31 +13,73 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Level geometry is often represented by multiple instances of <see cref="Collision.Shapes.TriangleShape"/>
-/// added to a <see cref="Dynamics.RigidBody"/>. Other rigid bodies sliding over these triangles
-/// might encounter "internal edges", resulting in jitter. The <see cref="TriangleEdgeCollisionFilter"/>
-/// implements the <see cref="INarrowPhaseFilter"/> to help filter out these internal edges.
+/// Filters internal edge collisions for triangle mesh geometry.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Level geometry is often represented by multiple instances of <see cref="Shapes.TriangleShape"/>
+/// added to a <see cref="Dynamics.RigidBody"/>. When other rigid bodies slide over these triangles,
+/// they may encounter "internal edges" where triangles meet, causing unwanted collision responses
+/// and jitter. This filter detects edge collisions and either adjusts the collision normal to
+/// match the neighboring triangle's normal or discards the collision entirely.
+/// </para>
+/// <para>
+/// The filter works best with manifold triangle meshes that have correct adjacency information
+/// (see <see cref="Shapes.TriangleMesh.Triangle.NeighborA"/>, etc.). For edges without neighbors
+/// (boundary edges), the collision is processed normally without adjustment.
+/// </para>
+/// <para>
+/// Additionally, this filter makes triangles one-sided: collisions from the back face
+/// (opposite the triangle normal) are discarded.
+/// </para>
+/// </remarks>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
     /// <summary>
-    /// A tweakable parameter. Collision points that are closer than this value to a triangle edge
-    /// are considered as edge collisions and might be modified or discarded entirely.
+    /// Gets or sets the distance threshold for edge collision detection, in world units.
     /// </summary>
+    /// <remarks>
+    /// Collision points closer than this distance to a triangle edge are considered edge collisions
+    /// and may have their normals adjusted or be discarded. Larger values are more aggressive at
+    /// filtering edges but may incorrectly affect legitimate collisions near triangle boundaries.
+    /// </remarks>
+    /// <value>The default value is 0.01 world units.</value>
     public Real EdgeThreshold { get; set; } = (Real)0.01;
 
-    // approx 2.5°
     private Real cosAngle = (Real)0.999;
 
     /// <summary>
-    /// A tweakable parameter.
+    /// Gets or sets the minimum length of the projected collision normal required to keep the contact.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When the collision normal is projected onto the plane formed by the triangle normal and its
+    /// neighbor's normal, a very short projection indicates the collision is occurring along the
+    /// edge crease itself. Such collisions are discarded as they typically represent internal edge artifacts.
+    /// </para>
+    /// <para>
+    /// Lower values allow more edge collisions through; higher values are more aggressive at filtering.
+    /// </para>
+    /// </remarks>
+    /// <value>The default value is 0.5.</value>
     public Real ProjectionThreshold { get; set; } = (Real)0.5;
 
     /// <summary>
-    /// A tweakable parameter that defines the threshold to determine when two normals
-    /// are considered identical.
+    /// Gets or sets the angle threshold for determining when two triangle normals are considered identical.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When a collision occurs near an edge, this threshold determines whether the current triangle
+    /// and its neighbor are treated as coplanar (same normal) or as forming a crease. Coplanar
+    /// neighbors use simpler normal snapping logic.
+    /// </para>
+    /// <para>
+    /// This threshold is also used to detect and discard back-face collisions: if the collision
+    /// normal points opposite to the triangle normal (beyond this angle from perpendicular),
+    /// the collision is filtered out.
+    /// </para>
+    /// </remarks>
+    /// <value>The default value is approximately 2.5 degrees.</value>
     public JAngle AngleThreshold
     {
         get => JAngle.FromRadian(MathR.Acos(cosAngle));
@@ -213,6 +255,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // ----------------------------------
 
         // 1st step, project the normal onto the plane given by tnormal and nnormal
+        // by removing the component along the cross product axis
         JVector cross = nnormal % tnormal;
         JVector proj = normal - cross * normal * cross;
 

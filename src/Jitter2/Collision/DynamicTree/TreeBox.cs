@@ -26,12 +26,21 @@ namespace Jitter2.Collision;
 [StructLayout(LayoutKind.Explicit, Size = 8 * sizeof(Real))]
 public struct TreeBox : IEquatable<TreeBox>
 {
+    /// <summary>
+    /// Small epsilon value used for ray-box intersection tests.
+    /// </summary>
     public const Real Epsilon = (Real)1e-12;
 
+    /// <summary>The minimum corner of the bounding box.</summary>
     [FieldOffset(0 * sizeof(Real))] public JVector Min;
+
+    /// <summary>Padding for SIMD alignment. Not used directly.</summary>
     [FieldOffset(3 * sizeof(Real))] public Real MinW;
 
+    /// <summary>The maximum corner of the bounding box.</summary>
     [FieldOffset(4 * sizeof(Real))] public JVector Max;
+
+    /// <summary>Padding for SIMD alignment. Not used directly.</summary>
     [FieldOffset(7 * sizeof(Real))] public Real MaxW;
 
     /// <summary>
@@ -48,6 +57,9 @@ public struct TreeBox : IEquatable<TreeBox>
     /// </summary>
     public readonly ref VectorReal VectorMax => ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in this.Max));
 
+    /// <summary>
+    /// Creates a new <see cref="TreeBox"/> from minimum and maximum corner vectors.
+    /// </summary>
     public TreeBox(in JVector min, in JVector max)
     {
         this.Min = min;
@@ -56,6 +68,9 @@ public struct TreeBox : IEquatable<TreeBox>
         this.MaxW = 0;
     }
 
+    /// <summary>
+    /// Creates a new <see cref="TreeBox"/> from an existing <see cref="JBoundingBox"/>.
+    /// </summary>
     public TreeBox(in JBoundingBox box)
     {
         this.Min = box.Min;
@@ -64,6 +79,9 @@ public struct TreeBox : IEquatable<TreeBox>
         this.MaxW = 0;
     }
 
+    /// <summary>
+    /// Converts this <see cref="TreeBox"/> to a <see cref="JBoundingBox"/>.
+    /// </summary>
     public readonly JBoundingBox AsJBoundingBox() => new(Min, Max);
 
     // ─── Helper functions 1:1 like in JBox ───────────────────────────

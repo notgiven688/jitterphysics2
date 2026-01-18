@@ -62,8 +62,19 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     /// </summary>
     /// <param name="triangles">All vertices defining the convex hull. The vertices must strictly lie
     /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="triangles"/> is empty.
+    /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the convex hull consists of more than <see cref="ushort.MaxValue"/> vertices.
+    /// </exception>
     public ConvexHullShape(ReadOnlySpan<JTriangle> triangles)
     {
+        if (triangles.Length == 0)
+        {
+            throw new ArgumentException("Triangle set must contain at least one triangle.", nameof(triangles));
+        }
+
         Dictionary<CHullVector, ushort> tmpIndices = new();
         List<CHullVector> tmpVertices = [];
 

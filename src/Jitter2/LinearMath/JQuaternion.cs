@@ -719,7 +719,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// scales a quaternion by a factor.
+    /// Scales a quaternion by a factor.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(Real value1, in JQuaternion value2)
@@ -729,7 +729,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// scales a quaternion by a factor.
+    /// Scales a quaternion by a factor.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion operator *(in JQuaternion value1, Real value2)

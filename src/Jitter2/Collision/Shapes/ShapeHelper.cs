@@ -32,7 +32,7 @@ public static class ShapeHelper
     };
 
     /// <inheritdoc cref="Tessellate(ISupportMappable, int)"/>
-    /// <param name="hullCollection">A collection to which the triangles are added too.</param>
+    /// <param name="hullCollection">A collection to which the triangles are added to.</param>
     public static void Tessellate<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle>
     {
         for (int i = 0; i < 20; i++)

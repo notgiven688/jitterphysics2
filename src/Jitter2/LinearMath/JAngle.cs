@@ -16,6 +16,9 @@ namespace Jitter2.LinearMath;
 [StructLayout(LayoutKind.Explicit, Size = 1*sizeof(Real))]
 public struct JAngle : IEquatable<JAngle>
 {
+    /// <summary>
+    /// Gets or sets the angle value in radians.
+    /// </summary>
     [field: FieldOffset(0*sizeof(Real))]
     public Real Radian { get; set; }
 
@@ -42,17 +45,26 @@ public struct JAngle : IEquatable<JAngle>
         return Radian.GetHashCode();
     }
 
+    /// <summary>
+    /// Gets or sets the angle value in degrees.
+    /// </summary>
     public Real Degree
     {
         readonly get => Radian / MathR.PI * (Real)180.0;
         set => Radian = value / (Real)180.0 * MathR.PI;
     }
 
+    /// <summary>
+    /// Creates a <see cref="JAngle"/> from a value in radians.
+    /// </summary>
     public static JAngle FromRadian(Real rad)
     {
         return new JAngle { Radian = rad };
     }
 
+    /// <summary>
+    /// Creates a <see cref="JAngle"/> from a value in degrees.
+    /// </summary>
     public static JAngle FromDegree(Real deg)
     {
         return new JAngle { Degree = deg };

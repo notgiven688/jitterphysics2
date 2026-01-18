@@ -13,9 +13,19 @@ using System.Threading;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// A hash set implementation which stores pairs of (int, int) values.
-/// The implementation is based on open addressing.
+/// A hash set implementation which stores unordered pairs of (int, int) values.
+/// The implementation is based on open addressing with power-of-two sizing.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Pairs are stored in a canonical form where the smaller ID comes first.
+/// A pair with <see cref="Pair.ID"/> equal to zero is treated as an empty slot.
+/// </para>
+/// <para>
+/// This class is not generally thread-safe. Only <see cref="ConcurrentAdd"/> may be called
+/// concurrently from multiple threads. All other methods require external synchronization.
+/// </para>
+/// </remarks>
 internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 {
     [StructLayout(LayoutKind.Explicit, Size = 8)]
@@ -97,6 +107,12 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         return p2;
     }
 
+    /// <summary>
+    /// Removes all pairs from the hash set.
+    /// </summary>
+    /// <remarks>
+    /// This method is not thread-safe. Do not call concurrently with any other method.
+    /// </remarks>
     public void Clear()
     {
         Array.Clear(Slots, 0, Slots.Length);
@@ -172,6 +188,16 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
     private Jitter2.Parallelization.ReaderWriterLock rwLock;
 
+    /// <summary>
+    /// Attempts to add a pair to the hash set in a thread-safe manner.
+    /// </summary>
+    /// <remarks>
+    /// Multiple threads may call <see cref="ConcurrentAdd"/> concurrently.
+    /// However, no other methods (including <see cref="Add"/>, <see cref="Remove(Pair)"/>,
+    /// <see cref="Clear"/>, or enumeration) may be called concurrently with this method.
+    /// </remarks>
+    /// <param name="pair">The pair to add.</param>
+    /// <returns><c>true</c> if the pair was added; <c>false</c> if it already exists.</returns>
     public bool ConcurrentAdd(Pair pair)
     {
         int hash = pair.GetHash();

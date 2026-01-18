@@ -14,6 +14,7 @@ namespace Jitter2.DataStructures;
 /// </summary>
 public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyCollection<T>
 {
+    /// <summary>Gets the element at the specified index.</summary>
     public T this[int i] => list[i];
 
     public List<T>.Enumerator GetEnumerator()
@@ -31,5 +32,6 @@ public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyCollection<T>
         return list.GetEnumerator();
     }
 
+    /// <summary>Gets the number of elements in the list.</summary>
     public int Count => list.Count;
 }

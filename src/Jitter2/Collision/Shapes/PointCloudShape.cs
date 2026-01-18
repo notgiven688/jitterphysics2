@@ -36,6 +36,9 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     /// Initializes a new instance of the <see cref="PointCloudShape"/> class.
     /// </summary>
     /// <param name="vertices">All vertices that define the convex hull.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="vertices"/> is empty.
+    /// </exception>
     public PointCloudShape(ReadOnlySpan<JVector> vertices)
     {
         supportMap = new VertexSupportMap(vertices);

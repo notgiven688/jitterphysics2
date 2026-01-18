@@ -12,14 +12,22 @@ using Jitter2.Parallelization;
 namespace Jitter2.Unmanaged;
 
 /// <summary>
-/// Handle for an unmanaged object.
+/// Handle for an unmanaged object stored in a <see cref="PartitionedBuffer{T}"/>.
+/// The handle remains stable even when the underlying memory is resized.
 /// </summary>
+/// <typeparam name="T">The unmanaged type of the data.</typeparam>
 public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
 {
+    /// <summary>
+    /// A handle representing a null/invalid reference.
+    /// </summary>
     public static readonly JHandle<T> Zero = new(null);
 
     internal readonly T** Pointer;
 
+    /// <summary>
+    /// Gets a reference to the underlying data.
+    /// </summary>
     public ref T Data => ref Unsafe.AsRef<T>(*Pointer);
 
     internal JHandle(T** ptr)
@@ -27,8 +35,14 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
         Pointer = ptr;
     }
 
+    /// <summary>
+    /// Gets a value indicating whether this handle is null/invalid.
+    /// </summary>
     public readonly bool IsZero => Pointer == null;
 
+    /// <summary>
+    /// Reinterprets a handle as a handle to a different type. Both types must have compatible layouts.
+    /// </summary>
     public static JHandle<TConvert> AsHandle<TConvert>(JHandle<T> handle) where TConvert : unmanaged
     {
         return new JHandle<TConvert>((TConvert**)handle.Pointer);
@@ -87,6 +101,9 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 /// </remarks>
 public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
 {
+    /// <summary>
+    /// Exception thrown when the buffer's internal indirection table reaches its maximum capacity.
+    /// </summary>
     public class MaximumSizeException : Exception
     {
         public MaximumSizeException() { }
@@ -115,6 +132,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// </summary>
     public ReaderWriterLock ResizeLock = new();
 
+    /// <summary>
+    /// Gets the number of allocated elements in the buffer.
+    /// </summary>
     public int Count { get; private set; }
 
     /// <summary>

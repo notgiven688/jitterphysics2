@@ -15,6 +15,11 @@ namespace Jitter2.Collision;
 /// <summary>
 /// Helper class to update islands. The methods here are not thread-safe.
 /// </summary>
+/// <remarks>
+/// This class uses static shared data structures (queues, lists, and an object pool),
+/// so all calls must be serialized. Islands returned to the pool are reused and must not
+/// be referenced after removal.
+/// </remarks>
 internal static class IslandHelper
 {
     private static readonly Stack<Island> pool = new();

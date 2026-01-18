@@ -304,7 +304,7 @@ public sealed class ThreadPool
 
         taskList.Clear();
 
-        // the main threads queue.
+        // the main thread's queue.
         var myQueue = queues[0];
 
         while (myQueue.TryDequeue(out var task))

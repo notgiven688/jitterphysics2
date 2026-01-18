@@ -23,8 +23,18 @@ public class TriangleShape : RigidBodyShape
     /// </summary>
     /// <param name="mesh">The triangle mesh to which this triangle belongs.</param>
     /// <param name="index">The index representing the position of the triangle within the mesh.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="mesh"/> is <c>null</c>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="index"/> is negative or greater than or equal to the number of triangles in the mesh.
+    /// </exception>
     public TriangleShape(TriangleMesh mesh, int index)
     {
+        ArgumentNullException.ThrowIfNull(mesh, nameof(mesh));
+        ArgumentOutOfRangeException.ThrowIfNegative(index, nameof(index));
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, mesh.Indices.Length, nameof(index));
+
         Mesh = mesh;
         Index = index;
 
@@ -43,10 +53,12 @@ public class TriangleShape : RigidBodyShape
         }
     }
 
+    /// <exception cref="NotSupportedException">
+    /// Always thrown because a triangle has no volume and therefore no mass properties.
+    /// </exception>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
-        throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
+        throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties. " +
                                         $"If you encounter this while calling RigidBody.AddShape, " +
                                         $"call AddShape with setMassInertia set to false.");
     }

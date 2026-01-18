@@ -174,6 +174,7 @@ public struct ContactData
     //
     // The following contact caching code is heavily influenced / a direct copy of the great
     // Bullet Physics Engine:
+
     //
     // Bullet Continuous Collision Detection and Physics Library Copyright (c) 2003-2006 Erwin
     // Coumans  https://bulletphysics.org

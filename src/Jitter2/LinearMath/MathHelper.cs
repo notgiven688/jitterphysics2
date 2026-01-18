@@ -10,6 +10,9 @@ using System.Runtime.CompilerServices;
 
 namespace Jitter2.LinearMath;
 
+/// <summary>
+/// Provides mathematical helper methods for linear algebra and physics calculations.
+/// </summary>
 public static class MathHelper
 {
     /// <summary>

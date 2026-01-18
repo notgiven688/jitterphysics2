@@ -19,6 +19,9 @@ namespace Jitter2.SoftBodies;
 /// </summary>
 public unsafe class SpringConstraint : Constraint
 {
+    /// <summary>
+    /// Low-level data for the spring constraint, stored in unmanaged memory.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct SpringData
     {

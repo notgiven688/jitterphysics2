@@ -28,16 +28,44 @@ global using VectorReal = System.Runtime.Intrinsics.Vector128<System.Single>;
 #endif
 
 namespace Jitter2;
+
+/// <summary>
+/// Provides constants and utilities related to floating-point precision configuration.
+/// The library can be compiled with single-precision (float) or double-precision (double)
+/// by defining the <c>USE_DOUBLE_PRECISION</c> symbol.
+/// </summary>
 public static class Precision
 {
 #if USE_DOUBLE_PRECISION
-        public const int ConstraintSizeFull = 512;
-        public const int ConstraintSizeSmall = 256;
-        public const int RigidBodyDataSize = 256;
+    /// <summary>
+    /// The size in bytes of a full constraint data structure.
+    /// </summary>
+    public const int ConstraintSizeFull = 512;
+
+    /// <summary>
+    /// The size in bytes of a small constraint data structure.
+    /// </summary>
+    public const int ConstraintSizeSmall = 256;
+
+    /// <summary>
+    /// The size in bytes of the <see cref="Dynamics.RigidBodyData"/> structure.
+    /// </summary>
+    public const int RigidBodyDataSize = 256;
 #else
-        public const int ConstraintSizeFull = 256;
-        public const int ConstraintSizeSmall = 128;
-        public const int RigidBodyDataSize = 128;
+    /// <summary>
+    /// The size in bytes of a full constraint data structure.
+    /// </summary>
+    public const int ConstraintSizeFull = 256;
+
+    /// <summary>
+    /// The size in bytes of a small constraint data structure.
+    /// </summary>
+    public const int ConstraintSizeSmall = 128;
+
+    /// <summary>
+    /// The size in bytes of the <see cref="Dynamics.RigidBodyData"/> structure.
+    /// </summary>
+    public const int RigidBodyDataSize = 128;
 #endif
 
     /// <summary>

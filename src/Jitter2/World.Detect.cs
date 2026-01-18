@@ -17,6 +17,14 @@ namespace Jitter2;
 
 public sealed partial class World
 {
+    /// <summary>
+    /// Thrown when the narrow phase encounters a pair of proxy types it cannot process.
+    /// </summary>
+    /// <remarks>
+    /// This typically indicates that non-<see cref="RigidBodyShape"/> proxies were inserted into the
+    /// world's <see cref="DynamicTree"/>. Use <see cref="BroadPhaseFilter"/> to filter such pairs,
+    /// or ensure only supported proxy types are added.
+    /// </remarks>
     public class InvalidCollisionTypeException(Type proxyA, Type proxyB) : Exception(
         $"Don't know how to handle collision between {proxyA} and {proxyB}." +
         $" Register a BroadPhaseFilter to handle and/or filter out these collision types.");
@@ -25,12 +33,20 @@ public sealed partial class World
     /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
     /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
+    /// <remarks>
+    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
+    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// </remarks>
     public INarrowPhaseFilter? NarrowPhaseFilter { get; set; } = new TriangleEdgeCollisionFilter();
 
     /// <summary>
     /// Specifies an implementation of the <see cref="IBroadPhaseFilter"/> to be used in collision detection.
     /// The default value is null.
     /// </summary>
+    /// <remarks>
+    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
+    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// </remarks>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
     /// <summary>
@@ -262,8 +278,15 @@ public sealed partial class World
     /// <summary>
     /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs.
     /// </summary>
-    /// <remarks>For arbiters created by the engine itself <see cref="id0"/> &lt; <see cref="id1"/> holds for
-    /// <see cref="RigidBodyShape"/>s.</remarks>
+    /// <param name="id0">The first identifier (e.g., shape ID).</param>
+    /// <param name="id1">The second identifier.</param>
+    /// <param name="arbiter">When this method returns true, contains the arbiter; otherwise, null.</param>
+    /// <returns><see langword="true"/> if an arbiter exists for the ordered ID pair; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// The order of <paramref name="id0"/> and <paramref name="id1"/> matters.
+    /// For arbiters created by the engine, <paramref name="id0"/> &lt; <paramref name="id1"/> holds
+    /// for <see cref="RigidBodyShape"/>s.
+    /// </remarks>
     public bool GetArbiter(ulong id0, ulong id1, [MaybeNullWhen(false)] out Arbiter arbiter)
     {
         ArbiterKey arbiterKey = new(id0, id1);

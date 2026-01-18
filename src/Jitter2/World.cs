@@ -26,15 +26,32 @@ namespace Jitter2;
 /// </summary>
 public sealed partial class World : IDisposable
 {
+    /// <summary>
+    /// Controls how internal worker threads behave between calls to <see cref="Step(Real, bool)"/>.
+    /// </summary>
     public enum ThreadModelType
     {
+        /// <summary>
+        /// Worker threads may yield when the engine is idle. Lower background CPU usage.
+        /// </summary>
         Regular,
+
+        /// <summary>
+        /// Worker threads remain active between steps to reduce wake-up latency,
+        /// at the cost of higher background CPU usage.
+        /// </summary>
         Persistent
     }
 
     /// <summary>
     /// Provides access to objects in unmanaged memory. This operation is potentially unsafe.
     /// </summary>
+    /// <remarks>
+    /// The returned spans are backed by unmanaged memory and are only valid until the next
+    /// world modification that may resize internal buffers (e.g., creating or removing bodies,
+    /// constraints, contacts, or calling <see cref="Step"/>). Do not cache these spans.
+    /// Not safe to use concurrently with <see cref="Step(Real, bool)"/>.
+    /// </remarks>
     public readonly struct SpanData(World world)
     {
         /// <summary>
@@ -46,20 +63,40 @@ public sealed partial class World : IDisposable
             world.memConstraints.TotalBytesAllocated +
             world.memSmallConstraints.TotalBytesAllocated;
 
+        /// <summary>Span over active (awake) rigid body data.</summary>
         public Span<RigidBodyData> ActiveRigidBodies => world.memRigidBodies.Active;
+
+        /// <summary>Span over inactive (sleeping) rigid body data.</summary>
         public Span<RigidBodyData> InactiveRigidBodies => world.memRigidBodies.Inactive;
+
+        /// <summary>Span over all rigid body data (active and inactive).</summary>
         public Span<RigidBodyData> RigidBodies => world.memRigidBodies.Elements;
 
+        /// <summary>Span over active contact data.</summary>
         public Span<ContactData> ActiveContacts => world.memContacts.Active;
+
+        /// <summary>Span over inactive contact data.</summary>
         public Span<ContactData> InactiveContacts => world.memContacts.Inactive;
+
+        /// <summary>Span over all contact data (active and inactive).</summary>
         public Span<ContactData> Contacts => world.memContacts.Elements;
 
+        /// <summary>Span over active constraint data.</summary>
         public Span<ConstraintData> ActiveConstraints => world.memConstraints.Active;
+
+        /// <summary>Span over inactive constraint data.</summary>
         public Span<ConstraintData> InactiveConstraints => world.memConstraints.Inactive;
+
+        /// <summary>Span over all constraint data (active and inactive).</summary>
         public Span<ConstraintData> Constraints => world.memConstraints.Elements;
 
+        /// <summary>Span over active small constraint data.</summary>
         public Span<SmallConstraintData> ActiveSmallConstraints => world.memSmallConstraints.Active;
+
+        /// <summary>Span over inactive small constraint data.</summary>
         public Span<SmallConstraintData> InactiveSmallConstraints => world.memSmallConstraints.Inactive;
+
+        /// <summary>Span over all small constraint data (active and inactive).</summary>
         public Span<SmallConstraintData> SmallConstraints => world.memSmallConstraints.Elements;
     }
 
@@ -68,6 +105,13 @@ public sealed partial class World : IDisposable
     private readonly PartitionedBuffer<ConstraintData> memConstraints;
     private readonly PartitionedBuffer<SmallConstraintData> memSmallConstraints;
 
+    /// <summary>
+    /// Delegate for per-step and per-substep callbacks.
+    /// </summary>
+    /// <param name="dt">
+    /// The duration in seconds: the full step duration for <see cref="PreStep"/>/<see cref="PostStep"/>,
+    /// or the substep duration for <see cref="PreSubStep"/>/<see cref="PostSubStep"/>.
+    /// </param>
     public delegate void WorldStep(Real dt);
 
     // Post- and Pre-step
@@ -136,6 +180,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Generates a unique ID.
     /// </summary>
+    /// <returns>A monotonically increasing unique identifier.</returns>
     public static ulong RequestId()
     {
         return Interlocked.Increment(ref _idCounter);
@@ -193,10 +238,16 @@ public sealed partial class World : IDisposable
     public bool AllowDeactivation { get; set; } = true;
 
     /// <summary>
-    /// Number of iterations (solver and relaxation) per substep (see <see cref="SubstepCount"/>).
+    /// Gets or sets the number of iterations per substep for the constraint solver and velocity relaxation.
     /// </summary>
-    /// <remarks>Default value: (solver: 6, relaxation: 4)</remarks>
-    /// <value></value>
+    /// <remarks>
+    /// Higher solver iterations improve constraint accuracy at the cost of performance.
+    /// Relaxation iterations help reduce velocity errors after solving.
+    /// Default value: (solver: 6, relaxation: 4).
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// Thrown if <c>solver</c> is less than 1 or <c>relaxation</c> is negative.
+    /// </exception>
     public (int solver, int relaxation) SolverIterations
     {
         get => (solverIterations, velocityRelaxations);
@@ -305,6 +356,7 @@ public sealed partial class World : IDisposable
     /// Removes the specified body from the world. This operation also automatically discards any associated contacts
     /// and constraints.
     /// </summary>
+    /// <param name="body">The rigid body to remove.</param>
     public void Remove(RigidBody body)
     {
         // No need to copy the hashset content first. Removing while iterating does not invalidate
@@ -474,12 +526,14 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Constructs a constraint of the specified type. After creation, it is mandatory to initialize the constraint using the Constraint.Initialize method.
+    /// Constructs a constraint of the specified type. After creation, initialize the constraint
+    /// by calling its <c>Initialize</c> method.
     /// </summary>
     /// <typeparam name="T">The specific type of constraint to create.</typeparam>
     /// <param name="body1">The first rigid body involved in the constraint.</param>
     /// <param name="body2">The second rigid body involved in the constraint.</param>
-    /// <returns>A new instance of the specified constraint type.</returns>
+    /// <returns>A new instance of the specified constraint type, already registered with the world.</returns>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="body1"/> and <paramref name="body2"/> are the same.</exception>
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
@@ -530,11 +584,22 @@ public sealed partial class World : IDisposable
         return body;
     }
 
+    /// <summary>
+    /// Releases all unmanaged memory buffers used by this simulation world.
+    /// </summary>
+    /// <remarks>
+    /// After disposal, the world instance is unusable. All bodies, constraints, and contacts
+    /// become invalid.
+    /// </remarks>
     public void Dispose()
     {
         memContacts.Dispose();
         memRigidBodies.Dispose();
         memConstraints.Dispose();
         memSmallConstraints.Dispose();
+
+        deferredContacts.Dispose();
+        deferredConstraints.Dispose();
+        deferredSmallConstraints.Dispose();
     }
 }

@@ -54,6 +54,7 @@ public class BoxShape : RigidBodyShape
     }
 
     /// <summary>
+    /// Creates a cube shape with sides of equal length.
     /// </summary>
     /// <param name="size">The length of each side.</param>
     /// <exception cref="ArgumentOutOfRangeException">

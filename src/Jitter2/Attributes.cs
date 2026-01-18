@@ -38,6 +38,9 @@ public sealed class ReferenceFrameAttribute : Attribute
     }
 }
 
+/// <summary>
+/// Specifies the threading context in which code executes or a callback is invoked.
+/// </summary>
 public enum ThreadContext
 {
     /// <summary>
@@ -65,5 +68,8 @@ public enum ThreadContext
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Event)]
 public sealed class CallbackThreadAttribute(ThreadContext context) : Attribute
 {
+    /// <summary>
+    /// Gets the thread context in which the attributed member is expected to be invoked.
+    /// </summary>
     public ThreadContext Context { get; } = context;
 }
