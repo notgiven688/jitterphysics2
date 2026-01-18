@@ -16,6 +16,8 @@ sidebar_position: 5
 - Fixed normalization bug in `TriangleEdgeCollisionFilter`.
 - Fixed validation in `SphereShape` radius setter.
 - Fixed a bug in speculative contact implementation.
+- Improved `TriangleMesh`. Added option to build directly from vertices and indices.
+- Added overloads for `Span` throughout the engine (in `TriangleMesh`, `ShapeHelper`, `PointCloudShape`, `ConvexHullShape`).
 
 ### Jitter 2.7.7 (2026-01-08)
 
