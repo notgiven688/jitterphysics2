@@ -4,6 +4,19 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.8 (2026-01-18)
+
+- Fixed degraded tree quality for large proxies in `DynamicTree`.
+- Added `JQuaternion.Lerp`, `JQuaternion.Slerp`, `JQuaternion.Dot`, and `JQuaternion.Inverse` methods for quaternion interpolation and math.
+- Added `JTriangle.GetCenter`, `JTriangle.GetNormal`, `JTriangle.GetArea`, `JTriangle.GetBoundingBox`, and `JTriangle.ClosestPoint` helper methods.
+- Added `JBoundingBox.Disjoint` and `JBoundingBox.Contains` methods (also in `TreeBox`).
+- Added `World.GetArbiter(id0, id1)` to retrieve existing arbiters without creating new ones.
+- Improved XML documentation throughout the codebase.
+- Fixed `CalculateMassInertia` in `TransformedShape` returning incorrect values.
+- Fixed normalization bug in `TriangleEdgeCollisionFilter`.
+- Fixed validation in `SphereShape` radius setter.
+- Fixed a bug in speculative contact implementation.
+
 ### Jitter 2.7.7 (2026-01-08)
 
 - Added `vector.UnsafeAs<T>` and `JVector.UnsafeFrom<T>`. Same for `JQuaternion`.
