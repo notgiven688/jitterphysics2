@@ -189,7 +189,7 @@ public sealed partial class World
         {
             memContacts.ResizeLock.EnterReadLock();
             arbiter.Handle.Data.AddContact(point1, point2, normal);
-            arbiter.Handle.Data.Mode &= ~removeFlags;
+            arbiter.Handle.Data.ResetMode(removeFlags);
             memContacts.ResizeLock.ExitReadLock();
         }
     }
@@ -227,6 +227,8 @@ public sealed partial class World
             // Do not add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
 
+            arbiter.Handle.Data.ResetMode(removeFlags);
+
             for (int e = 0; e < manifold.Count; e++)
             {
                 JVector mfA = manifold.ManifoldA[e];
@@ -236,7 +238,6 @@ public sealed partial class World
                 if (nd < (Real)0.0) continue;
 
                 arbiter.Handle.Data.AddContact(mfA, mfB, normal);
-                arbiter.Handle.Data.Mode &= ~removeFlags;
             }
 
             memContacts.ResizeLock.ExitReadLock();
