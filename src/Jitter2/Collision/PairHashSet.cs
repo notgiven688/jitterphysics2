@@ -37,7 +37,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         [FieldOffset(4)] public readonly int ID2;
 
-        public static Pair Zero = new();
+        public static readonly Pair Zero = new();
 
         public Pair(int id1, int id2)
         {
@@ -116,6 +116,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public void Clear()
     {
         Array.Clear(Slots, 0, Slots.Length);
+        count = 0;
     }
 
     public PairHashSet()
