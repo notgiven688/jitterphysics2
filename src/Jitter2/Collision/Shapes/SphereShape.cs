@@ -27,7 +27,7 @@ public class SphereShape : RigidBodyShape
         get => radius;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value, nameof(Radius));
             radius = value;
             UpdateWorldBoundingBox();
         }
