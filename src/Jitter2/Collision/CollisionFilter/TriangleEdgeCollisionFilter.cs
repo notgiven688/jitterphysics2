@@ -257,7 +257,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // 1st step, project the normal onto the plane given by tnormal and nnormal
         // by removing the component along the cross product axis
         JVector cross = nnormal % tnormal;
-        JVector proj = normal - cross * normal * cross;
+        Real crossLenSq = cross.LengthSquared();
+        JVector proj = normal - (cross * normal / crossLenSq) * cross;
 
         if (proj.LengthSquared() < ProjectionThreshold * ProjectionThreshold)
         {
