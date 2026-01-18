@@ -124,8 +124,6 @@ public sealed partial class World
     /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative.</exception>
     public void Step(Real dt, bool multiThread = true)
     {
-        Tracer.ProfileBegin(TraceName.Step);
-
         AssertNullBody();
 
         switch (dt)
@@ -135,6 +133,8 @@ public sealed partial class World
             case < Real.Epsilon:
                 return; // nothing to do
         }
+
+        Tracer.ProfileBegin(TraceName.Step);
 
         long time;
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -147,9 +147,9 @@ public sealed partial class World
             time = ctime;
         }
 
-        invStepDt = (Real)1.0 / stepDt;
-        substepDt = dt / substeps;
         stepDt = dt;
+        invStepDt = (Real)1.0 / dt;
+        substepDt = dt / substeps;
 
         if (multiThread)
         {
