@@ -88,11 +88,13 @@ public class AddRemoveTests
         world.Remove(bD);
         Assert.That(world.DynamicTree.HashSetInfo.Count == 1);
         TinyStep();
-        world.NullBody.AddShape(new SphereShape());
+        var nullShape = new SphereShape();
+        world.NullBody.AddShape(nullShape);
         TinyStep();
         Assert.That(world.DynamicTree.HashSetInfo.Count == 3);
         TinyStep();
-        world.Remove(world.NullBody);
+        // NullBody cannot be removed; remove the shape directly instead
+        world.NullBody.RemoveShape(nullShape);
         Assert.That(world.DynamicTree.HashSetInfo.Count == 1);
         TinyStep();
     }

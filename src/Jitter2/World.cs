@@ -359,6 +359,8 @@ public sealed partial class World : IDisposable
     /// <param name="body">The rigid body to remove.</param>
     public void Remove(RigidBody body)
     {
+        if (body == NullBody) return;
+
         // No need to copy the hashset content first. Removing while iterating does not invalidate
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
         // This comes in very handy for us.
@@ -379,8 +381,6 @@ public sealed partial class World : IDisposable
             Remove(contact);
         }
 
-        if (body == NullBody) return;
-
         memRigidBodies.Free(body.Handle);
 
         // We must be our own island.
@@ -389,6 +389,8 @@ public sealed partial class World : IDisposable
         body.Handle = JHandle<RigidBodyData>.Zero;
 
         IslandHelper.BodyRemoved(islands, body);
+
+        body.InternalIsland = null!;
 
         bodies.Remove(body);
     }
@@ -431,9 +433,11 @@ public sealed partial class World : IDisposable
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
-        Arbiter.Pool.Push(arbiter);
-
         arbiter.Handle = JHandle<ContactData>.Zero;
+        arbiter.Body1 = null!;
+        arbiter.Body2 = null!;
+
+        Arbiter.Pool.Push(arbiter);
     }
 
     internal void ActivateBodyNextStep(RigidBody body)
