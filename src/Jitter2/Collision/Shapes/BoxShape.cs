@@ -48,12 +48,13 @@ public class BoxShape : RigidBodyShape
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value.Y, nameof(Size));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value.Z, nameof(Size));
 
-            halfSize = value * 0.5f;
+            halfSize = value * (Real)0.5;
             UpdateWorldBoundingBox();
         }
     }
 
     /// <summary>
+    /// Creates a cube shape with sides of equal length.
     /// </summary>
     /// <param name="size">The length of each side.</param>
     /// <exception cref="ArgumentOutOfRangeException">

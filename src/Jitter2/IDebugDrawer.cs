@@ -25,7 +25,24 @@ public interface IDebugDrawable
 /// </summary>
 public interface IDebugDrawer
 {
+    /// <summary>
+    /// Draws a line segment between two points.
+    /// </summary>
+    /// <param name="pA">The start point of the segment.</param>
+    /// <param name="pB">The end point of the segment.</param>
     public void DrawSegment(in JVector pA, in JVector pB);
+
+    /// <summary>
+    /// Draws a triangle defined by three vertices.
+    /// </summary>
+    /// <param name="pA">The first vertex of the triangle.</param>
+    /// <param name="pB">The second vertex of the triangle.</param>
+    /// <param name="pC">The third vertex of the triangle.</param>
     public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC);
+
+    /// <summary>
+    /// Draws a point at the specified position.
+    /// </summary>
+    /// <param name="p">The position of the point.</param>
     public void DrawPoint(in JVector p);
 }

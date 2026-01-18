@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -22,18 +23,42 @@ public class TriangleShape : RigidBodyShape
     /// </summary>
     /// <param name="mesh">The triangle mesh to which this triangle belongs.</param>
     /// <param name="index">The index representing the position of the triangle within the mesh.</param>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="mesh"/> is <c>null</c>.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="index"/> is negative or greater than or equal to the number of triangles in the mesh.
+    /// </exception>
     public TriangleShape(TriangleMesh mesh, int index)
     {
+        ArgumentNullException.ThrowIfNull(mesh, nameof(mesh));
+        ArgumentOutOfRangeException.ThrowIfNegative(index, nameof(index));
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, mesh.Indices.Length, nameof(index));
+
         Mesh = mesh;
         Index = index;
 
         UpdateWorldBoundingBox();
     }
 
+    /// <summary>
+    /// Creates and returns all instances of type <see cref="TriangleShape"/>
+    /// for as given <see cref="TriangleMesh"/>.
+    /// </summary>
+    public static IEnumerable<TriangleShape> CreateAllShapes(TriangleMesh mesh)
+    {
+        for (int index = 0; index < mesh.Indices.Length; index++)
+        {
+            yield return new TriangleShape(mesh, index);
+        }
+    }
+
+    /// <exception cref="NotSupportedException">
+    /// Always thrown because a triangle has no volume and therefore no mass properties.
+    /// </exception>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
-        // This method is not supported for 2D objects in a 3D world as they have no mass/inertia.
-        throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties." +
+        throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties. " +
                                         $"If you encounter this while calling RigidBody.AddShape, " +
                                         $"call AddShape with setMassInertia set to false.");
     }
@@ -46,7 +71,7 @@ public class TriangleShape : RigidBodyShape
     /// <param name="c">The transformed coordinate of the third vertex.</param>
     public void GetWorldVertices(out JVector a, out JVector b, out JVector c)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
         a = Mesh.Vertices[triangle.IndexA];
         b = Mesh.Vertices[triangle.IndexB];
         c = Mesh.Vertices[triangle.IndexC];
@@ -69,7 +94,7 @@ public class TriangleShape : RigidBodyShape
     {
         const Real extraMargin = (Real)0.01;
 
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
         var a = Mesh.Vertices[triangle.IndexA];
         var b = Mesh.Vertices[triangle.IndexB];
         var c = Mesh.Vertices[triangle.IndexC];
@@ -92,7 +117,7 @@ public class TriangleShape : RigidBodyShape
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
-        ref var meshTriangle = ref Mesh.Indices[Index];
+        ref readonly var meshTriangle = ref Mesh.Indices[Index];
 
         var triangle = new JTriangle(Mesh.Vertices[meshTriangle.IndexA],
             Mesh.Vertices[meshTriangle.IndexB], Mesh.Vertices[meshTriangle.IndexC]);
@@ -102,7 +127,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void GetCenter(out JVector point)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
 
         JVector a = Mesh.Vertices[triangle.IndexA];
         JVector b = Mesh.Vertices[triangle.IndexB];
@@ -113,7 +138,7 @@ public class TriangleShape : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        ref var triangle = ref Mesh.Indices[Index];
+        ref readonly var triangle = ref Mesh.Indices[Index];
 
         JVector a = Mesh.Vertices[triangle.IndexA];
         JVector b = Mesh.Vertices[triangle.IndexB];

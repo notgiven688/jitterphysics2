@@ -12,8 +12,9 @@ namespace Jitter2.DataStructures;
 /// <summary>
 /// Implements a read-only wrapper for <see cref="List{T}"/>.
 /// </summary>
-public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyCollection<T>
+public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyList<T>
 {
+    /// <summary>Gets the element at the specified index.</summary>
     public T this[int i] => list[i];
 
     public List<T>.Enumerator GetEnumerator()
@@ -31,5 +32,6 @@ public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyCollection<T>
         return list.GetEnumerator();
     }
 
+    /// <summary>Gets the number of elements in the list.</summary>
     public int Count => list.Count;
 }

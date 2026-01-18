@@ -45,6 +45,10 @@ public abstract class RigidBodyShape : Shape
     /// performance or accuracy. The default implementation relies on an approximation of the shape
     /// constructed using the support map function.
     /// </summary>
+    /// <remarks>
+    /// The inertia tensor is computed relative to the coordinate system origin (0,0,0),
+    /// not the center of mass.
+    /// </remarks>
     [ReferenceFrame(ReferenceFrame.Local)]
     public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {

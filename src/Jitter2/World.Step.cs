@@ -27,19 +27,45 @@ public sealed partial class World
     private readonly SlimBag<Arbiter> deferredArbiters = [];
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
 
+    /// <summary>
+    /// Profiling buckets for <see cref="DebugTimings"/>, representing stages of <see cref="Step(Real, bool)"/>.
+    /// </summary>
     public enum Timings
     {
+        /// <summary>Time spent in <see cref="PreStep"/> callbacks.</summary>
         PreStep,
+
+        /// <summary>Time spent in narrow phase collision detection and contact generation.</summary>
         NarrowPhase,
+
+        /// <summary>Time spent creating deferred arbiters.</summary>
         AddArbiter,
+
+        /// <summary>Time spent reordering contacts for cache efficiency.</summary>
         ReorderContacts,
+
+        /// <summary>Time spent evaluating body deactivation (sleeping).</summary>
         CheckDeactivation,
+
+        /// <summary>Time spent in substeps: force integration, constraint solving, and velocity integration.</summary>
         Solve,
+
+        /// <summary>Time spent removing broken arbiters.</summary>
         RemoveArbiter,
+
+        /// <summary>Time spent updating contact state after solving.</summary>
         UpdateContacts,
+
+        /// <summary>Time spent finalizing body state and broadphase proxy updates.</summary>
         UpdateBodies,
+
+        /// <summary>Time spent updating the dynamic tree (broadphase).</summary>
         BroadPhase,
+
+        /// <summary>Time spent in <see cref="PostStep"/> callbacks.</summary>
         PostStep,
+
+        /// <summary>Sentinel value for array sizing. Not a real timing bucket.</summary>
         Last
     }
 
@@ -74,20 +100,30 @@ public sealed partial class World
 
     /// <summary>
     /// Contains timings for the stages of the last call to <see cref="World.Step(Real, bool)"/>.
-    /// Array elements correspond to the enums in <see cref="Timings"/>. It can be used to identify
+    /// Array elements correspond to the values in <see cref="Timings"/>. It can be used to identify
     /// bottlenecks.
     /// </summary>
+    /// <remarks>
+    /// Values are in milliseconds and are overwritten on each call to <see cref="Step(Real, bool)"/>.
+    /// Index using <c>(int)Timings.XYZ</c>.
+    /// </remarks>
     public double[] DebugTimings { get; } = new double[(int)Timings.Last];
 
     /// <summary>
     /// Performs a single simulation step.
     /// </summary>
-    /// <param name="dt">The duration of time to simulate. This should remain fixed and not exceed 1/60 of a second.</param>
-    /// <param name="multiThread">Indicates whether multithreading should be used. The behavior of the engine can be modified using <see cref="Parallelization.ThreadPool.Instance"/>.</param>
+    /// <param name="dt">The duration of time to simulate in seconds. Should remain fixed and typically not exceed 1/60 s.</param>
+    /// <param name="multiThread">If <see langword="true"/>, uses the internal thread pool for parallel execution.
+    /// Set to <see langword="false"/> for single-threaded execution (useful for debugging or platforms without threading).</param>
+    /// <remarks>
+    /// The step is divided into <see cref="SubstepCount"/> substeps for improved stability.
+    /// Callbacks (<see cref="PreStep"/>, <see cref="PostStep"/>, etc.) are invoked on the calling thread.
+    /// When <paramref name="multiThread"/> is true, <see cref="BroadPhaseFilter"/> and <see cref="NarrowPhaseFilter"/>
+    /// may be called concurrently from worker threads.
+    /// </remarks>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative.</exception>
     public void Step(Real dt, bool multiThread = true)
     {
-        Tracer.ProfileBegin(TraceName.Step);
-
         AssertNullBody();
 
         switch (dt)
@@ -97,6 +133,8 @@ public sealed partial class World
             case < Real.Epsilon:
                 return; // nothing to do
         }
+
+        Tracer.ProfileBegin(TraceName.Step);
 
         long time;
         double invFrequency = 1.0d / Stopwatch.Frequency;
@@ -109,9 +147,9 @@ public sealed partial class World
             time = ctime;
         }
 
-        invStepDt = (Real)1.0 / stepDt;
-        substepDt = dt / substeps;
         stepDt = dt;
+        invStepDt = (Real)1.0 / dt;
+        substepDt = dt / substeps;
 
         if (multiThread)
         {
@@ -681,8 +719,12 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Attempts to lock two bodies. Briefly waits on contention, then backs off if unsuccessful.
+    /// Attempts to lock two rigid bodies. Briefly waits on contention, then backs off if unsuccessful.
+    /// The lock order is determined by memory address to prevent deadlocks.
     /// </summary>
+    /// <param name="b1">Reference to the first rigid body data.</param>
+    /// <param name="b2">Reference to the second rigid body data.</param>
+    /// <returns><see langword="true"/> if both locks were acquired; otherwise, <see langword="false"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryLockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
     {
@@ -749,8 +791,11 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Spin-wait loop to prevent accessing a body from multiple threads.
+    /// Acquires locks on two rigid bodies using a spin-wait loop. The lock order is determined
+    /// by memory address to prevent deadlocks.
     /// </summary>
+    /// <param name="b1">Reference to the first rigid body data.</param>
+    /// <param name="b2">Reference to the second rigid body data.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void LockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
     {
@@ -785,8 +830,11 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Spin-wait loop to prevent accessing a body from multiple threads.
+    /// Releases locks on two rigid bodies previously acquired by <see cref="LockTwoBody"/>
+    /// or <see cref="TryLockTwoBody"/>.
     /// </summary>
+    /// <param name="b1">Reference to the first rigid body data.</param>
+    /// <param name="b2">Reference to the second rigid body data.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void UnlockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
     {

@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using System.Collections.Generic;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -24,14 +26,20 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     private VertexSupportMap supportMap;
     private JVector shifted;
 
+    /// <inheritdoc cref="PointCloudShape(ReadOnlySpan{JVector})"/>
+    public PointCloudShape(IEnumerable<JVector> vertices) :
+        this(SpanHelper.AsReadOnlySpan(vertices, out _))
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PointCloudShape"/> class.
     /// </summary>
-    /// <param name="vertices">
-    /// A list containing all vertices that define the convex hull. The list is not referenced and can be
-    /// modified after passing it to the constructor.
-    /// </param>
-    public PointCloudShape(IReadOnlyList<JVector> vertices)
+    /// <param name="vertices">All vertices that define the convex hull.</param>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="vertices"/> is empty.
+    /// </exception>
+    public PointCloudShape(ReadOnlySpan<JVector> vertices)
     {
         supportMap = new VertexSupportMap(vertices);
         UpdateShape();

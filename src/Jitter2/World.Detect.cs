@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -16,6 +17,14 @@ namespace Jitter2;
 
 public sealed partial class World
 {
+    /// <summary>
+    /// Thrown when the narrow phase encounters a pair of proxy types it cannot process.
+    /// </summary>
+    /// <remarks>
+    /// This typically indicates that non-<see cref="RigidBodyShape"/> proxies were inserted into the
+    /// world's <see cref="DynamicTree"/>. Use <see cref="BroadPhaseFilter"/> to filter such pairs,
+    /// or ensure only supported proxy types are added.
+    /// </remarks>
     public class InvalidCollisionTypeException(Type proxyA, Type proxyB) : Exception(
         $"Don't know how to handle collision between {proxyA} and {proxyB}." +
         $" Register a BroadPhaseFilter to handle and/or filter out these collision types.");
@@ -24,12 +33,20 @@ public sealed partial class World
     /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
     /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
+    /// <remarks>
+    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
+    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// </remarks>
     public INarrowPhaseFilter? NarrowPhaseFilter { get; set; } = new TriangleEdgeCollisionFilter();
 
     /// <summary>
     /// Specifies an implementation of the <see cref="IBroadPhaseFilter"/> to be used in collision detection.
     /// The default value is null.
     /// </summary>
+    /// <remarks>
+    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
+    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// </remarks>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
     /// <summary>
@@ -172,7 +189,7 @@ public sealed partial class World
         {
             memContacts.ResizeLock.EnterReadLock();
             arbiter.Handle.Data.AddContact(point1, point2, normal);
-            arbiter.Handle.Data.Mode &= ~removeFlags;
+            arbiter.Handle.Data.ResetMode(removeFlags);
             memContacts.ResizeLock.ExitReadLock();
         }
     }
@@ -210,6 +227,8 @@ public sealed partial class World
             // Do not add contacts while contacts might be resized
             memContacts.ResizeLock.EnterReadLock();
 
+            arbiter.Handle.Data.ResetMode(removeFlags);
+
             for (int e = 0; e < manifold.Count; e++)
             {
                 JVector mfA = manifold.ManifoldA[e];
@@ -219,7 +238,6 @@ public sealed partial class World
                 if (nd < (Real)0.0) continue;
 
                 arbiter.Handle.Data.AddContact(mfA, mfB, normal);
-                arbiter.Handle.Data.Mode &= ~removeFlags;
             }
 
             memContacts.ResizeLock.ExitReadLock();
@@ -256,6 +274,28 @@ public sealed partial class World
     {
         GetOrCreateArbiter(id0, id1, body1, body2, out Arbiter arbiter);
         RegisterContact(arbiter, point1, point2, normal, removeFlags);
+    }
+
+    /// <summary>
+    /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs.
+    /// </summary>
+    /// <param name="id0">The first identifier (e.g., shape ID).</param>
+    /// <param name="id1">The second identifier.</param>
+    /// <param name="arbiter">When this method returns true, contains the arbiter; otherwise, null.</param>
+    /// <returns><see langword="true"/> if an arbiter exists for the ordered ID pair; otherwise, <see langword="false"/>.</returns>
+    /// <remarks>
+    /// The order of <paramref name="id0"/> and <paramref name="id1"/> matters.
+    /// For arbiters created by the engine, <paramref name="id0"/> &lt; <paramref name="id1"/> holds
+    /// for <see cref="RigidBodyShape"/>s.
+    /// </remarks>
+    public bool GetArbiter(ulong id0, ulong id1, [MaybeNullWhen(false)] out Arbiter arbiter)
+    {
+        ArbiterKey arbiterKey = new(id0, id1);
+
+        lock (arbiters.GetLock(arbiterKey))
+        {
+            return arbiters.TryGetValue(arbiterKey, out arbiter!);
+        }
     }
 
     /// <summary>

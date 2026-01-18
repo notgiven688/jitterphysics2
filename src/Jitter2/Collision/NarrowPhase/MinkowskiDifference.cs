@@ -15,14 +15,23 @@ namespace Jitter2.Collision;
 public static class MinkowskiDifference
 {
     /// <summary>
-    /// Represents a vertex utilized in algorithms that operate on the Minkowski sum of two shapes.
+    /// Represents a vertex on the Minkowski difference of two shapes, storing both the
+    /// difference point and the original support points from each shape.
     /// </summary>
     public struct Vertex
     {
+        /// <summary>The point on the Minkowski difference: <c>V = A - B</c>.</summary>
         public JVector V;
+
+        /// <summary>The support point on shape A in world space.</summary>
         public JVector A;
+
+        /// <summary>The support point on shape B in world space.</summary>
         public JVector B;
 
+        /// <summary>
+        /// Creates a vertex with only the difference point set. A and B remain default.
+        /// </summary>
         public Vertex(JVector v)
         {
             V = v;

@@ -1,4 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -37,26 +41,11 @@ public class Demo05 : IDemo
 
     public IEnumerable<RigidBodyShape> CreateShapes()
     {
-        var indices = tm.Mesh.Indices;
-        var vertices = tm.Mesh.Vertices;
+        var indices = MemoryMarshal.Cast<TriangleVertexIndex, int>(tm.Mesh.Indices);
+        var vertices = tm.Mesh.Vertices.Select(vertex => Conversion.ToJitterVector(vertex.Position)).ToArray();
 
-        List<JTriangle> triangles = new();
-
-        foreach (var tvi in indices)
-        {
-            JVector v1 = Conversion.ToJitterVector(vertices[tvi.T1].Position);
-            JVector v2 = Conversion.ToJitterVector(vertices[tvi.T2].Position);
-            JVector v3 = Conversion.ToJitterVector(vertices[tvi.T3].Position);
-
-            triangles.Add(new JTriangle(v1, v2, v3));
-        }
-
-        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(triangles, true);
-
-        for (int i = 0; i < jtm.Indices.Length; i++)
-        {
-            yield return new TriangleShape(jtm, i);
-        }
+        var jtm = new Jitter2.Collision.Shapes.TriangleMesh(vertices, indices);
+        return TriangleShape.CreateAllShapes(jtm);
     }
 
     public void Build()

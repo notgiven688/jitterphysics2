@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using System.Collections.Generic;
+using Jitter2.DataStructures;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -29,16 +31,9 @@ public static class ShapeHelper
         { 4, 8, 9 }, { 8, 5, 9 }, { 10, 6, 11 }, { 7, 10, 11 }
     };
 
-    /// <summary>
-    /// Approximates the convex hull of a given set of 3D vertices.
-    /// </summary>
-    /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
-    /// <param name="hullCollection">An ICollection to which the triangles are added too.</param>
-    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.</remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static void MakeHull<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle>
+    /// <inheritdoc cref="Tessellate(ISupportMappable, int)"/>
+    /// <param name="hullCollection">A collection to which the triangles are added to.</param>
+    public static void Tessellate<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle>
     {
         for (int i = 0; i < 20; i++)
         {
@@ -91,34 +86,59 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Approximates the convex hull of a support map.
+    /// Creates a tessellation of a shape defined by its support map.
     /// </summary>
-    /// <param name="support">The support map.</param>
+    /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
-    /// <returns>A list of triangles representing the convex hull.</returns>
-    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <remarks>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
     /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static List<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
+    public static List<JTriangle> Tessellate(ISupportMappable support, int subdivisions = 3)
     {
         List<JTriangle> triangles = new();
-        MakeHull(support, triangles, subdivisions);
+        Tessellate(support, triangles, subdivisions);
         return triangles;
     }
 
     /// <summary>
-    /// Approximates the convex hull of a given set of 3D vertices.
+    /// Creates a tessellation of the convex hull of a given set of 3D vertices.
     /// </summary>
     /// <param name="vertices">The vertices used to approximate the hull.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
-    /// <remarks>The hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <remarks>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>.</remarks>
     /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static List<JTriangle> MakeHull(IReadOnlyList<JVector> vertices, int subdivisions = 3)
+    public static List<JTriangle> Tessellate(ReadOnlySpan<JVector> vertices, int subdivisions = 3)
     {
-        return MakeHull(new VertexSupportMap(vertices), subdivisions);
+        return Tessellate(new VertexSupportMap(vertices), subdivisions);
     }
+
+    /// <inheritdoc cref="Tessellate(System.ReadOnlySpan{Jitter2.LinearMath.JVector},int)"/>
+    public static List<JTriangle> Tessellate(IEnumerable<JVector> vertices, int subdivisions = 3)
+    {
+        return Tessellate(new VertexSupportMap(SpanHelper.AsReadOnlySpan(vertices, out _)), subdivisions);
+    }
+
+    #region Obsolete MakeHull - Use Tessellate instead
+
+    [Obsolete("Use Tessellate instead.")]
+    public static List<JTriangle> MakeHull(IEnumerable<JVector> vertices, int subdivisions = 3) =>
+        Tessellate(vertices, subdivisions);
+
+    [Obsolete("Use Tessellate instead.")]
+    public static List<JTriangle> MakeHull(ReadOnlySpan<JVector> vertices, int subdivisions = 3) =>
+        Tessellate(vertices, subdivisions);
+
+    [Obsolete("Use Tessellate instead.")]
+    public static List<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3) =>
+        Tessellate(support, subdivisions);
+
+    [Obsolete("Use Tessellate instead.")]
+    public static void MakeHull<T>(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : ICollection<JTriangle> =>
+        Tessellate(support, hullCollection, subdivisions);
+
+    #endregion
 
     public static void CalculateBoundingBox(ISupportMappable support,
         in JQuaternion orientation, in JVector position, out JBoundingBox box)
@@ -167,7 +187,13 @@ public static class ShapeHelper
     /// mapper to generate a hull point.
     /// </remarks>
     /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
-    public static List<JVector> SampleHull(IReadOnlyList<JVector> vertices, int subdivisions = 3)
+    public static List<JVector> SampleHull(ReadOnlySpan<JVector> vertices, int subdivisions = 3)
+    {
+        return SampleHull(new VertexSupportMap(vertices), subdivisions);
+    }
+
+    /// <inheritdoc cref="SampleHull(ReadOnlySpan{JVector}, int)"/>
+    public static List<JVector> SampleHull(IEnumerable<JVector> vertices, int subdivisions = 3)
     {
         return SampleHull(new VertexSupportMap(vertices), subdivisions);
     }
@@ -237,10 +263,23 @@ public static class ShapeHelper
     /// <summary>
     /// Calculates the mass properties of an implicitly defined shape, assuming unit mass density.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The shape is approximated via surface tessellation using the specified number of <paramref name="subdivisions"/>.
+    /// </para>
+    /// <para>
+    /// <b>Note on Reference Frame:</b>
+    /// The calculated <paramref name="inertia"/> tensor is expressed relative to the <b>coordinate system origin (0,0,0)</b>,
+    /// <em>not</em> the calculated <paramref name="centerOfMass"/>.
+    /// </para>
+    /// </remarks>
     /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="inertia">Output parameter for the calculated inertia matrix.</param>
-    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector.</param>
-    /// <param name="mass">Output parameter for the calculated mass.</param>
+    /// <param name="inertia">
+    /// Output parameter for the inertia tensor calculated relative to the <b>Origin (0,0,0)</b>.
+    /// </param>
+    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector (relative to the Origin).</param>
+    /// <param name="mass">Output parameter for the calculated mass (Volume * density 1.0).</param>
+    /// <param name="subdivisions">The recursion depth for the surface tessellation (default 4).</param>
     public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass,
         out Real mass, int subdivisions = 4)
     {
@@ -251,24 +290,16 @@ public static class ShapeHelper
         const Real a = (Real)(1.0 / 60.0), b = (Real)(1.0 / 120.0);
         JMatrix canonicalInertia = new(a, b, b, b, a, b, b, b, a);
 
-        foreach (JTriangle triangle in MakeHull(support, subdivisions))
+        foreach (JTriangle triangle in Tessellate(support, subdivisions))
         {
-            JVector column0 = triangle.V0;
-            JVector column1 = triangle.V1;
-            JVector column2 = triangle.V2;
-
-            JMatrix transformation = new(
-                column0.X, column1.X, column2.X,
-                column0.Y, column1.Y, column2.Y,
-                column0.Z, column1.Z, column2.Z);
-
+            JMatrix transformation = JMatrix.FromColumns(triangle.V0, triangle.V1, triangle.V2);
             Real detA = transformation.Determinant();
 
             // now transform this canonical tetrahedron to the target tetrahedron
             // inertia by a linear transformation A
             JMatrix tetrahedronInertia = JMatrix.Multiply(transformation * canonicalInertia * JMatrix.Transpose(transformation), detA);
 
-            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
+            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (triangle.V0 + triangle.V1 + triangle.V2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
 
             inertia += tetrahedronInertia;

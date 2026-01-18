@@ -10,6 +10,9 @@ using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
 
+/// <summary>
+/// Low-level data for constraints that fit within <see cref="Precision.ConstraintSizeSmall"/> bytes.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeSmall)]
 public unsafe struct SmallConstraintData
 {
@@ -21,6 +24,9 @@ public unsafe struct SmallConstraintData
     public JHandle<RigidBodyData> Body2;
 }
 
+/// <summary>
+/// Low-level data for constraints, stored in unmanaged memory.
+/// </summary>
 [StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeFull)]
 public unsafe struct ConstraintData
 {
@@ -37,9 +43,13 @@ public unsafe struct ConstraintData
 /// </summary>
 public abstract class Constraint : IDebugDrawable
 {
+    /// <summary>Gets the first rigid body connected by this constraint.</summary>
     public RigidBody Body1 { private set; get; } = null!;
+
+    /// <summary>Gets the second rigid body connected by this constraint.</summary>
     public RigidBody Body2 { private set; get; } = null!;
 
+    /// <summary>Gets whether this constraint uses the smaller data layout.</summary>
     public virtual bool IsSmallConstraint { get; } = false;
 
     /// <summary>
@@ -47,6 +57,9 @@ public abstract class Constraint : IDebugDrawable
     /// </summary>
     public JHandle<ConstraintData> Handle { internal set; get; }
 
+    /// <summary>
+    /// Gets a handle to the constraint data reinterpreted as <see cref="SmallConstraintData"/>.
+    /// </summary>
     public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(Handle);
 
     /// <summary>

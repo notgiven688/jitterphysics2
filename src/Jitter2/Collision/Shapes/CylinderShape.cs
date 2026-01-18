@@ -95,37 +95,15 @@ public class CylinderShape : RigidBodyShape
 
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
-        const Real zeroEpsilon = (Real)1e-12;
-
         JVector upa = orientation.GetBasisY();
 
         Real xx = upa.X * upa.X;
         Real yy = upa.Y * upa.Y;
         Real zz = upa.Z * upa.Z;
 
-        Real l1 = yy + zz;
-        Real l2 = xx + zz;
-        Real l3 = xx + yy;
-
-        Real xext = 0, yext = 0, zext = 0;
-
-        if (l1 > zeroEpsilon)
-        {
-            Real sl = (Real)1.0 / MathR.Sqrt(l1);
-            xext = (yy + zz) * sl * radius;
-        }
-
-        if (l2 > zeroEpsilon)
-        {
-            Real sl = (Real)1.0 / MathR.Sqrt(l2);
-            yext = (xx + zz) * sl * radius;
-        }
-
-        if (l3 > zeroEpsilon)
-        {
-            Real sl = (Real)1.0 / MathR.Sqrt(l3);
-            zext = (xx + yy) * sl * radius;
-        }
+        Real xext = MathR.Sqrt(yy + zz) * radius;
+        Real yext = MathR.Sqrt(xx + zz) * radius;
+        Real zext = MathR.Sqrt(xx + yy) * radius;
 
         JVector p1 = -(Real)0.5 * height * upa;
         JVector p2 = +(Real)0.5 * height * upa;

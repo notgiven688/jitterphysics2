@@ -31,7 +31,7 @@ public class SoftBodySphere : SoftBodyCloth
 
     private static IEnumerable<JTriangle> GenSphereTriangles(JVector offset)
     {
-        return ShapeHelper.MakeHull(new UnitSphere(), 4)
+        return ShapeHelper.Tessellate(new UnitSphere(), 4)
             .Select(t => new JTriangle(t.V0 + offset, t.V1 + offset, t.V2 + offset));
     }
 

@@ -9,6 +9,9 @@ using System.Runtime.InteropServices;
 
 namespace Jitter2.Unmanaged;
 
+/// <summary>
+/// Provides helper methods for unmanaged memory.
+/// </summary>
 public static unsafe class MemoryHelper
 {
     /// <summary>

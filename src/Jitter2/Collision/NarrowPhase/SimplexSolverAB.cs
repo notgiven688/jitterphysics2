@@ -15,6 +15,15 @@ using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 namespace Jitter2.Collision;
 
+/// <summary>
+/// Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving
+/// the closest points on the original shapes (A and B spaces).
+/// </summary>
+/// <remarks>
+/// Unlike <see cref="SimplexSolver"/>, this solver tracks barycentric coordinates and
+/// the original support points, enabling extraction of the closest points on each shape
+/// via <see cref="GetClosest"/>.
+/// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolverAB
 {
@@ -42,6 +51,9 @@ public unsafe struct SimplexSolverAB
     private Barycentric barycentric;
     private uint usageMask;
 
+    /// <summary>
+    /// Resets the solver to an empty simplex.
+    /// </summary>
     public void Reset()
     {
         usageMask = 0;
@@ -249,6 +261,12 @@ public unsafe struct SimplexSolverAB
         return JVector.Zero;
     }
 
+    /// <summary>
+    /// Computes the closest points on the original shapes A and B using the current simplex
+    /// and barycentric coordinates.
+    /// </summary>
+    /// <param name="pointA">The closest point on shape A.</param>
+    /// <param name="pointB">The closest point on shape B.</param>
     public void GetClosest(out JVector pointA, out JVector pointB)
     {
         pointA = JVector.Zero;
@@ -264,6 +282,15 @@ public unsafe struct SimplexSolverAB
         }
     }
 
+    /// <summary>
+    /// Adds a vertex to the simplex and computes the new closest point to the origin.
+    /// </summary>
+    /// <param name="vertex">The vertex position on the Minkowski difference.</param>
+    /// <param name="closest">The point on the reduced simplex closest to the origin.</param>
+    /// <returns>
+    /// <c>true</c> if the origin is not contained within the simplex;
+    /// <c>false</c> if the origin is enclosed by the tetrahedron.
+    /// </returns>
     public bool AddVertex(in JVector vertex, out JVector closest)
     {
         Unsafe.SkipInit(out Vertex fullVertex);
@@ -271,6 +298,16 @@ public unsafe struct SimplexSolverAB
         return AddVertex(fullVertex, out closest);
     }
 
+    /// <summary>
+    /// Adds a vertex (with full A/B support point data) to the simplex and computes
+    /// the new closest point to the origin.
+    /// </summary>
+    /// <param name="vertex">The Minkowski difference vertex including support points from both shapes.</param>
+    /// <param name="closest">The point on the reduced simplex closest to the origin.</param>
+    /// <returns>
+    /// <c>true</c> if the origin is not contained within the simplex;
+    /// <c>false</c> if the origin is enclosed by the tetrahedron.
+    /// </returns>
     public bool AddVertex(in Vertex vertex, out JVector closest)
     {
         Unsafe.SkipInit(out closest);

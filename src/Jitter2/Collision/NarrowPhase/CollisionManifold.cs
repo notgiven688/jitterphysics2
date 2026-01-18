@@ -31,9 +31,19 @@ public unsafe struct CollisionManifold
     private static readonly Real[] hexagonVertices = [(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2,
         -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2];
 
+    /// <summary>
+    /// Gets a span of contact points on shape A. Valid indices are <c>[0, Count)</c>.
+    /// </summary>
     public Span<JVector> ManifoldA => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), 6);
+
+    /// <summary>
+    /// Gets a span of contact points on shape B. Valid indices are <c>[0, Count)</c>.
+    /// </summary>
     public Span<JVector> ManifoldB => MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[18]), 6);
 
+    /// <summary>
+    /// Gets the number of contact points in the manifold.
+    /// </summary>
     public readonly int Count => manifoldCount;
 
     private void PushLeft(Span<JVector> left, in JVector v)

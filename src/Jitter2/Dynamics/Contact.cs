@@ -164,16 +164,27 @@ public struct ContactData
 
         Debug.Assert(body1.World == body2.World);
 
-        Mode = (body1.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody1 : 0;
-        Mode |= (body2.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody2 : 0;
-
+        Mode = SolveMode.None;
         UsageMask = 0;
+    }
+
+    /// <summary>
+    /// Resets the solve mode based on the current motion types of the bodies, then removes the specified flags.
+    /// </summary>
+    /// <param name="removeFlags">Flags to remove from the full solve mode.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ResetMode(SolveMode removeFlags = SolveMode.None)
+    {
+        Mode = (Body1.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody1 : 0;
+        Mode |= (Body2.Data.MotionType == MotionType.Dynamic) ? SolveMode.FullBody2 : 0;
+        Mode &= ~removeFlags;
     }
 
     // ---------------------------------------------------------------------------------------------------------
     //
     // The following contact caching code is heavily influenced / a direct copy of the great
     // Bullet Physics Engine:
+
     //
     // Bullet Continuous Collision Detection and Physics Library Copyright (c) 2003-2006 Erwin
     // Coumans  https://bulletphysics.org

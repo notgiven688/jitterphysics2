@@ -20,12 +20,16 @@ public static class Parallel
     /// </summary>
     public readonly struct Batch(int start, int end)
     {
+        /// <summary>Returns a string representation of the batch.</summary>
         public override string ToString()
         {
             return $"Batch(Start: {Start}, End: {End})";
         }
 
+        /// <summary>The inclusive start index of the batch.</summary>
         public readonly int Start = start;
+
+        /// <summary>The exclusive end index of the batch.</summary>
         public readonly int End = end;
     }
 

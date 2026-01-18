@@ -13,25 +13,34 @@ namespace Jitter2.Collision;
 public partial class DynamicTree
 {
     /// <summary>
-    /// Preliminary result of the ray cast.
+    /// Represents the result of a ray cast operation.
     /// </summary>
     public struct RayCastResult
     {
+        /// <summary>The proxy that was hit by the ray.</summary>
         public IDynamicTreeProxy Entity;
+
+        /// <summary>
+        /// The ray parameter at the hit point. The hit position is <c>origin + lambda * direction</c>.
+        /// </summary>
         public Real Lambda;
+
+        /// <summary>The surface normal at the hit point.</summary>
         public JVector Normal;
     }
 
     /// <summary>
-    /// Post-filter delegate.
+    /// Delegate for filtering ray cast results after the shape intersection test.
     /// </summary>
-    /// <returns>False if the hit should be filtered out.</returns>
+    /// <param name="result">The ray cast result to evaluate.</param>
+    /// <returns><c>false</c> to filter out this hit; <c>true</c> to keep it.</returns>
     public delegate bool RayCastFilterPost(RayCastResult result);
 
     /// <summary>
-    /// Pre-filter delegate.
+    /// Delegate for filtering ray cast candidates before the shape intersection test.
     /// </summary>
-    /// <returns>False if the hit should be filtered out.</returns>
+    /// <param name="result">The proxy to evaluate.</param>
+    /// <returns><c>false</c> to skip this proxy; <c>true</c> to test it.</returns>
     public delegate bool RayCastFilterPre(IDynamicTreeProxy result);
 
     private struct Ray
