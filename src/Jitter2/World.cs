@@ -339,7 +339,8 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Removes all entities from the simulation world.
+    /// Removes all entities from the simulation world. Also clears all proxies from the dynamic tree,
+    /// including any user-added proxies not owned by the world.
     /// </summary>
     public void Clear()
     {
