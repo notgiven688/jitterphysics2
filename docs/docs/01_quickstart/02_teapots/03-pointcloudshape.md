@@ -115,7 +115,7 @@ unsafe { teapotMesh = teapotModel.Meshes[0]; }
 var allVertices = teapotMesh.VerticesAs<JVector>();
 
 // sample vertices on the convex hull
-var vertices = ShapeHelper.SampleHull(allVertices.ToArray(), 4);
+var vertices = ShapeHelper.SampleHull(allVertices, 4);
 
 // create the PointCloudShape from the reduced vertices
 var pointCloudShape = new PointCloudShape(vertices);
