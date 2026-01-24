@@ -54,6 +54,13 @@ public unsafe class FixedAngle : Constraint
         handle = JHandle<ConstraintData>.AsHandle<FixedAngleData>(Handle);
     }
 
+    /// <summary>
+    /// Initializes the constraint using the current relative orientation of the bodies.
+    /// </summary>
+    /// <remarks>
+    /// Records the current relative orientation as the target.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// </remarks>
     public void Initialize()
     {
         ref FixedAngleData data = ref handle.Data;
@@ -107,18 +114,33 @@ public unsafe class FixedAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
     public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)

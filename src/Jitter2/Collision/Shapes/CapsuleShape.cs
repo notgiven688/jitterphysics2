@@ -10,7 +10,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a shape in the form of a capsule.
+/// Represents a capsule shape defined by a radius and the length of its cylindrical section.
 /// </summary>
 public class CapsuleShape : RigidBodyShape
 {
@@ -69,6 +69,7 @@ public class CapsuleShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         // capsule = segment + sphere
@@ -85,11 +86,13 @@ public class CapsuleShape : RigidBodyShape
         result.Y += MathR.Sign(direction.Y) * halfLength;
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JVector delta = halfLength * orientation.GetBasisY();
@@ -104,6 +107,7 @@ public class CapsuleShape : RigidBodyShape
         box.Max += position;
     }
 
+    /// <inheritdoc/>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         Real length = (Real)2.0 * halfLength;

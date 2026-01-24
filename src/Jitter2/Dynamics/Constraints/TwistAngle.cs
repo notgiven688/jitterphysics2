@@ -56,11 +56,15 @@ public unsafe class TwistAngle : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space axes and angular limits.
     /// </summary>
-    /// <param name="axis1">Axis fixed in the local reference frame of the first body, represented in world space.</param>
-    /// <param name="axis2">Axis fixed in the local reference frame of the second body, represented in world space.</param>
-    /// <param name="limit">The permissible relative twist between the bodies along the specified axes.</param>
+    /// <param name="axis1">The twist axis for body 1 in world space.</param>
+    /// <param name="axis2">The twist axis for body 2 in world space.</param>
+    /// <param name="limit">The allowed relative twist angle range.</param>
+    /// <remarks>
+    /// Stores each axis in the local frame of its body and records the initial relative orientation.
+    /// Default values: <see cref="Softness"/> = 0.0001, <see cref="Bias"/> = 0.2.
+    /// </remarks>
     public void Initialize(JVector axis1, JVector axis2, AngularLimit limit)
     {
         ref TwistLimitData data = ref handle.Data;
@@ -97,6 +101,9 @@ public unsafe class TwistAngle : Constraint
         data.Q0 = qCorrection * qRel;
     }
 
+    /// <summary>
+    /// Sets the angular limits for the twist rotation.
+    /// </summary>
     public AngularLimit Limit
     {
         set
@@ -108,10 +115,10 @@ public unsafe class TwistAngle : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint with a fixed twist angle (no rotation allowed).
     /// </summary>
-    /// <param name="axis1">Axis fixed in the local reference frame of the first body, defined in world space.</param>
-    /// <param name="axis2">Axis fixed in the local reference frame of the second body, defined in world space.</param>
+    /// <param name="axis1">The twist axis for body 1 in world space.</param>
+    /// <param name="axis2">The twist axis for body 2 in world space.</param>
     public void Initialize(JVector axis1, JVector axis2)
     {
         Initialize(axis1, axis2, AngularLimit.Fixed);
@@ -171,6 +178,9 @@ public unsafe class TwistAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets the current twist angle relative to the initial pose.
+    /// </summary>
     public JAngle Angle
     {
         get
@@ -191,18 +201,33 @@ public unsafe class TwistAngle : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.0001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
     public override void DebugDraw(IDebugDrawer drawer)

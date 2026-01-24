@@ -13,9 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A constraint that limits the relative tilt between two bodies.
-/// The allowed motion forms a cone defined by a minimum and maximum angle
-/// around an initial reference axis.
+/// Limits the relative tilt between two bodies, removing one angular degree of freedom when active.
 /// </summary>
 public unsafe class ConeLimit : Constraint
 {
@@ -64,10 +62,9 @@ public unsafe class ConeLimit : Constraint
     /// <param name="axisBody2">The reference axis for body 2 in world space.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// This overload allows specifying an initial angular offset between the bodies.
-    /// Each axis is stored as a local axis on the corresponding body. The constraint
-    /// then measures the angle between these axes (transformed back into world space)
-    /// and restricts it to the range given by the angular limit.
+    /// Each axis is stored as a local axis on the corresponding body. The constraint measures
+    /// the angle between these axes and restricts it to the given range.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
     /// </remarks>
     public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
@@ -100,10 +97,9 @@ public unsafe class ConeLimit : Constraint
     /// <param name="axis">The reference axis in world space for the initial pose.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// When initialized, the given world-space axis is stored as a local axis
-    /// on each body. The constraint then measures the angle between these two
-    /// axes (transformed back into world space) and restricts it to the range
-    /// specified by the angular limit.
+    /// Stores the axis as a local axis on each body. The constraint measures the angle between
+    /// these axes and restricts it to the given range.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
     /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
@@ -121,6 +117,9 @@ public unsafe class ConeLimit : Constraint
         Initialize(axis, axis, limit);
     }
 
+    /// <summary>
+    /// Gets the current angle between the two body axes.
+    /// </summary>
     public JAngle Angle
     {
         get
@@ -259,18 +258,33 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
     public static void IterateConeLimit(ref ConstraintData constraint, Real idt)

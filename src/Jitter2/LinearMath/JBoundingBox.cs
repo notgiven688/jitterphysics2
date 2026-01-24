@@ -95,8 +95,13 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
 
     /// <summary>
     /// Creates a new AABB that encloses the original box after it has been rotated by the given orientation matrix.
-    /// Note that rotating an AABB usually results in a larger AABB to fit the rotated geometry.
     /// </summary>
+    /// <remarks>
+    /// Rotating an AABB usually results in a larger AABB to fit the rotated geometry.
+    /// </remarks>
+    /// <param name="box">The original bounding box.</param>
+    /// <param name="orientation">The rotation matrix to apply.</param>
+    /// <returns>A new AABB enclosing the rotated box.</returns>
     public static JBoundingBox CreateTransformed(in JBoundingBox box, in JMatrix orientation)
     {
         JVector halfExtents = (Real)0.5 * (box.Max - box.Min);
@@ -239,6 +244,8 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Expands the bounding box to include the specified point.
     /// </summary>
+    /// <param name="box">The bounding box to expand.</param>
+    /// <param name="point">The point to include.</param>
     public static void AddPointInPlace(ref JBoundingBox box, in JVector point)
     {
         JVector.Max(box.Max, point, out box.Max);
@@ -248,6 +255,8 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Creates a bounding box that exactly encompasses a collection of points.
     /// </summary>
+    /// <param name="points">The collection of points to encompass.</param>
+    /// <returns>A bounding box containing all the points.</returns>
     public static JBoundingBox CreateFromPoints(IEnumerable<JVector> points)
     {
         JBoundingBox box = SmallBox;
@@ -265,6 +274,7 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Determines the relationship between this box and another box.
     /// </summary>
+    /// <param name="box">The other bounding box to test.</param>
     /// <returns>
     /// <see cref="ContainmentType.Disjoint"/> if they do not touch.<br/>
     /// <see cref="ContainmentType.Contains"/> if <paramref name="box"/> is strictly inside this box.<br/>
@@ -299,7 +309,9 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Determines whether the two boxes are completely separated (disjoint).
     /// </summary>
-    /// <returns><c>true</c> if there is a gap between the boxes on at least one axis; <c>false</c> if they touch or overlap.</returns>
+    /// <param name="left">The first bounding box.</param>
+    /// <param name="right">The second bounding box.</param>
+    /// <returns><see langword="true"/> if there is a gap between the boxes on at least one axis; otherwise, <see langword="false"/>.</returns>
     public static bool Disjoint(in JBoundingBox left, in JBoundingBox right)
     {
         return left.Max.X < right.Min.X || left.Min.X > right.Max.X || left.Max.Y < right.Min.Y || left.Min.Y > right.Max.Y ||
@@ -309,7 +321,9 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Determines whether the <paramref name="outer"/> box completely contains the <paramref name="inner"/> box.
     /// </summary>
-    /// <returns><c>true</c> if <paramref name="inner"/> is entirely within the boundaries of <paramref name="outer"/>.</returns>
+    /// <param name="outer">The outer bounding box.</param>
+    /// <param name="inner">The inner bounding box to test.</param>
+    /// <returns><see langword="true"/> if <paramref name="inner"/> is entirely within the boundaries of <paramref name="outer"/>; otherwise, <see langword="false"/>.</returns>
     public static bool Contains(in JBoundingBox outer, in JBoundingBox inner)
     {
         return outer.Min.X <= inner.Min.X && outer.Max.X >= inner.Max.X && outer.Min.Y <= inner.Min.Y && outer.Max.Y >= inner.Max.Y &&
@@ -330,6 +344,9 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Creates a new bounding box that is the union of two other bounding boxes.
     /// </summary>
+    /// <param name="original">The first bounding box.</param>
+    /// <param name="additional">The second bounding box.</param>
+    /// <returns>A bounding box encompassing both inputs.</returns>
     public static JBoundingBox CreateMerged(in JBoundingBox original, in JBoundingBox additional)
     {
         CreateMerged(original, additional, out JBoundingBox result);
@@ -339,6 +356,9 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Creates a new bounding box that is the union of two other bounding boxes.
     /// </summary>
+    /// <param name="original">The first bounding box.</param>
+    /// <param name="additional">The second bounding box.</param>
+    /// <param name="result">Output: A bounding box encompassing both inputs.</param>
     public static void CreateMerged(in JBoundingBox original, in JBoundingBox additional, out JBoundingBox result)
     {
         JVector.Min(original.Min, additional.Min, out result.Min);

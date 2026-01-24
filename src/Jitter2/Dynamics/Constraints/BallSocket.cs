@@ -12,9 +12,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements the BallSocket constraint. This constraint anchors a fixed point in the reference frame of
-/// one body to a fixed point in the reference frame of another body, eliminating three translational
-/// degrees of freedom.
+/// Implements a ball-and-socket joint that anchors a point on each body together,
+/// removing three translational degrees of freedom.
 /// </summary>
 public unsafe class BallSocket : Constraint
 {
@@ -56,9 +55,13 @@ public unsafe class BallSocket : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from a world-space anchor point.
     /// </summary>
-    /// <param name="anchor">Anchor point for both bodies in world space.</param>
+    /// <param name="anchor">The anchor point in world space, shared by both bodies.</param>
+    /// <remarks>
+    /// Computes local anchor points for each body from their current poses.
+    /// Default values: <see cref="Bias"/> = 0.2, <see cref="Softness"/> = 0.
+    /// </remarks>
     public void Initialize(JVector anchor)
     {
         ref BallSocketData data = ref handle.Data;
@@ -162,18 +165,34 @@ public unsafe class BallSocket : Constraint
         body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0. Higher values allow more positional error but improve stability.
+    /// Scaled by inverse timestep during solving.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
     public static void IterateBallSocket(ref ConstraintData constraint, Real idt)

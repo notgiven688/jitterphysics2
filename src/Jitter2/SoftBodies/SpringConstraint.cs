@@ -14,9 +14,15 @@ using Jitter2.Unmanaged;
 namespace Jitter2.SoftBodies;
 
 /// <summary>
-/// A constraint that acts like a spring, connecting two bodies.
-/// It applies forces to maintain a target distance between two anchor points.
+/// Constrains two bodies to maintain a target distance between anchor points,
+/// applying spring-like forces. Removes one translational degree of freedom along
+/// the line connecting the anchors.
 /// </summary>
+/// <remarks>
+/// The spring behavior is controlled by <see cref="Softness"/> and <see cref="Bias"/>,
+/// which can be set directly or computed from physical parameters using
+/// <see cref="SetSpringParameters"/>.
+/// </remarks>
 public unsafe class SpringConstraint : Constraint
 {
     /// <summary>
@@ -62,10 +68,15 @@ public unsafe class SpringConstraint : Constraint
     public override bool IsSmallConstraint { get; } = sizeof(SpringData) <= sizeof(SmallConstraintData);
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space anchor points.
     /// </summary>
     /// <param name="anchor1">Anchor point on the first rigid body, in world space.</param>
     /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
+    /// <remarks>
+    /// Computes local anchor offsets from the current body positions.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// The <see cref="TargetDistance"/> is set to the initial distance between the anchors.
+    /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2)
     {
         ref SpringData data = ref handle.Data;
@@ -160,6 +171,7 @@ public unsafe class SpringConstraint : Constraint
     /// <summary>
     /// Gets or sets the target resting distance of the spring.
     /// </summary>
+    /// <value>Units: meters. Default is the initial distance between anchors at initialization.</value>
     public Real TargetDistance
     {
         set
@@ -193,6 +205,11 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
+    /// <summary>
+    /// Prepares the spring constraint for iteration.
+    /// </summary>
+    /// <param name="constraint">The constraint data reference.</param>
+    /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, Real idt)
     {
         ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
@@ -224,8 +241,12 @@ public unsafe class SpringConstraint : Constraint
     }
 
     /// <summary>
-    /// Gets or sets the softness of the spring.
+    /// Gets or sets the softness (compliance) of the spring constraint.
     /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more positional error but produce a softer spring.
+    /// Scaled by inverse timestep during solving.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
@@ -233,14 +254,22 @@ public unsafe class SpringConstraint : Constraint
     }
 
     /// <summary>
-    /// Gets or sets the bias factor of the spring.
+    /// Gets or sets the bias factor (error correction strength) of the spring constraint.
     /// </summary>
+    /// <value>
+    /// Default is 0.2. Higher values correct distance errors more aggressively.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Performs one iteration of the spring constraint solver.
+    /// </summary>
+    /// <param name="constraint">The constraint data reference.</param>
+    /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void IterateSpringConstraint(ref ConstraintData constraint, Real idt)
     {
         ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));

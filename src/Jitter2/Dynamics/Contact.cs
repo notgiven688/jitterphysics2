@@ -16,33 +16,59 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics;
 
 /// <summary>
-/// Holds four <see cref="Contact"/> structs. The <see cref="ContactData.UsageMask"/>
-/// indicates which contacts are actually in use. Every shape-to-shape collision in Jitter is managed
-/// by one of these structs.
+/// Holds up to four <see cref="Contact"/> structs for a single shape-to-shape collision.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This structure is stored in unmanaged memory and accessed via <see cref="Arbiter.Handle"/>.
+/// The <see cref="UsageMask"/> bitfield indicates which of the four contact slots are active.
+/// </para>
+/// <para>
+/// The returned data is valid only while the associated arbiter exists and must not be accessed
+/// concurrently with <see cref="World.Step(Real, bool)"/>. Do not cache references to this structure.
+/// </para>
+/// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public struct ContactData
 {
+    /// <summary>
+    /// Specifies which velocity components the solver should update for each body.
+    /// </summary>
     [Flags]
     public enum SolveMode
     {
+        /// <summary>No velocity updates.</summary>
         None = 0,
+        /// <summary>Update linear velocity of body 1.</summary>
         LinearBody1 = 1 << 0,
+        /// <summary>Update angular velocity of body 1.</summary>
         AngularBody1 = 1 << 1,
+        /// <summary>Update linear velocity of body 2.</summary>
         LinearBody2 = 1 << 2,
+        /// <summary>Update angular velocity of body 2.</summary>
         AngularBody2 = 1 << 3,
+        /// <summary>Update both linear and angular velocity of body 1.</summary>
         FullBody1 = LinearBody1 | AngularBody1,
+        /// <summary>Update both linear and angular velocity of body 2.</summary>
         FullBody2 = LinearBody2 | AngularBody2,
+        /// <summary>Update linear velocities of both bodies.</summary>
         Linear = LinearBody1 | LinearBody2,
+        /// <summary>Update angular velocities of both bodies.</summary>
         Angular = AngularBody1 | AngularBody2,
+        /// <summary>Update all velocity components of both bodies.</summary>
         Full = Linear | Angular,
     }
 
+    /// <summary>Bit mask for contact slot 0.</summary>
     public const uint MaskContact0 = 0b0001;
+    /// <summary>Bit mask for contact slot 1.</summary>
     public const uint MaskContact1 = 0b0010;
+    /// <summary>Bit mask for contact slot 2.</summary>
     public const uint MaskContact2 = 0b0100;
+    /// <summary>Bit mask for contact slot 3.</summary>
     public const uint MaskContact3 = 0b1000;
 
+    /// <summary>Bit mask indicating all four contact slots are in use.</summary>
     public const uint MaskContactAll = MaskContact0 | MaskContact1 | MaskContact2 | MaskContact3;
 
     // Accessed in unsafe code.
@@ -63,22 +89,37 @@ public struct ContactData
     /// </example>
     public uint UsageMask;
 
+    /// <summary>Handle to the first body's simulation data.</summary>
     public JHandle<RigidBodyData> Body1;
+    /// <summary>Handle to the second body's simulation data.</summary>
     public JHandle<RigidBodyData> Body2;
 
+    /// <summary>Unique key identifying this arbiter's shape pair.</summary>
     public ArbiterKey Key;
 
+    /// <summary>Combined restitution coefficient for this contact pair.</summary>
     public Real Restitution;
+    /// <summary>Combined friction coefficient for this contact pair.</summary>
     public Real Friction;
+    /// <summary>Relaxation factor for speculative contacts.</summary>
     public Real SpeculativeRelaxationFactor;
 
+    /// <summary>Determines which velocity components are updated by the solver.</summary>
     public SolveMode Mode;
 
+    /// <summary>First contact point.</summary>
     public Contact Contact0;
+    /// <summary>Second contact point.</summary>
     public Contact Contact1;
+    /// <summary>Third contact point.</summary>
     public Contact Contact2;
+    /// <summary>Fourth contact point.</summary>
     public Contact Contact3;
 
+    /// <summary>
+    /// Prepares all active contacts for solver iterations by computing effective masses and warm-starting impulses.
+    /// </summary>
+    /// <param name="idt">Inverse of the timestep (1/dt).</param>
     public unsafe void PrepareForIteration(Real idt)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -99,6 +140,10 @@ public struct ContactData
         }
     }
 
+    /// <summary>
+    /// Performs one solver iteration over all active contacts, applying corrective impulses.
+    /// </summary>
+    /// <param name="applyBias">If <see langword="true"/>, applies position-correction bias.</param>
     public unsafe void Iterate(bool applyBias)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -125,6 +170,9 @@ public struct ContactData
     /// </summary>
     public static bool IsHardwareAccelerated => Vector.IsHardwareAccelerated;
 
+    /// <summary>
+    /// Updates contact positions after integration and removes contacts that have separated beyond the break threshold.
+    /// </summary>
     public unsafe void UpdatePosition()
     {
         UsageMask &= MaskContactAll;
@@ -153,6 +201,11 @@ public struct ContactData
         }
     }
 
+    /// <summary>
+    /// Initializes this contact data for a pair of rigid bodies.
+    /// </summary>
+    /// <param name="body1">The first rigid body.</param>
+    /// <param name="body2">The second rigid body.</param>
     public void Init(RigidBody body1, RigidBody body2)
     {
         Body1 = body1.Handle;
@@ -207,6 +260,9 @@ public struct ContactData
     /// <summary>
     /// Adds a new collision result to the contact manifold. Keeps at most four points.
     /// </summary>
+    /// <param name="point1">Contact point on the first body in world space.</param>
+    /// <param name="point2">Contact point on the second body in world space.</param>
+    /// <param name="normal">Contact normal pointing from body 2 to body 1.</param>
     public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal)
     {
         if ((UsageMask & MaskContactAll) == MaskContactAll)
@@ -367,24 +423,47 @@ public struct ContactData
 
     // ---------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Represents a single contact point between two rigid bodies.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This structure is layout-sensitive and stored in unmanaged memory as part of a <see cref="ContactData"/>.
+    /// It contains geometric information (normal, tangents, positions) and solver state (accumulated impulses, bias).
+    /// </para>
+    /// <para>
+    /// Do not cache or store references to this structure across simulation steps.
+    /// </para>
+    /// </remarks>
     [StructLayout(LayoutKind.Explicit)]
     public struct Contact
     {
+        /// <summary>Maximum position-correction bias applied per iteration.</summary>
         public const Real MaximumBias = (Real)100.0;
+        /// <summary>Fraction of penetration corrected per step (Baumgarte stabilization).</summary>
         public const Real BiasFactor = (Real)0.2;
+        /// <summary>Penetration depth below which no position correction is applied.</summary>
         public const Real AllowedPenetration = (Real)0.01;
+        /// <summary>Separation distance beyond which a contact is considered broken.</summary>
         public const Real BreakThreshold = (Real)0.02;
 
+        /// <summary>
+        /// Flags indicating contact state.
+        /// </summary>
         [Flags]
         public enum Flags
         {
+            /// <summary>Indicates this contact was created in the current step.</summary>
             NewContact = 1 << 1,
         }
 
+        /// <summary>Current contact state flags.</summary>
         [FieldOffset(0)] public Flags Flag;
 
+        /// <summary>Velocity bias for restitution (bounce).</summary>
         [FieldOffset(4)] public Real Bias;
 
+        /// <summary>Position-correction bias computed from penetration depth.</summary>
         [FieldOffset(4 + 1 * sizeof(Real))] public Real PenaltyBias;
 
         // ―――――― The following 4-component vectors overlap ――――――――――――――――――――――――――――――

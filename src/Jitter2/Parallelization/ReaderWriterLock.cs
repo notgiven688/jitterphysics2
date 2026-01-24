@@ -9,17 +9,29 @@ using System.Threading;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// An efficient reader-writer lock implementation optimized
-/// for rare write events.
+/// Provides a lightweight reader-writer lock optimized for rare write operations.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Multiple readers can hold the lock concurrently, but writers have exclusive access.
+/// This implementation uses spin-waiting and is best suited for short critical sections.
+/// </para>
+/// <para>
+/// Thread-safe. All methods use atomic operations and memory barriers.
+/// </para>
+/// </remarks>
 public struct ReaderWriterLock
 {
     private volatile int writer;
     private volatile int reader;
 
     /// <summary>
-    /// Enters the critical read section.
+    /// Acquires the read lock. Blocks while a writer holds the lock.
     /// </summary>
+    /// <remarks>
+    /// Multiple threads can hold the read lock simultaneously.
+    /// Call <see cref="ExitReadLock"/> to release.
+    /// </remarks>
     public void EnterReadLock()
     {
         while (true)
@@ -33,8 +45,12 @@ public struct ReaderWriterLock
     }
 
     /// <summary>
-    /// Enters the critical write section.
+    /// Acquires the write lock with exclusive access. Blocks until all readers and writers release.
     /// </summary>
+    /// <remarks>
+    /// Only one thread can hold the write lock at a time.
+    /// Call <see cref="ExitWriteLock"/> to release.
+    /// </remarks>
     public void EnterWriteLock()
     {
         SpinWait sw = new();

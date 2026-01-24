@@ -67,13 +67,16 @@ public unsafe class PointOnPlane : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space parameters.
     /// </summary>
-    /// <param name="axis">Axis fixed in the reference frame of the first body in world space.</param>
-    /// <param name="anchor1">Anchor point on the first body. Together with the axis this defines a plane in the reference
-    /// frame of body1.</param>
-    /// <param name="anchor2">Anchor point on the second body in world space.</param>
-    /// <param name="limit">A limit for the distance between the plane and the anchor point on the second body.</param>
+    /// <param name="axis">The plane normal in world space, fixed in the reference frame of body 1.</param>
+    /// <param name="anchor1">Anchor point on body 1 defining the plane origin in world space.</param>
+    /// <param name="anchor2">Anchor point on body 2 constrained to the plane in world space.</param>
+    /// <param name="limit">Distance limit from the plane.</param>
+    /// <remarks>
+    /// Computes local anchor points and axis from the current body poses.
+    /// Default values: <see cref="Bias"/> = 0.01, <see cref="Softness"/> = 0.00001.
+    /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
         ref SliderData data = ref handle.Data;
@@ -159,18 +162,33 @@ public unsafe class PointOnPlane : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.00001. Higher values allow more positional error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.01. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
     public static void IteratePointOnPlane(ref ConstraintData constraint, Real idt)

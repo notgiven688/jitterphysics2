@@ -13,16 +13,27 @@ using System.Threading;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// A data structure based on an array, without a fixed order. Removing an element at position n
-/// results in the last element of the array being moved to position n, with the <see cref="Count"/>
-/// decrementing by one.
+/// A lightweight unordered collection backed by an array. Removing an element at position n
+/// moves the last element to position n and decrements <see cref="Count"/>, providing O(1) removal.
 /// </summary>
-/// <typeparam name="T">The type of elements in the SlimBag.</typeparam>
+/// <typeparam name="T">The type of elements in the bag.</typeparam>
+/// <remarks>
+/// Key operations:
+/// <list type="bullet">
+///   <item><description><see cref="Add"/>: O(1) amortized, may resize the internal array.</description></item>
+///   <item><description><see cref="RemoveAt"/>: O(1), swaps with the last element.</description></item>
+///   <item><description><see cref="Remove"/>: O(n), requires linear search.</description></item>
+///   <item><description><see cref="ConcurrentAdd"/>: Thread-safe addition with reader-writer locking.</description></item>
+/// </list>
+/// </remarks>
 internal class SlimBag<T> : IEnumerable<T>
 {
-    /// <summary>Lightweight struct enumerator. NOT safe if the bag is
-    /// mutated while enumeration is in progress.
+    /// <summary>
+    /// A lightweight struct enumerator for <see cref="SlimBag{T}"/>.
     /// </summary>
+    /// <remarks>
+    /// <b>Warning:</b> Not safe if the bag is mutated during enumeration.
+    /// </remarks>
     public struct Enumerator : IEnumerator<T>
     {
         private readonly SlimBag<T> owner;

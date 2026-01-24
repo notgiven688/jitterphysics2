@@ -13,33 +13,61 @@ namespace Jitter2.Dynamics.Constraints;
 /// <summary>
 /// Low-level data for constraints that fit within <see cref="Precision.ConstraintSizeSmall"/> bytes.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This structure is stored in unmanaged memory and accessed via <see cref="Constraint.SmallHandle"/>.
+/// It contains function pointers for the solver and handles to the connected bodies.
+/// </para>
+/// <para>
+/// The data is valid only while the constraint is registered with the world. Do not cache references
+/// across simulation steps. Not safe to access concurrently with <see cref="World.Step(Real, bool)"/>.
+/// </para>
+/// </remarks>
 [StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeSmall)]
 public unsafe struct SmallConstraintData
 {
     internal int _internal;
+    /// <summary>Function pointer to the constraint's iteration solver.</summary>
     public delegate*<ref SmallConstraintData, Real, void> Iterate;
+    /// <summary>Function pointer to the constraint's pre-iteration setup.</summary>
     public delegate*<ref SmallConstraintData, Real, void> PrepareForIteration;
 
+    /// <summary>Handle to the first body's simulation data.</summary>
     public JHandle<RigidBodyData> Body1;
+    /// <summary>Handle to the second body's simulation data.</summary>
     public JHandle<RigidBodyData> Body2;
 }
 
 /// <summary>
 /// Low-level data for constraints, stored in unmanaged memory.
 /// </summary>
+/// <remarks>
+/// <para>
+/// This structure is stored in unmanaged memory and accessed via <see cref="Constraint.Handle"/>.
+/// It contains function pointers for the solver and handles to the connected bodies.
+/// </para>
+/// <para>
+/// The data is valid only while the constraint is registered with the world. Do not cache references
+/// across simulation steps. Not safe to access concurrently with <see cref="World.Step(Real, bool)"/>.
+/// </para>
+/// </remarks>
 [StructLayout(LayoutKind.Sequential, Size = Precision.ConstraintSizeFull)]
 public unsafe struct ConstraintData
 {
     internal int _internal;
+    /// <summary>Function pointer to the constraint's iteration solver.</summary>
     public delegate*<ref ConstraintData, Real, void> Iterate;
+    /// <summary>Function pointer to the constraint's pre-iteration setup.</summary>
     public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
 
+    /// <summary>Handle to the first body's simulation data.</summary>
     public JHandle<RigidBodyData> Body1;
+    /// <summary>Handle to the second body's simulation data.</summary>
     public JHandle<RigidBodyData> Body2;
 }
 
 /// <summary>
-/// The base class for constraints.
+/// Base class for constraints that connect two rigid bodies and restrict their relative motion.
 /// </summary>
 public abstract class Constraint : IDebugDrawable
 {
@@ -63,8 +91,10 @@ public abstract class Constraint : IDebugDrawable
     public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(Handle);
 
     /// <summary>
-    /// Helper to check if the constraint data is small enough.
+    /// Checks that the constraint data type fits within <see cref="ConstraintData"/>.
     /// </summary>
+    /// <typeparam name="T">The constraint-specific data type.</typeparam>
+    /// <exception cref="InvalidOperationException">Thrown if the data type is too large.</exception>
     protected static unsafe void CheckDataSize<T>() where T : unmanaged
     {
         if (sizeof(T) > sizeof(ConstraintData))
@@ -74,8 +104,8 @@ public abstract class Constraint : IDebugDrawable
     }
 
     /// <summary>
-    /// This method must be overridden. It initializes the function pointers for
-    /// <see cref="ConstraintData.Iterate"/> and <see cref="ConstraintData.PrepareForIteration"/>.
+    /// Initializes the function pointers for <see cref="ConstraintData.Iterate"/> and
+    /// <see cref="ConstraintData.PrepareForIteration"/>. Override this in derived classes.
     /// </summary>
     protected virtual void Create()
     {
@@ -85,9 +115,11 @@ public abstract class Constraint : IDebugDrawable
     protected unsafe delegate*<ref ConstraintData, Real, void> PrepareForIteration = null;
 
     /// <summary>
-    /// Enables or disables this constraint temporarily. For a complete removal of the constraint,
-    /// use <see cref="World.Remove(Constraint)"/>.
+    /// Gets or sets whether this constraint is enabled.
     /// </summary>
+    /// <remarks>
+    /// Use <see cref="World.Remove(Constraint)"/> for permanent removal.
+    /// </remarks>
     public unsafe bool IsEnabled
     {
         get => Handle.Data.Iterate != null;
@@ -119,6 +151,11 @@ public abstract class Constraint : IDebugDrawable
         IsEnabled = true;
     }
 
+    /// <summary>
+    /// Draws a debug visualization of this constraint.
+    /// </summary>
+    /// <param name="drawer">The debug drawer to receive visualization primitives.</param>
+    /// <exception cref="NotImplementedException">Thrown if the derived class does not override this method.</exception>
     public virtual void DebugDraw(IDebugDrawer drawer)
     {
         throw new NotImplementedException();

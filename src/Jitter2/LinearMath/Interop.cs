@@ -10,10 +10,11 @@ using System.Runtime.CompilerServices;
 
 namespace Jitter2.LinearMath;
 
-// Interop helpers for JVector and JQuaternion.
-// Includes safe implicit conversions to System.Numerics types, and opt-in unsafe
-// bit reinterpretation for high-performance interop with layout-compatible structs.
-
+/// <summary>
+/// Interop helpers for JVector and JQuaternion.
+/// Includes safe implicit conversions to System.Numerics types, and opt-in unsafe
+/// bit reinterpretation for high-performance interop with layout-compatible structs.
+/// </summary>
 internal static class UnsafeInterop
 {
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -32,8 +33,12 @@ public partial struct JVector
 {
     /// <summary>
     /// Reinterprets the bits of this <see cref="JVector"/> as <typeparamref name="T"/>.
-    /// Valid only if T has identical size and compatible layout (and same scalar type).
     /// </summary>
+    /// <remarks>
+    /// Valid only if <typeparamref name="T"/> has identical size and compatible layout.
+    /// </remarks>
+    /// <typeparam name="T">The target unmanaged type.</typeparam>
+    /// <returns>The reinterpreted value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T UnsafeAs<T>() where T : unmanaged
     {
@@ -47,8 +52,13 @@ public partial struct JVector
 
     /// <summary>
     /// Reinterprets the bits of <paramref name="value"/> as a <see cref="JVector"/>.
-    /// Valid only if T has identical size and compatible layout (and same scalar type).
     /// </summary>
+    /// <remarks>
+    /// Valid only if <typeparamref name="T"/> has identical size and compatible layout.
+    /// </remarks>
+    /// <typeparam name="T">The source unmanaged type.</typeparam>
+    /// <param name="value">The value to reinterpret.</param>
+    /// <returns>The reinterpreted vector.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector UnsafeFrom<T>(in T value) where T : unmanaged
     {
@@ -71,9 +81,13 @@ public partial struct JQuaternion
 {
     /// <summary>
     /// Reinterprets the bits of this <see cref="JQuaternion"/> as <typeparamref name="T"/>.
-    /// Valid only if T has identical size and compatible layout (and same scalar type).
-    /// Memory order is X, Y, Z, W (W is last).
     /// </summary>
+    /// <remarks>
+    /// Valid only if <typeparamref name="T"/> has identical size and compatible layout.
+    /// Memory order is X, Y, Z, W (W is last).
+    /// </remarks>
+    /// <typeparam name="T">The target unmanaged type.</typeparam>
+    /// <returns>The reinterpreted value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T UnsafeAs<T>() where T : unmanaged
     {
@@ -87,9 +101,14 @@ public partial struct JQuaternion
 
     /// <summary>
     /// Reinterprets the bits of <paramref name="value"/> as a <see cref="JQuaternion"/>.
-    /// Valid only if T has identical size and compatible layout (and same scalar type).
-    /// Expects memory order X, Y, Z, W (W is last).
     /// </summary>
+    /// <remarks>
+    /// Valid only if <typeparamref name="T"/> has identical size and compatible layout.
+    /// Expects memory order X, Y, Z, W (W is last).
+    /// </remarks>
+    /// <typeparam name="T">The source unmanaged type.</typeparam>
+    /// <param name="value">The value to reinterpret.</param>
+    /// <returns>The reinterpreted quaternion.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JQuaternion UnsafeFrom<T>(in T value) where T : unmanaged
     {

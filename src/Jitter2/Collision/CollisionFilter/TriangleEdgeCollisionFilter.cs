@@ -17,20 +17,13 @@ namespace Jitter2.Collision;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Level geometry is often represented by multiple instances of <see cref="Shapes.TriangleShape"/>
-/// added to a <see cref="Dynamics.RigidBody"/>. When other rigid bodies slide over these triangles,
-/// they may encounter "internal edges" where triangles meet, causing unwanted collision responses
-/// and jitter. This filter detects edge collisions and either adjusts the collision normal to
-/// match the neighboring triangle's normal or discards the collision entirely.
+/// When rigid bodies slide over triangle meshes, they may collide with internal edges where
+/// triangles meet, causing jitter. This filter adjusts collision normals at edges to match
+/// neighboring triangles or discards the collision entirely.
 /// </para>
 /// <para>
-/// The filter works best with manifold triangle meshes that have correct adjacency information
-/// (see <see cref="Shapes.TriangleMesh.Triangle.NeighborA"/>, etc.). For edges without neighbors
-/// (boundary edges), the collision is processed normally without adjustment.
-/// </para>
-/// <para>
-/// Additionally, this filter makes triangles one-sided: collisions from the back face
-/// (opposite the triangle normal) are discarded.
+/// Works best with manifold meshes that have adjacency information. Boundary edges
+/// (no neighbor) are processed normally. Back-face collisions are discarded.
 /// </para>
 /// </remarks>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter

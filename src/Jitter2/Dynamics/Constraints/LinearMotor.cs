@@ -51,12 +51,18 @@ public unsafe class LinearMotor : Constraint
         handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);
     }
 
+    /// <summary>
+    /// Gets or sets the motor axis on the first body in local space.
+    /// </summary>
     public JVector LocalAxis1
     {
         get => handle.Data.LocalAxis1;
         set => handle.Data.LocalAxis1 = value;
     }
 
+    /// <summary>
+    /// Gets or sets the motor axis on the second body in local space.
+    /// </summary>
     public JVector LocalAxis2
     {
         get => handle.Data.LocalAxis2;
@@ -64,10 +70,14 @@ public unsafe class LinearMotor : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the motor with axes for each body.
     /// </summary>
-    /// <param name="axis1">Axis on the first body in world space.</param>
-    /// <param name="axis2">Axis on the second body in world space.</param>
+    /// <param name="axis1">Motor axis on the first body in world space.</param>
+    /// <param name="axis2">Motor axis on the second body in world space.</param>
+    /// <remarks>
+    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
+    /// </remarks>
     public void Initialize(JVector axis1, JVector axis2)
     {
         ref LinearMotorData data = ref handle.Data;
@@ -84,12 +94,23 @@ public unsafe class LinearMotor : Constraint
         data.Velocity = 0;
     }
 
+    /// <summary>
+    /// Gets or sets the target linear velocity in units per second.
+    /// </summary>
+    /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
         get => handle.Data.Velocity;
         set => handle.Data.Velocity = value;
     }
 
+    /// <summary>
+    /// Gets or sets the maximum force the motor can apply.
+    /// </summary>
+    /// <value>Default is 0. Must be non-negative.</value>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is negative.
+    /// </exception>
     public Real MaximumForce
     {
         get => handle.Data.MaxForce;
@@ -100,6 +121,9 @@ public unsafe class LinearMotor : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this motor during the last step.
+    /// </summary>
     public Real Impulse => handle.Data.AccumulatedImpulse;
 
     public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, Real idt)

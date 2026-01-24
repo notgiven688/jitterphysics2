@@ -13,9 +13,17 @@ using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Provides efficient and accurate collision detection algorithms for general convex objects
-/// implicitly defined by a support function, see <see cref="ISupportMappable"/>.
+/// Provides collision detection algorithms for convex shapes defined by support functions.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Implements GJK (Gilbert-Johnson-Keerthi) for distance queries, MPR (Minkowski Portal Refinement)
+/// for fast overlap detection, and EPA (Expanding Polytope Algorithm) for penetration depth.
+/// </para>
+/// <para>
+/// All methods are thread-safe when used with thread-local solver state.
+/// </para>
+/// </remarks>
 public static class NarrowPhase
 {
     private const Real NumericEpsilon = (Real)1e-16;

@@ -16,6 +16,16 @@ namespace Jitter2.Unmanaged;
 /// The handle remains stable even when the underlying memory is resized.
 /// </summary>
 /// <typeparam name="T">The unmanaged type of the data.</typeparam>
+/// <remarks>
+/// <para>
+/// <b>Validity:</b> A handle is valid only while the owning <see cref="PartitionedBuffer{T}"/>
+/// exists and the element has not been freed via <see cref="PartitionedBuffer{T}.Free"/>.
+/// </para>
+/// <para>
+/// <b>Do not cache</b> the <see cref="Data"/> reference across operations that may resize
+/// the buffer. Use the handle to obtain a fresh reference when needed.
+/// </para>
+/// </remarks>
 public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
 {
     /// <summary>
@@ -43,6 +53,13 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
     /// <summary>
     /// Reinterprets a handle as a handle to a different type. Both types must have compatible layouts.
     /// </summary>
+    /// <typeparam name="TConvert">The target unmanaged type to reinterpret as.</typeparam>
+    /// <param name="handle">The handle to reinterpret.</param>
+    /// <returns>A handle reinterpreted as the target type.</returns>
+    /// <remarks>
+    /// <b>Safety:</b> The caller must ensure that <typeparamref name="T"/> and <typeparamref name="TConvert"/>
+    /// have compatible memory layouts. No runtime validation is performed.
+    /// </remarks>
     public static JHandle<TConvert> AsHandle<TConvert>(JHandle<T> handle) where TConvert : unmanaged
     {
         return new JHandle<TConvert>((TConvert**)handle.Pointer);
@@ -78,6 +95,7 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 /// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks.
 /// Each struct can either be active or inactive.
 /// </summary>
+/// <typeparam name="T">The unmanaged type to store. Must be at least 4 bytes in size.</typeparam>
 /// <remarks>
 /// <para>
 /// <b>Memory Layout Requirement:</b> The type <typeparamref name="T"/> must reserve its first
@@ -97,6 +115,13 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 ///     // ... other fields
 /// }
 /// </code>
+/// </para>
+/// <para>
+/// <b>Threading:</b> Concurrent calls to <see cref="Allocate"/> may trigger a resize. Use
+/// <see cref="ResizeLock"/> to synchronize access when reading data concurrently with allocations.
+/// </para>
+/// <para>
+/// <b>Disposal:</b> This class owns unmanaged memory and must be disposed to avoid memory leaks.
 /// </para>
 /// </remarks>
 public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
@@ -209,8 +234,13 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Removes the associated native structure from the data structure.
+    /// Removes the associated native structure from the buffer and invalidates the handle.
     /// </summary>
+    /// <param name="handle">The handle to free.</param>
+    /// <remarks>
+    /// <b>Safety:</b> After calling this method, the handle becomes invalid.
+    /// Do not use the handle or any cached references to its data.
+    /// </remarks>
     public void Free(JHandle<T> handle)
     {
         Debug.Assert(!disposed);
@@ -229,21 +259,32 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// A span for all elements marked as active.
     /// </summary>
+    /// <remarks>
+    /// <b>Do not cache:</b> This span is invalidated when the buffer resizes.
+    /// </remarks>
     public Span<T> Active => new(memory, activeCount);
 
     /// <summary>
     /// A span for all elements marked as inactive.
     /// </summary>
+    /// <remarks>
+    /// <b>Do not cache:</b> This span is invalidated when the buffer resizes.
+    /// </remarks>
     public Span<T> Inactive => new(&memory[activeCount], Count - activeCount);
 
     /// <summary>
     /// A span for all elements.
     /// </summary>
+    /// <remarks>
+    /// <b>Do not cache:</b> This span is invalidated when the buffer resizes.
+    /// </remarks>
     public Span<T> Elements => new(memory, Count);
 
     /// <summary>
     /// Returns the handle of the object. O(1) operation.
     /// </summary>
+    /// <param name="t">A reference to the element in the buffer.</param>
+    /// <returns>The handle for the element.</returns>
     public JHandle<T> GetHandle(ref T t)
     {
         return new JHandle<T>(GetHandleSlot(Unsafe.Read<int>(Unsafe.AsPointer(ref t))));
@@ -252,6 +293,8 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Checks if the element is stored as an active element. O(1).
     /// </summary>
+    /// <param name="handle">The handle to check.</param>
+    /// <returns><see langword="true"/> if the element is active; otherwise, <see langword="false"/>.</returns>
     public bool IsActive(JHandle<T> handle)
     {
         Debug.Assert(*handle.Pointer - memory < Count);
@@ -261,6 +304,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Moves an object from inactive to active.
     /// </summary>
+    /// <param name="handle">The handle of the element to move.</param>
     public void MoveToActive(JHandle<T> handle)
     {
         Debug.Assert(*handle.Pointer - memory < Count);
@@ -278,6 +322,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Moves an object from active to inactive.
     /// </summary>
+    /// <param name="handle">The handle of the element to move.</param>
     public void MoveToInactive(JHandle<T> handle)
     {
         if ((nint)(*handle.Pointer) - (nint)memory >= activeCount * sizeof(T)) return;
@@ -292,6 +337,8 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Swap two entries based on their index. Adjusts handles accordingly.
     /// </summary>
+    /// <param name="i">The index of the first element.</param>
+    /// <param name="j">The index of the second element.</param>
     public void Swap(int i, int j)
     {
         (memory[i], memory[j]) = (memory[j], memory[i]);
@@ -303,6 +350,8 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Retrieves the target index of the handle.
     /// </summary>
+    /// <param name="handle">The handle to get the index for.</param>
+    /// <returns>The index of the element in the buffer.</returns>
     public int GetIndex(JHandle<T> handle)
     {
         return (int)(((nint)(*handle.Pointer) - (nint)memory) / sizeof(T));
@@ -311,6 +360,13 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <summary>
     /// Allocates an unmanaged object. Growth is dynamic.
     /// </summary>
+    /// <param name="active">If <see langword="true"/>, the element is added to the active partition.</param>
+    /// <param name="clear">If <see langword="true"/>, the element's memory (excluding the internal ID) is zeroed.</param>
+    /// <returns>A handle to the newly allocated element.</returns>
+    /// <remarks>
+    /// <b>Threading:</b> This method may resize the buffer, which moves all data. Use
+    /// <see cref="ResizeLock"/> when calling concurrently with data access.
+    /// </remarks>
     public JHandle<T> Allocate(bool active = false, bool clear = false)
     {
         Debug.Assert(!disposed);

@@ -9,7 +9,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Wraps any shape and allows to orientate and translate it.
+/// Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).
 /// </summary>
 public class TransformedShape : RigidBodyShape
 {
@@ -55,8 +55,14 @@ public class TransformedShape : RigidBodyShape
     {
     }
 
+    /// <summary>
+    /// Gets the original shape that is being transformed.
+    /// </summary>
     public RigidBodyShape OriginalShape { get; }
 
+    /// <summary>
+    /// Gets or sets the translation applied to the shape.
+    /// </summary>
     public JVector Translation
     {
         get => translation;
@@ -80,6 +86,9 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
+    /// <summary>
+    /// Gets or sets the linear transformation (rotation, scale, or shear) applied to the shape.
+    /// </summary>
     public JMatrix Transformation
     {
         get => transformation;
@@ -91,6 +100,7 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         if (type == TransformationType.Identity)
@@ -107,6 +117,7 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         if (type == TransformationType.General)
@@ -122,12 +133,14 @@ public class TransformedShape : RigidBodyShape
         }
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         OriginalShape.GetCenter(out point);
         point = JVector.Transform(point, transformation) + translation;
     }
 
+    /// <inheritdoc/>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         OriginalShape.CalculateMassInertia(out JMatrix originalInertia, out JVector originalCom, out mass);

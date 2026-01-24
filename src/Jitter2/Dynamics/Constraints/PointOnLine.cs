@@ -69,13 +69,17 @@ public unsafe class PointOnLine : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space parameters.
     /// </summary>
-    /// <param name="axis">Axis in world space which is fixed in the reference frame of the first body.</param>
-    /// <param name="anchor1">Anchor point on the first body. Together with the axis this defines a line in the reference
-    /// frame of the first body.</param>
-    /// <param name="anchor2">Anchor point on the second body which should be constrained to the line.</param>
-    /// <param name="limit">A distance limit along the axis.</param>
+    /// <param name="axis">The line axis in world space, fixed in the reference frame of body 1.</param>
+    /// <param name="anchor1">Anchor point on body 1 defining the line origin in world space.</param>
+    /// <param name="anchor2">Anchor point on body 2 constrained to the line in world space.</param>
+    /// <param name="limit">Distance limit along the axis.</param>
+    /// <remarks>
+    /// Computes local anchor points and axis from the current body poses.
+    /// Default values: <see cref="Bias"/> = 0.01, <see cref="Softness"/> = 0.00001,
+    /// <see cref="LimitSoftness"/> = 0.0001, <see cref="LimitBias"/> = 0.2.
+    /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
         ref PointOnLineData data = ref handle.Data;
@@ -100,6 +104,9 @@ public unsafe class PointOnLine : Constraint
         (data.Min, data.Max) = limit;
     }
 
+    /// <summary>
+    /// Gets the current distance of the anchor point from the line origin along the axis.
+    /// </summary>
     public Real Distance
     {
         get
@@ -235,26 +242,53 @@ public unsafe class PointOnLine : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.00001. Higher values allow more positional error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.01. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) applied when distance limits are active.
+    /// </summary>
+    /// <value>
+    /// Default is 0.0001. Higher values allow more limit violation but improve stability.
+    /// </value>
     public Real LimitSoftness
     {
         get => handle.Data.LimitSoftness;
         set => handle.Data.LimitSoftness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor for distance limit correction.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct limit violations faster.
+    /// </value>
     public Real LimitBias
     {
         get => handle.Data.LimitBias;

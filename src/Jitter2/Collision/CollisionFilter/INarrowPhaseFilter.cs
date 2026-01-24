@@ -10,16 +10,24 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface to facilitate the implementation of a generic filter. This filter can either exclude certain pairs of shapes or modify collision
-/// information subsequent to Jitter's execution of narrow phase collision detection between the shapes.
+/// Defines a filter for modifying or excluding collisions after narrowphase detection.
 /// </summary>
+/// <remarks>
+/// Implement this interface to adjust contact points, normals, or penetration depth,
+/// or to discard specific collisions entirely.
+/// </remarks>
 public interface INarrowPhaseFilter
 {
     /// <summary>
-    /// Invoked following the narrow phase of collision detection in Jitter. This allows for the modification of collision information.
-    /// Refer to the corresponding <see cref="NarrowPhase"/> methods for details on the parameters.
+    /// Filters or modifies collision data after narrowphase detection.
     /// </summary>
-    /// <returns>False if the collision should be filtered out, true otherwise.</returns>
+    /// <param name="shapeA">The first shape in the collision.</param>
+    /// <param name="shapeB">The second shape in the collision.</param>
+    /// <param name="pointA">Contact point on shape A (modifiable).</param>
+    /// <param name="pointB">Contact point on shape B (modifiable).</param>
+    /// <param name="normal">Collision normal from B to A (modifiable).</param>
+    /// <param name="penetration">Penetration depth (modifiable).</param>
+    /// <returns><c>true</c> to keep the collision; <c>false</c> to discard it.</returns>
     [CallbackThread(ThreadContext.Any)]
     bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,
         ref JVector pointA, ref JVector pointB,

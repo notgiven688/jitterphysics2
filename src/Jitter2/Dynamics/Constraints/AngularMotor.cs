@@ -13,7 +13,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Represents a motor constraint that drives relative angular movement between two axes, which are fixed within the reference frames of their respective bodies.
+/// Represents a motor that drives relative angular velocity between two axes fixed
+/// in the reference frames of their respective bodies.
 /// </summary>
 public unsafe class AngularMotor : Constraint
 {
@@ -51,10 +52,14 @@ public unsafe class AngularMotor : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the motor with separate axes for each body.
     /// </summary>
-    /// <param name="axis1">The axis on the first body, defined in world space.</param>
-    /// <param name="axis2">The axis on the second body, defined in world space.</param>
+    /// <param name="axis1">The motor axis on the first body in world space.</param>
+    /// <param name="axis2">The motor axis on the second body in world space.</param>
+    /// <remarks>
+    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
+    /// </remarks>
     public void Initialize(JVector axis1, JVector axis2)
     {
         ref AngularMotorData data = ref handle.Data;
@@ -71,21 +76,42 @@ public unsafe class AngularMotor : Constraint
         data.Velocity = 0;
     }
 
+    /// <summary>
+    /// Initializes the motor with the same axis for both bodies.
+    /// </summary>
+    /// <param name="axis">The motor axis in world space, used for both bodies.</param>
     public void Initialize(JVector axis)
     {
         Initialize(axis, axis);
     }
 
+    /// <summary>
+    /// Gets or sets the target angular velocity in radians per second.
+    /// </summary>
+    /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
         get => handle.Data.Velocity;
         set => handle.Data.Velocity = value;
     }
 
+    /// <summary>
+    /// Gets the motor axis on the first body in local space.
+    /// </summary>
     public JVector LocalAxis1 => handle.Data.LocalAxis1;
 
+    /// <summary>
+    /// Gets the motor axis on the second body in local space.
+    /// </summary>
     public JVector LocalAxis2 => handle.Data.LocalAxis2;
 
+    /// <summary>
+    /// Gets or sets the maximum force the motor can apply.
+    /// </summary>
+    /// <value>Default is 0. Must be non-negative.</value>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is negative.
+    /// </exception>
     public Real MaximumForce
     {
         get => handle.Data.MaxForce;

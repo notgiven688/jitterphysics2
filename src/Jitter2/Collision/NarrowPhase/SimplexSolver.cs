@@ -18,14 +18,20 @@ namespace Jitter2.Collision;
 /// to the origin on a simplex (point, line segment, triangle, or tetrahedron).
 /// </summary>
 /// <remarks>
-/// This solver is used in GJK distance queries to iteratively reduce the simplex to the
-/// feature closest to the origin. It handles degeneracy by falling back to lower-dimensional
-/// features when the current simplex is near-degenerate.
+/// <para>
+/// This solver iteratively reduces the simplex to the feature closest to the origin.
+/// It handles degeneracy by falling back to lower-dimensional features when the current
+/// simplex is near-degenerate.
+/// </para>
+/// <para>
+/// Complexity: O(1) per vertex addition for point/segment, O(1) for triangle,
+/// O(1) for tetrahedron with early-out optimizations.
+/// </para>
 /// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolver
 {
-    const Real Epsilon = (Real)1e-8;
+    private const Real Epsilon = (Real)1e-8;
 
     private JVector v0;
     private JVector v1;

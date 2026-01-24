@@ -13,6 +13,9 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
 
+/// <summary>
+/// Represents a triangle mesh defined by a collection of vertices and triangle indices.
+/// </summary>
 public class TriangleMesh
 {
     public sealed class DegenerateTriangleException(JTriangle triangle) :
@@ -37,7 +40,14 @@ public class TriangleMesh
     private readonly JVector[] vertices = null!;
     private readonly Triangle[] indices = null!;
 
+    /// <summary>
+    /// Gets the vertices of the mesh.
+    /// </summary>
     public ReadOnlySpan<JVector> Vertices => vertices;
+
+    /// <summary>
+    /// Gets the triangle indices of the mesh.
+    /// </summary>
     public ReadOnlySpan<Triangle> Indices => indices;
 
     /// <summary>

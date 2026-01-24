@@ -12,7 +12,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains two bodies to only allow rotation around a specified axis, removing two angular degrees of freedom, or three if a limit is enforced.
+/// Constrains two bodies to rotate relative to each other around a single axis,
+/// removing two angular degrees of freedom. Optionally enforces angular limits.
 /// </summary>
 public unsafe class HingeAngle : Constraint
 {
@@ -59,9 +60,15 @@ public unsafe class HingeAngle : Constraint
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint with a rotation axis and angular limits.
     /// </summary>
-    /// <param name="axis">Axis in world space for which relative angular movement is allowed.</param>
+    /// <param name="axis">The hinge axis in world space around which rotation is allowed.</param>
+    /// <param name="limit">The angular limits defining the allowed rotation range.</param>
+    /// <remarks>
+    /// Stores the axis in the local frame of body 2 and records the initial relative orientation.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="LimitSoftness"/> = 0.001,
+    /// <see cref="Bias"/> = 0.2, <see cref="LimitBias"/> = 0.1.
+    /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
         ref HingeAngleData data = ref handle.Data;
@@ -84,6 +91,9 @@ public unsafe class HingeAngle : Constraint
         data.Q0 = q2.Conjugate() * q1;
     }
 
+    /// <summary>
+    /// Sets the angular limits for the hinge rotation.
+    /// </summary>
     public AngularLimit Limit
     {
         set
@@ -170,6 +180,9 @@ public unsafe class HingeAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.Transform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets the current angle of rotation around the hinge axis relative to the initial pose.
+    /// </summary>
     public JAngle Angle
     {
         get
@@ -190,30 +203,57 @@ public unsafe class HingeAngle : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the angular constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
         get => handle.Data.Softness;
         set => handle.Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) applied when angular limits are active.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more limit violation but improve stability.
+    /// </value>
     public Real LimitSoftness
     {
         get => handle.Data.LimitSoftness;
         set => handle.Data.LimitSoftness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
         get => handle.Data.BiasFactor;
         set => handle.Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor for angular limit correction.
+    /// </summary>
+    /// <value>
+    /// Default is 0.1. Range [0, 1]. Higher values correct limit violations faster.
+    /// </value>
     public Real LimitBias
     {
         get => handle.Data.LimitBias;
         set => handle.Data.LimitBias = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
     public JVector Impulse => handle.Data.AccumulatedImpulse;
 
     public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
