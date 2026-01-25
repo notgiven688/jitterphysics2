@@ -13,7 +13,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a generic convex shape.
+/// Represents a convex hull shape defined by a set of triangles.
 /// </summary>
 public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 {
@@ -206,6 +206,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         return result;
     }
 
+    /// <summary>
+    /// Gets or sets the shift applied to the convex hull vertices.
+    /// </summary>
     public JVector Shift
     {
         get => shifted;
@@ -216,12 +219,16 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         }
     }
 
+    /// <summary>
+    /// Updates the shape's cached mass, inertia, and bounding box.
+    /// </summary>
     public void UpdateShape()
     {
         CalculateMassInertia();
         CalcInitBox();
     }
 
+    /// <inheritdoc/>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
@@ -229,6 +236,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         mass = cachedMass;
     }
 
+    /// <summary>
+    /// Recalculates the mass, center of mass, and inertia tensor from the convex hull triangles.
+    /// </summary>
     public void CalculateMassInertia()
     {
         cachedCenter = JVector.Zero;
@@ -285,6 +295,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         cachedCenter *= (Real)1.0 / cachedMass;
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JVector halfSize = (Real)0.5 * (cachedBoundingBox.Max - cachedBoundingBox.Min);
@@ -403,11 +414,13 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         return current;
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         InternalSupportMap(direction, out result);
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = cachedCenter;

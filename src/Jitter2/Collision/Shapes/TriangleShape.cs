@@ -11,11 +11,18 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a single triangle within a mesh.
+/// Represents a triangle shape defined by a reference to a <see cref="TriangleMesh"/> and an index.
 /// </summary>
 public class TriangleShape : RigidBodyShape
 {
+    /// <summary>
+    /// The triangle mesh to which this triangle belongs.
+    /// </summary>
     public readonly TriangleMesh Mesh;
+
+    /// <summary>
+    /// The index representing the position of the triangle within the mesh.
+    /// </summary>
     public readonly int Index;
 
     /// <summary>
@@ -90,6 +97,7 @@ public class TriangleShape : RigidBodyShape
         c += position;
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         const Real extraMargin = (Real)0.01;
@@ -115,6 +123,7 @@ public class TriangleShape : RigidBodyShape
         box.Max += position + extra;
     }
 
+    /// <inheritdoc/>
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref readonly var meshTriangle = ref Mesh.Indices[Index];
@@ -125,6 +134,7 @@ public class TriangleShape : RigidBodyShape
         return triangle.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out normal, out lambda);
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         ref readonly var triangle = ref Mesh.Indices[Index];
@@ -136,6 +146,7 @@ public class TriangleShape : RigidBodyShape
         point = (Real)(1.0 / 3.0) * (a + b + c);
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         ref readonly var triangle = ref Mesh.Indices[Index];

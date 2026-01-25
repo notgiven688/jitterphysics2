@@ -14,10 +14,16 @@ using Jitter2.Unmanaged;
 namespace Jitter2.SoftBodies;
 
 /// <summary>
-/// A constraint that acts like a spring, connecting two bodies.
-/// It applies forces to maintain a target distance between two anchor points.
+/// Constrains two bodies to maintain a target distance between anchor points,
+/// applying spring-like forces. Removes one translational degree of freedom along
+/// the line connecting the anchors.
 /// </summary>
-public unsafe class SpringConstraint : Constraint
+/// <remarks>
+/// The spring behavior is controlled by <see cref="Softness"/> and <see cref="Bias"/>,
+/// which can be set directly or computed from physical parameters using
+/// <see cref="SetSpringParameters"/>.
+/// </remarks>
+public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 {
     /// <summary>
     /// Low-level data for the spring constraint, stored in unmanaged memory.
@@ -46,29 +52,31 @@ public unsafe class SpringConstraint : Constraint
         public JVector Jacobian;
     }
 
-    private JHandle<SpringData> handle;
-
     /// <inheritdoc/>
     protected override void Create()
     {
-        CheckDataSize<SpringData>();
-
         Iterate = &IterateSpringConstraint;
         PrepareForIteration = &PrepareForIterationSpringConstraint;
-        handle = JHandle<ConstraintData>.AsHandle<SpringData>(Handle);
+
+        base.Create();
     }
 
     /// <inheritdoc/>
     public override bool IsSmallConstraint { get; } = sizeof(SpringData) <= sizeof(SmallConstraintData);
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space anchor points.
     /// </summary>
     /// <param name="anchor1">Anchor point on the first rigid body, in world space.</param>
     /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
+    /// <remarks>
+    /// Computes local anchor offsets from the current body positions.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// The <see cref="TargetDistance"/> is set to the initial distance between the anchors.
+    /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2)
     {
-        ref SpringData data = ref handle.Data;
+        ref SpringData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -90,7 +98,7 @@ public unsafe class SpringConstraint : Constraint
     /// <param name="dt">The timestep of the simulation.</param>
     public void SetSpringParameters(Real frequency, Real damping, Real dt)
     {
-        ref SpringData data = ref handle.Data;
+        ref SpringData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -112,7 +120,7 @@ public unsafe class SpringConstraint : Constraint
     {
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             return data.AccumulatedImpulse;
         }
     }
@@ -124,13 +132,13 @@ public unsafe class SpringConstraint : Constraint
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
         }
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Add(data.LocalAnchor1, body1.Position, out JVector result);
             return result;
@@ -144,13 +152,13 @@ public unsafe class SpringConstraint : Constraint
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
         }
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Add(data.LocalAnchor2, body2.Position, out JVector result);
             return result;
@@ -160,14 +168,15 @@ public unsafe class SpringConstraint : Constraint
     /// <summary>
     /// Gets or sets the target resting distance of the spring.
     /// </summary>
+    /// <value>Units: meters. Default is the initial distance between anchors at initialization.</value>
     public Real TargetDistance
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             data.Distance = value;
         }
-        get => handle.Data.Distance;
+        get => Data.Distance;
     }
 
     /// <summary>
@@ -177,7 +186,7 @@ public unsafe class SpringConstraint : Constraint
     {
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -193,9 +202,14 @@ public unsafe class SpringConstraint : Constraint
         }
     }
 
+    /// <summary>
+    /// Prepares the spring constraint for iteration.
+    /// </summary>
+    /// <param name="constraint">The constraint data reference.</param>
+    /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, Real idt)
     {
-        ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -224,26 +238,38 @@ public unsafe class SpringConstraint : Constraint
     }
 
     /// <summary>
-    /// Gets or sets the softness of the spring.
+    /// Gets or sets the softness (compliance) of the spring constraint.
     /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more positional error but produce a softer spring.
+    /// Scaled by inverse timestep during solving.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
-    /// Gets or sets the bias factor of the spring.
+    /// Gets or sets the bias factor (error correction strength) of the spring constraint.
     /// </summary>
+    /// <value>
+    /// Default is 0.2. Higher values correct distance errors more aggressively.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Performs one iteration of the spring constraint solver.
+    /// </summary>
+    /// <param name="constraint">The constraint data reference.</param>
+    /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void IterateSpringConstraint(ref ConstraintData constraint, Real idt)
     {
-        ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

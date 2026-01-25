@@ -10,7 +10,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a cone shape.
+/// Represents a cone shape defined by a base radius and height.
 /// </summary>
 public class ConeShape : RigidBodyShape
 {
@@ -69,6 +69,7 @@ public class ConeShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         const Real zeroEpsilon = (Real)1e-12;
@@ -91,11 +92,13 @@ public class ConeShape : RigidBodyShape
         }
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JVector upa = orientation.GetBasisY();
@@ -120,6 +123,7 @@ public class ConeShape : RigidBodyShape
         box.Max += position;
     }
 
+    /// <inheritdoc/>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         mass = (Real)(1.0 / 3.0) * MathR.PI * radius * radius * height;

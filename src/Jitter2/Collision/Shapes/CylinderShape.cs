@@ -10,7 +10,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a cylinder shape.
+/// Represents a cylinder shape defined by a height and radius.
 /// </summary>
 public class CylinderShape : RigidBodyShape
 {
@@ -70,11 +70,13 @@ public class CylinderShape : RigidBodyShape
         UpdateWorldBoundingBox();
     }
 
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
     }
 
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         Real sigma = (Real)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
@@ -93,6 +95,7 @@ public class CylinderShape : RigidBodyShape
         }
     }
 
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         JVector upa = orientation.GetBasisY();
@@ -114,6 +117,7 @@ public class CylinderShape : RigidBodyShape
         box.Max = position + delta;
     }
 
+    /// <inheritdoc/>
     public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
     {
         mass = MathR.PI * radius * radius * height;

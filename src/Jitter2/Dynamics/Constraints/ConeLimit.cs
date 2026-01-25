@@ -13,11 +13,9 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A constraint that limits the relative tilt between two bodies.
-/// The allowed motion forms a cone defined by a minimum and maximum angle
-/// around an initial reference axis.
+/// Limits the relative tilt between two bodies, removing one angular degree of freedom when active.
 /// </summary>
-public unsafe class ConeLimit : Constraint
+public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct ConeLimitData
@@ -46,15 +44,12 @@ public unsafe class ConeLimit : Constraint
         public MemoryHelper.MemBlock6Real J0;
     }
 
-    private JHandle<ConeLimitData> handle;
 
     protected override void Create()
     {
-        CheckDataSize<ConeLimitData>();
-
         Iterate = &IterateConeLimit;
         PrepareForIteration = &PrepareForIterationConeLimit;
-        handle = JHandle<ConstraintData>.AsHandle<ConeLimitData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -64,17 +59,17 @@ public unsafe class ConeLimit : Constraint
     /// <param name="axisBody2">The reference axis for body 2 in world space.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// This overload allows specifying an initial angular offset between the bodies.
-    /// Each axis is stored as a local axis on the corresponding body. The constraint
-    /// then measures the angle between these axes (transformed back into world space)
-    /// and restricts it to the range given by the angular limit.
+    /// Each axis is stored as a local axis on the corresponding body. The constraint measures
+    /// the angle between these axes and restricts it to the given range.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
     /// </remarks>
     public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
+        VerifyNotZero();
         ArgumentOutOfRangeException.ThrowIfNegative((Real)limit.From);
         ArgumentOutOfRangeException.ThrowIfLessThan((Real)limit.To, (Real)limit.From);
 
-        ref ConeLimitData data = ref handle.Data;
+        ref ConeLimitData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -100,10 +95,9 @@ public unsafe class ConeLimit : Constraint
     /// <param name="axis">The reference axis in world space for the initial pose.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// When initialized, the given world-space axis is stored as a local axis
-    /// on each body. The constraint then measures the angle between these two
-    /// axes (transformed back into world space) and restricts it to the range
-    /// specified by the angular limit.
+    /// Stores the axis as a local axis on each body. The constraint measures the angle between
+    /// these axes and restricts it to the given range.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
     /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
@@ -121,11 +115,14 @@ public unsafe class ConeLimit : Constraint
         Initialize(axis, axis, limit);
     }
 
+    /// <summary>
+    /// Gets the current angle between the two body axes.
+    /// </summary>
     public JAngle Angle
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
 
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
@@ -144,7 +141,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
 
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis);
@@ -152,7 +149,7 @@ public unsafe class ConeLimit : Constraint
         }
         set
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
 
             JVector normalized = value;
@@ -169,7 +166,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis);
@@ -177,7 +174,7 @@ public unsafe class ConeLimit : Constraint
         }
         set
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
             JVector normalized = value;
@@ -194,7 +191,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             return new AngularLimit(JAngle.FromRadian(data.LimitLow), JAngle.FromRadian(data.LimitHigh));
         }
         set
@@ -202,7 +199,7 @@ public unsafe class ConeLimit : Constraint
             ArgumentOutOfRangeException.ThrowIfNegative((Real)value.From);
             ArgumentOutOfRangeException.ThrowIfLessThan((Real)value.To, (Real)value.From);
 
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             data.LimitLow = (Real)value.From;
             data.LimitHigh = (Real)value.To;
         }
@@ -210,7 +207,7 @@ public unsafe class ConeLimit : Constraint
 
     public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
-        ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -259,23 +256,38 @@ public unsafe class ConeLimit : Constraint
             JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void IterateConeLimit(ref ConstraintData constraint, Real idt)
     {
-        ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

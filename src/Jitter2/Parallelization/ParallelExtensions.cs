@@ -11,17 +11,22 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Provides ParallelForBatch extension methods for collections used by the physics engine.
+/// Provides parallel batch processing extension methods for collections used by the physics engine.
 /// </summary>
+/// <remarks>
+/// These methods divide collections into batches and distribute them across worker threads.
+/// The batch count is determined by the task threshold and available threads.
+/// </remarks>
 public static class ParallelExtensions
 {
     /// <summary>
-    /// Loop in batches over the elements of an array.
+    /// Processes array elements in parallel batches.
     /// </summary>
-    /// <param name="taskThreshold">If the number of elements is less than this value, only
-    /// one batch is generated.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
-    /// <returns>The number of batches(/tasks) generated.</returns>
+    /// <param name="array">The array to process.</param>
+    /// <param name="taskThreshold">Minimum elements per batch. Fewer elements result in a single batch.</param>
+    /// <param name="action">The callback to invoke for each batch.</param>
+    /// <param name="execute">If <see langword="true"/>, calls <see cref="ThreadPool.Execute"/> to start execution.</param>
+    /// <returns>The number of batches generated.</returns>
     public static int ParallelForBatch(this Array array, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true)
     {
@@ -34,12 +39,14 @@ public static class ParallelExtensions
     }
 
     /// <summary>
-    /// Loop in batches over the active elements of the <see cref="PartitionedBuffer{T}"/>.
+    /// Processes active elements of a <see cref="PartitionedBuffer{T}"/> in parallel batches.
     /// </summary>
-    /// <param name="taskThreshold">If the number of elements is less than this value, only
-    /// one batch is generated.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
-    /// <returns>The number of batches(/tasks) generated.</returns>
+    /// <typeparam name="T">The unmanaged element type.</typeparam>
+    /// <param name="list">The buffer to process.</param>
+    /// <param name="taskThreshold">Minimum elements per batch. Fewer elements result in a single batch.</param>
+    /// <param name="action">The callback to invoke for each batch.</param>
+    /// <param name="execute">If <see langword="true"/>, calls <see cref="ThreadPool.Execute"/> to start execution.</param>
+    /// <returns>The number of batches generated.</returns>
     public static int ParallelForBatch<T>(this PartitionedBuffer<T> list, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : unmanaged
     {
@@ -52,12 +59,14 @@ public static class ParallelExtensions
     }
 
     /// <summary>
-    /// Loop in batches over the active elements of the <see cref="ReadOnlyPartitionedSet{T}"/>.
+    /// Processes active elements of a <see cref="ReadOnlyPartitionedSet{T}"/> in parallel batches.
     /// </summary>
-    /// <param name="taskThreshold">If the number of elements is less than this value, only
-    /// one batch is generated.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
-    /// <returns>The number of batches(/tasks) generated.</returns>
+    /// <typeparam name="T">The element type.</typeparam>
+    /// <param name="list">The set to process.</param>
+    /// <param name="taskThreshold">Minimum elements per batch. Fewer elements result in a single batch.</param>
+    /// <param name="action">The callback to invoke for each batch.</param>
+    /// <param name="execute">If <see langword="true"/>, calls <see cref="ThreadPool.Execute"/> to start execution.</param>
+    /// <returns>The number of batches generated.</returns>
     public static int ParallelForBatch<T>(this ReadOnlyPartitionedSet<T> list, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : class, IPartitionedSetIndex
     {
@@ -70,12 +79,14 @@ public static class ParallelExtensions
     }
 
     /// <summary>
-    /// Loop in batches over the active elements of the <see cref="PartitionedSet{T}"/>.
+    /// Processes active elements of a <see cref="PartitionedSet{T}"/> in parallel batches.
     /// </summary>
-    /// <param name="taskThreshold">If the number of elements is less than this value, only
-    /// one batch is generated.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
-    /// <returns>The number of batches(/tasks) generated.</returns>
+    /// <typeparam name="T">The element type.</typeparam>
+    /// <param name="partitionedSet">The set to process.</param>
+    /// <param name="taskThreshold">Minimum elements per batch. Fewer elements result in a single batch.</param>
+    /// <param name="action">The callback to invoke for each batch.</param>
+    /// <param name="execute">If <see langword="true"/>, calls <see cref="ThreadPool.Execute"/> to start execution.</param>
+    /// <returns>The number of batches generated.</returns>
     internal static int ParallelForBatch<T>(this PartitionedSet<T> partitionedSet, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : class, IPartitionedSetIndex
     {
@@ -88,12 +99,14 @@ public static class ParallelExtensions
     }
 
     /// <summary>
-    /// Loop in batches over the elements of the <see cref="SlimBag{T}"/>.
+    /// Processes elements of a <see cref="SlimBag{T}"/> in parallel batches.
     /// </summary>
-    /// <param name="taskThreshold">If the number of elements is less than this value, only
-    /// one batch is generated.</param>
-    /// <param name="execute">True if <see cref="ThreadPool.Execute"/> should be called.</param>
-    /// <returns>The number of batches(/tasks) generated.</returns>
+    /// <typeparam name="T">The element type.</typeparam>
+    /// <param name="list">The bag to process.</param>
+    /// <param name="taskThreshold">Minimum elements per batch. Fewer elements result in a single batch.</param>
+    /// <param name="action">The callback to invoke for each batch.</param>
+    /// <param name="execute">If <see langword="true"/>, calls <see cref="ThreadPool.Execute"/> to start execution.</param>
+    /// <returns>The number of batches generated.</returns>
     internal static int ParallelForBatch<T>(this SlimBag<T> list, int taskThreshold,
         Action<Parallel.Batch> action, bool execute = true) where T : class, IPartitionedSetIndex
     {

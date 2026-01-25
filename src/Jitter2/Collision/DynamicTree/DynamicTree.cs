@@ -15,8 +15,17 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a dynamic Axis Aligned Bounding Box (AABB) tree. The tree can be queried for potential overlapping pairs.
+/// Represents a dynamic AABB tree for broadphase collision detection.
 /// </summary>
+/// <remarks>
+/// <para>
+/// Uses a bounding volume hierarchy with Surface Area Heuristic (SAH) for efficient
+/// insertion and query operations. Supports incremental updates for moving objects.
+/// </para>
+/// <para>
+/// Complexity: O(log n) for insertion/removal, O(n) worst-case for overlap queries.
+/// </para>
+/// </remarks>
 public partial class DynamicTree
 {
     private struct OverlapEnumerationParam
@@ -34,9 +43,6 @@ public partial class DynamicTree
     /// </summary>
     public ReadOnlyPartitionedSet<IDynamicTreeProxy> Proxies => new(proxies);
 
-    /// <summary>
-    /// The PairHashSet that contains pairs representing potential collisions.
-    /// </summary>
     private readonly PairHashSet potentialPairs = [];
 
     /// <summary>
@@ -218,6 +224,11 @@ public partial class DynamicTree
         }
     }
 
+    /// <summary>
+    /// Enumerates all potential collision pairs and invokes the specified action for each.
+    /// </summary>
+    /// <param name="action">The action to invoke for each overlapping pair.</param>
+    /// <param name="multiThread">If <c>true</c>, uses multithreading for enumeration.</param>
     public void EnumerateOverlaps(Action<IDynamicTreeProxy, IDynamicTreeProxy> action, bool multiThread = false)
     {
         OverlapEnumerationParam overlapEnumerationParam;
@@ -252,9 +263,10 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Updates all entities that are marked as active in the active list.
+    /// Updates all active proxies in the tree.
     /// </summary>
-    /// <param name="multiThread">A boolean indicating whether to perform a multithreaded update.</param>
+    /// <param name="multiThread">If <c>true</c>, uses multithreading for the update.</param>
+    /// <param name="dt">The timestep in seconds, used for velocity-based bounding box expansion.</param>
     public void Update(bool multiThread, Real dt)
     {
         long time = Stopwatch.GetTimestamp();
@@ -347,9 +359,10 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Updates the state of the specified entity within the dynamic tree structure.
+    /// Forces an immediate update of a single proxy in the tree.
     /// </summary>
-    /// <param name="proxy">The entity to update.</param>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to update.</param>
     public void Update<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox();
@@ -360,11 +373,12 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Add an entity to the tree.
+    /// Adds a proxy to the tree.
     /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the specified <paramref name="proxy"/> has already been added to this tree.
-    /// </exception>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to add.</param>
+    /// <param name="active">If <c>true</c>, the proxy is tracked for movement each update.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is already in this tree.</exception>
     public void AddProxy<T>(T proxy, bool active = true) where T : class, IDynamicTreeProxy
     {
         if (proxies.Contains(proxy))
@@ -390,14 +404,22 @@ public partial class DynamicTree
         proxies.Add(proxy, active);
     }
 
+    /// <summary>
+    /// Checks whether the specified proxy is currently active.
+    /// </summary>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to check.</param>
+    /// <returns><c>true</c> if the proxy is active; otherwise, <c>false</c>.</returns>
     public bool IsActive<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         return proxies.IsActive(proxy);
     }
 
     /// <summary>
-    /// The tree actively tracks the proxy.
+    /// Marks a proxy as active, causing it to be tracked for movement during updates.
     /// </summary>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to activate.</param>
     public void ActivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         if (proxies.MoveToActive(proxy))
@@ -407,20 +429,20 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// The tree assumes that the proxy is not active, i.e., it does not move out
-    /// of its expanded bounding box.
+    /// Marks a proxy as inactive, assuming it will not move outside its expanded bounding box.
     /// </summary>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to deactivate.</param>
     public void DeactivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
         proxies.MoveToInactive(proxy);
     }
 
     /// <summary>
-    /// Removes an entity from the tree.
+    /// Removes a proxy from the tree.
     /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when the specified <paramref name="proxy"/> is not registered with the tree.
-    /// </exception>
+    /// <param name="proxy">The proxy to remove.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is not in this tree.</exception>
     public void RemoveProxy(IDynamicTreeProxy proxy)
     {
         if (!proxies.Contains(proxy))
@@ -436,9 +458,9 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Calculates the cost function of the tree.
+    /// Calculates the SAH cost of the tree (sum of all node surface areas).
     /// </summary>
-    /// <returns>The calculated cost.</returns>
+    /// <returns>The total cost. Lower values indicate a more balanced tree.</returns>
     public double CalculateCost()
     {
         return Cost(ref Nodes[root]);
@@ -499,11 +521,12 @@ public partial class DynamicTree
     [ThreadStatic] private static Stack<int>? _stack;
 
     /// <summary>
-    /// Queries the tree to find proxies which intersect the specified ray.
+    /// Queries the tree for proxies intersecting a ray.
     /// </summary>
-    /// <param name="hits">An ICollection to store the entities found within the bounding box.</param>
+    /// <typeparam name="T">The collection type.</typeparam>
+    /// <param name="hits">Collection to store intersected proxies.</param>
     /// <param name="rayOrigin">The origin of the ray.</param>
-    /// <param name="rayDirection">Direction of the ray.</param>
+    /// <param name="rayDirection">The direction of the ray.</param>
     public void Query<T>(T hits, JVector rayOrigin, JVector rayDirection) where T : ICollection<IDynamicTreeProxy>
     {
         _stack ??= new Stack<int>(256);
@@ -537,10 +560,11 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Queries the tree to find entities within the specified axis-aligned bounding box.
+    /// Queries the tree for proxies overlapping an axis-aligned bounding box.
     /// </summary>
-    /// <param name="hits">An ICollection to store the entities found within the bounding box.</param>
-    /// <param name="box">The axis-aligned bounding box used for the query.</param>
+    /// <typeparam name="T">The collection type.</typeparam>
+    /// <param name="hits">Collection to store overlapping proxies.</param>
+    /// <param name="box">The bounding box to query.</param>
     public void Query<T>(T hits, in JBoundingBox box) where T : ICollection<IDynamicTreeProxy>
     {
         var sbox = new TreeBox(box);
@@ -581,18 +605,18 @@ public partial class DynamicTree
     readonly List<IDynamicTreeProxy> tempList = new();
 
     /// <summary>
-    /// Randomly removes and adds entities to the tree to facilitate optimization.
+    /// Optimizes the tree structure by randomly reinserting proxies.
     /// </summary>
-    /// <param name="sweeps">The number of times to iterate over all proxies in the tree. Must be greater than zero.</param>
-    /// <param name="chance">The chance of a proxy to be removed and re-added to the tree for each sweep. Must be between 0 and 1.</param>
-    /// <param name="incremental">If false, all entities of the tree are removed and reinserted at random order during the first sweep (chance = 1).</param>
+    /// <param name="sweeps">Number of optimization passes. Must be greater than zero.</param>
+    /// <param name="chance">Probability of reinserting each proxy per sweep. Range: [0, 1].</param>
+    /// <param name="incremental">If <c>false</c>, all proxies are reinserted in random order on the first sweep.</param>
     public void Optimize(int sweeps = 100, Real chance = (Real)0.01, bool incremental = false)
     {
         Optimize(rndFunc, sweeps, chance, incremental);
     }
 
-    /// <inheritdoc cref="Optimize(int, Real, bool)" />
-    /// <param name="getNextRandom">Delegate to create a sequence of random numbers.</param>
+    /// <inheritdoc cref="Optimize(int, Real, bool)"/>
+    /// <param name="getNextRandom">A function returning random values in [0, 1).</param>
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
@@ -848,12 +872,6 @@ public partial class DynamicTree
 
     private readonly PriorityQueue<int, double> priorityQueue = new();
 
-    /// <summary>
-    /// Finds the exact best insertion point for <paramref name="node"/> in the BVH,
-    /// starting from <paramref name="where"/>, using a priority-queue driven
-    /// Surface Area Heuristic (SAH) search. This method guarantees the same
-    /// result as a brute-force search, unlike the faster greedy version <see cref="FindBestGreedy"/>.
-    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private int FindBest(int node, int where)
     {

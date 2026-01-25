@@ -10,8 +10,9 @@ using System.Collections.Generic;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// Implements a read-only wrapper for <see cref="HashSet{T}"/>.
+/// A read-only wrapper around <see cref="HashSet{T}"/> that prevents modification while allowing enumeration and lookup.
 /// </summary>
+/// <typeparam name="T">The type of elements in the set.</typeparam>
 public readonly struct ReadOnlyHashSet<T>(HashSet<T> hashset) : IReadOnlyCollection<T>
 {
     public HashSet<T>.Enumerator GetEnumerator()

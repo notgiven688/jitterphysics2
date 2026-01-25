@@ -45,12 +45,12 @@ if (teapotModel.MeshCount == 0)
 Mesh mesh;
 unsafe { mesh = teapotModel.Meshes[0]; }
 
-var allVertices = mesh.VerticesAs<JVector>().ToArray();
+var allVertices = mesh.VerticesAs<JVector>();
 var vertices = ShapeHelper.SampleHull(allVertices, 4);
 
 // just for visualization -
 // we will not need to construct the explicit hull for the simulation!
-var debugHull = ShapeHelper.MakeHull(vertices, 4);
+var debugHull = ShapeHelper.Tessellate(vertices, 4);
 
 // create a camera
 Camera3D camera = new ()

@@ -10,8 +10,11 @@ using System.Diagnostics;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Contains methods and structures used for parallelization within the Jitter Physics engine.
+/// Provides methods and structures for parallel batch processing within the Jitter physics engine.
 /// </summary>
+/// <remarks>
+/// This class is used internally to distribute work across worker threads via <see cref="ThreadPool"/>.
+/// </remarks>
 public static class Parallel
 {
     /// <summary>
@@ -34,21 +37,17 @@ public static class Parallel
     }
 
     /// <summary>
-    /// Given the total number of elements, the number of divisions, and a specific part index,
-    /// this method calculates the start and end indices for that part.
+    /// Computes the start and end indices for a specific part of an evenly divided range.
     /// </summary>
-    /// <param name="numElements">The total number of elements to be divided.</param>
-    /// <param name="numDivisions">The number of divisions to split the elements into.</param>
-    /// <param name="part">The index of the specific part (0-based).</param>
-    /// <param name="start">The calculated start index for the specified part (output parameter).</param>
-    /// <param name="end">The calculated end index for the specified part (output parameter).</param>
-    /// <example>
-    /// For numElements = 14, numDivisions = 4, the parts are divided as follows:
-    /// - Part 0: start = 0, end = 4
-    /// - Part 1: start = 4, end = 8
-    /// - Part 2: start = 8, end = 11
-    /// - Part 3: start = 11, end = 14
-    /// </example>
+    /// <param name="numElements">The total number of elements to divide.</param>
+    /// <param name="numDivisions">The number of divisions (parts).</param>
+    /// <param name="part">The zero-based index of the part.</param>
+    /// <param name="start">The inclusive start index for the specified part.</param>
+    /// <param name="end">The exclusive end index for the specified part.</param>
+    /// <remarks>
+    /// Distributes remainder elements across the first parts. For example, with 14 elements
+    /// and 4 divisions: part 0 gets [0,4), part 1 gets [4,8), part 2 gets [8,11), part 3 gets [11,14).
+    /// </remarks>
     public static void GetBounds(int numElements, int numDivisions, int part, out int start, out int end)
     {
         Debug.Assert(part < numDivisions);

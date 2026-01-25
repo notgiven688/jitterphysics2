@@ -12,9 +12,10 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains two bodies to only allow rotation around a specified axis, removing two angular degrees of freedom, or three if a limit is enforced.
+/// Constrains two bodies to rotate relative to each other around a single axis,
+/// removing two angular degrees of freedom. Optionally enforces angular limits.
 /// </summary>
-public unsafe class HingeAngle : Constraint
+public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct HingeAngleData
@@ -47,24 +48,27 @@ public unsafe class HingeAngle : Constraint
         public ushort Clamp;
     }
 
-    private JHandle<HingeAngleData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<HingeAngleData>();
-
         Iterate = &IterateHingeAngle;
         PrepareForIteration = &PrepareForIterationHingeAngle;
-        handle = JHandle<ConstraintData>.AsHandle<HingeAngleData>(Handle);
+        base.Create();
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint with a rotation axis and angular limits.
     /// </summary>
-    /// <param name="axis">Axis in world space for which relative angular movement is allowed.</param>
+    /// <param name="axis">The hinge axis in world space around which rotation is allowed.</param>
+    /// <param name="limit">The angular limits defining the allowed rotation range.</param>
+    /// <remarks>
+    /// Stores the axis in the local frame of body 2 and records the initial relative orientation.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="LimitSoftness"/> = 0.001,
+    /// <see cref="Bias"/> = 0.2, <see cref="LimitBias"/> = 0.1.
+    /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
-        ref HingeAngleData data = ref handle.Data;
+        VerifyNotZero();
+        ref HingeAngleData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -84,11 +88,14 @@ public unsafe class HingeAngle : Constraint
         data.Q0 = q2.Conjugate() * q1;
     }
 
+    /// <summary>
+    /// Sets the angular limits for the hinge rotation.
+    /// </summary>
     public AngularLimit Limit
     {
         set
         {
-            ref HingeAngleData data = ref handle.Data;
+            ref HingeAngleData data = ref Data;
             data.MinAngle = MathR.Sin((Real)value.From / (Real)2.0);
             data.MaxAngle = MathR.Sin((Real)value.To / (Real)2.0);
         }
@@ -96,7 +103,7 @@ public unsafe class HingeAngle : Constraint
 
     public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, Real idt)
     {
-        ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -170,11 +177,14 @@ public unsafe class HingeAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.Transform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets the current angle of rotation around the hinge axis relative to the initial pose.
+    /// </summary>
     public JAngle Angle
     {
         get
         {
-            ref HingeAngleData data = ref handle.Data;
+            ref HingeAngleData data = ref Data;
             JQuaternion q1 = data.Body1.Data.Orientation;
             JQuaternion q2 = data.Body2.Data.Orientation;
 
@@ -190,35 +200,62 @@ public unsafe class HingeAngle : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the angular constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) applied when angular limits are active.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more limit violation but improve stability.
+    /// </value>
     public Real LimitSoftness
     {
-        get => handle.Data.LimitSoftness;
-        set => handle.Data.LimitSoftness = value;
+        get => Data.LimitSoftness;
+        set => Data.LimitSoftness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor for angular limit correction.
+    /// </summary>
+    /// <value>
+    /// Default is 0.1. Range [0, 1]. Higher values correct limit violations faster.
+    /// </value>
     public Real LimitBias
     {
-        get => handle.Data.LimitBias;
-        set => handle.Data.LimitBias = value;
+        get => Data.LimitBias;
+        set => Data.LimitBias = value;
     }
 
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public JVector Impulse => Data.AccumulatedImpulse;
 
     public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
     {
-        ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

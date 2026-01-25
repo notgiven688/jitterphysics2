@@ -9,6 +9,9 @@ using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
 
+/// <summary>
+/// Represents the abstract base class for shapes that can be attached to a rigid body.
+/// </summary>
 public abstract class RigidBodyShape : Shape
 {
     /// <summary>

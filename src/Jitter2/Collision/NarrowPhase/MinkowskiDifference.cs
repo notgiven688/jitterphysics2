@@ -12,11 +12,14 @@ namespace Jitter2.Collision;
 /// <summary>
 /// Provides methods for computing points on the Minkowski difference of two convex shapes.
 /// </summary>
+/// <remarks>
+/// The Minkowski difference A - B is defined as the set of all points (a - b) where a is in A and b is in B.
+/// This is the fundamental construct used by GJK and EPA algorithms to detect collisions.
+/// </remarks>
 public static class MinkowskiDifference
 {
     /// <summary>
-    /// Represents a vertex on the Minkowski difference of two shapes, storing both the
-    /// difference point and the original support points from each shape.
+    /// Represents a vertex on the Minkowski difference of two shapes.
     /// </summary>
     public struct Vertex
     {
@@ -30,8 +33,9 @@ public static class MinkowskiDifference
         public JVector B;
 
         /// <summary>
-        /// Creates a vertex with only the difference point set. A and B remain default.
+        /// Creates a vertex with only the difference point set.
         /// </summary>
+        /// <param name="v">The Minkowski difference point.</param>
         public Vertex(JVector v)
         {
             V = v;
@@ -39,8 +43,16 @@ public static class MinkowskiDifference
     }
 
     /// <summary>
-    /// Calculates the support function S_{A-B}(d) = S_{A}(d) - S_{B}(-d), where "d" represents the direction.
+    /// Computes the support function S_{A-B}(d) = S_A(d) - S_B(-d) for the Minkowski difference.
     /// </summary>
+    /// <typeparam name="TA">The type of support shape A.</typeparam>
+    /// <typeparam name="TB">The type of support shape B.</typeparam>
+    /// <param name="supportA">The support function of shape A (at origin, not rotated).</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
+    /// <param name="direction">The search direction.</param>
+    /// <param name="v">The resulting vertex containing support points from both shapes.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Support<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB,
         in JVector positionB, in JVector direction, out Vertex v) where TA : ISupportMappable where TB : ISupportMappable
@@ -57,8 +69,15 @@ public static class MinkowskiDifference
     }
 
     /// <summary>
-    /// Retrieves a point within the Minkowski Difference.
+    /// Computes a point guaranteed to be inside the Minkowski difference.
     /// </summary>
+    /// <typeparam name="TA">The type of support shape A.</typeparam>
+    /// <typeparam name="TB">The type of support shape B.</typeparam>
+    /// <param name="supportA">The support function of shape A (at origin, not rotated).</param>
+    /// <param name="supportB">The support function of shape B.</param>
+    /// <param name="orientationB">The orientation of shape B.</param>
+    /// <param name="positionB">The position of shape B.</param>
+    /// <param name="center">The resulting vertex representing the center of the Minkowski difference.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void GetCenter<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB,
         out Vertex center) where TA : ISupportMappable where TB : ISupportMappable

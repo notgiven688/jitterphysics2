@@ -12,11 +12,10 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements the BallSocket constraint. This constraint anchors a fixed point in the reference frame of
-/// one body to a fixed point in the reference frame of another body, eliminating three translational
-/// degrees of freedom.
+/// Implements a ball-and-socket joint that anchors a point on each body together,
+/// removing three translational degrees of freedom.
 /// </summary>
-public unsafe class BallSocket : Constraint
+public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct BallSocketData
@@ -44,24 +43,25 @@ public unsafe class BallSocket : Constraint
         public JVector Bias;
     }
 
-    private JHandle<BallSocketData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<BallSocketData>();
-
         Iterate = &IterateBallSocket;
         PrepareForIteration = &PrepareForIterationBallSocket;
-        handle = JHandle<ConstraintData>.AsHandle<BallSocketData>(Handle);
+        base.Create();
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from a world-space anchor point.
     /// </summary>
-    /// <param name="anchor">Anchor point for both bodies in world space.</param>
+    /// <param name="anchor">The anchor point in world space, shared by both bodies.</param>
+    /// <remarks>
+    /// Computes local anchor points for each body from their current poses.
+    /// Default values: <see cref="Bias"/> = 0.2, <see cref="Softness"/> = 0.
+    /// </remarks>
     public void Initialize(JVector anchor)
     {
-        ref BallSocketData data = ref handle.Data;
+        VerifyNotZero();
+        ref BallSocketData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -84,14 +84,14 @@ public unsafe class BallSocket : Constraint
     {
         set
         {
-            ref BallSocketData data = ref handle.Data;
+            ref BallSocketData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
             JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         }
         get
         {
-            ref BallSocketData data = ref handle.Data;
+            ref BallSocketData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector result);
             JVector.Add(result, body1.Position, out result);
@@ -108,14 +108,14 @@ public unsafe class BallSocket : Constraint
     {
         set
         {
-            ref BallSocketData data = ref handle.Data;
+            ref BallSocketData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
             JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
         }
         get
         {
-            ref BallSocketData data = ref handle.Data;
+            ref BallSocketData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector result);
             JVector.Add(result, body2.Position, out result);
@@ -125,7 +125,7 @@ public unsafe class BallSocket : Constraint
 
     public static void PrepareForIterationBallSocket(ref ConstraintData constraint, Real idt)
     {
-        ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -162,23 +162,39 @@ public unsafe class BallSocket : Constraint
         body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0. Higher values allow more positional error but improve stability.
+    /// Scaled by inverse timestep during solving.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public JVector Impulse => Data.AccumulatedImpulse;
 
     public static void IterateBallSocket(ref ConstraintData constraint, Real idt)
     {
-        ref BallSocketData data = ref Unsafe.AsRef<BallSocketData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

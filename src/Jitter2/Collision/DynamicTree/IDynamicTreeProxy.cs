@@ -10,60 +10,55 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Interface for entities which should be added to the <see cref="DynamicTree"/>.
+/// Represents an entity that can be tracked by the <see cref="DynamicTree"/> for broadphase collision detection.
 /// </summary>
 public interface IDynamicTreeProxy : IPartitionedSetIndex
 {
     /// <summary>
-    /// A pointer value which should only by internally modified by the tree.
+    /// Gets or sets the internal node pointer used by the tree.
     /// </summary>
+    /// <remarks>
+    /// This value is managed internally by <see cref="DynamicTree"/>. Do not modify directly.
+    /// </remarks>
     int NodePtr { get; set; }
 
     /// <summary>
-    /// The velocity of the entity.
+    /// Gets the velocity of the entity, used for bounding box expansion.
     /// </summary>
     JVector Velocity { get; }
 
     /// <summary>
-    /// The world bounding box of the entity.
+    /// Gets the axis-aligned bounding box of the entity in world space.
     /// </summary>
     JBoundingBox WorldBoundingBox { get; }
 }
 
 /// <summary>
-/// Represents an object for which the bounding box can be updated.
+/// Represents an entity whose bounding box can be recomputed.
 /// </summary>
 public interface IUpdatableBoundingBox
 {
     /// <summary>
-    /// Updates the bounding box.
+    /// Recomputes the world-space bounding box.
     /// </summary>
+    /// <param name="dt">The timestep for velocity-based expansion. Default is zero.</param>
     public void UpdateWorldBoundingBox(Real dt = (Real)0.0);
 }
 
 /// <summary>
-/// Represents an object that can be intersected by a ray.
+/// Represents an entity that can be intersected by a ray.
 /// </summary>
 public interface IRayCastable
 {
     /// <summary>
-    /// Performs a ray cast against the object, checking if a ray originating from a specified point
-    /// and traveling in a specified direction intersects with the object.
+    /// Performs a ray cast against this object.
     /// </summary>
     /// <param name="origin">The starting point of the ray.</param>
-    /// <param name="direction">
-    /// The direction of the ray. This vector does not need to be normalized.
-    /// </param>
-    /// <param name="normal">
-    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
-    /// </param>
+    /// <param name="direction">The direction of the ray. Does not need to be normalized.</param>
+    /// <param name="normal">The surface normal at the intersection point.</param>
     /// <param name="lambda">
-    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
-    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
-    /// <c>origin + lambda * direction</c>.
+    /// The distance along the ray to the intersection: <c>hitPoint = origin + lambda * direction</c>.
     /// </param>
-    /// <returns>
-    /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.
-    /// </returns>
+    /// <returns><c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.</returns>
     public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda);
 }

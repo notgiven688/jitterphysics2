@@ -10,8 +10,9 @@ using System.Collections.Generic;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// Implements a read-only wrapper for <see cref="List{T}"/>.
+/// A read-only wrapper around <see cref="List{T}"/> that prevents modification while allowing indexed access and enumeration.
 /// </summary>
+/// <typeparam name="T">The type of elements in the list.</typeparam>
 public readonly struct ReadOnlyList<T>(List<T> list) : IReadOnlyList<T>
 {
     /// <summary>Gets the element at the specified index.</summary>

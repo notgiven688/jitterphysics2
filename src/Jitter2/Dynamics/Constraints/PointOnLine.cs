@@ -17,7 +17,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// the reference frame of another body. This constraint removes one degree of translational
 /// freedom; two if the limit is enforced.
 /// </summary>
-public unsafe class PointOnLine : Constraint
+public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct PointOnLineData
@@ -52,33 +52,35 @@ public unsafe class PointOnLine : Constraint
         // public MemBlock96 J0;
     }
 
-    private JHandle<PointOnLineData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<PointOnLineData>();
-
         Iterate = &IteratePointOnLine;
         PrepareForIteration = &PrepareForIterationPointOnLine;
-        handle = JHandle<ConstraintData>.AsHandle<PointOnLineData>(Handle);
+        base.Create();
     }
 
+    /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
     {
         Initialize(axis, anchor1, anchor2, LinearLimit.Fixed);
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint from world-space parameters.
     /// </summary>
-    /// <param name="axis">Axis in world space which is fixed in the reference frame of the first body.</param>
-    /// <param name="anchor1">Anchor point on the first body. Together with the axis this defines a line in the reference
-    /// frame of the first body.</param>
-    /// <param name="anchor2">Anchor point on the second body which should be constrained to the line.</param>
-    /// <param name="limit">A distance limit along the axis.</param>
+    /// <param name="axis">The line axis in world space, fixed in the reference frame of body 1.</param>
+    /// <param name="anchor1">Anchor point on body 1 defining the line origin in world space.</param>
+    /// <param name="anchor2">Anchor point on body 2 constrained to the line in world space.</param>
+    /// <param name="limit">Distance limit along the axis.</param>
+    /// <remarks>
+    /// Computes local anchor points and axis from the current body poses.
+    /// Default values: <see cref="Bias"/> = 0.01, <see cref="Softness"/> = 0.00001,
+    /// <see cref="LimitSoftness"/> = 0.0001, <see cref="LimitBias"/> = 0.2.
+    /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
-        ref PointOnLineData data = ref handle.Data;
+        VerifyNotZero();
+        ref PointOnLineData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -100,11 +102,14 @@ public unsafe class PointOnLine : Constraint
         (data.Min, data.Max) = limit;
     }
 
+    /// <summary>
+    /// Gets the current distance of the anchor point from the line origin along the axis.
+    /// </summary>
     public Real Distance
     {
         get
         {
-            ref PointOnLineData data = ref handle.Data;
+            ref PointOnLineData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -125,7 +130,7 @@ public unsafe class PointOnLine : Constraint
     [SkipLocalsInit]
     public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, Real idt)
     {
-        ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -235,36 +240,63 @@ public unsafe class PointOnLine : Constraint
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.00001. Higher values allow more positional error but improve stability.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.01. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public JVector Impulse => Data.AccumulatedImpulse;
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) applied when distance limits are active.
+    /// </summary>
+    /// <value>
+    /// Default is 0.0001. Higher values allow more limit violation but improve stability.
+    /// </value>
     public Real LimitSoftness
     {
-        get => handle.Data.LimitSoftness;
-        set => handle.Data.LimitSoftness = value;
+        get => Data.LimitSoftness;
+        set => Data.LimitSoftness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor for distance limit correction.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct limit violations faster.
+    /// </value>
     public Real LimitBias
     {
-        get => handle.Data.LimitBias;
-        set => handle.Data.LimitBias = value;
+        get => Data.LimitBias;
+        set => Data.LimitBias = value;
     }
 
     [SkipLocalsInit]
     public static void IteratePointOnLine(ref ConstraintData constraint, Real idt)
     {
-        ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

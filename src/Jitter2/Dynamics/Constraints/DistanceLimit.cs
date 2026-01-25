@@ -17,7 +17,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// point in the reference frame of another body. This constraint removes one translational degree
 /// of freedom. For a distance of zero, use the <see cref="BallSocket"/> constraint.
 /// </summary>
-public unsafe class DistanceLimit : Constraint
+public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct DistanceLimitData
@@ -48,31 +48,38 @@ public unsafe class DistanceLimit : Constraint
         public short Clamp;
     }
 
-    private JHandle<DistanceLimitData> handle;
 
     protected override void Create()
     {
-        CheckDataSize<DistanceLimitData>();
-
         Iterate = &IterateFixedAngle;
         PrepareForIteration = &PrepareForIterationFixedAngle;
-        handle = JHandle<ConstraintData>.AsHandle<DistanceLimitData>(Handle);
+        base.Create();
     }
 
+    /// <summary>
+    /// Initializes the constraint with a fixed distance between anchor points.
+    /// </summary>
+    /// <param name="anchor1">Anchor point on the first body in world space.</param>
+    /// <param name="anchor2">Anchor point on the second body in world space.</param>
     public void Initialize(JVector anchor1, JVector anchor2)
     {
         Initialize(anchor1, anchor2, LinearLimit.Fixed);
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the constraint with distance limits between anchor points.
     /// </summary>
-    /// <param name="anchor1">Anchor point on the first rigid body, in world space.</param>
-    /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
-    /// <param name="limit">The allowed distance between the anchor points.</param>
+    /// <param name="anchor1">Anchor point on the first body in world space.</param>
+    /// <param name="anchor2">Anchor point on the second body in world space.</param>
+    /// <param name="limit">The allowed distance range between anchor points.</param>
+    /// <remarks>
+    /// Computes local anchor points and the initial distance from current poses.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2, LinearLimit limit)
     {
-        ref DistanceLimitData data = ref handle.Data;
+        VerifyNotZero();
+        ref DistanceLimitData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -98,14 +105,14 @@ public unsafe class DistanceLimit : Constraint
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
             JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         }
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector result);
             JVector.Add(result, body1.Position, out result);
@@ -122,14 +129,14 @@ public unsafe class DistanceLimit : Constraint
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
             JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
         }
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector result);
             JVector.Add(result, body2.Position, out result);
@@ -137,21 +144,28 @@ public unsafe class DistanceLimit : Constraint
         }
     }
 
+    /// <summary>
+    /// Gets or sets the target distance between anchor points.
+    /// </summary>
+    /// <value>Set during initialization from the initial anchor separation.</value>
     public Real TargetDistance
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             data.Distance = value;
         }
-        get => handle.Data.Distance;
+        get => Data.Distance;
     }
 
+    /// <summary>
+    /// Gets the current distance between anchor points in world space.
+    /// </summary>
     public Real Distance
     {
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -169,7 +183,7 @@ public unsafe class DistanceLimit : Constraint
 
     public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -229,23 +243,38 @@ public unsafe class DistanceLimit : Constraint
         body2.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * jacobian[3], body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more distance error but improve stability.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively distance error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

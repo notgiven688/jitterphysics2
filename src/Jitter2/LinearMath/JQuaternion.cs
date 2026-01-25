@@ -293,10 +293,14 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     }
 
     /// <summary>
-    /// Creates a Quaternion from a unit axis and an angle.
+    /// Creates a quaternion from a unit axis and an angle.
     /// </summary>
-    /// <param name="axis">The unit vector to rotate around.</param>
+    /// <remarks>
+    /// The <paramref name="axis"/> must be normalized.
+    /// </remarks>
+    /// <param name="axis">The unit vector to rotate around (must be normalized).</param>
     /// <param name="angle">The angle of rotation in radians.</param>
+    /// <returns>A unit quaternion representing the rotation.</returns>
     public static JQuaternion CreateFromAxisAngle(in JVector axis, Real angle)
     {
         Real halfAngle = angle * (Real)0.5;

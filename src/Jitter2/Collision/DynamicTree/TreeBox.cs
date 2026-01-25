@@ -358,6 +358,9 @@ public struct TreeBox : IEquatable<TreeBox>
         result.VectorMax = Vector.Max(first.VectorMax, second.VectorMax);
     }
 
+    /// <summary>
+    /// Determines whether two boxes are equal using binary comparison.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Equals(in TreeBox first, in TreeBox second)
     {
@@ -366,6 +369,7 @@ public struct TreeBox : IEquatable<TreeBox>
         return a.SequenceEqual(b); // SIMD-accelerated in .NET ≥ 5
     }
 
+    /// <inheritdoc />
     public readonly bool Equals(TreeBox other)
     {
         return Equals(this, other);

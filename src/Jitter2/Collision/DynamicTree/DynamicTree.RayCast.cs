@@ -13,16 +13,14 @@ namespace Jitter2.Collision;
 public partial class DynamicTree
 {
     /// <summary>
-    /// Represents the result of a ray cast operation.
+    /// Represents the result of a ray cast against the dynamic tree.
     /// </summary>
     public struct RayCastResult
     {
-        /// <summary>The proxy that was hit by the ray.</summary>
+        /// <summary>The proxy that was hit.</summary>
         public IDynamicTreeProxy Entity;
 
-        /// <summary>
-        /// The ray parameter at the hit point. The hit position is <c>origin + lambda * direction</c>.
-        /// </summary>
+        /// <summary>The ray parameter at the hit: <c>hitPoint = origin + Lambda * direction</c>.</summary>
         public Real Lambda;
 
         /// <summary>The surface normal at the hit point.</summary>

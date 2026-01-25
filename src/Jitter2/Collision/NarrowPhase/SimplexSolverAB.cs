@@ -20,14 +20,19 @@ namespace Jitter2.Collision;
 /// the closest points on the original shapes (A and B spaces).
 /// </summary>
 /// <remarks>
+/// <para>
 /// Unlike <see cref="SimplexSolver"/>, this solver tracks barycentric coordinates and
 /// the original support points, enabling extraction of the closest points on each shape
 /// via <see cref="GetClosest"/>.
+/// </para>
+/// <para>
+/// Complexity: O(1) per vertex addition with early-out optimizations.
+/// </para>
 /// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolverAB
 {
-    const Real Epsilon = (Real)1e-8;
+    private const Real Epsilon = (Real)1e-8;
 
     private struct Barycentric
     {

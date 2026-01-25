@@ -41,6 +41,9 @@ public static class MathHelper
     /// Calculates the rotation quaternion corresponding to the given (constant) angular
     /// velocity vector and time step.
     /// </summary>
+    /// <param name="omega">The angular velocity vector in radians per second.</param>
+    /// <param name="dt">The time step in seconds.</param>
+    /// <returns>A unit quaternion representing the rotation.</returns>
     public static JQuaternion RotationQuaternion(in JVector omega, Real dt)
     {
         Real angle = omega.Length();
@@ -77,6 +80,9 @@ public static class MathHelper
     /// <summary>
     /// Checks if matrix is a pure rotation matrix.
     /// </summary>
+    /// <param name="matrix">The matrix to check.</param>
+    /// <param name="epsilon">The tolerance for floating-point comparisons.</param>
+    /// <returns><see langword="true"/> if the matrix is orthonormal with determinant 1; otherwise, <see langword="false"/>.</returns>
     public static bool IsRotationMatrix(in JMatrix matrix, Real epsilon = (Real)1e-06)
     {
         JMatrix delta = JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity;
@@ -92,6 +98,9 @@ public static class MathHelper
     /// <summary>
     /// Checks if all entries of a vector are close to zero.
     /// </summary>
+    /// <param name="vector">The vector to check.</param>
+    /// <param name="epsilon">The tolerance for each component.</param>
+    /// <returns><see langword="true"/> if all components are within epsilon of zero; otherwise, <see langword="false"/>.</returns>
     public static bool IsZero(in JVector vector, Real epsilon = (Real)1e-6)
     {
         return !(MathR.Abs(vector.X) >= epsilon) &&
@@ -102,6 +111,9 @@ public static class MathHelper
     /// <summary>
     /// Checks if a value is close to zero.
     /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <param name="epsilon">The tolerance.</param>
+    /// <returns><see langword="true"/> if the absolute value is less than epsilon; otherwise, <see langword="false"/>.</returns>
     public static bool IsZero(Real value, Real epsilon = (Real)1e-6)
     {
         return MathR.Abs(value) < epsilon;
@@ -110,6 +122,9 @@ public static class MathHelper
     /// <summary>
     /// Checks if all entries of a matrix are close to zero.
     /// </summary>
+    /// <param name="matrix">The matrix to check.</param>
+    /// <param name="epsilon">The tolerance for each element.</param>
+    /// <returns><see langword="true"/> if all elements are within epsilon of zero; otherwise, <see langword="false"/>.</returns>
     public static bool UnsafeIsZero(ref JMatrix matrix, Real epsilon = (Real)1e-6)
     {
         if (!IsZero(matrix.UnsafeGet(0), epsilon)) return false;
@@ -119,9 +134,11 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Calculates (M^T \times M)^(-1/2) using Jacobi iterations.
+    /// Calculates <c>(MᵀM)^(-1/2)</c> using Jacobi iterations.
     /// </summary>
+    /// <param name="m">The input matrix.</param>
     /// <param name="sweeps">The number of Jacobi iterations.</param>
+    /// <returns>The inverse square root of <c>MᵀM</c>.</returns>
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
         Unsafe.SkipInit(out JMatrix r);
@@ -176,8 +193,11 @@ public static class MathHelper
     /// <summary>
     /// Calculates an orthonormal vector to the given vector.
     /// </summary>
-    /// <param name="vec">The input vector, which does not need to be normalized.</param>
-    /// <returns>An orthonormal vector to the input vector.</returns>
+    /// <remarks>
+    /// The input vector must be non-zero. Debug builds assert this condition.
+    /// </remarks>
+    /// <param name="vec">The input vector (must be non-zero, does not need to be normalized).</param>
+    /// <returns>A unit vector orthogonal to the input.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector CreateOrthonormal(in JVector vec)
     {
@@ -233,10 +253,10 @@ public static class MathHelper
 
     /// <summary>
     /// Verifies whether the columns of the given matrix constitute an orthonormal basis.
-    /// An orthonormal basis means that the columns are mutually perpendicular and have unit length.
     /// </summary>
-    /// <param name="matrix">The input matrix to check for an orthonormal basis.</param>
-    /// <returns>True if the columns of the matrix form an orthonormal basis; otherwise, false.</returns>
+    /// <param name="matrix">The input matrix to check.</param>
+    /// <param name="epsilon">The tolerance for floating-point comparisons.</param>
+    /// <returns><see langword="true"/> if the columns are mutually perpendicular and have unit length; otherwise, <see langword="false"/>.</returns>
     public static bool CheckOrthonormalBasis(in JMatrix matrix, Real epsilon = (Real)1e-6)
     {
         JMatrix delta = JMatrix.MultiplyTransposed(matrix, matrix) - JMatrix.Identity;
@@ -247,9 +267,8 @@ public static class MathHelper
     /// Determines whether the length of the given vector is zero or close to zero.
     /// </summary>
     /// <param name="v">The vector to evaluate.</param>
-    /// <param name="epsilonSq">A threshold value below which the squared magnitude of the vector
-    /// is considered to be zero or close to zero.</param>
-    /// <returns>True if the vector is close to zero; otherwise, false.</returns>
+    /// <param name="epsilonSq">Threshold for squared magnitude.</param>
+    /// <returns><see langword="true"/> if the squared length is less than <paramref name="epsilonSq"/>; otherwise, <see langword="false"/>.</returns>
     public static bool CloseToZero(in JVector v, Real epsilonSq = (Real)1e-16)
     {
         return v.LengthSquared() < epsilonSq;

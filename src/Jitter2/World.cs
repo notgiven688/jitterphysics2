@@ -339,7 +339,8 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Removes all entities from the simulation world.
+    /// Removes all entities from the simulation world. Also clears all proxies from the dynamic tree,
+    /// including any user-added proxies not owned by the world.
     /// </summary>
     public void Clear()
     {
@@ -440,6 +441,10 @@ public sealed partial class World : IDisposable
         Arbiter.Pool.Push(arbiter);
     }
 
+    /// <summary>
+    /// Marks a body to be activated at the start of the next step.
+    /// </summary>
+    /// <param name="body">The body to activate.</param>
     internal void ActivateBodyNextStep(RigidBody body)
     {
         body.InternalSleepTime = 0;
@@ -464,6 +469,10 @@ public sealed partial class World : IDisposable
         body.Island.NeedsUpdate = true;
     }
 
+    /// <summary>
+    /// Removes constraints and contacts that connect two non-dynamic bodies.
+    /// </summary>
+    /// <param name="body">The body whose static-static connections should be removed.</param>
     internal void RemoveStaticStaticConstraints(RigidBody body)
     {
         foreach (var constraint in body.InternalConstraints)
@@ -485,6 +494,10 @@ public sealed partial class World : IDisposable
         }
     }
 
+    /// <summary>
+    /// Rebuilds island connections from the body's existing contacts and constraints.
+    /// </summary>
+    /// <param name="body">The body whose connections should be rebuilt.</param>
     internal void BuildConnectionsFromExistingContacts(RigidBody body)
     {
         foreach (var constraint in body.InternalConstraints)
@@ -498,6 +511,10 @@ public sealed partial class World : IDisposable
         }
     }
 
+    /// <summary>
+    /// Removes all island connections for a body.
+    /// </summary>
+    /// <param name="body">The body whose connections should be removed.</param>
     internal void RemoveConnections(RigidBody body)
     {
         if (body.InternalConnections.Count > 0)
@@ -524,6 +541,10 @@ public sealed partial class World : IDisposable
         Debug.Assert(body.InternalIsland.InternalBodies.Count == 1);
     }
 
+    /// <summary>
+    /// Marks a body to be deactivated at the start of the next step.
+    /// </summary>
+    /// <param name="body">The body to deactivate.</param>
     internal void DeactivateBodyNextStep(RigidBody body)
     {
         body.InternalSleepTime = Real.PositiveInfinity;
@@ -563,6 +584,10 @@ public sealed partial class World : IDisposable
         return constraint;
     }
 
+    /// <summary>
+    /// Marks an island as active and moves it to the active partition.
+    /// </summary>
+    /// <param name="island">The island to activate.</param>
     private void AddToActiveList(Island island)
     {
         island.MarkedAsActive = true;

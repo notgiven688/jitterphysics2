@@ -14,7 +14,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// <summary>
 /// Constrains the relative orientation between two bodies, eliminating three degrees of rotational freedom.
 /// </summary>
-public unsafe class FixedAngle : Constraint
+public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct FixedAngleData
@@ -31,7 +31,7 @@ public unsafe class FixedAngle : Constraint
 
         public Real BiasFactor;
         public Real Softness;
-        
+
         public JQuaternion Q0;
 
         public JVector AccumulatedImpulse;
@@ -43,20 +43,24 @@ public unsafe class FixedAngle : Constraint
         public ushort Clamp;
     }
 
-    private JHandle<FixedAngleData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<FixedAngleData>();
-
         Iterate = &IterateFixedAngle;
         PrepareForIteration = &PrepareForIterationFixedAngle;
-        handle = JHandle<ConstraintData>.AsHandle<FixedAngleData>(Handle);
+        base.Create();
     }
 
+    /// <summary>
+    /// Initializes the constraint using the current relative orientation of the bodies.
+    /// </summary>
+    /// <remarks>
+    /// Records the current relative orientation as the target.
+    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// </remarks>
     public void Initialize()
     {
-        ref FixedAngleData data = ref handle.Data;
+        VerifyNotZero();
+        ref FixedAngleData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -71,7 +75,7 @@ public unsafe class FixedAngle : Constraint
 
     public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -107,23 +111,38 @@ public unsafe class FixedAngle : Constraint
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
     }
 
+    /// <summary>
+    /// Gets or sets the softness (compliance) of the constraint.
+    /// </summary>
+    /// <value>
+    /// Default is 0.001. Higher values allow more angular error but improve stability.
+    /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
+    /// <summary>
+    /// Gets or sets the bias factor controlling how aggressively angular error is corrected.
+    /// </summary>
+    /// <value>
+    /// Default is 0.2. Range [0, 1]. Higher values correct errors faster but may cause instability.
+    /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    /// <summary>
+    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// </summary>
+    public JVector Impulse => Data.AccumulatedImpulse;
 
     public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref FixedAngleData data = ref Unsafe.AsRef<FixedAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

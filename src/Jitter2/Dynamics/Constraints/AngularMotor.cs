@@ -13,9 +13,10 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Represents a motor constraint that drives relative angular movement between two axes, which are fixed within the reference frames of their respective bodies.
+/// Represents a motor that drives relative angular velocity between two axes fixed
+/// in the reference frames of their respective bodies.
 /// </summary>
-public unsafe class AngularMotor : Constraint
+public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct AngularMotorData
@@ -39,25 +40,26 @@ public unsafe class AngularMotor : Constraint
         public Real AccumulatedImpulse;
     }
 
-    private JHandle<AngularMotorData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<AngularMotorData>();
-
         Iterate = &IterateAngularMotor;
         PrepareForIteration = &PrepareForIterationAngularMotor;
-        handle = JHandle<ConstraintData>.AsHandle<AngularMotorData>(Handle);
+        base.Create();
     }
 
     /// <summary>
-    /// Initializes the constraint.
+    /// Initializes the motor with separate axes for each body.
     /// </summary>
-    /// <param name="axis1">The axis on the first body, defined in world space.</param>
-    /// <param name="axis2">The axis on the second body, defined in world space.</param>
+    /// <param name="axis1">The motor axis on the first body in world space.</param>
+    /// <param name="axis2">The motor axis on the second body in world space.</param>
+    /// <remarks>
+    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
+    /// </remarks>
     public void Initialize(JVector axis1, JVector axis2)
     {
-        ref AngularMotorData data = ref handle.Data;
+        VerifyNotZero();
+        ref AngularMotorData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -71,34 +73,55 @@ public unsafe class AngularMotor : Constraint
         data.Velocity = 0;
     }
 
+    /// <summary>
+    /// Initializes the motor with the same axis for both bodies.
+    /// </summary>
+    /// <param name="axis">The motor axis in world space, used for both bodies.</param>
     public void Initialize(JVector axis)
     {
         Initialize(axis, axis);
     }
 
+    /// <summary>
+    /// Gets or sets the target angular velocity in radians per second.
+    /// </summary>
+    /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
-        get => handle.Data.Velocity;
-        set => handle.Data.Velocity = value;
+        get => Data.Velocity;
+        set => Data.Velocity = value;
     }
 
-    public JVector LocalAxis1 => handle.Data.LocalAxis1;
+    /// <summary>
+    /// Gets the motor axis on the first body in local space.
+    /// </summary>
+    public JVector LocalAxis1 => Data.LocalAxis1;
 
-    public JVector LocalAxis2 => handle.Data.LocalAxis2;
+    /// <summary>
+    /// Gets the motor axis on the second body in local space.
+    /// </summary>
+    public JVector LocalAxis2 => Data.LocalAxis2;
 
+    /// <summary>
+    /// Gets or sets the maximum force the motor can apply.
+    /// </summary>
+    /// <value>Default is 0. Must be non-negative.</value>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="value"/> is negative.
+    /// </exception>
     public Real MaximumForce
     {
-        get => handle.Data.MaxForce;
+        get => Data.MaxForce;
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
-            handle.Data.MaxForce = value;
+            Data.MaxForce = value;
         }
     }
 
     public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)
     {
-        ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -118,7 +141,8 @@ public unsafe class AngularMotor : Constraint
 
     public static void IterateAngularMotor(ref ConstraintData constraint, Real idt)
     {
-        ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
+
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

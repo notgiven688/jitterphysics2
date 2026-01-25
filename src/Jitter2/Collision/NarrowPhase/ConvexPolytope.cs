@@ -15,10 +15,19 @@ using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a convex polytope builder used in collision detection during the narrow phase.
-/// Note: Ensure to call <see cref="ConvexPolytope.InitHeap"/> at least once before utilizing this structure
-/// to allocate necessary memory for vertices and triangles.
+/// Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA)
+/// for computing penetration depth and contact information.
 /// </summary>
+/// <remarks>
+/// <para>
+/// The polytope is iteratively expanded by adding vertices from the Minkowski difference
+/// until convergence. Call <see cref="InitHeap"/> at least once before use to allocate
+/// memory for vertices and triangles.
+/// </para>
+/// <para>
+/// Memory is allocated from the unmanaged heap and reused across EPA iterations.
+/// </para>
+/// </remarks>
 public unsafe struct ConvexPolytope
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -81,9 +90,11 @@ public unsafe struct ConvexPolytope
     public readonly bool OriginEnclosed => originEnclosed;
 
     /// <summary>
-    /// Computes the barycentric coordinates of the origin projected onto a given triangle.
-    /// These coordinates are used to retrieve points in A- and B-space.
+    /// Computes the closest points on shapes A and B from a triangle on the polytope.
     /// </summary>
+    /// <param name="ctri">The triangle from <see cref="GetClosestTriangle"/>.</param>
+    /// <param name="pA">The closest point on shape A.</param>
+    /// <param name="pB">The closest point on shape B.</param>
     public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
     {
         CalcBarycentric(ctri, out JVector bc);
@@ -243,9 +254,9 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Iterates through all triangles of the convex polytope and returns the one closest
-    /// to the origin (0, 0, 0), based on the minimum distance.
+    /// Finds the triangle on the polytope closest to the origin.
     /// </summary>
+    /// <returns>A reference to the closest triangle. Also updates <see cref="OriginEnclosed"/>.</returns>
     public ref Triangle GetClosestTriangle()
     {
         int closestIndex = -1;
@@ -272,8 +283,11 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Initializes the structure with a tetrahedron formed using the first four vertices.
+    /// Initializes the polytope with a tetrahedron formed from the first four vertices.
     /// </summary>
+    /// <remarks>
+    /// The first four vertices must be set before calling this method.
+    /// </remarks>
     public void InitTetrahedron()
     {
         originEnclosed = false;
@@ -289,8 +303,9 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Creates a small tetrahedron that encapsulates the specified point.
+    /// Initializes the polytope with a small tetrahedron centered at the specified point.
     /// </summary>
+    /// <param name="point">The center point of the initial tetrahedron.</param>
     public void InitTetrahedron(in JVector point)
     {
         originEnclosed = false;
@@ -311,10 +326,11 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Initializes the memory for <see cref="vertices"/> and <see cref="triangles"/>.
-    /// Must be invoked prior to calling any other method in this struct.
-    /// Note: Can be called multiple times; however, initialization occurs only once.
+    /// Allocates unmanaged memory for vertices and triangles.
     /// </summary>
+    /// <remarks>
+    /// Must be called before any other method. Safe to call multiple times; allocation occurs only once.
+    /// </remarks>
     public void InitHeap()
     {
         if (vertices != (void*)0) return;
@@ -323,11 +339,13 @@ public unsafe struct ConvexPolytope
     }
 
     /// <summary>
-    /// Adds a vertex to the polyhedron. Note: This operation invalidates the reference
-    /// returned by previous calls to <see cref="GetClosestTriangle"/>, regardless of
-    /// the return value of this method.
+    /// Adds a vertex to the polytope and rebuilds the convex hull.
     /// </summary>
-    /// <returns>Indicates whether the polyhedron successfully incorporated the new vertex.</returns>
+    /// <param name="vertex">The Minkowski difference vertex to add.</param>
+    /// <returns><c>true</c> if the vertex was incorporated; <c>false</c> if the polytope could not expand.</returns>
+    /// <remarks>
+    /// This operation invalidates references from previous <see cref="GetClosestTriangle"/> calls.
+    /// </remarks>
     [SkipLocalsInit]
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     public bool AddVertex(in Vertex vertex)
