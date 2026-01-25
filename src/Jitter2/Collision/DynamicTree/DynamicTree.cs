@@ -872,6 +872,12 @@ public partial class DynamicTree
 
     private readonly PriorityQueue<int, double> priorityQueue = new();
 
+    /// <summary>
+    /// Finds the exact best insertion point for <paramref name="node"/> in the BVH,
+    /// starting from <paramref name="where"/>, using a priority-queue driven
+    /// Surface Area Heuristic (SAH) search. This method guarantees the same
+    /// result as a brute-force search, unlike the faster greedy version <see cref="FindBestGreedy"/>.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private int FindBest(int node, int where)
     {
