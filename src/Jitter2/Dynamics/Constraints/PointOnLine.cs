@@ -17,7 +17,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// the reference frame of another body. This constraint removes one degree of translational
 /// freedom; two if the limit is enforced.
 /// </summary>
-public unsafe class PointOnLine : Constraint
+public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct PointOnLineData
@@ -52,15 +52,11 @@ public unsafe class PointOnLine : Constraint
         // public MemBlock96 J0;
     }
 
-    private JHandle<PointOnLineData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<PointOnLineData>();
-
         Iterate = &IteratePointOnLine;
         PrepareForIteration = &PrepareForIterationPointOnLine;
-        handle = JHandle<ConstraintData>.AsHandle<PointOnLineData>(Handle);
+        base.Create();
     }
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
@@ -84,7 +80,7 @@ public unsafe class PointOnLine : Constraint
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
         VerifyNotZero();
-        ref PointOnLineData data = ref handle.Data;
+        ref PointOnLineData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -113,7 +109,7 @@ public unsafe class PointOnLine : Constraint
     {
         get
         {
-            ref PointOnLineData data = ref handle.Data;
+            ref PointOnLineData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -134,7 +130,7 @@ public unsafe class PointOnLine : Constraint
     [SkipLocalsInit]
     public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, Real idt)
     {
-        ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -252,8 +248,8 @@ public unsafe class PointOnLine : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -264,14 +260,14 @@ public unsafe class PointOnLine : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    public JVector Impulse => Data.AccumulatedImpulse;
 
     /// <summary>
     /// Gets or sets the softness (compliance) applied when distance limits are active.
@@ -281,8 +277,8 @@ public unsafe class PointOnLine : Constraint
     /// </value>
     public Real LimitSoftness
     {
-        get => handle.Data.LimitSoftness;
-        set => handle.Data.LimitSoftness = value;
+        get => Data.LimitSoftness;
+        set => Data.LimitSoftness = value;
     }
 
     /// <summary>
@@ -293,14 +289,14 @@ public unsafe class PointOnLine : Constraint
     /// </value>
     public Real LimitBias
     {
-        get => handle.Data.LimitBias;
-        set => handle.Data.LimitBias = value;
+        get => Data.LimitBias;
+        set => Data.LimitBias = value;
     }
 
     [SkipLocalsInit]
     public static void IteratePointOnLine(ref ConstraintData constraint, Real idt)
     {
-        ref PointOnLineData data = ref Unsafe.AsRef<PointOnLineData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

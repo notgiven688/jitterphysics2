@@ -15,7 +15,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// Constrains the relative twist of two bodies. This constraint removes one angular
 /// degree of freedom when the limit is enforced.
 /// </summary>
-public unsafe class TwistAngle : Constraint
+public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct TwistLimitData
@@ -44,15 +44,11 @@ public unsafe class TwistAngle : Constraint
         public JVector Jacobian;
     }
 
-    private JHandle<TwistLimitData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<TwistLimitData>();
-
         Iterate = &IterateTwistAngle;
         PrepareForIteration = &PrepareForIterationTwistAngle;
-        handle = JHandle<ConstraintData>.AsHandle<TwistLimitData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -68,7 +64,7 @@ public unsafe class TwistAngle : Constraint
     public void Initialize(JVector axis1, JVector axis2, AngularLimit limit)
     {
         VerifyNotZero();
-        ref TwistLimitData data = ref handle.Data;
+        ref TwistLimitData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -109,7 +105,7 @@ public unsafe class TwistAngle : Constraint
     {
         set
         {
-            ref TwistLimitData data = ref handle.Data;
+            ref TwistLimitData data = ref Data;
             data.Angle1 = MathR.Sin((Real)value.From / (Real)2.0);
             data.Angle2 = MathR.Sin((Real)value.To / (Real)2.0);
         }
@@ -127,7 +123,7 @@ public unsafe class TwistAngle : Constraint
 
     public static void PrepareForIterationTwistAngle(ref ConstraintData constraint, Real idt)
     {
-        ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -186,7 +182,7 @@ public unsafe class TwistAngle : Constraint
     {
         get
         {
-            ref var data = ref handle.Data;
+            ref var data = ref Data;
             JQuaternion q1 = data.Body1.Data.Orientation;
             JQuaternion q2 = data.Body2.Data.Orientation;
 
@@ -210,8 +206,8 @@ public unsafe class TwistAngle : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -222,14 +218,14 @@ public unsafe class TwistAngle : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public override void DebugDraw(IDebugDrawer drawer)
     {
@@ -237,7 +233,7 @@ public unsafe class TwistAngle : Constraint
 
     public static void IterateTwistAngle(ref ConstraintData constraint, Real idt)
     {
-        ref TwistLimitData data = ref Unsafe.AsRef<TwistLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

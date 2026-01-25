@@ -23,7 +23,7 @@ namespace Jitter2.SoftBodies;
 /// which can be set directly or computed from physical parameters using
 /// <see cref="SetSpringParameters"/>.
 /// </remarks>
-public unsafe class SpringConstraint : Constraint
+public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 {
     /// <summary>
     /// Low-level data for the spring constraint, stored in unmanaged memory.
@@ -52,16 +52,13 @@ public unsafe class SpringConstraint : Constraint
         public JVector Jacobian;
     }
 
-    private JHandle<SpringData> handle;
-
     /// <inheritdoc/>
     protected override void Create()
     {
-        CheckDataSize<SpringData>();
-
         Iterate = &IterateSpringConstraint;
         PrepareForIteration = &PrepareForIterationSpringConstraint;
-        handle = JHandle<ConstraintData>.AsHandle<SpringData>(Handle);
+
+        base.Create();
     }
 
     /// <inheritdoc/>
@@ -79,7 +76,7 @@ public unsafe class SpringConstraint : Constraint
     /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2)
     {
-        ref SpringData data = ref handle.Data;
+        ref SpringData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -101,7 +98,7 @@ public unsafe class SpringConstraint : Constraint
     /// <param name="dt">The timestep of the simulation.</param>
     public void SetSpringParameters(Real frequency, Real damping, Real dt)
     {
-        ref SpringData data = ref handle.Data;
+        ref SpringData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -123,7 +120,7 @@ public unsafe class SpringConstraint : Constraint
     {
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             return data.AccumulatedImpulse;
         }
     }
@@ -135,13 +132,13 @@ public unsafe class SpringConstraint : Constraint
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
         }
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Add(data.LocalAnchor1, body1.Position, out JVector result);
             return result;
@@ -155,13 +152,13 @@ public unsafe class SpringConstraint : Constraint
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
         }
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Add(data.LocalAnchor2, body2.Position, out JVector result);
             return result;
@@ -176,10 +173,10 @@ public unsafe class SpringConstraint : Constraint
     {
         set
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             data.Distance = value;
         }
-        get => handle.Data.Distance;
+        get => Data.Distance;
     }
 
     /// <summary>
@@ -189,7 +186,7 @@ public unsafe class SpringConstraint : Constraint
     {
         get
         {
-            ref SpringData data = ref handle.Data;
+            ref SpringData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -212,7 +209,7 @@ public unsafe class SpringConstraint : Constraint
     /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, Real idt)
     {
-        ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -249,8 +246,8 @@ public unsafe class SpringConstraint : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -261,8 +258,8 @@ public unsafe class SpringConstraint : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
@@ -272,7 +269,7 @@ public unsafe class SpringConstraint : Constraint
     /// <param name="idt">The inverse substep duration (1/dt).</param>
     public static void IterateSpringConstraint(ref ConstraintData constraint, Real idt)
     {
-        ref SpringData data = ref Unsafe.AsRef<SpringData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

@@ -17,7 +17,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// the reference frame of another body. This constraint removes one degree of translational
 /// freedom if the limit is enforced.
 /// </summary>
-public unsafe class PointOnPlane : Constraint
+public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct SliderData
@@ -50,15 +50,11 @@ public unsafe class PointOnPlane : Constraint
         public MemoryHelper.MemBlock12Real J0;
     }
 
-    private JHandle<SliderData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<SliderData>();
-
         Iterate = &IteratePointOnPlane;
         PrepareForIteration = &PrepareForIterationPointOnPlane;
-        handle = JHandle<ConstraintData>.AsHandle<SliderData>(Handle);
+        base.Create();
     }
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
@@ -81,7 +77,7 @@ public unsafe class PointOnPlane : Constraint
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
         VerifyNotZero();
-        ref SliderData data = ref handle.Data;
+        ref SliderData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -103,7 +99,7 @@ public unsafe class PointOnPlane : Constraint
 
     public static void PrepareForIterationPointOnPlane(ref ConstraintData constraint, Real idt)
     {
-        ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -172,8 +168,8 @@ public unsafe class PointOnPlane : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -184,18 +180,18 @@ public unsafe class PointOnPlane : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void IteratePointOnPlane(ref ConstraintData constraint, Real idt)
     {
-        ref SliderData data = ref Unsafe.AsRef<SliderData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

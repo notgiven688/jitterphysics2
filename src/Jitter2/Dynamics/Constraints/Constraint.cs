@@ -67,6 +67,31 @@ public unsafe struct ConstraintData
 }
 
 /// <summary>
+/// Generic base class for constraints that store custom data of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">
+/// The unmanaged data structure containing constraint-specific state. Must fit within
+/// <see cref="ConstraintData"/> (i.e., <see cref="Precision.ConstraintSizeFull"/> bytes).
+/// </typeparam>
+/// <remarks>
+/// Derive from this class to create constraints with custom data layouts. The <see cref="Data"/>
+/// property provides typed access to the constraint's unmanaged memory.
+/// </remarks>
+public abstract class Constraint<T> : Constraint where T : unmanaged
+{
+    /// <summary>
+    /// Gets a reference to the constraint's typed data stored in unmanaged memory.
+    /// </summary>
+    public ref T Data => ref JHandle<ConstraintData>.AsHandle<T>(Handle).Data;
+
+    /// <inheritdoc />
+    public override unsafe bool IsSmallConstraint => sizeof(T) <= sizeof(SmallConstraintData);
+
+    /// <inheritdoc />
+    protected override void Create() => Constraint.CheckDataSize<T>();
+}
+
+/// <summary>
 /// Base class for constraints that connect two rigid bodies and restrict their relative motion.
 /// </summary>
 public abstract class Constraint : IDebugDrawable
@@ -146,7 +171,6 @@ public abstract class Constraint : IDebugDrawable
             Handle.Data.PrepareForIteration = value ? PrepareForIteration : null;
         }
     }
-
 
     internal void Create(JHandle<SmallConstraintData> handle, RigidBody body1, RigidBody body2)
     {

@@ -17,7 +17,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// point in the reference frame of another body. This constraint removes one translational degree
 /// of freedom. For a distance of zero, use the <see cref="BallSocket"/> constraint.
 /// </summary>
-public unsafe class DistanceLimit : Constraint
+public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct DistanceLimitData
@@ -48,15 +48,12 @@ public unsafe class DistanceLimit : Constraint
         public short Clamp;
     }
 
-    private JHandle<DistanceLimitData> handle;
 
     protected override void Create()
     {
-        CheckDataSize<DistanceLimitData>();
-
         Iterate = &IterateFixedAngle;
         PrepareForIteration = &PrepareForIterationFixedAngle;
-        handle = JHandle<ConstraintData>.AsHandle<DistanceLimitData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -82,7 +79,7 @@ public unsafe class DistanceLimit : Constraint
     public void Initialize(JVector anchor1, JVector anchor2, LinearLimit limit)
     {
         VerifyNotZero();
-        ref DistanceLimitData data = ref handle.Data;
+        ref DistanceLimitData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -108,14 +105,14 @@ public unsafe class DistanceLimit : Constraint
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Subtract(value, body1.Position, out data.LocalAnchor1);
             JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         }
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector result);
             JVector.Add(result, body1.Position, out result);
@@ -132,14 +129,14 @@ public unsafe class DistanceLimit : Constraint
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Subtract(value, body2.Position, out data.LocalAnchor2);
             JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
         }
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
             JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector result);
             JVector.Add(result, body2.Position, out result);
@@ -155,10 +152,10 @@ public unsafe class DistanceLimit : Constraint
     {
         set
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             data.Distance = value;
         }
-        get => handle.Data.Distance;
+        get => Data.Distance;
     }
 
     /// <summary>
@@ -168,7 +165,7 @@ public unsafe class DistanceLimit : Constraint
     {
         get
         {
-            ref DistanceLimitData data = ref handle.Data;
+            ref DistanceLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -186,7 +183,7 @@ public unsafe class DistanceLimit : Constraint
 
     public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -254,8 +251,8 @@ public unsafe class DistanceLimit : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -266,18 +263,18 @@ public unsafe class DistanceLimit : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
     {
-        ref DistanceLimitData data = ref Unsafe.AsRef<DistanceLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

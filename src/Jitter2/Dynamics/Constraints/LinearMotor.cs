@@ -16,7 +16,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// A motor constraint that drives relative translational movement along two axes fixed
 /// in the reference frames of the bodies.
 /// </summary>
-public unsafe class LinearMotor : Constraint
+public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct LinearMotorData
@@ -40,15 +40,11 @@ public unsafe class LinearMotor : Constraint
         public Real AccumulatedImpulse;
     }
 
-    private JHandle<LinearMotorData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<LinearMotorData>();
-
         Iterate = &IterateLinearMotor;
         PrepareForIteration = &PrepareForIterationLinearMotor;
-        handle = JHandle<ConstraintData>.AsHandle<LinearMotorData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -56,8 +52,8 @@ public unsafe class LinearMotor : Constraint
     /// </summary>
     public JVector LocalAxis1
     {
-        get => handle.Data.LocalAxis1;
-        set => handle.Data.LocalAxis1 = value;
+        get => Data.LocalAxis1;
+        set => Data.LocalAxis1 = value;
     }
 
     /// <summary>
@@ -65,8 +61,8 @@ public unsafe class LinearMotor : Constraint
     /// </summary>
     public JVector LocalAxis2
     {
-        get => handle.Data.LocalAxis2;
-        set => handle.Data.LocalAxis2 = value;
+        get => Data.LocalAxis2;
+        set => Data.LocalAxis2 = value;
     }
 
     /// <summary>
@@ -81,7 +77,7 @@ public unsafe class LinearMotor : Constraint
     public void Initialize(JVector axis1, JVector axis2)
     {
         VerifyNotZero();
-        ref LinearMotorData data = ref handle.Data;
+        ref LinearMotorData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -101,8 +97,8 @@ public unsafe class LinearMotor : Constraint
     /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
-        get => handle.Data.Velocity;
-        set => handle.Data.Velocity = value;
+        get => Data.Velocity;
+        set => Data.Velocity = value;
     }
 
     /// <summary>
@@ -114,22 +110,22 @@ public unsafe class LinearMotor : Constraint
     /// </exception>
     public Real MaximumForce
     {
-        get => handle.Data.MaxForce;
+        get => Data.MaxForce;
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
-            handle.Data.MaxForce = value;
+            Data.MaxForce = value;
         }
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this motor during the last step.
     /// </summary>
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, Real idt)
     {
-        ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -151,7 +147,7 @@ public unsafe class LinearMotor : Constraint
 
     public static void IterateLinearMotor(ref ConstraintData constraint, Real idt)
     {
-        ref LinearMotorData data = ref Unsafe.AsRef<LinearMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

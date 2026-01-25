@@ -15,7 +15,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// <summary>
 /// Limits the relative tilt between two bodies, removing one angular degree of freedom when active.
 /// </summary>
-public unsafe class ConeLimit : Constraint
+public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct ConeLimitData
@@ -44,15 +44,12 @@ public unsafe class ConeLimit : Constraint
         public MemoryHelper.MemBlock6Real J0;
     }
 
-    private JHandle<ConeLimitData> handle;
 
     protected override void Create()
     {
-        CheckDataSize<ConeLimitData>();
-
         Iterate = &IterateConeLimit;
         PrepareForIteration = &PrepareForIterationConeLimit;
-        handle = JHandle<ConstraintData>.AsHandle<ConeLimitData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -72,7 +69,7 @@ public unsafe class ConeLimit : Constraint
         ArgumentOutOfRangeException.ThrowIfNegative((Real)limit.From);
         ArgumentOutOfRangeException.ThrowIfLessThan((Real)limit.To, (Real)limit.From);
 
-        ref ConeLimitData data = ref handle.Data;
+        ref ConeLimitData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -125,7 +122,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
 
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
@@ -144,7 +141,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
 
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis);
@@ -152,7 +149,7 @@ public unsafe class ConeLimit : Constraint
         }
         set
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body1 = ref data.Body1.Data;
 
             JVector normalized = value;
@@ -169,7 +166,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis);
@@ -177,7 +174,7 @@ public unsafe class ConeLimit : Constraint
         }
         set
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
             JVector normalized = value;
@@ -194,7 +191,7 @@ public unsafe class ConeLimit : Constraint
     {
         get
         {
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             return new AngularLimit(JAngle.FromRadian(data.LimitLow), JAngle.FromRadian(data.LimitHigh));
         }
         set
@@ -202,7 +199,7 @@ public unsafe class ConeLimit : Constraint
             ArgumentOutOfRangeException.ThrowIfNegative((Real)value.From);
             ArgumentOutOfRangeException.ThrowIfLessThan((Real)value.To, (Real)value.From);
 
-            ref ConeLimitData data = ref handle.Data;
+            ref ConeLimitData data = ref Data;
             data.LimitLow = (Real)value.From;
             data.LimitHigh = (Real)value.To;
         }
@@ -210,7 +207,7 @@ public unsafe class ConeLimit : Constraint
 
     public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
-        ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -267,8 +264,8 @@ public unsafe class ConeLimit : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -279,18 +276,18 @@ public unsafe class ConeLimit : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public Real Impulse => handle.Data.AccumulatedImpulse;
+    public Real Impulse => Data.AccumulatedImpulse;
 
     public static void IterateConeLimit(ref ConstraintData constraint, Real idt)
     {
-        ref ConeLimitData data = ref Unsafe.AsRef<ConeLimitData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

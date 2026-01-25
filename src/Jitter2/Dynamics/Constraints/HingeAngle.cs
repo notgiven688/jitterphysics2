@@ -15,7 +15,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// Constrains two bodies to rotate relative to each other around a single axis,
 /// removing two angular degrees of freedom. Optionally enforces angular limits.
 /// </summary>
-public unsafe class HingeAngle : Constraint
+public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct HingeAngleData
@@ -48,15 +48,11 @@ public unsafe class HingeAngle : Constraint
         public ushort Clamp;
     }
 
-    private JHandle<HingeAngleData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<HingeAngleData>();
-
         Iterate = &IterateHingeAngle;
         PrepareForIteration = &PrepareForIterationHingeAngle;
-        handle = JHandle<ConstraintData>.AsHandle<HingeAngleData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -72,7 +68,7 @@ public unsafe class HingeAngle : Constraint
     public void Initialize(JVector axis, AngularLimit limit)
     {
         VerifyNotZero();
-        ref HingeAngleData data = ref handle.Data;
+        ref HingeAngleData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -99,7 +95,7 @@ public unsafe class HingeAngle : Constraint
     {
         set
         {
-            ref HingeAngleData data = ref handle.Data;
+            ref HingeAngleData data = ref Data;
             data.MinAngle = MathR.Sin((Real)value.From / (Real)2.0);
             data.MaxAngle = MathR.Sin((Real)value.To / (Real)2.0);
         }
@@ -107,7 +103,7 @@ public unsafe class HingeAngle : Constraint
 
     public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, Real idt)
     {
-        ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -188,7 +184,7 @@ public unsafe class HingeAngle : Constraint
     {
         get
         {
-            ref HingeAngleData data = ref handle.Data;
+            ref HingeAngleData data = ref Data;
             JQuaternion q1 = data.Body1.Data.Orientation;
             JQuaternion q2 = data.Body2.Data.Orientation;
 
@@ -212,8 +208,8 @@ public unsafe class HingeAngle : Constraint
     /// </value>
     public Real Softness
     {
-        get => handle.Data.Softness;
-        set => handle.Data.Softness = value;
+        get => Data.Softness;
+        set => Data.Softness = value;
     }
 
     /// <summary>
@@ -224,8 +220,8 @@ public unsafe class HingeAngle : Constraint
     /// </value>
     public Real LimitSoftness
     {
-        get => handle.Data.LimitSoftness;
-        set => handle.Data.LimitSoftness = value;
+        get => Data.LimitSoftness;
+        set => Data.LimitSoftness = value;
     }
 
     /// <summary>
@@ -236,8 +232,8 @@ public unsafe class HingeAngle : Constraint
     /// </value>
     public Real Bias
     {
-        get => handle.Data.BiasFactor;
-        set => handle.Data.BiasFactor = value;
+        get => Data.BiasFactor;
+        set => Data.BiasFactor = value;
     }
 
     /// <summary>
@@ -248,18 +244,18 @@ public unsafe class HingeAngle : Constraint
     /// </value>
     public Real LimitBias
     {
-        get => handle.Data.LimitBias;
-        set => handle.Data.LimitBias = value;
+        get => Data.LimitBias;
+        set => Data.LimitBias = value;
     }
 
     /// <summary>
     /// Gets the accumulated impulse applied by this constraint during the last step.
     /// </summary>
-    public JVector Impulse => handle.Data.AccumulatedImpulse;
+    public JVector Impulse => Data.AccumulatedImpulse;
 
     public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
     {
-        ref HingeAngleData data = ref Unsafe.AsRef<HingeAngleData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 

@@ -16,7 +16,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// Represents a motor that drives relative angular velocity between two axes fixed
 /// in the reference frames of their respective bodies.
 /// </summary>
-public unsafe class AngularMotor : Constraint
+public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct AngularMotorData
@@ -40,15 +40,11 @@ public unsafe class AngularMotor : Constraint
         public Real AccumulatedImpulse;
     }
 
-    private JHandle<AngularMotorData> handle;
-
     protected override void Create()
     {
-        CheckDataSize<AngularMotorData>();
-
         Iterate = &IterateAngularMotor;
         PrepareForIteration = &PrepareForIterationAngularMotor;
-        handle = JHandle<ConstraintData>.AsHandle<AngularMotorData>(Handle);
+        base.Create();
     }
 
     /// <summary>
@@ -63,7 +59,7 @@ public unsafe class AngularMotor : Constraint
     public void Initialize(JVector axis1, JVector axis2)
     {
         VerifyNotZero();
-        ref AngularMotorData data = ref handle.Data;
+        ref AngularMotorData data = ref Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -92,19 +88,19 @@ public unsafe class AngularMotor : Constraint
     /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
-        get => handle.Data.Velocity;
-        set => handle.Data.Velocity = value;
+        get => Data.Velocity;
+        set => Data.Velocity = value;
     }
 
     /// <summary>
     /// Gets the motor axis on the first body in local space.
     /// </summary>
-    public JVector LocalAxis1 => handle.Data.LocalAxis1;
+    public JVector LocalAxis1 => Data.LocalAxis1;
 
     /// <summary>
     /// Gets the motor axis on the second body in local space.
     /// </summary>
-    public JVector LocalAxis2 => handle.Data.LocalAxis2;
+    public JVector LocalAxis2 => Data.LocalAxis2;
 
     /// <summary>
     /// Gets or sets the maximum force the motor can apply.
@@ -115,17 +111,17 @@ public unsafe class AngularMotor : Constraint
     /// </exception>
     public Real MaximumForce
     {
-        get => handle.Data.MaxForce;
+        get => Data.MaxForce;
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
-            handle.Data.MaxForce = value;
+            Data.MaxForce = value;
         }
     }
 
     public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)
     {
-        ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -145,7 +141,8 @@ public unsafe class AngularMotor : Constraint
 
     public static void IterateAngularMotor(ref ConstraintData constraint, Real idt)
     {
-        ref AngularMotorData data = ref Unsafe.AsRef<AngularMotorData>(Unsafe.AsPointer(ref constraint));
+        ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
+
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 
