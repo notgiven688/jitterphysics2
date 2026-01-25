@@ -68,6 +68,7 @@ public unsafe class ConeLimit : Constraint
     /// </remarks>
     public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
+        VerifyNotZero();
         ArgumentOutOfRangeException.ThrowIfNegative((Real)limit.From);
         ArgumentOutOfRangeException.ThrowIfLessThan((Real)limit.To, (Real)limit.From);
 

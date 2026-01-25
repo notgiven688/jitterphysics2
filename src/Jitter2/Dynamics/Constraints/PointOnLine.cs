@@ -82,6 +82,7 @@ public unsafe class PointOnLine : Constraint
     /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
+        VerifyNotZero();
         ref PointOnLineData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

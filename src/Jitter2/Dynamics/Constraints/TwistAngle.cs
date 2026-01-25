@@ -67,6 +67,7 @@ public unsafe class TwistAngle : Constraint
     /// </remarks>
     public void Initialize(JVector axis1, JVector axis2, AngularLimit limit)
     {
+        VerifyNotZero();
         ref TwistLimitData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

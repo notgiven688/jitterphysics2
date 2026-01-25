@@ -63,6 +63,7 @@ public unsafe class FixedAngle : Constraint
     /// </remarks>
     public void Initialize()
     {
+        VerifyNotZero();
         ref FixedAngleData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

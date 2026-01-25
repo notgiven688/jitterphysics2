@@ -80,6 +80,7 @@ public unsafe class LinearMotor : Constraint
     /// </remarks>
     public void Initialize(JVector axis1, JVector axis2)
     {
+        VerifyNotZero();
         ref LinearMotorData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

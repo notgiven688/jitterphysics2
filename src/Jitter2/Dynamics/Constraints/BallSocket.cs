@@ -64,6 +64,7 @@ public unsafe class BallSocket : Constraint
     /// </remarks>
     public void Initialize(JVector anchor)
     {
+        VerifyNotZero();
         ref BallSocketData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

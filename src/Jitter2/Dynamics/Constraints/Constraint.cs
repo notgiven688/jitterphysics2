@@ -104,6 +104,23 @@ public abstract class Constraint : IDebugDrawable
     }
 
     /// <summary>
+    /// Verifies that this constraint has been properly created via the World class.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the constraint was instantiated directly instead of through
+    /// <see cref="World.CreateConstraint{T}(RigidBody, RigidBody)"/>.
+    /// </exception>
+    protected void VerifyNotZero()
+    {
+        if (Handle.IsZero)
+        {
+            throw new InvalidOperationException(
+                $"The constraint has not been created by the world. " +
+                $"Use World.CreateConstraint<{GetType().Name}>() to create constraints.");
+        }
+    }
+
+    /// <summary>
     /// Initializes the function pointers for <see cref="ConstraintData.Iterate"/> and
     /// <see cref="ConstraintData.PrepareForIteration"/>. Override this in derived classes.
     /// </summary>

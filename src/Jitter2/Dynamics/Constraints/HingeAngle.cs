@@ -71,6 +71,7 @@ public unsafe class HingeAngle : Constraint
     /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
+        VerifyNotZero();
         ref HingeAngleData data = ref handle.Data;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
