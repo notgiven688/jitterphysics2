@@ -10,16 +10,17 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Defines a filter for modifying or excluding collisions after narrowphase detection.
+/// Provides a hook into the narrowphase collision detection pipeline.
 /// </summary>
 /// <remarks>
-/// Implement this interface to adjust contact points, normals, or penetration depth,
-/// or to discard specific collisions entirely.
+/// Implement this interface to intercept collisions after contact generation.
+/// This can be used to modify contact data, implement custom collision responses,
+/// or filter out specific collisions.
 /// </remarks>
 public interface INarrowPhaseFilter
 {
     /// <summary>
-    /// Filters or modifies collision data after narrowphase detection.
+    /// Called for each detected collision with its contact data.
     /// </summary>
     /// <param name="shapeA">The first shape in the collision.</param>
     /// <param name="shapeB">The second shape in the collision.</param>

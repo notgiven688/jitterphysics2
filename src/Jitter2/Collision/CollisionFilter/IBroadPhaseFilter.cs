@@ -7,20 +7,21 @@
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Defines a filter for excluding shape pairs during broadphase collision detection.
+/// Provides a hook into the broadphase collision detection pipeline.
 /// </summary>
 /// <remarks>
-/// Implement this interface to prevent specific pairs from generating contacts.
-/// See <see cref="World.BroadPhaseFilter"/>.
+/// Implement this interface to intercept shape pairs before narrowphase detection.
+/// This can be used to filter out specific pairs, implement custom collision layers,
+/// or handle collisions for custom proxy types. See <see cref="World.BroadPhaseFilter"/>.
 /// </remarks>
 public interface IBroadPhaseFilter
 {
     /// <summary>
-    /// Determines whether a pair of proxies should be considered for collision.
+    /// Called for each pair of proxies whose bounding boxes overlap.
     /// </summary>
     /// <param name="proxyA">The first proxy.</param>
     /// <param name="proxyB">The second proxy.</param>
-    /// <returns><c>true</c> to allow collision; <c>false</c> to filter it out.</returns>
+    /// <returns><c>true</c> to continue with narrowphase detection; <c>false</c> to skip this pair.</returns>
     [CallbackThread(ThreadContext.Any)]
     bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB);
 }

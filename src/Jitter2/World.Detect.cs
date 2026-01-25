@@ -30,22 +30,23 @@ public sealed partial class World
         $" Register a BroadPhaseFilter to handle and/or filter out these collision types.");
 
     /// <summary>
-    /// Specifies an implementation of the <see cref="INarrowPhaseFilter"/> to be used in collision detection.
+    /// Hook into the narrowphase collision detection pipeline.
     /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
     /// <remarks>
-    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
-    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// Use this to intercept collisions after contact generation, modify contact data,
+    /// or implement custom collision responses. When <see cref="Step(Real, bool)"/> is called
+    /// with <c>multiThread=true</c>, this may be invoked concurrently. Implementations must be thread-safe.
     /// </remarks>
     public INarrowPhaseFilter? NarrowPhaseFilter { get; set; } = new TriangleEdgeCollisionFilter();
 
     /// <summary>
-    /// Specifies an implementation of the <see cref="IBroadPhaseFilter"/> to be used in collision detection.
-    /// The default value is null.
+    /// Hook into the broadphase collision detection pipeline. The default value is null.
     /// </summary>
     /// <remarks>
-    /// When <see cref="Step(Real, bool)"/> is called with <c>multiThread=true</c>, this filter may be
-    /// invoked concurrently from worker threads. Implementations must be thread-safe.
+    /// Use this to intercept shape pairs before narrowphase detection, implement custom collision layers,
+    /// or handle collisions for custom proxy types. When <see cref="Step(Real, bool)"/> is called
+    /// with <c>multiThread=true</c>, this may be invoked concurrently. Implementations must be thread-safe.
     /// </remarks>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
