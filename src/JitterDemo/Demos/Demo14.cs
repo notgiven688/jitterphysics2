@@ -59,9 +59,9 @@ public class EllipsoidShape : RigidBodyShape
         dir.Z *= 0.4f;
         result = dir;
         JVector.NormalizeInPlace(ref result);
-        result.X *= 0.8f;
-        result.Y *= 1.2f;
-        result.Z *= 0.4f;
+        result.X *= 0.8d;
+        result.Y *= 1.2d;
+        result.Z *= 0.4d;
     }
 
     public override void GetCenter(out JVector point)

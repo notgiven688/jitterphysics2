@@ -58,7 +58,7 @@ public readonly struct ChunkKey(int x, int z) : IEquatable<ChunkKey>
 // Temporary struct passed to the Physics Engine (NarrowPhase)
 public readonly struct CollisionVoxel(JVector position) : ISupportMappable
 {
-    private const float HalfSize = 0.5f;
+    private const double HalfSize = 0.5f;
 
     public void SupportMap(in JVector direction, out JVector result)
     {
@@ -96,24 +96,24 @@ public static class Noise
         for (int i = 0; i < 256; i++) p[256 + i] = p[i] = permutation[i];
     }
 
-    public static float Calc(float x, float y)
+    public static double Calc(double x, double y)
     {
-        int X = (int)MathF.Floor(x) & 255;
-        int Y = (int)MathF.Floor(y) & 255;
-        x -= MathF.Floor(x); y -= MathF.Floor(y);
-        float u = Fade(x), v = Fade(y);
+        int X = (int)Math.Floor(x) & 255;
+        int Y = (int)Math.Floor(y) & 255;
+        x -= Math.Floor(x); y -= Math.Floor(y);
+        double u = Fade(x), v = Fade(y);
         int A = p[X] + Y, B = p[X + 1] + Y;
         return Lerp(v, Lerp(u, Grad(p[A], x, y, 0), Grad(p[B], x - 1, y, 0)),
                        Lerp(u, Grad(p[A + 1], x, y - 1, 0), Grad(p[B + 1], x - 1, y - 1, 0)));
     }
 
-    public static float Calc3D(float x, float y, float z)
+    public static double Calc3D(double x, double y, double z)
     {
-        int X = (int)MathF.Floor(x) & 255;
-        int Y = (int)MathF.Floor(y) & 255;
-        int Z = (int)MathF.Floor(z) & 255;
-        x -= MathF.Floor(x); y -= MathF.Floor(y); z -= MathF.Floor(z);
-        float u = Fade(x), v = Fade(y), w = Fade(z);
+        int X = (int)Math.Floor(x) & 255;
+        int Y = (int)Math.Floor(y) & 255;
+        int Z = (int)Math.Floor(z) & 255;
+        x -= Math.Floor(x); y -= Math.Floor(y); z -= Math.Floor(z);
+        double u = Fade(x), v = Fade(y), w = Fade(z);
         int A = p[X] + Y, AA = p[A] + Z, AB = p[A + 1] + Z;
         int B = p[X + 1] + Y, BA = p[B] + Z, BB = p[B + 1] + Z;
 
@@ -123,12 +123,12 @@ public static class Noise
                                Lerp(u, Grad(p[AB + 1], x, y - 1, z - 1), Grad(p[BB + 1], x - 1, y - 1, z - 1))));
     }
 
-    private static float Fade(float t) => t * t * t * (t * (t * 6 - 15) + 10);
-    private static float Lerp(float t, float a, float b) => a + t * (b - a);
-    private static float Grad(int hash, float x, float y, float z)
+    private static double Fade(double t) => t * t * t * (t * (t * 6 - 15) + 10);
+    private static double Lerp(double t, double a, double b) => a + t * (b - a);
+    private static double Grad(int hash, double x, double y, double z)
     {
         int h = hash & 15;
-        float u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
+        double u = h < 8 ? x : y, v = h < 4 ? y : h == 12 || h == 14 ? x : z;
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 }
@@ -141,22 +141,22 @@ public class VoxelWorld : IDynamicTreeProxy, IRayCastable
     // Global minimum height for optimizing loops
     public const int MinHeight = -40;
 
-    public static float GetHeight(int x, int z)
+    public static double GetHeight(int x, int z)
     {
-        float h = 0;
+        double h = 0;
         h += Noise.Calc(x * 0.01f, z * 0.01f) * 30.0f; // Mountains
         h += Noise.Calc(x * 0.05f, z * 0.05f) * 5.0f;  // Hills
         return h;
     }
 
-    public static bool IsSolid(int x, int y, int z, float terrainHeight)
+    public static bool IsSolid(int x, int y, int z, double terrainHeight)
     {
         // 1. Bedrock Layer
         if (y < MinHeight) return true;
 
         // 2. 3D Noise for Caves
         // Returns true if solid, false if air (cave)
-        float density = Noise.Calc3D(x * 0.05f, y * 0.08f, z * 0.05f);
+        double density = Noise.Calc3D(x * 0.05f, y * 0.08f, z * 0.05f);
 
         // 3. Ground Logic
         // If below terrain height, solid UNLESS noise creates a cave (density > 0.3)
@@ -169,11 +169,11 @@ public class VoxelWorld : IDynamicTreeProxy, IRayCastable
 
     // IBroadPhaseProxy implementation
     public JVector Velocity => JVector.Zero;
-    public JBoundingBox WorldBoundingBox => new (new JVector(-1e6f), new JVector(1e6f));
+    public JBoundingBox WorldBoundingBox => new (new JVector(-1e6), new JVector(1e6d));
     public int NodePtr { get; set; }
     public int SetIndex { get; set; } = -1;
 
-    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public bool RayCast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     { normal = JVector.Zero; lambda = 0; return false; }
 }
 
@@ -186,8 +186,8 @@ public class VoxelCollisionFilter : IBroadPhaseFilter
     private readonly VoxelWorld voxelProxy;
     private readonly ulong minIndex;
 
-    private const float NormalThreshold = 0.5f;
-    private const float EdgeThreshold = 0.01f;
+    private const double NormalThreshold = 0.5f;
+    private const double EdgeThreshold = 0.01f;
 
     public VoxelCollisionFilter(World world, VoxelWorld voxelProxy)
     {
@@ -207,14 +207,14 @@ public class VoxelCollisionFilter : IBroadPhaseFilter
 
         // Iterate through all integer coordinates intersecting the body's AABB
         JBoundingBox box = bodyShape.WorldBoundingBox;
-        int minX = (int)MathF.Floor(box.Min.X);
-        int minY = (int)MathF.Floor(box.Min.Y);
-        int minZ = (int)MathF.Floor(box.Min.Z);
-        int maxX = (int)MathF.Ceiling(box.Max.X);
-        int maxY = (int)MathF.Ceiling(box.Max.Y);
-        int maxZ = (int)MathF.Ceiling(box.Max.Z);
+        int minX = (int)Math.Floor(box.Min.X);
+        int minY = (int)Math.Floor(box.Min.Y);
+        int minZ = (int)Math.Floor(box.Min.Z);
+        int maxX = (int)Math.Ceiling(box.Max.X);
+        int maxY = (int)Math.Ceiling(box.Max.Y);
+        int maxZ = (int)Math.Ceiling(box.Max.Z);
 
-        float closeToEdge = 0.5f - EdgeThreshold;
+        double closeToEdge = 0.5f - EdgeThreshold;
 
         for (int x = minX; x < maxX; x++)
         {
@@ -233,7 +233,7 @@ public class VoxelCollisionFilter : IBroadPhaseFilter
                         // NarrowPhase: Box vs Voxel
                         bool hit = NarrowPhase.MprEpa(voxel, rbs,
                             rbs.RigidBody!.Orientation, rbs.RigidBody!.Position,
-                            out JVector pointA, out JVector pointB, out JVector normal, out float penetration);
+                            out JVector pointA, out JVector pointB, out JVector normal, out double penetration);
 
                         if (hit)
                         {
@@ -304,8 +304,8 @@ public class Demo21 : IDemo, ICleanDemo
         Vector3 camDir = cam.Direction;
 
         // Current chunk coordinates
-        int camChunkX = (int)MathF.Floor(camPos.X / ChunkSize);
-        int camChunkZ = (int)MathF.Floor(camPos.Z / ChunkSize);
+        int camChunkX = (int)Math.Floor(camPos.X / ChunkSize);
+        int camChunkZ = (int)Math.Floor(camPos.Z / ChunkSize);
 
         // 1. GENERATION PHASE (Parallel)
         // Identify which chunks are missing and generate them on threads
@@ -394,7 +394,7 @@ public class Demo21 : IDemo, ICleanDemo
         {
             for (int z = startZ; z < endZ; z++)
             {
-                float h = VoxelWorld.GetHeight(x, z);
+                double h = VoxelWorld.GetHeight(x, z);
 
                 // Loop Optimization: Scan from just below bedrock up to surface
                 int maxY = (int)h + 2;

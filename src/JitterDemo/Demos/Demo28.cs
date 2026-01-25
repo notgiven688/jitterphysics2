@@ -29,11 +29,11 @@ public class Demo28: IDemo
 
     private World world = null!;
 
-    private static void CreateRingWall(World world, JVector position, JVector size, int height, float radius)
+    private static void CreateRingWall(World world, JVector position, JVector size, int height, double radius)
     {
-        var circumference = MathF.PI * 2 * radius;
-        var boxCountPerRing = (int)(0.9f * circumference / size.Z);
-        float increment = (2.0f*MathF.PI) / boxCountPerRing;
+        var circumference = Math.PI * 2 * radius;
+        var boxCountPerRing = (int)(0.9d * circumference / size.Z);
+        double increment = (2.0d*Math.PI) / boxCountPerRing;
         for (int ringIndex = 0; ringIndex < height; ringIndex++)
         {
             for (int i = 0; i < boxCountPerRing; i++)
@@ -41,18 +41,18 @@ public class Demo28: IDemo
                 var body = world.CreateRigidBody();
                 body.AddShape(new BoxShape(size));
 
-                var angle = ((ringIndex & 1) == 0 ? i + 0.5f : i) * increment;
-                body.Position = position + new JVector(-MathF.Cos(angle) * radius, (ringIndex + 0.5f) * size.Y, MathF.Sin(angle) * radius);
+                var angle = ((ringIndex & 1) == 0 ? i + 0.5d : i) * increment;
+                body.Position = position + new JVector(-Math.Cos(angle) * radius, (ringIndex + 0.5d) * size.Y, Math.Sin(angle) * radius);
                 body.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitY, angle);
             }
         }
     }
 
-    private static void CreateRingPlatform(World world, JVector position, JVector size, float radius)
+    private static void CreateRingPlatform(World world, JVector position, JVector size, double radius)
     {
-        var innerCircumference = MathF.PI * 2 * (radius - 0.5f * size.Z);
-        var boxCount = (int)(0.95f * innerCircumference / size.Y);
-        float increment = (2.0f*MathF.PI)/ boxCount;
+        var innerCircumference = Math.PI * 2 * (radius - 0.5d * size.Z);
+        var boxCount = (int)(0.95d * innerCircumference / size.Y);
+        double increment = (2.0d*Math.PI)/ boxCount;
         for (int i = 0; i < boxCount; i++)
         {
             var angle = i * increment;
@@ -60,16 +60,16 @@ public class Demo28: IDemo
             var body = world.CreateRigidBody();
             body.AddShape(new BoxShape(size));
 
-            body.Position = position + new JVector(-MathF.Cos(angle) * radius, 0.5f * size.X, MathF.Sin(angle) * radius);
-            body.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitY, angle + MathF.PI * 0.5f)*JQuaternion.CreateFromAxisAngle(JVector.UnitZ, MathF.PI * 0.5f);
+            body.Position = position + new JVector(-Math.Cos(angle) * radius, 0.5d * size.X, Math.Sin(angle) * radius);
+            body.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitY, angle + Math.PI * 0.5d)*JQuaternion.CreateFromAxisAngle(JVector.UnitZ, Math.PI * 0.5d);
         }
     }
 
-    private static JVector CreateRing(World world, JVector position, JVector size, float radius, int heightPerPlatformLevel, int platformLevels)
+    private static JVector CreateRing(World world, JVector position, JVector size, double radius, int heightPerPlatformLevel, int platformLevels)
     {
         for (int platformIndex = 0; platformIndex < platformLevels; ++platformIndex)
         {
-            var wallOffset = 0.5f * size.Z - 0.5f * size.X;
+            var wallOffset = 0.5d * size.Z - 0.5d * size.X;
             CreateRingWall(world, position, size, heightPerPlatformLevel, radius + wallOffset);
             CreateRingWall(world, position, size, heightPerPlatformLevel, radius - wallOffset);
 
@@ -86,13 +86,13 @@ public class Demo28: IDemo
 
         pg.ResetScene();
 
-        var size = new JVector(0.5f, 1, 3);
+        var size = new JVector(0.5d, 1, 3);
         var layerPosition = new JVector();
         const int layerCount = 6;
-        var innerRadius = 15f;
+        var innerRadius = 15d;
         var heightPerPlatform = 3;
         var platformsPerLayer = 1;
-        var ringSpacing = 0.5f;
+        var ringSpacing = 0.5d;
 
         for (int layerIndex = 0; layerIndex < layerCount; ++layerIndex)
         {

@@ -149,11 +149,11 @@ public class Octree
         JVector delta = box.Max - box.Min;
         JVector center = box.Center;
 
-        float max = MathF.Max(MathF.Max(delta.X, delta.Y), delta.Z);
+        double max = Math.Max(Math.Max(delta.X, delta.Y), delta.Z);
         delta = new JVector(max, max, max);
 
-        box.Max = center + delta * 0.5f;
-        box.Min = center - delta * 0.5f;
+        box.Max = center + delta * 0.5d;
+        box.Min = center - delta * 0.5d;
 
         AllocateNode(box);
 
@@ -163,7 +163,7 @@ public class Octree
         }
     }
 
-    public bool Raycast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+    public bool Raycast(in JVector origin, in JVector direction, out JVector normal, out double lambda)
     {
         lambda = float.MaxValue;
         normal = JVector.Zero;
@@ -171,7 +171,7 @@ public class Octree
         return InternalRaycast(origin, direction, 0, ref normal, ref lambda);
     }
 
-    private bool InternalRaycast(in JVector origin, in JVector direction, uint nodeIndex, ref JVector normal, ref float lambda)
+    private bool InternalRaycast(in JVector origin, in JVector direction, uint nodeIndex, ref JVector normal, ref double lambda)
     {
         ref var node = ref nodes[nodeIndex];
 
@@ -243,7 +243,7 @@ public class Octree
     private void GetSubdivison(in JBoundingBox parent, int index, out JBoundingBox result)
     {
         JVector.Subtract(parent.Max, parent.Min, out var dims);
-        JVector.Multiply(dims, 0.5f, out dims);
+        JVector.Multiply(dims, 0.5d, out dims);
 
         JVector offset = new JVector((index & (1 << 0)) >> 0, (index & (1 << 1)) >> 1, (index & (1 << 2)) >> 2);
 
@@ -251,7 +251,7 @@ public class Octree
         JVector.Add(result.Min, parent.Min, out result.Min);
         JVector.Add(result.Min, dims, out result.Max);
 
-        const float margin = 1e-6f; // expand boxes by a tiny amount
+        const double margin = 1e-6d; // expand boxes by a tiny amount
         JVector.Multiply(dims, margin, out var temp);
         JVector.Subtract(result.Min, temp, out result.Min);
         JVector.Add(result.Max, temp, out result.Max);
