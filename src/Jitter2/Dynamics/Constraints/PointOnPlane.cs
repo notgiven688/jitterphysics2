@@ -61,6 +61,7 @@ public unsafe class PointOnPlane : Constraint
         handle = JHandle<ConstraintData>.AsHandle<SliderData>(Handle);
     }
 
+    /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
     {
         Initialize(axis, anchor1, anchor2, LinearLimit.Fixed);

@@ -140,6 +140,13 @@ public static class ShapeHelper
 
     #endregion
 
+    /// <summary>
+    /// Calculates the axis-aligned bounding box of a shape given its orientation and position.
+    /// </summary>
+    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="orientation">The orientation of the shape.</param>
+    /// <param name="position">The position of the shape.</param>
+    /// <param name="box">The resulting bounding box.</param>
     public static void CalculateBoundingBox(ISupportMappable support,
         in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {

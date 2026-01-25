@@ -63,6 +63,7 @@ public unsafe class PointOnLine : Constraint
         handle = JHandle<ConstraintData>.AsHandle<PointOnLineData>(Handle);
     }
 
+    /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
     {
         Initialize(axis, anchor1, anchor2, LinearLimit.Fixed);
