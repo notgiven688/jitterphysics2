@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Struct JMatrix | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Struct JMatrix | Jitter2 ">
+      
+      <meta name="description" content="Represents a 3x3 matrix with components of type .">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_LinearMath_JMatrix.md&amp;value=---%0Auid%3A%20Jitter2.LinearMath.JMatrix%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.LinearMath.JMatrix">
+
+
+
+  <h1 id="Jitter2_LinearMath_JMatrix" data-uid="Jitter2.LinearMath.JMatrix" class="text-break">
+Struct JMatrix  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.LinearMath.html">LinearMath</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Represents a 3x3 matrix with components of type <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public struct JMatrix : IEquatable&lt;JMatrix&gt;</code></pre>
+  </div>
+
+
+
+
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JMatrix__ctor_" data-uid="Jitter2.LinearMath.JMatrix.#ctor*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix__ctor_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+  JMatrix(float, float, float, float, float, float, float, float, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Represents a 3x3 matrix with components of type <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JMatrix(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>m11</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m12</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m13</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m21</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m22</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m23</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m31</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m32</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>m33</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Identity" data-uid="Jitter2.LinearMath.JMatrix.Identity">
+  Identity
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The identity matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly JMatrix Identity</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M11" data-uid="Jitter2.LinearMath.JMatrix.M11">
+  M11
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M11</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M12" data-uid="Jitter2.LinearMath.JMatrix.M12">
+  M12
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M12</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M13" data-uid="Jitter2.LinearMath.JMatrix.M13">
+  M13
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M13</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M21" data-uid="Jitter2.LinearMath.JMatrix.M21">
+  M21
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M21</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M22" data-uid="Jitter2.LinearMath.JMatrix.M22">
+  M22
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M22</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M23" data-uid="Jitter2.LinearMath.JMatrix.M23">
+  M23
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M23</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M31" data-uid="Jitter2.LinearMath.JMatrix.M31">
+  M31
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M31</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M32" data-uid="Jitter2.LinearMath.JMatrix.M32">
+  M32
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M32</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_M33" data-uid="Jitter2.LinearMath.JMatrix.M33">
+  M33
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float M33</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Zero" data-uid="Jitter2.LinearMath.JMatrix.Zero">
+  Zero
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The zero matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly JMatrix Zero</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Absolute_" data-uid="Jitter2.LinearMath.JMatrix.Absolute*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Absolute_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Absolute(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Absolute(in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L494"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a matrix where each component is the absolute value of the input matrix component.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Absolute(in JMatrix matrix, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The input matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The absolute matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Add_" data-uid="Jitter2.LinearMath.JMatrix.Add*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Add_Jitter2_LinearMath_JMatrix_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.Add(Jitter2.LinearMath.JMatrix,Jitter2.LinearMath.JMatrix)">
+  Add(JMatrix, JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix Add(JMatrix matrix1, JMatrix matrix2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The sum of the two matrices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Add_" data-uid="Jitter2.LinearMath.JMatrix.Add*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Add_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Add(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Add(in JMatrix, in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L356"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two matrices component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Add(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The sum of the two matrices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateCrossProduct_" data-uid="Jitter2.LinearMath.JMatrix.CreateCrossProduct*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateCrossProduct_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JMatrix.CreateCrossProduct(Jitter2.LinearMath.JVector@)">
+  CreateCrossProduct(in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L557"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a skew-symmetric matrix from a vector, representing the cross product operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateCrossProduct(in JVector vec)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>vec</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The vector.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The skew-symmetric matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JMatrix_CreateCrossProduct_Jitter2_LinearMath_JVector___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Result is equivalent to:</p>
+<pre><code class="lang-csharp">[  0  -z   y ]
+[  z   0  -x ]
+[ -y   x   0 ]</code></pre>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateFromQuaternion_" data-uid="Jitter2.LinearMath.JMatrix.CreateFromQuaternion*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateFromQuaternion_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JMatrix.CreateFromQuaternion(Jitter2.LinearMath.JQuaternion)">
+  CreateFromQuaternion(JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L482"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix from a quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateFromQuaternion(JQuaternion quaternion)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion representing the rotation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateFromQuaternion_" data-uid="Jitter2.LinearMath.JMatrix.CreateFromQuaternion*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateFromQuaternion_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.CreateFromQuaternion(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JMatrix@)">
+  CreateFromQuaternion(in JQuaternion, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L513"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix from a quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion representing the rotation.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateRotationMatrix_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationMatrix*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateRotationMatrix_Jitter2_LinearMath_JVector_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationMatrix(Jitter2.LinearMath.JVector,System.Single)">
+  CreateRotationMatrix(JVector, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix from an axis and an angle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateRotationMatrix(JVector axis, float angle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The axis to rotate around.</p>
+</dd>
+    <dt><code>angle</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateRotationX_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationX*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateRotationX_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationX(System.Single)">
+  CreateRotationX(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L228"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix around the X-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateRotationX(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateRotationY_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationY*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateRotationY_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationY(System.Single)">
+  CreateRotationY(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L251"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix around the Y-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateRotationY(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateRotationZ_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationZ*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateRotationZ_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.CreateRotationZ(System.Single)">
+  CreateRotationZ(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L274"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a rotation matrix around the Z-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateRotationZ(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateScale_" data-uid="Jitter2.LinearMath.JMatrix.CreateScale*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateScale_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JMatrix.CreateScale(Jitter2.LinearMath.JVector@)">
+  CreateScale(in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L297"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a scaling matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateScale(in JVector scale)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>scale</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The scaling vector.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The scaling matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_CreateScale_" data-uid="Jitter2.LinearMath.JMatrix.CreateScale*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_CreateScale_System_Single_System_Single_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.CreateScale(System.Single,System.Single,System.Single)">
+  CreateScale(float, float, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a scaling matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix CreateScale(float x, float y, float z)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Scaling factor on the X-axis.</p>
+</dd>
+    <dt><code>y</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Scaling factor on the Y-axis.</p>
+</dd>
+    <dt><code>z</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Scaling factor on the Z-axis.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The scaling matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Determinant_" data-uid="Jitter2.LinearMath.JMatrix.Determinant*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Determinant" data-uid="Jitter2.LinearMath.JMatrix.Determinant">
+  Determinant()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L394"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the determinant of the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly float Determinant()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The determinant.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Equals_" data-uid="Jitter2.LinearMath.JMatrix.Equals*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Equals_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.Equals(Jitter2.LinearMath.JMatrix)">
+  Equals(JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L646"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly bool Equals(JMatrix other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>An object to compare with this object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Equals_" data-uid="Jitter2.LinearMath.JMatrix.Equals*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Equals_System_Object_" data-uid="Jitter2.LinearMath.JMatrix.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L662"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_FromColumns_" data-uid="Jitter2.LinearMath.JMatrix.FromColumns*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_FromColumns_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JMatrix.FromColumns(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  FromColumns(in JVector, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a matrix from three column vectors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix FromColumns(in JVector col1, in JVector col2, in JVector col3)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>col1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The first column vector.</p>
+</dd>
+    <dt><code>col2</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The second column vector.</p>
+</dd>
+    <dt><code>col3</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The third column vector.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_GetColumn_" data-uid="Jitter2.LinearMath.JMatrix.GetColumn*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_GetColumn_System_Int32_" data-uid="Jitter2.LinearMath.JMatrix.GetColumn(System.Int32)">
+  GetColumn(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a column vector by index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector GetColumn(int index)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index of the column (0, 1, or 2).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_GetHashCode_" data-uid="Jitter2.LinearMath.JMatrix.GetHashCode*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_GetHashCode" data-uid="Jitter2.LinearMath.JMatrix.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L667"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A 32-bit signed integer that is the hash code for this instance.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Inverse_" data-uid="Jitter2.LinearMath.JMatrix.Inverse*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Inverse_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Inverse(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Inverse(in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L407"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the inverse of the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Inverse(in JMatrix matrix, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The matrix to invert.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The inverted matrix, or a zero matrix if the determinant is zero.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the matrix can be inverted; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Multiply_Jitter2_LinearMath_JMatrix_System_Single_" data-uid="Jitter2.LinearMath.JMatrix.Multiply(Jitter2.LinearMath.JMatrix,System.Single)">
+  Multiply(JMatrix, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L449"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies a matrix by a scalar factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix Multiply(JMatrix matrix1, float scaleFactor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The matrix.</p>
+</dd>
+    <dt><code>scaleFactor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The scalar factor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The scaled matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Multiply_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Multiply(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Multiply(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix Multiply(in JMatrix matrix1, in JMatrix matrix2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The product of the two matrices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Multiply_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Multiply(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Multiply(in JMatrix, in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Multiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The product of the two matrices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Multiply_Jitter2_LinearMath_JMatrix__System_Single_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Multiply(Jitter2.LinearMath.JMatrix@,System.Single,Jitter2.LinearMath.JMatrix@)">
+  Multiply(in JMatrix, float, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L462"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies a matrix by a scalar factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Multiply(in JMatrix matrix1, float scaleFactor, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The matrix.</p>
+</dd>
+    <dt><code>scaleFactor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The scalar factor.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The scaled matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_MultiplyTransposed_" data-uid="Jitter2.LinearMath.JMatrix.MultiplyTransposed*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_MultiplyTransposed_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.MultiplyTransposed(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  MultiplyTransposed(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>matrix1 * transpose(matrix2)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix (which will be transposed during multiplication).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The result of the multiplication.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_MultiplyTransposed_" data-uid="Jitter2.LinearMath.JMatrix.MultiplyTransposed*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_MultiplyTransposed_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.MultiplyTransposed(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  MultiplyTransposed(in JMatrix, in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>matrix1 * matrix2ᵀ</code> (multiplying matrix1 by the transpose of matrix2).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void MultiplyTransposed(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix (transposed during operation).</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The result of the multiplication.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Subtract_" data-uid="Jitter2.LinearMath.JMatrix.Subtract*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Subtract_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Subtract(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  Subtract(in JMatrix, in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L376"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Subtracts the second matrix from the first component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Subtract(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix.</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The difference of the two matrices.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_ToString_" data-uid="Jitter2.LinearMath.JMatrix.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_ToString" data-uid="Jitter2.LinearMath.JMatrix.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L655"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the fully qualified type name of this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The fully qualified type name.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Trace_" data-uid="Jitter2.LinearMath.JMatrix.Trace*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Trace" data-uid="Jitter2.LinearMath.JMatrix.Trace">
+  Trace()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L600"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the trace (sum of diagonal elements) of the matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly float Trace()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The trace of the matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_Transpose_" data-uid="Jitter2.LinearMath.JMatrix.Transpose*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_Transpose_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.Transpose(Jitter2.LinearMath.JMatrix@)">
+  Transpose(in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L537"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transposes a matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix Transpose(in JMatrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The matrix to transpose.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The transposed matrix.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_TransposedMultiply_" data-uid="Jitter2.LinearMath.JMatrix.TransposedMultiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_TransposedMultiply_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.TransposedMultiply(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  TransposedMultiply(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>transpose(matrix1) * matrix2</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix (which will be transposed during multiplication).</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The result of the multiplication.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_TransposedMultiply_" data-uid="Jitter2.LinearMath.JMatrix.TransposedMultiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_TransposedMultiply_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.TransposedMultiply(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  TransposedMultiply(in JMatrix, in JMatrix, out JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>matrix1ᵀ * matrix2</code> (multiplying the transpose of matrix1 by matrix2).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void TransposedMultiply(in JMatrix matrix1, in JMatrix matrix2, out JMatrix result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The first matrix (transposed during operation).</p>
+</dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The second matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Output: The result of the multiplication.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_UnsafeGet_" data-uid="Jitter2.LinearMath.JMatrix.UnsafeGet*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_UnsafeGet_System_Int32_" data-uid="Jitter2.LinearMath.JMatrix.UnsafeGet(System.Int32)">
+  UnsafeGet(int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets a reference to a column vector by index using unsafe pointer arithmetic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ref JVector UnsafeGet(int index)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The zero-based index of the column (0, 1, or 2).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Addition_" data-uid="Jitter2.LinearMath.JMatrix.op_Addition*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Addition_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.op_Addition(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  operator +(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L629"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix operator +(in JMatrix value1, in JMatrix value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Equality_" data-uid="Jitter2.LinearMath.JMatrix.op_Equality*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Equality_Jitter2_LinearMath_JMatrix_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.op_Equality(Jitter2.LinearMath.JMatrix,Jitter2.LinearMath.JMatrix)">
+  operator ==(JMatrix, JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L676"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(JMatrix left, JMatrix right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Inequality_" data-uid="Jitter2.LinearMath.JMatrix.op_Inequality*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Inequality_Jitter2_LinearMath_JMatrix_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.op_Inequality(Jitter2.LinearMath.JMatrix,Jitter2.LinearMath.JMatrix)">
+  operator !=(JMatrix, JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L681"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(JMatrix left, JMatrix right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Multiply_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  operator *(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L580"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two matrices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix operator *(in JMatrix matrix1, in JMatrix matrix2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>matrix2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Multiply_Jitter2_LinearMath_JMatrix__System_Single_" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply(Jitter2.LinearMath.JMatrix@,System.Single)">
+  operator *(in JMatrix, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L619"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Scales a matrix by a factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix operator *(in JMatrix matrix, float factor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>factor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Multiply_" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Multiply_System_Single_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.op_Multiply(System.Single,Jitter2.LinearMath.JMatrix@)">
+  operator *(float, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L609"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Scales a matrix by a factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix operator *(float factor, in JMatrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>factor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_op_Subtraction_" data-uid="Jitter2.LinearMath.JMatrix.op_Subtraction*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_op_Subtraction_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JMatrix.op_Subtraction(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JMatrix@)">
+  operator -(in JMatrix, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L639"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Subtracts the second matrix from the first.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix operator -(in JMatrix value1, in JMatrix value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L16" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

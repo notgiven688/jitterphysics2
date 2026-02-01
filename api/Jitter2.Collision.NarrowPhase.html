@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class NarrowPhase | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class NarrowPhase | Jitter2 ">
+      
+      <meta name="description" content="Provides collision detection algorithms for convex shapes defined by support functions.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_NarrowPhase.md&amp;value=---%0Auid%3A%20Jitter2.Collision.NarrowPhase%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Collision.NarrowPhase">
+
+
+
+  <h1 id="Jitter2_Collision_NarrowPhase" data-uid="Jitter2.Collision.NarrowPhase" class="text-break">
+Class NarrowPhase  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Collision.html">Collision</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Provides collision detection algorithms for convex shapes defined by support functions.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class NarrowPhase</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">NarrowPhase</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Jitter2_Collision_NarrowPhase_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Implements GJK (Gilbert-Johnson-Keerthi) for distance queries, MPR (Minkowski Portal Refinement)
+for fast overlap detection, and EPA (Expanding Polytope Algorithm) for penetration depth.
+</p>
+<p>
+All methods are thread-safe when used with thread-local solver state.
+</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Collision_" data-uid="Jitter2.Collision.NarrowPhase.Collision*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Collision&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L667"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
+cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Collision&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape A in world space.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape A in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>For the overlapping case: the deepest point on shape A inside shape B; for the separated case: the
+closest point on shape A to shape B.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>For the overlapping case: the deepest point on shape B inside shape A; for the separated case: the
+closest point on shape B to shape A.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
+(defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
+the separated case.</p>
+</dd>
+    <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The penetration depth.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
+failure, collision information reverts to the type's default values.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Collision_" data-uid="Jitter2.Collision.NarrowPhase.Collision*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Collision&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L625"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
+cases. It assumes that support shape A is at position zero and not rotated.
+Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Collision&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>For the overlapping case: the deepest point on shape A inside shape B; for the separated case: the
+closest point on shape A to shape B.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>For the overlapping case: the deepest point on shape B inside shape A; for the separated case: the
+closest point on shape B to shape A.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
+(defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
+the separated case.</p>
+</dd>
+    <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The penetration depth.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
+failure, collision information reverts to the type's default values.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Distance_" data-uid="Jitter2.Collision.NarrowPhase.Distance*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Distance&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L771"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Provides the distance and closest points for non-overlapping shapes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Distance&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape A in world space.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape A in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on shape A. Not well-defined for the overlapping case.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on shape B. Not well-defined for the overlapping case.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>distance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The distance between the separating shapes. Zero if shapes overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the shapes do not overlap and distance information
+can be provided.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Distance_" data-uid="Jitter2.Collision.NarrowPhase.Distance*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Distance&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L707"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Provides the distance and closest points for non-overlapping shapes. It
+assumes that support shape A is located at position zero and not rotated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Distance&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on shape A. Not well-defined for the overlapping case.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on shape B. Not well-defined for the overlapping case.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>distance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The distance between the separating shapes. Zero if shapes overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the shapes do not overlap and distance information
+can be provided.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_MprEpa_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
+  MprEpa&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L890"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
+Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
+Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound exceeds
+a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape A in world space.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape A in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The deepest point on shape A that is inside shape B.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The deepest point on shape B that is inside shape A.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
+distance (determined by the penetration depth) to avoid overlap.</p>
+</dd>
+    <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The penetration depth.</p>
+</dd>
+    <dt><code>epaThreshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The threshold parameter.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the shapes overlap (collide), and false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_MprEpa_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
+  MprEpa&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L939"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
+It assumes that support shape A is at position zero and not rotated.
+Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
+Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound
+exceeds a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The deepest point on shape A that is inside shape B.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The deepest point on shape B that is inside shape A.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
+if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
+distance (determined by the penetration depth) to avoid overlap.</p>
+</dd>
+    <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The penetration depth.</p>
+</dd>
+    <dt><code>epaThreshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The threshold parameter.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the shapes overlap (collide), and false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Overlap_" data-uid="Jitter2.Collision.NarrowPhase.Overlap*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  Overlap&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L847"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs an overlap test.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape A in world space.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape A in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true of the shapes overlap, and false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Overlap_" data-uid="Jitter2.Collision.NarrowPhase.Overlap*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)">
+  Overlap&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L806"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs an overlap test. It assumes that support shape A is located
+at position zero and not rotated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd><p>The support function of shape B.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of shape B in world space.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true of the shapes overlap, and false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_PointTest_" data-uid="Jitter2.Collision.NarrowPhase.PointTest*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  PointTest&lt;TA&gt;(in TA, in JMatrix, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L481"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Check if a point is inside a shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;TA&gt;(in TA support, in JMatrix orientation, in JVector position, in JVector point) where TA : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dd><p>Support map representing the shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>Orientation of the shape.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Position of the shape.</p>
+</dd>
+    <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Point to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the point is contained within the shape, false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_PointTest_" data-uid="Jitter2.Collision.NarrowPhase.PointTest*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JVector@)">
+  PointTest&lt;TA&gt;(in TA, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L430"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Check if a point is inside a shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;TA&gt;(in TA support, in JVector point) where TA : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dd><p>Support map representing the shape.</p>
+</dd>
+    <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Point to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the point is contained within the shape, false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_RayCast_" data-uid="Jitter2.Collision.NarrowPhase.RayCast*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
+  RayCast&lt;TA&gt;(in TA, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L504"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs a ray cast against a shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;TA&gt;(in TA support, in JQuaternion orientation, in JVector position, in JVector origin, in JVector direction, out float lambda, out JVector normal) where TA : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of the shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The orientation of the shape in world space.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position of the shape in world space.</p>
+</dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The origin of the ray.</p>
+</dd>
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction of the ray; normalization is not necessary.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.
+Zero if the origin is inside the shape, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> is the ray does not hit.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
+the ray origin overlaps with the shape.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the ray intersects with the shape; otherwise, false.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_RayCast_" data-uid="Jitter2.Collision.NarrowPhase.RayCast*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
+  RayCast&lt;TA&gt;(in TA, in JVector, in JVector, out float, out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L534"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs a ray cast against a shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;TA&gt;(in TA support, in JVector origin, in JVector direction, out float lambda, out JVector normal) where TA : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dd><p>The support function of the shape.</p>
+</dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The origin of the ray.</p>
+</dd>
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction of the ray; normalization is not necessary.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.
+Zero if the origin is inside the shape, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> is the ray does not hit.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
+the origin overlaps with the shape.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Returns true if the ray intersects with the shape; otherwise, false.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1069"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the time of impact and the collision points in world space for two shapes with velocities
+sweepA and sweepB.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd></dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd></dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shapeA in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shapeB in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Zero if the shapes already overlap or do not hit.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> if no hit is detected, zero if shapes overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the shapes will hit or already overlap, false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L968"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the time of impact (TOI) and the collision points in world space for two shapes with linear
+velocities <code class="paramref">sweepA</code> and <code class="paramref">sweepB</code> and angular velocities
+<code class="paramref">sweepAngularA</code> and <code class="paramref">sweepAngularB</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, in JVector sweepAngularA, in JVector sweepAngularB, in float extentA, in float extentB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd></dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd></dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepAngularA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepAngularB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>extentA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>extentB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shape A in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shape B in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Normalized collision normal in world space at time of impact (points from A to B). Zero if the shapes already
+overlap or do not hit.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> if no hit is detected. Zero if shapes overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the shapes hit or already overlap, false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Uses conservative advancement for continuous collision detection. May fail to converge to the correct TOI
+and collision points in certain edge cases due to limitations in linear motion approximation and
+distance gradient estimation.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
+direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dd></dd>
+    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dd></dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>sweepB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shapeA in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shapeB in world space at t = 0, where collision will occur.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Zero if the shapes already overlap or do not hit.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> if no hit is detected, zero if shapes overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if the shapes hit or already overlap, false otherwise.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TA</code></dt>
+    <dd></dd>
+    <dt><code>TB</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L27" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

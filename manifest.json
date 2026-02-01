@@ -241,6 +241,2007 @@
       "version": ""
     },
     {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.CallbackThreadAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.CallbackThreadAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.CallbackThreadAttribute",
+      "Summary": "<p sourcefile=\"api/Jitter2.CallbackThreadAttribute.yml\" sourcestartlinenumber=\"1\">Indicates the thread context in which a callback or event is expected to be invoked.\nThis attribute is primarily informational and used for documentation purposes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.CollisionManifold.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.CollisionManifold.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.CollisionManifold",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.CollisionManifold.yml\" sourcestartlinenumber=\"1\">Represents a contact manifold between two convex shapes, storing up to six contact points.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.ConvexPolytope.Triangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.ConvexPolytope.Triangle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.ConvexPolytope.Triangle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.ConvexPolytope.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.ConvexPolytope.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.ConvexPolytope",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ConvexPolytope.yml\" sourcestartlinenumber=\"1\">Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA)\nfor computing penetration depth and contact information.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.Node.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.Node.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.Node",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.Node.yml\" sourcestartlinenumber=\"1\">Represents a node in the AABB tree.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.RayCastFilterPost.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.RayCastFilterPost.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.RayCastFilterPost",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.RayCastFilterPost.yml\" sourcestartlinenumber=\"1\">Delegate for filtering ray cast results after the shape intersection test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.RayCastFilterPre.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.RayCastFilterPre.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.RayCastFilterPre",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.RayCastFilterPre.yml\" sourcestartlinenumber=\"1\">Delegate for filtering ray cast candidates before the shape intersection test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.RayCastResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.RayCastResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.RayCastResult",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.RayCastResult.yml\" sourcestartlinenumber=\"1\">Represents the result of a ray cast against the dynamic tree.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.Timings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.Timings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.Timings",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.Timings.yml\" sourcestartlinenumber=\"1\">Profiling buckets for <xref href=\"Jitter2.Collision.DynamicTree.DebugTimings\" data-throw-if-not-resolved=\"false\"></xref>, representing stages of <xref href=\"Jitter2.Collision.DynamicTree.Update(System.Boolean%2cSystem.Single)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.yml\" sourcestartlinenumber=\"1\">Represents a dynamic AABB tree for broadphase collision detection.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IBroadPhaseFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IBroadPhaseFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IBroadPhaseFilter",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IBroadPhaseFilter.yml\" sourcestartlinenumber=\"1\">Provides a hook into the broadphase collision detection pipeline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IDynamicTreeProxy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IDynamicTreeProxy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IDynamicTreeProxy",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IDynamicTreeProxy.yml\" sourcestartlinenumber=\"1\">Represents an entity that can be tracked by the <xref href=\"Jitter2.Collision.DynamicTree\" data-throw-if-not-resolved=\"false\"></xref> for broadphase collision detection.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.INarrowPhaseFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.INarrowPhaseFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.INarrowPhaseFilter",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.INarrowPhaseFilter.yml\" sourcestartlinenumber=\"1\">Provides a hook into the narrowphase collision detection pipeline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IRayCastable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IRayCastable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IRayCastable",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IRayCastable.yml\" sourcestartlinenumber=\"1\">Represents an entity that can be intersected by a ray.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.ISupportMappable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.ISupportMappable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.ISupportMappable",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ISupportMappable.yml\" sourcestartlinenumber=\"1\">Defines an interface for a generic convex shape characterized by its support function.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IUpdatableBoundingBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IUpdatableBoundingBox.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IUpdatableBoundingBox",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IUpdatableBoundingBox.yml\" sourcestartlinenumber=\"1\">Represents an entity whose bounding box can be recomputed.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Island.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Island.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Island",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Island.yml\" sourcestartlinenumber=\"1\">Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.MinkowskiDifference.Vertex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.MinkowskiDifference.Vertex.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.MinkowskiDifference.Vertex",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.MinkowskiDifference.Vertex.yml\" sourcestartlinenumber=\"1\">Represents a vertex on the Minkowski difference of two shapes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.MinkowskiDifference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.MinkowskiDifference.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.MinkowskiDifference",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.MinkowskiDifference.yml\" sourcestartlinenumber=\"1\">Provides methods for computing points on the Minkowski difference of two convex shapes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.NarrowPhase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.NarrowPhase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.NarrowPhase",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.NarrowPhase.yml\" sourcestartlinenumber=\"1\">Provides collision detection algorithms for convex shapes defined by support functions.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.BoxShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.BoxShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.BoxShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.BoxShape.yml\" sourcestartlinenumber=\"1\">Represents a three-dimensional box shape.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.CapsuleShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.CapsuleShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.CapsuleShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.CapsuleShape.yml\" sourcestartlinenumber=\"1\">Represents a capsule shape defined by a radius and the length of its cylindrical section.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.ConeShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.ConeShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.ConeShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.ConeShape.yml\" sourcestartlinenumber=\"1\">Represents a cone shape defined by a base radius and height.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.ConvexHullShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.ConvexHullShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.ConvexHullShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.ConvexHullShape.yml\" sourcestartlinenumber=\"1\">Represents a convex hull shape defined by a set of triangles.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.CylinderShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.CylinderShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.CylinderShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.CylinderShape.yml\" sourcestartlinenumber=\"1\">Represents a cylinder shape defined by a height and radius.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.ICloneableShape-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.ICloneableShape-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.ICloneableShape<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.ICloneableShape-1.yml\" sourcestartlinenumber=\"1\">Defines a method to create a new instance of a shape for use with another rigid body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.PointCloudShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.PointCloudShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.PointCloudShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.PointCloudShape.yml\" sourcestartlinenumber=\"1\">Represents a convex hull shape defined by a point cloud. Unlike <xref href=\"Jitter2.Collision.Shapes.ConvexHullShape\" data-throw-if-not-resolved=\"false\"></xref>,\nit is not necessary for the points to lie on the convex hull. For performance optimization,\nthis shape should ideally be used for a small number of points (~300).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.RigidBodyShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.RigidBodyShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.RigidBodyShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.RigidBodyShape.yml\" sourcestartlinenumber=\"1\">Represents the abstract base class for shapes that can be attached to a rigid body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.Shape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.Shape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.Shape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.Shape.yml\" sourcestartlinenumber=\"1\">The main entity of the collision system. Implements <xref href=\"Jitter2.Collision.ISupportMappable\" data-throw-if-not-resolved=\"false\"></xref> for\nnarrow-phase and <xref href=\"Jitter2.Collision.IDynamicTreeProxy\" data-throw-if-not-resolved=\"false\"></xref> for broad-phase collision detection.\nThe shape itself does not have a position or orientation. Shapes can be associated with\ninstances of <xref href=\"Jitter2.Dynamics.RigidBody\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.ShapeHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.ShapeHelper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.ShapeHelper",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.ShapeHelper.yml\" sourcestartlinenumber=\"1\">Provides helper methods for calculating the properties of implicitly defined shapes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.SphereShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.SphereShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.SphereShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.SphereShape.yml\" sourcestartlinenumber=\"1\">Represents a sphere.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.TransformedShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.TransformedShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.TransformedShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.TransformedShape.yml\" sourcestartlinenumber=\"1\">Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.Triangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.Triangle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.TriangleMesh.Triangle",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.TriangleMesh.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.TriangleMesh",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.TriangleMesh.yml\" sourcestartlinenumber=\"1\">Represents a triangle mesh defined by a collection of vertices and triangle indices.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.TriangleShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.TriangleShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.TriangleShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.TriangleShape.yml\" sourcestartlinenumber=\"1\">Represents a triangle shape defined by a reference to a <xref href=\"Jitter2.Collision.Shapes.TriangleMesh\" data-throw-if-not-resolved=\"false\"></xref> and an index.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.VertexSupportMap.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.VertexSupportMap.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes.VertexSupportMap",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.VertexSupportMap.yml\" sourcestartlinenumber=\"1\">Implements a SIMD accelerated support map for a set of vertices.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.Shapes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.Shapes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.Shapes",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SimplexSolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SimplexSolver.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SimplexSolver",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SimplexSolver.yml\" sourcestartlinenumber=\"1\">Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver for finding the closest point\nto the origin on a simplex (point, line segment, triangle, or tetrahedron).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SimplexSolverAB.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SimplexSolverAB.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SimplexSolverAB",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SimplexSolverAB.yml\" sourcestartlinenumber=\"1\">Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving\nthe closest points on the original shapes (A and B spaces).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.TreeBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.TreeBox.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.TreeBox",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TreeBox.yml\" sourcestartlinenumber=\"1\">Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in\nacceleration structures such as <xref href=\"Jitter2.Collision.DynamicTree\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.TriangleEdgeCollisionFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.TriangleEdgeCollisionFilter",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Filters internal edge collisions for triangle mesh geometry.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.IPartitionedSetIndex.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.IPartitionedSetIndex.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.IPartitionedSetIndex",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.IPartitionedSetIndex.yml\" sourcestartlinenumber=\"1\">Defines an index property used by <xref href=\"Jitter2.DataStructures.PartitionedSet%601\" data-throw-if-not-resolved=\"false\"></xref> to track element positions.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.PartitionedSet-1.Enumerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.PartitionedSet-1.Enumerator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.PartitionedSet<T>.Enumerator",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.PartitionedSet-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.PartitionedSet-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.PartitionedSet<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.PartitionedSet-1.yml\" sourcestartlinenumber=\"1\">Represents a collection of objects that can be partitioned into active and inactive subsets.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.ReadOnlyHashSet-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.ReadOnlyHashSet-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.ReadOnlyHashSet<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.ReadOnlyHashSet-1.yml\" sourcestartlinenumber=\"1\">A read-only wrapper around <xref href=\"System.Collections.Generic.HashSet%601\" data-throw-if-not-resolved=\"false\"></xref> that prevents modification while allowing enumeration and lookup.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.ReadOnlyList-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.ReadOnlyList-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.ReadOnlyList<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.ReadOnlyList-1.yml\" sourcestartlinenumber=\"1\">A read-only wrapper around <xref href=\"System.Collections.Generic.List%601\" data-throw-if-not-resolved=\"false\"></xref> that prevents modification while allowing indexed access and enumeration.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.ReadOnlyPartitionedSet-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.ReadOnlyPartitionedSet-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.ReadOnlyPartitionedSet<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.ReadOnlyPartitionedSet-1.yml\" sourcestartlinenumber=\"1\">A read-only wrapper around <xref href=\"Jitter2.DataStructures.PartitionedSet%601\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Arbiter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Arbiter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Arbiter",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Arbiter.yml\" sourcestartlinenumber=\"1\">Manages contact information between two different rigid bodies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ArbiterKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ArbiterKey.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ArbiterKey",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ArbiterKey.yml\" sourcestartlinenumber=\"1\">Represents an ordered pair of identifiers used to look up an <xref href=\"Jitter2.Dynamics.Arbiter\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.AngularLimit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.AngularLimit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.AngularLimit",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.AngularLimit.yml\" sourcestartlinenumber=\"1\">Represents an angular limit defined by a minimum and maximum angle.\nUsed by constraints to restrict rotational motion within a specified range.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.AngularMotor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.AngularMotor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.AngularMotor",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.AngularMotor.yml\" sourcestartlinenumber=\"1\">Represents a motor that drives relative angular velocity between two axes fixed\nin the reference frames of their respective bodies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.BallSocket.BallSocketData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.BallSocket.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.BallSocket.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.BallSocket",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.BallSocket.yml\" sourcestartlinenumber=\"1\">Implements a ball-and-socket joint that anchors a point on each body together,\nremoving three translational degrees of freedom.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.ConeLimit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.ConeLimit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.ConeLimit",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.ConeLimit.yml\" sourcestartlinenumber=\"1\">Limits the relative tilt between two bodies, removing one angular degree of freedom when active.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.Constraint-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.Constraint-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.Constraint<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.Constraint-1.yml\" sourcestartlinenumber=\"1\">Generic base class for constraints that store custom data of type <code class=\"typeparamref\">T</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.Constraint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.Constraint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.Constraint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.Constraint.yml\" sourcestartlinenumber=\"1\">Base class for constraints that connect two rigid bodies and restrict their relative motion.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.ConstraintData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.ConstraintData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.ConstraintData",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.ConstraintData.yml\" sourcestartlinenumber=\"1\">Low-level data for constraints, stored in unmanaged memory.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.DistanceLimit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.DistanceLimit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.DistanceLimit",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.DistanceLimit.yml\" sourcestartlinenumber=\"1\">Constrains the distance between a fixed point in the reference frame of one body and a fixed\npoint in the reference frame of another body. This constraint removes one translational degree\nof freedom. For a distance of zero, use the <xref href=\"Jitter2.Dynamics.Constraints.BallSocket\" data-throw-if-not-resolved=\"false\"></xref> constraint.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.FixedAngle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.FixedAngle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.FixedAngle",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.FixedAngle.yml\" sourcestartlinenumber=\"1\">Constrains the relative orientation between two bodies, eliminating three degrees of rotational freedom.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.HingeAngle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.HingeAngle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.HingeAngle",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.HingeAngle.yml\" sourcestartlinenumber=\"1\">Constrains two bodies to rotate relative to each other around a single axis,\nremoving two angular degrees of freedom. Optionally enforces angular limits.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.HingeJoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.HingeJoint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.HingeJoint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.HingeJoint.yml\" sourcestartlinenumber=\"1\">Constructs a hinge joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref>, a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>, and an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.Joint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.Joint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.Joint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.Joint.yml\" sourcestartlinenumber=\"1\">Base class for joints, which are composite constraints built from multiple <xref href=\"Jitter2.Dynamics.Constraints.Constraint\" data-throw-if-not-resolved=\"false\"></xref> instances.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearLimit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearLimit.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearLimit",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearLimit.yml\" sourcestartlinenumber=\"1\">Represents a linear limit defined by a minimum and maximum distance.\nUsed by constraints to restrict translational motion within a specified range.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearMotor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearMotor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearMotor",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearMotor.yml\" sourcestartlinenumber=\"1\">A motor constraint that drives relative translational movement along two axes fixed\nin the reference frames of the bodies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.PointOnLine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.PointOnLine.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.PointOnLine",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PointOnLine.yml\" sourcestartlinenumber=\"1\">Constrains a fixed point in the reference frame of one body to a line that is fixed in\nthe reference frame of another body. This constraint removes one degree of translational\nfreedom; two if the limit is enforced.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.PointOnPlane.SliderData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.PointOnPlane.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.PointOnPlane.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.PointOnPlane",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PointOnPlane.yml\" sourcestartlinenumber=\"1\">Constrains a fixed point in the reference frame of one body to a plane that is fixed in\nthe reference frame of another body. This constraint removes one degree of translational\nfreedom if the limit is enforced.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.PrismaticJoint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.PrismaticJoint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml\" sourcestartlinenumber=\"1\">Constructs a prismatic joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.PointOnLine\" data-throw-if-not-resolved=\"false\"></xref> constraint in conjunction with\n<xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref>, and <xref href=\"Jitter2.Dynamics.Constraints.LinearMotor\" data-throw-if-not-resolved=\"false\"></xref> constraints.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.SmallConstraintData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.SmallConstraintData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.SmallConstraintData",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.SmallConstraintData.yml\" sourcestartlinenumber=\"1\">Low-level data for constraints that fit within <xref href=\"Jitter2.Precision.ConstraintSizeSmall\" data-throw-if-not-resolved=\"false\"></xref> bytes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.TwistAngle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.TwistAngle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.TwistAngle",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.TwistAngle.yml\" sourcestartlinenumber=\"1\">Constrains the relative twist of two bodies. This constraint removes one angular\ndegree of freedom when the limit is enforced.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.UniversalJoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.UniversalJoint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.UniversalJoint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.UniversalJoint.yml\" sourcestartlinenumber=\"1\">Creates a universal joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.TwistAngle\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>, and an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref>\nconstraint.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.WeldJoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.WeldJoint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.WeldJoint",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.WeldJoint.yml\" sourcestartlinenumber=\"1\">Creates a rigid weld joint between two bodies using a <xref href=\"Jitter2.Dynamics.Constraints.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref>\nconstraint for orientation locking and a <xref href=\"Jitter2.Dynamics.Constraints.WeldJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref> constraint\nfor positional locking. This effectively removes all relative motion between\nthe connected bodies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ContactData.Contact.Flags.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ContactData.Contact.Flags.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ContactData.Contact.Flags",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ContactData.Contact.Flags.yml\" sourcestartlinenumber=\"1\">Flags indicating contact state.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ContactData.Contact.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ContactData.Contact.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ContactData.Contact",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ContactData.Contact.yml\" sourcestartlinenumber=\"1\">Represents a single contact point between two rigid bodies.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ContactData.SolveMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ContactData.SolveMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ContactData.SolveMode",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ContactData.SolveMode.yml\" sourcestartlinenumber=\"1\">Specifies which velocity components the solver should update for each body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ContactData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ContactData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ContactData",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ContactData.yml\" sourcestartlinenumber=\"1\">Holds up to four <xref href=\"Jitter2.Dynamics.ContactData.Contact\" data-throw-if-not-resolved=\"false\"></xref> structs for a single shape-to-shape collision.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.MotionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.MotionType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.MotionType",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.MotionType.yml\" sourcestartlinenumber=\"1\">Specifies how a rigid body participates in the simulation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.RigidBody.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.RigidBody.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.RigidBody",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.RigidBody.yml\" sourcestartlinenumber=\"1\">Represents the primary entity in the Jitter physics world.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.RigidBodyData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.RigidBodyData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.RigidBodyData",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.RigidBodyData.yml\" sourcestartlinenumber=\"1\">Low-level simulation state for a <xref href=\"Jitter2.Dynamics.RigidBody\" data-throw-if-not-resolved=\"false\"></xref>, stored in unmanaged memory.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.IDebugDrawable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.IDebugDrawable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.IDebugDrawable",
+      "Summary": "<p sourcefile=\"api/Jitter2.IDebugDrawable.yml\" sourcestartlinenumber=\"1\">Defines an interface for objects that can be debug-drawn.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.IDebugDrawer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.IDebugDrawer.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.IDebugDrawer",
+      "Summary": "<p sourcefile=\"api/Jitter2.IDebugDrawer.yml\" sourcestartlinenumber=\"1\">Defines an interface for drawing debug visualization elements.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JAngle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JAngle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JAngle",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JAngle.yml\" sourcestartlinenumber=\"1\">A floating point variable of type <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref> representing an angle. This structure exists to eliminate\nambiguity between radians and degrees in the Jitter API.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JBoundingBox.ContainmentType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JBoundingBox.ContainmentType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JBoundingBox.ContainmentType",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JBoundingBox.ContainmentType.yml\" sourcestartlinenumber=\"1\">Describes how one bounding box relates to another spatially.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JBoundingBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JBoundingBox.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JBoundingBox",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JBoundingBox.yml\" sourcestartlinenumber=\"1\">Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JMatrix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JMatrix.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JMatrix",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JMatrix.yml\" sourcestartlinenumber=\"1\">Represents a 3x3 matrix with components of type <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JQuaternion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JQuaternion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JQuaternion",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JQuaternion.yml\" sourcestartlinenumber=\"1\">A structure representing a Quaternion: <code>Q = x<em sourcefile=\"api/Jitter2.LinearMath.JQuaternion.yml\" sourcestartlinenumber=\"1\">i + y</em>j + z*k + w</code>.\n<br>\nUses the Hamilton convention where <code>i² = j² = k² = ijk = -1</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JTriangle.CullMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JTriangle.CullMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JTriangle.CullMode",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JTriangle.CullMode.yml\" sourcestartlinenumber=\"1\">Specifies the face culling mode for triangles based on their winding order.\nCounter-clockwise (CCW) winding is considered front-facing.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JTriangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JTriangle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JTriangle",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JTriangle.yml\" sourcestartlinenumber=\"1\">Represents a triangle defined by three vertices.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JVector.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JVector.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JVector",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JVector.yml\" sourcestartlinenumber=\"1\">Represents a three-dimensional vector with components of type <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.MathHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.MathHelper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.MathHelper",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.MathHelper.yml\" sourcestartlinenumber=\"1\">Provides mathematical helper methods for linear algebra and physics calculations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Logger.LogLevel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Logger.LogLevel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Logger.LogLevel",
+      "Summary": "<p sourcefile=\"api/Jitter2.Logger.LogLevel.yml\" sourcestartlinenumber=\"1\">Defines the severity levels for logging messages.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Logger.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Logger.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Logger",
+      "Summary": "<p sourcefile=\"api/Jitter2.Logger.yml\" sourcestartlinenumber=\"1\">Provides logging functionality.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.Parallel.Batch.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.Parallel.Batch.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization.Parallel.Batch",
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.Parallel.Batch.yml\" sourcestartlinenumber=\"1\">Represents a batch defined by a start index, an end index, and a batch index.\nThis struct is utilized in <xref href=\"Jitter2.Parallelization.Parallel.ForBatch(System.Int32%2cSystem.Int32%2cSystem.Int32%2cSystem.Action%7bJitter2.Parallelization.Parallel.Batch%7d%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref> to facilitate multithreaded batch processing within a for-loop.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.Parallel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.Parallel.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization.Parallel",
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.Parallel.yml\" sourcestartlinenumber=\"1\">Provides methods and structures for parallel batch processing within the Jitter physics engine.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.ParallelExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.ParallelExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization.ParallelExtensions",
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.ParallelExtensions.yml\" sourcestartlinenumber=\"1\">Provides parallel batch processing extension methods for collections used by the physics engine.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.ReaderWriterLock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.ReaderWriterLock.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization.ReaderWriterLock",
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.ReaderWriterLock.yml\" sourcestartlinenumber=\"1\">Provides a lightweight reader-writer lock optimized for rare write operations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.ThreadPool.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.ThreadPool.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization.ThreadPool",
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.ThreadPool.yml\" sourcestartlinenumber=\"1\">Provides a persistent worker thread pool for parallel task execution within the physics engine.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Parallelization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Parallelization.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Parallelization",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Precision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Precision.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Precision",
+      "Summary": "<p sourcefile=\"api/Jitter2.Precision.yml\" sourcestartlinenumber=\"1\">Provides constants and utilities related to floating-point precision configuration.\nThe library can be compiled with single-precision (float) or double-precision (double)\nby defining the <code>USE_DOUBLE_PRECISION</code> symbol.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.ReferenceFrame.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.ReferenceFrame.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.ReferenceFrame",
+      "Summary": "<p sourcefile=\"api/Jitter2.ReferenceFrame.yml\" sourcestartlinenumber=\"1\">Enum representing reference frames.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.ReferenceFrameAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.ReferenceFrameAttribute.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.ReferenceFrameAttribute",
+      "Summary": "<p sourcefile=\"api/Jitter2.ReferenceFrameAttribute.yml\" sourcestartlinenumber=\"1\">Attribute to specify the reference frame of a member.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.BroadPhaseCollisionFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.BroadPhaseCollisionFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.BroadPhaseCollisionFilter",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.BroadPhaseCollisionFilter.yml\" sourcestartlinenumber=\"1\">A broad-phase filter that handles collisions involving soft body shapes.\nIt delegates collision detection to the narrow phase and registers contacts with the\nclosest rigid body vertices of the soft body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.DynamicTreeCollisionFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.DynamicTreeCollisionFilter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.DynamicTreeCollisionFilter",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.DynamicTreeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Provides a collision filter that prevents self-collisions within soft bodies\nand shapes attached to the same rigid body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SoftBody.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SoftBody.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SoftBody",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SoftBody.yml\" sourcestartlinenumber=\"1\">Represents a soft body in the physics simulation. A soft body is composed of vertices (rigid bodies),\nsprings (constraints), and shapes.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SoftBodyShape.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SoftBodyShape.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SoftBodyShape",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SoftBodyShape.yml\" sourcestartlinenumber=\"1\">Abstract base class for shapes used in soft body simulations.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SoftBodyTetrahedron.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SoftBodyTetrahedron.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SoftBodyTetrahedron",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SoftBodyTetrahedron.yml\" sourcestartlinenumber=\"1\">Represents a tetrahedral shape in a soft body simulation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SoftBodyTriangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SoftBodyTriangle.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SoftBodyTriangle",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SoftBodyTriangle.yml\" sourcestartlinenumber=\"1\">Represents a triangular shape in a soft body simulation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SpringConstraint.SpringData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SpringConstraint.SpringData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SpringConstraint.SpringData",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SpringConstraint.SpringData.yml\" sourcestartlinenumber=\"1\">Low-level data for the spring constraint, stored in unmanaged memory.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.SpringConstraint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.SpringConstraint.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies.SpringConstraint",
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.SpringConstraint.yml\" sourcestartlinenumber=\"1\">Constrains two bodies to maintain a target distance between anchor points,\napplying spring-like forces. Removes one translational degree of freedom along\nthe line connecting the anchors.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SoftBodies.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SoftBodies.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SoftBodies",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.ThreadContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.ThreadContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.ThreadContext",
+      "Summary": "<p sourcefile=\"api/Jitter2.ThreadContext.yml\" sourcestartlinenumber=\"1\">Specifies the threading context in which code executes or a callback is invoked.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.JHandle-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.JHandle-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.JHandle<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.JHandle-1.yml\" sourcestartlinenumber=\"1\">Handle for an unmanaged object stored in a <xref href=\"Jitter2.Unmanaged.PartitionedBuffer%601\" data-throw-if-not-resolved=\"false\"></xref>.\nThe handle remains stable even when the underlying memory is resized.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.IsolatedInt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.IsolatedInt.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.IsolatedInt",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.IsolatedInt.yml\" sourcestartlinenumber=\"1\">Represents an integer value isolated in memory to prevent false sharing\nbetween multiple threads operating on adjacent data.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock12Real.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock12Real.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.MemBlock12Real",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.MemBlock12Real.yml\" sourcestartlinenumber=\"1\">A memory block with a size equivalent to twelve instances of the <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref> type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock16Real.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock16Real.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.MemBlock16Real",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.MemBlock16Real.yml\" sourcestartlinenumber=\"1\">A memory block with a size equivalent to sixteen instances of the <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref> type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock6Real.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock6Real.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.MemBlock6Real",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.MemBlock6Real.yml\" sourcestartlinenumber=\"1\">A memory block with a size equivalent to six instances of the <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref> type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock9Real.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.MemBlock9Real.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.MemBlock9Real",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.MemBlock9Real.yml\" sourcestartlinenumber=\"1\">A memory block with a size equivalent to nine instances of the <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref> type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.yml\" sourcestartlinenumber=\"1\">Provides helper methods for allocating and managing unmanaged memory.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.PartitionedBuffer-1.MaximumSizeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.PartitionedBuffer-1.MaximumSizeException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.PartitionedBuffer<T>.MaximumSizeException",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.PartitionedBuffer-1.MaximumSizeException.yml\" sourcestartlinenumber=\"1\">Exception thrown when the buffer's internal indirection table reaches its maximum capacity.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.PartitionedBuffer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.PartitionedBuffer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.PartitionedBuffer<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.PartitionedBuffer-1.yml\" sourcestartlinenumber=\"1\">Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks.\nEach struct can either be active or inactive.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.InvalidCollisionTypeException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.InvalidCollisionTypeException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World.InvalidCollisionTypeException",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.InvalidCollisionTypeException.yml\" sourcestartlinenumber=\"1\">Thrown when the narrow phase encounters a pair of proxy types it cannot process.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.SpanData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.SpanData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World.SpanData",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.SpanData.yml\" sourcestartlinenumber=\"1\">Provides access to objects in unmanaged memory. This operation is potentially unsafe.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.ThreadModelType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.ThreadModelType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World.ThreadModelType",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.ThreadModelType.yml\" sourcestartlinenumber=\"1\">Controls how internal worker threads behave between calls to <xref href=\"Jitter2.World.Step(System.Single%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.Timings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.Timings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World.Timings",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.Timings.yml\" sourcestartlinenumber=\"1\">Profiling buckets for <xref href=\"Jitter2.World.DebugTimings\" data-throw-if-not-resolved=\"false\"></xref>, representing stages of <xref href=\"Jitter2.World.Step(System.Single%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.WorldStep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.WorldStep.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World.WorldStep",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.WorldStep.yml\" sourcestartlinenumber=\"1\">Delegate for per-step and per-substep callbacks.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.World.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.World.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.World",
+      "Summary": "<p sourcefile=\"api/Jitter2.World.yml\" sourcestartlinenumber=\"1\">Represents a simulation environment that holds and manages the state of all simulation objects.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "docs/changelog.md",
       "output": {

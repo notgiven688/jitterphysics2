@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TriangleEdgeCollisionFilter | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TriangleEdgeCollisionFilter | Jitter2 ">
+      
+      <meta name="description" content="Filters internal edge collisions for triangle mesh geometry.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_TriangleEdgeCollisionFilter.md&amp;value=---%0Auid%3A%20Jitter2.Collision.TriangleEdgeCollisionFilter%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter">
+
+
+
+  <h1 id="Jitter2_Collision_TriangleEdgeCollisionFilter" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter" class="text-break">
+Class TriangleEdgeCollisionFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Collision.html">Collision</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Filters internal edge collisions for triangle mesh geometry.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TriangleEdgeCollisionFilter : INarrowPhaseFilter</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TriangleEdgeCollisionFilter</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="Jitter2.Collision.INarrowPhaseFilter.html">INarrowPhaseFilter</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Jitter2_Collision_TriangleEdgeCollisionFilter_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+When rigid bodies slide over triangle meshes, they may collide with internal edges where
+triangles meet, causing jitter. This filter adjusts collision normals at edges to match
+neighboring triangles or discards the collision entirely.
+</p>
+<p>
+Works best with manifold meshes that have adjacency information. Boundary edges
+(no neighbor) are processed normally. Back-face collisions are discarded.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold_" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.AngleThreshold*"></a>
+
+  <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.AngleThreshold">
+  AngleThreshold
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the angle threshold for determining when two triangle normals are considered identical.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JAngle AngleThreshold { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd><p>The default value is approximately 2.5 degrees.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+When a collision occurs near an edge, this threshold determines whether the current triangle
+and its neighbor are treated as coplanar (same normal) or as forming a crease. Coplanar
+neighbors use simpler normal snapping logic.
+</p>
+<p>
+This threshold is also used to detect and discard back-face collisions: if the collision
+normal points opposite to the triangle normal (beyond this angle from perpendicular),
+the collision is filtered out.
+</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_TriangleEdgeCollisionFilter_EdgeThreshold_" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.EdgeThreshold*"></a>
+
+  <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_EdgeThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.EdgeThreshold">
+  EdgeThreshold
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the distance threshold for edge collision detection, in world units.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float EdgeThreshold { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The default value is 0.01 world units.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_TriangleEdgeCollisionFilter_EdgeThreshold_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Collision points closer than this distance to a triangle edge are considered edge collisions
+and may have their normals adjusted or be discarded. Larger values are more aggressive at
+filtering edges but may incorrectly affect legitimate collisions near triangle boundaries.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_TriangleEdgeCollisionFilter_ProjectionThreshold_" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.ProjectionThreshold*"></a>
+
+  <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_ProjectionThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.ProjectionThreshold">
+  ProjectionThreshold
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the minimum length of the projected collision normal required to keep the contact.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float ProjectionThreshold { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The default value is 0.5.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_TriangleEdgeCollisionFilter_ProjectionThreshold_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+When the collision normal is projected onto the plane formed by the triangle normal and its
+neighbor's normal, a very short projection indicates the collision is occurring along the
+edge crease itself. Such collisions are discarded as they typically represent internal edge artifacts.
+</p>
+<p>
+Lower values allow more edge collisions through; higher values are more aggressive at filtering.
+</p>
+</div>
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Collision_TriangleEdgeCollisionFilter_Filter_" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.Filter*"></a>
+
+  <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_Filter_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.Filter(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Filter(RigidBodyShape, RigidBodyShape, ref JVector, ref JVector, ref JVector, ref float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Called for each detected collision with its contact data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pointA, ref JVector pointB, ref JVector normal, ref float penetration)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shapeA</code> <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd><p>The first shape in the collision.</p>
+</dd>
+    <dt><code>shapeB</code> <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd><p>The second shape in the collision.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on shape A (modifiable).</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on shape B (modifiable).</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision normal from B to A (modifiable).</p>
+</dd>
+    <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Penetration depth (modifiable).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> to keep the collision; <code>false</code> to discard it.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L29" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

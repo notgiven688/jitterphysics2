@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Jitter2.Dynamics.Constraints | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Jitter2.Dynamics.Constraints | Jitter2 ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Dynamics.Constraints">
+
+  <h1 id="Jitter2_Dynamics_Constraints" data-uid="Jitter2.Dynamics.Constraints" class="text-break">Namespace Jitter2.Dynamics.Constraints</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a></dt>
+      <dd><p>Represents a motor that drives relative angular velocity between two axes fixed
+in the reference frames of their respective bodies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a></dt>
+      <dd><p>Implements a ball-and-socket joint that anchors a point on each body together,
+removing three translational degrees of freedom.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.ConeLimit.html">ConeLimit</a></dt>
+      <dd><p>Limits the relative tilt between two bodies, removing one angular degree of freedom when active.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html">Constraint</a></dt>
+      <dd><p>Base class for constraints that connect two rigid bodies and restrict their relative motion.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.Constraint-1.html">Constraint&lt;T&gt;</a></dt>
+      <dd><p>Generic base class for constraints that store custom data of type <code class="typeparamref">T</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit.html">DistanceLimit</a></dt>
+      <dd><p>Constrains the distance between a fixed point in the reference frame of one body and a fixed
+point in the reference frame of another body. This constraint removes one translational degree
+of freedom. For a distance of zero, use the <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a> constraint.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.html">FixedAngle</a></dt>
+      <dd><p>Constrains the relative orientation between two bodies, eliminating three degrees of rotational freedom.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html">HingeAngle</a></dt>
+      <dd><p>Constrains two bodies to rotate relative to each other around a single axis,
+removing two angular degrees of freedom. Optionally enforces angular limits.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html">HingeJoint</a></dt>
+      <dd><p>Constructs a hinge joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle">HingeAngle</a>, a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.Joint.html">Joint</a></dt>
+      <dd><p>Base class for joints, which are composite constraints built from multiple <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html">Constraint</a> instances.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a></dt>
+      <dd><p>A motor constraint that drives relative translational movement along two axes fixed
+in the reference frames of the bodies.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a></dt>
+      <dd><p>Constrains a fixed point in the reference frame of one body to a line that is fixed in
+the reference frame of another body. This constraint removes one degree of translational
+freedom; two if the limit is enforced.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.html">PointOnPlane</a></dt>
+      <dd><p>Constrains a fixed point in the reference frame of one body to a plane that is fixed in
+the reference frame of another body. This constraint removes one degree of translational
+freedom if the limit is enforced.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html">PrismaticJoint</a></dt>
+      <dd><p>Constructs a prismatic joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint in conjunction with
+<a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a>, and <a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraints.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistAngle.html">TwistAngle</a></dt>
+      <dd><p>Constrains the relative twist of two bodies. This constraint removes one angular
+degree of freedom when the limit is enforced.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html">UniversalJoint</a></dt>
+      <dd><p>Creates a universal joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>
+constraint.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.WeldJoint.html">WeldJoint</a></dt>
+      <dd><p>Creates a rigid weld joint between two bodies using a <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.html">FixedAngle</a>
+constraint for orientation locking and a <a class="xref" href="Jitter2.Dynamics.Constraints.WeldJoint.html#Jitter2_Dynamics_Constraints_WeldJoint_BallSocket">BallSocket</a> constraint
+for positional locking. This effectively removes all relative motion between
+the connected bodies.</p>
+</dd>
+    </dl>
+    <h3 id="structs">
+Structs
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+      <dd><p>Represents an angular limit defined by a minimum and maximum angle.
+Used by constraints to restrict rotational motion within a specified range.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html">AngularMotor.AngularMotorData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html">BallSocket.BallSocketData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html">ConeLimit.ConeLimitData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
+      <dd><p>Low-level data for constraints, stored in unmanaged memory.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html">DistanceLimit.DistanceLimitData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html">FixedAngle.FixedAngleData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html">HingeAngle.HingeAngleData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearLimit.html">LinearLimit</a></dt>
+      <dd><p>Represents a linear limit defined by a minimum and maximum distance.
+Used by constraints to restrict translational motion within a specified range.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html">LinearMotor.LinearMotorData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html">PointOnLine.PointOnLineData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html">PointOnPlane.SliderData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.SmallConstraintData.html">SmallConstraintData</a></dt>
+      <dd><p>Low-level data for constraints that fit within <a class="xref" href="Jitter2.Precision.html#Jitter2_Precision_ConstraintSizeSmall">ConstraintSizeSmall</a> bytes.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html">TwistAngle.TwistLimitData</a></dt>
+      <dd></dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TransformedShape | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TransformedShape | Jitter2 ">
+      
+      <meta name="description" content="Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_Shapes_TransformedShape.md&amp;value=---%0Auid%3A%20Jitter2.Collision.Shapes.TransformedShape%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Collision.Shapes.TransformedShape">
+
+
+
+  <h1 id="Jitter2_Collision_Shapes_TransformedShape" data-uid="Jitter2.Collision.Shapes.TransformedShape" class="text-break">
+Class TransformedShape  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Collision.html">Collision</a>.<a class="xref" href="Jitter2.Collision.Shapes.html">Shapes</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class TransformedShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="Jitter2.Collision.Shapes.Shape.html">Shape</a></div>
+      <div><a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></div>
+      <div><span class="xref">TransformedShape</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a></div>
+      <div><a class="xref" href="Jitter2.DataStructures.IPartitionedSetIndex.html">IPartitionedSetIndex</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_RigidBody">RigidBodyShape.RigidBody</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Velocity">RigidBodyShape.Velocity</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_UpdateWorldBoundingBox_System_Single_">RigidBodyShape.UpdateWorldBoundingBox(float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_LocalRayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">RigidBodyShape.LocalRayCast(in JVector, in JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">RigidBodyShape.RayCast(in JVector, in JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_ShapeId">Shape.ShapeId</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_WorldBoundingBox">Shape.WorldBoundingBox</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_System_Single_">Shape.SweptExpandBoundingBox(float)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape__ctor_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JMatrix)">
+  TransformedShape(RigidBodyShape, JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a transformed shape with a linear transformation (rotation, scale, or shear),
+assuming zero translation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransformedShape(RigidBodyShape shape, JMatrix transform)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd></dd>
+    <dt><code>transform</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape__ctor_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector)">
+  TransformedShape(RigidBodyShape, JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a transformed shape with a translation (offset), assuming identity rotation/scale.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransformedShape(RigidBodyShape shape, JVector translation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd></dd>
+    <dt><code>translation</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape__ctor_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@)">
+  TransformedShape(RigidBodyShape, in JVector, in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Constructs a transformed shape through an affine transformation defined by
+a linear map and a translation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TransformedShape(RigidBodyShape shape, in JVector translation, in JMatrix transform)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>shape</code> <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd></dd>
+    <dt><code>translation</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>transform</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_OriginalShape_" data-uid="Jitter2.Collision.Shapes.TransformedShape.OriginalShape*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_OriginalShape" data-uid="Jitter2.Collision.Shapes.TransformedShape.OriginalShape">
+  OriginalShape
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the original shape that is being transformed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RigidBodyShape OriginalShape { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html">RigidBodyShape</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_Transformation_" data-uid="Jitter2.Collision.Shapes.TransformedShape.Transformation*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_Transformation" data-uid="Jitter2.Collision.Shapes.TransformedShape.Transformation">
+  Transformation
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the linear transformation (rotation, scale, or shear) applied to the shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JMatrix Transformation { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_Translation_" data-uid="Jitter2.Collision.Shapes.TransformedShape.Translation*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_Translation" data-uid="Jitter2.Collision.Shapes.TransformedShape.Translation">
+  Translation
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the translation applied to the shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector Translation { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_CalculateBoundingBox_" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateBoundingBox*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
+  CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L121"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>box</code> <a class="xref" href="Jitter2.LinearMath.JBoundingBox.html">JBoundingBox</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
+  CalculateMassInertia(out JMatrix, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L144"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
+performance or accuracy. The default implementation relies on an approximation of the shape
+constructed using the support map function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>inertia</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd></dd>
+    <dt><code>com</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>mass</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The inertia tensor is computed relative to the coordinate system origin (0,0,0),
+not the center of mass.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_GetCenter_" data-uid="Jitter2.Collision.Shapes.TransformedShape.GetCenter*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TransformedShape.GetCenter(Jitter2.LinearMath.JVector@)">
+  GetCenter(out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void GetCenter(out JVector point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>A point guaranteed to be inside the convex hull, typically the center of mass.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_TransformedShape_SupportMap_" data-uid="Jitter2.Collision.Shapes.TransformedShape.SupportMap*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_TransformedShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TransformedShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  SupportMap(in JVector, out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void SupportMap(in JVector direction, out JVector result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The search direction in local space. Does not need to be normalized.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The point on the shape's surface furthest along <code class="paramref">direction</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L14" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

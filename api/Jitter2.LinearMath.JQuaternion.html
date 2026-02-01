@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Struct JQuaternion | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Struct JQuaternion | Jitter2 ">
+      
+      <meta name="description" content="A structure representing a Quaternion: Q = xi + yj + z*k + w.  Uses the Hamilton convention where i&#178; = j&#178; = k&#178; = ijk = -1.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_LinearMath_JQuaternion.md&amp;value=---%0Auid%3A%20Jitter2.LinearMath.JQuaternion%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.LinearMath.JQuaternion">
+
+
+
+  <h1 id="Jitter2_LinearMath_JQuaternion" data-uid="Jitter2.LinearMath.JQuaternion" class="text-break">
+Struct JQuaternion  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.LinearMath.html">LinearMath</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A structure representing a Quaternion: <code>Q = x<em>i + y</em>j + z*k + w</code>.
+<br>
+Uses the Hamilton convention where <code>i² = j² = k² = ijk = -1</code>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public struct JQuaternion : IEquatable&lt;JQuaternion&gt;</code></pre>
+  </div>
+
+
+
+
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JQuaternion__ctor_" data-uid="Jitter2.LinearMath.JQuaternion.#ctor*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion__ctor_System_Single_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JQuaternion.#ctor(System.Single,Jitter2.LinearMath.JVector@)">
+  JQuaternion(float, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a> struct.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JQuaternion(float w, in JVector v)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>w</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The scalar (W) component.</p>
+</dd>
+    <dt><code>v</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The vector (X, Y, Z) component.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion__ctor_" data-uid="Jitter2.LinearMath.JQuaternion.#ctor*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion__ctor_System_Single_System_Single_System_Single_System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.#ctor(System.Single,System.Single,System.Single,System.Single)">
+  JQuaternion(float, float, float, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A structure representing a Quaternion: <code>Q = x<em>i + y</em>j + z*k + w</code>.
+<br>
+Uses the Hamilton convention where <code>i² = j² = k² = ijk = -1</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JQuaternion(float x, float y, float z, float w)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>x</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>y</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>z</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>w</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_W" data-uid="Jitter2.LinearMath.JQuaternion.W">
+  W
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float W</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_X" data-uid="Jitter2.LinearMath.JQuaternion.X">
+  X
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float X</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Y" data-uid="Jitter2.LinearMath.JQuaternion.Y">
+  Y
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Y</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Z" data-uid="Jitter2.LinearMath.JQuaternion.Z">
+  Z
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Z</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Identity_" data-uid="Jitter2.LinearMath.JQuaternion.Identity*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Identity" data-uid="Jitter2.LinearMath.JQuaternion.Identity">
+  Identity
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the identity quaternion <code>(0, 0, 0, 1)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Identity { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Scalar_" data-uid="Jitter2.LinearMath.JQuaternion.Scalar*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Scalar" data-uid="Jitter2.LinearMath.JQuaternion.Scalar">
+  Scalar
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the scalar part <code>(w)</code> of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Scalar { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Vector_" data-uid="Jitter2.LinearMath.JQuaternion.Vector*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Vector" data-uid="Jitter2.LinearMath.JQuaternion.Vector">
+  Vector
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L29"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the vector part <code>(x, y, z)</code> of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector Vector { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Add_" data-uid="Jitter2.LinearMath.JQuaternion.Add*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Add_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Add(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Add(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two quaternions component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Add(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The sum of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Add_" data-uid="Jitter2.LinearMath.JQuaternion.Add*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Add_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Add(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Add(in JQuaternion, in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two quaternions component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Add(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The sum of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Conjugate_" data-uid="Jitter2.LinearMath.JQuaternion.Conjugate*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Conjugate" data-uid="Jitter2.LinearMath.JQuaternion.Conjugate">
+  Conjugate()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L145"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the conjugate of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly JQuaternion Conjugate()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The conjugate of the quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_Conjugate_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The conjugate is defined as <code>(-x, -y, -z, w)</code>.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Conjugate_" data-uid="Jitter2.LinearMath.JQuaternion.Conjugate*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Conjugate_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Conjugate(Jitter2.LinearMath.JQuaternion@)">
+  Conjugate(in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the conjugate of a quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Conjugate(in JQuaternion value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to conjugate.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The conjugate of the quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_Conjugate_Jitter2_LinearMath_JQuaternion___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The conjugate is defined as <code>(-x, -y, -z, w)</code>.
+For unit quaternions, the conjugate is equivalent to the inverse.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_ConjugateMultiply_" data-uid="Jitter2.LinearMath.JQuaternion.ConjugateMultiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_ConjugateMultiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.ConjugateMultiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  ConjugateMultiply(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L397"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>conjugate(Q1) * Q2</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to conjugate and then multiply.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_ConjugateMultiply_" data-uid="Jitter2.LinearMath.JQuaternion.ConjugateMultiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_ConjugateMultiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.ConjugateMultiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  ConjugateMultiply(in JQuaternion, in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L377"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>conjugate(Q1) * Q2</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ConjugateMultiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to conjugate and then multiply.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The resulting quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateFromAxisAngle_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromAxisAngle*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateFromAxisAngle_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromAxisAngle(Jitter2.LinearMath.JVector@,System.Single)">
+  CreateFromAxisAngle(in JVector, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L304"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion from a unit axis and an angle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateFromAxisAngle(in JVector axis, float angle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The unit vector to rotate around (must be normalized).</p>
+</dd>
+    <dt><code>angle</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>A unit quaternion representing the rotation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_CreateFromAxisAngle_Jitter2_LinearMath_JVector__System_Single__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The <code class="paramref">axis</code> must be normalized.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateFromMatrix_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromMatrix*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateFromMatrix_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromMatrix(Jitter2.LinearMath.JMatrix@)">
+  CreateFromMatrix(in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L544"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion from a rotation matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateFromMatrix(in JMatrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion representing the rotation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateFromMatrix_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromMatrix*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateFromMatrix_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromMatrix(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JQuaternion@)">
+  CreateFromMatrix(in JMatrix, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L556"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion from a rotation matrix.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void CreateFromMatrix(in JMatrix matrix, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The rotation matrix.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The quaternion representing the rotation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateFromToRotation_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromToRotation*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateFromToRotation_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JQuaternion.CreateFromToRotation(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
+  CreateFromToRotation(JVector, JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion that rotates the unit vector <code class="paramref">from</code> into
+the unit vector <code class="paramref">to</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateFromToRotation(JVector from, JVector to)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>from</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Source direction (must be unit length).</p>
+</dd>
+    <dt><code>to</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Target direction (must be unit length).</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>A unit quaternion representing the shortest rotation.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_CreateFromToRotation_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This calculation relies on the half-angle formula.
+If the vectors are parallel (<code>dot ≈ 1</code>), Identity is returned.
+If the vectors are opposite (<code>dot ≈ -1</code>), a rotation of 180° (π radians)
+around an arbitrary orthogonal axis is returned.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateRotationX_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationX*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateRotationX_System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationX(System.Single)">
+  CreateRotationX(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion representing a rotation around the X-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateRotationX(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The resulting quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateRotationY_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationY*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateRotationY_System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationY(System.Single)">
+  CreateRotationY(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion representing a rotation around the Y-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateRotationY(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The resulting quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_CreateRotationZ_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationZ*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_CreateRotationZ_System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.CreateRotationZ(System.Single)">
+  CreateRotationZ(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a quaternion representing a rotation around the Z-axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion CreateRotationZ(float radians)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>radians</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The angle of rotation in radians.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The resulting quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Dot_" data-uid="Jitter2.LinearMath.JQuaternion.Dot*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Dot_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Dot(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Dot(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L600"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the dot product of two quaternions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static float Dot(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The dot product.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Equals_" data-uid="Jitter2.LinearMath.JQuaternion.Equals*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Equals_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.Equals(Jitter2.LinearMath.JQuaternion)">
+  Equals(JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L765"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly bool Equals(JQuaternion other)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>other</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>An object to compare with this object.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the current object is equal to the <code class="paramref">other</code> parameter; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Equals_" data-uid="Jitter2.LinearMath.JQuaternion.Equals*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Equals_System_Object_" data-uid="Jitter2.LinearMath.JQuaternion.Equals(System.Object)">
+  Equals(object?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L770"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly bool Equals(object? obj)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>obj</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></dt>
+    <dd><p>The object to compare with the current instance.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_GetBasisX_" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisX*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_GetBasisX" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisX">
+  GetBasisX()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the transformation of the X-axis <code>(1, 0, 0)</code> by this quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly JVector GetBasisX()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The transformed vector.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisX_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (1,0,0) · q⁻¹</code>.<br>
+Result: <code>[1 - 2(y² + z²), 2(xy + zw), 2(xz - yw)]</code></p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_GetBasisY_" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisY*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_GetBasisY" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisY">
+  GetBasisY()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L233"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the transformation of the Y-axis <code>(0, 1, 0)</code> by this quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly JVector GetBasisY()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The transformed vector.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisY_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (0,1,0) · q⁻¹</code>.<br>
+Result: <code>[2(xy - zw), 1 - 2(x² + z²), 2(yz + xw)]</code></p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_GetBasisZ_" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisZ*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_GetBasisZ" data-uid="Jitter2.LinearMath.JQuaternion.GetBasisZ">
+  GetBasisZ()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L250"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the transformation of the Z-axis <code>(0, 0, 1)</code> by this quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly JVector GetBasisZ()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The transformed vector.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisZ_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (0,0,1) · q⁻¹</code>.<br>
+Result: <code>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</code></p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_GetHashCode_" data-uid="Jitter2.LinearMath.JQuaternion.GetHashCode*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_GetHashCode" data-uid="Jitter2.LinearMath.JQuaternion.GetHashCode">
+  GetHashCode()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L775"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly int GetHashCode()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>A 32-bit signed integer that is the hash code for this instance.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Inverse_" data-uid="Jitter2.LinearMath.JQuaternion.Inverse*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Inverse_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Inverse(Jitter2.LinearMath.JQuaternion@)">
+  Inverse(in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L616"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the inverse of a quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Inverse(in JQuaternion value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_Inverse_Jitter2_LinearMath_JQuaternion___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Unlike <a class="xref" href="Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_Conjugate_Jitter2_LinearMath_JQuaternion__">Conjugate(in JQuaternion)</a>, this handles non-unit quaternions correctly
+by dividing by the squared length.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Length_" data-uid="Jitter2.LinearMath.JQuaternion.Length*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Length" data-uid="Jitter2.LinearMath.JQuaternion.Length">
+  Length()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L469"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the Euclidean length of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly float Length()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The length (magnitude).</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_LengthSquared_" data-uid="Jitter2.LinearMath.JQuaternion.LengthSquared*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_LengthSquared" data-uid="Jitter2.LinearMath.JQuaternion.LengthSquared">
+  LengthSquared()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L479"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates the squared Euclidean length of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly float LengthSquared()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The squared length.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Lerp_" data-uid="Jitter2.LinearMath.JQuaternion.Lerp*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Lerp_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.Lerp(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,System.Single)">
+  Lerp(in JQuaternion, in JQuaternion, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L636"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Linearly interpolates between two quaternions and normalizes the result.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Lerp(in JQuaternion quaternion1, in JQuaternion quaternion2, float amount)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Source quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Target quaternion.</p>
+</dd>
+    <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Weight of the interpolation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The interpolated unit quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Multiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Multiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Multiply(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two quaternions (Hamilton Product).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The product of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_Multiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Non-commutative. <code>Q1 * Q2</code> represents the rotation Q2 followed by Q1 (local frame) or Q1 followed by Q2 (global frame).</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Multiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Multiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Multiply(in JQuaternion, in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L352"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two quaternions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Multiply(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The product of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Multiply_Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.Multiply(Jitter2.LinearMath.JQuaternion@,System.Single)">
+  Multiply(in JQuaternion, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L443"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies a quaternion by a scalar factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Multiply(in JQuaternion quaternion1, float scaleFactor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion.</p>
+</dd>
+    <dt><code>scaleFactor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The scalar factor.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The scaled quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Multiply_Jitter2_LinearMath_JQuaternion__System_Single_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Multiply(Jitter2.LinearMath.JQuaternion@,System.Single,Jitter2.LinearMath.JQuaternion@)">
+  Multiply(in JQuaternion, float, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L456"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies a quaternion by a scalar factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Multiply(in JQuaternion quaternion1, float scaleFactor, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion.</p>
+</dd>
+    <dt><code>scaleFactor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The scalar factor.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The scaled quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_MultiplyConjugate_" data-uid="Jitter2.LinearMath.JQuaternion.MultiplyConjugate*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_MultiplyConjugate_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.MultiplyConjugate(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  MultiplyConjugate(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L430"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>Q1 * conjugate(Q2)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to conjugate.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_MultiplyConjugate_" data-uid="Jitter2.LinearMath.JQuaternion.MultiplyConjugate*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_MultiplyConjugate_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.MultiplyConjugate(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  MultiplyConjugate(in JQuaternion, in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L410"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Calculates <code>Q1 * conjugate(Q2)</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void MultiplyConjugate(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to conjugate.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The resulting quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Normalize_" data-uid="Jitter2.LinearMath.JQuaternion.Normalize*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Normalize" data-uid="Jitter2.LinearMath.JQuaternion.Normalize">
+  Normalize()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L488"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Normalizes the quaternion to unit length.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;In-place Normalize() is deprecated; use the static Normalize method or NormalizeInPlace.&quot;)]
+public void Normalize()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Normalize_" data-uid="Jitter2.LinearMath.JQuaternion.Normalize*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Normalize_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Normalize(Jitter2.LinearMath.JQuaternion@)">
+  Normalize(in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L532"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a normalized version of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Normalize(in JQuaternion value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The source quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Normalize_" data-uid="Jitter2.LinearMath.JQuaternion.Normalize*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Normalize_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Normalize(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Normalize(in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L520"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a normalized version of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Normalize(in JQuaternion value, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The source quaternion.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The normalized unit quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_NormalizeInPlace_" data-uid="Jitter2.LinearMath.JQuaternion.NormalizeInPlace*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_NormalizeInPlace_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.NormalizeInPlace(Jitter2.LinearMath.JQuaternion@)">
+  NormalizeInPlace(ref JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L505"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Normalizes the provided quaternion structure in place.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void NormalizeInPlace(ref JQuaternion quaternion)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The quaternion to normalize.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Slerp_" data-uid="Jitter2.LinearMath.JQuaternion.Slerp*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Slerp_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.Slerp(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,System.Single)">
+  Slerp(in JQuaternion, in JQuaternion, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L669"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Interpolates between two quaternions using Spherical Linear Interpolation (SLERP).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Slerp(in JQuaternion quaternion1, in JQuaternion quaternion2, float amount)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Source quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Target quaternion.</p>
+</dd>
+    <dt><code>amount</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Weight of the interpolation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The interpolated quaternion.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Subtract_" data-uid="Jitter2.LinearMath.JQuaternion.Subtract*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Subtract_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Subtract(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Subtract(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L170"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Subtracts the second quaternion from the first component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The difference of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_Subtract_" data-uid="Jitter2.LinearMath.JQuaternion.Subtract*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_Subtract_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Subtract(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  Subtract(in JQuaternion, in JQuaternion, out JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Subtracts the second quaternion from the first component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Subtract(in JQuaternion quaternion1, in JQuaternion quaternion2, out JQuaternion result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The first quaternion.</p>
+</dd>
+    <dt><code>quaternion2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The second quaternion.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Output: The difference of the two quaternions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_ToAxisAngle_" data-uid="Jitter2.LinearMath.JQuaternion.ToAxisAngle*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_ToAxisAngle_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.LinearMath.JQuaternion.ToAxisAngle(Jitter2.LinearMath.JQuaternion,Jitter2.LinearMath.JVector@,System.Single@)">
+  ToAxisAngle(JQuaternion, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L321"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Decomposes a unit quaternion into an axis and an angle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ToAxisAngle(JQuaternion quaternion, out JVector axis, out float angle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>quaternion</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The unit quaternion to decompose.</p>
+</dd>
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Output: The unit rotation axis.</p>
+</dd>
+    <dt><code>angle</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Output: The rotation angle (radians).</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_ToAxisAngle_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Assumes <code class="paramref">quaternion</code> is normalized.
+Returns the shortest arc (angle in [0, π]).</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_ToString_" data-uid="Jitter2.LinearMath.JQuaternion.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_ToString" data-uid="Jitter2.LinearMath.JQuaternion.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string representing the quaternion in the format <code>X=..., Y=..., Z=..., W=...</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_UnsafeAs_" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeAs*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_UnsafeAs__1" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeAs``1">
+  UnsafeAs&lt;T&gt;()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reinterprets the bits of this <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a> as <code class="typeparamref">T</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T UnsafeAs&lt;T&gt;() where T : unmanaged</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">T</span></dt>
+    <dd><p>The reinterpreted value.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The target unmanaged type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_UnsafeAs__1_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Valid only if <code class="typeparamref">T</code> has identical size and compatible layout.
+Memory order is X, Y, Z, W (W is last).</p>
+</div>
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_UnsafeFrom_" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeFrom*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_UnsafeFrom__1___0__" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeFrom``1(``0@)">
+  UnsafeFrom&lt;T&gt;(in T)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reinterprets the bits of <code class="paramref">value</code> as a <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion UnsafeFrom&lt;T&gt;(in T value) where T : unmanaged</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <span class="xref">T</span></dt>
+    <dd><p>The value to reinterpret.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The reinterpreted quaternion.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The source unmanaged type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_JQuaternion_UnsafeFrom__1___0___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Valid only if <code class="typeparamref">T</code> has identical size and compatible layout.
+Expects memory order X, Y, Z, W (W is last).</p>
+</div>
+
+
+
+
+  <h2 class="section" id="operators">Operators
+</h2>
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Addition_" data-uid="Jitter2.LinearMath.JQuaternion.op_Addition*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Addition_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Addition(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  operator +(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L748"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Adds two quaternions component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator +(in JQuaternion value1, in JQuaternion value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Equality_" data-uid="Jitter2.LinearMath.JQuaternion.op_Equality*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Equality_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.op_Equality(Jitter2.LinearMath.JQuaternion,Jitter2.LinearMath.JQuaternion)">
+  operator ==(JQuaternion, JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L777"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(JQuaternion left, JQuaternion right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Implicit_" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_Jitter2_LinearMath_JQuaternion___System_Numerics_Quaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(Jitter2.LinearMath.JQuaternion@)~System.Numerics.Quaternion">
+  implicit operator Quaternion(in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Quaternion(in JQuaternion q)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>q</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.quaternion">Quaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Implicit_" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_System_Numerics_Quaternion___Jitter2_LinearMath_JQuaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(System.Numerics.Quaternion@)~Jitter2.LinearMath.JQuaternion">
+  implicit operator JQuaternion(in Quaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator JQuaternion(in Quaternion q)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>q</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.quaternion">Quaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Implicit_" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_System_ValueTuple_System_Single_System_Single_System_Single_System_Single___Jitter2_LinearMath_JQuaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(System.ValueTuple{System.Single,System.Single,System.Single,System.Single})~Jitter2.LinearMath.JQuaternion">
+  implicit operator JQuaternion((float x, float y, float z, float w))
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator JQuaternion((float x, float y, float z, float w) tuple)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>tuple</code> (<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.single,system.single,system.single,system.single-.x">x</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.single,system.single,system.single,system.single-.y">y</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.single,system.single,system.single,system.single-.z">z</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.single,system.single,system.single,system.single-.w">w</a>)</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Inequality_" data-uid="Jitter2.LinearMath.JQuaternion.op_Inequality*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Inequality_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.op_Inequality(Jitter2.LinearMath.JQuaternion,Jitter2.LinearMath.JQuaternion)">
+  operator !=(JQuaternion, JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L782"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(JQuaternion left, JQuaternion right)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>left</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>right</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  operator *(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L718"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Multiplies two quaternions (Hamilton Product).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator *(in JQuaternion value1, in JQuaternion value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(Jitter2.LinearMath.JQuaternion@,System.Single)">
+  operator *(in JQuaternion, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L738"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Scales a quaternion by a factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator *(in JQuaternion value1, float value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Multiply_" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_System_Single_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(System.Single,Jitter2.LinearMath.JQuaternion@)">
+  operator *(float, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L728"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Scales a quaternion by a factor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator *(float value1, in JQuaternion value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_Subtraction_" data-uid="Jitter2.LinearMath.JQuaternion.op_Subtraction*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_Subtraction_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Subtraction(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
+  operator -(in JQuaternion, in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L758"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Subtracts the second quaternion from the first component-wise.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator -(in JQuaternion value1, in JQuaternion value2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value1</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>value2</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JQuaternion_op_UnaryNegation_" data-uid="Jitter2.LinearMath.JQuaternion.op_UnaryNegation*"></a>
+
+  <h3 id="Jitter2_LinearMath_JQuaternion_op_UnaryNegation_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_UnaryNegation(Jitter2.LinearMath.JQuaternion@)">
+  operator -(in JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L709"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Flips the sign of each component of the quaternion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JQuaternion operator -(in JQuaternion value)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>value</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L18" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

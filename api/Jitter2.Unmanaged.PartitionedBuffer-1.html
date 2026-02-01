@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class PartitionedBuffer&lt;T&gt; | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class PartitionedBuffer&lt;T&gt; | Jitter2 ">
+      
+      <meta name="description" content="Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks. Each struct can either be active or inactive.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Unmanaged_PartitionedBuffer_1.md&amp;value=---%0Auid%3A%20Jitter2.Unmanaged.PartitionedBuffer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Unmanaged.PartitionedBuffer`1">
+
+
+
+  <h1 id="Jitter2_Unmanaged_PartitionedBuffer_1" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1" class="text-break">
+Class PartitionedBuffer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Unmanaged.html">Unmanaged</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks.
+Each struct can either be active or inactive.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class PartitionedBuffer&lt;T&gt; : IDisposable where T : unmanaged</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The unmanaged type to store. Must be at least 4 bytes in size.</p>
+</dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">PartitionedBuffer&lt;T&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="Jitter2.Parallelization.ParallelExtensions.html#Jitter2_Parallelization_ParallelExtensions_ParallelForBatch__1_Jitter2_Unmanaged_PartitionedBuffer___0__System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ParallelExtensions.ParallelForBatch&lt;T&gt;(PartitionedBuffer&lt;T&gt;, int, Action&lt;Parallel.Batch&gt;, bool)</a>
+  </div>
+  </dd></dl>
+
+
+
+  <h2 id="Jitter2_Unmanaged_PartitionedBuffer_1_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+<b>Memory Layout Requirement:</b> The type <code class="typeparamref">T</code> must reserve its first
+4 bytes (sizeof(int)) for internal bookkeeping. This memory region is used to store
+the stable ID that maps the data back to its <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle&lt;T&gt;</a>.
+</p>
+<p>
+Do not modify these bytes manually. A compatible struct should look like this:
+<pre><code class="lang-csharp">[StructLayout(LayoutKind.Sequential)]
+public struct RigidBodyData
+{
+    private readonly int _internalIndex; // Reserved by PartitionedBuffer
+<pre><code>public JVector Position;
+public JQuaternion Orientation;
+// ... other fields
+</code></pre>
+<p>}</p></code></pre>
+
+<p>
+<b>Threading:</b> Concurrent calls to <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html#Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_System_Boolean_System_Boolean_">Allocate(bool, bool)</a> may trigger a resize. Use
+<a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html#Jitter2_Unmanaged_PartitionedBuffer_1_ResizeLock">ResizeLock</a> to synchronize access when reading data concurrently with allocations.
+</p>
+<p>
+<b>Disposal:</b> This class owns unmanaged memory and must be disposed to avoid memory leaks.
+</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1__ctor_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.#ctor*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1__ctor_System_Int32_System_Boolean_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.#ctor(System.Int32,System.Boolean)">
+  PartitionedBuffer(int, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance of the class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PartitionedBuffer(int initialSize = 1024, bool aligned64 = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>initialSize</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The initial size of the contiguous memory block.</p>
+</dd>
+    <dt><code>aligned64</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>Indicates whether the memory should be aligned to 64 bytes.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_ResizeLock" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.ResizeLock">
+  ResizeLock
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L158"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Reader-writer lock. Locked by a writer when a resize occurs.
+Resizing moves the contiguous data memory addresses. Use a reader lock
+to access data if concurrent calls to Allocate are made.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReaderWriterLock ResizeLock</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html">ReaderWriterLock</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Active_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Active*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Active" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Active">
+  Active
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L265"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A span for all elements marked as active.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Span&lt;T&gt; Active { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Unmanaged_PartitionedBuffer_1_Active_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Do not cache:</b> This span is invalidated when the buffer resizes.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Aligned64_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Aligned64*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Aligned64" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Aligned64">
+  Aligned64
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Indicates whether the allocated memory is aligned to a 64-byte boundary.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Aligned64 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Count_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Count*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Count" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Count">
+  Count
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the number of allocated elements in the buffer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Count { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Elements_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Elements*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Elements" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Elements">
+  Elements
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L281"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A span for all elements.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Span&lt;T&gt; Elements { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Unmanaged_PartitionedBuffer_1_Elements_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Do not cache:</b> This span is invalidated when the buffer resizes.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Inactive_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Inactive*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Inactive" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Inactive">
+  Inactive
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L273"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A span for all elements marked as inactive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Span&lt;T&gt; Inactive { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;T&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_Unmanaged_PartitionedBuffer_1_Inactive_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Do not cache:</b> This span is invalidated when the buffer resizes.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_TotalBytesAllocated_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.TotalBytesAllocated*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_TotalBytesAllocated" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.TotalBytesAllocated">
+  TotalBytesAllocated
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L216"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the total amount of unmanaged memory allocated in bytes (data + indirection pages).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long TotalBytesAllocated { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int64">long</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Allocate*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_System_Boolean_System_Boolean_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Allocate(System.Boolean,System.Boolean)">
+  Allocate(bool, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L370"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Allocates an unmanaged object. Growth is dynamic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JHandle&lt;T&gt; Allocate(bool active = false, bool clear = false)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>active</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>If <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>, the element is added to the active partition.</p>
+</dd>
+    <dt><code>clear</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>If <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>, the element's memory (excluding the internal ID) is zeroed.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>A handle to the newly allocated element.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_System_Boolean_System_Boolean__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Threading:</b> This method may resize the buffer, which moves all data. Use
+<a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html#Jitter2_Unmanaged_PartitionedBuffer_1_ResizeLock">ResizeLock</a> when calling concurrently with data access.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Dispose_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Dispose*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Dispose" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Dispose">
+  Dispose()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L446"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Finalize_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Finalize*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Finalize" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Finalize">
+  ~PartitionedBuffer()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L444"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected ~PartitionedBuffer()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Free_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Free*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Free_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Free(Jitter2.Unmanaged.JHandle{`0})">
+  Free(JHandle&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L244"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes the associated native structure from the buffer and invalidates the handle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Free(JHandle&lt;T&gt; handle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handle</code> <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle to free.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Unmanaged_PartitionedBuffer_1_Free_Jitter2_Unmanaged_JHandle__0___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><b>Safety:</b> After calling this method, the handle becomes invalid.
+Do not use the handle or any cached references to its data.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_GetHandle_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetHandle*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_GetHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetHandle(`0@)">
+  GetHandle(ref T)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns the handle of the object. O(1) operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JHandle&lt;T&gt; GetHandle(ref T t)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>t</code> <span class="xref">T</span></dt>
+    <dd><p>A reference to the element in the buffer.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle for the element.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_GetIndex_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetIndex*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_GetIndex_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetIndex(Jitter2.Unmanaged.JHandle{`0})">
+  GetIndex(JHandle&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L355"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Retrieves the target index of the handle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int GetIndex(JHandle&lt;T&gt; handle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handle</code> <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle to get the index for.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The index of the element in the buffer.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_IsActive_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.IsActive*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_IsActive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.IsActive(Jitter2.Unmanaged.JHandle{`0})">
+  IsActive(JHandle&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Checks if the element is stored as an active element. O(1).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsActive(JHandle&lt;T&gt; handle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handle</code> <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle to check.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the element is active; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToActive_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToActive*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToActive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToActive(Jitter2.Unmanaged.JHandle{`0})">
+  MoveToActive(JHandle&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L308"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Moves an object from inactive to active.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MoveToActive(JHandle&lt;T&gt; handle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handle</code> <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle of the element to move.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToInactive_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToInactive*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToInactive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToInactive(Jitter2.Unmanaged.JHandle{`0})">
+  MoveToInactive(JHandle&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Moves an object from active to inactive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void MoveToInactive(JHandle&lt;T&gt; handle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>handle</code> <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html">JHandle</a>&lt;T&gt;</dt>
+    <dd><p>The handle of the element to move.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Unmanaged_PartitionedBuffer_1_Swap_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Swap*"></a>
+
+  <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Swap_System_Int32_System_Int32_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Swap(System.Int32,System.Int32)">
+  Swap(int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L342"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Swap two entries based on their index. Adjusts handles accordingly.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Swap(int i, int j)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>i</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The index of the first element.</p>
+</dd>
+    <dt><code>j</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The index of the second element.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L127" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
