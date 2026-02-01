@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "../src/Jitter2",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**",
+          "docs/**/images/**",
+          "logo.png",
+          "favicon.ico"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern",
+      "template"
+    ],
+    "globalMetadata": {
+      "_appName": "",
+      "_appTitle": "Jitter2",
+      "_appFaviconPath": "favicon.ico",
+      "_appLogoPath": "logo.png",
+      "_enableSearch": true,
+      "pdf": false,
+      "_gitUrlPattern": "github",
+      "_gitContribute": {
+        "repo": "https://github.com/notgiven688/jitterphysics2",
+        "branch": "main"
+      }
+    }
+  }
+}
