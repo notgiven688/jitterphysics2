@@ -18,6 +18,10 @@ jobs:
       - name: Install docfx
         run: dotnet tool install -g docfx
 
+      - name: Generate API metadata
+        run: docfx metadata
+        working-directory: docfx
+
       - name: Build documentation
         run: docfx build
         working-directory: docfx
