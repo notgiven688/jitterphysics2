@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Rigid Bodies | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Rigid Bodies | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/bodies.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="rigid-bodies">Rigid Bodies</h1>
+
+<p>Rigid bodies represent the main entity of the dynamics system of the engine.</p>
+<h2 id="creating-a-body">Creating a body</h2>
+<p>Rigid bodies are associated to an instance of the <code>World</code> class. They can be created like this:</p>
+<pre><code class="lang-cs">var world = new World();
+var body = world.CreateRigidBody();
+</code></pre>
+<h2 id="adding-shapes">Adding shapes</h2>
+<p>Multiple shapes can be added to a rigid body, for example:</p>
+<pre><code class="lang-cs">body.AddShape([new SphereShape(radius: 2), new BoxShape(size: 1)]);
+</code></pre>
+<p>Shapes determine how bodies collide with each other.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>Creating many bodies at once</strong>
+When calling body.AddShape(shape), the shape is registered in the collision system of the engine and immediately added to the spatial tree structure (<code>DynamicTree</code>) for efficient broad-phase collision detection.
+Registering many objects at <span class="math">\((0, 0, 0)\)</span> must be prevented by specifying the rigid body position, before adding shapes.</p>
+</div>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>Passing the same instance to multiple bodies</strong>
+Passing the same instance of a shape to multiple bodies is not allowed in Jitter and will throw an exception.</p>
+</div>
+<p>In Jitter, the sphere shape is defined so that its geometric center aligns with the (local) coordinate system's center at <span class="math">\((0, 0, 0)\)</span>.
+The same holds for all basic primitives (sphere, box, capsule, cone, cylinder).</p>
+<p>After adding a shape to Jitter the mass properties (mass and inertia) of the associated rigid body are calculated accordingly.
+Jitter assumes unit density for the calculations.</p>
+<p>Adding just a sphere</p>
+<pre><code class="lang-cs">body.AddShape(new SphereShape(radius: 1));
+</code></pre>
+<p>will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.</p>
+<p>Of course, the mass properties of the body can be set directly, using <code>body.SetMassInertia</code>.
+Setting <code>setMassProperties: false</code> in <code>body.AddShape(...)</code> prevents Jitter from using the shapes' mass properties.</p>
+<p><em><strong>In Jitter the position of the rigid body has to align with the center of mass.</strong>
+So in the local reference frame of the body, the center of mass is <span class="math">\((0, 0, 0)\)</span>. Shapes or combinations of shapes must be translated accordingly.</em></p>
+<h3 id="debugging-shapes">Debugging shapes</h3>
+<p>The <code>RigidBody</code> class offers the <code>body.DebugDraw(IDebugDrawer drawer)</code> method which creates a triangle hull for each shape added to the body and calls the <code>drawer.DrawTriangle</code> method in the provided <code>IDebugDrawer</code> implementation.
+The coordinates of the triangles are in world space and can be drawn to debug the collision shape of the rigid body.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>body.DebugDraw performance</strong>
+Every call to <code>body.DebugDraw</code> the triangle hulls are generated on the fly.
+Since this is a slow operation the method should only be called for debugging purposes.</p>
+</div>
+<h2 id="gravity">Gravity</h2>
+<p>The gravity for the world can be set using <code>world.Gravity</code>.
+The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.</p>
+<h2 id="damping">Damping</h2>
+<p>Jitter uses a very simple damping system to slow rigid bodies down.
+This improves simulation stability and also resembles mechanical systems 'losing' energy in the real world.
+In Jitter there is a linear and an angular damping factor for each body which can be set using <code>body.Damping</code>.
+With each <code>world.Step</code>, Jitter multiplies the angular and linear velocity of each rigid body by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the damping factor.
+For performance reasons there is no time dependency for the damping system.
+As a result, bodies in a simulation with smaller timesteps experience greater damping.</p>
+<h2 id="speculative-contacts">Speculative contacts</h2>
+<p>Speculative contacts can be utilized to prevent fast and small objects from tunneling through thin objects.
+An object moving quickly enough might 'miss' a collision since the distance traveled between two frames exceeds the thickness of another object.
+Speculative contacts can be enabled on a per-body basis using <code>body.EnableSpeculativeContacts</code>.
+The <code>world.SpeculativeRelaxationFactor</code> and <code>world.SpeculativeVelocityThreshold</code> can be adjusted to fine-tune speculative contacts for specific use cases.
+However, it should be noted that an accurate simulation of fast-moving objects is only possible using smaller time steps.
+Speculative contacts may involve a trade-off of less accurate collision detection and response.</p>
+<h2 id="friction-and-restitution">Friction and Restitution</h2>
+<p>Friction and restitution coefficients may be set through <code>body.Friction</code> and <code>body.Restitution</code>.
+For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>
+<h2 id="collide-events">Collide events</h2>
+<p>An instance of <code>RigidBody</code> provides two events: <code>BeginCollide</code> and <code>EndCollide</code>.
+These events are triggered whenever an arbiter (Contact) is created or removed which involves the rigid body.
+By default, arbiters are created between colliding shapes.
+For example, the <code>BeginCollide</code> event can be used to modify the coefficient of friction of a contact:</p>
+<pre><code class="lang-cs">body.BeginCollide += BodyOnBeginCollide;
+
+private void BodyOnBeginCollide(Arbiter arb)
+{
+    arb.Handle.Data.Friction = 0.0f;
+}
+</code></pre>
+<h2 id="activationdeactivation">Activation/Deactivation</h2>
+<p>A rigid body is always assigned to an island.
+Islands are formed by bodies which are pairwise interacting with each other trough contacts or constraints.
+Different islands are not interacting with each other in any way.</p>
+<p>Active rigid bodies may be marked for deactivation by the world once their angular and linear velocity remain below the thresholds defined in <code>body.DeactivationThreshold</code> for a period defined by <code>body.DeactivationTime</code>.
+If all bodies within an island are marked for deactivation the whole island gets deactivated.
+The simulation cost for inactive bodies is effectively zero.
+Islands (and their associated bodies) might get waken up, as soon as a collision with an active body is registered.</p>
+<p>Using <code>body.SetActivationState</code>, the user can reset the internal deactivation time clock for the rigid body.
+It will not immediately change the activation state of the body (<code>body.IsActive</code>).
+Jitter will then in the next <code>world.Step</code> consider this body and it's connected island for activation or deactivation.
+Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no effect.</p>
+<h2 id="static-bodies">Static bodies</h2>
+<p>Static bodies (<code>body.BodyType == BodyType.Static</code>) have infinite mass and therefore are not affected by collisions or constraints.
+They also do not join islands.
+Static bodies do not generate collisions with other static or inactive bodies.
+Because of this, the position of static bodies should not be altered while in contact with other bodies.</p>
+<h2 id="kinematic-bodies">Kinematic bodies</h2>
+<p>In Jitter kinematic bodies (<code>body.BodyType == BodyType.Kinematic</code>) are bodies which can have a velocity and therefore change their position.
+They act similar to static bodies during collisions - their velocity is not changed when colliding with a regular body. They do take part in collision islands.</p>
+<div class="CAUTION">
+<h5>Caution</h5>
+<p><strong>Kinematic bodies</strong>
+Having an unstoppable object colliding with a static (immovable object) or another unstoppable object might crash the solver.
+It must be ensured that no contact points are generated in such cases.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/bodies.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

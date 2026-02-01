@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hello World | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hello World | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      <meta name="docfx:rel" content="../../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/boxes/hello-world.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hello-world">Hello World</h1>
+
+<p>We will now add physics to the scene. We do this by creating a new instance of the World class and adding several rigid bodies to it.</p>
+<p>Replace the content of <code>Program.cs</code> with the following code (marked lines indicate the additions to the source code):</p>
+<pre><code class="lang-cs">using System.Numerics;
+using Raylib_cs;
+using Jitter2;
+using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
+using Jitter2.LinearMath;
+using static Raylib_cs.Raylib;
+
+static Matrix4x4 GetRayLibTransformMatrix(RigidBody body)
+{
+    JMatrix ori = JMatrix.CreateFromQuaternion(body.Orientation);
+    JVector pos = body.Position;
+
+    return new Matrix4x4(ori.M11, ori.M12, ori.M13, pos.X,
+                         ori.M21, ori.M22, ori.M23, pos.Y,
+                         ori.M31, ori.M32, ori.M33, pos.Z,
+                         0, 0, 0, 1.0f);
+}
+
+static Texture2D GenCheckedTexture(int size, int checks, Color colorA, Color colorB)
+{
+    Image imageMag = GenImageChecked(size, size, checks, checks, colorA, colorB);
+    Texture2D textureMag = LoadTextureFromImage(imageMag);
+    UnloadImage(imageMag);
+    return textureMag;
+}
+
+const int NumberOfBoxes = 12;
+
+// set a hint for anti-aliasing
+SetConfigFlags(ConfigFlags.Msaa4xHint);
+
+// initialize a 1200x800 px window with a title
+InitWindow(1200, 800, &quot;BoxDrop example&quot;);
+
+// dynamically create a plane model
+Texture2D texture = GenCheckedTexture(10, 1,  Color.LightGray, Color.Gray);
+Model planeModel = LoadModelFromMesh(GenMeshPlane(10, 10, 10, 10));
+SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.Diffuse, ref texture);
+
+// dynamically create a box model
+texture = GenCheckedTexture(2, 1,  Color.White, Color.Magenta);
+Mesh boxMesh = GenMeshCube(1, 1, 1);
+Material boxMat = LoadMaterialDefault();
+SetMaterialTexture(ref boxMat, MaterialMapIndex.Diffuse, texture);
+
+// initialize the Jitter physics world
+World world = new ();
+world.SubstepCount = 4;
+
+// add a body representing the plane
+RigidBody planeBody = world.CreateRigidBody();
+planeBody.AddShape(new BoxShape(10));
+planeBody.Position = new JVector(0, -5, 0);
+planeBody.MotionType = MotionType.Static;
+
+// add NumberOfBoxes cubes
+for(int i = 0; i &lt; NumberOfBoxes; i++)
+{
+    RigidBody body = world.CreateRigidBody();
+    body.AddShape(new BoxShape(1));
+    body.Position = new JVector(0, i * 2 + 0.5f, 0);
+}
+
+// create a camera
+Camera3D camera = new ()
+{
+    Position = new Vector3(-20.0f, 8.0f, 10.0f),
+    Target = new Vector3(0.0f, 4.0f, 0.0f),
+    Up = new Vector3(0.0f, 1.0f, 0.0f),
+    FovY = 45.0f,
+    Projection = CameraProjection.Perspective
+};
+
+// 100 fps target
+SetTargetFPS(100);
+
+// simple render loop
+while (!WindowShouldClose())
+{
+    BeginDrawing();
+    ClearBackground(Color.Blue);
+
+    BeginMode3D(camera);
+
+    DrawModel(planeModel, Vector3.Zero, 1.0f, Color.White);
+
+    world.Step(1.0f / 100.0f, true);
+
+    foreach(var body in world.RigidBodies)
+    {
+        if (body == planeBody || body == world.NullBody) continue; // do not draw this
+        DrawMesh(boxMesh, boxMat, GetRayLibTransformMatrix(body));
+    }
+
+    EndMode3D();
+    DrawText($&quot;{GetFPS()} fps&quot;, 10, 10, 20, Color.White);
+
+    EndDrawing();
+}
+
+CloseWindow();
+</code></pre>
+<p>Running your program, you should now see a few boxes dynamically falling onto the ground.</p>
+<p><img src="images/raylibjitter.gif" alt="plane"></p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/boxes/hello-world.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Changelog | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Changelog | Jitter2 ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/changelog.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="changelog">Changelog</h1>
+
+<h3 id="jitter-278-2026-01-18">Jitter 2.7.8 (2026-01-18)</h3>
+<ul>
+<li>Fixed degraded tree quality for large proxies in <code>DynamicTree</code>.</li>
+<li>Added <code>JQuaternion.Lerp</code>, <code>JQuaternion.Slerp</code>, <code>JQuaternion.Dot</code>, and <code>JQuaternion.Inverse</code> methods for quaternion interpolation and math.</li>
+<li>Added <code>JTriangle.GetCenter</code>, <code>JTriangle.GetNormal</code>, <code>JTriangle.GetArea</code>, <code>JTriangle.GetBoundingBox</code>, and <code>JTriangle.ClosestPoint</code> helper methods.</li>
+<li>Added <code>JBoundingBox.Disjoint</code> and <code>JBoundingBox.Contains</code> methods (also in <code>TreeBox</code>).</li>
+<li>Added <code>World.GetArbiter(id0, id1)</code> to retrieve existing arbiters without creating new ones.</li>
+<li>Improved XML documentation throughout the codebase.</li>
+<li>Fixed <code>CalculateMassInertia</code> in <code>TransformedShape</code> returning incorrect values.</li>
+<li>Fixed normalization bug in <code>TriangleEdgeCollisionFilter</code>.</li>
+<li>Fixed validation in <code>SphereShape</code> radius setter.</li>
+<li>Fixed a bug in speculative contact implementation.</li>
+<li>Improved <code>TriangleMesh</code>. Added option to build directly from vertices and indices.</li>
+<li>Added overloads for <code>Span</code> throughout the engine (in <code>TriangleMesh</code>, <code>ShapeHelper</code>, <code>PointCloudShape</code>, <code>ConvexHullShape</code>).</li>
+</ul>
+<h3 id="jitter-277-2026-01-08">Jitter 2.7.7 (2026-01-08)</h3>
+<ul>
+<li>Added <code>vector.UnsafeAs&lt;T&gt;</code> and <code>JVector.UnsafeFrom&lt;T&gt;</code>. Same for <code>JQuaternion</code>.</li>
+<li>Added <code>world.PreSubStep</code> and <code>world.PostSubStep</code> events.</li>
+</ul>
+<h3 id="jitter-276-2025-12-18">Jitter 2.7.6 (2025-12-18)</h3>
+<ul>
+<li>Removed <code>World.Capacity</code>. Number of entities in <code>World</code> no longer has to be specified in advance.</li>
+<li>Fixed a bug in <code>TwistAngle</code>.</li>
+<li>Added <code>WeldJoint</code>.</li>
+<li>Exposed more properties in <code>ConeLimit</code>.</li>
+</ul>
+<h3 id="jitter-275-2025-11-16">Jitter 2.7.5 (2025-11-16)</h3>
+<ul>
+<li>Improved cost heuristic for <code>DynamicTree</code>.</li>
+</ul>
+<h3 id="jitter-274-2025-10-29">Jitter 2.7.4 (2025-10-29)</h3>
+<ul>
+<li>Add <code>MotionType</code> property to <code>RigidBody</code> instances. Bodies might me <code>Dynamic</code>, <code>Static</code> or <code>Kinematic</code>.
+Static bodies with non-zero velocity are no longer supported, kinematic bodies must be used instead.</li>
+<li>The contact graph information is used to optimize the memory layout for contacts (<code>ReorderContacts</code> step). This makes the solver more cache friendly.</li>
+<li>Reduced overhead of <code>CheckDeactivation</code> step in the engine.</li>
+</ul>
+<h3 id="jitter-273-2025-10-19">Jitter 2.7.3 (2025-10-19)</h3>
+<ul>
+<li>Improved multi-threading performance.</li>
+</ul>
+<h3 id="jitter-272-2025-09-21">Jitter 2.7.2 (2025-09-21)</h3>
+<ul>
+<li>Reduced GC in <code>DynamicTree.Optimize</code>.</li>
+<li>Default to LocalRayCast if body is not set for <code>RigidBodyShape</code>.</li>
+<li>Added wakeup parameter to <code>AddForce</code> overloads for finer activation state control.</li>
+<li>Added generic <code>ICloneableShape&lt;T&gt;</code> interface for type-safe shape cloning.</li>
+</ul>
+<h3 id="jitter-271-2025-06-28">Jitter 2.7.1 (2025-06-28)</h3>
+<ul>
+<li>Added <code>RigidBody.EnableGyroscopicForces</code> to include gyroscopic forces.</li>
+</ul>
+<h3 id="jitter-270-2025-06-14">Jitter 2.7.0 (2025-06-14)</h3>
+<ul>
+<li><strong>Dropped .NET7 support</strong></li>
+<li>Added <code>JQuaternion.ToAxisAngle</code> method</li>
+<li>Renamed <code>JBBox</code> to <code>JBoundingBox</code>and <code>TreeBBox</code> to <code>TreeBox</code>.</li>
+<li>Various smaller API changes.</li>
+</ul>
+<h3 id="jitter-267-2025-06-09">Jitter 2.6.7 (2025-06-09)</h3>
+<ul>
+<li>Introduced SIMD accelerated <code>TreeBBox</code> for <code>DynamicTree</code>.</li>
+</ul>
+<h3 id="jitter-266-2025-05-31">Jitter 2.6.6 (2025-05-31)</h3>
+<ul>
+<li>Implicit conversion for <code>JVector</code> and <code>JQuaternion</code> from tuples, e.g. <code>cube.Position = (1, 2, 3);</code>.</li>
+<li>Added <code>PreStep</code> and <code>PostStep</code> to <code>World.Timings</code>.</li>
+<li>Added <code>NarrowPhase.Sweep</code> overload which calculates time of impact (TOI) for rotating shapes.</li>
+<li><code>RegisterContact</code> no longer requires a <code>penetration</code> and a <code>speculative</code> parameter.</li>
+<li>Bugfix: <code>MathHelper.RotationQuaternion</code>, fixed wrong/not normalized quaternion generation for large <code>dt</code>.</li>
+<li>Added an additional <code>normal</code> out-parameter to <code>NarrowPhase.Distance</code>.</li>
+<li>Renamed <code>JVector.TransposedTransform(in JVector vector, in JQuaternion quat)</code> to <code>ConjugatedTransform</code>.</li>
+<li>Added <code>Anchor1</code> and <code>Anchor2</code> properties to <code>BallSocket</code>.</li>
+<li>Bugfix: Skipping degenerate triangles in <code>TriangleMesh</code> now works correctly.</li>
+</ul>
+<h3 id="jitter-265-2025-05-21">Jitter 2.6.5 (2025-05-21)</h3>
+<ul>
+<li>Rigid bodies now activate on velocity or force changes.</li>
+<li>Removed FatTriangleShape.</li>
+<li>Renamed 'Active' to 'ActiveCount' and add span-based accessors in ReadOnlyPartitionedSet.</li>
+<li>Fixed bug in TriangleEdgeCollisionFilter.</li>
+</ul>
+<h3 id="jitter-264-2025-05-19">Jitter 2.6.4 (2025-05-19)</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Triangle winding order in <code>TriangleMesh</code> is now counter-clockwise (CCW) for front-facing triangles.
+<em>If you're using <code>TriangleMesh</code>, swap the vertex order to maintain correct normal orientation.</em></li>
+<li>Added <code>JTriangle.RayIntersect</code> method.</li>
+<li>Renamed <code>ConvexHullIntersection</code> to <code>CollisionManifold</code>.</li>
+<li>Modified support function for <code>BoxShape</code>.</li>
+</ul>
+<h3 id="jitter-263-2025-05-17">Jitter 2.6.3 (2025-05-17)</h3>
+<ul>
+<li>Aligned rigid bodies (<code>RigidBodyData</code>) to a 64-byte boundary (reduce false sharing).</li>
+<li>Bugfix in speculative contacts.</li>
+</ul>
+<h3 id="jitter-262-2025-05-06">Jitter 2.6.2 (2025-05-06)</h3>
+<ul>
+<li>Use <strong>Generics</strong> in <code>NarrowPhase.cs</code> (avoid boxing for structs implementing the <code>ISupportMappable</code> interface).</li>
+<li>Added special code paths in <code>Contact.cs</code> for static bodies (avoid unnecessary cache line invalidation).</li>
+<li>Added <code>PredictPosition</code>, <code>PredictOrientation</code> and <code>PredictPose</code> to <code>RigidBody</code>.</li>
+<li>Added <code>CreateFromAxisAngle</code> and <code>Normalize</code> methods in <code>JQuaternion</code>.</li>
+</ul>
+<h3 id="jitter-261-2025-04-24">Jitter 2.6.1 (2025-04-24)</h3>
+<ul>
+<li>Bugfix in <code>TriangleEdgeCollisionFilter</code> for speculative contacts.</li>
+</ul>
+<h3 id="jitter-260-2025-04-24">Jitter 2.6.0 (2025-04-24)</h3>
+<ul>
+<li>Added <code>SampleHull</code> and <code>MakeHull</code> to <code>ShapeHelper</code>.</li>
+<li>Fixed hill climbing getting stuck for <code>ConvexHullShape</code>s.</li>
+<li>Added SIMD support for <code>PointCloudShape</code>s.</li>
+<li>Added option to ignore degenerated triangles in <code>TriangleMesh</code>.</li>
+<li>Made thickness parameter mandatory in <code>FatTriangleShape</code>.</li>
+<li>Added Fisher-Yates shuffle to <code>DynamicTree.Optimize</code>.</li>
+<li>Optimized <code>TriangleEdgeCollisionFilter</code>.</li>
+</ul>
+<h3 id="jitter-259-2025-04-17">Jitter 2.5.9 (2025-04-17)</h3>
+<ul>
+<li>Use <code>CollideEpsilon</code> 1e-5 in MPREPA.</li>
+<li>Fixed a bug in <code>ShardedDictionary</code>.</li>
+</ul>
+<h3 id="jitter-258-2025-04-16">Jitter 2.5.8 (2025-04-16)</h3>
+<ul>
+<li>Fixed <code>DynamicTree.Optimize</code> messing up collision pairs.</li>
+<li>Refactored <code>SoftBody.cs</code></li>
+<li>Improved <code>TriangleEdgeCollisionFilter</code>.</li>
+<li>Further reduced GC.</li>
+</ul>
+<h3 id="jitter-257-2025-04-06">Jitter 2.5.7 (2025-04-06)</h3>
+<ul>
+<li>Fixed possible crash when dynamically making bodies static.</li>
+<li>Improved memory footprint and reduced GC.</li>
+<li>Added <code>Logger</code> as a replacement for <code>Trace</code>.</li>
+</ul>
+<h3 id="jitter-256-2025-03-08">Jitter 2.5.6 (2025-03-08)</h3>
+<ul>
+<li>Fixed concurrency bug in <code>world.GetArbiter</code>.</li>
+</ul>
+<h3 id="jitter-255-2025-03-02">Jitter 2.5.5 (2025-03-02)</h3>
+<ul>
+<li>Added implicit conversion operators for System.Numerics Vector3 and Quaternion.</li>
+<li>Replaced Trace.WriteLine with Trace.Information, Warning, Error.</li>
+</ul>
+<h3 id="jitter-254-2025-02-08">Jitter 2.5.4 (2025-02-08)</h3>
+<ul>
+<li>Renamed <code>JAngle.Radiant</code> to <code>JAngle.Radian</code>.</li>
+<li>Renamed namespace <code>Jitter2.UnmanagedMemory</code> to <code>Jitter2.Unmanaged</code>.</li>
+<li>Fixed <code>body.AddShape(IEnumerable&lt;RigidBodyShape&gt; shapes)</code> for one-time-use iterators.</li>
+<li>Smaller improvements in XML-documentation.</li>
+</ul>
+<h3 id="jitter-253-2025-01-12">Jitter 2.5.3 (2025-01-12)</h3>
+<ul>
+<li>DynamicTree, <code>Optimize</code> takes a delegate now.</li>
+<li>Fixed <code>TriangleShape</code> ray cast not returning a normalized normal.</li>
+<li>Removed the <code>CollisionHelper</code> class.</li>
+<li>Renamed <code>ActiveList</code> and <code>UnmanagedActiveList</code> to <code>PartitionedSet</code> and <code>PartitionedBuffer</code>, respectively.</li>
+<li>Various smaller improvements (ToString() overloads, IEquality&lt;T&gt; implementations, XML-documentation)</li>
+</ul>
+<h3 id="jitter-252-2025-01-08">Jitter 2.5.2 (2025-01-08)</h3>
+<ul>
+<li>Added enumeration method to <code>DynamicTree</code> and made <code>PairHashSet</code> internal.</li>
+<li><strong>Breaking Change:</strong> Removed <code>UseFullEPASolver</code> option.</li>
+<li>Further improved simulation performance under high lock contention scenarios.</li>
+</ul>
+<h3 id="jitter-251-2024-12-31">Jitter 2.5.1 (2024-12-31)</h3>
+<ul>
+<li>Bugfix in <code>PairHashSet</code>.</li>
+</ul>
+<h3 id="jitter-250-2024-12-23">Jitter 2.5.0 (2024-12-23)</h3>
+<ul>
+<li>Better utilization of multi core systems.</li>
+<li>Bugfix in collision detection (possible NaN values).</li>
+</ul>
+<h3 id="jitter-249-2024-12-18">Jitter 2.4.9 (2024-12-18)</h3>
+<ul>
+<li>Huge improvements for the <code>DynamicTree</code> implementation.</li>
+</ul>
+<h3 id="jitter-248-2024-11-27">Jitter 2.4.8 (2024-11-27)</h3>
+<ul>
+<li>Add option to build in double precision mode.</li>
+<li>Made <code>Constraint</code> constructor public to allow for custom constraints.</li>
+</ul>
+<h3 id="jitter-247-2024-11-18">Jitter 2.4.7 (2024-11-18)</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Dropped .NET6 support, added .NET9.</li>
+<li>SIMD for contacts.</li>
+<li>Contact manifold overflow fix.</li>
+<li>Changed default damping.</li>
+<li>Improved auxiliary contact points.</li>
+<li>Minor API changes.</li>
+</ul>
+<h3 id="jitter-246-2024-10-28">Jitter 2.4.6 (2024-10-28)</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Jitter world is now constructed using World.Capacity.</li>
+<li><strong>Breaking Change:</strong> World.RayCast moved to World.DynamicTree.RayCast.</li>
+<li><strong>Breaking Change:</strong> Renamed NumberSubsteps to SubstepCount.</li>
+<li>Added split impulses. <strong>Breaking Change:</strong> SolverIterations property is now a tuple.</li>
+<li>Several smaller improvements in the API.</li>
+</ul>
+<h3 id="jitter-245-2024-10-07">Jitter 2.4.5 (2024-10-07)</h3>
+<ul>
+<li>Added new methods to NarrowPhase: Distance and Overlap.</li>
+<li><strong>Breaking Change:</strong>  Renamed NarrowPhase.SweepTest to NarrowPhase.Sweep.</li>
+<li><strong>Breaking Change:</strong>  Renamed NarrowPhase.GJKEPA to NarrowPhase.Collision.</li>
+<li>Made PointTest, Raycast and SweepTest to use new SimplexSolver and SimplexSolverAB implementations.</li>
+<li>Fixed normal in GJKEPA for separating case.</li>
+</ul>
+<h3 id="jitter-244-2024-09-14">Jitter 2.4.4 (2024-09-14)</h3>
+<ul>
+<li>Implemented fixes and workarounds for using Jitter with a debugger attached.</li>
+</ul>
+<h3 id="jitter-243-2024-08-31">Jitter 2.4.3 (2024-08-31)</h3>
+<ul>
+<li>Correct corner case beeing wrong in MPR collision detection due to typo (bug fix).</li>
+<li>FatTriangleShape level did not properly take transformations into account (bug fix).</li>
+</ul>
+<h3 id="jitter-242-2024-08-26">Jitter 2.4.2 (2024-08-26)</h3>
+<ul>
+<li>Added FatTriangleShape to give triangles thickness which can be useful for static triangle meshes.</li>
+<li>Removal from potential pairs in DynamicTree ignores filters from now on (bug fix).</li>
+<li>Use sweep tests for speculative contacts, vastly improving simulation quality in this scenario.</li>
+<li><strong>Breaking Change:</strong> Redefinition of NarrowPhase.SweepTest results.</li>
+<li>Improved TriangleEdgeCollisionFilter.</li>
+</ul>
+<h3 id="jitter-241-2024-08-21">Jitter 2.4.1 (2024-08-21)</h3>
+<ul>
+<li>Improved TriangleEdgeCollisionFilter.</li>
+<li>Implemented analytical box and sphere ray casting.</li>
+<li>Made Restitution and Friction public in Contact.</li>
+<li>Improved DynamicTree interface.</li>
+<li>Added Debug.Asserts in ActiveList.</li>
+<li>Marked ArbiterKey as readonly.</li>
+<li>Added enumerator to PairHashSet.</li>
+<li>Changed ShapeHelper.MakeHull to take a generic of type ICollection.</li>
+</ul>
+<h3 id="jitter-240-2024-08-10">Jitter 2.4.0 (2024-08-10)</h3>
+<ul>
+<li>Improved TrimPotentialPairs logic.</li>
+<li>Optimized quaternion vector transformation.</li>
+<li>Extended functionality of ContactData.UsageMask.</li>
+<li><strong>Breaking Change:</strong> Overhauled the shape system. Regular shapes (box, sphere, capsule, ...) now derive from RigidBodyShape. Some method signatures changed slightly, e.g. ray casting.</li>
+<li>Improved exceptions.</li>
+<li>Added ReferenceFrameAttribute.</li>
+</ul>
+<h3 id="jitter-231-2024-06-02">Jitter 2.3.1 (2024-06-02)</h3>
+<ul>
+<li>ReadOnly wrappers (ReadOnlyList, ReadOnlyHashset) are now structs.</li>
+<li>Shapes with very small dimensions might have close to zero or zero mass/inertia. Creating rigid bodies from them now throws an exception (use body.AddShape(shape, setMassInertia: false) to not use the shape's mass properties).</li>
+<li>Added BeginCollide and EndCollide events per body.</li>
+</ul>
+<h3 id="jitter-230-2024-05-20">Jitter 2.3.0 (2024-05-20)</h3>
+<ul>
+<li>Added RigidBody.RemoveShape overload to remove multiple shapes at once.</li>
+<li>Marked Rigid.ClearShapes deprecated.</li>
+<li><strong>Breaking Change:</strong> Use JQuaternion for orientations. Sorry for the API break.</li>
+</ul>
+<h3 id="jitter-221-2024-04-29">Jitter 2.2.1 (2024-04-29)</h3>
+<ul>
+<li>Add optional activate parameter to world.AddShape.</li>
+<li>Add NarrowPhase.SweepTest.</li>
+<li>EPA collision detection: various improvements.</li>
+<li>Improve exit condition for RayCast and PointTest.</li>
+<li>Remove redundant ArgumentException for zero mass shapes.</li>
+<li>Handle zero time steps. Throw ArgumentException for negative time steps.</li>
+<li>Add joint base class to joint classes.</li>
+</ul>
+<h3 id="jitter-220-2024-01-02">Jitter 2.2.0 (2024-01-02)</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Renamed <code>Raycast</code> to <code>RayCast</code>.</li>
+<li><code>world.Remove(world.NullBody)</code> does now remove all shapes, constraints and contacts associated with NullBody.</li>
+<li><code>world.AddShape(shape)</code> respects the activation state of the associated rigid body. Most notable: performance improvement when directly adding <code>TriangleShape</code>s to world.NullBody for static geometry.</li>
+<li>Performance improvements for ConvexHullShape.</li>
+<li>Improved termination condition in GJKEPA collision detection.</li>
+</ul>
+<h3 id="jitter-211-2023-12-17">Jitter 2.1.1 (2023-12-17)</h3>
+<ul>
+<li>Fixed O(n^2) problem in <code>TriangleMesh</code> due to hash collisions.</li>
+<li><code>WorldBoundingBox</code> of <code>Shape</code> is now updated even if no <code>RigidBody</code> is attached.</li>
+</ul>
+<h3 id="jitter-210-2023-12-10">Jitter 2.1.0 (2023-12-10)</h3>
+<ul>
+<li>Added debug drawing for rigid bodies (<code>RigidBody.DebugDraw</code>).</li>
+<li>Fixed a bug in <code>CalculateMassInertia</code> within <code>TransformedShape.cs</code>.</li>
+<li>Improved ray casting performance and introduced <code>NarrowPhase.PointTest</code>.</li>
+<li><strong>Breaking Change:</strong> Inverted behavior of <code>BroadPhaseCollisionFilter</code>.</li>
+<li><strong>Breaking Change:</strong> Inverted definition of damping factors in <code>RigidBody.Damping</code> (0 = no damping, 1 = immediate halt).</li>
+<li>Added <code>RigidBody.SetMassInertia</code> overload to enable setting the inverse inertia to zero.</li>
+<li>An exception is now thrown when a body's mass is set to zero.</li>
+<li>Fixed a bug in the friction handling in <code>Contact.cs</code>.</li>
+</ul>
+<h3 id="jitter-201-2023-10-28">Jitter 2.0.1 (2023-10-28)</h3>
+<ul>
+<li>Fixed a bug in contact initialization which affected soft body physics.</li>
+</ul>
+<h3 id="jitter-200-2023-10-22">Jitter 2.0.0 (2023-10-22)</h3>
+<p>Initial stable Release.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/changelog.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

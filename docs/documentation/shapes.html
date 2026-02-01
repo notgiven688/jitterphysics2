@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Shapes | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Shapes | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/shapes.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="shapes">Shapes</h1>
+
+<p>Shapes in Jitter define how the rigid body collides with other objects.
+Shapes implement the <code>ISupportMappable</code> interface and are always convex.
+They can be passed to static methods defined in the <code>NarrowPhase</code> class for collision detection.
+They also implement the <code>IDynamicTreeEntry</code> interface and can therefore be added to the <code>DynamicTree</code> class:
+When a shape is added to a rigid body this is done automatically (<code>world.DynamicTree</code>).</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p><strong>Concave Shapes</strong>
+A concave shape can be represented by combining multiple convex shapes on a single rigid body.
+Third-party libraries for 'convex decomposition' can be used to generate convex hulls from arbitrary meshes.</p>
+</div>
+<h2 id="default-types">Default types</h2>
+<p>The inheritance hierarchy for the default shapes in Jitter is shown here:</p>
+<pre><code class="lang-text">Shape
+├── RigidBodyShape
+│   ├── BoxShape
+│   ├── CapsuleShape
+│   ├── ConeShape
+│   ├── ConvexHullShape
+│   ├── CylinderShape
+│   ├── PointCloudShape
+│   ├── TransformedShape
+│   └── TriangleShape
+└── SoftBodyShape
+    ├── SoftBodyTetrahedron
+    └── SoftBodyTriangle
+</code></pre>
+<p>Most shapes are self-explanatory (additional details are in the API documentation), while some specifics are outlined below.</p>
+<h3 id="convexhullshape">ConvexHullShape</h3>
+<p>The constructor of the <code>ConvexHullShape</code> takes a list of triangles.</p>
+<pre><code class="lang-cs">public ConvexHullShape(List&lt;JTriangle&gt; triangles)
+</code></pre>
+<p>The triangles provided <em>must</em> form a convex hull.
+The validity of the convex shape is not checked.
+Invalid shapes can lead to glitched
+collisions and/or non-terminating algorithms during collision detection.
+The triangles are used to construct an internal acceleration structure that speeds up collision detection for this shape through hill-climbing.</p>
+<p>The <code>convexHullShape.Clone()</code> method can be used to clone the shape:
+The internal data structure is then used for both shapes.</p>
+<h3 id="pointcloudshape">PointCloudShape</h3>
+<p>The <code>PointCloudShape</code> is very similar to the <code>ConvexHullShape</code>.
+The constructor takes a list of vertices.</p>
+<pre><code class="lang-cs">public PointCloudShape(List&lt;JVector&gt; vertices)
+</code></pre>
+<p>The vertices do not need to form a convex hull; however, collision detection will 'shrink-wrap' these vertices, so the final collision shape is convex.
+For example, passing the 8 vertices of a cube to the constructor generates a cube shape; adding a 9th vertex at the cube's center has no effect.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>Number of vertices</strong>
+<code>PointCloudShape</code>s should only be used for a small to moderate number of vertices (<span class="math">\(\approx{}300\)</span>). Larger numbers of vertices can negatively impact performance.
+<code>ConvexHullShape</code>s are the better choice for more complex hulls.</p>
+</div>
+<h3 id="transformedshape">TransformedShape</h3>
+<p>The <code>TransformedShape</code> takes another shape as input and transforms it.</p>
+<pre><code class="lang-cs">public TransformedShape(RigidBodyShape shape, in JVector translation, in JMatrix transform)
+</code></pre>
+<p>Any affine transformation is possible.
+The wrapped shape might be translated, rotated, scaled and sheared.
+For example, a sphere shape could be transformed into an ellipsoid.</p>
+<h3 id="triangleshape">TriangleShape</h3>
+<p>The <code>TriangleShape</code> has no volume.
+It is mostly used for static geometry, although it can be added to non-static bodies. The <code>TriangleShape</code> is constructed  with a <code>TriangleMesh</code> and an index.</p>
+<pre><code class="lang-cs">public TriangleShape(TriangleMesh mesh, int index)
+</code></pre>
+<p>A <code>TriangleMesh.Triangle</code> stores information about neighbour triangles.
+This information is used in the <code>TriangleEdgeCollisionFilter</code> (enabled by default) to resolve collision artifacts that occur when shapes slide over the edges between connected triangles.
+These edges are often referred to as 'internal edges' and can cause major problems when adding level geometry to a game.</p>
+<h3 id="softbodyshape">SoftBodyShape</h3>
+<p>The vertices of the <code>SoftBodyShape</code> are represented by rigid bodies.
+The shapes (triangle and tetrahedron) are dynamically defined by the position of the vertices.
+A <code>SoftBodyShape</code> is not added to a body.</p>
+<h2 id="custom-shapes">Custom shapes</h2>
+<p>Custom shapes can easily be implemented in Jitter.
+A shape is defined by its support function - which can be looked up or derived.</p>
+<p>The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one in Jitter.</p>
+<pre><code class="lang-cs">public class HalfSphereShape : RigidBodyShape
+{
+    public override void SupportMap(in JVector direction, out JVector result)
+    {
+        const float centerOfMassOffset = 3.0f / 8.0f;
+
+        if (direction.Y &gt;= 0.0f)
+        {
+            result = JVector.Normalize(direction);
+        }
+        else
+        {
+            JVector pDir = new JVector(direction.X, 0.0f, direction.Z);
+            float pDirSq = pDir.LengthSquared();
+
+            if (pDirSq &lt; 1e-12f) result = JVector.Zero;
+            else result = (1.0f / MathF.Sqrt(pDirSq)) * pDir;
+        }
+
+        // shift, such that (0, 0, 0) is the center of mass
+        result.Y -= centerOfMassOffset;
+    }
+
+    public override void GetCenter(out JVector point)
+    {
+        point = JVector.Zero;
+    }
+}
+</code></pre>
+<p>Mass properties and bounding boxes are automatically calculated from the support map using methods in the <code>ShapeHelper</code> class.
+Performance can be optimized by providing overrides directly in the shape class:</p>
+<pre><code class="lang-cs">public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+
+public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+
+public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
+</code></pre>
+<p>The <code>ShapeHelper</code> class can also be used to generate a triangle mesh representation of the shape (or any class implementing <code>ISupportMappable</code>), via</p>
+<pre><code class="lang-cs">public static IEnumerable&lt;JTriangle&gt; MakeHull(ISupportMappable support, int subdivisions = 3)
+</code></pre>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/shapes.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

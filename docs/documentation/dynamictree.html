@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Dynamic tree | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Dynamic tree | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/dynamictree.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="dynamic-tree">Dynamic tree</h1>
+
+<p>The dynamic tree in Jitter holds instances which implement the <code>IDynamicTreeProxy</code> interface.
+The main task of the tree is to efficiently determine if a proxy's axis-aligned bounding box is overlapping with the axis-aligned bounding box of any other proxy in the world.
+In a naive implementation this requires <span class="math">\(\mathcal{O}\left(n\right)\)</span> operations (checking for an overlap with every of the <span class="math">\(n-1\)</span> entities).
+The tree structure does accelerate this to <span class="math">\(\mathcal{O}\left(\mathrm{log}(n)\right)\)</span>. Since proxies are dynamic and can move, the tree must be continuously updated.
+To less frequently trigger updates, entities are enclosed within slightly larger bounding boxes than their actual size.
+This bounding box extension is defined by the <code>Velocity</code> property of the <code>IDynamicTreeProxy</code> interface.</p>
+<p><img src="images/dynamictree.png" alt="img alt"></p>
+<h2 id="adding-proxies">Adding proxies</h2>
+<p>Jitter automatically registers all shapes added to a rigid body (<code>body.AddShape</code>) with the <code>world.DynamicTree</code>.
+However, users are free to add own implementations of <code>IDynamicTreeProxy</code> to the world's tree, using <code>tree.AddProxy</code>.
+In this case the user has to implement a <code>BroadPhaseFilter</code> and register it (using <code>world.BroadPhaseFilter</code>) to handle any collisions with the custom proxy, otherwise an <code>InvalidCollisionTypeException</code> is thrown.</p>
+<h2 id="enumerate-overlaps">Enumerate Overlaps</h2>
+<p>The tree implementation in Jitter needs to be updated using <code>tree.Update</code>.
+This is done automatically for the dynamic tree owned by the world class (<code>world.DynamicTree</code>).
+Internally <code>UpdateWorldBoundingBox</code> is called for the active proxies implementing the <code>IUpdatableBoundingBox</code> interface
+and the internal book-keeping of overlapping pairs is updated. Overlaps may be queried using <code>tree.EnumerateOverlaps</code>.</p>
+<h2 id="querying-the-tree">Querying the tree</h2>
+<p>All tree proxies that overlap a given axis aligned box can be queried</p>
+<pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JBBox box) where T : ICollection&lt;IDynamicTreeProxy&gt;
+</code></pre>
+<p>as well as all proxies which overlap with a ray</p>
+<pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, JVector rayOrigin, JVector rayDirection) where T : ICollection&lt;IDynamicTreeProxy&gt;
+</code></pre>
+<p>Custom queries can easily be implemented. An implementation which queries all proxies which have an overlap with a single point can be implemented like this:</p>
+<pre><code class="lang-cs">var stack = new Stack&lt;int&gt;();
+stack.Push(tree.Root);
+
+while (stack.TryPop(out int id))
+{
+    ref DynamicTree.Node node = ref tree.Nodes[id];
+    
+    if (node.ExpandedBox.Contains(point))
+    {
+        if (node.IsLeaf)
+        {
+            Console.WriteLine($'{node.Proxy} contains {point}.');
+        }
+        else
+        {
+            stack.Push(node.Left);
+            stack.Push(node.Right);
+        }
+    }
+}
+</code></pre>
+<h2 id="ray-casting">Ray casting</h2>
+<p>All proxies in the tree which implement the <code>IRayCastable</code> interface can be raycasted.
+This includes all shapes:</p>
+<pre><code class="lang-cs">public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
+    out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
+</code></pre>
+<p>The pre- and post-filters can be used to discard hits during the ray cast.
+Jitter shoots a ray from the origin into the specified direction.
+The function returns <code>true</code> if a hit was found.
+It also reports the point of collision which is given by</p>
+<p>$$$
+\mathbf{hit} = \mathbf{origin} + \lambda{},\times,\mathbf{direction}, \quad \textrm{with} \quad \lambda \in [0,\infty).
+$$$</p>
+<p>The returned <code>normal</code> is the normalized surface normal at the hit point.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/dynamictree.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

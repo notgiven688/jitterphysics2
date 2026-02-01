@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Jitter World | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Jitter World | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/world.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="jitter-world">Jitter World</h1>
+
+<p>An instance of the Jitter <code>World</code> class contains all entities in the physics simulation and provides the <code>World.Step</code> method to advance the simulation by a single time step.</p>
+<h2 id="worldstep">World.Step</h2>
+<p>Forward the world by a single time step using</p>
+<pre><code class="lang-cs">Step(float dt, bool multiThread = true)
+</code></pre>
+<h3 id="time-step-size">Time step size</h3>
+<div class="NOTE">
+<h5>Note</h5>
+<p><strong>Units in Jitter</strong>
+The unit system of Jitter is not explicitly defined.
+The engine utilizes 32-bit floating-point arithmetic and is optimized for objects with a size of 1 [len_unit].
+For example, the collision system uses length thresholds on the order of 1e-04 [len_unit].
+It assumes a unit density of 1 [mass_unit/len_unit³] for the mass properties of shapes.
+Consequently, the default mass of a unit cube is 1 [mass_unit].
+The default value for gravity in Jitter is 9.81 [len_unit/time_unit²], which aligns with the gravitational acceleration on Earth in metric units (m/s²).
+Therefore, it is reasonable to use metric units (kg, m, s) when conceptualizing these values.</p>
+</div>
+<p>The smaller the time step size, the more stable the simulation.
+Timesteps larger then <span class="math">\(\mathrm{dt}=1/60\,\mathrm{s}\)</span> are not adviced.
+It is also recommend to use fixed time steps.
+Typical code accumulates delta times and calls <code>world.Step</code> only at fixed time intervals, as shown in the following example.</p>
+<pre><code class="lang-cs">private float accumulatedTime = 0.0f;
+
+public void FixedTimeStep(float dt, int maxSteps = 4)
+{
+    const float fixedStep = 1.0f / 100.0f;
+
+    int steps = 0;
+    accumulatedTime += dt;
+
+    while (accumulatedTime &gt; fixedStep)
+    {
+        world.Step(fixedStep, multiThread);
+        accumulatedTime -= fixedStep;
+
+        // we can not keep up with the real time, i.e. the simulation
+        // is running slower than the real time is passing.
+        if (++steps &gt;= maxSteps) return;
+    }
+}
+</code></pre>
+<h3 id="multithreading">Multithreading</h3>
+<p>Jitter employs its own thread pool (<code>Parallelization.ThreadPool</code>) to distribute tasks across multiple threads, potentially processed by multiple cores.
+Jitter utilizes the thread pool when the <code>world.Step</code> method is invoked with the multiThread argument set to true.
+By default Jitter spawns <code>ThreadPool.ThreadCountSuggestion</code><span class="math">\(-1\)</span> additional threads, where the suggestion is caculated by</p>
+<pre><code class="lang-cs">public const float ThreadsPerProcessor = 0.9f;
+public static int ThreadCountSuggestion =&gt; Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
+</code></pre>
+<p>The number of worker threads managed by the thread pool can be adjusted using <code>ChangeThreadCount(int numThreads)</code>.
+A singleton pattern is used here, as demonstrated below:</p>
+<pre><code class="lang-cs">ThreadPool.Instance.ChangeThreadCount(4);
+</code></pre>
+<p>This adjusts the number of additional (with respect to the main thread) worker threads to <span class="math">\(4-1=3\)</span>.</p>
+<p>The <code>world.ThreadModel</code> property may be used to keep the thread pool in a tight loop waiting for work to be processed after <code>world.Step</code> has been run (<code>ThreadModelType.Persistent</code>), or to yield threads afterwards (<code>ThreadModelType.Regular</code>).
+The latter option is recommend to free processing power for other code, such as rendering.</p>
+<h2 id="solver-iterations">Solver Iterations</h2>
+<p>Jitter employs an iterative solver to solve contacts and constraints.
+The number of iterations can be raised to improve simulation quality (<code>world.SolverIterations</code>).</p>
+<pre><code class="lang-cs">world.SolverIterations = (solver: 6, relaxation: 4);
+</code></pre>
+<p>Jitter solves physical contacts (and constraints) on the velocity level ('solver iterations').
+Jitter also adds velocities to rigid bodies to resolve unphysical interpenetrations of bodies.
+These additional velocities add unwanted energy to the system which can be removed by an additional relaxation phase after integrating the new positions from these velocities.
+The number of iterations in the relaxation phase ('relaxation iterations') is specified here as well.
+The runtime for solving contacts and constraints scales linearly with the number of iterations.</p>
+<h2 id="substep-count">Substep Count</h2>
+<p>The time step can be divided into smaller steps, defined by <code>world.SubstepCount</code>.
+These smaller time steps are solved similiar to a regular full steps, however collision information is not updated.
+Each sub step is solved with the number of solver iterations specified in <code>world.SolverIterations</code>.
+For example</p>
+<pre><code class="lang-cs">world.SubstepCount = 4;
+world.SolverIterations = (solver: 2, relaxation: 1);
+</code></pre>
+<p>does perform <span class="math">\(12\)</span> solver iterations in total for each call to <code>world.Step</code>.
+The runtime is slower than a single regular step with <span class="math">\(12\)</span> iterations but this approach enhances the stability of the simulation.
+Substepping is excellent for enhancing the overall quality of constraints, stabilizing large stacks of objects, and simulating large mass ratios (like heavy objects resting on light objects) with greater accuracy.</p>
+<h2 id="auxiliary-contacts">Auxiliary Contacts</h2>
+<p>Jitter employs a technique termed 'auxiliary contacts', where additional contacts are generated for the general case where two flat surfaces of shapes are in contact.
+These additional contacts are calculated within one frame, generating the full contact manifold in a 'single pass' and preventing jitter commonly encountered with incrementally constructed collision manifolds.
+The <code>world.EnableAuxiliaryContactPoints</code> property can be used to enable or disable the usage of auxiliary contact point generation.</p>
+<h2 id="rigid-bodies">Rigid Bodies</h2>
+<p>All rigid bodies registered with the world can be accessed using</p>
+<pre><code class="lang-cs">world.RigidBodies
+</code></pre>
+<p>where <code>RigidBodies</code> is of type <code>ReadOnlyActiveList&lt;RigidBody&gt;</code>.
+The bodies are in no particular order and maybe reordered during calls to <code>world.Step</code>.</p>
+<h2 id="raw-data">Raw Data</h2>
+<p><code>RigidBodie</code>s, <code>Arbiter</code>s, and <code>(Small)Constraints</code> are regular C# classes that reside on the managed heap.
+However, these objects are linked to their unmanaged counterparts: <code>RigidBodyData</code>, <code>ContactData</code>, and <code>(Small)ConstraintData</code> which can be accessed using:</p>
+<pre><code class="lang-cs">world.RawData
+</code></pre>
+<p>Jitter relocates native structures so that active objects are stored in contiguous memory, enabling efficient access by the iterative solver.</p>
+<div class="CAUTION">
+<h5>Caution</h5>
+<p><strong>Raw Memory Access</strong>
+Accessing raw memory is generally not required when utilizing the standard functionalities of Jitter.
+Although reading the raw data of objects is generally safe, modifying data can corrupt the internal state of the engine.</p>
+</div>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>Accessing Removed Entities</strong>
+Instances of <code>RigidBody</code>, <code>Arbiter</code>, and <code>Constraint</code> store some of their data in unmanaged memory, which is automatically freed once the entities are removed (<code>world.Remove</code>) from the world.
+These entities must not be used any longer, i.e., their functions and properties must not be called or accessed, otherwise, a <code>NullReferenceException</code> is thrown.</p>
+</div>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/world.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

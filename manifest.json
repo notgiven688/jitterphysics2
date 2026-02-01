@@ -1,0 +1,525 @@
+{
+  "source_base_path": "/home/runner/work/jitterphysics2/jitterphysics2/docfx",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/WebDemo.runtimeconfig.json",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/WebDemo.runtimeconfig.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/Jitter2.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/Jitter2.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/Raylib-cs.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/Raylib-cs.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/System.Collections.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/System.Collections.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/System.Diagnostics.TraceSource.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/System.Diagnostics.TraceSource.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/System.Private.CoreLib.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/System.Private.CoreLib.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/System.Runtime.InteropServices.JavaScript.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/System.Runtime.InteropServices.JavaScript.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/WebDemo.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/WebDemo.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/blazor.boot.json",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/blazor.boot.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.js",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.js"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.js.map",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.js.map"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.native.js",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.native.js"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.native.wasm",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.native.wasm"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.native.worker.mjs",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.native.worker.mjs"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.runtime.js",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.runtime.js"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/dotnet.runtime.js.map",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/dotnet.runtime.js.map"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/0_lighting.fs",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/0_lighting.fs"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/1_lighting.vs",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/1_lighting.vs"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/2_texel_checker.png",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/2_texel_checker.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/3_runtimeconfig.bin",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/3_runtimeconfig.bin"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/index.html",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/main.js",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/main.js"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/package.json",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/package.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/changelog.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/changelog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/bodies.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/bodies.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/constraints.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/constraints.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/dynamictree.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/dynamictree.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/filters.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/filters.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/documentation/images/dynamictree.odp",
+      "output": {
+        "resource": {
+          "relative_path": "docs/documentation/images/dynamictree.odp"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/documentation/images/dynamictree.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/documentation/images/dynamictree.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/shapes.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/shapes.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/world.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/boxes/hello-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/boxes/hello-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/boxes/images/raylibjitter.gif",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/boxes/images/raylibjitter.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/boxes/images/raylibjitter.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/boxes/images/raylibjitter.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/boxes/images/raylibplane.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/boxes/images/raylibplane.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/boxes/project-setup.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/boxes/project-setup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/boxes/render-loop.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/boxes/render-loop.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/teapots/aftermath.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/teapots/aftermath.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/teapots/hello-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/teapots/hello-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/teapots/hull-sampling.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/teapots/hull-sampling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/teapots/images/teapot.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/teapots/images/teapot.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/teapots/images/teapots.gif",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/teapots/images/teapots.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/teapots/project-setup.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/teapots/project-setup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "logo.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
