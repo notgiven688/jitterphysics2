@@ -1,9 +1,0 @@
-{
-  "label": "Dropping Boxes",
-  "position": 1,
-  "collapsed": false,
-  "link": {
-    "type": "generated-index",
-    "description": "Implement a simple scene of boxes falling to the ground."
-  }
-}
