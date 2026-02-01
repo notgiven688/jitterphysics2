@@ -30,7 +30,8 @@
           "images/**",
           "docs/**/images/**",
           "logo.png",
-          "favicon.ico"
+          "favicon.ico",
+          "AppBundle/**"
         ]
       }
     ],
