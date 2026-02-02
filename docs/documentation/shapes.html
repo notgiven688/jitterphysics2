@@ -87,10 +87,10 @@
         <article data-uid="">
 <h1 id="shapes">Shapes</h1>
 
-<p>Shapes in Jitter define how the rigid body collides with other objects.
+<p>Shapes define how the rigid body collides with other objects.
 Shapes implement the <code>ISupportMappable</code> interface and are always convex.
 They can be passed to static methods defined in the <code>NarrowPhase</code> class for collision detection.
-They also implement the <code>IDynamicTreeEntry</code> interface and can therefore be added to the <code>DynamicTree</code> class:
+Shapes also implement the <code>IDynamicTreeEntry</code> interface and can be added to the <code>DynamicTree</code> class.
 When a shape is added to a rigid body this is done automatically (<code>world.DynamicTree</code>).</p>
 <div class="NOTE">
 <h5>Note</h5>
@@ -99,7 +99,7 @@ A concave shape can be represented by combining multiple convex shapes on a sing
 Third-party libraries for 'convex decomposition' can be used to generate convex hulls from arbitrary meshes.</p>
 </div>
 <h2 id="default-types">Default types</h2>
-<p>The inheritance hierarchy for the default shapes in Jitter is shown here:</p>
+<p>The inheritance hierarchy for the default shapes:</p>
 <pre><code class="lang-text">Shape
 ├── RigidBodyShape
 │   ├── BoxShape
@@ -148,7 +148,8 @@ The wrapped shape might be translated, rotated, scaled and sheared.
 For example, a sphere shape could be transformed into an ellipsoid.</p>
 <h3 id="triangleshape">TriangleShape</h3>
 <p>The <code>TriangleShape</code> has no volume.
-It is mostly used for static geometry, although it can be added to non-static bodies. The <code>TriangleShape</code> is constructed  with a <code>TriangleMesh</code> and an index.</p>
+It is mostly used for static geometry, although it can be added to non-static bodies.
+The <code>TriangleShape</code> is constructed with a <code>TriangleMesh</code> and an index.</p>
 <pre><code class="lang-cs">public TriangleShape(TriangleMesh mesh, int index)
 </code></pre>
 <p>A <code>TriangleMesh.Triangle</code> stores information about neighbour triangles.
@@ -159,9 +160,9 @@ These edges are often referred to as 'internal edges' and can cause major proble
 The shapes (triangle and tetrahedron) are dynamically defined by the position of the vertices.
 A <code>SoftBodyShape</code> is not added to a body.</p>
 <h2 id="custom-shapes">Custom shapes</h2>
-<p>Custom shapes can easily be implemented in Jitter.
-A shape is defined by its support function - which can be looked up or derived.</p>
-<p>The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one in Jitter.</p>
+<p>Custom shapes can easily be implemented.
+A shape is defined by its support function—which can be looked up or derived.</p>
+<p>The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one:</p>
 <pre><code class="lang-cs">public class HalfSphereShape : RigidBodyShape
 {
     public override void SupportMap(in JVector direction, out JVector result)
@@ -199,8 +200,8 @@ public override void CalculateMassInertia(out JMatrix inertia, out JVector com, 
 
 public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
 </code></pre>
-<p>The <code>ShapeHelper</code> class can also be used to generate a triangle mesh representation of the shape (or any class implementing <code>ISupportMappable</code>), via</p>
-<pre><code class="lang-cs">public static IEnumerable&lt;JTriangle&gt; MakeHull(ISupportMappable support, int subdivisions = 3)
+<p>The <code>ShapeHelper</code> class can also be used to generate a triangle mesh representation of the shape (or any class implementing <code>ISupportMappable</code>):</p>
+<pre><code class="lang-cs">public static List&lt;JTriangle&gt; Tessellate(ISupportMappable support, int subdivisions = 3)
 </code></pre>
 
 </article>

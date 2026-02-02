@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>General | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="General | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/general.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="general">General</h1>
+
+<p>This section covers fundamental design decisions and configuration options.</p>
+<h2 id="precision">Precision</h2>
+<p>Jitter2 supports both single-precision (<code>float</code>) and double-precision (<code>double</code>) floating-point arithmetic.
+The precision is selected at compile time.</p>
+<h3 id="compiling-for-double-precision">Compiling for Double Precision</h3>
+<p>To build with double precision, either:</p>
+<ul>
+<li>Uncomment <code>#define USE_DOUBLE_PRECISION</code> in <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Precision.cs">Precision.cs</a>, or</li>
+<li>Use the command line option:</li>
+</ul>
+<pre><code class="lang-bash">dotnet build -c Release -p:DoublePrecision=true
+</code></pre>
+<h3 id="runtime-detection">Runtime Detection</h3>
+<p>The active precision mode can be checked at runtime:</p>
+<pre><code class="lang-cs">if (Precision.IsDoublePrecision)
+{
+    Console.WriteLine(&quot;Running in double precision mode.&quot;);
+}
+</code></pre>
+<h3 id="type-differences">Type Differences</h3>
+<p>Depending on the precision mode, the math types use different component types:</p>
+<table>
+<thead>
+<tr>
+<th>Precision</th>
+<th>Vector/Matrix components</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single</td>
+<td><code>float</code></td>
+<td><code>JVector.X</code> is <code>float</code></td>
+</tr>
+<tr>
+<td>Double</td>
+<td><code>double</code></td>
+<td><code>JVector.X</code> is <code>double</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="coordinate-system">Coordinate System</h2>
+<p>Jitter2 uses a right-handed coordinate system.
+The engine itself is coordinate-system agnostic and does not enforce any particular axis convention.</p>
+<p>The only default that assumes a specific orientation is <code>World.Gravity</code>, which is initialized to <code>(0, -9.81, 0)</code>, treating the Y-axis as up.
+This can be changed:</p>
+<pre><code class="lang-cs">world.Gravity = new JVector(0, 0, -9.81f);  // Z-up convention
+</code></pre>
+<h2 id="tracing-and-logging">Tracing and Logging</h2>
+<p>Jitter2 provides mechanisms for logging and performance profiling.</p>
+<h3 id="logging">Logging</h3>
+<p>The <code>Logger</code> class provides a simple logging interface with three severity levels: <code>Information</code>, <code>Warning</code>, and <code>Error</code>.
+To receive log messages, register a listener:</p>
+<pre><code class="lang-cs">Logger.Listener = (level, message) =&gt;
+{
+    Console.WriteLine($&quot;[{level}] {message}&quot;);
+};
+</code></pre>
+<p>The engine logs warnings for events such as EPA convergence issues or memory allocation fallbacks.</p>
+<h3 id="performance-tracing">Performance Tracing</h3>
+<p>When compiled with the <code>PROFILE</code> symbol, Jitter2 records detailed timing information for each simulation phase (broad phase, narrow phase, solver iterations, etc.).
+The trace data is stored in thread-local buffers for minimal overhead.</p>
+<p>To export the recorded data:</p>
+<pre><code class="lang-cs">Tracer.WriteToFile(&quot;trace.json&quot;);
+</code></pre>
+<p>The output file uses the Chrome Trace Event format and can be visualized in:</p>
+<ul>
+<li><code>chrome://tracing</code> (paste in Chrome's address bar)</li>
+<li><a href="https://ui.perfetto.dev/">Perfetto UI</a></li>
+</ul>
+<p>When <code>PROFILE</code> is not defined, all tracing calls are completely stripped by the compiler via <code>[Conditional]</code> attributes, resulting in zero runtime overhead.</p>
+<h2 id="custom-math-types">Custom Math Types</h2>
+<p>Jitter2 defines its own math types (<code>JVector</code>, <code>JMatrix</code>, <code>JQuaternion</code>, <code>JBoundingBox</code>) rather than using <code>System.Numerics</code>.</p>
+<h3 id="full-control">Full Control</h3>
+<ul>
+<li>Precision can be switched globally between <code>float</code> and <code>double</code> without code changes.</li>
+<li>Memory layout is explicitly controlled using <code>[StructLayout(LayoutKind.Explicit)]</code>.</li>
+<li>No dependency on external math library behavior or updates.</li>
+</ul>
+<h3 id="zero-cost-interop">Zero-Cost Interop</h3>
+<p>The math types are defined with explicit field offsets, guaranteeing a predictable memory layout.
+This enables zero-copy conversion to and from other libraries' types using unsafe bit reinterpretation:</p>
+<pre><code class="lang-cs">// Convert to any layout-compatible type
+MyVector3 myVec = jitterVector.UnsafeAs&lt;MyVector3&gt;();
+
+// Convert from any layout-compatible type
+JVector jitterVector = JVector.UnsafeFrom(myVec);
+</code></pre>
+<p>The methods perform a compile-time size check and reinterpret the memory directly—no copying, no allocations.</p>
+<h3 id="safe-conversions">Safe Conversions</h3>
+<p>For convenience, implicit conversions to and from <code>System.Numerics</code> types are also provided:</p>
+<pre><code class="lang-cs">System.Numerics.Vector3 sysVec = jitterVector;  // implicit conversion
+JVector jitterVec = sysVec;                      // implicit conversion
+</code></pre>
+<p>These conversions involve copying and potential precision loss when converting from double to float.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/general.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

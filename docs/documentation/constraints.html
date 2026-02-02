@@ -87,53 +87,153 @@
         <article data-uid="">
 <h1 id="constraints">Constraints</h1>
 
-<p>Constraints constraint various degrees of freedom of rigid bodies.
-In Jitter, constraints always act between two bodies.
+<p>Constraints restrict degrees of freedom of rigid bodies.
+In Jitter2, constraints always act between two bodies.
 A joint is a collection of multiple constraints, so it may act on multiple bodies.</p>
-<h2 id="default-constraints">Default constraints</h2>
-<p>Default constraints available are:</p>
-<pre><code class="lang-text">AngularMotor, BallSocket, ConeLimit, DistanceLimit, FixedAngle, HingeAngle, LinearMotor, PointOnLine, PointOnPlane, TwistAngle, SpringConstraint
-</code></pre>
-<p>Available joints:</p>
-<pre><code class="lang-text">HingeJoint, PrismaticJoint, UniversalJoint, Weld
-</code></pre>
+<h2 id="degrees-of-freedom">Degrees of Freedom</h2>
+<p>A rigid body has 6 degrees of freedom (DOF): 3 translational and 3 rotational.
+Constraints remove one or more of these degrees of freedom.</p>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Removed DOF</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BallSocket</code></td>
+<td>3 translational</td>
+<td>Anchors a point on each body together</td>
+</tr>
+<tr>
+<td><code>FixedAngle</code></td>
+<td>3 rotational</td>
+<td>Locks relative orientation between bodies</td>
+</tr>
+<tr>
+<td><code>HingeAngle</code></td>
+<td>2 rotational</td>
+<td>Allows rotation around a single axis only</td>
+</tr>
+<tr>
+<td><code>PointOnLine</code></td>
+<td>2 translational</td>
+<td>Constrains a point to a line (1 DOF with limit)</td>
+</tr>
+<tr>
+<td><code>PointOnPlane</code></td>
+<td>1 translational</td>
+<td>Constrains a point to a plane</td>
+</tr>
+<tr>
+<td><code>DistanceLimit</code></td>
+<td>1 translational</td>
+<td>Maintains distance between anchor points</td>
+</tr>
+<tr>
+<td><code>TwistAngle</code></td>
+<td>1 rotational</td>
+<td>Limits relative twist around an axis</td>
+</tr>
+<tr>
+<td><code>ConeLimit</code></td>
+<td>1 rotational</td>
+<td>Limits angular tilt between two axes</td>
+</tr>
+<tr>
+<td><code>AngularMotor</code></td>
+<td>—</td>
+<td>Drives angular velocity (does not remove DOF)</td>
+</tr>
+<tr>
+<td><code>LinearMotor</code></td>
+<td>—</td>
+<td>Drives linear velocity (does not remove DOF)</td>
+</tr>
+<tr>
+<td><code>SpringConstraint</code></td>
+<td>1 translational</td>
+<td>Spring-like force along the anchor connection</td>
+</tr>
+</tbody>
+</table>
+<h2 id="joints">Joints</h2>
+<p>Joints are combinations of constraints for common use cases:</p>
+<table>
+<thead>
+<tr>
+<th>Joint</th>
+<th>Constraints used</th>
+<th>Remaining DOF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HingeJoint</code></td>
+<td><code>BallSocket</code> + <code>HingeAngle</code> (+ optional <code>AngularMotor</code>)</td>
+<td>1 rotational</td>
+</tr>
+<tr>
+<td><code>PrismaticJoint</code></td>
+<td><code>PointOnLine</code> + <code>FixedAngle</code> or <code>HingeAngle</code> (+ optional <code>LinearMotor</code>)</td>
+<td>1 translational</td>
+</tr>
+<tr>
+<td><code>UniversalJoint</code></td>
+<td><code>BallSocket</code> + <code>TwistAngle</code> (+ optional <code>AngularMotor</code>)</td>
+<td>2 rotational</td>
+</tr>
+<tr>
+<td><code>WeldJoint</code></td>
+<td><code>BallSocket</code> + <code>FixedAngle</code></td>
+<td>0 (fully locked)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="creating-constraints">Creating constraints</h2>
-<p>Similar to rigid bodies but unlike shapes, constraints are instantiated through a create method in the world class:</p>
+<p>Constraints are instantiated through a create method in the world class:</p>
 <pre><code class="lang-cs">var constraint = world.CreateConstraint&lt;ConstraintType&gt;(body1, body2);
 </code></pre>
-<p>Jitter allocates and assigns unmanaged memory to constraints internally, allowing them to be used like regular classes.
+<p>Jitter2 allocates and assigns unmanaged memory to constraints internally, allowing them to be used like regular classes.
 The solver interacts with unmanaged memory structures of type <code>ConstraintData</code> (256 bytes) or <code>SmallConstraintData</code> (128 bytes), depending on whether <code>constraint.IsSmallConstraint</code> is set.
 Small constraints are designed for simpler constraints with a smaller memory footprint, such as spring constraints for soft bodies.</p>
 <div class="CAUTION">
 <h5>Caution</h5>
 <p><strong>Constraint Initialization</strong>
-For all default constraints in Jitter, <code>constraint.Initialize</code> must be called once after <code>world.CreateConstraint</code>.</p>
+For all default constraints, <code>constraint.Initialize</code> must be called once after <code>world.CreateConstraint</code>.</p>
 </div>
+<h3 id="world-space-initialization">World space initialization</h3>
+<p>Constraints are initialized using world space coordinates (anchor points, axes).
+The bodies should be positioned in a valid configuration before calling <code>Initialize</code>.
+The constraint then computes and stores local reference frames for each body based on their current poses.
+This means the constraint &quot;remembers&quot; the initial setup and will try to maintain it during simulation.</p>
 <h3 id="example-hinge-joint">Example: Hinge joint</h3>
-<p>A swinging door may be implemented by a combination of two constraints: A <code>HingeAngle</code> constraint which removes two degrees of angular freedom (i.e. the bodies can only rotate around a single axis), and a <code>BallSocket</code> constraint removing all three degrees of freedom (there is no translation possible):</p>
+<p>A swinging door can be implemented by combining two constraints: A <code>HingeAngle</code> constraint which removes two degrees of angular freedom (the bodies can only rotate around a single axis), and a <code>BallSocket</code> constraint removing all three translational degrees of freedom:</p>
 <pre><code class="lang-cs">var hingeAngle = world.CreateConstraint&lt;HingeAngle&gt;(body1, body2);
 hingeAngle.Initialize(hingeAxis, AngularLimit.Full);
 
 var ballSocket = world.CreateConstraint&lt;BallSocket&gt;(body1, body2);
 ballSocket.Initialize(hingeCenter);
 </code></pre>
-<p>Alternatively the <code>HingeJoint</code> might be used for convenience:</p>
+<p>Alternatively, the <code>HingeJoint</code> can be used for convenience:</p>
 <pre><code class="lang-cs">var hinge = new HingeJoint(world, body1, body2, hingeCenter, hingeAxis);
 </code></pre>
 <h3 id="fixed-constraints">Fixed constraints</h3>
 <p>To constrain a rigid body relative to world space, use <code>world.NullBody</code> as one of the bodies.
-For example, to keep a capsule upright, a constraint can be set up as follows:</p>
+For example, to keep a capsule upright:</p>
 <pre><code class="lang-cs">var upright = world.CreateConstraint&lt;HingeAngle&gt;(capsule, world.NullBody);
 upright.Initialize(JVector.UnitY, AngularLimit.Full);
 </code></pre>
 <h3 id="softness-and-bias">Softness and Bias</h3>
-<p>For most constraints a softness and bias value can be set.
-These values define how strict the constraint limits are enforced.
-Softer constraints might improve simulation stability but do not fully enforce the constraint limits.
+<p>For most constraints, softness and bias values can be set.
+These values define how strictly the constraint limits are enforced.
+Softer constraints may improve simulation stability but do not fully enforce the constraint limits.
 The softness and bias parameters can be tweaked for optimal results.
-Better constraint behaviour can also be archived by sub-stepping, see <a href="world.html">world.Step</a>.</p>
+Better constraint behavior can also be achieved by sub-stepping, see <a href="world.html">World</a>.</p>
 <h3 id="enabledisable-constraints">Enable/Disable constraints</h3>
-<p>Constraints can be temporarily enabled or disables using <code>constraint.IsEnabled</code>.</p>
+<p>Constraints can be temporarily enabled or disabled using <code>constraint.IsEnabled</code>.</p>
 
 </article>
 

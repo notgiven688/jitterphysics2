@@ -87,12 +87,12 @@
         <article data-uid="">
 <h1 id="collision-filters">Collision Filters</h1>
 
-<p>There are three types of collision filters in Jitter: <code>world.DynamicTree.Filter</code>, <code>world.BroadPhaseFilter</code> and <code>world.NarrowPhaseFilter</code>.</p>
+<p>There are three types of collision filters: <code>world.DynamicTree.Filter</code>, <code>world.BroadPhaseFilter</code>, and <code>world.NarrowPhaseFilter</code>.</p>
 <h2 id="dynamic-tree-filter">Dynamic tree filter</h2>
 <p>The <code>world.DynamicTree.Filter</code></p>
 <pre><code class="lang-cs">public Func&lt;IDynamicTreeProxy, IDynamicTreeProxy, bool&gt; Filter { get; set; }
 </code></pre>
-<p>is the earliest filter applied during a <code>world.Step</code> and set by default to <code>World.DefaultDynamicTreeFilter</code>:</p>
+<p>is the earliest filter applied during <code>world.Step</code> and is set by default to <code>World.DefaultDynamicTreeFilter</code>:</p>
 <pre><code class="lang-cs">public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
 {
     if (proxyA is RigidBodyShape rbsA &amp;&amp; proxyB is RigidBodyShape rbsB)
@@ -110,14 +110,14 @@ The dynamic tree will ignore these collisions, and no potential pairs will be cr
 <p>By default <code>world.BroadPhaseFilter</code></p>
 <pre><code class="lang-cs">public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 </code></pre>
-<p>is <code>null</code>. It is used to filter out collisions that passed broad phase collision detection - that is, after the <code>DynamicTree</code> has added the collision to the <code>PotentialPair</code> hash set.</p>
-<p>This can be useful if custom collision proxies got added to <code>world.DynamicTree</code>.
-Since the Jitter <code>world</code> only knows how to handle collisions between <code>RigidBodyShape</code>s, a filter must handle the detected collision (i.e. implement custom collision response code and filter out the collision) such that no <code>InvalidCollisionTypeException</code> is thrown.
-Jitter's soft body implementation is based on this kind of filter (see <code>SoftBodies.BroadPhaseCollisionFilter</code>).</p>
+<p>is <code>null</code>. It is used to filter out collisions that passed broad phase collision detection—that is, after the <code>DynamicTree</code> has added the collision to the <code>PotentialPair</code> hash set.</p>
+<p>This can be useful if custom collision proxies are added to <code>world.DynamicTree</code>.
+Since the world only knows how to handle collisions between <code>RigidBodyShape</code>s, a filter must handle the detected collision (implement custom collision response code and filter out the collision) such that no <code>InvalidCollisionTypeException</code> is thrown.
+The soft body implementation is based on this kind of filter (see <code>SoftBodies.BroadPhaseCollisionFilter</code>).</p>
 <h3 id="example-collision-groups">Example: Collision groups</h3>
-<p>Collision groups might be easily implemented using a broad phase filter.
-In this example, there are two 'teams', team blue and team red.
-A filter that disregards all collisions between team members (rigid bodies) of different colors is implemented:</p>
+<p>Collision groups can be implemented using a broad phase filter.
+In this example, there are two teams: team blue and team red.
+A filter that disregards all collisions between team members of different colors:</p>
 <pre><code class="lang-cs">public class TeamFilter : IBroadPhaseFilter
 {
     public class TeamMember { }
@@ -138,7 +138,7 @@ A filter that disregards all collisions between team members (rigid bodies) of d
     }
 }
 </code></pre>
-<p>The <code>TeamFilter</code> class can then be instantiated and assigned to <code>world.BroadPhaseFilter</code>, ensuring that rigid bodies of different colors will not interact:</p>
+<p>The <code>TeamFilter</code> class can then be instantiated and assigned to <code>world.BroadPhaseFilter</code>:</p>
 <pre><code class="lang-cs">world.BroadPhaseFilter = new TeamFilter();
 ...
 bodyA.Tag = TeamFilter.TeamBlue;
@@ -152,9 +152,9 @@ bodyC.Tag = TeamFilter.TeamRed;
 <p>operates similarly.
 However, this callback is called after narrow phase collision detection, meaning detailed collision information (such as normal, penetration depth, and collision points) is available at this stage.
 The filter can not only exclude collisions but also modify collision information.</p>
-<p>The default narrow phase collision filter in Jitter is assigned to an instance of <code>TriangleEdgeCollisionFilter</code>, which filters out so-called 'internal edges' for <code>TriangleShape</code>s.
+<p>The default narrow phase collision filter is assigned to an instance of <code>TriangleEdgeCollisionFilter</code>, which filters out so-called 'internal edges' for <code>TriangleShape</code>s.
 These internal edges typically cause collision artifacts when rigid bodies slide over the edges of connected triangles forming static geometry.
-In the literature, this problem is also known as 'ghost collisions'.</p>
+This problem is also known as 'ghost collisions'.</p>
 
 </article>
 

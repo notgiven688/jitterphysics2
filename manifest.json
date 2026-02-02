@@ -2292,6 +2292,16 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "docs/documentation/general.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/documentation/general.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Resource",
       "source_relative_path": "docs/documentation/images/dynamictree.odp",
       "output": {
