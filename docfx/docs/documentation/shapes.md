@@ -1,9 +1,9 @@
 # Shapes
 
-Shapes in Jitter define how the rigid body collides with other objects.
+Shapes define how the rigid body collides with other objects.
 Shapes implement the `ISupportMappable` interface and are always convex.
 They can be passed to static methods defined in the `NarrowPhase` class for collision detection.
-They also implement the `IDynamicTreeEntry` interface and can therefore be added to the `DynamicTree` class:
+Shapes also implement the `IDynamicTreeEntry` interface and can be added to the `DynamicTree` class.
 When a shape is added to a rigid body this is done automatically (`world.DynamicTree`).
 
 > [!NOTE]
@@ -13,7 +13,7 @@ When a shape is added to a rigid body this is done automatically (`world.Dynamic
 
 ## Default types
 
-The inheritance hierarchy for the default shapes in Jitter is shown here:
+The inheritance hierarchy for the default shapes:
 
 ```text
 Shape
@@ -82,7 +82,8 @@ For example, a sphere shape could be transformed into an ellipsoid.
 ### TriangleShape
 
 The `TriangleShape` has no volume.
-It is mostly used for static geometry, although it can be added to non-static bodies. The `TriangleShape` is constructed  with a `TriangleMesh` and an index.
+It is mostly used for static geometry, although it can be added to non-static bodies.
+The `TriangleShape` is constructed with a `TriangleMesh` and an index.
 
 ```cs
 public TriangleShape(TriangleMesh mesh, int index)
@@ -100,10 +101,10 @@ A `SoftBodyShape` is not added to a body.
 
 ## Custom shapes
 
-Custom shapes can easily be implemented in Jitter.
-A shape is defined by its support function - which can be looked up or derived.
+Custom shapes can easily be implemented.
+A shape is defined by its support function—which can be looked up or derived.
 
-The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one in Jitter.
+The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one:
 
 ```cs
 public class HalfSphereShape : RigidBodyShape
@@ -147,8 +148,8 @@ public override void CalculateMassInertia(out JMatrix inertia, out JVector com, 
 public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
 ```
 
-The `ShapeHelper` class can also be used to generate a triangle mesh representation of the shape (or any class implementing `ISupportMappable`), via
+The `ShapeHelper` class can also be used to generate a triangle mesh representation of the shape (or any class implementing `ISupportMappable`):
 
 ```cs
-public static IEnumerable<JTriangle> MakeHull(ISupportMappable support, int subdivisions = 3)
+public static List<JTriangle> Tessellate(ISupportMappable support, int subdivisions = 3)
 ```

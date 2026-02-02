@@ -1,10 +1,10 @@
 # Rigid Bodies
 
-Rigid bodies represent the main entity of the dynamics system of the engine.
+Rigid bodies are the main entity of the dynamics system.
 
 ## Creating a body
 
-Rigid bodies are associated to an instance of the `World` class. They can be created like this:
+Rigid bodies are associated with an instance of the `World` class:
 
 ```cs
 var world = new World();
@@ -30,11 +30,11 @@ Shapes determine how bodies collide with each other.
 > **Passing the same instance to multiple bodies**
 > Passing the same instance of a shape to multiple bodies is not allowed in Jitter and will throw an exception.
 
-In Jitter, the sphere shape is defined so that its geometric center aligns with the (local) coordinate system's center at $(0, 0, 0)$.
+The sphere shape is defined so that its geometric center aligns with the (local) coordinate system's center at $(0, 0, 0)$.
 The same holds for all basic primitives (sphere, box, capsule, cone, cylinder).
 
-After adding a shape to Jitter the mass properties (mass and inertia) of the associated rigid body are calculated accordingly.
-Jitter assumes unit density for the calculations.
+After adding a shape, the mass properties (mass and inertia) of the associated rigid body are calculated accordingly.
+Unit density is assumed for the calculations.
 
 Adding just a sphere
 
@@ -44,10 +44,10 @@ body.AddShape(new SphereShape(radius: 1));
 
 will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.
 
-Of course, the mass properties of the body can be set directly, using `body.SetMassInertia`.
-Setting `setMassProperties: false` in `body.AddShape(...)` prevents Jitter from using the shapes' mass properties.
+The mass properties of the body can also be set directly using `body.SetMassInertia`.
+Setting `setMassProperties: false` in `body.AddShape(...)` prevents the shapes' mass properties from being used.
 
-***In Jitter the position of the rigid body has to align with the center of mass.**
+***The position of the rigid body has to align with the center of mass.**
 So in the local reference frame of the body, the center of mass is $(0, 0, 0)$. Shapes or combinations of shapes must be translated accordingly.*
 
 ### Debugging shapes
@@ -67,10 +67,10 @@ The property `body.AffectedByGravity` can be used to disable gravity for individ
 
 ## Damping
 
-Jitter uses a very simple damping system to slow rigid bodies down.
-This improves simulation stability and also resembles mechanical systems 'losing' energy in the real world.
-In Jitter there is a linear and an angular damping factor for each body which can be set using `body.Damping`.
-With each `world.Step`, Jitter multiplies the angular and linear velocity of each rigid body by $1-\gamma$, where $\gamma$ is the damping factor.
+Jitter2 uses a simple damping system to slow rigid bodies down.
+This improves simulation stability and also resembles mechanical systems losing energy in the real world.
+There is a linear and an angular damping factor for each body which can be set using `body.Damping`.
+With each `world.Step`, the angular and linear velocity of each rigid body is multiplied by $1-\gamma$, where $\gamma$ is the damping factor.
 For performance reasons there is no time dependency for the damping system.
 As a result, bodies in a simulation with smaller timesteps experience greater damping.
 
@@ -90,10 +90,10 @@ For a collision of two bodies with different coefficients the maximum value of e
 
 ## Collide events
 
-An instance of `RigidBody` provides two events: `BeginCollide` and `EndCollide`.
-These events are triggered whenever an arbiter (Contact) is created or removed which involves the rigid body.
+`RigidBody` provides two events: `BeginCollide` and `EndCollide`.
+These events are triggered whenever an arbiter (contact) is created or removed which involves the rigid body.
 By default, arbiters are created between colliding shapes.
-For example, the `BeginCollide` event can be used to modify the coefficient of friction of a contact:
+For example, `BeginCollide` can be used to modify the coefficient of friction of a contact:
 
 ```cs
 body.BeginCollide += BodyOnBeginCollide;
@@ -107,17 +107,17 @@ private void BodyOnBeginCollide(Arbiter arb)
 ## Activation/Deactivation
 
 A rigid body is always assigned to an island.
-Islands are formed by bodies which are pairwise interacting with each other trough contacts or constraints.
+Islands are formed by bodies which are pairwise interacting with each other through contacts or constraints.
 Different islands are not interacting with each other in any way.
 
 Active rigid bodies may be marked for deactivation by the world once their angular and linear velocity remain below the thresholds defined in `body.DeactivationThreshold` for a period defined by `body.DeactivationTime`.
 If all bodies within an island are marked for deactivation the whole island gets deactivated.
 The simulation cost for inactive bodies is effectively zero.
-Islands (and their associated bodies) might get waken up, as soon as a collision with an active body is registered.
+Islands (and their associated bodies) may get woken up as soon as a collision with an active body is registered.
 
 Using `body.SetActivationState`, the user can reset the internal deactivation time clock for the rigid body.
 It will not immediately change the activation state of the body (`body.IsActive`).
-Jitter will then in the next `world.Step` consider this body and it's connected island for activation or deactivation.
+The next `world.Step` will then consider this body and its connected island for activation or deactivation.
 Calling e.g. `body.SetActivationState(false)` on a falling body with a velocity greater than `body.DeactivationThreshold` will have no effect.
 
 ## Static bodies
@@ -129,8 +129,9 @@ Because of this, the position of static bodies should not be altered while in co
 
 ## Kinematic bodies
 
-In Jitter kinematic bodies (`body.BodyType == BodyType.Kinematic`) are bodies which can have a velocity and therefore change their position.
-They act similar to static bodies during collisions - their velocity is not changed when colliding with a regular body. They do take part in collision islands.
+Kinematic bodies (`body.BodyType == BodyType.Kinematic`) can have a velocity and therefore change their position.
+They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
+They do take part in collision islands.
 
 > [!CAUTION]
 > **Kinematic bodies**

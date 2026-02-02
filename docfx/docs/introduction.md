@@ -1,3 +1,5 @@
 # Welcome
 
-You will find tutorials and documentation here. Work in progress. You can help by editing or adding new content.
+Jitter2 is a fast and lightweight physics engine for .NET.
+This documentation contains tutorials and reference material.
+Work in progress—contributions are welcome.

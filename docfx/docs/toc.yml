@@ -26,6 +26,8 @@
 - name: Overview
   expanded: true
   items:
+    - name: General
+      href: documentation/general.md
     - name: World
       href: documentation/world.md
     - name: Rigid Bodies

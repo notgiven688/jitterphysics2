@@ -1,6 +1,6 @@
 # Collision Filters
 
-There are three types of collision filters in Jitter: `world.DynamicTree.Filter`, `world.BroadPhaseFilter` and `world.NarrowPhaseFilter`.
+There are three types of collision filters: `world.DynamicTree.Filter`, `world.BroadPhaseFilter`, and `world.NarrowPhaseFilter`.
 
 ## Dynamic tree filter
 
@@ -10,7 +10,7 @@ The `world.DynamicTree.Filter`
 public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter { get; set; }
 ```
 
-is the earliest filter applied during a `world.Step` and set by default to `World.DefaultDynamicTreeFilter`:
+is the earliest filter applied during `world.Step` and is set by default to `World.DefaultDynamicTreeFilter`:
 
 ```cs
 public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -37,17 +37,17 @@ By default `world.BroadPhaseFilter`
 public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 ```
 
-is `null`. It is used to filter out collisions that passed broad phase collision detection - that is, after the `DynamicTree` has added the collision to the `PotentialPair` hash set.
+is `null`. It is used to filter out collisions that passed broad phase collision detection—that is, after the `DynamicTree` has added the collision to the `PotentialPair` hash set.
 
-This can be useful if custom collision proxies got added to `world.DynamicTree`.
-Since the Jitter `world` only knows how to handle collisions between `RigidBodyShape`s, a filter must handle the detected collision (i.e. implement custom collision response code and filter out the collision) such that no `InvalidCollisionTypeException` is thrown.
-Jitter's soft body implementation is based on this kind of filter (see `SoftBodies.BroadPhaseCollisionFilter`).
+This can be useful if custom collision proxies are added to `world.DynamicTree`.
+Since the world only knows how to handle collisions between `RigidBodyShape`s, a filter must handle the detected collision (implement custom collision response code and filter out the collision) such that no `InvalidCollisionTypeException` is thrown.
+The soft body implementation is based on this kind of filter (see `SoftBodies.BroadPhaseCollisionFilter`).
 
 ### Example: Collision groups
 
-Collision groups might be easily implemented using a broad phase filter.
-In this example, there are two 'teams', team blue and team red.
-A filter that disregards all collisions between team members (rigid bodies) of different colors is implemented:
+Collision groups can be implemented using a broad phase filter.
+In this example, there are two teams: team blue and team red.
+A filter that disregards all collisions between team members of different colors:
 
 ```cs
 public class TeamFilter : IBroadPhaseFilter
@@ -71,7 +71,7 @@ public class TeamFilter : IBroadPhaseFilter
 }
 ```
 
-The `TeamFilter` class can then be instantiated and assigned to `world.BroadPhaseFilter`, ensuring that rigid bodies of different colors will not interact:
+The `TeamFilter` class can then be instantiated and assigned to `world.BroadPhaseFilter`:
 
 ```cs
 world.BroadPhaseFilter = new TeamFilter();
@@ -93,6 +93,6 @@ operates similarly.
 However, this callback is called after narrow phase collision detection, meaning detailed collision information (such as normal, penetration depth, and collision points) is available at this stage.
 The filter can not only exclude collisions but also modify collision information.
 
-The default narrow phase collision filter in Jitter is assigned to an instance of `TriangleEdgeCollisionFilter`, which filters out so-called 'internal edges' for `TriangleShape`s.
+The default narrow phase collision filter is assigned to an instance of `TriangleEdgeCollisionFilter`, which filters out so-called 'internal edges' for `TriangleShape`s.
 These internal edges typically cause collision artifacts when rigid bodies slide over the edges of connected triangles forming static geometry.
-In the literature, this problem is also known as 'ghost collisions'.
+This problem is also known as 'ghost collisions'.

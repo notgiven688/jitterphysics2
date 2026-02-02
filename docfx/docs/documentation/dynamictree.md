@@ -1,42 +1,44 @@
-# Dynamic tree
+# Dynamic Tree
 
-The dynamic tree in Jitter holds instances which implement the `IDynamicTreeProxy` interface.
-The main task of the tree is to efficiently determine if a proxy's axis-aligned bounding box is overlapping with the axis-aligned bounding box of any other proxy in the world.
-In a naive implementation this requires $\mathcal{O}\left(n\right)$ operations (checking for an overlap with every of the $n-1$ entities).
-The tree structure does accelerate this to $\mathcal{O}\left(\mathrm{log}(n)\right)$. Since proxies are dynamic and can move, the tree must be continuously updated.
-To less frequently trigger updates, entities are enclosed within slightly larger bounding boxes than their actual size.
+The dynamic tree holds instances which implement the `IDynamicTreeProxy` interface.
+Its main task is to efficiently determine if a proxy's axis-aligned bounding box overlaps with the axis-aligned bounding box of any other proxy in the world.
+A naive implementation requires $\mathcal{O}\left(n\right)$ operations (checking for an overlap with every of the $n-1$ entities).
+The tree structure accelerates this to $\mathcal{O}\left(\mathrm{log}(n)\right)$.
+Since proxies are dynamic and can move, the tree must be continuously updated.
+To trigger updates less frequently, entities are enclosed within slightly larger bounding boxes than their actual size.
 This bounding box extension is defined by the `Velocity` property of the `IDynamicTreeProxy` interface.
 
 ![img alt](images/dynamictree.png)
 
 ## Adding proxies
 
-Jitter automatically registers all shapes added to a rigid body (`body.AddShape`) with the `world.DynamicTree`.
-However, users are free to add own implementations of `IDynamicTreeProxy` to the world's tree, using `tree.AddProxy`.
-In this case the user has to implement a `BroadPhaseFilter` and register it (using `world.BroadPhaseFilter`) to handle any collisions with the custom proxy, otherwise an `InvalidCollisionTypeException` is thrown.
+All shapes added to a rigid body (`body.AddShape`) are automatically registered with `world.DynamicTree`.
+Custom implementations of `IDynamicTreeProxy` can be added to the tree using `tree.AddProxy`.
+In this case, a `BroadPhaseFilter` must be implemented and registered (using `world.BroadPhaseFilter`) to handle collisions with the custom proxy, otherwise an `InvalidCollisionTypeException` is thrown.
 
 ## Enumerate Overlaps
 
-The tree implementation in Jitter needs to be updated using `tree.Update`.
+The tree implementation needs to be updated using `tree.Update`.
 This is done automatically for the dynamic tree owned by the world class (`world.DynamicTree`).
-Internally `UpdateWorldBoundingBox` is called for the active proxies implementing the `IUpdatableBoundingBox` interface
-and the internal book-keeping of overlapping pairs is updated. Overlaps may be queried using `tree.EnumerateOverlaps`.
+Internally, `UpdateWorldBoundingBox` is called for active proxies implementing the `IUpdatableBoundingBox` interface, and the internal book-keeping of overlapping pairs is updated.
+Overlaps can be queried using `tree.EnumerateOverlaps`.
 
 ## Querying the tree
 
-All tree proxies that overlap a given axis aligned box can be queried
+All tree proxies that overlap a given axis-aligned box can be queried:
 
 ```cs
 public void Query<T>(T hits, in JBBox box) where T : ICollection<IDynamicTreeProxy>
 ```
 
-as well as all proxies which overlap with a ray
+As well as all proxies which overlap with a ray:
 
 ```cs
 public void Query<T>(T hits, JVector rayOrigin, JVector rayDirection) where T : ICollection<IDynamicTreeProxy>
 ```
 
-Custom queries can easily be implemented. An implementation which queries all proxies which have an overlap with a single point can be implemented like this:
+Custom queries can easily be implemented.
+An implementation which queries all proxies overlapping with a single point:
 
 ```cs
 var stack = new Stack<int>();
@@ -63,8 +65,7 @@ while (stack.TryPop(out int id))
 
 ## Ray casting
 
-All proxies in the tree which implement the `IRayCastable` interface can be raycasted.
-This includes all shapes:
+All proxies in the tree which implement the `IRayCastable` interface can be raycasted, including all shapes:
 
 ```cs
 public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
@@ -72,12 +73,8 @@ public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, Ra
 ```
 
 The pre- and post-filters can be used to discard hits during the ray cast.
-Jitter shoots a ray from the origin into the specified direction.
+A ray is shot from the origin into the specified direction.
 The function returns `true` if a hit was found.
-It also reports the point of collision which is given by
-
-$$$
-\mathbf{hit} = \mathbf{origin} + \lambda{}\,\times\,\mathbf{direction}, \quad \textrm{with} \quad \lambda \in [0,\infty).
-$$$
+The point of collision is given by `hit = origin + lambda * direction`, where `lambda` is in the range `[0, ∞)`.
 
 The returned `normal` is the normalized surface normal at the hit point.
