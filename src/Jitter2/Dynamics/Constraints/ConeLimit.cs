@@ -321,4 +321,18 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
         body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
     }
+
+    public override void DebugDraw(IDebugDrawer drawer)
+    {
+        ref ConeLimitData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
+        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
+
+        const Real axisLength = (Real)0.5;
+        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
+        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+    }
 }

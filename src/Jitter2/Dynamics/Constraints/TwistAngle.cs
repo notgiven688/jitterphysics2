@@ -229,6 +229,15 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
     public override void DebugDraw(IDebugDrawer drawer)
     {
+        ref TwistLimitData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        JVector.Transform(data.B, body2.Orientation, out JVector axis);
+
+        const Real axisLength = (Real)0.5;
+        drawer.DrawSegment(body1.Position, body1.Position + axis * axisLength);
+        drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
     }
 
     public static void IterateTwistAngle(ref ConstraintData constraint, Real idt)

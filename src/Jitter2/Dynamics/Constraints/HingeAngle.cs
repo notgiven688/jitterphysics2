@@ -291,4 +291,17 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         body1.AngularVelocity += JVector.Transform(JVector.Transform(lambda, data.Jacobian), body1.InverseInertiaWorld);
         body2.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, data.Jacobian), body2.InverseInertiaWorld);
     }
+
+    public override void DebugDraw(IDebugDrawer drawer)
+    {
+        ref HingeAngleData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        JVector.Transform(data.Axis, body2.Orientation, out JVector axis);
+
+        const Real axisLength = (Real)0.5;
+        drawer.DrawSegment(body1.Position, body1.Position + axis * axisLength);
+        drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
+    }
 }

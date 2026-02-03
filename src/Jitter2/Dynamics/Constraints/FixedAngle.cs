@@ -155,4 +155,29 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body1.InverseInertiaWorld);
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body2.InverseInertiaWorld);
     }
+
+    public override void DebugDraw(IDebugDrawer drawer)
+    {
+        ref FixedAngleData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        const Real axisLength = (Real)0.5;
+
+        JVector x1 = body1.Orientation.GetBasisX() * axisLength;
+        JVector y1 = body1.Orientation.GetBasisY() * axisLength;
+        JVector z1 = body1.Orientation.GetBasisZ() * axisLength;
+
+        JVector x2 = body2.Orientation.GetBasisX() * axisLength;
+        JVector y2 = body2.Orientation.GetBasisY() * axisLength;
+        JVector z2 = body2.Orientation.GetBasisZ() * axisLength;
+
+        drawer.DrawSegment(body1.Position, body1.Position + x1);
+        drawer.DrawSegment(body1.Position, body1.Position + y1);
+        drawer.DrawSegment(body1.Position, body1.Position + z1);
+
+        drawer.DrawSegment(body2.Position, body2.Position + x2);
+        drawer.DrawSegment(body2.Position, body2.Position + y2);
+        drawer.DrawSegment(body2.Position, body2.Position + z2);
+    }
 }

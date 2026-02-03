@@ -283,4 +283,21 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         body1.Velocity -= body1.InverseMass * lambda * data.Jacobian;
         body2.Velocity += body2.InverseMass * lambda * data.Jacobian;
     }
+
+    /// <inheritdoc/>
+    public override void DebugDraw(IDebugDrawer drawer)
+    {
+        ref SpringData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        JVector p1 = body1.Position + data.LocalAnchor1;
+        JVector p2 = body2.Position + data.LocalAnchor2;
+
+        drawer.DrawSegment(body1.Position, p1);
+        drawer.DrawSegment(body2.Position, p2);
+        drawer.DrawSegment(p1, p2);
+        drawer.DrawPoint(p1);
+        drawer.DrawPoint(p2);
+    }
 }

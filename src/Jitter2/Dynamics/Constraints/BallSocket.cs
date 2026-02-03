@@ -216,4 +216,22 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         body2.Velocity += body2.InverseMass * lambda;
         body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
     }
+
+    public override void DebugDraw(IDebugDrawer drawer)
+    {
+        ref BallSocketData data = ref Data;
+        ref RigidBodyData body1 = ref data.Body1.Data;
+        ref RigidBodyData body2 = ref data.Body2.Data;
+
+        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
+        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
+
+        JVector p1 = body1.Position + r1;
+        JVector p2 = body2.Position + r2;
+
+        drawer.DrawSegment(body1.Position, p1);
+        drawer.DrawSegment(body2.Position, p2);
+        drawer.DrawPoint(p1);
+        drawer.DrawPoint(p2);
+    }
 }
