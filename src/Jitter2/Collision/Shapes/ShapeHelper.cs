@@ -254,9 +254,9 @@ public static class ShapeHelper
                 continue;
             }
 
-            JVector ab = JVector.Normalize((tri.V0 + tri.V1) * 0.5f);
-            JVector bc = JVector.Normalize((tri.V1 + tri.V2) * 0.5f);
-            JVector ca = JVector.Normalize((tri.V2 + tri.V0) * 0.5f);
+            JVector ab = JVector.Normalize((tri.V0 + tri.V1) * (Real)0.5);
+            JVector bc = JVector.Normalize((tri.V1 + tri.V2) * (Real)0.5);
+            JVector ca = JVector.Normalize((tri.V2 + tri.V0) * (Real)0.5);
 
             stack.Push((new JTriangle(tri.V0, ab, ca), depth - 1));
             stack.Push((new JTriangle(ab, tri.V1, bc), depth - 1));

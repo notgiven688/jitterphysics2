@@ -352,7 +352,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         var min = vertices[current].NeighborMinIndex;
         var max = vertices[current].NeighborMaxIndex;
 
-        const Real epsilonIncrement = 1e-12f;
+        const Real epsilonIncrement = (Real)1e-12;
 
         for (int i = min; i < max; i++)
         {
