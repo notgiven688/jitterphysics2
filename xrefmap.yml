@@ -4945,6 +4945,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.Create
   nameWithType: AngularMotor.Create
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: AngularMotor.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw
+  nameWithType: AngularMotor.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.Initialize(Jitter2.LinearMath.JVector)
   name: Initialize(JVector)
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_Initialize_Jitter2_LinearMath_JVector_
@@ -5196,6 +5209,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.BallSocket.Create
   nameWithType: BallSocket.Create
+- uid: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: BallSocket.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.BallSocket.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw
+  nameWithType: BallSocket.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.BallSocket.Impulse
   name: Impulse
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_Impulse
@@ -5434,6 +5460,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.Create
   nameWithType: ConeLimit.Create
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: ConeLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw
+  nameWithType: ConeLimit.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.Impulse
   name: Impulse
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_Impulse
@@ -5823,6 +5862,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.Create
   nameWithType: DistanceLimit.Create
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: DistanceLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw
+  nameWithType: DistanceLimit.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.Distance
   name: Distance
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_Distance
@@ -6060,6 +6112,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.Create
   nameWithType: FixedAngle.Create
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: FixedAngle.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw
+  nameWithType: FixedAngle.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData
   name: FixedAngle.FixedAngleData
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html
@@ -6266,6 +6331,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.Create
   nameWithType: HingeAngle.Create
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: HingeAngle.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw
+  nameWithType: HingeAngle.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData
   name: HingeAngle.HingeAngleData
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html
@@ -7021,6 +7099,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.Create
   nameWithType: PointOnLine.Create
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: PointOnLine.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw
+  nameWithType: PointOnLine.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.Distance
   name: Distance
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_Distance
@@ -7277,6 +7368,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.Create
   nameWithType: PointOnPlane.Create
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: PointOnPlane.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw
+  nameWithType: PointOnPlane.DebugDraw
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.Impulse
   name: Impulse
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_Impulse
@@ -14004,6 +14108,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.Create
   nameWithType: SpringConstraint.Create
+- uid: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: SpringConstraint.DebugDraw(IDebugDrawer)
+- uid: Jitter2.SoftBodies.SpringConstraint.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_DebugDraw_
+  commentId: Overload:Jitter2.SoftBodies.SpringConstraint.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SpringConstraint.DebugDraw
+  nameWithType: SpringConstraint.DebugDraw
 - uid: Jitter2.SoftBodies.SpringConstraint.Distance
   name: Distance
   href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Distance
