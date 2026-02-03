@@ -163,24 +163,14 @@ The trace data is stored in thread-local buffers for minimal overhead.</p>
 </ul>
 <p>When <code>PROFILE</code> is not defined, all tracing calls are completely stripped by the compiler via <code>[Conditional]</code> attributes, resulting in zero runtime overhead.</p>
 <h2 id="custom-math-types">Custom Math Types</h2>
-<p>Jitter2 defines its own math types (<code>JVector</code>, <code>JMatrix</code>, <code>JQuaternion</code>, <code>JBoundingBox</code>) rather than using <code>System.Numerics</code>.</p>
-<h3 id="full-control">Full Control</h3>
-<ul>
-<li>Precision can be switched globally between <code>float</code> and <code>double</code> without code changes.</li>
-<li>Memory layout is explicitly controlled using <code>[StructLayout(LayoutKind.Explicit)]</code>.</li>
-<li>No dependency on external math library behavior or updates.</li>
-</ul>
-<h3 id="zero-cost-interop">Zero-Cost Interop</h3>
-<p>The math types are defined with explicit field offsets, guaranteeing a predictable memory layout.
-This enables zero-copy conversion to and from other libraries' types using unsafe bit reinterpretation:</p>
+<p>Jitter2 defines its own math types (<code>JVector</code>, <code>JMatrix</code>, <code>JQuaternion</code>, <code>JBoundingBox</code>) rather than using <code>System.Numerics</code>. This allows precision to be switched globally between <code>float</code> and <code>double</code> without code changes, gives explicit control over memory layout using <code>[StructLayout(LayoutKind.Explicit)]</code>, and avoids dependencies on external math library behavior.</p>
+<p>The explicit field offsets guarantee a predictable memory layout, enabling zero-copy conversion to and from other libraries' types:</p>
 <pre><code class="lang-cs">// Convert to any layout-compatible type
 MyVector3 myVec = jitterVector.UnsafeAs&lt;MyVector3&gt;();
 
 // Convert from any layout-compatible type
 JVector jitterVector = JVector.UnsafeFrom(myVec);
 </code></pre>
-<p>The methods perform a compile-time size check and reinterpret the memory directly—no copying, no allocations.</p>
-<h3 id="safe-conversions">Safe Conversions</h3>
 <p>For convenience, implicit conversions to and from <code>System.Numerics</code> types are also provided:</p>
 <pre><code class="lang-cs">System.Numerics.Vector3 sysVec = jitterVector;  // implicit conversion
 JVector jitterVec = sysVec;                      // implicit conversion
