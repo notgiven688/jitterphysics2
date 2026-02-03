@@ -10,39 +10,13 @@ Traditional physics engines use a three-phase collision pipeline: broad phase (s
 
 ## Precision
 
-Jitter2 supports both single-precision (`float`) and double-precision (`double`) floating-point arithmetic.
-The precision is selected at compile time.
-
-### Compiling for Double Precision
-
-To build with double precision, either:
-
-- Uncomment `#define USE_DOUBLE_PRECISION` in [Precision.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Precision.cs), or
-- Use the command line option:
+Jitter2 supports both single-precision (`float`) and double-precision (`double`) floating-point arithmetic, selected at compile time. To build with double precision, either uncomment `#define USE_DOUBLE_PRECISION` in [Precision.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Precision.cs), or use the command line option:
 
 ```bash
 dotnet build -c Release -p:DoublePrecision=true
 ```
 
-### Runtime Detection
-
-The active precision mode can be checked at runtime:
-
-```cs
-if (Precision.IsDoublePrecision)
-{
-    Console.WriteLine("Running in double precision mode.");
-}
-```
-
-### Type Differences
-
-Depending on the precision mode, the math types use different component types:
-
-| Precision | Vector/Matrix components | Example |
-|-----------|--------------------------|---------|
-| Single    | `float` | `JVector.X` is `float` |
-| Double    | `double` | `JVector.X` is `double` |
+The active precision mode can be checked at runtime via `Precision.IsDoublePrecision`. In single precision, `JVector.X` is a `float`; in double precision, it is a `double`.
 
 ## Coordinate System
 
