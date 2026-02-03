@@ -94,18 +94,9 @@ When `PROFILE` is not defined, all tracing calls are completely stripped by the 
 
 ## Custom Math Types
 
-Jitter2 defines its own math types (`JVector`, `JMatrix`, `JQuaternion`, `JBoundingBox`) rather than using `System.Numerics`.
+Jitter2 defines its own math types (`JVector`, `JMatrix`, `JQuaternion`, `JBoundingBox`) rather than using `System.Numerics`. This allows precision to be switched globally between `float` and `double` without code changes, gives explicit control over memory layout using `[StructLayout(LayoutKind.Explicit)]`, and avoids dependencies on external math library behavior.
 
-### Full Control
-
-- Precision can be switched globally between `float` and `double` without code changes.
-- Memory layout is explicitly controlled using `[StructLayout(LayoutKind.Explicit)]`.
-- No dependency on external math library behavior or updates.
-
-### Zero-Cost Interop
-
-The math types are defined with explicit field offsets, guaranteeing a predictable memory layout.
-This enables zero-copy conversion to and from other libraries' types using unsafe bit reinterpretation:
+The explicit field offsets guarantee a predictable memory layout, enabling zero-copy conversion to and from other libraries' types:
 
 ```cs
 // Convert to any layout-compatible type
@@ -114,10 +105,6 @@ MyVector3 myVec = jitterVector.UnsafeAs<MyVector3>();
 // Convert from any layout-compatible type
 JVector jitterVector = JVector.UnsafeFrom(myVec);
 ```
-
-The methods perform a compile-time size check and reinterpret the memory directly—no copying, no allocations.
-
-### Safe Conversions
 
 For convenience, implicit conversions to and from `System.Numerics` types are also provided:
 
