@@ -2,6 +2,12 @@
 
 This section covers fundamental design decisions and configuration options.
 
+## Collision Detection Philosophy
+
+Jitter2 takes a unified approach to collision detection that differs from many other physics engines. Unlike engines that implement dedicated algorithms for specific shape pairs (sphere-sphere, box-box, capsule-capsule, etc.), Jitter2 treats all collision detection uniformly using implicit shapes. Every shape is represented through a support function, and collisions are resolved via MPR (Minkowski Portal Refinement), falling back to EPA (Expanding Polytope Algorithm) for deep penetrations. This design simplifies the codebase and makes it straightforward to add custom shapes—any shape that provides a support mapping automatically works with all other shapes.
+
+Traditional physics engines use a three-phase collision pipeline: broad phase (spatial partitioning), mid-phase (hierarchical bounding volumes for complex meshes), and narrow phase (exact shape intersection). Jitter2 eliminates the mid-phase entirely. Instead of building internal acceleration structures for complex geometry, Jitter2 relies on [collision filters](filters.md) to handle large-scale environments. This enables user-defined spatial partitioning strategies—heightmaps, detailed triangle meshes, or even infinite voxel worlds can be implemented by generating collision geometry on-demand within filter callbacks.
+
 ## Precision
 
 Jitter2 supports both single-precision (`float`) and double-precision (`double`) floating-point arithmetic.
