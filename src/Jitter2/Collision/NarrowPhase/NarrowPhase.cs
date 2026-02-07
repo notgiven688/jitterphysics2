@@ -269,8 +269,8 @@ public static class NarrowPhase
                 Real delta = JVector.Dot(temp3, normal);
                 penetration = JVector.Dot(v4.V, normal);
 
-                // If the boundary is thin enough or the origin is outside the support plane for the newly discovered
-                // vertex, then we can terminate
+                // If the boundary is thin enough, the origin is outside the support plane for the newly discovered
+                // vertex, or the maximum number of iterations has been reached, then we can terminate
                 if (delta * delta <= collideEpsilon * collideEpsilon * normalSq || penetration <= (Real)0.0 ||
                     phase2 > maxIter)
                 {

@@ -205,11 +205,14 @@ internal class SlimBag<T> : IEnumerable<T>
     }
 
     /// <summary>
-    /// This should be called after adding entries to the SlimBag
-    /// to keep track of the largest index used within the internal array of
-    /// this data structure. It will set this item in the array to its default value
-    /// to allow for garbage collection.
+    /// Nulls out one stale array slot per call to allow garbage collection of removed elements.
     /// </summary>
+    /// <remarks>
+    /// Tracks the high-water mark of <see cref="Count"/>. When elements are removed and
+    /// <see cref="Count"/> drops below that mark, each call clears one slot from the end
+    /// of the previously used range. Call this method repeatedly (e.g., once per step) to
+    /// amortize cleanup cost.
+    /// </remarks>
     public void TrackAndNullOutOne()
     {
         nullOut = Math.Max(nullOut, counter);

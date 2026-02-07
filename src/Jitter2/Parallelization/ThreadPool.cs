@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Jitter2 Physics Library
  * (c) Thorben Linneweber and contributors
  * SPDX-License-Identifier: MIT
@@ -82,9 +82,6 @@ namespace Jitter2.Parallelization;
 /// The main thread participates as "worker 0" during <see cref="Execute"/> calls.
 /// Use <see cref="ResumeWorkers"/> and <see cref="PauseWorkers"/> to control thread activity
 /// between simulation steps.
-/// </para>
-/// <para>
-/// Thread-safe. All task queuing and execution methods are safe to call from multiple threads.
 /// </para>
 /// </remarks>
 public sealed class ThreadPool
@@ -237,7 +234,7 @@ public sealed class ThreadPool
     /// <param name="parameter">The parameter to pass to the action.</param>
     /// <remarks>
     /// Tasks are not executed until <see cref="Execute"/> is called.
-    /// This method is thread-safe.
+    /// This method is not thread-safe and must be called from a single thread.
     /// </remarks>
     public void AddTask<T>(Action<T> action, T parameter)
     {

@@ -73,7 +73,7 @@ public class ConeShape : RigidBodyShape
     public override void SupportMap(in JVector direction, out JVector result)
     {
         const Real zeroEpsilon = (Real)1e-12;
-        // cone = disk + point
+        // cone = convex hull of disk and point
 
         // The center of mass is at 0.25 height.
         JVector baseDir = new JVector(direction.X, (Real)0.0, direction.Z);

@@ -68,7 +68,7 @@ public sealed partial class World
     public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
 
     /// <summary>
-    /// Speculative contacts are generated when the velocity towards an obstacle exceeds
+    /// Speculative contacts are generated when the relative velocity between two bodies exceeds
     /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01.

@@ -63,7 +63,7 @@ public partial class DynamicTree
 
     /// <summary>
     /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
-    /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * (1 + alpha), where alpha is a pseudo-random number in the range [0, 1].
+    /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * (1 + alpha), where alpha is a pseudo-random number in the range [0, 1).
     /// </summary>
     public const Real ExpandFactor = (Real)0.1;
 
