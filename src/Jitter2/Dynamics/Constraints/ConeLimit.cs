@@ -67,6 +67,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     {
         VerifyNotZero();
         ArgumentOutOfRangeException.ThrowIfNegative((Real)limit.From);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((Real)limit.To, MathR.PI);
         ArgumentOutOfRangeException.ThrowIfLessThan((Real)limit.To, (Real)limit.From);
 
         ref ConeLimitData data = ref Data;
@@ -192,16 +193,18 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         get
         {
             ref ConeLimitData data = ref Data;
-            return new AngularLimit(JAngle.FromRadian(data.LimitLow), JAngle.FromRadian(data.LimitHigh));
+            return new AngularLimit((JAngle)MathR.Acos(data.LimitLow),
+                (JAngle)MathR.Acos(data.LimitHigh));
         }
         set
         {
             ArgumentOutOfRangeException.ThrowIfNegative((Real)value.From);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan((Real)value.To, MathR.PI);
             ArgumentOutOfRangeException.ThrowIfLessThan((Real)value.To, (Real)value.From);
 
             ref ConeLimitData data = ref Data;
-            data.LimitLow = (Real)value.From;
-            data.LimitHigh = (Real)value.To;
+            data.LimitLow = MathR.Cos((Real)value.From);
+            data.LimitHigh = MathR.Cos((Real)value.To);
         }
     }
 
