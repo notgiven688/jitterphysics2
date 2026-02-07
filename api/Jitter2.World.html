@@ -648,7 +648,7 @@ might be enough to trigger another speculative contact in the next frame.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L76"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Speculative contacts are generated when the velocity towards an obstacle exceeds
+  <div class="markdown level1 summary"><p>Speculative contacts are generated when the relative velocity between two bodies exceeds
 the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
 threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
 timestep of 0.01.</p>
