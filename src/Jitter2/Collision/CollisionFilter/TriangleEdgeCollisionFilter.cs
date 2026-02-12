@@ -68,7 +68,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// </para>
     /// <para>
     /// This threshold is also used to detect and discard back-face collisions: if the collision
-    /// normal points opposite to the triangle normal (beyond this angle from perpendicular),
+    /// normal points within this angle of being anti-parallel to the triangle normal,
     /// the collision is filtered out.
     /// </para>
     /// </remarks>

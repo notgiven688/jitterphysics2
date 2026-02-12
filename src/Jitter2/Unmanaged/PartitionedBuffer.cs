@@ -211,9 +211,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Returns the total amount of unmanaged memory allocated in bytes (data + indirection pages).
+    /// Returns the total amount of unmanaged memory allocated in bytes (data + indirection pages + master page table).
     /// </summary>
-    public long TotalBytesAllocated => (long)size * sizeof(T) + (long)pageCount * PageSize * sizeof(IntPtr);
+    public long TotalBytesAllocated => (long)size * sizeof(T) + (long)pageCount * PageSize * sizeof(IntPtr) + MaxPages * sizeof(IntPtr);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private T** GetHandleSlot(int id)

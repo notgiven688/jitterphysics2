@@ -472,7 +472,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Removes constraints and contacts that connect two non-dynamic bodies.
     /// </summary>
-    /// <param name="body">The body whose static-static connections should be removed.</param>
+    /// <param name="body">The body whose non-dynamic connections should be removed.</param>
     internal void RemoveStaticStaticConstraints(RigidBody body)
     {
         foreach (var constraint in body.InternalConstraints)

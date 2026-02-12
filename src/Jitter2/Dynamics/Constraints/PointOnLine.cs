@@ -14,8 +14,8 @@ namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
 /// Constrains a fixed point in the reference frame of one body to a line that is fixed in
-/// the reference frame of another body. This constraint removes one degree of translational
-/// freedom; two if the limit is enforced.
+/// the reference frame of another body. This constraint removes two degrees of translational
+/// freedom; three if the limit is enforced.
 /// </summary>
 public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {

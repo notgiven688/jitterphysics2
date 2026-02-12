@@ -19,6 +19,8 @@ namespace Jitter2.SoftBodies;
 /// the line connecting the anchors.
 /// </summary>
 /// <remarks>
+/// This constraint is designed for soft body vertices, which act as mass points.
+/// Angular of the connected bodies are not taken into account.
 /// The spring behavior is controlled by <see cref="Softness"/> and <see cref="Bias"/>,
 /// which can be set directly or computed from physical parameters using
 /// <see cref="SetSpringParameters"/>.
