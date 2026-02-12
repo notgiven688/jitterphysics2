@@ -13,12 +13,12 @@ Constraints remove one or more of these degrees of freedom.
 |------------|-------------|-------------|
 | `BallSocket` | 3 translational | Anchors a point on each body together |
 | `FixedAngle` | 3 rotational | Locks relative orientation between bodies |
-| `HingeAngle` | 2 rotational | Allows rotation around a single axis only |
-| `PointOnLine` | 2 translational | Constrains a point to a line (1 DOF with limit) |
-| `PointOnPlane` | 1 translational | Constrains a point to a plane |
-| `DistanceLimit` | 1 translational | Maintains distance between anchor points |
-| `TwistAngle` | 1 rotational | Limits relative twist around an axis |
-| `ConeLimit` | 1 rotational | Limits angular tilt between two axes |
+| `HingeAngle` | 2 rotational (3 with limit) | Allows rotation around a single axis only, optionally enforces angular limits |
+| `PointOnLine` | 2 translational (3 with limit) | Constrains a point to a line, optionally limits distance along the axis |
+| `PointOnPlane` | 1 translational (when limit active) | Constrains a point to a plane, only enforced when the limit is violated |
+| `DistanceLimit` | 1 translational (when limit active) | Constrains the distance between anchor points, only enforced when outside the limit range |
+| `TwistAngle` | 1 rotational (when limit active) | Limits relative twist around an axis, only enforced when outside the limit range |
+| `ConeLimit` | 1 rotational (when limit active) | Limits angular tilt between two axes, only enforced when outside the limit range |
 | `AngularMotor` | — | Drives angular velocity (does not remove DOF) |
 | `LinearMotor` | — | Drives linear velocity (does not remove DOF) |
 | `SpringConstraint` | 1 translational | Spring-like force along the anchor connection |
