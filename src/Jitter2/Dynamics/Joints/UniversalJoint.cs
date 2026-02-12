@@ -35,7 +35,7 @@ public class UniversalJoint : Joint
 
         BallSocket = world.CreateConstraint<BallSocket>(body1, body2);
         BallSocket.Initialize(center);
-        Register(TwistAngle);
+        Register(BallSocket);
 
         if (hasMotor)
         {

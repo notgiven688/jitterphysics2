@@ -1098,7 +1098,7 @@ public partial class DynamicTree
             }
             else
             {
-                // cost of ascending
+                // cost of descending
                 double oldArea = Nodes[left].ExpandedBox.GetSurfaceArea();
                 double newArea = TreeBox.MergedSurface(Nodes[left].ExpandedBox, nodeTreeBox);
                 leftCost = newArea - oldArea;

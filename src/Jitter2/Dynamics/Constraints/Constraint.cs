@@ -146,8 +146,10 @@ public abstract class Constraint : IDebugDrawable
     }
 
     /// <summary>
-    /// Initializes the function pointers for <see cref="ConstraintData.Iterate"/> and
-    /// <see cref="ConstraintData.PrepareForIteration"/>. Override this in derived classes.
+    /// Sets the <see cref="Iterate"/> and <see cref="PrepareForIteration"/> function pointer
+    /// fields on this instance. Override this in derived classes to assign the correct solver
+    /// methods. The pointers are later written into <see cref="ConstraintData"/> when the
+    /// constraint is enabled.
     /// </summary>
     protected virtual void Create()
     {
