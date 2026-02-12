@@ -168,7 +168,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_Iterate" data-uid="Jitter2.Dynamics.Constraints.Constraint.Iterate">
   Iterate
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L158"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -198,7 +198,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration" data-uid="Jitter2.Dynamics.Constraints.Constraint.PrepareForIteration">
   PrepareForIteration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -329,7 +329,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_IsEnabled" data-uid="Jitter2.Dynamics.Constraints.Constraint.IsEnabled">
   IsEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L165"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether this constraint is enabled.</p>
@@ -471,11 +471,13 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_Create" data-uid="Jitter2.Dynamics.Constraints.Constraint.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes the function pointers for <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate">Iterate</a> and
-<a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration">PrepareForIteration</a>. Override this in derived classes.</p>
+  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
+fields on this instance. Override this in derived classes to assign the correct solver
+methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
+constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -499,7 +501,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L200"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L202"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>

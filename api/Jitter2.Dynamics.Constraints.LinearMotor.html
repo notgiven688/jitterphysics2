@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class LinearMotor | Jitter2 ">
       
-      <meta name="description" content="A motor constraint that drives relative translational movement along two axes fixed in the reference frames of the bodies.">
+      <meta name="description" content="A motor constraint that drives relative translational velocity along an axis fixed in the reference frame of each body.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Class LinearMotor  <a class="header-action link-secondary" title="View source" h
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>A motor constraint that drives relative translational movement along two axes fixed
-in the reference frames of the bodies.</p>
+  <div class="markdown summary"><p>A motor constraint that drives relative translational velocity along an axis fixed
+in the reference frame of each body.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -374,8 +374,10 @@ in the reference frames of the bodies.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/LinearMotor.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes the function pointers for <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate">Iterate</a> and
-<a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration">PrepareForIteration</a>. Override this in derived classes.</p>
+  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
+fields on this instance. Override this in derived classes to assign the correct solver
+methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
+constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

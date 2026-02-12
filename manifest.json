@@ -1260,7 +1260,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.LinearMotor",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearMotor.yml\" sourcestartlinenumber=\"1\">A motor constraint that drives relative translational movement along two axes fixed\nin the reference frames of the bodies.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearMotor.yml\" sourcestartlinenumber=\"1\">A motor constraint that drives relative translational velocity along an axis fixed\nin the reference frame of each body.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1288,7 +1288,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.PointOnLine",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PointOnLine.yml\" sourcestartlinenumber=\"1\">Constrains a fixed point in the reference frame of one body to a line that is fixed in\nthe reference frame of another body. This constraint removes one degree of translational\nfreedom; two if the limit is enforced.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PointOnLine.yml\" sourcestartlinenumber=\"1\">Constrains a fixed point in the reference frame of one body to a line that is fixed in\nthe reference frame of another body. This constraint removes two degrees of translational\nfreedom; three if the limit is enforced.</p>\n"
     },
     {
       "type": "ManagedReference",
