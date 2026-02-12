@@ -477,7 +477,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             World.DynamicTree.Update(shape);
         }
 
-        World.ActivateBodyNextStep(this);
+        World.ActivateBodyNextStep(this, true);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -676,7 +676,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
                     Data.MotionType = MotionType.Kinematic;
                     World.RemoveStaticStaticConstraints(this);
-                    World.ActivateBodyNextStep(this);
+                    World.ActivateBodyNextStep(this, true);
                     UpdateWorldInertia();
                     break;
                 }
@@ -690,7 +690,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     }
 
                     Data.MotionType = MotionType.Dynamic;
-                    World.ActivateBodyNextStep(this);
+                    World.ActivateBodyNextStep(this, true);
                     UpdateWorldInertia();
                     break;
                 }

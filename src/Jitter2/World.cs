@@ -445,11 +445,15 @@ public sealed partial class World : IDisposable
     /// Marks a body to be activated at the start of the next step.
     /// </summary>
     /// <param name="body">The body to activate.</param>
-    internal void ActivateBodyNextStep(RigidBody body)
+    /// <param name="wakeUpStatic">Set to true when the intention is to move a static
+    /// body or to switch from another MotionType to static. This then activates all connected bodies.</param>
+    internal void ActivateBodyNextStep(RigidBody body, bool wakeUpStatic = false)
     {
         body.InternalSleepTime = 0;
 
         if (body.IsActive) return;
+
+        if (body.MotionType == MotionType.Static && !wakeUpStatic) return;
 
         AddToActiveList(body.InternalIsland);
 
@@ -462,7 +466,7 @@ public sealed partial class World : IDisposable
 
             foreach (var c in body.Contacts)
             {
-                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+               ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
             }
         }
 
