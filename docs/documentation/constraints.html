@@ -114,33 +114,33 @@ Constraints remove one or more of these degrees of freedom.</p>
 </tr>
 <tr>
 <td><code>HingeAngle</code></td>
-<td>2 rotational</td>
-<td>Allows rotation around a single axis only</td>
+<td>2 rotational (3 with limit)</td>
+<td>Allows rotation around a single axis only, optionally enforces angular limits</td>
 </tr>
 <tr>
 <td><code>PointOnLine</code></td>
-<td>2 translational</td>
-<td>Constrains a point to a line (1 DOF with limit)</td>
+<td>2 translational (3 with limit)</td>
+<td>Constrains a point to a line, optionally limits distance along the axis</td>
 </tr>
 <tr>
 <td><code>PointOnPlane</code></td>
-<td>1 translational</td>
-<td>Constrains a point to a plane</td>
+<td>1 translational (when limit active)</td>
+<td>Constrains a point to a plane, only enforced when the limit is violated</td>
 </tr>
 <tr>
 <td><code>DistanceLimit</code></td>
-<td>1 translational</td>
-<td>Maintains distance between anchor points</td>
+<td>1 translational (when limit active)</td>
+<td>Constrains the distance between anchor points, only enforced when outside the limit range</td>
 </tr>
 <tr>
 <td><code>TwistAngle</code></td>
-<td>1 rotational</td>
-<td>Limits relative twist around an axis</td>
+<td>1 rotational (when limit active)</td>
+<td>Limits relative twist around an axis, only enforced when outside the limit range</td>
 </tr>
 <tr>
 <td><code>ConeLimit</code></td>
-<td>1 rotational</td>
-<td>Limits angular tilt between two axes</td>
+<td>1 rotational (when limit active)</td>
+<td>Limits angular tilt between two axes, only enforced when outside the limit range</td>
 </tr>
 <tr>
 <td><code>AngularMotor</code></td>
