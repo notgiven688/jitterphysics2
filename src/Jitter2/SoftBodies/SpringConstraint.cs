@@ -189,11 +189,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
             ref RigidBodyData body1 = ref data.Body1.Data;
             ref RigidBodyData body2 = ref data.Body2.Data;
 
-            JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-            JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-
-            JVector.Add(body1.Position, r1, out JVector p1);
-            JVector.Add(body2.Position, r2, out JVector p2);
+            JVector.Add(body1.Position, data.LocalAnchor1, out JVector p1);
+            JVector.Add(body2.Position, data.LocalAnchor2, out JVector p2);
 
             JVector.Subtract(p2, p1, out JVector dp);
 
