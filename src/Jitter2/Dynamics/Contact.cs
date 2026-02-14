@@ -777,7 +777,9 @@ public struct ContactData
             accumulatedNormalImpulse = MathR.Max(oldNormalImpulse + normalImpulse, (Real)0.0);
             normalImpulse = accumulatedNormalImpulse - oldNormalImpulse;
 
-            Real maxTangentImpulse = cd->Friction * accumulatedNormalImpulse;
+            // Use the pre-update normal impulse for the friction cone to stay consistent
+            // with the SIMD path, where this avoids breaking the vectorized clamp.
+            Real maxTangentImpulse = cd->Friction * oldNormalImpulse;
             Real tangentImpulse1 = massTangent1 * -vt1;
             Real tangentImpulse2 = massTangent2 * -vt2;
 
@@ -989,6 +991,8 @@ public struct ContactData
             var impulse = Vector.Multiply(MassNormalTangent, (Vector.Subtract(Vector.Create(bias, 0, 0, 0), vdots)));
             var oldImpulse = Accumulated;
 
+            // Use the pre-update normal impulse for the friction cone; this keeps the
+            // vectorized clamp simple and matches the scalar path.
             Real maxTangentImpulse = cd->Friction * Accumulated.GetElement(0);
 
             Accumulated = Vector.Add(oldImpulse, impulse);
