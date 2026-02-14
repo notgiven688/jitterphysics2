@@ -4,6 +4,17 @@ sidebar_position: 5
 
 # Changelog
 
+### Jitter 2.7.9 (2026-02-14)
+
+- Fixed distance calculation in `SpringConstraint`.
+- Fixed register bug in `UniversalJoint`.
+- Fixed `ConeLimit.Limit` property and added upper bound validation.
+- Fixed inconsistent friction clamping between scalar and SIMD contact solver paths. Both paths now use the pre-update normal impulse for the friction cone.
+- Fixed unnecessary wake-ups for sleeping bodies in contact with static bodies.
+- Added basic debug draw methods to constraints.
+- Added world ownership validation in `World.Remove` and `World.CreateConstraint`. Passing bodies, constraints, or arbiters from a different world now throws `ArgumentException`.
+- Improved XML documentation throughout the codebase.
+
 ### Jitter 2.7.8 (2026-01-18)
 
 - Fixed degraded tree quality for large proxies in `DynamicTree`.
