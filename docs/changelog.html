@@ -87,6 +87,17 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-279-2026-02-14">Jitter 2.7.9 (2026-02-14)</h3>
+<ul>
+<li>Fixed distance calculation in <code>SpringConstraint</code>.</li>
+<li>Fixed register bug in <code>UniversalJoint</code>.</li>
+<li>Fixed <code>ConeLimit.Limit</code> property and added upper bound validation.</li>
+<li>Fixed inconsistent friction clamping between scalar and SIMD contact solver paths. Both paths now use the pre-update normal impulse for the friction cone.</li>
+<li>Fixed unnecessary wake-ups for sleeping bodies in contact with static bodies.</li>
+<li>Added basic debug draw methods to constraints.</li>
+<li>Added world ownership validation in <code>World.Remove</code> and <code>World.CreateConstraint</code>. Passing bodies, constraints, or arbiters from a different world now throws <code>ArgumentException</code>.</li>
+<li>Improved XML documentation throughout the codebase.</li>
+</ul>
 <h3 id="jitter-278-2026-01-18">Jitter 2.7.8 (2026-01-18)</h3>
 <ul>
 <li>Fixed degraded tree quality for large proxies in <code>DynamicTree</code>.</li>
