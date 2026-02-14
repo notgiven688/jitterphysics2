@@ -360,6 +360,9 @@ public sealed partial class World : IDisposable
     /// <param name="body">The rigid body to remove.</param>
     public void Remove(RigidBody body)
     {
+        if (body.World != this)
+            throw new ArgumentException("The body does not belong to this world.", nameof(body));
+
         if (body == NullBody) return;
 
         // No need to copy the hashset content first. Removing while iterating does not invalidate
@@ -403,6 +406,9 @@ public sealed partial class World : IDisposable
     /// <param name="constraint">The constraint to be removed.</param>
     public void Remove(Constraint constraint)
     {
+        if (constraint.Body1.World != this)
+            throw new ArgumentException("The constraint does not belong to this world.", nameof(constraint));
+
         ActivateBodyNextStep(constraint.Body1);
         ActivateBodyNextStep(constraint.Body2);
 
@@ -425,6 +431,9 @@ public sealed partial class World : IDisposable
     /// </summary>
     public void Remove(Arbiter arbiter)
     {
+        if (arbiter.Body1.World != this)
+            throw new ArgumentException("The arbiter does not belong to this world.", nameof(arbiter));
+
         ActivateBodyNextStep(arbiter.Body1);
         ActivateBodyNextStep(arbiter.Body2);
 
@@ -566,6 +575,10 @@ public sealed partial class World : IDisposable
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
+        if (body1.World != this)
+            throw new ArgumentException("The body does not belong to this world.", nameof(body1));
+        if (body2.World != this)
+            throw new ArgumentException("The body does not belong to this world.", nameof(body2));
         if (ReferenceEquals(body1, body2))
             throw new ArgumentException($"{nameof(body1)} and {nameof(body2)} must be different.");
 

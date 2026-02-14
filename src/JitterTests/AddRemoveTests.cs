@@ -1,3 +1,5 @@
+using Jitter2.Dynamics.Constraints;
+
 namespace JitterTests;
 
 public class AddRemoveTests
@@ -97,5 +99,36 @@ public class AddRemoveTests
         world.NullBody.RemoveShape(nullShape);
         Assert.That(world.DynamicTree.HashSetInfo.Count == 1);
         TinyStep();
+    }
+
+    [TestCase]
+    public void RemoveBodyFromWrongWorld()
+    {
+        using World other = new World();
+        var body = other.CreateRigidBody();
+
+        Assert.Throws<ArgumentException>(() => world.Remove(body));
+    }
+
+    [TestCase]
+    public void RemoveConstraintFromWrongWorld()
+    {
+        using World other = new World();
+        var b1 = other.CreateRigidBody();
+        var b2 = other.CreateRigidBody();
+        var constraint = other.CreateConstraint<BallSocket>(b1, b2);
+
+        Assert.Throws<ArgumentException>(() => world.Remove(constraint));
+    }
+
+    [TestCase]
+    public void CreateConstraintWithForeignBody()
+    {
+        using World other = new World();
+        var local = world.CreateRigidBody();
+        var foreign = other.CreateRigidBody();
+
+        Assert.Throws<ArgumentException>(() => world.CreateConstraint<BallSocket>(foreign, local));
+        Assert.Throws<ArgumentException>(() => world.CreateConstraint<BallSocket>(local, foreign));
     }
 }
