@@ -34,6 +34,8 @@
       href: documentation/bodies.md
     - name: Shapes
       href: documentation/shapes.md
+    - name: Arbiters
+      href: documentation/arbiters.md
     - name: Constraints
       href: documentation/constraints.md
     - name: Dynamic Tree

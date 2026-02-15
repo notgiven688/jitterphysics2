@@ -91,18 +91,8 @@ For a collision of two bodies with different coefficients the maximum value of e
 ## Collide events
 
 `RigidBody` provides two events: `BeginCollide` and `EndCollide`.
-These events are triggered whenever an arbiter (contact) is created or removed which involves the rigid body.
-By default, arbiters are created between colliding shapes.
-For example, `BeginCollide` can be used to modify the coefficient of friction of a contact:
-
-```cs
-body.BeginCollide += BodyOnBeginCollide;
-
-private void BodyOnBeginCollide(Arbiter arb)
-{
-    arb.Handle.Data.Friction = 0.0f;
-}
-```
+These events are triggered whenever an arbiter is created or removed which involves the rigid body.
+See [Arbiters](arbiters.md#collision-events) for details and examples.
 
 ## Activation/Deactivation
 
