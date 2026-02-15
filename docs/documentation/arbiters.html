@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Arbiters | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Arbiters | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/arbiters.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="arbiters">Arbiters</h1>
+
+<p>Arbiters manage contact information between two rigid bodies.
+An arbiter is created when two shapes begin overlapping and is removed when they separate or when one of the involved bodies is removed from the world.
+Each arbiter can hold up to four cached contact points (see <code>ContactData</code>).</p>
+<h2 id="arbiters-and-shapes">Arbiters and shapes</h2>
+<p>Arbiters are created between <em>shapes</em>, not bodies.
+Since a rigid body can have multiple shapes attached to it, a single pair of bodies may produce multiple arbiters—one for each pair of overlapping shapes.</p>
+<p>For example, consider two bodies where body A has two box shapes and body B has one sphere shape.
+If both boxes overlap with the sphere, two separate arbiters are created: one for each box–sphere pair.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p><strong>One arbiter per shape pair</strong>
+Even if the contact manifold changes over time, the arbiter remains the same as long as the two shapes stay in proximity.
+Contact points within the arbiter are cached and updated across frames.</p>
+</div>
+<h2 id="arbiterkey">ArbiterKey</h2>
+<p>Each arbiter is identified by an <code>ArbiterKey</code>, which is an ordered pair of <code>ulong</code> identifiers.
+For arbiters created by the engine, these identifiers are the <code>ShapeId</code> values of the two shapes involved.
+The ordering is canonical: the shape with the smaller ID is always first.</p>
+<pre><code class="lang-cs">public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable&lt;ArbiterKey&gt;
+{
+    public readonly ulong Key1 = key1;
+    public readonly ulong Key2 = key2;
+}
+</code></pre>
+<p>The order of <code>Key1</code> and <code>Key2</code> matters for equality comparison.</p>
+<h2 id="accessing-contact-data">Accessing contact data</h2>
+<p>The <code>Arbiter</code> class exposes a <code>Handle</code> property of type <code>JHandle&lt;ContactData&gt;</code>.
+Through <code>arbiter.Handle.Data</code>, the underlying contact information can be read and modified:</p>
+<pre><code class="lang-cs">ref ContactData data = ref arbiter.Handle.Data;
+</code></pre>
+<p>The <code>ContactData</code> structure contains up to four contact slots.
+The <code>UsageMask</code> bitfield indicates which slots are active.
+It also stores the combined <code>Friction</code> and <code>Restitution</code> coefficients for the contact pair (derived from the maximum of the two bodies' values).</p>
+<div class="CAUTION">
+<h5>Caution</h5>
+<p><strong>Lifetime</strong>
+The contact data is only valid while the arbiter is registered with the world.
+Do not cache references to <code>ContactData</code>.
+Accessing it after the arbiter has been removed results in undefined behavior.</p>
+</div>
+<h2 id="collision-events">Collision events</h2>
+<p>The <code>RigidBody</code> class provides two events that supply the associated arbiter:</p>
+<pre><code class="lang-cs">body.BeginCollide += (Arbiter arb) =&gt;
+{
+    // Called when a new arbiter is created involving this body.
+};
+
+body.EndCollide += (Arbiter arb) =&gt;
+{
+    // Called when an arbiter involving this body is removed.
+};
+</code></pre>
+<p>These events can be used to inspect or modify contact properties.
+For example, overriding friction for a specific contact:</p>
+<pre><code class="lang-cs">body.BeginCollide += (Arbiter arb) =&gt;
+{
+    arb.Handle.Data.Friction = 0.0f;
+};
+</code></pre>
+<p>Since arbiters are per shape pair, a body with multiple shapes may trigger <code>BeginCollide</code> multiple times for the same opposing body—once for each shape pair.</p>
+<h2 id="custom-arbiters">Custom arbiters</h2>
+<p>Arbiters are not limited to the engine's built-in collision detection.
+Custom arbiters can be created and managed using <code>world.GetOrCreateArbiter</code> and <code>world.RegisterContact</code>.</p>
+<h3 id="creating-an-arbiter">Creating an arbiter</h3>
+<p><code>GetOrCreateArbiter</code> takes two <code>ulong</code> identifiers and two rigid bodies.
+If an arbiter for the given ID pair already exists, it is returned; otherwise, a new one is created:</p>
+<pre><code class="lang-cs">world.GetOrCreateArbiter(id0, id1, body1, body2, out Arbiter arbiter);
+</code></pre>
+<p>The identifiers do not have to be shape IDs—they can be any <code>ulong</code> values that uniquely identify the contact pair.
+This allows custom collision systems to create arbiters for application-specific purposes.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><strong>ID ordering</strong>
+The order of the two identifiers matters.
+<code>ArbiterKey(1, 2)</code> and <code>ArbiterKey(2, 1)</code> are considered different keys.
+When creating custom arbiters, be consistent with the ordering.</p>
+</div>
+<h3 id="registering-contacts">Registering contacts</h3>
+<p>Once an arbiter exists, contacts can be registered into it:</p>
+<pre><code class="lang-cs">world.RegisterContact(arbiter, point1, point2, normal);
+</code></pre>
+<p>All vectors must be in world space, and the normal must be a unit vector.
+The <code>removeFlags</code> parameter can be used to exclude certain velocity components from the solver (e.g., <code>ContactData.SolveMode.Angular</code> for angular-only or linear-only responses).</p>
+<p>Alternatively, contacts can be registered using IDs directly, which also creates the arbiter if needed:</p>
+<pre><code class="lang-cs">world.RegisterContact(id0, id1, body1, body2, point1, point2, normal);
+</code></pre>
+<h3 id="contact-caching">Contact caching</h3>
+<p>An arbiter holds at most four contact points.
+When a new contact is registered, the arbiter decides how to incorporate it:</p>
+<ol>
+<li><strong>Slot available</strong>: If fewer than four contacts are active, the new point is compared to existing contacts. If it is close enough to an existing contact (within a break threshold), it replaces that contact and inherits its accumulated impulse for warm-starting. Otherwise it is inserted into an empty slot as a new contact.</li>
+<li><strong>All slots full</strong>: When all four slots are occupied, the algorithm evaluates which existing contact to replace. For each of the four candidates, it computes the area of the quadrilateral formed by the new point and the three remaining contacts. The candidate whose removal maximizes this area is replaced. This heuristic keeps contacts well-distributed across the contact patch, which produces the most stable contact manifold.</li>
+</ol>
+<p>Contacts that drift apart beyond a distance threshold during position integration are automatically removed from the manifold.</p>
+<h2 id="arbiter-lifecycle">Arbiter lifecycle</h2>
+<ol>
+<li><strong>Creation</strong>: When two shapes begin overlapping, the engine calls <code>GetOrCreateArbiter</code> using the shape IDs as keys. The <code>BeginCollide</code> event is raised on both bodies.</li>
+<li><strong>Update</strong>: Each <code>world.Step</code>, contact positions are updated. Contacts that have separated beyond a threshold are removed from the arbiter. New contacts from ongoing collisions are added.</li>
+<li><strong>Removal</strong>: When all contacts in an arbiter are broken and the shapes are no longer overlapping, the arbiter is removed. The <code>EndCollide</code> event is raised on both bodies. The arbiter is returned to an internal pool for reuse.</li>
+</ol>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/arbiters.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

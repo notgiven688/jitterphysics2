@@ -152,16 +152,8 @@ Speculative contacts may involve a trade-off of less accurate collision detectio
 For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>
 <h2 id="collide-events">Collide events</h2>
 <p><code>RigidBody</code> provides two events: <code>BeginCollide</code> and <code>EndCollide</code>.
-These events are triggered whenever an arbiter (contact) is created or removed which involves the rigid body.
-By default, arbiters are created between colliding shapes.
-For example, <code>BeginCollide</code> can be used to modify the coefficient of friction of a contact:</p>
-<pre><code class="lang-cs">body.BeginCollide += BodyOnBeginCollide;
-
-private void BodyOnBeginCollide(Arbiter arb)
-{
-    arb.Handle.Data.Friction = 0.0f;
-}
-</code></pre>
+These events are triggered whenever an arbiter is created or removed which involves the rigid body.
+See <a href="arbiters.html#collision-events">Arbiters</a> for details and examples.</p>
 <h2 id="activationdeactivation">Activation/Deactivation</h2>
 <p>A rigid body is always assigned to an island.
 Islands are formed by bodies which are pairwise interacting with each other through contacts or constraints.
