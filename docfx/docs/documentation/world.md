@@ -117,7 +117,7 @@ All rigid bodies registered with the world can be accessed using
 world.RigidBodies
 ```
 
-where `RigidBodies` is of type `ReadOnlyActiveList<RigidBody>`.
+where `RigidBodies` is of type `ReadOnlyPartitionedSet<RigidBody>`.
 The bodies are in no particular order and may be reordered during calls to `world.Step`.
 
 ## Raw Data
