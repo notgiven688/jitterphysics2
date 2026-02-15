@@ -140,6 +140,15 @@ JVector jitterVector = JVector.UnsafeFrom(myVec);
 JVector jitterVec = sysVec;                      // implicit conversion
 </code></pre>
 <p>These conversions involve copying and potential precision loss when converting from double to float.</p>
+<h3 id="vector-and-matrix-convention">Vector and matrix convention</h3>
+<p>Jitter2 treats vectors as <strong>column vectors</strong>.
+A vector <span class="math">\(v\)</span> is transformed by a matrix <span class="math">\(M\)</span> using <span class="math">\(M \cdot v\)</span> (post-multiplication):</p>
+<pre><code class="lang-cs">JVector result = JVector.Transform(v, M);  // computes M * v
+</code></pre>
+<p>This is the standard convention used in mathematics, physics, and most graphics APIs (e.g., OpenGL, Vulkan/GLSL).
+<code>System.Numerics</code> uses the opposite convention: vectors are <strong>row vectors</strong> and transformation is written as <span class="math">\(v \cdot M\)</span> (pre-multiplication).</p>
+<p>As a consequence, when converting transformation matrices between Jitter2 and <code>System.Numerics</code>, the matrices must be transposed.
+Jitter2's <code>JMatrix</code> also stores its elements in column-major order in memory (i.e., <code>M11</code>, <code>M21</code>, <code>M31</code> are contiguous), whereas <code>System.Numerics.Matrix4x4</code> uses row-major storage.</p>
 
 </article>
 
