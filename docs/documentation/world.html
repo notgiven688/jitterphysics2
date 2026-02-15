@@ -171,7 +171,7 @@ The <code>world.EnableAuxiliaryContactPoints</code> property can be used to enab
 <p>All rigid bodies registered with the world can be accessed using</p>
 <pre><code class="lang-cs">world.RigidBodies
 </code></pre>
-<p>where <code>RigidBodies</code> is of type <code>ReadOnlyActiveList&lt;RigidBody&gt;</code>.
+<p>where <code>RigidBodies</code> is of type <code>ReadOnlyPartitionedSet&lt;RigidBody&gt;</code>.
 The bodies are in no particular order and may be reordered during calls to <code>world.Step</code>.</p>
 <h2 id="raw-data">Raw Data</h2>
 <p><code>RigidBody</code>s, <code>Arbiter</code>s, and <code>(Small)Constraint</code>s are regular C# classes that reside on the managed heap.
