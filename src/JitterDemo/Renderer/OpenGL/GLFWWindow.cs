@@ -262,7 +262,7 @@ public class GLFWWindow
         if (Handle == IntPtr.Zero)
         {
             GLFW.Terminate();
-            throw new Exception("Unable to create. window");
+            throw new Exception("Unable to create window.");
         }
 
         GLFW.MakeContextCurrent(Handle);

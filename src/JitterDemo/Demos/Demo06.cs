@@ -100,18 +100,17 @@ public class CarMesh : MultiMesh
     }
 }
 
-public class Demo06 : IDemo
+public class Demo06 : IDemo, IDrawUpdate
 {
     public string Name => "Ray-cast Car";
+    public string Description => "Drivable car using raycasts for wheel-ground contact.";
+    public string Controls => "Arrow Keys - Steer and accelerate";
 
     private RayCastCar defaultCar = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         defaultCar = new RayCastCar(world);
         defaultCar.Body.Position = new JVector(0, 2, 0);
@@ -126,7 +125,7 @@ public class Demo06 : IDemo
         world.SubstepCount = 2;
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var cm = RenderWindow.Instance.CSMRenderer.GetInstance<CarMesh>();
         cm.PushMatrix(Conversion.FromJitter(defaultCar.Body) *

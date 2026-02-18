@@ -10,12 +10,9 @@ public class Demo08 : IDemo
 {
     public string Name => "Contact Manifold Test";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.SolverIterations = (4, 4);
 
@@ -28,9 +25,5 @@ public class Demo08 : IDemo
         body2.AddShape(new CylinderShape(0.5f, 3.0f));
         body2.Position = new JVector(0, 2.5f, 0);
         body2.Friction = 0;
-    }
-
-    public void Draw()
-    {
     }
 }

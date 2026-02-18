@@ -7,22 +7,15 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo23 : IDemo
+public class Demo23 : IDemo, IDrawUpdate
 {
     public string Name => "Rotating Cube";
-
-    private Playground pg = null!;
-    private World world = null!;
+    public string Description => "Bodies inside a large kinematic rotating hollow cube.";
 
     private RigidBody rotatingBox = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
-
-        pg.ResetScene(false);
-
         rotatingBox = world.CreateRigidBody();
 
         float size = 50;
@@ -58,7 +51,7 @@ public class Demo23 : IDemo
         }
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         rotatingBox.AngularVelocity = new JVector(0.14f, 0.02f, 0.03f);
     }

@@ -106,8 +106,6 @@ public class RayCastCar
         float Izz = (1.0f / 12.0f) * mass * (sides.X * sides.X + sides.Y * sides.Y);
 
         JMatrix inertia = new JMatrix(Ixx, 0, 0, 0, Iyy, 0, 0, 0, Izz);
-        JVector r = new JVector(0, 0, 0);
-        inertia += mass * r.LengthSquared() * JMatrix.Identity - mass * JVector.Outer(r, r);
 
         Body.Position = new JVector(0, 0.5f, -4);
         Body.SetMassInertia(inertia, mass);

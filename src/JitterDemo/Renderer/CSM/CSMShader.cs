@@ -86,7 +86,7 @@ public class PhongShader : BasicShader
     public UniformVector3 SunDir { private set; get; }
     public Material MaterialProperties { private set; get; }
     public UniformMatrix4 Lights { private set; get; }
-    public UniformTexture Test { private set; get; }
+    public UniformTexture DiffuseTexture { private set; get; }
     public UniformMatrix4 Model { private set; get; }
 
     public PhongShader() : base(vshader, fshader)
@@ -95,7 +95,7 @@ public class PhongShader : BasicShader
         Projection = GetUniform<UniformMatrix4>("projection");
         ViewPosition = GetUniform<UniformVector3>("viewPos");
         Lights = GetUniform<UniformMatrix4>("lightmaps[0]");
-        Test = GetUniform<UniformTexture>("diffuse");
+        DiffuseTexture = GetUniform<UniformTexture>("diffuse");
         SunDir = GetUniform<UniformVector3>("sundir");
         Model = GetUniform<UniformMatrix4>("model");
 
@@ -120,13 +120,6 @@ public class PhongShader : BasicShader
         out vec3 normal;
         out vec3 pos;
         out vec2 TexCoords;
-
-        vec3 hsv2rgb(vec3 c)
-        {
-            vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-            vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-            return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-        }
 
         void main()
         {
@@ -189,12 +182,6 @@ public class PhongShader : BasicShader
             projCoords = projCoords * 0.5 + 0.5; 
 
             float currentDepth = projCoords.z;  
-
-            int blockers = 0;
-            float blockerDistance = 0.0;
-            vec2 texelSize = 1.0 / textureSize(shadowmap, 0)*0;
- 
-            float shadow = 0;
 
             if(projCoords.z > 1.0) return 0.0;
 
@@ -268,8 +255,6 @@ public class PhongShader : BasicShader
             lightDir = normalize(lights[0]);
             vec3 viewDir = normalize(viewPos - pos);
             vec3 halfwayDir = normalize(lightDir + viewDir);
-            vec3 reflectDir = reflect(-lightDir, fnormal);
-
             float spec = pow(max(dot(viewDir, halfwayDir),0.0), material.shininess);
             specular = lightColor * spec * material.specular;
             

@@ -7,24 +7,26 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class Demo26 : IDemo
+public class Demo26 : IDemo, IDrawUpdate
 {
     public string Name => "Angular Sweep";
+    public string Description => "Visualizes NarrowPhase.Sweep with angular velocity.\n" +
+                                 "A rotating box sweeps toward a static bar, showing\n" +
+                                 "interpolated orientations up to the time of impact.";
+    public string Controls => "O/P - Move sweep origin forward/backward";
 
     private BoxShape staticBar = null!;
     private BoxShape dynamicBox = null!;
+
+    private Playground pg = null!;
 
     private JVector position = new JVector(0, 0, 10);
     private JVector velocity = new JVector(0, 0, -10);
     private JVector angularVelocity = new JVector(1, 2,2);
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene(false);
-
+        this.pg = pg;
         staticBar = new BoxShape(10,10,0.1f);
         dynamicBox = new BoxShape(5,1,1);
     }
@@ -39,10 +41,8 @@ public class Demo26 : IDemo
         return translation * orientation * scale;
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-
         var kb = Keyboard.Instance;
         if(kb.IsKeyDown(Keyboard.Key.O)) position += new JVector(0,0,0.01f);
         if(kb.IsKeyDown(Keyboard.Key.P)) position -= new JVector(0,0,0.01f);

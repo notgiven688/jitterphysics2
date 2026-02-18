@@ -208,8 +208,6 @@ public class Wheel
 
     public void PreStep(float timeStep)
     {
-        // var dr = Playground.Instance.DebugRenderer;
-
         JVector force = JVector.Zero;
         lastDisplacement = displacement;
         displacement = 0.0f;
@@ -219,8 +217,7 @@ public class Wheel
         JVector worldPos = car.Position + JVector.Transform(Position, car.Orientation);
         JVector worldAxis = JVector.Transform(Up, car.Orientation);
 
-
-        JVector forward = JVector.Transform(-JVector.UnitZ, car.Orientation); //-car.Orientation.GetColumn(2);
+        JVector forward = JVector.Transform(-JVector.UnitZ, car.Orientation);
         JVector wheelFwd = JVector.Transform(forward, JMatrix.CreateRotationMatrix(worldAxis, SteerAngle));
 
         JVector wheelLeft = JVector.Cross(worldAxis, wheelFwd);
@@ -251,24 +248,13 @@ public class Wheel
 
             JVector newOrigin = wheelRayOrigin + distFwd * wheelFwd + zOffset * wheelUp;
 
-            RigidBody body;
-
             bool result = world.DynamicTree.RayCast(newOrigin, wheelRayDelta,
                 rayCast, null, out IDynamicTreeProxy? shape, out JVector normal, out float frac);
-
-            // Debug Rendering
-            // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(newOrigin), 0.2f);
-            // dr.PushPoint(DebugRenderer.Color.Red, Conversion.FromJitter(newOrigin + wheelRayDelta), 0.2f);
-
-            JVector minBox = worldPos - new JVector(Radius);
-            JVector maxBox = worldPos + new JVector(Radius);
-
-            // dr.PushBox(DebugRenderer.Color.Green, Conversion.FromJitter(minBox), Conversion.FromJitter(maxBox));
 
             if (result && frac <= 1.0f)
             {
                 // shape must be RigidBodyShape since we filter out other ray tests
-                body = (shape as RigidBodyShape)!.RigidBody;
+                RigidBody body = (shape as RigidBodyShape)!.RigidBody;
 
                 if (frac < deepestFrac)
                 {
@@ -284,11 +270,7 @@ public class Wheel
 
         if (!onFloor) return;
 
-        // dr.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(groundPos), 0.2f);
-
         if (groundNormal.LengthSquared() > 0.0f) JVector.NormalizeInPlace(ref groundNormal);
-
-        // System.Diagnostics.Debug.WriteLine(groundPos.ToString());
 
         displacement = rayLen * (1.0f - deepestFrac);
         displacement = Math.Clamp(displacement, 0.0f, WheelTravel);

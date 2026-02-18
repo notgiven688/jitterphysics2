@@ -8,18 +8,11 @@ namespace JitterDemo;
 public class Demo04 : IDemo
 {
     public string Name => "Many Ragdolls";
+    public string Description => "100 ragdolls dropping from increasing heights with collision filtering between limbs.";
 
-
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        var filter = new IgnoreCollisionBetweenFilter();
-
-        world.BroadPhaseFilter = filter;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         for (int i = 0; i < 100; i++)
         {
@@ -27,9 +20,5 @@ public class Demo04 : IDemo
         }
 
         world.SolverIterations = (8, 4);
-    }
-
-    public void Draw()
-    {
     }
 }

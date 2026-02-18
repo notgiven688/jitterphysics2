@@ -4,11 +4,6 @@ namespace JitterTests;
 
 public class MathTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [TestCase]
     public static void QMatrixProjectMultiplyLeftRight()
     {

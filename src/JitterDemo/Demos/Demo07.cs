@@ -7,13 +7,11 @@ namespace JitterDemo;
 public class Demo07 : IDemo
 {
     public string Name => "Many Pyramids";
+    public string Description => "60 pre-deactivated box pyramids arranged in a grid.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.SolverIterations = (4, 2);
 
@@ -25,9 +23,5 @@ public class Demo07 : IDemo
                     body => body.SetActivationState(false));
             }
         }
-    }
-
-    public void Draw()
-    {
     }
 }

@@ -12,38 +12,32 @@ public class DecomposedTeapot : MultiMesh
     }
 }
 
-public class Demo00 : IDemo
+public class Demo00 : IDemo, IDrawUpdate
 {
     private ConvexDecomposition<DecomposedTeapot> teapotDecomp = null!;
 
     public string Name => "Convex Decomposition";
+    public string Description => "Convex-decomposed teapot models with compound convex hull collision.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         teapotDecomp = new ConvexDecomposition<DecomposedTeapot>(world);
         teapotDecomp.Load();
 
         for (int i = 0; i < 6; i++)
+        {
             teapotDecomp.Spawn(new JVector(0, 10 + i * 3, -14));
-
-        for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(0, 10 + i * 3, -6));
-
-        for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(5, 10 + i * 3, -14));
-
-        for (int i = 0; i < 6; i++)
             teapotDecomp.Spawn(new JVector(5, 10 + i * 3, -6));
+        }
 
         world.SolverIterations = (8, 4);
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         teapotDecomp.PushMatrices();
     }

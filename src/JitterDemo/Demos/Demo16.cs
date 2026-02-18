@@ -7,22 +7,21 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo16 : IDemo, ICleanDemo
+public class Demo16 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Soft Body Cubes";
+    public string Description => "Deformable soft-body cubes interacting with rigid bodies.";
 
-    private Playground pg = null!;
     private readonly List<SoftBodyCube> cubes = new();
     private World world = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
         cubes.Clear();
 
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.world = world;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
@@ -66,7 +65,7 @@ public class Demo16 : IDemo, ICleanDemo
         world.SubstepCount = 4;
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var dr = RenderWindow.Instance.DebugRenderer;
         foreach (var cube in cubes)

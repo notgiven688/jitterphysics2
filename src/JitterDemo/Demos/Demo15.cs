@@ -6,22 +6,21 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo15 : IDemo, ICleanDemo
+public class Demo15 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Pressurized Soft Bodies";
+    public string Description => "Soft-body spheres using spring-connected particles and internal pressure.";
 
-    private Playground pg = null!;
     private readonly List<SoftBodySphere> spheres = new();
     private World world = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
         spheres.Clear();
 
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.world = world;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         // Prepare Jitter to handle soft bodies.
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
@@ -38,7 +37,7 @@ public class Demo15 : IDemo, ICleanDemo
         world.SubstepCount = 3;
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var dr = RenderWindow.Instance.DebugRenderer;
 

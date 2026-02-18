@@ -267,6 +267,42 @@ public static unsafe class ImGui
         }
     }
 
+    public static double GetTime()
+    {
+        return ImGuiNative.igGetTime();
+    }
+
+    public static void PushStyleColor(ImGuiCol idx, Vector4 color)
+    {
+        ImGuiNative.igPushStyleColor_Vec4(idx, color);
+    }
+
+    public static void PopStyleColor(int count = 1)
+    {
+        ImGuiNative.igPopStyleColor(count);
+    }
+
+    public static bool IsItemHovered(ImGuiHoveredFlags flags = ImGuiHoveredFlags.None)
+    {
+        return Convert.ToBoolean(ImGuiNative.igIsItemHovered(flags));
+    }
+
+    public static void SetItemTooltip(string text)
+    {
+        PushStr(text, 0);
+        ImGuiNative.igSetItemTooltip(strPtr[0]);
+    }
+
+    public static bool BeginItemTooltip()
+    {
+        return Convert.ToBoolean(ImGuiNative.igBeginItemTooltip());
+    }
+
+    public static void EndTooltip()
+    {
+        ImGuiNative.igEndTooltip();
+    }
+
     public static void ShowDemo()
     {
         byte popen = 1;

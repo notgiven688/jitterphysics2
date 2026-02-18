@@ -7,8 +7,6 @@ public class TriangleMesh : CSMInstance
 {
     public readonly Mesh Mesh;
 
-    public Vector3 Color { get; set; }
-
     public TriangleMesh(string objFile, float scale = 1.0f)
     {
         string filename = Path.Combine("assets", objFile);
@@ -21,10 +19,4 @@ public class TriangleMesh : CSMInstance
         return (Mesh.Vertices, Mesh.Indices);
     }
 
-    public override void LightPass(PhongShader shader)
-    {
-        //Renderer.OpenGL.Native.GL.PolygonMode(Renderer.OpenGL.Native.GLC.FRONT_AND_BACK, Renderer.OpenGL.Native.GLC.LINE);
-        base.LightPass(shader);
-        //Renderer.OpenGL.Native.GL.PolygonMode(Renderer.OpenGL.Native.GLC.FRONT_AND_BACK, Renderer.OpenGL.Native.GLC.FILL);
-    }
 }

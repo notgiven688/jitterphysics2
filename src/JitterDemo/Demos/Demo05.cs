@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2;
 using Jitter2.Collision.Shapes;
@@ -27,9 +25,11 @@ public class Dust : TriangleMesh
     }
 }
 
-public class Demo05 : IDemo
+public class Demo05 : IDemo, IDrawUpdate
 {
     public string Name => "Level Geometry";
+    public string Description => "Triangle-mesh level loaded from an OBJ file with a player character.";
+    public string Controls => "Arrow Keys - Move player\nLeft Ctrl - Jump\nO - Toggle debug draw";
 
     private TriangleMesh tm = null!;
 
@@ -37,7 +37,7 @@ public class Demo05 : IDemo
 
     private RigidBody level = null!;
 
-    private bool debugDraw = false;
+    private bool debugDraw;
 
     public IEnumerable<RigidBodyShape> CreateShapes()
     {
@@ -48,14 +48,11 @@ public class Demo05 : IDemo
         return TriangleShape.CreateAllShapes(jtm);
     }
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        tm = RenderWindow.Instance.CSMRenderer.GetInstance<Dust>();
+        tm = pg.CSMRenderer.GetInstance<Dust>();
 
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         level = world.CreateRigidBody();
         level.AddShape(CreateShapes(), false);
@@ -67,7 +64,7 @@ public class Demo05 : IDemo
         player = new Player(world, new JVector(-6, 7, 32));
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         tm.PushMatrix(Conversion.FromJitter(level), new Vector3(0.35f, 0.35f, 0.35f));
 

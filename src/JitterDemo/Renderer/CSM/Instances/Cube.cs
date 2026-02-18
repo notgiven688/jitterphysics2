@@ -37,9 +37,4 @@ public class Cube : CSMInstance
 
         return (vertices, indices);
     }
-
-    public override void LightPass(PhongShader shader)
-    {
-        base.LightPass(shader);
-    }
 }

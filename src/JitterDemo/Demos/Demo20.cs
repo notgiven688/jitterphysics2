@@ -137,21 +137,22 @@ public class Tester(Octree tree) : IDynamicTreeProxy, IRayCastable
     }
 }
 
-public class Demo20 : IDemo, ICleanDemo
+public class Demo20 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Octree (Custom Collision)";
+    public string Description => "High-poly mesh in an octree with custom narrow-phase triangle collision.";
 
     private Playground pg = null!;
     private World world = null!;
 
     private Tester testShape = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.pg = pg;
+        this.world = world;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         var tm = RenderWindow.Instance.CSMRenderer.GetInstance<Dragon>();
 
@@ -173,7 +174,7 @@ public class Demo20 : IDemo, ICleanDemo
         world.BroadPhaseFilter = new CustomCollisionDetection(world, testShape, octree);
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var tm = RenderWindow.Instance.CSMRenderer.GetInstance<Dragon>();
         tm.PushMatrix(Matrix4.Identity, new Vector3(0.35f, 0.35f, 0.35f));

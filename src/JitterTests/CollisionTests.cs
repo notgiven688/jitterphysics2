@@ -1,15 +1,9 @@
-using System.Diagnostics;
 using JVector = Jitter2.LinearMath.JVector;
 
 namespace JitterTests;
 
 public class CollisionTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [TestCase]
     public void NoBodyWorldBoundingBox()
     {

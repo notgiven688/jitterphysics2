@@ -1,38 +1,16 @@
-/* Copyright <2021> <Thorben Linneweber>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
-
 using JitterDemo.Renderer.OpenGL.Native;
 
 namespace JitterDemo.Renderer.OpenGL;
 
 public abstract class Uniform
 {
-    public ShaderProgram shader;
-    public int location;
+    protected readonly ShaderProgram Shader;
+    protected readonly int Location;
 
-    public Uniform(ShaderProgram shader, int location)
+    protected Uniform(ShaderProgram shader, int location)
     {
-        this.shader = shader;
-        this.location = location;
+        Shader = shader;
+        Location = location;
     }
 }
 
@@ -44,7 +22,7 @@ public class UniformUint : Uniform
 
     public void Set(uint value)
     {
-        GL.Uniform1ui(location, value);
+        GL.Uniform1ui(Location, value);
     }
 
     public void Set(uint[] values)
@@ -53,7 +31,7 @@ public class UniformUint : Uniform
         {
             fixed (uint* first = values)
             {
-                GL.Uniform1uiv(location, values.Length, first);
+                GL.Uniform1uiv(Location, values.Length, first);
             }
         }
     }
@@ -67,7 +45,7 @@ public class UniformBool : Uniform
 
     public void Set(bool value)
     {
-        GL.Uniform1i(location, value ? 1 : 0);
+        GL.Uniform1i(Location, value ? 1 : 0);
     }
 }
 
@@ -79,7 +57,7 @@ public class UniformFloat : Uniform
 
     public void Set(float value)
     {
-        GL.Uniform1f(location, value);
+        GL.Uniform1f(Location, value);
     }
 
     public void Set(float[] values)
@@ -88,7 +66,7 @@ public class UniformFloat : Uniform
         {
             fixed (float* first = values)
             {
-                GL.Uniform1fv(location, values.Length, first);
+                GL.Uniform1fv(Location, values.Length, first);
             }
         }
     }
@@ -102,7 +80,7 @@ public class UniformTexture : Uniform
 
     public void Set(int value)
     {
-        GL.Uniform1i(location, value);
+        GL.Uniform1i(Location, value);
     }
 }
 
@@ -118,7 +96,7 @@ public class UniformMatrix4 : Uniform
         {
             fixed (float* first = &value[0].M11)
             {
-                GL.UniformMatrix4fv(location, value.Length, transpose, first);
+                GL.UniformMatrix4fv(Location, value.Length, transpose, first);
             }
         }
     }
@@ -129,7 +107,7 @@ public class UniformMatrix4 : Uniform
         {
             fixed (float* first = &value.M11)
             {
-                GL.UniformMatrix4fv(location, 1, transpose, first);
+                GL.UniformMatrix4fv(Location, 1, transpose, first);
             }
         }
     }
@@ -152,7 +130,7 @@ public class UniformVector2 : Uniform
         {
             fixed (float* first = &value.X)
             {
-                GL.Uniform2fv(location, 1, first);
+                GL.Uniform2fv(Location, 1, first);
             }
         }
     }
@@ -163,14 +141,14 @@ public class UniformVector2 : Uniform
         {
             fixed (float* first = &value[0].X)
             {
-                GL.Uniform2fv(location, value.Length, first);
+                GL.Uniform2fv(Location, value.Length, first);
             }
         }
     }
 
     public void Set(float x, float y)
     {
-        GL.Uniform2f(location, x, y);
+        GL.Uniform2f(Location, x, y);
     }
 }
 
@@ -186,14 +164,14 @@ public class UniformVector3 : Uniform
         {
             fixed (float* first = &value.X)
             {
-                GL.Uniform3fv(location, 1, first);
+                GL.Uniform3fv(Location, 1, first);
             }
         }
     }
 
     public void Set(float x, float y, float z)
     {
-        GL.Uniform3f(location, x, y, z);
+        GL.Uniform3f(Location, x, y, z);
     }
 }
 
@@ -209,13 +187,13 @@ public class UniformVector4 : Uniform
         {
             fixed (float* first = &value.X)
             {
-                GL.Uniform4fv(location, 1, first);
+                GL.Uniform4fv(Location, 1, first);
             }
         }
     }
 
     public void Set(float x, float y, float z, float w)
     {
-        GL.Uniform4f(location, x, y, z, w);
+        GL.Uniform4f(Location, x, y, z, w);
     }
 }

@@ -1,4 +1,3 @@
-using System.IO;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;
@@ -14,7 +13,7 @@ public class RenderWindow : GLFWWindow
 
     private readonly Skybox skybox;
 
-    public bool ShowShadowDebug { set; get; } = false;
+    public bool ShowShadowDebug { set; get; }
 
     public static RenderWindow Instance { get; private set; } = null!;
 
@@ -86,20 +85,9 @@ public class RenderWindow : GLFWWindow
         GuiRenderer.Load();
 
         shadowDebug = new TexturedQuad();
-        shadowDebug.Texture = CSMRenderer.depthMap[0];
+        shadowDebug.Texture = CSMRenderer.DepthMap[0];
 
         DebugRenderer.Load();
-
-        string filename = Path.Combine("assets", "logo.tga");
-
-        /*
-        Image.LoadImage(filename).FixedData((img, data) =>
-        {
-            logo = new TexturedQuad(img.Width, img.Height);
-            logo.Texture = new Texture2D();
-            logo.Texture.LoadImage(data, img.Width, img.Height, false);
-        });
-        */
 
         Camera.Position = new Vector3(0, 4, 8);
 

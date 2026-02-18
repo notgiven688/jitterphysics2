@@ -102,6 +102,15 @@ public class DoubleSphereShape : RigidBodyShape
 
 public class Icosahedron : RigidBodyShape
 {
+    private static readonly float GR = (1.0f + MathF.Sqrt(5.0f)) / 2.0f;
+
+    private static readonly JVector[] Vertices =
+    [
+        new(0, +1, +GR), new(0, -1, +GR), new(0, +1, -GR), new(0, -1, -GR),
+        new(+1, +GR, 0), new(+1, -GR, 0), new(-1, +GR, 0), new(-1, -GR, 0),
+        new(+GR, 0, +1), new(+GR, 0, -1), new(-GR, 0, +1), new(-GR, 0, -1)
+    ];
+
     public Icosahedron()
     {
         UpdateWorldBoundingBox();
@@ -109,34 +118,20 @@ public class Icosahedron : RigidBodyShape
 
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        float gr = (1.0f + MathF.Sqrt(5.0f)) / 2.0f;
-
-        Span<JVector> vertices = stackalloc JVector[12];
-
-        vertices[0] = new JVector(0, +1, +gr);
-        vertices[1] = new JVector(0, -1, +gr);
-        vertices[2] = new JVector(0, +1, -gr);
-        vertices[3] = new JVector(0, -1, -gr);
-        vertices[4] = new JVector(+1, +gr, 0);
-        vertices[5] = new JVector(+1, -gr, 0);
-        vertices[6] = new JVector(-1, +gr, 0);
-        vertices[7] = new JVector(-1, -gr, 0);
-        vertices[8] = new JVector(+gr, 0, +1);
-        vertices[9] = new JVector(+gr, 0, -1);
-        vertices[10] = new JVector(-gr, 0, +1);
-        vertices[11] = new JVector(-gr, 0, -1);
-
         int largestIndex = 0;
+        float maxDot = JVector.Dot(Vertices[0], direction);
 
-        for (int i = 1; i < 12; i++)
+        for (int i = 1; i < Vertices.Length; i++)
         {
-            if (JVector.Dot(vertices[i], direction) > JVector.Dot(vertices[largestIndex], direction))
+            float dot = JVector.Dot(Vertices[i], direction);
+            if (dot > maxDot)
             {
+                maxDot = dot;
                 largestIndex = i;
             }
         }
 
-        result = vertices[largestIndex] * 0.5f;
+        result = Vertices[largestIndex] * 0.5f;
     }
 
     public override void GetCenter(out JVector point)
@@ -145,32 +140,28 @@ public class Icosahedron : RigidBodyShape
     }
 }
 
-public class Demo14 : IDemo
+public class Demo14 : IDemo, IDrawUpdate
 {
     public string Name => "Custom Shapes";
+    public string Description => "Custom support-mapped shapes: ellipsoid, double-sphere, and icosahedron.";
 
     private Playground pg = null!;
 
-    private EllipsoidShape ellipsoid = null!;
-    private DoubleSphereShape doublesSphere = null!;
-    private Icosahedron icosahedron = null!;
-
     private List<RigidBody> demoBodies = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        this.pg = pg;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         demoBodies = new List<RigidBody>();
 
         for (int i = 0; i < 100; i++)
         {
-            ellipsoid = new EllipsoidShape();
-            doublesSphere = new DoubleSphereShape();
-            icosahedron = new Icosahedron();
+            var ellipsoid = new EllipsoidShape();
+            var doublesSphere = new DoubleSphereShape();
+            var icosahedron = new Icosahedron();
 
             var body1 = world.CreateRigidBody();
             body1.AddShape(ellipsoid);
@@ -189,7 +180,7 @@ public class Demo14 : IDemo
         }
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var cesd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<EllipsoidShape>>();
         var rbsd = pg.CSMRenderer.GetInstance<CustomSupportMapInstance<DoubleSphereShape>>();

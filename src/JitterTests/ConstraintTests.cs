@@ -5,11 +5,6 @@ namespace JitterTests;
 
 public class ConstraintTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [TestCase]
     public void TestSizes()
     {

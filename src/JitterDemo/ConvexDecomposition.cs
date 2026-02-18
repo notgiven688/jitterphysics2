@@ -64,7 +64,7 @@ public class ConvexDecomposition<T> where T : MultiMesh, new()
             }
 
             ConvexHullShape chs = new(hullTriangles);
-            chs.CalculateMassInertia(out var cvhInertia, out var cvhCom, out var cvhMass);
+            chs.CalculateMassInertia(out _, out var cvhCom, out var cvhMass);
 
             com += cvhCom * cvhMass;
             totalMass += cvhMass;
@@ -73,9 +73,9 @@ public class ConvexDecomposition<T> where T : MultiMesh, new()
 
         com *= 1.0f / totalMass;
 
-        foreach (Shape s in shapesToAdd)
+        foreach (ConvexHullShape s in shapesToAdd)
         {
-            ((ConvexHullShape)s).Shift = -com;
+            s.Shift = -com;
         }
     }
 
@@ -91,9 +91,7 @@ public class ConvexDecomposition<T> where T : MultiMesh, new()
         foreach (RigidBody body in bodies)
         {
             var mat = Conversion.FromJitter(body);
-            Vector3 color = Vector3.Zero;
-            //if (!body.Data.isActive) color = new Vector3(0.2f, 0.2f, 0.2f);
-            csmInstance.PushMatrix(mat * MatrixHelper.CreateTranslation(Conversion.FromJitter(-com)), color);
+            csmInstance.PushMatrix(mat * MatrixHelper.CreateTranslation(Conversion.FromJitter(-com)), Vector3.Zero);
         }
     }
 }

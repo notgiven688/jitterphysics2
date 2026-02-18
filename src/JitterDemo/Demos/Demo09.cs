@@ -1,5 +1,3 @@
-#pragma warning disable CS8602
-
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
@@ -10,13 +8,11 @@ namespace JitterDemo;
 public class Demo09 : IDemo
 {
     public string Name => "Restitution and Friction";
+    public string Description => "Varying restitution and friction values across rows of bodies.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.SolverIterations = (20, 4);
 
@@ -44,9 +40,5 @@ public class Demo09 : IDemo
             body.Velocity = new JVector(0, 0, -10);
             body.Damping = (0.001f, 0.001f);
         }
-    }
-
-    public void Draw()
-    {
     }
 }

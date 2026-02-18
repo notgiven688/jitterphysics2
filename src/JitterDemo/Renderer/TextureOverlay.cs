@@ -93,7 +93,6 @@ public class QuadShader : BasicShader
     private static readonly string fshader = @"
         #version 330 core
         uniform sampler2D fontTexture;
-        uniform vec2 screensize;
         in vec2 TexCoord;
         out vec4 FragColor;
         void main()
