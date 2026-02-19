@@ -24,12 +24,17 @@ public partial class Playground : RenderWindow
             Conversion.FromJitter(treeBBox.Max));
     }
 
-    public Vector3 rayHitPoint = Vector3.Zero;
-
-    public void DebugDraw()
+    private void DrawContact(in ContactData cq, in ContactData.Contact c)
     {
-        //DebugRenderer.PushPoint(DebugRenderer.Color.White, rayHitPoint);
+        JVector v1 = c.RelativePosition1 + cq.Body1.Data.Position;
+        JVector v2 = c.RelativePosition2 + cq.Body2.Data.Position;
 
+        DebugRenderer.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(v1), 0.1f);
+        DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(v2), 0.1f);
+    }
+
+    private void DebugDraw()
+    {
         if (debugDrawTree)
         {
             World.DynamicTree.EnumerateTreeBoxes(drawBox);
@@ -82,16 +87,6 @@ public partial class Playground : RenderWindow
             for (int i = 0; i < contacts.Length; i++)
             {
                 ref var cq = ref contacts[i];
-
-                void DrawContact(in ContactData cq, in ContactData.Contact c)
-                {
-                    JVector v1 = c.RelativePosition1 + cq.Body1.Data.Position;
-                    JVector v2 = c.RelativePosition2 + cq.Body2.Data.Position;
-
-                    DebugRenderer.PushPoint(DebugRenderer.Color.Green, Conversion.FromJitter(v1), 0.1f);
-                    DebugRenderer.PushPoint(DebugRenderer.Color.White, Conversion.FromJitter(v2), 0.1f);
-                }
-
                 uint umask = cq.UsageMask >> 4;
 
                 if ((umask & ContactData.MaskContact0) != 0) DrawContact(cq, cq.Contact0);

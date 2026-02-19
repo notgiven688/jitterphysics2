@@ -1,4 +1,3 @@
-using System;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -12,7 +11,7 @@ namespace JitterDemo;
 
 public partial class Playground : RenderWindow
 {
-    public Vector3 Unproject(Vector3 source, in Matrix4 projection, in Matrix4 view)
+    private Vector3 Unproject(Vector3 source, in Matrix4 projection, in Matrix4 view)
     {
         source.X = source.X / Width * 2.0f - 1.0f;
         source.Y = -source.Y / Height * 2.0f + 1.0f;
@@ -34,10 +33,10 @@ public partial class Playground : RenderWindow
         return Vector3.Normalize(farPoint - nearPoint);
     }
 
-    private RigidBody? grepBody;
-    private bool grepping;
+    private RigidBody? grabBody;
+    private bool grabbing;
 
-    private DistanceLimit? grepConstraint;
+    private DistanceLimit? grabConstraint;
     private float hitDistance;
     private float hitWheelPosition;
 
@@ -46,55 +45,55 @@ public partial class Playground : RenderWindow
         JVector origin = Conversion.ToJitterVector(Camera.Position);
         JVector dir = Conversion.ToJitterVector(RayTo((int)Mouse.Position.X, (int)Mouse.Position.Y));
 
-        if (grepping)
+        if (grabbing)
         {
-            if (grepBody == null) return;
-            if (grepConstraint == null) return;
+            if (grabBody == null) return;
+            if (grabConstraint == null) return;
 
-            hitDistance += ((float)Mouse.ScrollWheel.Y - hitWheelPosition);
+            float currentWheel = (float)Mouse.ScrollWheel.Y;
+            hitDistance += currentWheel - hitWheelPosition;
+            hitWheelPosition = currentWheel;
 
-            grepConstraint.Anchor2 = origin + hitDistance * dir;
-            grepBody.SetActivationState(true);
+            grabConstraint.Anchor2 = origin + hitDistance * dir;
+            grabBody.SetActivationState(true);
 
-            grepBody.Data.Velocity *= 0.98f;
-            grepBody.Data.AngularVelocity *= 0.98f;
+            grabBody.Data.Velocity *= 0.98f;
+            grabBody.Data.AngularVelocity *= 0.98f;
         }
         else
         {
-            grepBody = null;
+            grabBody = null;
 
             bool result = World.DynamicTree.RayCast(origin, dir, null, null,
-                out IDynamicTreeProxy? grepShape, out JVector hitNormal, out hitDistance);
+                out IDynamicTreeProxy? grabShape, out JVector hitNormal, out hitDistance);
 
             if (!result) return;
 
             JVector hitPoint = origin + hitDistance * dir;
 
-            Console.WriteLine($"Ray cast, hit point: {hitPoint}; hit normal: {hitNormal}; distance: {hitDistance}");
-
-            if (grepShape != null)
+            if (grabShape != null)
             {
-                if (grepShape is SoftBodyShape gs)
+                if (grabShape is SoftBodyShape gs)
                 {
-                    grepBody = gs.GetClosest(hitPoint);
+                    grabBody = gs.GetClosest(hitPoint);
                 }
-                else if (grepShape is RigidBodyShape rbs)
+                else if (grabShape is RigidBodyShape rbs)
                 {
-                    grepBody = rbs.RigidBody;
+                    grabBody = rbs.RigidBody;
                 }
             }
 
-            if (grepBody == null || grepBody.MotionType != MotionType.Dynamic) return;
-            grepping = true;
+            if (grabBody == null || grabBody.MotionType != MotionType.Dynamic) return;
+            grabbing = true;
 
             hitWheelPosition = (float)Mouse.ScrollWheel.Y;
 
-            if (grepConstraint != null) World.Remove(grepConstraint);
+            if (grabConstraint != null) World.Remove(grabConstraint);
 
-            grepConstraint = World.CreateConstraint<DistanceLimit>(grepBody, World.NullBody);
-            grepConstraint.Initialize(hitPoint, hitPoint);
-            grepConstraint.Softness = 0.01f;
-            grepConstraint.Bias = 0.1f;
+            grabConstraint = World.CreateConstraint<DistanceLimit>(grabBody, World.NullBody);
+            grabConstraint.Initialize(hitPoint, hitPoint);
+            grabConstraint.Softness = 0.01f;
+            grabConstraint.Bias = 0.1f;
         }
     }
 }

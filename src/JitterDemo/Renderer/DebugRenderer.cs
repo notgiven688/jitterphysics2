@@ -1,27 +1,4 @@
-/* Copyright <2021> <Thorben Linneweber>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
-
 using System;
-using System.Collections.Generic;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;
@@ -105,30 +82,30 @@ public class DebugRenderer
 
     private class LineBuffer
     {
-        public Vector3[] vertices = new Vector3[64];
-        public LineVertexIndex[] indices = new LineVertexIndex[64];
+        public Vector3[] Vertices = new Vector3[64];
+        public LineVertexIndex[] Indices = new LineVertexIndex[64];
 
         public int VertexCount;
         public int IndexCount;
 
         public void Add(float x, float y, float z)
         {
-            if (VertexCount == vertices.Length)
+            if (VertexCount == Vertices.Length)
             {
-                Array.Resize(ref vertices, VertexCount * 2);
+                Array.Resize(ref Vertices, VertexCount * 2);
             }
 
-            vertices[VertexCount++] = new Vector3(x, y, z);
+            Vertices[VertexCount++] = new Vector3(x, y, z);
         }
 
         public void Add(uint i1, uint i2)
         {
-            if (IndexCount == indices.Length)
+            if (IndexCount == Indices.Length)
             {
-                Array.Resize(ref indices, IndexCount * 2);
+                Array.Resize(ref Indices, IndexCount * 2);
             }
 
-            indices[IndexCount++] = new LineVertexIndex(i1, i2);
+            Indices[IndexCount++] = new LineVertexIndex(i1, i2);
         }
 
         public void Clear()
@@ -137,14 +114,20 @@ public class DebugRenderer
         }
     }
 
-    private List<LineBuffer> buffer = null!;
+    private readonly LineBuffer[] buffers = CreateBuffers();
 
-    private VertexArrayObject Vao = null!;
+    private static LineBuffer[] CreateBuffers()
+    {
+        var result = new LineBuffer[(int)Color.NumColor];
+        for (int i = 0; i < result.Length; i++)
+            result[i] = new LineBuffer();
+        return result;
+    }
+
+    private VertexArrayObject vao = null!;
     private LineShader shader = null!;
     private ArrayBuffer ab = null!;
     private ElementArrayBuffer eab = null!;
-
-    protected ArrayBuffer worldMatrices = null!;
 
     public void Draw()
     {
@@ -157,16 +140,16 @@ public class DebugRenderer
         shader.Projection.Set(camera.ProjectionMatrix);
         shader.View.Set(camera.ViewMatrix);
 
-        Vao.Bind();
+        vao.Bind();
 
         for (int i = 0; i < (int)Color.NumColor; i++)
         {
-            var lines = buffer[i];
+            var lines = buffers[i];
 
             if (lines.IndexCount == 0) continue;
 
-            eab.SetData(lines.indices, lines.IndexCount);
-            ab.SetData(lines.vertices, lines.VertexCount);
+            eab.SetData(lines.Indices, lines.IndexCount);
+            ab.SetData(lines.Vertices, lines.VertexCount);
 
             shader.Color.Set(colors[i]);
             GLDevice.DrawElements(DrawMode.Lines, lines.IndexCount * 2, IndexType.UnsignedInt, 0);
@@ -181,7 +164,7 @@ public class DebugRenderer
 
     public void PushLine(Color color, in Vector3 pointA, in Vector3 pointB)
     {
-        var list = buffer[(int)color];
+        var list = buffers[(int)color];
         uint offset = (uint)list.VertexCount;
 
         list.Add(pointA.X, pointA.Y, pointA.Z);
@@ -191,7 +174,7 @@ public class DebugRenderer
 
     public void PushBox(Color color, in Vector3 min, in Vector3 max)
     {
-        var list = buffer[(int)color];
+        var list = buffers[(int)color];
 
         uint offset = (uint)list.VertexCount;
 
@@ -220,7 +203,7 @@ public class DebugRenderer
 
     public void PushPoint(Color color, in Vector3 pos, float halfSize = 1.0f)
     {
-        var list = buffer[(int)color];
+        var list = buffers[(int)color];
         uint offset = (uint)list.VertexCount;
 
         list.Add(pos.X - halfSize, pos.Y, pos.Z);
@@ -237,23 +220,16 @@ public class DebugRenderer
 
     public void Load()
     {
-        buffer = new List<LineBuffer>();
-
-        for (int i = 0; i < (int)Color.NumColor; i++)
-        {
-            buffer.Add(new LineBuffer());
-        }
-
         shader = new LineShader();
 
-        Vao = new VertexArrayObject();
+        vao = new VertexArrayObject();
 
         ab = new ArrayBuffer();
         eab = new ElementArrayBuffer();
 
         int sof = sizeof(float);
 
-        Vao.VertexAttributes[0].Set(ab, 3, VertexAttributeType.Float, false, 3 * sof, 0 * sof); // position
-        Vao.ElementArrayBuffer = eab;
+        vao.VertexAttributes[0].Set(ab, 3, VertexAttributeType.Float, false, 3 * sof, 0 * sof); // position
+        vao.ElementArrayBuffer = eab;
     }
 }

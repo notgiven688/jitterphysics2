@@ -261,9 +261,10 @@ public class VoxelCollisionFilter : IBroadPhaseFilter
 // -------------------------------------------------------------------------
 // 5. THE DEMO (Chunk Management & Rendering)
 // -------------------------------------------------------------------------
-public class Demo21 : IDemo, ICleanDemo
+public class Demo21 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Voxel World (Custom Collision)";
+    public string Description => "Infinite procedural voxel terrain with custom collision shapes.";
 
     private Playground pg = null!;
     private World world = null!;
@@ -286,18 +287,16 @@ public class Demo21 : IDemo, ICleanDemo
         new Vector3(0.9f, 0.9f, 0.9f)  // Snow
     ];
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
-        pg.ResetScene(false);
-
+        this.pg = pg;
+        this.world = world;
         voxelProxy = new VoxelWorld();
         world.DynamicTree.AddProxy(voxelProxy, false);
         world.BroadPhaseFilter = new VoxelCollisionFilter(world, voxelProxy);
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         var cam = RenderWindow.Instance.Camera;
         Vector3 camPos = cam.Position;

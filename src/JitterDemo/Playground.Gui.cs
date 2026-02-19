@@ -11,10 +11,20 @@ namespace JitterDemo;
 
 public partial class Playground : RenderWindow
 {
+    private const string GlobalControls =
+        "[Controls]\n" +
+        "WASD - Move camera\n" +
+        "Right Mouse (hold) - Rotate camera\n" +
+        "Left Mouse (hold) - Grab object\n" +
+        "Scroll Wheel - Adjust grab distance\n" +
+        "Space - Shoot cube\n" +
+        "M - Toggle multi-threading";
+
+    private bool demoSelected;
     private readonly double[] debugTimes = new double[(int)World.Timings.Last];
     private readonly StringBuilder gcText = new();
 
-    public float[] physicsTime = new float[100];
+    private readonly float[] physicsTime = new float[100];
     private double totalTime;
 
     private int samplingRate = 5;
@@ -52,9 +62,10 @@ public partial class Playground : RenderWindow
 
         physicsTime[0] = (float)totalTime;
 
-        gcText.AppendLine(
-            $"gen0: {GC.CollectionCount(0)}; gen1: {GC.CollectionCount(1)}; gen2: {GC.CollectionCount(2)}");
-        gcText.AppendLine($"pause total: {GC.GetTotalPauseDuration().TotalSeconds} s");
+        gcText.Append("gen0: ").Append(GC.CollectionCount(0))
+              .Append("; gen1: ").Append(GC.CollectionCount(1))
+              .Append("; gen2: ").AppendLine(GC.CollectionCount(2).ToString());
+        gcText.Append("pause total: ").Append(GC.GetTotalPauseDuration().TotalSeconds).AppendLine(" s");
     }
 
     private void LayoutGui()
@@ -76,17 +87,50 @@ public partial class Playground : RenderWindow
 
         ImGui.Text($"{fps} fps", new Vector4(1, 1, 0, 1));
 
+        if (!demoSelected)
+        {
+            float alpha = (float)(0.5 + 0.5 * Math.Sin(ImGui.GetTime() * 4.0));
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, alpha));
+        }
+
         if (ImGui.BeginMenu("Select Demo Scene", true))
         {
+            if (!demoSelected) ImGui.PopStyleColor();
+            demoSelected = true;
+
             for (int i = 0; i < demos.Count; i++)
             {
                 if (ImGui.MenuItem($"Demo {i:00} - {demos[i].Name}", string.Empty, false, true))
                 {
                     SwitchDemo(i);
                 }
+
+                if (demos[i].Description.Length > 0)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.PopupBg, new Vector4(1.0f, 1.0f, 0.88f, 0.95f));
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+                    if (ImGui.BeginItemTooltip())
+                    {
+                        ImGui.Text(demos[i].Description);
+                        ImGui.Text(string.Empty);
+                        ImGui.Text(GlobalControls, new Vector4(0.3f, 0.3f, 0.3f, 1.0f));
+                        if (demos[i].Controls.Length > 0)
+                        {
+                            ImGui.Text(demos[i].Controls, new Vector4(0.3f, 0.3f, 0.3f, 1.0f));
+                        }
+
+                        ImGui.EndTooltip();
+                    }
+
+                    ImGui.PopStyleColor(2);
+                }
             }
 
             ImGui.EndMenu();
+        }
+        else if (!demoSelected)
+        {
+            ImGui.PopStyleColor();
         }
 
         ImGui.Separator();
@@ -94,35 +138,15 @@ public partial class Playground : RenderWindow
         ImGui.NextTreeNodeOpen(true);
         if (ImGui.TreeNode("Objects"))
         {
-            ImGui.BeginTable(string.Empty, 3,
-                ImGuiTableFlags.NoBordersInBody |
-                ImGuiTableFlags.SizingFixedFit |
-                ImGuiTableFlags.Resizable,
-                Vector2.Zero, 0);
-
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthStretch, 0, 0);
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthFixed, 0, 0);
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthFixed, 0, 0);
-
-            void AddRow(string a, string b, string c)
-            {
-                ImGui.TableNextRow();
-                ImGui.TableSetColumnIndex(0);
-                ImGui.Text(a);
-                ImGui.TableSetColumnIndex(1);
-                ImGui.Text(b.PadLeft(5));
-                ImGui.TableSetColumnIndex(2);
-                ImGui.Text(c.PadLeft(5));
-            }
-
+            BeginFixedTable("##objects", 3);
             World.SpanData data = World.RawData;
 
-            AddRow("Islands", $"{World.Islands.Count}", $"{World.Islands.ActiveCount}");
-            AddRow("Bodies", $"{data.RigidBodies.Length}", $"{data.ActiveRigidBodies.Length}");
-            AddRow("Arbiter", $"{data.Contacts.Length}", $"{data.ActiveContacts.Length}");
-            AddRow("Constraints", $"{data.Constraints.Length}", $"{data.ActiveConstraints.Length}");
-            AddRow("SmallConstraints", $"{data.SmallConstraints.Length}", $"{data.ActiveSmallConstraints.Length}");
-            AddRow("Proxies", $"{World.DynamicTree.Proxies.Count}", $"{World.DynamicTree.Proxies.ActiveCount}");
+            AddTableRow("Islands", $"{World.Islands.Count,5}", $"{World.Islands.ActiveCount,5}");
+            AddTableRow("Bodies", $"{data.RigidBodies.Length,5}", $"{data.ActiveRigidBodies.Length,5}");
+            AddTableRow("Arbiter", $"{data.Contacts.Length,5}", $"{data.ActiveContacts.Length,5}");
+            AddTableRow("Constraints", $"{data.Constraints.Length,5}", $"{data.ActiveConstraints.Length,5}");
+            AddTableRow("SmallConstraints", $"{data.SmallConstraints.Length,5}", $"{data.ActiveSmallConstraints.Length,5}");
+            AddTableRow("Proxies", $"{World.DynamicTree.Proxies.Count,5}", $"{World.DynamicTree.Proxies.ActiveCount,5}");
 
             ImGui.EndTable();
             ImGui.TreePop();
@@ -131,13 +155,13 @@ public partial class Playground : RenderWindow
         ImGui.NextTreeNodeOpen(true);
         if (ImGui.TreeNode("Options"))
         {
-            bool ufes = World.AllowDeactivation;
-            ImGui.Checkbox("Allow Deactivation", ref ufes);
-            World.AllowDeactivation = ufes;
+            bool allowDeactivation = World.AllowDeactivation;
+            ImGui.Checkbox("Allow Deactivation", ref allowDeactivation);
+            World.AllowDeactivation = allowDeactivation;
 
-            ufes = World.EnableAuxiliaryContactPoints;
-            ImGui.Checkbox("Auxiliary Flat Surface", ref ufes);
-            World.EnableAuxiliaryContactPoints = ufes;
+            bool auxiliaryContacts = World.EnableAuxiliaryContactPoints;
+            ImGui.Checkbox("Auxiliary Flat Surface", ref auxiliaryContacts);
+            World.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
             ImGui.Checkbox("Multithreading", ref multiThread);
 
@@ -154,32 +178,16 @@ public partial class Playground : RenderWindow
 
         if (ImGui.TreeNode("Broadphase"))
         {
-            ImGui.BeginTable(string.Empty, 2,
-                ImGuiTableFlags.NoBordersInBody |
-                ImGuiTableFlags.SizingFixedFit |
-                ImGuiTableFlags.Resizable,
-                Vector2.Zero, 0);
+            BeginFixedTable("##broadphase", 2);
 
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthStretch, 0, 0);
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthFixed, 0, 0);
-
-            void AddRow(string a, string b)
-            {
-                ImGui.TableNextRow();
-                ImGui.TableSetColumnIndex(0);
-                ImGui.Text(a);
-                ImGui.TableSetColumnIndex(1);
-                ImGui.Text(b.PadLeft(6));
-            }
-
-            AddRow("PairHashSet Size", World.DynamicTree.HashSetInfo.TotalSize.ToString());
-            AddRow("PairHashSet Count", World.DynamicTree.HashSetInfo.Count.ToString());
-            AddRow("Proxies updated", World.DynamicTree.UpdatedProxyCount.ToString());
+            AddTableRow("PairHashSet Size", $"{World.DynamicTree.HashSetInfo.TotalSize,6}");
+            AddTableRow("PairHashSet Count", $"{World.DynamicTree.HashSetInfo.Count,6}");
+            AddTableRow("Proxies updated", $"{World.DynamicTree.UpdatedProxyCount,6}");
 
             for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)
             {
-                AddRow($"{(DynamicTree.Timings)i}",
-                    $"{World.DynamicTree.DebugTimings[i],0:N2}");
+                AddTableRow($"{(DynamicTree.Timings)i}",
+                    $"{World.DynamicTree.DebugTimings[i],6:N2}");
             }
 
             ImGui.EndTable();
@@ -197,27 +205,11 @@ public partial class Playground : RenderWindow
         ImGui.NextTreeNodeOpen(true);
         if (ImGui.TreeNode("Timings"))
         {
-            ImGui.BeginTable(string.Empty, 2,
-                ImGuiTableFlags.NoBordersInBody |
-                ImGuiTableFlags.SizingFixedFit |
-                ImGuiTableFlags.Resizable,
-                Vector2.Zero, 0);
-
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthStretch, 0, 0);
-            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthFixed, 0, 0);
-
-            void AddRow(string a, string b)
-            {
-                ImGui.TableNextRow();
-                ImGui.TableSetColumnIndex(0);
-                ImGui.Text(a);
-                ImGui.TableSetColumnIndex(1);
-                ImGui.Text(b.PadLeft(6));
-            }
+            BeginFixedTable("##timings", 2);
 
             for (int i = 0; i < (int)World.Timings.Last; i++)
             {
-                AddRow(((World.Timings)i).ToString(), $"{debugTimes[i],0:N2}");
+                AddTableRow(((World.Timings)i).ToString(), $"{debugTimes[i],6:N2}");
             }
 
             ImGui.EndTable();
@@ -244,5 +236,30 @@ public partial class Playground : RenderWindow
 
         ImGui.EndFrame();
         ImGui.Render();
+    }
+
+    private static void BeginFixedTable(string id, int columns)
+    {
+        ImGui.BeginTable(id, columns,
+            ImGuiTableFlags.NoBordersInBody |
+            ImGuiTableFlags.SizingFixedFit |
+            ImGuiTableFlags.Resizable,
+            Vector2.Zero, 0);
+
+        ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthStretch, 0, 0);
+        for (int i = 1; i < columns; i++)
+        {
+            ImGui.SetupColumn(string.Empty, ImGuiTableColumnFlags.WidthFixed, 0, 0);
+        }
+    }
+
+    private static void AddTableRow(params string[] columns)
+    {
+        ImGui.TableNextRow();
+        for (int i = 0; i < columns.Length; i++)
+        {
+            ImGui.TableSetColumnIndex(i);
+            ImGui.Text(columns[i]);
+        }
     }
 }

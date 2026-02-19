@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
@@ -10,20 +9,15 @@ namespace JitterDemo;
 public class Demo10 : IDemo
 {
     public string Name => "Stacked Cubes";
+    public string Description => "Tall stacks of cubes and cones using sub-stepping for stability.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        var pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
-
-        List<RigidBody> bodies = new();
+        pg.AddFloor();
 
         for (int i = 0; i < 32; i++)
         {
             var body = world.CreateRigidBody();
-            bodies.Add(body);
 
             body.Position = new JVector(0, 0.5f + i * 0.999f, 0);
             body.AddShape(new BoxShape(1));
@@ -33,7 +27,6 @@ public class Demo10 : IDemo
         for (int i = 0; i < 32; i++)
         {
             var body = world.CreateRigidBody();
-            bodies.Add(body);
 
             body.Position = new JVector(10, 0.5f + i * 0.999f, 0);
             body.AddShape(new TransformedShape(new ConeShape(), JVector.Zero, JMatrix.CreateScale(0.4f, 1, 1)));
@@ -42,9 +35,5 @@ public class Demo10 : IDemo
 
         world.SolverIterations = (4, 2);
         world.SubstepCount = 3;
-    }
-
-    public void Draw()
-    {
     }
 }

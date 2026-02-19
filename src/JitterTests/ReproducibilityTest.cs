@@ -4,11 +4,6 @@ namespace JitterTests;
 
 public class ReproducibilityTest
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [TestCase]
     public static void BasicReproducibilityTest()
     {
@@ -36,12 +31,12 @@ public class ReproducibilityTest
         last.Velocity = new JVector(10);
         Helper.AdvanceWorld(worldB, 10, (Real)(1.0 / 100.0), false);
 
-        var positionsA = worldB.RigidBodies.Select(body => body.Position);
+        var positionsA = worldA.RigidBodies.Select(body => body.Position);
         var positionsB = worldB.RigidBodies.Select(body => body.Position);
 
         Assert.That(positionsA.SequenceEqual(positionsB));
 
-        worldB.Dispose();
+        worldA.Dispose();
         worldB.Dispose();
     }
 }

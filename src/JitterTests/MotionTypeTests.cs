@@ -26,6 +26,8 @@ public class MotionTypeTests
 
         Assert.That(sphere.Data.InverseMass, Is.EqualTo(0));
         Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
+
+        world.Dispose();
     }
 
     private void PrepareTwoStack(World world, out RigidBody platform, out List<RigidBody> boxes)

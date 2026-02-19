@@ -10,23 +10,25 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class RigidBodyTag
+public class RigidBodyTag(bool doNotDraw = true)
 {
-    public bool DoNotDraw { get; set; }
-
-    public RigidBodyTag(bool doNotDraw = true)
-    {
-        DoNotDraw = doNotDraw;
-    }
+    public bool DoNotDraw { get; set; } = doNotDraw;
 }
 
 public partial class Playground : RenderWindow
 {
     private readonly World world;
 
-    private bool multiThread;
-    private bool persistentThreadModel = false;
+    private const float PhysicsTimestep = 1.0f / 100.0f;
+    private bool multiThread = true;
     private RigidBodyShape? floorShape;
+
+    private CSMInstance sphereDrawer = null!;
+    private CSMInstance boxDrawer = null!;
+    private CSMInstance coneDrawer = null!;
+    private CSMInstance cylinderDrawer = null!;
+    private CSMInstance halfSphereDrawer = null!;
+    private CSMInstance floorDrawer = null!;
 
     private readonly List<IDemo> demos = new()
     {
@@ -56,7 +58,7 @@ public partial class Playground : RenderWindow
         new Demo23(),
         new Demo24(),
         new Demo25(),
-        // new Demo26(), // angular sweep
+        new Demo26(), // angular sweep
         new Demo27(),
         new Demo28(),
         new Demo29(),
@@ -67,8 +69,9 @@ public partial class Playground : RenderWindow
     private void SwitchDemo(int index)
     {
         (currentDemo as ICleanDemo)?.CleanUp();
+        ResetScene();
         currentDemo = demos[index];
-        currentDemo.Build();
+        currentDemo.Build(this, world);
     }
 
     public Playground()
@@ -78,19 +81,10 @@ public partial class Playground : RenderWindow
         drawBox = DrawBox;
     }
 
-    public void ResetScene(bool addFloor = true)
+    private void ResetScene()
     {
+        floorShape = null;
         world.Clear();
-
-        if (addFloor)
-        {
-            RigidBody body = World.CreateRigidBody();
-            floorShape = new BoxShape(200, 200, 200);
-            body.Position = new JVector(0, -100, 0f);
-            body.MotionType = MotionType.Static;
-            body.AddShape(floorShape);
-        }
-
         world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
         world.BroadPhaseFilter = null;
         world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter();
@@ -99,10 +93,27 @@ public partial class Playground : RenderWindow
         world.SolverIterations = (8, 4);
     }
 
+    public void AddFloor()
+    {
+        RigidBody body = World.CreateRigidBody();
+        floorShape = new BoxShape(200, 200, 200);
+        body.Position = new JVector(0, -100, 0f);
+        body.MotionType = MotionType.Static;
+        body.AddShape(floorShape);
+    }
+
     public override void Load()
     {
         base.Load();
         ResetScene();
+        AddFloor();
+
+        sphereDrawer = CSMRenderer.GetInstance<Sphere>();
+        boxDrawer = CSMRenderer.GetInstance<Cube>();
+        coneDrawer = CSMRenderer.GetInstance<Cone>();
+        cylinderDrawer = CSMRenderer.GetInstance<Cylinder>();
+        halfSphereDrawer = CSMRenderer.GetInstance<HalfSphere>();
+        floorDrawer = CSMRenderer.GetInstance<JitterFloor>();
 
         VerticalSync = false;
     }
@@ -126,74 +137,60 @@ public partial class Playground : RenderWindow
         sb.AddShape(ss);
     }
 
+    private void DrawShape(Shape shape, in Matrix4 mat, in Vector3 color)
+    {
+        Matrix4 ms;
+
+        switch (shape)
+        {
+            case BoxShape s:
+                ms = MatrixHelper.CreateScale(s.Size.X, s.Size.Y, s.Size.Z);
+                boxDrawer.PushMatrix(mat * ms, color);
+                break;
+            case SphereShape s:
+                ms = MatrixHelper.CreateScale(s.Radius * 2);
+                sphereDrawer.PushMatrix(mat * ms, color);
+                break;
+            case CylinderShape s:
+                ms = MatrixHelper.CreateScale(s.Radius, s.Height, s.Radius);
+                cylinderDrawer.PushMatrix(mat * ms, color);
+                break;
+            case CapsuleShape s:
+                ms = MatrixHelper.CreateScale(s.Radius, s.Length, s.Radius);
+                cylinderDrawer.PushMatrix(mat * ms, color);
+                ms = MatrixHelper.CreateTranslation(0, 0.5f * s.Length, 0) * MatrixHelper.CreateScale(s.Radius * 2);
+                halfSphereDrawer.PushMatrix(mat * ms, color);
+                halfSphereDrawer.PushMatrix(mat * MatrixHelper.CreateRotationX(MathF.PI) * ms, color);
+                break;
+            case ConeShape s:
+                ms = MatrixHelper.CreateScale(s.Radius * 2, s.Height, s.Radius * 2);
+                coneDrawer.PushMatrix(mat * ms, color);
+                break;
+        }
+    }
+
     public override void Draw()
     {
-        // if (Keyboard.KeyPressBegin(Keyboard.Key.P))
-        world.Step(1.0f / 100.0f, multiThread);
+        world.Step(PhysicsTimestep, multiThread);
 
         UpdateDisplayText();
         LayoutGui();
-
-        World.ThreadModel = persistentThreadModel ? World.ThreadModelType.Persistent : World.ThreadModelType.Regular;
-
-        var sphereDrawer = CSMRenderer.GetInstance<Sphere>();
-        var boxDrawer = CSMRenderer.GetInstance<Cube>();
-        var coneDrawer = CSMRenderer.GetInstance<Cone>();
-        var cylinderDrawer = CSMRenderer.GetInstance<Cylinder>();
-        var halfSphereDrawer = CSMRenderer.GetInstance<HalfSphere>();
-
-        void DrawShape(Shape shape, in Matrix4 mat, in Vector3 color)
-        {
-            Matrix4 ms;
-
-            switch (shape)
-            {
-                case BoxShape s:
-                    ms = MatrixHelper.CreateScale(s.Size.X, s.Size.Y, s.Size.Z);
-                    boxDrawer.PushMatrix(mat * ms, color);
-                    break;
-                case SphereShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius * 2);
-                    sphereDrawer.PushMatrix(mat * ms, color);
-                    break;
-                case CylinderShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius, s.Height, s.Radius);
-                    cylinderDrawer.PushMatrix(mat * ms, color);
-                    break;
-                case CapsuleShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius, s.Length, s.Radius);
-                    cylinderDrawer.PushMatrix(mat * ms, color);
-                    ms = MatrixHelper.CreateTranslation(0, 0.5f * s.Length, 0) * MatrixHelper.CreateScale(s.Radius * 2);
-                    halfSphereDrawer.PushMatrix(mat * ms, color);
-                    halfSphereDrawer.PushMatrix(mat * MatrixHelper.CreateRotationX(MathF.PI) * ms, color);
-                    break;
-                case ConeShape s:
-                    ms = MatrixHelper.CreateScale(s.Radius * 2, s.Height, s.Radius * 2);
-                    coneDrawer.PushMatrix(mat * ms, color);
-                    break;
-            }
-        }
-
-        Matrix4 mat = Matrix4.Identity;
 
         foreach (RigidBody body in world.RigidBodies)
         {
             if (body.Tag is RigidBodyTag { DoNotDraw: true }) continue;
 
-            mat = Conversion.FromJitter(body);
+            Matrix4 mat = Conversion.FromJitter(body);
 
             foreach (var shape in body.Shapes)
             {
-                var color = ColorGenerator.GetColor(shape.GetHashCode());
-
-                if (shape.RigidBody == null) break;
-
                 if (shape == floorShape)
                 {
-                    CSMRenderer.GetInstance<JitterFloor>().PushMatrix(Matrix4.Identity);
+                    floorDrawer.PushMatrix(Matrix4.Identity);
                     continue;
                 }
 
+                var color = ColorGenerator.GetColor(shape.GetHashCode());
                 if (!shape.RigidBody.Data.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
 
                 if (shape is TransformedShape ts)
@@ -209,21 +206,21 @@ public partial class Playground : RenderWindow
             }
         }
 
-        currentDemo?.Draw();
+        (currentDemo as IDrawUpdate)?.DrawUpdate();
 
         DebugDraw();
 
-        if (!GuiRenderer.WantsCaptureMouse && (Mouse.ButtonPressBegin(Mouse.Button.Left) || grepping))
+        if (!GuiRenderer.WantsCaptureMouse && (Mouse.ButtonPressBegin(Mouse.Button.Left) || grabbing))
         {
             Pick();
         }
 
         if (!Mouse.IsButtonDown(Mouse.Button.Left))
         {
-            if (grepConstraint != null) world.Remove(grepConstraint);
-            grepBody = null;
-            grepConstraint = null;
-            grepping = false;
+            if (grabConstraint != null) world.Remove(grabConstraint);
+            grabBody = null;
+            grabConstraint = null;
+            grabbing = false;
         }
 
         if (Keyboard.KeyPressBegin(Keyboard.Key.M))

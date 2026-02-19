@@ -4,11 +4,6 @@ namespace JitterTests;
 
 public class MiscTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [TestCase]
     public static void RequestId()
     {

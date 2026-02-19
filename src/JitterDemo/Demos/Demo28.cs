@@ -26,8 +26,7 @@ namespace JitterDemo;
 public class Demo28: IDemo
 {
     public string Name => "Colosseum";
-
-    private World world = null!;
+    public string Description => "Colosseum of concentric ring walls and platforms to benchmark large scenes.";
 
     private static void CreateRingWall(World world, JVector position, JVector size, int height, float radius)
     {
@@ -79,12 +78,9 @@ public class Demo28: IDemo
         return position;
     }
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         var size = new JVector(0.5f, 1, 3);
         var layerPosition = new JVector();
@@ -103,10 +99,5 @@ public class Demo28: IDemo
             }
             layerPosition.Y += platformsPerLayer * (size.Y * heightPerPlatform + size.X);
         }
-    }
-
-    public void Draw()
-    {
-
     }
 }

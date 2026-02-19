@@ -1,8 +1,5 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework;
-using Jitter2;
 
 namespace JitterTests
 {
@@ -30,6 +27,8 @@ namespace JitterTests
             Assert.That(third, Is.True, "TryLock should succeed after unlock.");
 
             World.UnlockTwoBody(ref bodyA.Data, ref bodyB.Data);
+
+            world.Dispose();
         }
     }
 }

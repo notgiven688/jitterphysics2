@@ -9,22 +9,23 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo01 : IDemo
+public class Demo01 : IDemo, IDrawUpdate
 {
     public string Name => "Constraint car";
+    public string Description => "Constraint-based car with a breakable hinge-joint suspension bridge.";
+    public string Controls => "Arrow Keys - Steer and accelerate";
 
     private readonly ConstraintCar car = new();
     private readonly List<HingeJoint> hinges = new();
     private World world = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.world = world;
 
         hinges.Clear();
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         {
             // -------  bridge
@@ -80,7 +81,7 @@ public class Demo01 : IDemo
         world.SolverIterations = (2, 2);
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         for (int i = hinges.Count; i-- > 0;)
         {
@@ -92,7 +93,6 @@ public class Demo01 : IDemo
             }
         }
 
-        Playground pg = (Playground)RenderWindow.Instance;
         car.UpdateControls();
     }
 }

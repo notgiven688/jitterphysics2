@@ -7,20 +7,14 @@ namespace JitterDemo;
 public class Demo02 : IDemo
 {
     public string Name => "Tower of Jitter";
+    public string Description => "A single tower of stacked bodies to test solver stability.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         Common.BuildTower(JVector.Zero);
 
         world.SolverIterations = (12, 4);
-    }
-
-    public void Draw()
-    {
     }
 }

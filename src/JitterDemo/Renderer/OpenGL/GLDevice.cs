@@ -61,7 +61,7 @@ public enum BlendFunction : uint
     OneMinusDestinationColor = GLC.ONE_MINUS_DST_COLOR,
     SourceAlpha = GLC.SRC_ALPHA,
     OneMinusSourceAlpha = GLC.ONE_MINUS_SRC_ALPHA,
-    DestiantionAlpha = GLC.DST_ALPHA,
+    DestinationAlpha = GLC.DST_ALPHA,
     OneMinusDestinationAlpha = GLC.ONE_MINUS_DST_ALPHA,
     ConstantColor = GLC.CONSTANT_COLOR,
     OneMinusConstantColor = GLC.ONE_MINUS_CONSTANT_COLOR,

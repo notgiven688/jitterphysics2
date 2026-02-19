@@ -17,15 +17,11 @@ public class CSMRenderer
             rinst.Load();
         }
 
-        T? result = rinst as T;
-
-        if (result == null) throw new Exception("Instance not found exception!");
-
-        return result;
+        return (T)rinst;
     }
 
     private readonly Matrix4[] lightMatrices = new Matrix4[3];
-    public Texture2D[] depthMap = new Texture2D[3];
+    public Texture2D[] DepthMap { get; } = new Texture2D[3];
     private readonly FrameBuffer[] depthMapFBO = new FrameBuffer[3];
 
     public const int ShadowMapSize = 4096;
@@ -35,7 +31,7 @@ public class CSMRenderer
 
     private readonly float[] shadowCascadeLevels = { 20, 60 };
 
-    private static void GetFrustomPoints(Span<Vector4> corners, Matrix4 proj, Matrix4 view)
+    private static void GetFrustumPoints(Span<Vector4> corners, Matrix4 proj, Matrix4 view)
     {
         bool result = Matrix4.Invert(proj * view, out Matrix4 inv);
         if (!result) throw new Exception("matrix misbehaved.");
@@ -66,10 +62,10 @@ public class CSMRenderer
 
         Span<Vector4> corners = stackalloc Vector4[8];
 
-        float cameraZoom = (float)(Math.PI / 4.0d); // TODO
+        float cameraZoom = camera.FieldOfView;
         Matrix4 proj = MatrixHelper.CreatePerspectiveFieldOfView(cameraZoom, width / height, nearPlane, farPlane);
 
-        GetFrustomPoints(corners, proj, camera.ViewMatrix);
+        GetFrustumPoints(corners, proj, camera.ViewMatrix);
 
         Vector3 center = Vector3.Zero;
 
@@ -147,7 +143,7 @@ public class CSMRenderer
 
     public void Load()
     {
-        for (int i = 0; i < 3; i++) CreateFramebuffer(out depthMap[i], out depthMapFBO[i]);
+        for (int i = 0; i < 3; i++) CreateFramebuffer(out DepthMap[i], out depthMapFBO[i]);
 
         shadowShader = new ShadowShader();
         phongShader = new PhongShader();
@@ -171,8 +167,6 @@ public class CSMRenderer
         }
 
         shadowShader.Use();
-
-        //GLDevice.Disable(Capability.CullFace);
 
         GetLightSpaceMatrices(lightMatrices);
 
@@ -198,7 +192,7 @@ public class CSMRenderer
 
         for (uint i = 0; i < 3; i++)
         {
-            depthMap[i].Bind(i);
+            DepthMap[i].Bind(i);
         }
 
         (int width, int height) = RenderWindow.Instance.FramebufferSize;
@@ -212,18 +206,16 @@ public class CSMRenderer
         phongShader.Lights.Set(lightMatrices, false);
         phongShader.SunDir.Set(lightDir);
 
-        //GLDevice.Enable(Capability.CullFace);
-
         foreach (var drawable in csmInstances.Values)
         {
             if (drawable.Count == 0) continue;
 
             drawable.LightPass(phongShader);
 
-            int mld2 = drawable.WorldMatrices.Length / 2;
-            if (drawable.Count < mld2)
+            int mld4 = drawable.WorldMatrices.Length / 4;
+            if (drawable.Count < mld4)
             {
-                Array.Resize(ref drawable.WorldMatrices, mld2);
+                Array.Resize(ref drawable.WorldMatrices, drawable.WorldMatrices.Length / 2);
             }
 
             drawable.Count = 0;

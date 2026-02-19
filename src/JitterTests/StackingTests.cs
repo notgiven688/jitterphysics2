@@ -26,7 +26,6 @@ public class StackingTests
 
         RigidBody last = Helper.BuildSimpleStack(world);
 
-
         Real stackHeight = last.Position.Y;
         Helper.AdvanceWorld(world, 10, (Real)(1.0 / 100.0), true);
         Real delta = MathR.Abs(stackHeight - last.Position.Y);
@@ -52,7 +51,6 @@ public class StackingTests
 
     [TestCase(0, 0, 0, true)]
     [TestCase(0, 0, 0, false)]
-    [TestCase(0, 0, 0, true)]
     [TestCase(1000, 1000, 1000, true)]
     public void PyramidStackCylinder(int x, int y, int z, bool multiThread)
     {
@@ -68,7 +66,7 @@ public class StackingTests
     }
 
     [TestCase(true)]
-    [TestCase(true)]
+    [TestCase(false)]
     public void TowerStack(bool multiThread)
     {
         world.SolverIterations = (14, 4);

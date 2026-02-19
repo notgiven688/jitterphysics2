@@ -53,7 +53,7 @@ public class Skybox
     private SkyboxShader shader = null!;
     private CubemapTexture cmTexture = null!;
 
-    private float[] VertexBuffer()
+    private static float[] VertexBuffer()
     {
         return new[]
         {
@@ -114,18 +114,7 @@ public class Skybox
         int sof = sizeof(float);
         vao.VertexAttributes[0].Set(ab0, 3, VertexAttributeType.Float, false, 3 * sof, 0);
 
-        /*
-        Bitmap[] bitmaps = new Bitmap[6] { // r,l, t, b, f, b
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "right.jpg")),
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "left.jpg")),
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "top.jpg")),
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "bottom.jpg")),
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "front.jpg")),
-        new Bitmap(System.IO.Path.Combine("assets", "skybox", "back.jpg"))};
-        */
-
         cmTexture = new CubemapTexture();
-        //cmTexture.LoadBitmaps(bitmaps);
     }
 
     public void Draw()
@@ -137,7 +126,6 @@ public class Skybox
         shader.Use();
         shader.View.Set(camera.ViewMatrix);
         shader.Projection.Set(camera.ProjectionMatrix);
-        // proj?
         vao.Bind();
         cmTexture.Bind();
         GL.DrawArrays(GLC.TRIANGLES, 0, 36);

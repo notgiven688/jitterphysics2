@@ -8,9 +8,10 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo22 : IDemo, ICleanDemo
+public class Demo22 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Conveyor Belt";
+    public string Description => "Kinematic planks forming a conveyor belt that transports rigid bodies.";
 
     private Playground pg = null!;
     private World world = null!;
@@ -25,7 +26,7 @@ public class Demo22 : IDemo, ICleanDemo
         public float DistanceOffset;
     }
 
-    private List<BeltPlank> planks = new();
+    private readonly List<BeltPlank> planks = new();
 
     private static class Curve
     {
@@ -79,11 +80,11 @@ public class Demo22 : IDemo, ICleanDemo
         }
     }
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
-        pg.ResetScene(true);
+        this.pg = pg;
+        this.world = world;
+        pg.AddFloor();
         planks.Clear();
         physicsTime = 0;
 
@@ -174,7 +175,7 @@ public class Demo22 : IDemo, ICleanDemo
         }
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         // Only drawing logic remains here
         const int stepMax = 200;

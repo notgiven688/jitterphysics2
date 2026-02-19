@@ -5,7 +5,7 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class Conversion
+public static class Conversion
 {
     public static JVector ToJitterVector(Vector3 im)
     {

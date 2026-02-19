@@ -11,9 +11,10 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class Demo17 : IDemo, ICleanDemo
+public class Demo17 : IDemo, ICleanDemo, IDrawUpdate
 {
     public string Name => "Cloth";
+    public string Description => "Cloth sheet pinned at its corners with rigid bodies falling onto it.";
 
     private Playground pg = null!;
     private SoftBodyCloth cloth = null!;
@@ -21,12 +22,12 @@ public class Demo17 : IDemo, ICleanDemo
 
     private Cloth clothRenderer = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.pg = pg;
+        this.world = world;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
         world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
@@ -46,18 +47,8 @@ public class Demo17 : IDemo, ICleanDemo
                 JVector v2 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 0) * scale);
                 JVector v3 = new JVector((-leno2 + e + 1) * scale, 6, (-leno2 + i + 1) * scale);
 
-                bool even = (e + i) % 2 == 0;
-
-                if (even)
-                {
-                    tris.Add(new JTriangle(v0, v1, v2));
-                    tris.Add(new JTriangle(v3, v2, v1));
-                }
-                else
-                {
-                    tris.Add(new JTriangle(v0, v1, v2));
-                    tris.Add(new JTriangle(v3, v2, v1));
-                }
+                tris.Add(new JTriangle(v0, v1, v2));
+                tris.Add(new JTriangle(v3, v2, v1));
             }
         }
 
@@ -125,7 +116,7 @@ public class Demo17 : IDemo, ICleanDemo
     }
 
 
-    public void Draw()
+    public void DrawUpdate()
     {
         UpdateRenderVertices();
         clothRenderer.PushMatrix(Matrix4.Identity, Vector3.UnitY);

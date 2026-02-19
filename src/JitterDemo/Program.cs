@@ -33,7 +33,7 @@ public static class Program
             Console.WriteLine($"{colorCode}{bold}[Jitter] {level}{reset}: {message}");
         };
 
-        CreationSettings cs = new(1200, 800, "JitterDemo");
+        CreationSettings cs = new(1200, 800, "Jitter2 - Demo");
 
         try
         {

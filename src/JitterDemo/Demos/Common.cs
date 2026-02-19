@@ -72,91 +72,93 @@ public static class Common
     }
 
 
+    private const int RagdollPartCount = (int)RagdollParts.Torso + 1;
+
     public static void BuildRagdoll(JVector position, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
-        RigidBody[] parts = new RigidBody[Enum.GetNames<RagdollParts>().Length];
+        RigidBody[] parts = new RigidBody[RagdollPartCount];
 
         for (int i = 0; i < parts.Length; i++)
         {
             parts[i] = world.CreateRigidBody();
         }
 
-        parts[(int)RagdollParts.Head].AddShape(new SphereShape(0.15f));
-        parts[(int)RagdollParts.UpperLegLeft].AddShape(new CapsuleShape(0.08f, 0.3f));
-        parts[(int)RagdollParts.UpperLegRight].AddShape(new CapsuleShape(0.08f, 0.3f));
-        parts[(int)RagdollParts.LowerLegLeft].AddShape(new CapsuleShape(0.08f, 0.3f));
-        parts[(int)RagdollParts.LowerLegRight].AddShape(new CapsuleShape(0.08f, 0.3f));
-        parts[(int)RagdollParts.UpperArmLeft].AddShape(new CapsuleShape(0.07f, 0.2f));
-        parts[(int)RagdollParts.UpperArmRight].AddShape(new CapsuleShape(0.07f, 0.2f));
-        parts[(int)RagdollParts.LowerArmLeft].AddShape(new CapsuleShape(0.06f, 0.2f));
-        parts[(int)RagdollParts.LowerArmRight].AddShape(new CapsuleShape(0.06f, 0.2f));
-        parts[(int)RagdollParts.Torso].AddShape(new BoxShape(0.35f, 0.6f, 0.2f));
+        var head = parts[(int)RagdollParts.Head];
+        var torso = parts[(int)RagdollParts.Torso];
+        var upperLegLeft = parts[(int)RagdollParts.UpperLegLeft];
+        var upperLegRight = parts[(int)RagdollParts.UpperLegRight];
+        var lowerLegLeft = parts[(int)RagdollParts.LowerLegLeft];
+        var lowerLegRight = parts[(int)RagdollParts.LowerLegRight];
+        var upperArmLeft = parts[(int)RagdollParts.UpperArmLeft];
+        var upperArmRight = parts[(int)RagdollParts.UpperArmRight];
+        var lowerArmLeft = parts[(int)RagdollParts.LowerArmLeft];
+        var lowerArmRight = parts[(int)RagdollParts.LowerArmRight];
 
-        parts[(int)RagdollParts.Head].Position = new JVector(0, 0, 0);
-        parts[(int)RagdollParts.Torso].Position = new JVector(0, -0.46f, 0);
-        parts[(int)RagdollParts.UpperLegLeft].Position = new JVector(0.11f, -0.85f, 0);
-        parts[(int)RagdollParts.UpperLegRight].Position = new JVector(-0.11f, -0.85f, 0);
-        parts[(int)RagdollParts.LowerLegLeft].Position = new JVector(0.11f, -1.2f, 0);
-        parts[(int)RagdollParts.LowerLegRight].Position = new JVector(-0.11f, -1.2f, 0);
+        head.AddShape(new SphereShape(0.15f));
+        upperLegLeft.AddShape(new CapsuleShape(0.08f, 0.3f));
+        upperLegRight.AddShape(new CapsuleShape(0.08f, 0.3f));
+        lowerLegLeft.AddShape(new CapsuleShape(0.08f, 0.3f));
+        lowerLegRight.AddShape(new CapsuleShape(0.08f, 0.3f));
+        upperArmLeft.AddShape(new CapsuleShape(0.07f, 0.2f));
+        upperArmRight.AddShape(new CapsuleShape(0.07f, 0.2f));
+        lowerArmLeft.AddShape(new CapsuleShape(0.06f, 0.2f));
+        lowerArmRight.AddShape(new CapsuleShape(0.06f, 0.2f));
+        torso.AddShape(new BoxShape(0.35f, 0.6f, 0.2f));
 
-        parts[(int)RagdollParts.UpperArmLeft].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.UpperArmRight].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.LowerArmLeft].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
-        parts[(int)RagdollParts.LowerArmRight].Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        head.Position = new JVector(0, 0, 0);
+        torso.Position = new JVector(0, -0.46f, 0);
+        upperLegLeft.Position = new JVector(0.11f, -0.85f, 0);
+        upperLegRight.Position = new JVector(-0.11f, -0.85f, 0);
+        lowerLegLeft.Position = new JVector(0.11f, -1.2f, 0);
+        lowerLegRight.Position = new JVector(-0.11f, -1.2f, 0);
 
-        parts[(int)RagdollParts.UpperArmLeft].Position = new JVector(0.30f, -0.2f, 0);
-        parts[(int)RagdollParts.UpperArmRight].Position = new JVector(-0.30f, -0.2f, 0);
+        upperArmLeft.Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        upperArmRight.Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        lowerArmLeft.Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
+        lowerArmRight.Orientation = JQuaternion.CreateRotationZ(MathF.PI / 2.0f);
 
-        parts[(int)RagdollParts.LowerArmLeft].Position = new JVector(0.55f, -0.2f, 0);
-        parts[(int)RagdollParts.LowerArmRight].Position = new JVector(-0.55f, -0.2f, 0);
+        upperArmLeft.Position = new JVector(0.30f, -0.2f, 0);
+        upperArmRight.Position = new JVector(-0.30f, -0.2f, 0);
 
-        var spine0 = world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.Head], parts[(int)RagdollParts.Torso]);
+        lowerArmLeft.Position = new JVector(0.55f, -0.2f, 0);
+        lowerArmRight.Position = new JVector(-0.55f, -0.2f, 0);
+
+        var spine0 = world.CreateConstraint<BallSocket>(head, torso);
         spine0.Initialize(new JVector(0, -0.15f, 0));
 
-        var spine1 = world.CreateConstraint<ConeLimit>(parts[(int)RagdollParts.Head], parts[(int)RagdollParts.Torso]);
+        var spine1 = world.CreateConstraint<ConeLimit>(head, torso);
         spine1.Initialize(-JVector.UnitZ, AngularLimit.FromDegree(0, 45));
 
-        var hipLeft0 =
-            world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegLeft]);
+        var hipLeft0 = world.CreateConstraint<BallSocket>(torso, upperLegLeft);
         hipLeft0.Initialize(new JVector(0.11f, -0.7f, 0));
 
-        var hipLeft1 =
-            world.CreateConstraint<TwistAngle>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegLeft]);
+        var hipLeft1 = world.CreateConstraint<TwistAngle>(torso, upperLegLeft);
         hipLeft1.Initialize(JVector.UnitY, JVector.UnitY, AngularLimit.FromDegree(-80, +80));
 
-        var hipLeft2 =
-            world.CreateConstraint<ConeLimit>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegLeft]);
+        var hipLeft2 = world.CreateConstraint<ConeLimit>(torso, upperLegLeft);
         hipLeft2.Initialize(-JVector.UnitY, AngularLimit.FromDegree(0, 60));
 
-        var hipRight0 =
-            world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegRight]);
+        var hipRight0 = world.CreateConstraint<BallSocket>(torso, upperLegRight);
         hipRight0.Initialize(new JVector(-0.11f, -0.7f, 0));
 
-        var hipRight1 =
-            world.CreateConstraint<TwistAngle>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegRight]);
+        var hipRight1 = world.CreateConstraint<TwistAngle>(torso, upperLegRight);
         hipRight1.Initialize(JVector.UnitY, JVector.UnitY, AngularLimit.FromDegree(-80, +80));
 
-        var hipRight2 =
-            world.CreateConstraint<ConeLimit>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperLegRight]);
+        var hipRight2 = world.CreateConstraint<ConeLimit>(torso, upperLegRight);
         hipRight2.Initialize(-JVector.UnitY, AngularLimit.FromDegree(0, 60));
 
-        var kneeLeft = new HingeJoint(world, parts[(int)RagdollParts.UpperLegLeft],
-            parts[(int)RagdollParts.LowerLegLeft],
+        var kneeLeft = new HingeJoint(world, upperLegLeft, lowerLegLeft,
             new JVector(0.11f, -1.05f, 0), JVector.UnitX, AngularLimit.FromDegree(-120, 0));
 
-        var kneeRight = new HingeJoint(world, parts[(int)RagdollParts.UpperLegRight],
-            parts[(int)RagdollParts.LowerLegRight],
+        var kneeRight = new HingeJoint(world, upperLegRight, lowerLegRight,
             new JVector(-0.11f, -1.05f, 0), JVector.UnitX, AngularLimit.FromDegree(-120, 0));
 
-        var armLeft = new HingeJoint(world, parts[(int)RagdollParts.LowerArmLeft],
-            parts[(int)RagdollParts.UpperArmLeft],
+        var armLeft = new HingeJoint(world, lowerArmLeft, upperArmLeft,
             new JVector(0.42f, -0.2f, 0), JVector.UnitY, AngularLimit.FromDegree(-160, 0));
 
-        var armRight = new HingeJoint(world, parts[(int)RagdollParts.LowerArmRight],
-            parts[(int)RagdollParts.UpperArmRight],
+        var armRight = new HingeJoint(world, lowerArmRight, upperArmRight,
             new JVector(-0.42f, -0.2f, 0), JVector.UnitY, AngularLimit.FromDegree(0, 160));
 
         // Soften the limits for the hinge joints
@@ -165,20 +167,16 @@ public static class Common
         armLeft.HingeAngle.LimitSoftness = armLeft.HingeAngle.Softness = 1;
         armRight.HingeAngle.LimitSoftness = armRight.HingeAngle.Softness = 1;
 
-        var shoulderLeft0 =
-            world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.UpperArmLeft], parts[(int)RagdollParts.Torso]);
+        var shoulderLeft0 = world.CreateConstraint<BallSocket>(upperArmLeft, torso);
         shoulderLeft0.Initialize(new JVector(0.20f, -0.2f, 0));
 
-        var shoulderLeft1 =
-            world.CreateConstraint<TwistAngle>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperArmLeft]);
+        var shoulderLeft1 = world.CreateConstraint<TwistAngle>(torso, upperArmLeft);
         shoulderLeft1.Initialize(JVector.UnitX, JVector.UnitX, AngularLimit.FromDegree(-20, 60));
 
-        var shoulderRight0 =
-            world.CreateConstraint<BallSocket>(parts[(int)RagdollParts.UpperArmRight], parts[(int)RagdollParts.Torso]);
+        var shoulderRight0 = world.CreateConstraint<BallSocket>(upperArmRight, torso);
         shoulderRight0.Initialize(new JVector(-0.20f, -0.2f, 0));
 
-        var shoulderRight1 =
-            world.CreateConstraint<TwistAngle>(parts[(int)RagdollParts.Torso], parts[(int)RagdollParts.UpperArmRight]);
+        var shoulderRight1 = world.CreateConstraint<TwistAngle>(torso, upperArmRight);
         shoulderRight1.Initialize(JVector.UnitX, JVector.UnitX, AngularLimit.FromDegree(-20, 60));
 
         shoulderLeft1.Bias = 0.01f;
@@ -192,22 +190,14 @@ public static class Common
             world.BroadPhaseFilter = filter;
         }
 
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperLegLeft].Shapes[0],
-            parts[(int)RagdollParts.Torso].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperLegRight].Shapes[0],
-            parts[(int)RagdollParts.Torso].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperLegLeft].Shapes[0],
-            parts[(int)RagdollParts.LowerLegLeft].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperLegRight].Shapes[0],
-            parts[(int)RagdollParts.LowerLegRight].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperArmLeft].Shapes[0],
-            parts[(int)RagdollParts.Torso].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperArmRight].Shapes[0],
-            parts[(int)RagdollParts.Torso].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperArmLeft].Shapes[0],
-            parts[(int)RagdollParts.LowerArmLeft].Shapes[0]);
-        filter.IgnoreCollisionBetween(parts[(int)RagdollParts.UpperArmRight].Shapes[0],
-            parts[(int)RagdollParts.LowerArmRight].Shapes[0]);
+        filter.IgnoreCollisionBetween(upperLegLeft.Shapes[0], torso.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperLegRight.Shapes[0], torso.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperLegLeft.Shapes[0], lowerLegLeft.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperLegRight.Shapes[0], lowerLegRight.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperArmLeft.Shapes[0], torso.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperArmRight.Shapes[0], torso.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperArmLeft.Shapes[0], lowerArmLeft.Shapes[0]);
+        filter.IgnoreCollisionBetween(upperArmRight.Shapes[0], lowerArmRight.Shapes[0]);
 
         for (int i = 0; i < parts.Length; i++)
         {
@@ -218,8 +208,7 @@ public static class Common
 
     public static void BuildPyramid(JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
         for (int i = 0; i < size; i++)
         {
@@ -236,8 +225,7 @@ public static class Common
 
     public static void BuildTower(JVector pos, int height = 40, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
         JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * 2.0f / 64.0f);
         JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
@@ -269,8 +257,7 @@ public static class Common
 
     public static void BuildJenga(JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
         position += new JVector(0, 0.5f, 0);
 
@@ -298,8 +285,7 @@ public static class Common
 
     public static void BuildWall(JVector position, int sizex = 20, int sizey = 14, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
         for (int i = 0; i < sizex; i++)
         {
@@ -316,8 +302,7 @@ public static class Common
 
     public static void BuildPyramidCylinder(JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
+        World world = ((Playground)RenderWindow.Instance).World;
 
         for (int i = 0; i < size; i++)
         {

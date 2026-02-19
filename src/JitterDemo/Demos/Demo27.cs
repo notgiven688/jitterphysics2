@@ -10,17 +10,15 @@ namespace JitterDemo;
 public class Demo27 : IDemo, ICleanDemo
 {
     public string Name => "CCD: Proof of concept";
+    public string Description => "Continuous collision detection with fast-moving objects and thin geometry.";
 
     private CcdSolver ccdSolver = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
         ccdSolver = new CcdSolver(world);
 
-        pg.ResetScene(true);
+        pg.AddFloor();
 
         var paddle = world.CreateRigidBody();
         paddle.AddShape(new BoxShape(5, 1, 0.01f));
@@ -47,10 +45,6 @@ public class Demo27 : IDemo, ICleanDemo
         ccdSolver.Add(ball);
 
         world.SpeculativeRelaxationFactor = 0.5f;
-    }
-
-    public void Draw()
-    {
     }
 
     public void CleanUp()

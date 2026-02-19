@@ -1,5 +1,6 @@
 using System;
 using JitterDemo.Renderer.OpenGL;
+using JitterDemo.Renderer.OpenGL.Native;
 
 namespace JitterDemo.Renderer;
 
@@ -8,35 +9,28 @@ public struct TransformColor
     public Matrix4 Transform;
     public Vector3 Color;
 
-    public static TransformColor Default = Default2();
-
-    private static TransformColor Default2()
+    public static readonly TransformColor Default = new()
     {
-        TransformColor tc;
-        tc.Transform = Matrix4.Identity;
-        tc.Color = new Vector3(0, 1, 0);
-        return tc;
-    }
+        Transform = Matrix4.Identity,
+        Color = new Vector3(0, 1, 0)
+    };
 }
 
-public class CSMInstance
+public abstract class CSMInstance
 {
     public Texture2D Texture { set; get; } = Texture2D.EmptyTexture();
 
-    public VertexArrayObject Vao = null!;
-    public PhongShader shader = null!;
-    public ArrayBuffer ab = null!;
+    protected VertexArrayObject Vao = null!;
+    protected PhongShader shader = null!;
+    protected ArrayBuffer ab = null!;
 
     protected ArrayBuffer worldMatrices = null!;
     protected int IndexLen;
 
     public TransformColor[] WorldMatrices = { TransformColor.Default };
-    public int Count { set; get; } = 1;
+    public int Count { set; get; }
 
-    public virtual (Vertex[] vertices, TriangleVertexIndex[] indices) ProvideVertices()
-    {
-        throw new NotImplementedException();
-    }
+    public abstract (Vertex[] vertices, TriangleVertexIndex[] indices) ProvideVertices();
 
     public void PushMatrix(in Matrix4 matrix)
     {
@@ -72,7 +66,7 @@ public class CSMInstance
     public virtual void UpdateWorldMatrices()
     {
         if (Count == 0) return;
-        worldMatrices.SetData(WorldMatrices, Count);
+        worldMatrices.SetData(WorldMatrices, Count, GLC.DYNAMIC_DRAW);
     }
 
     public virtual void ShadowPass(ShadowShader shader)

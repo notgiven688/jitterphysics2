@@ -8,7 +8,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo11 : IDemo
+public class Demo11 : IDemo, IDrawUpdate
 {
     public string Name => "Double Pendulum";
 
@@ -16,12 +16,11 @@ public class Demo11 : IDemo
 
     private World world = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
+        this.world = world;
 
-        pg.ResetScene();
+        pg.AddFloor();
 
         b0 = world.CreateRigidBody();
         b0.AddShape(new SphereShape(0.2f));
@@ -47,7 +46,7 @@ public class Demo11 : IDemo
         b1.Damping = (0, 0);
     }
 
-    public void Draw()
+    public void DrawUpdate()
     {
         float ekin = 0.5f * (b0.Velocity.LengthSquared() + b1.Velocity.LengthSquared());
         float epot = -world.Gravity.Y * (b0.Position.Y + b1.Position.Y);

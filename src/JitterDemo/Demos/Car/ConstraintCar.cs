@@ -59,11 +59,8 @@ public class ConstraintCar
 
             bodies.Add(wheels[i]);
             bodies.Add(damper[i]);
-            //wheels[i].IsStatic = true;
         }
 
-
-        //car.IsStatic = true;
         car.DeactivationTime = TimeSpan.MaxValue;
 
         damper[FrontLeft].Position = new JVector(-0.75f, 1.4f, -1.1f);

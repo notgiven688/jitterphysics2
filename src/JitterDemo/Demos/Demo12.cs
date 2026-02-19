@@ -9,13 +9,11 @@ namespace JitterDemo;
 public class Demo12 : IDemo
 {
     public string Name => "Speculative Contacts";
+    public string Description => "High-velocity objects fired at thin walls to test tunneling prevention.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        Playground pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         world.BroadPhaseFilter = new Common.IgnoreCollisionBetweenFilter();
 
@@ -36,7 +34,6 @@ public class Demo12 : IDemo
         boxBody.Velocity = new JVector(0, 0, -107);
         boxBody.EnableSpeculativeContacts = true;
 
-
         Common.BuildRagdoll(new JVector(0, 8, -1),
             body =>
             {
@@ -45,10 +42,5 @@ public class Demo12 : IDemo
                 body.SetActivationState(false);
             }
         );
-    }
-
-    public void Draw()
-    {
-        //Console.WriteLine(sphereBody.Velocity.Y);
     }
 }

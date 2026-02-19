@@ -10,13 +10,11 @@ namespace JitterDemo;
 public class Demo13 : IDemo
 {
     public string Name => "Motor and Limit";
+    public string Description => "Hinge joints with angular motors, angular limits, and coupled rotating wheels.";
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        var pg = (Playground)RenderWindow.Instance;
-        World world = pg.World;
-
-        pg.ResetScene();
+        pg.AddFloor();
 
         {
             // Motor
@@ -90,9 +88,5 @@ public class Demo13 : IDemo
 
         world.SolverIterations = (4, 2);
         world.SubstepCount = 3;
-    }
-
-    public void Draw()
-    {
     }
 }

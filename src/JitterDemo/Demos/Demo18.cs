@@ -6,9 +6,9 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo18 : IDemo
+public class Demo18 : IDemo, IDrawUpdate
 {
-    public void Draw()
+    public void DrawUpdate()
     {
         float time = (float)pg.Time;
 
@@ -39,16 +39,12 @@ public class Demo18 : IDemo
     public string Name => "PointTest";
 
     private Playground pg = null!;
-    private World world = null!;
 
     private Shape testShape = null!;
 
-    public void Build()
+    public void Build(Playground pg, World world)
     {
-        pg = (Playground)RenderWindow.Instance;
-        world = pg.World;
-
+        this.pg = pg;
         testShape = new ConeShape(1f);
-        pg.ResetScene(false);
     }
 }
