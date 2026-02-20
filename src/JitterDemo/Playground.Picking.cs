@@ -38,8 +38,6 @@ public partial class Playground : RenderWindow
 
     private DistanceLimit? grabConstraint;
     private float hitDistance;
-    private float hitWheelPosition;
-
     private void Pick()
     {
         JVector origin = Conversion.ToJitterVector(Camera.Position);
@@ -50,9 +48,7 @@ public partial class Playground : RenderWindow
             if (grabBody == null) return;
             if (grabConstraint == null) return;
 
-            float currentWheel = (float)Mouse.ScrollWheel.Y;
-            hitDistance += currentWheel - hitWheelPosition;
-            hitWheelPosition = currentWheel;
+            hitDistance += (float)Mouse.ScrollWheel.Y;
 
             grabConstraint.Anchor2 = origin + hitDistance * dir;
             grabBody.SetActivationState(true);
@@ -85,8 +81,6 @@ public partial class Playground : RenderWindow
 
             if (grabBody == null || grabBody.MotionType != MotionType.Dynamic) return;
             grabbing = true;
-
-            hitWheelPosition = (float)Mouse.ScrollWheel.Y;
 
             if (grabConstraint != null) World.Remove(grabConstraint);
 
