@@ -85,8 +85,8 @@ public unsafe struct CollisionManifold
     /// <summary>
     /// Builds the contact manifold between two shapes given their transforms and initial contact.
     /// </summary>
-    /// <typeparam name="TA">The type of support shape A.</typeparam>
-    /// <typeparam name="TB">The type of support shape B.</typeparam>
+    /// <typeparam name="Ta">The type of support shape A.</typeparam>
+    /// <typeparam name="Tb">The type of support shape B.</typeparam>
     /// <param name="shapeA">The first shape.</param>
     /// <param name="shapeB">The second shape.</param>
     /// <param name="quaternionA">Orientation of shape A.</param>
@@ -98,9 +98,9 @@ public unsafe struct CollisionManifold
     /// <param name="normal">The collision normal (from B to A).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]
-    public void BuildManifold<TA,TB>(TA shapeA, TB shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
+    public void BuildManifold<Ta,Tb>(Ta shapeA, Tb shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
         in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // Reset
         leftCount = 0;
@@ -214,8 +214,8 @@ public unsafe struct CollisionManifold
     /// <summary>
     /// Builds the contact manifold between two rigid body shapes using their current transforms.
     /// </summary>
-    /// <typeparam name="TA">The type of shape A.</typeparam>
-    /// <typeparam name="TB">The type of shape B.</typeparam>
+    /// <typeparam name="Ta">The type of shape A.</typeparam>
+    /// <typeparam name="Tb">The type of shape B.</typeparam>
     /// <param name="shapeA">The first rigid body shape.</param>
     /// <param name="shapeB">The second rigid body shape.</param>
     /// <param name="pA">Initial contact point on shape A.</param>
@@ -223,8 +223,8 @@ public unsafe struct CollisionManifold
     /// <param name="normal">The collision normal (from B to A).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]
-    public void BuildManifold<TA,TB>(TA shapeA, TB shapeB,
-        in JVector pA, in JVector pB, in JVector normal) where TA : RigidBodyShape where TB : RigidBodyShape
+    public void BuildManifold<Ta,Tb>(Ta shapeA, Tb shapeB,
+        in JVector pA, in JVector pB, in JVector normal) where Ta : RigidBodyShape where Tb : RigidBodyShape
     {
         BuildManifold(shapeA, shapeB, shapeA.RigidBody.Orientation, shapeB.RigidBody.Orientation,
             shapeA.RigidBody.Position, shapeB.RigidBody.Position, pA, pB, normal);

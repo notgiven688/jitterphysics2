@@ -113,7 +113,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         get => Data.MaxForce;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             Data.MaxForce = value;
         }
     }

@@ -33,9 +33,9 @@ public static class NarrowPhase
         private ConvexPolytope convexPolytope;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool SolveMprEpa<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB,
+        private bool SolveMprEpa<Ta,Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB,
             ref JVector point1, ref JVector point2, ref JVector normal, ref Real penetration)
-            where TA : ISupportMappable where TB : ISupportMappable
+            where Ta : ISupportMappable where Tb : ISupportMappable
         {
             const Real collideEpsilon = (Real)1e-5;
             const int maxIter = 85;
@@ -91,10 +91,10 @@ public static class NarrowPhase
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public bool SolveMpr<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB,
+        public bool SolveMpr<Ta,Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB,
             in JVector positionB, Real epaThreshold,
             out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
-            where TA : ISupportMappable where TB : ISupportMappable
+            where Ta : ISupportMappable where Tb : ISupportMappable
         {
             /*
             This method is adapted from XenoCollide.
@@ -343,9 +343,9 @@ public static class NarrowPhase
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool Collision<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB,
+        public bool Collision<Ta,Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB,
             out JVector point1, out JVector point2, out JVector normal, out Real penetration)
-            where TA : ISupportMappable where TB : ISupportMappable
+            where Ta : ISupportMappable where Tb : ISupportMappable
         {
             const Real collideEpsilon = (Real)1e-4;
             const int maxIter = 85;
@@ -428,7 +428,7 @@ public static class NarrowPhase
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool PointTest<TA>(in TA support, in JVector point) where TA : ISupportMappable
+    public static bool PointTest<Ta>(in Ta support, in JVector point) where Ta : ISupportMappable
     {
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
@@ -479,8 +479,8 @@ public static class NarrowPhase
     /// <param name="point">Point to check.</param>
     /// <returns>Returns true if the point is contained within the shape, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool PointTest<TA>(in TA support, in JMatrix orientation,
-        in JVector position, in JVector point) where TA : ISupportMappable
+    public static bool PointTest<Ta>(in Ta support, in JMatrix orientation,
+        in JVector position, in JVector point) where Ta : ISupportMappable
     {
         JVector transformedOrigin = JVector.TransposedTransform(point - position, orientation);
         return PointTest(support, transformedOrigin);
@@ -502,9 +502,9 @@ public static class NarrowPhase
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool RayCast<TA>(in TA support, in JQuaternion orientation,
+    public static bool RayCast<Ta>(in Ta support, in JQuaternion orientation,
         in JVector position, in JVector origin, in JVector direction, out Real lambda, out JVector normal)
-        where TA : ISupportMappable
+        where Ta : ISupportMappable
     {
         // rotate the ray into the reference frame of bodyA...
         JVector transformedDir = JVector.ConjugatedTransform(direction, orientation);
@@ -532,8 +532,8 @@ public static class NarrowPhase
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool RayCast<TA>(in TA support, in JVector origin, in JVector direction,
-        out Real lambda, out JVector normal) where TA : ISupportMappable
+    public static bool RayCast<Ta>(in Ta support, in JVector origin, in JVector direction,
+        out Real lambda, out JVector normal) where Ta : ISupportMappable
     {
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
@@ -623,10 +623,10 @@ public static class NarrowPhase
     /// failure, collision information reverts to the type's default values.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Collision<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Collision<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // ..perform collision detection..
         bool success = _solver.Collision(supportA, supportB, orientationB, positionB,
@@ -665,11 +665,11 @@ public static class NarrowPhase
     /// failure, collision information reverts to the type's default values.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Collision<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Collision<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // rotate into the reference frame of bodyA...
         JQuaternion.ConjugateMultiply(orientationA, orientationB, out JQuaternion orientation);
@@ -705,16 +705,16 @@ public static class NarrowPhase
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Distance<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // ..perform overlap test..
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
         simplexSolver.Reset();
 
         int iter = maxIter;
@@ -769,11 +769,11 @@ public static class NarrowPhase
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Distance<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Distance<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // rotate into the reference frame of bodyA...
         JQuaternion.ConjugateMultiply(orientationA, orientationB, out JQuaternion orientation);
@@ -804,14 +804,14 @@ public static class NarrowPhase
     /// <param name="positionB">The position of shape B in world space.</param>
     /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Overlap<TA,TB>(in TA supportA, in TB supportB,
-        in JQuaternion orientationB, in JVector positionB) where TA : ISupportMappable where TB : ISupportMappable
+    public static bool Overlap<Ta,Tb>(in Ta supportA, in Tb supportB,
+        in JQuaternion orientationB, in JVector positionB) where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // ..perform overlap test..
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
         simplexSolver.Reset();
 
         int iter = maxIter;
@@ -845,10 +845,10 @@ public static class NarrowPhase
     /// <param name="positionB">The position of shape B in world space.</param>
     /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Overlap<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Overlap<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // rotate into the reference frame of bodyA...
         JQuaternion.ConjugateMultiply(orientationA, orientationB, out JQuaternion orientation);
@@ -888,12 +888,12 @@ public static class NarrowPhase
     /// <param name="epaThreshold">The threshold parameter.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool MprEpa<TA,TB>(in TA supportA, in TB supportB,
+    public static bool MprEpa<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real penetration,
         Real epaThreshold = EpaPenetrationThreshold)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // rotate into the reference frame of bodyA..
         JQuaternion.ConjugateMultiply(orientationA, orientationB, out JQuaternion orientation);
@@ -937,11 +937,11 @@ public static class NarrowPhase
     /// <param name="epaThreshold">The threshold parameter.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool MprEpa<TA,TB>(in TA supportA, in TB supportB,
+    public static bool MprEpa<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationB, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real penetration,
         Real epaThreshold = EpaPenetrationThreshold)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // ..perform collision detection..
         return _solver.SolveMpr(supportA, supportB, orientationB, positionB , epaThreshold, out pointA, out pointB, out normal, out penetration);
@@ -966,14 +966,14 @@ public static class NarrowPhase
     /// distance gradient estimation.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Sweep<TA, TB>(in TA supportA, in TB supportB,
+    public static bool Sweep<Ta, Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
         in JVector sweepAngularA, in JVector sweepAngularB,
         in Real extentA, in Real extentB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 64;
@@ -1067,12 +1067,12 @@ public static class NarrowPhase
     /// <param name="normal">Zero if the shapes already overlap or do not hit.</param>
     /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Sweep<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Sweep<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         in JVector sweepA, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // rotate into the reference frame of bodyA...
         JQuaternion.ConjugateMultiply(orientationA, orientationB, out JQuaternion orientation);
@@ -1118,16 +1118,16 @@ public static class NarrowPhase
     /// <param name="normal">Zero if the shapes already overlap or do not hit.</param>
     /// <returns>True if the shapes hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Sweep<TA,TB>(in TA supportA, in TB supportB,
+    public static bool Sweep<Ta,Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationB, in JVector positionB, in JVector sweepB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
-        where TA : ISupportMappable where TB : ISupportMappable
+        where Ta : ISupportMappable where Tb : ISupportMappable
     {
         // ..perform toi calculation
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
         simplexSolver.Reset();
 
         MinkowskiDifference.GetCenter(supportA, supportB, orientationB, positionB, out var center);

@@ -43,7 +43,7 @@ public class SphereShape : RigidBodyShape
     /// </exception>
     public SphereShape(Real radius = (Real)1.0)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius);
 
         this.radius = radius;
         UpdateWorldBoundingBox();

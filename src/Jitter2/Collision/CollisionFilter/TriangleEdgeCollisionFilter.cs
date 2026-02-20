@@ -135,10 +135,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         // project collP onto triangle plane
         ProjectPointOnPlane(ref collP, a, b, c);
 
-        JVector n, pma;
-
-        n = b - a;
-        pma = collP - a;
+        var n = b - a;
+        var pma = collP - a;
         var d0 = (pma - JVector.Dot(pma, n) * n * ((Real)1.0 / n.LengthSquared())).LengthSquared();
 
         n = c - a;

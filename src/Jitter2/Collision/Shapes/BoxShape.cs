@@ -62,7 +62,7 @@ public class BoxShape : RigidBodyShape
     /// </exception>
     public BoxShape(Real size)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size, nameof(size));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
 
         halfSize = new JVector(size * (Real)0.5);
         UpdateWorldBoundingBox();
@@ -80,9 +80,9 @@ public class BoxShape : RigidBodyShape
     /// </exception>
     public BoxShape(Real width, Real height, Real length)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(length, nameof(length));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width,  nameof(width));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(length);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width);
 
         halfSize = (Real)0.5 * new JVector(width, height, length);
         UpdateWorldBoundingBox();

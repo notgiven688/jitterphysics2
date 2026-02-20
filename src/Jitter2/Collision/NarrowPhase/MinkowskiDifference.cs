@@ -45,8 +45,8 @@ public static class MinkowskiDifference
     /// <summary>
     /// Computes the support function S_{A-B}(d) = S_A(d) - S_B(-d) for the Minkowski difference.
     /// </summary>
-    /// <typeparam name="TA">The type of support shape A.</typeparam>
-    /// <typeparam name="TB">The type of support shape B.</typeparam>
+    /// <typeparam name="Ta">The type of support shape A.</typeparam>
+    /// <typeparam name="Tb">The type of support shape B.</typeparam>
     /// <param name="supportA">The support function of shape A (at origin, not rotated).</param>
     /// <param name="supportB">The support function of shape B.</param>
     /// <param name="orientationB">The orientation of shape B.</param>
@@ -54,8 +54,8 @@ public static class MinkowskiDifference
     /// <param name="direction">The search direction.</param>
     /// <param name="v">The resulting vertex containing support points from both shapes.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void Support<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB,
-        in JVector positionB, in JVector direction, out Vertex v) where TA : ISupportMappable where TB : ISupportMappable
+    public static void Support<Ta,Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB,
+        in JVector positionB, in JVector direction, out Vertex v) where Ta : ISupportMappable where Tb : ISupportMappable
     {
         JVector.Negate(direction, out JVector tmp);
         supportA.SupportMap(direction, out v.A);
@@ -71,16 +71,16 @@ public static class MinkowskiDifference
     /// <summary>
     /// Computes a point guaranteed to be inside the Minkowski difference.
     /// </summary>
-    /// <typeparam name="TA">The type of support shape A.</typeparam>
-    /// <typeparam name="TB">The type of support shape B.</typeparam>
+    /// <typeparam name="Ta">The type of support shape A.</typeparam>
+    /// <typeparam name="Tb">The type of support shape B.</typeparam>
     /// <param name="supportA">The support function of shape A (at origin, not rotated).</param>
     /// <param name="supportB">The support function of shape B.</param>
     /// <param name="orientationB">The orientation of shape B.</param>
     /// <param name="positionB">The position of shape B.</param>
     /// <param name="center">The resulting vertex representing the center of the Minkowski difference.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void GetCenter<TA,TB>(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB,
-        out Vertex center) where TA : ISupportMappable where TB : ISupportMappable
+    public static void GetCenter<Ta,Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB,
+        out Vertex center) where Ta : ISupportMappable where Tb : ISupportMappable
     {
         supportA.GetCenter(out center.A);
         supportB.GetCenter(out center.B);

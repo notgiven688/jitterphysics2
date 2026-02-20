@@ -61,8 +61,8 @@ public class CapsuleShape : RigidBodyShape
     /// </exception>
     public CapsuleShape(Real radius = (Real)0.5, Real length = (Real)1.0)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
-        ArgumentOutOfRangeException.ThrowIfNegative(length, nameof(length));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius);
+        ArgumentOutOfRangeException.ThrowIfNegative(length);
 
         this.radius = radius;
         halfLength = (Real)0.5 * length;

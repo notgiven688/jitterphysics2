@@ -87,14 +87,14 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         Real dot = JVector.Dot(from, to);
 
         // Vectors are opposite (Singularity)
-        if (dot < (Real)(-1 + epsilon))
+        if (dot < -(Real)1.0 + epsilon)
         {
             JVector axis = MathHelper.CreateOrthonormal(from);
             return new JQuaternion(axis.X, axis.Y, axis.Z, 0);
         }
 
-        Real s = MathR.Sqrt(((Real)1 + dot) * (Real)2);
-        Real invS = (Real)1 / s;
+        Real s = MathR.Sqrt(((Real)1.0 + dot) * (Real)2.0);
+        Real invS = (Real)1.0 / s;
 
         JVector c = JVector.Cross(from, to);
         return new JQuaternion(s * (Real)0.5, c * invS);

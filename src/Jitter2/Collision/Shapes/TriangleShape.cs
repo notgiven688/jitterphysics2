@@ -38,9 +38,9 @@ public class TriangleShape : RigidBodyShape
     /// </exception>
     public TriangleShape(TriangleMesh mesh, int index)
     {
-        ArgumentNullException.ThrowIfNull(mesh, nameof(mesh));
-        ArgumentOutOfRangeException.ThrowIfNegative(index, nameof(index));
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, mesh.Indices.Length, nameof(index));
+        ArgumentNullException.ThrowIfNull(mesh);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, mesh.Indices.Length);
 
         Mesh = mesh;
         Index = index;

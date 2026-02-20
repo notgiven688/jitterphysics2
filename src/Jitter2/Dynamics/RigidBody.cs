@@ -312,7 +312,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => friction;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             friction = value;
         }
     }
@@ -332,8 +332,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => restitution;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, (Real)1.0, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, (Real)1.0);
             restitution = value;
         }
     }

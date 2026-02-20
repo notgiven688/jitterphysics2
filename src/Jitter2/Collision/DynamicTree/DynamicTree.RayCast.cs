@@ -41,24 +41,15 @@ public partial class DynamicTree
     /// <returns><c>false</c> to skip this proxy; <c>true</c> to test it.</returns>
     public delegate bool RayCastFilterPre(IDynamicTreeProxy result);
 
-    private struct Ray
+    private struct Ray(in JVector origin, in JVector direction)
     {
-        public readonly JVector Origin;
-        public readonly JVector Direction;
+        public readonly JVector Origin = origin;
+        public readonly JVector Direction = direction;
 
-        public RayCastFilterPost? FilterPost;
-        public RayCastFilterPre? FilterPre;
+        public RayCastFilterPost? FilterPost = null;
+        public RayCastFilterPre? FilterPre = null;
 
-        public Real Lambda;
-
-        public Ray(in JVector origin, in JVector direction)
-        {
-            Origin = origin;
-            Direction = direction;
-            FilterPost = null;
-            FilterPre = null;
-            Lambda = Real.MaxValue;
-        }
+        public Real Lambda = Real.MaxValue;
     }
 
     /// <summary>

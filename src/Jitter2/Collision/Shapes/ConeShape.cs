@@ -61,8 +61,8 @@ public class ConeShape : RigidBodyShape
     /// </exception>
     public ConeShape(Real radius = (Real)0.5, Real height = (Real)1.0)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
 
         this.radius = radius;
         this.height = height;

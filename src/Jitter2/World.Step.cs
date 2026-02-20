@@ -658,26 +658,23 @@ public sealed partial class World
 
     private void RemoveBrokenArbiters()
     {
-        for (int i = 0; i < brokenArbiters.Count; i++)
+        foreach (var handle in brokenArbiters)
         {
-            var handle = brokenArbiters[i];
-            if ((handle.Data.UsageMask & ContactData.MaskContactAll) == 0)
-            {
-                Arbiter arb = arbiters[handle.Data.Key];
+            if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
+            var arb = arbiters[handle.Data.Key];
 
-                AddToActiveList(arb.Body1.InternalIsland);
-                AddToActiveList(arb.Body2.InternalIsland);
+            AddToActiveList(arb.Body1.InternalIsland);
+            AddToActiveList(arb.Body2.InternalIsland);
 
-                memContacts.Free(handle);
-                IslandHelper.ArbiterRemoved(islands, arb);
-                arbiters.Remove(handle.Data.Key);
+            memContacts.Free(handle);
+            IslandHelper.ArbiterRemoved(islands, arb);
+            arbiters.Remove(handle.Data.Key);
 
-                arb.Body1.RaiseEndCollide(arb);
-                arb.Body2.RaiseEndCollide(arb);
+            arb.Body1.RaiseEndCollide(arb);
+            arb.Body2.RaiseEndCollide(arb);
 
-                Arbiter.Pool.Push(arb);
-                arb.Handle = JHandle<ContactData>.Zero;
-            }
+            Arbiter.Pool.Push(arb);
+            arb.Handle = JHandle<ContactData>.Zero;
         }
 
         brokenArbiters.Clear();
@@ -703,9 +700,8 @@ public sealed partial class World
 
     private void HandleDeferredArbiters()
     {
-        for (int i = 0; i < deferredArbiters.Count; i++)
+        foreach (var arb in deferredArbiters)
         {
-            Arbiter arb = deferredArbiters[i];
             IslandHelper.ArbiterCreated(islands, arb);
 
             AddToActiveList(arb.Body1.InternalIsland);

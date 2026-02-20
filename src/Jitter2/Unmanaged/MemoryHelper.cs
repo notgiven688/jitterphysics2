@@ -15,7 +15,7 @@ namespace Jitter2.Unmanaged;
 /// <remarks>
 /// <para>
 /// <b>Safety:</b> All pointers returned by allocation methods must be freed using
-/// the corresponding <see cref="Free(void*)"/> or <see cref="AlignedFree"/> method.
+/// the corresponding <see cref="Free(System.Void*)"/> or <see cref="AlignedFree"/> method.
 /// Failure to do so will result in memory leaks.
 /// </para>
 /// <para>
@@ -34,7 +34,7 @@ public static unsafe class MemoryHelper
     /// to ensure the <see cref="Value"/> field resides on its own cache line.
     /// </remarks>
     [StructLayout(LayoutKind.Explicit, Size = 132)]
-    public unsafe struct IsolatedInt
+    public struct IsolatedInt
     {
         [FieldOffset(0)]
         private fixed byte pad0[64];
@@ -129,7 +129,7 @@ public static unsafe class MemoryHelper
     /// <param name="len">The length of the memory block to allocate, in bytes.</param>
     /// <returns>A pointer to the allocated memory block.</returns>
     /// <remarks>
-    /// <b>Safety:</b> The caller must free the returned pointer using <see cref="Free(void*)"/>.
+    /// <b>Safety:</b> The caller must free the returned pointer using <see cref="Free(System.Void*)"/>.
     /// The memory is not zero-initialized.
     /// </remarks>
     public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);

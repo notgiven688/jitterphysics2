@@ -170,9 +170,8 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         var newSlots = new Pair[size];
 
-        for (int i = 0; i < Slots.Length; i++)
+        foreach (var pair in Slots)
         {
-            Pair pair = Slots[i];
             if (pair.ID != 0)
             {
                 int hash = pair.GetHash();

@@ -30,7 +30,7 @@ public sealed partial class World
         $" Register a BroadPhaseFilter to handle and/or filter out these collision types.");
 
     /// <summary>
-    /// Hook into the narrowphase collision detection pipeline.
+    /// Hook into the narrow-phase collision detection pipeline.
     /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
     /// <remarks>
@@ -44,7 +44,7 @@ public sealed partial class World
     /// Hook into the broadphase collision detection pipeline. The default value is null.
     /// </summary>
     /// <remarks>
-    /// Use this to intercept shape pairs before narrowphase detection, implement custom collision layers,
+    /// Use this to intercept shape pairs before narrow-phase detection, implement custom collision layers,
     /// or handle collisions for custom proxy types. When <see cref="Step(Real, bool)"/> is called
     /// with <c>multiThread=true</c>, this may be invoked concurrently. Implementations must be thread-safe.
     /// </remarks>

@@ -62,8 +62,8 @@ public class CylinderShape : RigidBodyShape
     /// </exception>
     public CylinderShape(Real height, Real radius)
     {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius, nameof(radius));
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height);
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(radius);
 
         this.radius = radius;
         this.height = height;
@@ -104,14 +104,14 @@ public class CylinderShape : RigidBodyShape
         Real yy = upa.Y * upa.Y;
         Real zz = upa.Z * upa.Z;
 
-        Real xext = MathR.Sqrt(yy + zz) * radius;
-        Real yext = MathR.Sqrt(xx + zz) * radius;
-        Real zext = MathR.Sqrt(xx + yy) * radius;
+        Real xExt = MathR.Sqrt(yy + zz) * radius;
+        Real yExt = MathR.Sqrt(xx + zz) * radius;
+        Real zExt = MathR.Sqrt(xx + yy) * radius;
 
         JVector p1 = -(Real)0.5 * height * upa;
         JVector p2 = +(Real)0.5 * height * upa;
 
-        JVector delta = JVector.Max(p1, p2) + new JVector(xext, yext, zext);
+        JVector delta = JVector.Max(p1, p2) + new JVector(xExt, yExt, zExt);
 
         box.Min = position - delta;
         box.Max = position + delta;

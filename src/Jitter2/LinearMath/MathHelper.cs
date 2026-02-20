@@ -216,7 +216,7 @@ public static class MathHelper
             Real z = -vec.Y;
 
             // invLen = 1 / sqrt(y*y + z*z)
-            Real invLen = (Real)1 / MathR.Sqrt(y * y + z * z);
+            Real invLen = (Real)1.0 / MathR.Sqrt(y * y + z * z);
 
             r.X = 0;
             r.Y = y * invLen;
@@ -228,7 +228,7 @@ public static class MathHelper
             Real x = -vec.Z;
             Real z = vec.X;
 
-            Real invLen = (Real)1 / MathR.Sqrt(x * x + z * z);
+            Real invLen = (Real)1.0 / MathR.Sqrt(x * x + z * z);
 
             r.X = x * invLen;
             r.Y = 0;
@@ -240,7 +240,7 @@ public static class MathHelper
             Real x = vec.Y;
             Real y = -vec.X;
 
-            Real invLen = (Real)1 / MathR.Sqrt(x * x + y * y);
+            Real invLen = (Real)1.0 / MathR.Sqrt(x * x + y * y);
 
             r.X = x * invLen;
             r.Y = y * invLen;

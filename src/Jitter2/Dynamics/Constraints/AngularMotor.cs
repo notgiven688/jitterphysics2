@@ -114,7 +114,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         get => Data.MaxForce;
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value, nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
             Data.MaxForce = value;
         }
     }

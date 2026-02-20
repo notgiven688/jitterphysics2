@@ -30,7 +30,7 @@ namespace Jitter2.Collision;
 /// </para>
 /// </remarks>
 [StructLayout(LayoutKind.Sequential)]
-public unsafe struct SimplexSolverAB
+public unsafe struct SimplexSolverAb
 {
     private const Real Epsilon = (Real)1e-8;
 
