@@ -1,7 +1,3 @@
----
-sidebar_position: 5
----
-
 # Changelog
 
 ### Jitter 2.7.9 (2026-02-14)
