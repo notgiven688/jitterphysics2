@@ -65,23 +65,23 @@ references:
   fullName: Jitter2.Collision.CollisionManifold.BuildManifold
   nameWithType: CollisionManifold.BuildManifold
 - uid: Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: BuildManifold<TA, TB>(TA, TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
+  name: BuildManifold<Ta, Tb>(Ta, Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
   href: api/Jitter2.Collision.CollisionManifold.html#Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: BuildManifold(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector)
-  fullName: Jitter2.Collision.CollisionManifold.BuildManifold<TA, TB>(TA, TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.CollisionManifold.BuildManifold(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: CollisionManifold.BuildManifold<TA, TB>(TA, TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
-  nameWithType.vb: CollisionManifold.BuildManifold(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector)
+  name.vb: BuildManifold(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector)
+  fullName: Jitter2.Collision.CollisionManifold.BuildManifold<Ta, Tb>(Ta, Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.CollisionManifold.BuildManifold(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: CollisionManifold.BuildManifold<Ta, Tb>(Ta, Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
+  nameWithType.vb: CollisionManifold.BuildManifold(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector)
 - uid: Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: BuildManifold<TA, TB>(TA, TB, in JVector, in JVector, in JVector)
+  name: BuildManifold<Ta, Tb>(Ta, Tb, in JVector, in JVector, in JVector)
   href: api/Jitter2.Collision.CollisionManifold.html#Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: BuildManifold(Of TA, TB)(TA, TB, JVector, JVector, JVector)
-  fullName: Jitter2.Collision.CollisionManifold.BuildManifold<TA, TB>(TA, TB, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.CollisionManifold.BuildManifold(Of TA, TB)(TA, TB, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: CollisionManifold.BuildManifold<TA, TB>(TA, TB, in JVector, in JVector, in JVector)
-  nameWithType.vb: CollisionManifold.BuildManifold(Of TA, TB)(TA, TB, JVector, JVector, JVector)
+  name.vb: BuildManifold(Of Ta, Tb)(Ta, Tb, JVector, JVector, JVector)
+  fullName: Jitter2.Collision.CollisionManifold.BuildManifold<Ta, Tb>(Ta, Tb, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.CollisionManifold.BuildManifold(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: CollisionManifold.BuildManifold<Ta, Tb>(Ta, Tb, in JVector, in JVector, in JVector)
+  nameWithType.vb: CollisionManifold.BuildManifold(Of Ta, Tb)(Ta, Tb, JVector, JVector, JVector)
 - uid: Jitter2.Collision.CollisionManifold.Count
   name: Count
   href: api/Jitter2.Collision.CollisionManifold.html#Jitter2_Collision_CollisionManifold_Count
@@ -1029,14 +1029,14 @@ references:
   fullName: Jitter2.Collision.MinkowskiDifference.GetCenter
   nameWithType: MinkowskiDifference.GetCenter
 - uid: Jitter2.Collision.MinkowskiDifference.GetCenter``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)
-  name: GetCenter<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out Vertex)
+  name: GetCenter<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out Vertex)
   href: api/Jitter2.Collision.MinkowskiDifference.html#Jitter2_Collision_MinkowskiDifference_GetCenter__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_MinkowskiDifference_Vertex__
   commentId: M:Jitter2.Collision.MinkowskiDifference.GetCenter``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)
-  name.vb: GetCenter(Of TA, TB)(TA, TB, JQuaternion, JVector, Vertex)
-  fullName: Jitter2.Collision.MinkowskiDifference.GetCenter<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.Collision.MinkowskiDifference.Vertex)
-  fullName.vb: Jitter2.Collision.MinkowskiDifference.GetCenter(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.Collision.MinkowskiDifference.Vertex)
-  nameWithType: MinkowskiDifference.GetCenter<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out MinkowskiDifference.Vertex)
-  nameWithType.vb: MinkowskiDifference.GetCenter(Of TA, TB)(TA, TB, JQuaternion, JVector, MinkowskiDifference.Vertex)
+  name.vb: GetCenter(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, Vertex)
+  fullName: Jitter2.Collision.MinkowskiDifference.GetCenter<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.Collision.MinkowskiDifference.Vertex)
+  fullName.vb: Jitter2.Collision.MinkowskiDifference.GetCenter(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.Collision.MinkowskiDifference.Vertex)
+  nameWithType: MinkowskiDifference.GetCenter<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out MinkowskiDifference.Vertex)
+  nameWithType.vb: MinkowskiDifference.GetCenter(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, MinkowskiDifference.Vertex)
 - uid: Jitter2.Collision.MinkowskiDifference.Support*
   name: Support
   href: api/Jitter2.Collision.MinkowskiDifference.html#Jitter2_Collision_MinkowskiDifference_Support_
@@ -1045,14 +1045,14 @@ references:
   fullName: Jitter2.Collision.MinkowskiDifference.Support
   nameWithType: MinkowskiDifference.Support
 - uid: Jitter2.Collision.MinkowskiDifference.Support``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)
-  name: Support<TA, TB>(in TA, in TB, in JQuaternion, in JVector, in JVector, out Vertex)
+  name: Support<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out Vertex)
   href: api/Jitter2.Collision.MinkowskiDifference.html#Jitter2_Collision_MinkowskiDifference_Support__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_MinkowskiDifference_Vertex__
   commentId: M:Jitter2.Collision.MinkowskiDifference.Support``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)
-  name.vb: Support(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, Vertex)
-  fullName: Jitter2.Collision.MinkowskiDifference.Support<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.Collision.MinkowskiDifference.Vertex)
-  fullName.vb: Jitter2.Collision.MinkowskiDifference.Support(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Collision.MinkowskiDifference.Vertex)
-  nameWithType: MinkowskiDifference.Support<TA, TB>(in TA, in TB, in JQuaternion, in JVector, in JVector, out MinkowskiDifference.Vertex)
-  nameWithType.vb: MinkowskiDifference.Support(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, MinkowskiDifference.Vertex)
+  name.vb: Support(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, Vertex)
+  fullName: Jitter2.Collision.MinkowskiDifference.Support<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.Collision.MinkowskiDifference.Vertex)
+  fullName.vb: Jitter2.Collision.MinkowskiDifference.Support(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Collision.MinkowskiDifference.Vertex)
+  nameWithType: MinkowskiDifference.Support<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out MinkowskiDifference.Vertex)
+  nameWithType.vb: MinkowskiDifference.Support(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, MinkowskiDifference.Vertex)
 - uid: Jitter2.Collision.MinkowskiDifference.Vertex
   name: MinkowskiDifference.Vertex
   href: api/Jitter2.Collision.MinkowskiDifference.Vertex.html
@@ -1110,23 +1110,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.Collision
   nameWithType: NarrowPhase.Collision
 - uid: Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Collision<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Collision<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Collision(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Collision<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Collision(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Collision<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Collision(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  name.vb: Collision(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Collision<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Collision(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Collision<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Collision(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Collision<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Collision<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Collision(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Collision<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Collision(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Collision<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Collision(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single)
+  name.vb: Collision(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Collision<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Collision(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Collision<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Collision(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Distance*
   name: Distance
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Distance_
@@ -1135,23 +1135,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.Distance
   nameWithType: NarrowPhase.Distance
 - uid: Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Distance<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Distance<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Distance(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Distance<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Distance(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Distance<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Distance(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  name.vb: Distance(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Distance<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Distance(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Distance<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Distance(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Distance<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Distance<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Distance(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Distance<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Distance(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Distance<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Distance(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single)
+  name.vb: Distance(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Distance<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Distance(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Distance<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Distance(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.MprEpa*
   name: MprEpa
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_MprEpa_
@@ -1160,23 +1160,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.MprEpa
   nameWithType: NarrowPhase.MprEpa
 - uid: Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)
-  name: MprEpa<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
+  name: MprEpa<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_
   commentId: M:Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)
-  name.vb: MprEpa(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single, Single)
-  fullName: Jitter2.Collision.NarrowPhase.MprEpa<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float, float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.MprEpa(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single)
-  nameWithType: NarrowPhase.MprEpa<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
-  nameWithType.vb: NarrowPhase.MprEpa(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single, Single)
+  name.vb: MprEpa(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single, Single)
+  fullName: Jitter2.Collision.NarrowPhase.MprEpa<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float, float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.MprEpa(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single)
+  nameWithType: NarrowPhase.MprEpa<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
+  nameWithType.vb: NarrowPhase.MprEpa(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single, Single)
 - uid: Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)
-  name: MprEpa<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
+  name: MprEpa<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_
   commentId: M:Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)
-  name.vb: MprEpa(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single, Single)
-  fullName: Jitter2.Collision.NarrowPhase.MprEpa<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float, float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.MprEpa(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single)
-  nameWithType: NarrowPhase.MprEpa<TA, TB>(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
-  nameWithType.vb: NarrowPhase.MprEpa(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, Single, Single)
+  name.vb: MprEpa(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single, Single)
+  fullName: Jitter2.Collision.NarrowPhase.MprEpa<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float, float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.MprEpa(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single)
+  nameWithType: NarrowPhase.MprEpa<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
+  nameWithType.vb: NarrowPhase.MprEpa(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, Single, Single)
 - uid: Jitter2.Collision.NarrowPhase.Overlap*
   name: Overlap
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Overlap_
@@ -1185,23 +1185,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.Overlap
   nameWithType: NarrowPhase.Overlap
 - uid: Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: Overlap<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector)
+  name: Overlap<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: Overlap(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.Overlap<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Overlap(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.Overlap<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector)
-  nameWithType.vb: NarrowPhase.Overlap(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector)
+  name.vb: Overlap(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.Overlap<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Overlap(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.Overlap<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector)
+  nameWithType.vb: NarrowPhase.Overlap(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector)
 - uid: Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)
-  name: Overlap<TA, TB>(in TA, in TB, in JQuaternion, in JVector)
+  name: Overlap<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)
-  name.vb: Overlap(Of TA, TB)(TA, TB, JQuaternion, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.Overlap<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Overlap(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.Overlap<TA, TB>(in TA, in TB, in JQuaternion, in JVector)
-  nameWithType.vb: NarrowPhase.Overlap(Of TA, TB)(TA, TB, JQuaternion, JVector)
+  name.vb: Overlap(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.Overlap<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Overlap(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.Overlap<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector)
+  nameWithType.vb: NarrowPhase.Overlap(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector)
 - uid: Jitter2.Collision.NarrowPhase.PointTest*
   name: PointTest
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_PointTest_
@@ -1210,23 +1210,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.PointTest
   nameWithType: NarrowPhase.PointTest
 - uid: Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: PointTest<TA>(in TA, in JMatrix, in JVector, in JVector)
+  name: PointTest<Ta>(in Ta, in JMatrix, in JVector, in JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: PointTest(Of TA)(TA, JMatrix, JVector, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.PointTest<TA>(in TA, in Jitter2.LinearMath.JMatrix, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.PointTest(Of TA)(TA, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.PointTest<TA>(in TA, in JMatrix, in JVector, in JVector)
-  nameWithType.vb: NarrowPhase.PointTest(Of TA)(TA, JMatrix, JVector, JVector)
+  name.vb: PointTest(Of Ta)(Ta, JMatrix, JVector, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.PointTest<Ta>(in Ta, in Jitter2.LinearMath.JMatrix, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.PointTest(Of Ta)(Ta, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.PointTest<Ta>(in Ta, in JMatrix, in JVector, in JVector)
+  nameWithType.vb: NarrowPhase.PointTest(Of Ta)(Ta, JMatrix, JVector, JVector)
 - uid: Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JVector@)
-  name: PointTest<TA>(in TA, in JVector)
+  name: PointTest<Ta>(in Ta, in JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JVector@)
-  name.vb: PointTest(Of TA)(TA, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.PointTest<TA>(in TA, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.PointTest(Of TA)(TA, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.PointTest<TA>(in TA, in JVector)
-  nameWithType.vb: NarrowPhase.PointTest(Of TA)(TA, JVector)
+  name.vb: PointTest(Of Ta)(Ta, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.PointTest<Ta>(in Ta, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.PointTest(Of Ta)(Ta, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.PointTest<Ta>(in Ta, in JVector)
+  nameWithType.vb: NarrowPhase.PointTest(Of Ta)(Ta, JVector)
 - uid: Jitter2.Collision.NarrowPhase.RayCast*
   name: RayCast
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_RayCast_
@@ -1235,23 +1235,23 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.RayCast
   nameWithType: NarrowPhase.RayCast
 - uid: Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)
-  name: RayCast<TA>(in TA, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
+  name: RayCast<Ta>(in Ta, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)
-  name.vb: RayCast(Of TA)(TA, JQuaternion, JVector, JVector, JVector, Single, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.RayCast<TA>(in TA, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out float, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.RayCast(Of TA)(TA, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.RayCast<TA>(in TA, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
-  nameWithType.vb: NarrowPhase.RayCast(Of TA)(TA, JQuaternion, JVector, JVector, JVector, Single, JVector)
+  name.vb: RayCast(Of Ta)(Ta, JQuaternion, JVector, JVector, JVector, Single, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.RayCast<Ta>(in Ta, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out float, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.RayCast(Of Ta)(Ta, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.RayCast<Ta>(in Ta, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
+  nameWithType.vb: NarrowPhase.RayCast(Of Ta)(Ta, JQuaternion, JVector, JVector, JVector, Single, JVector)
 - uid: Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)
-  name: RayCast<TA>(in TA, in JVector, in JVector, out float, out JVector)
+  name: RayCast<Ta>(in Ta, in JVector, in JVector, out float, out JVector)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__
   commentId: M:Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)
-  name.vb: RayCast(Of TA)(TA, JVector, JVector, Single, JVector)
-  fullName: Jitter2.Collision.NarrowPhase.RayCast<TA>(in TA, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out float, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.NarrowPhase.RayCast(Of TA)(TA, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Jitter2.LinearMath.JVector)
-  nameWithType: NarrowPhase.RayCast<TA>(in TA, in JVector, in JVector, out float, out JVector)
-  nameWithType.vb: NarrowPhase.RayCast(Of TA)(TA, JVector, JVector, Single, JVector)
+  name.vb: RayCast(Of Ta)(Ta, JVector, JVector, Single, JVector)
+  fullName: Jitter2.Collision.NarrowPhase.RayCast<Ta>(in Ta, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out float, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.NarrowPhase.RayCast(Of Ta)(Ta, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Jitter2.LinearMath.JVector)
+  nameWithType: NarrowPhase.RayCast<Ta>(in Ta, in JVector, in JVector, out float, out JVector)
+  nameWithType.vb: NarrowPhase.RayCast(Of Ta)(Ta, JVector, JVector, Single, JVector)
 - uid: Jitter2.Collision.NarrowPhase.Sweep*
   name: Sweep
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep_
@@ -1260,32 +1260,32 @@ references:
   fullName: Jitter2.Collision.NarrowPhase.Sweep
   nameWithType: NarrowPhase.Sweep
 - uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Sweep(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Sweep<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Sweep(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, JVector, Single)
+  name.vb: Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
+  name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Sweep(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Sweep<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in float, in float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Sweep(Of TA, TB)(TA, TB, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+  name.vb: Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in float, in float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
   commentId: M:Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: Sweep(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
-  fullName: Jitter2.Collision.NarrowPhase.Sweep<TA, TB>(in TA, in TB, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of TA, TB)(TA, TB, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
-  nameWithType: NarrowPhase.Sweep<TA, TB>(in TA, in TB, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  nameWithType.vb: NarrowPhase.Sweep(Of TA, TB)(TA, TB, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  name.vb: Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.Shapes
   name: Jitter2.Collision.Shapes
   href: api/Jitter2.Collision.Shapes.html
@@ -3279,66 +3279,66 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SimplexSolver.Reset
   nameWithType: SimplexSolver.Reset
-- uid: Jitter2.Collision.SimplexSolverAB
-  name: SimplexSolverAB
-  href: api/Jitter2.Collision.SimplexSolverAB.html
-  commentId: T:Jitter2.Collision.SimplexSolverAB
-  fullName: Jitter2.Collision.SimplexSolverAB
-  nameWithType: SimplexSolverAB
-- uid: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
+- uid: Jitter2.Collision.SimplexSolverAb
+  name: SimplexSolverAb
+  href: api/Jitter2.Collision.SimplexSolverAb.html
+  commentId: T:Jitter2.Collision.SimplexSolverAb
+  fullName: Jitter2.Collision.SimplexSolverAb
+  nameWithType: SimplexSolverAb
+- uid: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
   name: AddVertex(in Vertex, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
   name.vb: AddVertex(Vertex, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex(in Jitter2.Collision.MinkowskiDifference.Vertex, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAB.AddVertex(in MinkowskiDifference.Vertex, out JVector)
-  nameWithType.vb: SimplexSolverAB.AddVertex(MinkowskiDifference.Vertex, JVector)
-- uid: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex(in Jitter2.Collision.MinkowskiDifference.Vertex, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAb.AddVertex(in MinkowskiDifference.Vertex, out JVector)
+  nameWithType.vb: SimplexSolverAb.AddVertex(MinkowskiDifference.Vertex, JVector)
+- uid: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: AddVertex(in JVector, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name.vb: AddVertex(JVector, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAB.AddVertex(in JVector, out JVector)
-  nameWithType.vb: SimplexSolverAB.AddVertex(JVector, JVector)
-- uid: Jitter2.Collision.SimplexSolverAB.AddVertex*
+  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAb.AddVertex(in JVector, out JVector)
+  nameWithType.vb: SimplexSolverAb.AddVertex(JVector, JVector)
+- uid: Jitter2.Collision.SimplexSolverAb.AddVertex*
   name: AddVertex
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAB.AddVertex
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAb.AddVertex
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex
-  nameWithType: SimplexSolverAB.AddVertex
-- uid: Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex
+  nameWithType: SimplexSolverAb.AddVertex
+- uid: Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: GetClosest(out JVector, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name.vb: GetClosest(JVector, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAB.GetClosest(out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAB.GetClosest(out JVector, out JVector)
-  nameWithType.vb: SimplexSolverAB.GetClosest(JVector, JVector)
-- uid: Jitter2.Collision.SimplexSolverAB.GetClosest*
+  fullName: Jitter2.Collision.SimplexSolverAb.GetClosest(out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAb.GetClosest(out JVector, out JVector)
+  nameWithType.vb: SimplexSolverAb.GetClosest(JVector, JVector)
+- uid: Jitter2.Collision.SimplexSolverAb.GetClosest*
   name: GetClosest
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_GetClosest_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAB.GetClosest
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_GetClosest_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAb.GetClosest
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAB.GetClosest
-  nameWithType: SimplexSolverAB.GetClosest
-- uid: Jitter2.Collision.SimplexSolverAB.Reset
+  fullName: Jitter2.Collision.SimplexSolverAb.GetClosest
+  nameWithType: SimplexSolverAb.GetClosest
+- uid: Jitter2.Collision.SimplexSolverAb.Reset
   name: Reset()
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_Reset
-  commentId: M:Jitter2.Collision.SimplexSolverAB.Reset
-  fullName: Jitter2.Collision.SimplexSolverAB.Reset()
-  nameWithType: SimplexSolverAB.Reset()
-- uid: Jitter2.Collision.SimplexSolverAB.Reset*
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_Reset
+  commentId: M:Jitter2.Collision.SimplexSolverAb.Reset
+  fullName: Jitter2.Collision.SimplexSolverAb.Reset()
+  nameWithType: SimplexSolverAb.Reset()
+- uid: Jitter2.Collision.SimplexSolverAb.Reset*
   name: Reset
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_Reset_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAB.Reset
+  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_Reset_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAb.Reset
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAB.Reset
-  nameWithType: SimplexSolverAB.Reset
+  fullName: Jitter2.Collision.SimplexSolverAb.Reset
+  nameWithType: SimplexSolverAb.Reset
 - uid: Jitter2.Collision.TreeBox
   name: TreeBox
   href: api/Jitter2.Collision.TreeBox.html

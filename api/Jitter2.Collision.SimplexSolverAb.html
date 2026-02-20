@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Struct SimplexSolverAB | Jitter2 </title>
+      <title>Struct SimplexSolverAb | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Struct SimplexSolverAB | Jitter2 ">
+      <meta name="title" content="Struct SimplexSolverAb | Jitter2 ">
       
       <meta name="description" content="Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving the closest points on the original shapes (A and B spaces).">
       <link rel="icon" href="../favicon.ico">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_SimplexSolverAB.md&amp;value=---%0Auid%3A%20Jitter2.Collision.SimplexSolverAB%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_SimplexSolverAb.md&amp;value=---%0Auid%3A%20Jitter2.Collision.SimplexSolverAb%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Collision.SimplexSolverAB">
+        <article data-uid="Jitter2.Collision.SimplexSolverAb">
 
 
 
-  <h1 id="Jitter2_Collision_SimplexSolverAB" data-uid="Jitter2.Collision.SimplexSolverAB" class="text-break">
-Struct SimplexSolverAB  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Jitter2_Collision_SimplexSolverAb" data-uid="Jitter2.Collision.SimplexSolverAb" class="text-break">
+Struct SimplexSolverAb  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -103,7 +103,7 @@ the closest points on the original shapes (A and B spaces).</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct SimplexSolverAB</code></pre>
+    <pre><code class="lang-csharp hljs">public struct SimplexSolverAb</code></pre>
   </div>
 
 
@@ -138,11 +138,11 @@ the closest points on the original shapes (A and B spaces).</p>
 
 
 
-  <h2 id="Jitter2_Collision_SimplexSolverAB_remarks">Remarks</h2>
+  <h2 id="Jitter2_Collision_SimplexSolverAb_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
 Unlike <a class="xref" href="Jitter2.Collision.SimplexSolver.html">SimplexSolver</a>, this solver tracks barycentric coordinates and
 the original support points, enabling extraction of the closest points on each shape
-via <a class="xref" href="Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">GetClosest(out JVector, out JVector)</a>.
+via <a class="xref" href="Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">GetClosest(out JVector, out JVector)</a>.
 </p>
 <p>
 Complexity: O(1) per vertex addition with early-out optimizations.
@@ -154,9 +154,9 @@ Complexity: O(1) per vertex addition with early-out optimizations.
 </h2>
 
 
-  <a id="Jitter2_Collision_SimplexSolverAB_AddVertex_" data-uid="Jitter2.Collision.SimplexSolverAB.AddVertex*"></a>
+  <a id="Jitter2_Collision_SimplexSolverAb_AddVertex_" data-uid="Jitter2.Collision.SimplexSolverAb.AddVertex*"></a>
 
-  <h3 id="Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)">
+  <h3 id="Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)">
   AddVertex(in Vertex, out JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L316"><i class="bi bi-code-slash"></i></a>
   </h3>
@@ -198,9 +198,9 @@ the new closest point to the origin.</p>
 
 
 
-  <a id="Jitter2_Collision_SimplexSolverAB_AddVertex_" data-uid="Jitter2.Collision.SimplexSolverAB.AddVertex*"></a>
+  <a id="Jitter2_Collision_SimplexSolverAb_AddVertex_" data-uid="Jitter2.Collision.SimplexSolverAb.AddVertex*"></a>
 
-  <h3 id="Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  <h3 id="Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   AddVertex(in JVector, out JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L299"><i class="bi bi-code-slash"></i></a>
   </h3>
@@ -241,9 +241,9 @@ the new closest point to the origin.</p>
 
 
 
-  <a id="Jitter2_Collision_SimplexSolverAB_GetClosest_" data-uid="Jitter2.Collision.SimplexSolverAB.GetClosest*"></a>
+  <a id="Jitter2_Collision_SimplexSolverAb_GetClosest_" data-uid="Jitter2.Collision.SimplexSolverAb.GetClosest*"></a>
 
-  <h3 id="Jitter2_Collision_SimplexSolverAB_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  <h3 id="Jitter2_Collision_SimplexSolverAb_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   GetClosest(out JVector, out JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L275"><i class="bi bi-code-slash"></i></a>
   </h3>
@@ -278,9 +278,9 @@ and barycentric coordinates.</p>
 
 
 
-  <a id="Jitter2_Collision_SimplexSolverAB_Reset_" data-uid="Jitter2.Collision.SimplexSolverAB.Reset*"></a>
+  <a id="Jitter2_Collision_SimplexSolverAb_Reset_" data-uid="Jitter2.Collision.SimplexSolverAb.Reset*"></a>
 
-  <h3 id="Jitter2_Collision_SimplexSolverAB_Reset" data-uid="Jitter2.Collision.SimplexSolverAB.Reset">
+  <h3 id="Jitter2_Collision_SimplexSolverAb_Reset" data-uid="Jitter2.Collision.SimplexSolverAb.Reset">
   Reset()
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SimplexSolverAB.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>

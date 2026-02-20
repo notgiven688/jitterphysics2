@@ -165,7 +165,7 @@ All methods are thread-safe when used with thread-local solver state.
   <a id="Jitter2_Collision_NarrowPhase_Collision_" data-uid="Jitter2.Collision.NarrowPhase.Collision*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Collision&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  Collision&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L667"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -175,15 +175,15 @@ cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to 
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Collision&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Collision&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -227,9 +227,9 @@ failure, collision information reverts to the type's default values.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -245,7 +245,7 @@ failure, collision information reverts to the type's default values.</p>
   <a id="Jitter2_Collision_NarrowPhase_Collision_" data-uid="Jitter2.Collision.NarrowPhase.Collision*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Collision&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  Collision&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L625"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -256,15 +256,15 @@ Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather 
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Collision&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Collision&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -302,9 +302,9 @@ failure, collision information reverts to the type's default values.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -320,7 +320,7 @@ failure, collision information reverts to the type's default values.</p>
   <a id="Jitter2_Collision_NarrowPhase_Distance_" data-uid="Jitter2.Collision.NarrowPhase.Distance*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Distance&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  Distance&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L771"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -329,15 +329,15 @@ failure, collision information reverts to the type's default values.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Distance&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Distance&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -375,9 +375,9 @@ can be provided.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -393,7 +393,7 @@ can be provided.</p>
   <a id="Jitter2_Collision_NarrowPhase_Distance_" data-uid="Jitter2.Collision.NarrowPhase.Distance*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Distance&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  Distance&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L707"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -403,15 +403,15 @@ assumes that support shape A is located at position zero and not rotated.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Distance&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Distance&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -443,9 +443,9 @@ can be provided.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -461,7 +461,7 @@ can be provided.</p>
   <a id="Jitter2_Collision_NarrowPhase_MprEpa_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
-  MprEpa&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
+  MprEpa&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L890"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -473,15 +473,15 @@ a predefined threshold, the results are further refined using the Expanding Poly
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -524,9 +524,9 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -542,7 +542,7 @@ distance (determined by the penetration depth) to avoid overlap.</p>
   <a id="Jitter2_Collision_NarrowPhase_MprEpa_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
-  MprEpa&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
+  MprEpa&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L939"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -555,15 +555,15 @@ exceeds a predefined threshold, the results are further refined using the Expand
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool MprEpa&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, out JVector pointA, out JVector pointB, out JVector normal, out float penetration, float epaThreshold = 0.02) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -600,9 +600,9 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -618,7 +618,7 @@ distance (determined by the penetration depth) to avoid overlap.</p>
   <a id="Jitter2_Collision_NarrowPhase_Overlap_" data-uid="Jitter2.Collision.NarrowPhase.Overlap*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  Overlap&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector)
+  Overlap&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L847"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -627,15 +627,15 @@ distance (determined by the penetration depth) to avoid overlap.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -661,9 +661,9 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -679,7 +679,7 @@ distance (determined by the penetration depth) to avoid overlap.</p>
   <a id="Jitter2_Collision_NarrowPhase_Overlap_" data-uid="Jitter2.Collision.NarrowPhase.Overlap*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)">
-  Overlap&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector)
+  Overlap&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L806"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -689,15 +689,15 @@ at position zero and not rotated.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Overlap&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A.</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -717,9 +717,9 @@ at position zero and not rotated.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -735,7 +735,7 @@ at position zero and not rotated.</p>
   <a id="Jitter2_Collision_NarrowPhase_PointTest_" data-uid="Jitter2.Collision.NarrowPhase.PointTest*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  PointTest&lt;TA&gt;(in TA, in JMatrix, in JVector, in JVector)
+  PointTest&lt;Ta&gt;(in Ta, in JMatrix, in JVector, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L481"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -744,12 +744,12 @@ at position zero and not rotated.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;TA&gt;(in TA support, in JMatrix orientation, in JVector position, in JVector point) where TA : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;Ta&gt;(in Ta support, in JMatrix orientation, in JVector position, in JVector point) where Ta : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dt><code>support</code> <span class="xref">Ta</span></dt>
     <dd><p>Support map representing the shape.</p>
 </dd>
     <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
@@ -772,7 +772,7 @@ at position zero and not rotated.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
   </dl>
 
@@ -788,7 +788,7 @@ at position zero and not rotated.</p>
   <a id="Jitter2_Collision_NarrowPhase_PointTest_" data-uid="Jitter2.Collision.NarrowPhase.PointTest*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JVector@)">
-  PointTest&lt;TA&gt;(in TA, in JVector)
+  PointTest&lt;Ta&gt;(in Ta, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L430"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -797,12 +797,12 @@ at position zero and not rotated.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;TA&gt;(in TA support, in JVector point) where TA : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool PointTest&lt;Ta&gt;(in Ta support, in JVector point) where Ta : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dt><code>support</code> <span class="xref">Ta</span></dt>
     <dd><p>Support map representing the shape.</p>
 </dd>
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
@@ -819,7 +819,7 @@ at position zero and not rotated.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
   </dl>
 
@@ -835,7 +835,7 @@ at position zero and not rotated.</p>
   <a id="Jitter2_Collision_NarrowPhase_RayCast_" data-uid="Jitter2.Collision.NarrowPhase.RayCast*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
-  RayCast&lt;TA&gt;(in TA, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
+  RayCast&lt;Ta&gt;(in Ta, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L504"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -844,12 +844,12 @@ at position zero and not rotated.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;TA&gt;(in TA support, in JQuaternion orientation, in JVector position, in JVector origin, in JVector direction, out float lambda, out JVector normal) where TA : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;Ta&gt;(in Ta support, in JQuaternion orientation, in JVector position, in JVector origin, in JVector direction, out float lambda, out JVector normal) where Ta : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dt><code>support</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of the shape.</p>
 </dd>
     <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -883,7 +883,7 @@ the ray origin overlaps with the shape.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
   </dl>
 
@@ -899,7 +899,7 @@ the ray origin overlaps with the shape.</p>
   <a id="Jitter2_Collision_NarrowPhase_RayCast_" data-uid="Jitter2.Collision.NarrowPhase.RayCast*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
-  RayCast&lt;TA&gt;(in TA, in JVector, in JVector, out float, out JVector)
+  RayCast&lt;Ta&gt;(in Ta, in JVector, in JVector, out float, out JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L534"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -908,12 +908,12 @@ the ray origin overlaps with the shape.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;TA&gt;(in TA support, in JVector origin, in JVector direction, out float lambda, out JVector normal) where TA : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool RayCast&lt;Ta&gt;(in Ta support, in JVector origin, in JVector direction, out float lambda, out JVector normal) where Ta : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <span class="xref">TA</span></dt>
+    <dt><code>support</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of the shape.</p>
 </dd>
     <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
@@ -941,7 +941,7 @@ the origin overlaps with the shape.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
   </dl>
 
@@ -957,7 +957,7 @@ the origin overlaps with the shape.</p>
   <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1069"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -967,14 +967,14 @@ sweepA and sweepB.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd></dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd></dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
     <dd></dd>
@@ -1011,9 +1011,9 @@ sweepA and sweepB.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -1029,7 +1029,7 @@ sweepA and sweepB.</p>
   <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
+  Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L968"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -1040,14 +1040,14 @@ velocities <code class="paramref">sweepA</code> and <code class="paramref">sweep
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, in JVector sweepAngularA, in JVector sweepAngularB, in float extentA, in float extentB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, in JVector sweepAngularA, in JVector sweepAngularB, in float extentA, in float extentB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd></dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd></dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
     <dd></dd>
@@ -1093,9 +1093,9 @@ overlap or do not hit.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 
@@ -1116,7 +1116,7 @@ distance gradient estimation.</p>
   <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  Sweep&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -1126,14 +1126,14 @@ direction.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool Sweep&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, in JVector sweepB, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd></dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd></dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
     <dd></dd>
@@ -1164,9 +1164,9 @@ direction.</p>
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd></dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd></dd>
   </dl>
 

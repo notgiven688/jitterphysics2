@@ -160,7 +160,7 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
   <a id="Jitter2_Collision_MinkowskiDifference_GetCenter_" data-uid="Jitter2.Collision.MinkowskiDifference.GetCenter*"></a>
 
   <h3 id="Jitter2_Collision_MinkowskiDifference_GetCenter__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_MinkowskiDifference_Vertex__" data-uid="Jitter2.Collision.MinkowskiDifference.GetCenter``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)">
-  GetCenter&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, out Vertex)
+  GetCenter&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out Vertex)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/MinkowskiDifference.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -169,15 +169,15 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void GetCenter&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, out MinkowskiDifference.Vertex center) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static void GetCenter&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, out MinkowskiDifference.Vertex center) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A (at origin, not rotated).</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -194,10 +194,10 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd><p>The type of support shape A.</p>
 </dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd><p>The type of support shape B.</p>
 </dd>
   </dl>
@@ -214,7 +214,7 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
   <a id="Jitter2_Collision_MinkowskiDifference_Support_" data-uid="Jitter2.Collision.MinkowskiDifference.Support*"></a>
 
   <h3 id="Jitter2_Collision_MinkowskiDifference_Support__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_MinkowskiDifference_Vertex__" data-uid="Jitter2.Collision.MinkowskiDifference.Support``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.MinkowskiDifference.Vertex@)">
-  Support&lt;TA, TB&gt;(in TA, in TB, in JQuaternion, in JVector, in JVector, out Vertex)
+  Support&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out Vertex)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/MinkowskiDifference.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -223,15 +223,15 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Support&lt;TA, TB&gt;(in TA supportA, in TB supportB, in JQuaternion orientationB, in JVector positionB, in JVector direction, out MinkowskiDifference.Vertex v) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public static void Support&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB, in JVector direction, out MinkowskiDifference.Vertex v) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>supportA</code> <span class="xref">TA</span></dt>
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
     <dd><p>The support function of shape A (at origin, not rotated).</p>
 </dd>
-    <dt><code>supportB</code> <span class="xref">TB</span></dt>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -251,10 +251,10 @@ This is the fundamental construct used by GJK and EPA algorithms to detect colli
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd><p>The type of support shape A.</p>
 </dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd><p>The type of support shape B.</p>
 </dd>
   </dl>

@@ -150,7 +150,7 @@ Class MemoryHelper  <a class="header-action link-secondary" title="View source" 
   <h2 id="Jitter2_Unmanaged_MemoryHelper_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
 <b>Safety:</b> All pointers returned by allocation methods must be freed using
-the corresponding <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_Free_System_Void__">Free(void*)</a> or <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_AlignedFree_System_Void__">AlignedFree(void*)</a> method.
+the corresponding Free(System.Void*) or <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_AlignedFree_System_Void__">AlignedFree(void*)</a> method.
 Failure to do so will result in memory leaks.
 </p>
 <p>
@@ -331,7 +331,7 @@ The memory is not zero-initialized.</p>
 
 
   <h4 class="section" id="Jitter2_Unmanaged_MemoryHelper_AllocateHeap_System_Int32__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p><b>Safety:</b> The caller must free the returned pointer using <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_Free_System_Void__">Free(void*)</a>.
+  <div class="markdown level1 remarks"><p><b>Safety:</b> The caller must free the returned pointer using Free(System.Void*).
 The memory is not zero-initialized.</p>
 </div>
 

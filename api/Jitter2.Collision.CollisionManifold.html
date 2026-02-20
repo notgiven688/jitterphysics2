@@ -250,7 +250,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
   <a id="Jitter2_Collision_CollisionManifold_BuildManifold_" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold*"></a>
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  BuildManifold&lt;TA, TB&gt;(TA, TB, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
+  BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -259,15 +259,15 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void BuildManifold&lt;TA, TB&gt;(TA shapeA, TB shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB, in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal) where TA : ISupportMappable where TB : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public void BuildManifold&lt;Ta, Tb&gt;(Ta shapeA, Tb shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB, in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>shapeA</code> <span class="xref">TA</span></dt>
+    <dt><code>shapeA</code> <span class="xref">Ta</span></dt>
     <dd><p>The first shape.</p>
 </dd>
-    <dt><code>shapeB</code> <span class="xref">TB</span></dt>
+    <dt><code>shapeB</code> <span class="xref">Tb</span></dt>
     <dd><p>The second shape.</p>
 </dd>
     <dt><code>quaternionA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -296,10 +296,10 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd><p>The type of support shape A.</p>
 </dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd><p>The type of support shape B.</p>
 </dd>
   </dl>
@@ -316,7 +316,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
   <a id="Jitter2_Collision_CollisionManifold_BuildManifold_" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold*"></a>
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  BuildManifold&lt;TA, TB&gt;(TA, TB, in JVector, in JVector, in JVector)
+  BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JVector, in JVector, in JVector)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L224"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -325,15 +325,15 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void BuildManifold&lt;TA, TB&gt;(TA shapeA, TB shapeB, in JVector pA, in JVector pB, in JVector normal) where TA : RigidBodyShape where TB : RigidBodyShape</code></pre>
+    <pre><code class="lang-csharp hljs">public void BuildManifold&lt;Ta, Tb&gt;(Ta shapeA, Tb shapeB, in JVector pA, in JVector pB, in JVector normal) where Ta : RigidBodyShape where Tb : RigidBodyShape</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>shapeA</code> <span class="xref">TA</span></dt>
+    <dt><code>shapeA</code> <span class="xref">Ta</span></dt>
     <dd><p>The first rigid body shape.</p>
 </dd>
-    <dt><code>shapeB</code> <span class="xref">TB</span></dt>
+    <dt><code>shapeB</code> <span class="xref">Tb</span></dt>
     <dd><p>The second rigid body shape.</p>
 </dd>
     <dt><code>pA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
@@ -350,10 +350,10 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>TA</code></dt>
+    <dt><code>Ta</code></dt>
     <dd><p>The type of shape A.</p>
 </dd>
-    <dt><code>TB</code></dt>
+    <dt><code>Tb</code></dt>
     <dd><p>The type of shape B.</p>
 </dd>
   </dl>

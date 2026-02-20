@@ -788,17 +788,17 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/Jitter2.Collision.SimplexSolverAB.yml",
+      "source_relative_path": "api/Jitter2.Collision.SimplexSolverAb.yml",
       "output": {
         ".html": {
-          "relative_path": "api/Jitter2.Collision.SimplexSolverAB.html"
+          "relative_path": "api/Jitter2.Collision.SimplexSolverAb.html"
         }
       },
       "version": "",
       "Uid": null,
       "IsMRef": true,
-      "Title": "Jitter2.Collision.SimplexSolverAB",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SimplexSolverAB.yml\" sourcestartlinenumber=\"1\">Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving\nthe closest points on the original shapes (A and B spaces).</p>\n"
+      "Title": "Jitter2.Collision.SimplexSolverAb",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SimplexSolverAb.yml\" sourcestartlinenumber=\"1\">Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving\nthe closest points on the original shapes (A and B spaces).</p>\n"
     },
     {
       "type": "ManagedReference",
