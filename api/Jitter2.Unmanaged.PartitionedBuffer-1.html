@@ -176,11 +176,11 @@ Do not modify these bytes manually. A compatible struct should look like this:
 public struct RigidBodyData
 {
     private readonly int _internalIndex; // Reserved by PartitionedBuffer
-<pre><code>public JVector Position;
-public JQuaternion Orientation;
-// ... other fields
-</code></pre>
-<p>}</p></code></pre>
+
+    public JVector Position;
+    public JQuaternion Orientation;
+    // ... other fields
+}</code></pre>
 
 <p>
 <b>Threading:</b> Concurrent calls to <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html#Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_System_Boolean_System_Boolean_">Allocate(bool, bool)</a> may trigger a resize. Use
