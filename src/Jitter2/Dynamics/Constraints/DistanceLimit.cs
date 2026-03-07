@@ -74,7 +74,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// <param name="limit">The allowed distance range between anchor points.</param>
     /// <remarks>
     /// Computes local anchor points and the initial distance from current poses.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>.
     /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2, LinearLimit limit)
     {
@@ -89,8 +89,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
-        data.Softness = (Real)0.001;
-        data.BiasFactor = (Real)0.2;
+        data.Softness = Constraint.DefaultLinearSoftness;
+        data.BiasFactor = Constraint.DefaultLinearBias;
         data.Distance = (anchor2 - anchor1).Length();
 
         (data.LimitMin, data.LimitMax) = limit;

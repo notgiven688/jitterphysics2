@@ -55,7 +55,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     /// </summary>
     /// <remarks>
     /// Records the current relative orientation as the target.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     public void Initialize()
     {
@@ -64,8 +64,8 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = (Real)0.001;
-        data.BiasFactor = (Real)0.2;
+        data.Softness = Constraint.DefaultAngularSoftness;
+        data.BiasFactor = Constraint.DefaultAngularBias;
 
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;

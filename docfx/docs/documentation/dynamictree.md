@@ -28,13 +28,13 @@ Overlaps can be queried using `tree.EnumerateOverlaps`.
 All tree proxies that overlap a given axis-aligned box can be queried:
 
 ```cs
-public void Query<T>(T hits, in JBBox box) where T : ICollection<IDynamicTreeProxy>
+public void Query<T>(T hits, in JBBox box) where T : class, ICollection<IDynamicTreeProxy>
 ```
 
 As well as all proxies which overlap with a ray:
 
 ```cs
-public void Query<T>(T hits, JVector rayOrigin, JVector rayDirection) where T : ICollection<IDynamicTreeProxy>
+public void Query<T>(T hits, in JVector rayOrigin, in JVector rayDirection) where T : class, ICollection<IDynamicTreeProxy>
 ```
 
 Custom queries can easily be implemented.
@@ -44,9 +44,11 @@ An implementation which queries all proxies overlapping with a single point:
 var stack = new Stack<int>();
 stack.Push(tree.Root);
 
+ReadOnlySpan<DynamicTree.Node> nodes = tree.Nodes;
+
 while (stack.TryPop(out int id))
 {
-    ref DynamicTree.Node node = ref tree.Nodes[id];
+    ref readonly DynamicTree.Node node = ref nodes[id];
     
     if (node.ExpandedBox.Contains(point))
     {

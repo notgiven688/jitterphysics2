@@ -273,6 +273,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// The number of substeps for each call to <see cref="World.Step(Real, bool)"/>.
     /// Sub-stepping is deactivated when set to one.
+    /// Default value: 1.
     /// </summary>
     public int SubstepCount
     {
@@ -291,6 +292,7 @@ public sealed partial class World : IDisposable
 
     /// <summary>
     /// Default gravity, see also <see cref="RigidBody.AffectedByGravity"/>.
+    /// Default value: (0, -9.81, 0).
     /// </summary>
     public JVector Gravity { get; set; } = new(0, -(Real)9.81, 0);
 
@@ -344,6 +346,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     public void Clear()
     {
+        ThrowIfDisposed();
+
         // create a copy, since we are going to modify the list
         Stack<RigidBody> bodyStack = new(bodies);
         while (bodyStack.Count > 0) Remove(bodyStack.Pop());
@@ -575,6 +579,8 @@ public sealed partial class World : IDisposable
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
+        ThrowIfDisposed();
+
         if (body1.World != this)
             throw new ArgumentException("The body does not belong to this world.", nameof(body1));
         if (body2.World != this)
@@ -618,6 +624,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
     public RigidBody CreateRigidBody()
     {
+        ThrowIfDisposed();
         RigidBody body = new(memRigidBodies.Allocate(true, true), this);
         body.Data.IsActive = true;
 
@@ -630,15 +637,25 @@ public sealed partial class World : IDisposable
         return body;
     }
 
+    private bool disposed;
+
+    private void ThrowIfDisposed()
+    {
+        ObjectDisposedException.ThrowIf(disposed, this);
+    }
+
     /// <summary>
     /// Releases all unmanaged memory buffers used by this simulation world.
     /// </summary>
     /// <remarks>
     /// After disposal, the world instance is unusable. All bodies, constraints, and contacts
-    /// become invalid.
+    /// become invalid. Calling <see cref="Dispose"/> multiple times is safe.
     /// </remarks>
     public void Dispose()
     {
+        if (disposed) return;
+        disposed = true;
+
         memContacts.Dispose();
         memRigidBodies.Dispose();
         memConstraints.Dispose();

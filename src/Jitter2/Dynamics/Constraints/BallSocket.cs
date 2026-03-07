@@ -56,7 +56,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     /// <param name="anchor">The anchor point in world space, shared by both bodies.</param>
     /// <remarks>
     /// Computes local anchor points for each body from their current poses.
-    /// Default values: <see cref="Bias"/> = 0.2, <see cref="Softness"/> = 0.
+    /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     public void Initialize(JVector anchor)
     {
@@ -71,8 +71,8 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         JVector.ConjugatedTransform(data.LocalAnchor1, body1.Orientation, out data.LocalAnchor1);
         JVector.ConjugatedTransform(data.LocalAnchor2, body2.Orientation, out data.LocalAnchor2);
 
-        data.BiasFactor = (Real)0.2;
-        data.Softness = (Real)0.0;
+        data.BiasFactor = Constraint.DefaultLinearBias;
+        data.Softness = Constraint.DefaultLinearSoftness;
     }
 
     /// <summary>
