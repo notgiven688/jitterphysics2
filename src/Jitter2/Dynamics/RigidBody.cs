@@ -304,7 +304,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// The friction coefficient determines the resistance to sliding motion.
     /// Values typically range from 0 (no friction) upwards.
     /// Higher values represent strong friction or adhesion effects.
-    /// Default is 0.2.
+    /// Default value: 0.2.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is negative.</exception>
     public Real Friction
@@ -324,7 +324,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// The restitution value determines how much energy is retained after a collision,
     /// with 0 representing an inelastic collision (no bounce) and 1 representing a perfectly elastic collision (full bounce).
     /// Values between 0 and 1 create a partially elastic collision effect.
-    /// Default is 0.0.
+    /// Default value: 0.0.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is not between 0 and 1.</exception>
     public Real Restitution
@@ -359,6 +359,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Gets or sets the deactivation time. If the magnitudes of both the angular and linear velocity of the rigid body
     /// remain below the <see cref="DeactivationThreshold"/> for the specified time, the body is deactivated.
+    /// Default value: 1 second.
     /// </summary>
     public TimeSpan DeactivationTime
     {
@@ -374,6 +375,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>
     /// Values must be non-negative. This property stores the squared thresholds internally,
     /// so the input values are automatically squared when set.
+    /// Default values: angular = 0.1, linear = 0.1 (squared internally).
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular threshold is negative.
@@ -398,7 +400,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// factor. Note that the values are not scaled by time; a smaller time-step in <see cref="World.Step(Real, bool)"/>
     /// results in increased damping.
     /// </summary>
-    /// <remarks>The damping factors must be within the range [0, 1].</remarks>
+    /// <remarks>The damping factors must be within the range [0, 1].
+    /// Default values: linear = 0.002, angular = 0.005.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular damping value is less than 0 or greater than 1.
     /// </exception>

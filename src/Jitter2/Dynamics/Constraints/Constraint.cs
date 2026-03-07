@@ -96,6 +96,31 @@ public abstract class Constraint<T> : Constraint where T : unmanaged
 /// </summary>
 public abstract class Constraint : IDebugDrawable
 {
+    /// <summary>Default softness (compliance) for angular constraints.</summary>
+    public const Real DefaultAngularSoftness = (Real)0.001;
+
+    /// <summary>Default bias factor for angular error correction.</summary>
+    public const Real DefaultAngularBias = (Real)0.2;
+
+    /// <summary>Default softness for angular limit enforcement.</summary>
+    public const Real DefaultAngularLimitSoftness = (Real)0.001;
+
+    /// <summary>Default bias factor for angular limit correction.</summary>
+    public const Real DefaultAngularLimitBias = (Real)0.1;
+
+    /// <summary>Default softness (compliance) for linear constraints.</summary>
+    public const Real DefaultLinearSoftness = (Real)0.00001;
+
+    /// <summary>Default bias factor for linear error correction.</summary>
+    public const Real DefaultLinearBias = (Real)0.01;
+
+    /// <summary>Default softness for linear limit enforcement.</summary>
+    public const Real DefaultLinearLimitSoftness = (Real)0.0001;
+
+    /// <summary>Default bias factor for linear limit correction.</summary>
+    public const Real DefaultLinearLimitBias = (Real)0.2;
+
+
     /// <summary>Gets the first rigid body connected by this constraint.</summary>
     public RigidBody Body1 { private set; get; } = null!;
 

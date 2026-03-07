@@ -72,7 +72,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     /// <param name="limit">Distance limit from the plane.</param>
     /// <remarks>
     /// Computes local anchor points and axis from the current body poses.
-    /// Default values: <see cref="Bias"/> = 0.01, <see cref="Softness"/> = 0.00001.
+    /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
@@ -91,8 +91,8 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis);
 
-        data.BiasFactor = (Real)0.01;
-        data.Softness = (Real)0.00001;
+        data.BiasFactor = Constraint.DefaultLinearBias;
+        data.Softness = Constraint.DefaultLinearSoftness;
 
         (data.Min, data.Max) = limit;
     }

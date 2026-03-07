@@ -62,8 +62,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     /// <param name="limit">The angular limits defining the allowed rotation range.</param>
     /// <remarks>
     /// Stores the axis in the local frame of body 2 and records the initial relative orientation.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="LimitSoftness"/> = 0.001,
-    /// <see cref="Bias"/> = 0.2, <see cref="LimitBias"/> = 0.1.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultAngularLimitSoftness"/>,
+    /// <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultAngularLimitBias"/>.
     /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {
@@ -72,10 +72,10 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = (Real)0.001;
-        data.LimitSoftness = (Real)0.001;
-        data.BiasFactor = (Real)0.2;
-        data.LimitBias = (Real)0.1;
+        data.Softness = Constraint.DefaultAngularSoftness;
+        data.LimitSoftness = Constraint.DefaultAngularLimitSoftness;
+        data.BiasFactor = Constraint.DefaultAngularBias;
+        data.LimitBias = Constraint.DefaultAngularLimitBias;
 
         data.MinAngle = MathR.Sin((Real)limit.From / (Real)2.0);
         data.MaxAngle = MathR.Sin((Real)limit.To / (Real)2.0);

@@ -59,7 +59,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// <param name="limit">The allowed relative twist angle range.</param>
     /// <remarks>
     /// Stores each axis in the local frame of its body and records the initial relative orientation.
-    /// Default values: <see cref="Softness"/> = 0.0001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     public void Initialize(JVector axis1, JVector axis2, AngularLimit limit)
     {
@@ -68,8 +68,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        data.Softness = (Real)0.0001;
-        data.BiasFactor = (Real)0.2;
+        data.Softness = Constraint.DefaultAngularSoftness;
+        data.BiasFactor = Constraint.DefaultAngularBias;
 
         JVector.NormalizeInPlace(ref axis1);
         JVector.NormalizeInPlace(ref axis2);

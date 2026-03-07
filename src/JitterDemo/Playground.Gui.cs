@@ -52,7 +52,7 @@ public partial class Playground : RenderWindow
 
         gcText.Clear();
 
-        World.DebugTimings.CopyTo(debugTimes, 0);
+        World.DebugTimings.CopyTo(debugTimes);
         totalTime = debugTimes.Sum();
 
         for (int i = physicsTime.Length; i-- > 1;)

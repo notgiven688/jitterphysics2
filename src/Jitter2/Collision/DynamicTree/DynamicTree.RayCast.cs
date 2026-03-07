@@ -18,7 +18,7 @@ public partial class DynamicTree
     public struct RayCastResult
     {
         /// <summary>The proxy that was hit.</summary>
-        public IDynamicTreeProxy Entity;
+        public IDynamicTreeProxy? Entity;
 
         /// <summary>The ray parameter at the hit: <c>hitPoint = origin + Lambda * direction</c>.</summary>
         public Real Lambda;
@@ -117,7 +117,7 @@ public partial class DynamicTree
         {
             int pop = _stack.Pop();
 
-            ref Node node = ref Nodes[pop];
+            ref Node node = ref nodes[pop];
 
             if (node.IsLeaf)
             {
@@ -139,8 +139,8 @@ public partial class DynamicTree
                 continue;
             }
 
-            ref Node lNode = ref Nodes[node.Left];
-            ref Node rNode = ref Nodes[node.Right];
+            ref Node lNode = ref nodes[node.Left];
+            ref Node rNode = ref nodes[node.Right];
 
             bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real lEnter);
             bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real rEnter);

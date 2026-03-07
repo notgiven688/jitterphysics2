@@ -603,6 +603,7 @@ public struct ContactData
 
             Real penetration = JVector.Dot(dist, n);
 
+            // use a tenth of the actual threshold value here.
             if (penetration < -BreakThreshold * (Real)0.1)
             {
                 return false;

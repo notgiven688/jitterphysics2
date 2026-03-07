@@ -70,7 +70,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
     /// <remarks>
     /// Computes local anchor offsets from the current body positions.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>.
     /// The <see cref="TargetDistance"/> is set to the initial distance between the anchors.
     /// </remarks>
     public void Initialize(JVector anchor1, JVector anchor2)
@@ -82,8 +82,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         JVector.Subtract(anchor1, body1.Position, out data.LocalAnchor1);
         JVector.Subtract(anchor2, body2.Position, out data.LocalAnchor2);
 
-        data.Softness = (Real)0.001;
-        data.BiasFactor = (Real)0.2;
+        data.Softness = Constraint.DefaultLinearSoftness;
+        data.BiasFactor = Constraint.DefaultLinearBias;
         data.Distance = (anchor2 - anchor1).Length();
     }
 

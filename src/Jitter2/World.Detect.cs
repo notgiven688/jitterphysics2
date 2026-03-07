@@ -64,6 +64,7 @@ public sealed partial class World
     /// slowdown, ranging from 0 (where the body stops immediately during this frame) to 1 (where the body and the
     /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
     /// might be enough to trigger another speculative contact in the next frame.
+    /// Default value: 0.9.
     /// </summary>
     public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
 
@@ -72,6 +73,7 @@ public sealed partial class World
     /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01.
+    /// Default value: 10.0.
     /// </summary>
     public Real SpeculativeVelocityThreshold { get; set; } = (Real)10.0;
 
