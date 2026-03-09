@@ -61,7 +61,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <remarks>
     /// Each axis is stored as a local axis on the corresponding body. The constraint measures
     /// the angle between these axes and restricts it to the given range.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     public void Initialize(JVector axisBody1, JVector axisBody2, AngularLimit limit)
     {
@@ -80,8 +80,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         JVector.ConjugatedTransform(axisBody1, body1.Orientation, out data.LocalAxis1);
         JVector.ConjugatedTransform(axisBody2, body2.Orientation, out data.LocalAxis2);
 
-        data.Softness = (Real)0.001;
-        data.BiasFactor = (Real)0.2;
+        data.Softness = Constraint.DefaultAngularSoftness;
+        data.BiasFactor = Constraint.DefaultAngularBias;
 
         Real lower = (Real)limit.From;
         Real upper = (Real)limit.To;
@@ -98,7 +98,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <remarks>
     /// Stores the axis as a local axis on each body. The constraint measures the angle between
     /// these axes and restricts it to the given range.
-    /// Default values: <see cref="Softness"/> = 0.001, <see cref="Bias"/> = 0.2.
+    /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     public void Initialize(JVector axis, AngularLimit limit)
     {

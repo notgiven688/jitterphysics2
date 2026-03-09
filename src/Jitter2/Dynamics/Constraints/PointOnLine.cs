@@ -74,8 +74,8 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     /// <param name="limit">Distance limit along the axis.</param>
     /// <remarks>
     /// Computes local anchor points and axis from the current body poses.
-    /// Default values: <see cref="Bias"/> = 0.01, <see cref="Softness"/> = 0.00001,
-    /// <see cref="LimitSoftness"/> = 0.0001, <see cref="LimitBias"/> = 0.2.
+    /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>,
+    /// <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultLinearLimitSoftness"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultLinearLimitBias"/>.
     /// </remarks>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2, LinearLimit limit)
     {
@@ -94,10 +94,10 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         JVector.ConjugatedTransform(axis, body1.Orientation, out data.LocalAxis);
 
-        data.BiasFactor = (Real)0.01;
-        data.Softness = (Real)0.00001;
-        data.LimitSoftness = (Real)0.0001;
-        data.LimitBias = (Real)0.2;
+        data.BiasFactor = Constraint.DefaultLinearBias;
+        data.Softness = Constraint.DefaultLinearSoftness;
+        data.LimitSoftness = Constraint.DefaultLinearLimitSoftness;
+        data.LimitBias = Constraint.DefaultLinearLimitBias;
 
         (data.Min, data.Max) = limit;
     }

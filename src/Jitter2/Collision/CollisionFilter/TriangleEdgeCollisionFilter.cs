@@ -13,19 +13,11 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Filters internal edge collisions for triangle mesh geometry.
+/// Filters internal edge collisions for <see cref="TriangleShape"/> geometry. Adjusts collision
+/// normals at shared edges to match neighboring triangles, or discards the collision if the normal
+/// cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
+/// are left unmodified. Back-face collisions are discarded.
 /// </summary>
-/// <remarks>
-/// <para>
-/// When rigid bodies slide over triangle meshes, they may collide with internal edges where
-/// triangles meet, causing jitter. This filter adjusts collision normals at edges to match
-/// neighboring triangles or discards the collision entirely.
-/// </para>
-/// <para>
-/// Works best with manifold meshes that have adjacency information. Boundary edges
-/// (no neighbor) are processed normally. Back-face collisions are discarded.
-/// </para>
-/// </remarks>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
     /// <summary>

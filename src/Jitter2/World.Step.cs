@@ -98,16 +98,13 @@ public sealed partial class World
         detect = Detect;
     }
 
+    private readonly double[] debugTimings = new double[(int)Timings.Last];
+
     /// <summary>
     /// Contains timings for the stages of the last call to <see cref="World.Step(Real, bool)"/>.
-    /// Array elements correspond to the values in <see cref="Timings"/>. It can be used to identify
-    /// bottlenecks.
+    /// Values are in milliseconds. Index using <c>(int)Timings.XYZ</c>.
     /// </summary>
-    /// <remarks>
-    /// Values are in milliseconds and are overwritten on each call to <see cref="Step(Real, bool)"/>.
-    /// Index using <c>(int)Timings.XYZ</c>.
-    /// </remarks>
-    public double[] DebugTimings { get; } = new double[(int)Timings.Last];
+    public ReadOnlySpan<double> DebugTimings => debugTimings;
 
     /// <summary>
     /// Performs a single simulation step.
@@ -124,6 +121,7 @@ public sealed partial class World
     /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative.</exception>
     public void Step(Real dt, bool multiThread = true)
     {
+        ThrowIfDisposed();
         AssertNullBody();
 
         switch (dt)
@@ -143,7 +141,7 @@ public sealed partial class World
         {
             long ctime = Stopwatch.GetTimestamp();
             double delta = (ctime - time) * 1000.0d;
-            DebugTimings[(int)type] = delta * invFrequency;
+            debugTimings[(int)type] = delta * invFrequency;
             time = ctime;
         }
 
