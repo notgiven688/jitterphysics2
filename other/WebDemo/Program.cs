@@ -197,7 +197,7 @@ public class Playground
 
         EndMode3D();
 
-        DrawText($"{GetFPS()} fps\nPress R (or touch) to reset", 10, 10, 20, Color.RayWhite);
+        DrawText($"{GetFPS()} fps", 10, 10, 20, Color.RayWhite);
 
         EndDrawing();
 
@@ -213,6 +213,12 @@ public partial class Application
     public static void UpdateFrame()
     {
         _playground?.UpdateFrame();
+    }
+
+    [JSExport]
+    public static void Resize(int width, int height)
+    {
+        SetWindowSize(width, height);
     }
 
     public static void Main()
