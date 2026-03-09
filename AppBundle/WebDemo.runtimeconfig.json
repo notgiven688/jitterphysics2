@@ -4,7 +4,7 @@
     "includedFrameworks": [
       {
         "name": "Microsoft.NETCore.App",
-        "version": "9.0.0"
+        "version": "9.0.12"
       }
     ],
     "wasmHostProperties": {
@@ -28,9 +28,12 @@
       "System.Diagnostics.Metrics.Meter.IsSupported": false,
       "System.Diagnostics.Tracing.EventSource.IsSupported": false,
       "System.Globalization.Invariant": true,
-      "System.Globalization.Hybrid": false,
+      "System.TimeZoneInfo.Invariant": false,
       "System.Globalization.PredefinedCulturesOnly": true,
+      "System.Linq.Enumerable.IsSizeOptimized": true,
       "System.Net.Http.EnableActivityPropagation": false,
+      "System.Net.Http.WasmEnableStreamingResponse": true,
+      "System.Net.SocketsHttpHandler.Http3Support": false,
       "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
       "System.Resources.ResourceManager.AllowCustomResourceTypes": false,
       "System.Resources.UseSystemResourceKeys": true,

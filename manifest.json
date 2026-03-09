@@ -142,16 +142,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/dotnet.native.worker.mjs",
-      "output": {
-        "resource": {
-          "relative_path": "AppBundle/_framework/dotnet.native.worker.mjs"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "AppBundle/_framework/dotnet.runtime.js",
       "output": {
         "resource": {
