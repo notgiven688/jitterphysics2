@@ -2,63 +2,115 @@
 <html lang="en">
 
 <head>
-  <title>DotnetRaylibWasm</title>
+  <title>Jitter2 WebDemo</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="modulepreload" href="./main.js" />
   <link rel="modulepreload" href="./_framework/dotnet.js" />
 
-  <style>
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+<style>
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: #222;
+    color: #ddd;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  div#canvas_wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 800 / 600;
+  padding: 0;
+  overflow: hidden;
+}
+
+canvas.emscripten {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+  #github-link {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    color: #fff;
+    background: #333;
+    font-family: sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    z-index: 1000;
+    transition: background 0.2s;
+  }
+
+  #github-link:hover {
+    background: #555;
+  }
+
+  h1 { color: #fff; font-size: 1.6em; margin: 24px 0 8px; }
+  h2 { color: #ccc; font-size: 1.2em; margin: 20px 0 8px; }
+  p, li { line-height: 1.6; color: #bbb; font-size: 0.95em; }
+  a { color: #5ba8f5; }
+  code { background: #333; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+  ol { padding-left: 20px; }
+  .hint { color: #888; font-size: 0.85em; margin-top: 8px; }
+
+  #spinner {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #spinner_animation {
+    height: 60px;
+    width: 60px;
+    animation: rotation .6s infinite linear;
+    border-left: 6px solid rgba(0,174,239,.15);
+    border-right: 6px solid rgba(0,174,239,.15);
+    border-bottom: 6px solid rgba(0,174,239,.15);
+    border-top: 6px solid rgba(0,174,239,.8);
+    border-radius: 100%;
+  }
+
+  @keyframes rotation {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(359deg); }
+  }
+
+  @media (max-width: 700px) {
+    #github-link {
+      position: static;
+      display: inline-block;
+      margin-bottom: 12px;
     }
-    div#canvas_wrapper {
-      border: 1px solid black;
-      width: 800px;
-      height: 600px;
-      padding: 0;
-    }
-    canvas.emscripten {
-      width: 100%;
-      height: 100%;
-    }
-    /* The rest of the CSS is just for the spinner */
-    #spinner {
-      position: absolute;
-      top: 25%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    #spinner_animation {
-      height:60px;
-      width:60px;
-      animation: rotation .6s infinite linear;
-      border-left:6px solid rgba(0,174,239,.15);
-      border-right:6px solid rgba(0,174,239,.15);
-      border-bottom:6px solid rgba(0,174,239,.15);
-      border-top:6px solid rgba(0,174,239,.8);
-      border-radius:100%;
-    }
-    @keyframes rotation {
-      from {transform: rotate(0deg);}
-      to {transform: rotate(359deg);}
-    }
-  </style>
+  }
+</style>
 </head>
 
 <body>
-  <div id="canvas_wrapper">
-    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
-    <!-- Spinner is removed when .NET is loaded -->
-    <div id="spinner"><div id="spinner_animation"></div></div>
+  <a id="github-link" href="https://github.com/notgiven688/jitterphysics2" target="_blank">⭐ View on GitHub</a>
+  <div id="page">
+    <div id="canvas_wrapper">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+      <!-- Spinner is removed when .NET is loaded -->
+      <div id="spinner"><div id="spinner_animation"></div></div>
+    </div>
+    <p class="hint">Press <strong>R</strong> or tap to reset the simulation.</p>
   </div>
 
   <script type="module" src="./main.js"></script>
 </body>
 
 </html>
-
