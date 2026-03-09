@@ -411,7 +411,14 @@ references:
 - uid: Jitter2.Collision.DynamicTree.DebugTimings
   name: DebugTimings
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_DebugTimings
-  commentId: F:Jitter2.Collision.DynamicTree.DebugTimings
+  commentId: P:Jitter2.Collision.DynamicTree.DebugTimings
+  fullName: Jitter2.Collision.DynamicTree.DebugTimings
+  nameWithType: DynamicTree.DebugTimings
+- uid: Jitter2.Collision.DynamicTree.DebugTimings*
+  name: DebugTimings
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_DebugTimings_
+  commentId: Overload:Jitter2.Collision.DynamicTree.DebugTimings
+  isSpec: "True"
   fullName: Jitter2.Collision.DynamicTree.DebugTimings
   nameWithType: DynamicTree.DebugTimings
 - uid: Jitter2.Collision.DynamicTree.EnumerateOverlaps(System.Action{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy},System.Boolean)
@@ -564,7 +571,14 @@ references:
 - uid: Jitter2.Collision.DynamicTree.Nodes
   name: Nodes
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Nodes
-  commentId: F:Jitter2.Collision.DynamicTree.Nodes
+  commentId: P:Jitter2.Collision.DynamicTree.Nodes
+  fullName: Jitter2.Collision.DynamicTree.Nodes
+  nameWithType: DynamicTree.Nodes
+- uid: Jitter2.Collision.DynamicTree.Nodes*
+  name: Nodes
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Nodes_
+  commentId: Overload:Jitter2.Collision.DynamicTree.Nodes
+  isSpec: "True"
   fullName: Jitter2.Collision.DynamicTree.Nodes
   nameWithType: DynamicTree.Nodes
 - uid: Jitter2.Collision.DynamicTree.NullNode
@@ -633,15 +647,33 @@ references:
   fullName.vb: Jitter2.Collision.DynamicTree.Query(Of T)(T, Jitter2.LinearMath.JBoundingBox)
   nameWithType: DynamicTree.Query<T>(T, in JBoundingBox)
   nameWithType.vb: DynamicTree.Query(Of T)(T, JBoundingBox)
-- uid: Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
-  name: Query<T>(T, JVector, JVector)
-  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_
-  commentId: M:Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
+- uid: Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: Query<T>(T, in JVector, in JVector)
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name.vb: Query(Of T)(T, JVector, JVector)
-  fullName: Jitter2.Collision.DynamicTree.Query<T>(T, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  fullName: Jitter2.Collision.DynamicTree.Query<T>(T, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
   fullName.vb: Jitter2.Collision.DynamicTree.Query(Of T)(T, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: DynamicTree.Query<T>(T, JVector, JVector)
+  nameWithType: DynamicTree.Query<T>(T, in JVector, in JVector)
   nameWithType.vb: DynamicTree.Query(Of T)(T, JVector, JVector)
+- uid: Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JBoundingBox@)
+  name: Query<TSink>(ref TSink, in JBoundingBox)
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JBoundingBox__
+  commentId: M:Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JBoundingBox@)
+  name.vb: Query(Of TSink)(TSink, JBoundingBox)
+  fullName: Jitter2.Collision.DynamicTree.Query<TSink>(ref TSink, in Jitter2.LinearMath.JBoundingBox)
+  fullName.vb: Jitter2.Collision.DynamicTree.Query(Of TSink)(TSink, Jitter2.LinearMath.JBoundingBox)
+  nameWithType: DynamicTree.Query<TSink>(ref TSink, in JBoundingBox)
+  nameWithType.vb: DynamicTree.Query(Of TSink)(TSink, JBoundingBox)
+- uid: Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: Query<TSink>(ref TSink, in JVector, in JVector)
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name.vb: Query(Of TSink)(TSink, JVector, JVector)
+  fullName: Jitter2.Collision.DynamicTree.Query<TSink>(ref TSink, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.DynamicTree.Query(Of TSink)(TSink, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: DynamicTree.Query<TSink>(ref TSink, in JVector, in JVector)
+  nameWithType.vb: DynamicTree.Query(Of TSink)(TSink, JVector, JVector)
 - uid: Jitter2.Collision.DynamicTree.RayCast(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Collision.DynamicTree.RayCastFilterPre,Jitter2.Collision.DynamicTree.RayCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,System.Single@)
   name: RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_RayCast_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Collision_DynamicTree_RayCastFilterPre_Jitter2_Collision_DynamicTree_RayCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__System_Single__
@@ -2482,6 +2514,15 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of T)(Jitter2.Collision.ISupportMappable, T, Integer)
   nameWithType: ShapeHelper.Tessellate<T>(ISupportMappable, T, int)
   nameWithType.vb: ShapeHelper.Tessellate(Of T)(ISupportMappable, T, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0@,System.Int32)
+  name: Tessellate<TSink>(ISupportMappable, ref TSink, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0@,System.Int32)
+  name.vb: Tessellate(Of TSink)(ISupportMappable, TSink, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<TSink>(Jitter2.Collision.ISupportMappable, ref TSink, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of TSink)(Jitter2.Collision.ISupportMappable, TSink, Integer)
+  nameWithType: ShapeHelper.Tessellate<TSink>(ISupportMappable, ref TSink, int)
+  nameWithType.vb: ShapeHelper.Tessellate(Of TSink)(ISupportMappable, TSink, Integer)
 - uid: Jitter2.Collision.Shapes.SphereShape
   name: SphereShape
   href: api/Jitter2.Collision.Shapes.SphereShape.html
@@ -3821,6 +3862,52 @@ references:
   commentId: N:Jitter2.DataStructures
   fullName: Jitter2.DataStructures
   nameWithType: Jitter2.DataStructures
+- uid: Jitter2.DataStructures.CollectionSink`1
+  name: CollectionSink<T>
+  href: api/Jitter2.DataStructures.CollectionSink-1.html
+  commentId: T:Jitter2.DataStructures.CollectionSink`1
+  name.vb: CollectionSink(Of T)
+  fullName: Jitter2.DataStructures.CollectionSink<T>
+  fullName.vb: Jitter2.DataStructures.CollectionSink(Of T)
+  nameWithType: CollectionSink<T>
+  nameWithType.vb: CollectionSink(Of T)
+- uid: Jitter2.DataStructures.CollectionSink`1.#ctor(System.Collections.Generic.ICollection{`0})
+  name: CollectionSink(ICollection<T>)
+  href: api/Jitter2.DataStructures.CollectionSink-1.html#Jitter2_DataStructures_CollectionSink_1__ctor_System_Collections_Generic_ICollection__0__
+  commentId: M:Jitter2.DataStructures.CollectionSink`1.#ctor(System.Collections.Generic.ICollection{`0})
+  name.vb: New(ICollection(Of T))
+  fullName: Jitter2.DataStructures.CollectionSink<T>.CollectionSink(System.Collections.Generic.ICollection<T>)
+  fullName.vb: Jitter2.DataStructures.CollectionSink(Of T).New(System.Collections.Generic.ICollection(Of T))
+  nameWithType: CollectionSink<T>.CollectionSink(ICollection<T>)
+  nameWithType.vb: CollectionSink(Of T).New(ICollection(Of T))
+- uid: Jitter2.DataStructures.CollectionSink`1.#ctor*
+  name: CollectionSink
+  href: api/Jitter2.DataStructures.CollectionSink-1.html#Jitter2_DataStructures_CollectionSink_1__ctor_
+  commentId: Overload:Jitter2.DataStructures.CollectionSink`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.DataStructures.CollectionSink<T>.CollectionSink
+  fullName.vb: Jitter2.DataStructures.CollectionSink(Of T).New
+  nameWithType: CollectionSink<T>.CollectionSink
+  nameWithType.vb: CollectionSink(Of T).New
+- uid: Jitter2.DataStructures.CollectionSink`1.Add(`0@)
+  name: Add(in T)
+  href: api/Jitter2.DataStructures.CollectionSink-1.html#Jitter2_DataStructures_CollectionSink_1_Add__0__
+  commentId: M:Jitter2.DataStructures.CollectionSink`1.Add(`0@)
+  name.vb: Add(T)
+  fullName: Jitter2.DataStructures.CollectionSink<T>.Add(in T)
+  fullName.vb: Jitter2.DataStructures.CollectionSink(Of T).Add(T)
+  nameWithType: CollectionSink<T>.Add(in T)
+  nameWithType.vb: CollectionSink(Of T).Add(T)
+- uid: Jitter2.DataStructures.CollectionSink`1.Add*
+  name: Add
+  href: api/Jitter2.DataStructures.CollectionSink-1.html#Jitter2_DataStructures_CollectionSink_1_Add_
+  commentId: Overload:Jitter2.DataStructures.CollectionSink`1.Add
+  isSpec: "True"
+  fullName: Jitter2.DataStructures.CollectionSink<T>.Add
+  fullName.vb: Jitter2.DataStructures.CollectionSink(Of T).Add
+  nameWithType: CollectionSink<T>.Add
+  nameWithType.vb: CollectionSink(Of T).Add
 - uid: Jitter2.DataStructures.IPartitionedSetIndex
   name: IPartitionedSetIndex
   href: api/Jitter2.DataStructures.IPartitionedSetIndex.html
@@ -3840,6 +3927,33 @@ references:
   isSpec: "True"
   fullName: Jitter2.DataStructures.IPartitionedSetIndex.SetIndex
   nameWithType: IPartitionedSetIndex.SetIndex
+- uid: Jitter2.DataStructures.ISink`1
+  name: ISink<T>
+  href: api/Jitter2.DataStructures.ISink-1.html
+  commentId: T:Jitter2.DataStructures.ISink`1
+  name.vb: ISink(Of T)
+  fullName: Jitter2.DataStructures.ISink<T>
+  fullName.vb: Jitter2.DataStructures.ISink(Of T)
+  nameWithType: ISink<T>
+  nameWithType.vb: ISink(Of T)
+- uid: Jitter2.DataStructures.ISink`1.Add(`0@)
+  name: Add(in T)
+  href: api/Jitter2.DataStructures.ISink-1.html#Jitter2_DataStructures_ISink_1_Add__0__
+  commentId: M:Jitter2.DataStructures.ISink`1.Add(`0@)
+  name.vb: Add(T)
+  fullName: Jitter2.DataStructures.ISink<T>.Add(in T)
+  fullName.vb: Jitter2.DataStructures.ISink(Of T).Add(T)
+  nameWithType: ISink<T>.Add(in T)
+  nameWithType.vb: ISink(Of T).Add(T)
+- uid: Jitter2.DataStructures.ISink`1.Add*
+  name: Add
+  href: api/Jitter2.DataStructures.ISink-1.html#Jitter2_DataStructures_ISink_1_Add_
+  commentId: Overload:Jitter2.DataStructures.ISink`1.Add
+  isSpec: "True"
+  fullName: Jitter2.DataStructures.ISink<T>.Add
+  fullName.vb: Jitter2.DataStructures.ISink(Of T).Add
+  nameWithType: ISink<T>.Add
+  nameWithType.vb: ISink(Of T).Add
 - uid: Jitter2.DataStructures.PartitionedSet`1
   name: PartitionedSet<T>
   href: api/Jitter2.DataStructures.PartitionedSet-1.html
@@ -5637,6 +5751,54 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.DebugDraw
   nameWithType: Constraint.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularBias
+  name: DefaultAngularBias
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularBias
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultAngularBias
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularBias
+  nameWithType: Constraint.DefaultAngularBias
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitBias
+  name: DefaultAngularLimitBias
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitBias
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitBias
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitBias
+  nameWithType: Constraint.DefaultAngularLimitBias
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitSoftness
+  name: DefaultAngularLimitSoftness
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitSoftness
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitSoftness
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularLimitSoftness
+  nameWithType: Constraint.DefaultAngularLimitSoftness
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularSoftness
+  name: DefaultAngularSoftness
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularSoftness
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultAngularSoftness
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultAngularSoftness
+  nameWithType: Constraint.DefaultAngularSoftness
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearBias
+  name: DefaultLinearBias
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearBias
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultLinearBias
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearBias
+  nameWithType: Constraint.DefaultLinearBias
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitBias
+  name: DefaultLinearLimitBias
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearLimitBias
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitBias
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitBias
+  nameWithType: Constraint.DefaultLinearLimitBias
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitSoftness
+  name: DefaultLinearLimitSoftness
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearLimitSoftness
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitSoftness
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearLimitSoftness
+  nameWithType: Constraint.DefaultLinearLimitSoftness
+- uid: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearSoftness
+  name: DefaultLinearSoftness
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness
+  commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultLinearSoftness
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearSoftness
+  nameWithType: Constraint.DefaultLinearSoftness
 - uid: Jitter2.Dynamics.Constraints.Constraint.Handle
   name: Handle
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Handle

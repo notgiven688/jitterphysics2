@@ -166,7 +166,7 @@ Complexity: O(log n) for insertion/removal, O(n) worst-case for overlap queries.
 
   <h3 id="Jitter2_Collision_DynamicTree__ctor_System_Func_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy_System_Boolean__" data-uid="Jitter2.Collision.DynamicTree.#ctor(System.Func{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy,System.Boolean})">
   DynamicTree(Func&lt;IDynamicTreeProxy, IDynamicTreeProxy, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a> class.</p>
@@ -198,38 +198,6 @@ to the same body. The collision is filtered out if the function returns false.</
 
   <h2 class="section" id="fields">Fields
 </h2>
-
-
-
-  <h3 id="Jitter2_Collision_DynamicTree_DebugTimings" data-uid="Jitter2.Collision.DynamicTree.DebugTimings">
-  DebugTimings
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L192"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Contains timings for the stages of the last call to <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.
-Values are in milliseconds. Index using <code>(int)Timings.XYZ</code>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly double[] DebugTimings</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
 
 
 
@@ -327,40 +295,6 @@ Values are in milliseconds. Index using <code>(int)Timings.XYZ</code>.</p>
 
 
 
-  <h3 id="Jitter2_Collision_DynamicTree_Nodes" data-uid="Jitter2.Collision.DynamicTree.Nodes">
-  Nodes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L119"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>The internal array of tree nodes. Exposed for advanced scenarios such as debugging or visualization.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DynamicTree.Node[] Nodes</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.Collision.DynamicTree.Node.html">Node</a>[]</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-  <h4 class="section" id="Jitter2_Collision_DynamicTree_Nodes_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This array may be resized during tree operations. Do not cache references to elements.</p>
-</div>
-
-
-
-
-
   <h3 id="Jitter2_Collision_DynamicTree_NullNode" data-uid="Jitter2.Collision.DynamicTree.NullNode">
   NullNode
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L51"><i class="bi bi-code-slash"></i></a>
@@ -427,11 +361,44 @@ A value of 128 means 1/128th of the hash set is scanned each update.</p>
 </h2>
 
 
+  <a id="Jitter2_Collision_DynamicTree_DebugTimings_" data-uid="Jitter2.Collision.DynamicTree.DebugTimings*"></a>
+
+  <h3 id="Jitter2_Collision_DynamicTree_DebugTimings" data-uid="Jitter2.Collision.DynamicTree.DebugTimings">
+  DebugTimings
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Contains timings for the stages of the last call to <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.
+Values are in milliseconds. Index using <code>(int)Timings.XYZ</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReadOnlySpan&lt;double&gt; DebugTimings { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.double">double</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Jitter2_Collision_DynamicTree_Filter_" data-uid="Jitter2.Collision.DynamicTree.Filter*"></a>
 
   <h3 id="Jitter2_Collision_DynamicTree_Filter" data-uid="Jitter2.Collision.DynamicTree.Filter">
   Filter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the filter function used to exclude proxy pairs from collision detection.</p>
@@ -460,6 +427,12 @@ A value of 128 means 1/128th of the hash set is scanned each update.</p>
 In Jitter, this is typically used to exclude shapes belonging to the same rigid body.</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when the value is null.</p>
+</dd>
+  </dl>
 
 
 
@@ -467,7 +440,7 @@ In Jitter, this is typically used to exclude shapes belonging to the same rigid 
 
   <h3 id="Jitter2_Collision_DynamicTree_HashSetInfo" data-uid="Jitter2.Collision.DynamicTree.HashSetInfo">
   HashSetInfo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L212"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Retrieve information of the size and filling of the internal hash set used to
@@ -486,6 +459,39 @@ store potential overlaps.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt>(<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.solver">solver</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetuple-system.int32,system.int32-.relaxation">relaxation</a>)</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_DynamicTree_Nodes_" data-uid="Jitter2.Collision.DynamicTree.Nodes*"></a>
+
+  <h3 id="Jitter2_Collision_DynamicTree_Nodes" data-uid="Jitter2.Collision.DynamicTree.Nodes">
+  Nodes
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Read-only view of the internal tree nodes for debugging or visualization.
+Do not cache the returned span across tree operations.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ReadOnlySpan&lt;DynamicTree.Node&gt; Nodes { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.<a class="xref" href="Jitter2.Collision.DynamicTree.Node.html">Node</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -564,7 +570,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_UpdatedProxyCount" data-uid="Jitter2.Collision.DynamicTree.UpdatedProxyCount">
   UpdatedProxyCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L197"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L206"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of updated proxies during the last call to <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.</p>
@@ -600,7 +606,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_ActivateProxy__1___0_" data-uid="Jitter2.Collision.DynamicTree.ActivateProxy``1(``0)">
   ActivateProxy&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L423"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L432"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Marks a proxy as active, causing it to be tracked for movement during updates.</p>
@@ -639,7 +645,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_AddProxy__1___0_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.AddProxy``1(``0,System.Boolean)">
   AddProxy&lt;T&gt;(T, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L382"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L391"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a proxy to the tree.</p>
@@ -687,7 +693,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_CalculateCost" data-uid="Jitter2.Collision.DynamicTree.CalculateCost">
   CalculateCost()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L464"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L473"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the SAH cost of the tree (sum of all node surface areas).</p>
@@ -720,7 +726,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_DeactivateProxy__1___0_" data-uid="Jitter2.Collision.DynamicTree.DeactivateProxy``1(``0)">
   DeactivateProxy&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L436"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L445"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Marks a proxy as inactive, assuming it will not move outside its expanded bounding box.</p>
@@ -759,7 +765,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_EnumerateOverlaps_System_Action_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy__System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.EnumerateOverlaps(System.Action{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy},System.Boolean)">
   EnumerateOverlaps(Action&lt;IDynamicTreeProxy, IDynamicTreeProxy&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L241"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enumerates all potential collision pairs and invokes the specified action for each.</p>
@@ -795,7 +801,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_EnumerateTreeBoxes_System_Action_Jitter2_Collision_TreeBox_System_Int32__" data-uid="Jitter2.Collision.DynamicTree.EnumerateTreeBoxes(System.Action{Jitter2.Collision.TreeBox,System.Int32})">
   EnumerateTreeBoxes(Action&lt;TreeBox, int&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L473"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L482"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enumerates all axis-aligned bounding boxes in the tree.</p>
@@ -828,7 +834,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_IsActive__1___0_" data-uid="Jitter2.Collision.DynamicTree.IsActive``1(``0)">
   IsActive&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L413"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L422"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks whether the specified proxy is currently active.</p>
@@ -873,7 +879,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Optimize_System_Func_System_Double__System_Int32_System_Single_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.Optimize(System.Func{System.Double},System.Int32,System.Single,System.Boolean)">
   Optimize(Func&lt;double&gt;, int, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L620"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L669"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Optimizes the tree structure by randomly reinserting proxies.</p>
@@ -915,7 +921,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Optimize_System_Int32_System_Single_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.Optimize(System.Int32,System.Single,System.Boolean)">
   Optimize(int, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L613"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L662"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Optimizes the tree structure by randomly reinserting proxies.</p>
@@ -954,7 +960,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JBoundingBox@)">
   Query&lt;T&gt;(T, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L568"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L647"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies overlapping an axis-aligned bounding box.</p>
@@ -962,7 +968,7 @@ store potential overlaps.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Query&lt;T&gt;(T hits, in JBoundingBox box) where T : ICollection&lt;IDynamicTreeProxy&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public void Query&lt;T&gt;(T hits, in JBoundingBox box) where T : class, ICollection&lt;IDynamicTreeProxy&gt;</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -994,9 +1000,9 @@ store potential overlaps.</p>
 
   <a id="Jitter2_Collision_DynamicTree_Query_" data-uid="Jitter2.Collision.DynamicTree.Query*"></a>
 
-  <h3 id="Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
-  Query&lt;T&gt;(T, JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L530"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  Query&lt;T&gt;(T, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L634"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies intersecting a ray.</p>
@@ -1004,7 +1010,7 @@ store potential overlaps.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Query&lt;T&gt;(T hits, JVector rayOrigin, JVector rayDirection) where T : ICollection&lt;IDynamicTreeProxy&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public void Query&lt;T&gt;(T hits, in JVector rayOrigin, in JVector rayDirection) where T : class, ICollection&lt;IDynamicTreeProxy&gt;</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -1025,6 +1031,93 @@ store potential overlaps.</p>
   <dl class="parameters">
     <dt><code>T</code></dt>
     <dd><p>The collection type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_DynamicTree_Query_" data-uid="Jitter2.Collision.DynamicTree.Query*"></a>
+
+  <h3 id="Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JBoundingBox@)">
+  Query&lt;TSink&gt;(ref TSink, in JBoundingBox)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L585"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Queries the tree for proxies overlapping an axis-aligned bounding box and appends all hits to the specified sink.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Query&lt;TSink&gt;(ref TSink hits, in JBoundingBox box) where TSink : ISink&lt;IDynamicTreeProxy&gt;</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>hits</code> <span class="xref">TSink</span></dt>
+    <dd><p>The sink receiving all overlapping proxies.</p>
+</dd>
+    <dt><code>box</code> <a class="xref" href="Jitter2.LinearMath.JBoundingBox.html">JBoundingBox</a></dt>
+    <dd><p>The bounding box to query.</p>
+</dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSink</code></dt>
+    <dd><p>The sink type receiving all overlapping proxies.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_DynamicTree_Query_" data-uid="Jitter2.Collision.DynamicTree.Query*"></a>
+
+  <h3 id="Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  Query&lt;TSink&gt;(ref TSink, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L539"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Queries the tree for proxies intersecting a ray and appends all hits to the specified sink.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Query&lt;TSink&gt;(ref TSink hits, in JVector rayOrigin, in JVector rayDirection) where TSink : ISink&lt;IDynamicTreeProxy&gt;</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>hits</code> <span class="xref">TSink</span></dt>
+    <dd><p>The sink receiving all intersected proxies.</p>
+</dd>
+    <dt><code>rayOrigin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The origin of the ray.</p>
+</dd>
+    <dt><code>rayDirection</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction of the ray.</p>
+</dd>
+  </dl>
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSink</code></dt>
+    <dd><p>The sink type receiving all intersected proxies.</p>
 </dd>
   </dl>
 
@@ -1158,7 +1251,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_RemoveProxy_Jitter2_Collision_IDynamicTreeProxy_" data-uid="Jitter2.Collision.DynamicTree.RemoveProxy(Jitter2.Collision.IDynamicTreeProxy)">
   RemoveProxy(IDynamicTreeProxy)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L446"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L455"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a proxy from the tree.</p>
@@ -1197,7 +1290,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_" data-uid="Jitter2.Collision.DynamicTree.Update(System.Boolean,System.Single)">
   Update(bool, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L270"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L279"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates all active proxies in the tree.</p>
@@ -1233,7 +1326,7 @@ store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Update__1___0_" data-uid="Jitter2.Collision.DynamicTree.Update``1(``0)">
   Update&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L366"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L375"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Forces an immediate update of a single proxy in the tree.</p>

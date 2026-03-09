@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TriangleEdgeCollisionFilter | Jitter2 ">
       
-      <meta name="description" content="Filters internal edge collisions for triangle mesh geometry.">
+      <meta name="description" content="Filters internal edge collisions for  geometry. Adjusts collision normals at shared edges to match neighboring triangles, or discards the collision if the normal cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor) are left unmodified. Back-face collisions are discarded.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_TriangleEdgeCollisionFilter" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter" class="text-break">
-Class TriangleEdgeCollisionFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L29"><i class="bi bi-code-slash"></i></a>
+Class TriangleEdgeCollisionFilter  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,10 @@ Class TriangleEdgeCollisionFilter  <a class="header-action link-secondary" title
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Filters internal edge collisions for triangle mesh geometry.</p>
+  <div class="markdown summary"><p>Filters internal edge collisions for <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> geometry. Adjusts collision
+normals at shared edges to match neighboring triangles, or discards the collision if the normal
+cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
+are left unmodified. Back-face collisions are discarded.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -153,17 +156,6 @@ Class TriangleEdgeCollisionFilter  <a class="header-action link-secondary" title
 
 
 
-  <h2 id="Jitter2_Collision_TriangleEdgeCollisionFilter_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>
-When rigid bodies slide over triangle meshes, they may collide with internal edges where
-triangles meet, causing jitter. This filter adjusts collision normals at edges to match
-neighboring triangles or discards the collision entirely.
-</p>
-<p>
-Works best with manifold meshes that have adjacency information. Boundary edges
-(no neighbor) are processed normally. Back-face collisions are discarded.
-</p>
-</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -174,7 +166,7 @@ Works best with manifold meshes that have adjacency information. Boundary edges
 
   <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.AngleThreshold">
   AngleThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the angle threshold for determining when two triangle normals are considered identical.</p>
@@ -219,7 +211,7 @@ the collision is filtered out.
 
   <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_EdgeThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.EdgeThreshold">
   EdgeThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the distance threshold for edge collision detection, in world units.</p>
@@ -257,7 +249,7 @@ filtering edges but may incorrectly affect legitimate collisions near triangle b
 
   <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_ProjectionThreshold" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.ProjectionThreshold">
   ProjectionThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the minimum length of the projected collision normal required to keep the contact.</p>
@@ -304,7 +296,7 @@ Lower values allow more edge collisions through; higher values are more aggressi
 
   <h3 id="Jitter2_Collision_TriangleEdgeCollisionFilter_Filter_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.TriangleEdgeCollisionFilter.Filter(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Filter(RigidBodyShape, RigidBodyShape, ref JVector, ref JVector, ref JVector, ref float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called for each detected collision with its contact data.</p>
@@ -358,7 +350,7 @@ Lower values allow more edge collisions through; higher values are more aggressi
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L29" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/TriangleEdgeCollisionFilter.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
 

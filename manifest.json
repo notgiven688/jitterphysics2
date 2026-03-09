@@ -816,7 +816,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.TriangleEdgeCollisionFilter",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Filters internal edge collisions for triangle mesh geometry.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Filters internal edge collisions for <xref href=\"Jitter2.Collision.Shapes.TriangleShape\" data-throw-if-not-resolved=\"false\"></xref> geometry. Adjusts collision\nnormals at shared edges to match neighboring triangles, or discards the collision if the normal\ncannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)\nare left unmodified. Back-face collisions are discarded.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -834,6 +834,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.CollectionSink-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.CollectionSink-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.CollectionSink<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.CollectionSink-1.yml\" sourcestartlinenumber=\"1\">Adapts an <xref href=\"System.Collections.Generic.ICollection%601\" data-throw-if-not-resolved=\"false\"></xref> to the <xref href=\"Jitter2.DataStructures.ISink%601\" data-throw-if-not-resolved=\"false\"></xref> interface.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.DataStructures.IPartitionedSetIndex.yml",
       "output": {
         ".html": {
@@ -845,6 +859,20 @@
       "IsMRef": true,
       "Title": "Jitter2.DataStructures.IPartitionedSetIndex",
       "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.IPartitionedSetIndex.yml\" sourcestartlinenumber=\"1\">Defines an index property used by <xref href=\"Jitter2.DataStructures.PartitionedSet%601\" data-throw-if-not-resolved=\"false\"></xref> to track element positions.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DataStructures.ISink-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DataStructures.ISink-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DataStructures.ISink<T>",
+      "Summary": "<p sourcefile=\"api/Jitter2.DataStructures.ISink-1.yml\" sourcestartlinenumber=\"1\">Append-only target for values produced by an algorithm. Designed as a minimal,\nstruct-friendly alternative to <xref href=\"System.Collections.Generic.ICollection%601\" data-throw-if-not-resolved=\"false\"></xref> for hot paths.</p>\n"
     },
     {
       "type": "ManagedReference",

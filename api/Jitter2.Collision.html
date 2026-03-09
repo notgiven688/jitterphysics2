@@ -116,7 +116,10 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.TriangleEdgeCollisionFilter.html">TriangleEdgeCollisionFilter</a></dt>
-      <dd><p>Filters internal edge collisions for triangle mesh geometry.</p>
+      <dd><p>Filters internal edge collisions for <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> geometry. Adjusts collision
+normals at shared edges to match neighboring triangles, or discards the collision if the normal
+cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
+are left unmodified. Back-face collisions are discarded.</p>
 </dd>
     </dl>
     <h3 id="structs">

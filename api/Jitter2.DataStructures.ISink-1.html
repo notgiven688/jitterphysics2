@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Enum DynamicTree.Timings | Jitter2 </title>
+      <title>Interface ISink&lt;T&gt; | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Enum DynamicTree.Timings | Jitter2 ">
+      <meta name="title" content="Interface ISink&lt;T&gt; | Jitter2 ">
       
-      <meta name="description" content="Profiling buckets for , representing stages of .">
+      <meta name="description" content="Append-only target for values produced by an algorithm. Designed as a minimal, struct-friendly alternative to  for hot paths.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_DynamicTree_Timings.md&amp;value=---%0Auid%3A%20Jitter2.Collision.DynamicTree.Timings%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_DataStructures_ISink_1.md&amp;value=---%0Auid%3A%20Jitter2.DataStructures.ISink%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,71 +84,87 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Collision.DynamicTree.Timings">
+        <article data-uid="Jitter2.DataStructures.ISink`1">
 
 
 
-
-  <h1 id="Jitter2_Collision_DynamicTree_Timings" data-uid="Jitter2.Collision.DynamicTree.Timings" class="text-break">
-Enum DynamicTree.Timings  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Jitter2_DataStructures_ISink_1" data-uid="Jitter2.DataStructures.ISink`1" class="text-break">
+Interface ISink&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DataStructures/ISink.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Collision.html">Collision</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.DataStructures.html">DataStructures</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Profiling buckets for <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_DebugTimings">DebugTimings</a>, representing stages of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.</p>
+  <div class="markdown summary"><p>Append-only target for values produced by an algorithm. Designed as a minimal,
+struct-friendly alternative to <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection&lt;T&gt;</a> for hot paths.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum DynamicTree.Timings</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ISink&lt;T&gt;</code></pre>
   </div>
 
 
 
-
-
-
-
-
-
-  <h2 id="fields">Fields
-</h2>
+  <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt id="Jitter2_Collision_DynamicTree_Timings_Last"><code>Last = 5</code></dt>
-  
-  <dd><p>Sentinel value for array sizing. Not a real timing bucket.</p>
-</dd>
-    <dt id="Jitter2_Collision_DynamicTree_Timings_PruneInvalidPairs"><code>PruneInvalidPairs = 0</code></dt>
-  
-  <dd><p>Time spent removing stale pairs from the potential pairs set.</p>
-</dd>
-    <dt id="Jitter2_Collision_DynamicTree_Timings_ScanMoved"><code>ScanMoved = 2</code></dt>
-  
-  <dd><p>Time spent scanning for proxies that moved outside their expanded boxes.</p>
-</dd>
-    <dt id="Jitter2_Collision_DynamicTree_Timings_ScanOverlaps"><code>ScanOverlaps = 4</code></dt>
-  
-  <dd><p>Time spent scanning for new overlapping pairs.</p>
-</dd>
-    <dt id="Jitter2_Collision_DynamicTree_Timings_UpdateBoundingBoxes"><code>UpdateBoundingBoxes = 1</code></dt>
-  
-  <dd><p>Time spent updating proxy bounding boxes.</p>
-</dd>
-    <dt id="Jitter2_Collision_DynamicTree_Timings_UpdateProxies"><code>UpdateProxies = 3</code></dt>
-  
-  <dd><p>Time spent reinserting moved proxies into the tree.</p>
+    <dt><code>T</code></dt>
+    <dd><p>The type of value accepted by the sink.</p>
 </dd>
   </dl>
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_DataStructures_ISink_1_Add_" data-uid="Jitter2.DataStructures.ISink`1.Add*"></a>
+
+  <h3 id="Jitter2_DataStructures_ISink_1_Add__0__" data-uid="Jitter2.DataStructures.ISink`1.Add(`0@)">
+  Add(in T)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DataStructures/ISink.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Appends a value to the sink.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Add(in T item)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>item</code> <span class="xref">T</span></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
 
 
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L174" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DataStructures/ISink.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
 
