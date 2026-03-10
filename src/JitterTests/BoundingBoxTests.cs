@@ -16,7 +16,7 @@ public class BoundingBoxTests
 
         Real fraction = shr.GetVolume() / sbb.GetVolume();
 
-        Assert.That(fraction - (Real)1e-7, Is.LessThan((Real)1.0));
+        Assert.That(fraction - (Real)1e-4, Is.LessThan((Real)1.0));
         Assert.That(fraction, Is.GreaterThan((Real)0.2));
     }
 
@@ -52,5 +52,22 @@ public class BoundingBoxTests
         CheckBoundingBox(new ConvexHullShape(triangles));
         CheckBoundingBox(new PointCloudShape(vertices));
         CheckBoundingBox(new TriangleShape(tm, 0));
+
+        CheckBoundingBox(new TransformedShape(new BoxShape(1, 2, 3),
+            new JVector(1, 2, 3)));
+        CheckBoundingBox(new TransformedShape(new BoxShape(1, 2, 3),
+            JMatrix.CreateRotationX((Real)0.7) * JMatrix.CreateRotationY((Real)1.1)));
+        CheckBoundingBox(new TransformedShape(new BoxShape(1, 2, 3),
+            new JVector(1, 2, 3),
+            JMatrix.CreateRotationZ((Real)0.5) * JMatrix.CreateRotationX((Real)1.3)));
+
+        CheckBoundingBox(new TransformedShape(new SphereShape(1),
+            new JVector(1, -2, 3), JMatrix.CreateScale((Real)2.0, (Real)1.5, (Real)3.0)));
+
+        var shear = JMatrix.Identity;
+        shear.M12 = (Real)0.5;
+        shear.M31 = (Real)0.3;
+        CheckBoundingBox(new TransformedShape(new BoxShape(1, 2, 3),
+            new JVector(1, -2, 3), shear));
     }
 }

@@ -168,6 +168,53 @@ public class CollisionTests
     }
 
     [TestCase]
+    public void TransformedShapeOverlapDistance()
+    {
+        var box = new BoxShape(1);
+        var rotation = JMatrix.CreateRotationZ(MathR.PI / (Real)4.0);
+        var ts = new TransformedShape(box, new JVector(0, 5, 0), rotation);
+
+        var sphere = new SphereShape(1);
+
+        var overlap = NarrowPhase.Overlap(ts, sphere,
+            JQuaternion.Identity, JVector.Zero);
+        Assert.That(!overlap);
+
+        var separated = NarrowPhase.Distance(ts, sphere,
+            JQuaternion.Identity, JVector.Zero,
+            out JVector pA, out JVector pB, out JVector normal, out Real dist);
+        Assert.That(separated);
+        Assert.That(dist, Is.GreaterThan((Real)0.0));
+
+        var tsClose = new TransformedShape(box, new JVector(0, (Real)0.5, 0), rotation);
+
+        overlap = NarrowPhase.Overlap(tsClose, sphere,
+            JQuaternion.Identity, JVector.Zero);
+        Assert.That(overlap);
+    }
+
+    [TestCase]
+    public void TransformedShapeScaledOverlap()
+    {
+        var sphere = new SphereShape((Real)0.5);
+        var ts = new TransformedShape(sphere, JMatrix.CreateScale((Real)3.0, (Real)1.0, (Real)1.0));
+
+        var probe = new SphereShape((Real)0.1);
+
+        var overlap = NarrowPhase.Overlap(ts, probe,
+            JQuaternion.Identity, new JVector((Real)1.2, 0, 0));
+        Assert.That(overlap);
+
+        overlap = NarrowPhase.Overlap(ts, probe,
+            JQuaternion.Identity, new JVector((Real)1.7, 0, 0));
+        Assert.That(!overlap);
+
+        overlap = NarrowPhase.Overlap(ts, probe,
+            JQuaternion.Identity, new JVector(0, (Real)0.7, 0));
+        Assert.That(!overlap);
+    }
+
+    [TestCase]
     public void NormalDirection()
     {
         SphereShape s1 = new((Real)0.5);

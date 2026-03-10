@@ -71,6 +71,55 @@ public class InertiaTests
     }
 
     [TestCase]
+    public static void TransformedRotationInertia()
+    {
+        var box = new BoxShape((Real)1.0, (Real)2.0, (Real)3.0);
+        var rotation = JMatrix.CreateRotationX((Real)0.7) * JMatrix.CreateRotationY((Real)1.1);
+
+        var ts = new TransformedShape(box, rotation);
+        ShapeHelper.CalculateMassInertia(ts, out JMatrix inertia, out JVector com, out Real mass, 8);
+        Check(ts, inertia, com, mass);
+    }
+
+    [TestCase]
+    public static void TransformedRotationTranslationInertia()
+    {
+        var box = new BoxShape((Real)1.0, (Real)2.0, (Real)3.0);
+        var translation = new JVector((Real)2.847, (Real)3.432, (Real)1.234);
+        var rotation = JMatrix.CreateRotationZ((Real)0.5) * JMatrix.CreateRotationX((Real)1.3);
+
+        var ts = new TransformedShape(box, translation, rotation);
+        ShapeHelper.CalculateMassInertia(ts, out JMatrix inertia, out JVector com, out Real mass, 8);
+        Check(ts, inertia, com, mass);
+    }
+
+    [TestCase]
+    public static void TransformedScaleInertia()
+    {
+        var box = new BoxShape((Real)1.0, (Real)2.0, (Real)3.0);
+        var scale = JMatrix.CreateScale((Real)2.0, (Real)1.5, (Real)3.0);
+        var translation = new JVector((Real)1.0, (Real)2.0, (Real)3.0);
+
+        var ts = new TransformedShape(box, translation, scale);
+        ShapeHelper.CalculateMassInertia(ts, out JMatrix inertia, out JVector com, out Real mass, 8);
+        Check(ts, inertia, com, mass);
+    }
+
+    [TestCase]
+    public static void TransformedShearInertia()
+    {
+        var box = new BoxShape((Real)1.0, (Real)2.0, (Real)3.0);
+        var shear = JMatrix.Identity;
+        shear.M12 = (Real)0.5;
+        shear.M31 = (Real)0.3;
+        var translation = new JVector((Real)1.5, (Real)(-0.7), (Real)2.3);
+
+        var ts = new TransformedShape(box, translation, shear);
+        ShapeHelper.CalculateMassInertia(ts, out JMatrix inertia, out JVector com, out Real mass, 8);
+        Check(ts, inertia, com, mass);
+    }
+
+    [TestCase]
     public static void ConvexHullInertia()
     {
         List<JTriangle> cvh = new List<JTriangle>();
