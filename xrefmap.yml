@@ -8847,6 +8847,31 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.AddForce
   nameWithType: RigidBody.AddForce
+- uid: Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name: AddImpulse(in JVector, in JVector, bool)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddImpulse_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_
+  commentId: M:Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name.vb: AddImpulse(JVector, JVector, Boolean)
+  fullName: Jitter2.Dynamics.RigidBody.AddImpulse(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: RigidBody.AddImpulse(in JVector, in JVector, bool)
+  nameWithType.vb: RigidBody.AddImpulse(JVector, JVector, Boolean)
+- uid: Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,System.Boolean)
+  name: AddImpulse(in JVector, bool)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddImpulse_Jitter2_LinearMath_JVector__System_Boolean_
+  commentId: M:Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,System.Boolean)
+  name.vb: AddImpulse(JVector, Boolean)
+  fullName: Jitter2.Dynamics.RigidBody.AddImpulse(in Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: RigidBody.AddImpulse(in JVector, bool)
+  nameWithType.vb: RigidBody.AddImpulse(JVector, Boolean)
+- uid: Jitter2.Dynamics.RigidBody.AddImpulse*
+  name: AddImpulse
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddImpulse_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.AddImpulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.AddImpulse
+  nameWithType: RigidBody.AddImpulse
 - uid: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)
   name: AddShape(RigidBodyShape, bool)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_
