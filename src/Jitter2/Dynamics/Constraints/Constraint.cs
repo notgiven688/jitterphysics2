@@ -112,7 +112,7 @@ public abstract class Constraint : IDebugDrawable
     public const Real DefaultLinearSoftness = (Real)0.00001;
 
     /// <summary>Default bias factor for linear error correction.</summary>
-    public const Real DefaultLinearBias = (Real)0.01;
+    public const Real DefaultLinearBias = (Real)0.2;
 
     /// <summary>Default softness for linear limit enforcement.</summary>
     public const Real DefaultLinearLimitSoftness = (Real)0.0001;
