@@ -871,6 +871,51 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
+    /// Applies an instantaneous impulse to the rigid body, directly changing its velocity.
+    /// </summary>
+    /// <param name="impulse">The impulse to be applied.</param>
+    /// <param name="wakeup">
+    /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
+    /// If <c>false</c>, the impulse is only applied if the body is already active; sleeping
+    /// bodies will remain asleep and ignore the impulse.
+    /// </param>
+    public void AddImpulse(in JVector impulse, bool wakeup = true)
+    {
+        if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
+        if (!wakeup && !IsActive) return;
+
+        World.ActivateBodyNextStep(this);
+        handle.Data.Velocity += inverseMass * impulse;
+    }
+
+    /// <summary>
+    /// Applies an instantaneous impulse at a world-space position, directly changing both
+    /// linear and angular velocity.
+    /// </summary>
+    /// <param name="impulse">The impulse to be applied.</param>
+    /// <param name="position">The position where the impulse will be applied.</param>
+    /// <param name="wakeup">
+    /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
+    /// If <c>false</c>, the impulse is only applied if the body is already active; sleeping
+    /// bodies will remain asleep and ignore the impulse.
+    /// </param>
+    [ReferenceFrame(ReferenceFrame.World)]
+    public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = true)
+    {
+        if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
+        if (!wakeup && !IsActive) return;
+        
+        World.ActivateBodyNextStep(this);
+
+        ref RigidBodyData data = ref Data;
+        JVector.Subtract(position, data.Position, out JVector angularImpulse);
+        JVector.Cross(angularImpulse, impulse, out angularImpulse);
+
+        data.Velocity += impulse * inverseMass;
+        data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
+    }
+
+    /// <summary>
     /// Predicts the position of the body after a given time step using linear extrapolation.
     /// This does not simulate forces or collisions — it assumes constant velocity.
     /// </summary>
