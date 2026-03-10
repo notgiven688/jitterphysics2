@@ -547,17 +547,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             if (handle.Data.MotionType == MotionType.Static)
             {
-                // Throw an exception here, since we change the behaviour of the engine with version 2.7.4.
+                // Throw an exception here, since we change the behavior of the engine with version 2.7.4.
                 // Maybe return to assert-only later.
                 throw new InvalidOperationException(
                     $"Can not set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            if (!MathHelper.CloseToZero(value))
-            {
-                World.ActivateBodyNextStep(this);
-            }
+            if (MathHelper.CloseToZero(value)) return;
 
+            World.ActivateBodyNextStep(this);
             handle.Data.Velocity = value;
         }
     }
@@ -582,17 +580,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             if (handle.Data.MotionType == MotionType.Static)
             {
-                // Throw an exception here, since we change the behaviour of the engine with version 2.7.4.
+                // Throw an exception here, since we change the behavior of the engine with version 2.7.4.
                 // Maybe return to assert-only later.
                 throw new InvalidOperationException(
                     $"Can not set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            if (!MathHelper.CloseToZero(value))
-            {
-                World.ActivateBodyNextStep(this);
-            }
+            if (MathHelper.CloseToZero(value)) return;
 
+            World.ActivateBodyNextStep(this);
             handle.Data.AngularVelocity = value;
         }
     }
@@ -775,7 +771,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     ///
     /// The benefit becomes noticeable for bodies with a high inertia anisotropy or very fast
     /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
-    /// whose principal inertias differ by an order of magnitude. In those cases the flag eliminates artificial
+    /// whose principal inertia values differ by an order of magnitude. In those cases the flag eliminates artificial
     /// precession.
     /// </remarks>
     /// <value>
@@ -1062,9 +1058,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         JMatrix inertia = JMatrix.Zero;
         Real mass = (Real)0.0;
 
-        for (int i = 0; i < InternalShapes.Count; i++)
+        foreach (var rbs in InternalShapes)
         {
-            InternalShapes[i].CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
+            rbs.CalculateMassInertia(out var shapeInertia, out _, out var shapeMass);
 
             inertia += shapeInertia;
             mass += shapeMass;
