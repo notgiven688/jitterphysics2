@@ -373,9 +373,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
     /// <remarks>
-    /// Values must be non-negative. This property stores the squared thresholds internally,
-    /// so the input values are automatically squared when set.
-    /// Default values: angular = 0.1, linear = 0.1 (squared internally).
+    /// Values must be non-negative.
+    /// Default values: angular = 0.1, linear = 0.1.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular threshold is negative.
@@ -875,7 +874,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// If <c>false</c>, the impulse is only applied if the body is already active; sleeping
     /// bodies will remain asleep and ignore the impulse.
     /// </param>
-    public void AddImpulse(in JVector impulse, bool wakeup = true)
+    public void ApplyImpulse(in JVector impulse, bool wakeup = true)
     {
         if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
         if (!wakeup && !IsActive) return;
@@ -896,7 +895,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// bodies will remain asleep and ignore the impulse.
     /// </param>
     [ReferenceFrame(ReferenceFrame.World)]
-    public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = true)
+    public void ApplyImpulse(in JVector impulse, in JVector position, bool wakeup = true)
     {
         if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
         if (!wakeup && !IsActive) return;
@@ -910,6 +909,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         data.Velocity += impulse * inverseMass;
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
     }
+
+    [Obsolete("Use ApplyImpulse instead.")]
+    public void AddImpulse(in JVector impulse, bool wakeup = true) => ApplyImpulse(impulse, wakeup);
+
+    [Obsolete("Use ApplyImpulse instead.")]
+    public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = true) => ApplyImpulse(impulse, position, wakeup);
 
     /// <summary>
     /// Predicts the position of the body after a given time step using linear extrapolation.
