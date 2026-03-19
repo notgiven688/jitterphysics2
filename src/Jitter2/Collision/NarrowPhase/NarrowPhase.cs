@@ -714,7 +714,7 @@ public static class NarrowPhase
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
         simplexSolver.Reset();
 
         int iter = maxIter;
@@ -811,7 +811,7 @@ public static class NarrowPhase
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
         simplexSolver.Reset();
 
         int iter = maxIter;
@@ -1127,7 +1127,7 @@ public static class NarrowPhase
         const Real collideEpsilon = (Real)1e-4;
         const int maxIter = 34;
 
-        Unsafe.SkipInit(out SimplexSolverAb simplexSolver);
+        Unsafe.SkipInit(out SimplexSolverAB simplexSolver);
         simplexSolver.Reset();
 
         MinkowskiDifference.GetCenter(supportA, supportB, orientationB, positionB, out var center);

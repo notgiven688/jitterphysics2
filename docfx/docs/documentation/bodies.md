@@ -60,6 +60,23 @@ The coordinates of the triangles are in world space and can be drawn to debug th
 > Every call to `body.DebugDraw` the triangle hulls are generated on the fly.
 > Since this is a slow operation the method should only be called for debugging purposes.
 
+## Forces and impulses
+
+Forces and torques can be applied using `body.AddForce`. Forces accumulate over the current step and are reset after integration.
+
+For instantaneous velocity changes, use `body.AddImpulse`:
+
+```cs
+// Linear impulse — changes velocity immediately.
+body.AddImpulse(new JVector(0, 10, 0));
+
+// Impulse at a world-space position — changes both linear and angular velocity.
+body.AddImpulse(new JVector(0, 10, 0), hitPosition);
+```
+
+Both overloads accept an optional `wakeup` parameter (default `true`).
+When set to `false`, the impulse is silently ignored if the body is sleeping.
+
 ## Gravity
 
 The gravity for the world can be set using `world.Gravity`.
@@ -122,8 +139,3 @@ Because of this, the position of static bodies should not be altered while in co
 Kinematic bodies (`body.BodyType == BodyType.Kinematic`) can have a velocity and therefore change their position.
 They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
 They do take part in collision islands.
-
-> [!CAUTION]
-> **Kinematic bodies**
-> Having an unstoppable object colliding with a static (immovable object) or another unstoppable object might crash the solver.
-> It must be ensured that no contact points are generated in such cases.

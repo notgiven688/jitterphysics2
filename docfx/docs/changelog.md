@@ -1,5 +1,16 @@
 # Changelog
 
+### Jitter 2.8.0 (2026-03-19)
+
+- Added `RigidBody.AddImpulse` methods for applying instantaneous impulses (linear and at a world-space position).
+- Fixed corner case in wake-up logic: setting velocity to zero no longer unnecessarily activates sleeping bodies.
+- Introduced `ISink<T>` interface and `CollectionSink<T>` adapter as a struct-friendly alternative to `ICollection<T>` on hot paths.
+- Added `ref TSink` overloads for `ShapeHelper.Tessellate` and `DynamicTree.Query`.
+- Extracted default constraint tuning values into named constants on the `Constraint` base class (`DefaultLinearBias`, `DefaultLinearSoftness`, `DefaultAngularBias`, etc.).
+- **Breaking Change:** `DynamicTree.Nodes` changed from `Node[]` to `ReadOnlySpan<Node>`, exposing only the occupied portion of the internal array.
+- **Breaking Change:** `World.DebugTimings` is now `ReadOnlySpan<double>` instead of `double[]`.
+- Renamed generic type parameters in `NarrowPhase` and `CollisionManifold` from `TA`/`TB` to `Ta`/`Tb`.
+
 ### Jitter 2.7.9 (2026-02-14)
 
 - Fixed distance calculation in `SpringConstraint`.
