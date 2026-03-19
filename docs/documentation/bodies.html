@@ -130,6 +130,17 @@ The coordinates of the triangles are in world space and can be drawn to debug th
 Every call to <code>body.DebugDraw</code> the triangle hulls are generated on the fly.
 Since this is a slow operation the method should only be called for debugging purposes.</p>
 </div>
+<h2 id="forces-and-impulses">Forces and impulses</h2>
+<p>Forces and torques can be applied using <code>body.AddForce</code>. Forces accumulate over the current step and are reset after integration.</p>
+<p>For instantaneous velocity changes, use <code>body.AddImpulse</code>:</p>
+<pre><code class="lang-cs">// Linear impulse — changes velocity immediately.
+body.AddImpulse(new JVector(0, 10, 0));
+
+// Impulse at a world-space position — changes both linear and angular velocity.
+body.AddImpulse(new JVector(0, 10, 0), hitPosition);
+</code></pre>
+<p>Both overloads accept an optional <code>wakeup</code> parameter (default <code>true</code>).
+When set to <code>false</code>, the impulse is silently ignored if the body is sleeping.</p>
 <h2 id="gravity">Gravity</h2>
 <p>The gravity for the world can be set using <code>world.Gravity</code>.
 The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.</p>
@@ -175,12 +186,6 @@ Because of this, the position of static bodies should not be altered while in co
 <p>Kinematic bodies (<code>body.BodyType == BodyType.Kinematic</code>) can have a velocity and therefore change their position.
 They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
 They do take part in collision islands.</p>
-<div class="CAUTION">
-<h5>Caution</h5>
-<p><strong>Kinematic bodies</strong>
-Having an unstoppable object colliding with a static (immovable object) or another unstoppable object might crash the solver.
-It must be ensured that no contact points are generated in such cases.</p>
-</div>
 
 </article>
 

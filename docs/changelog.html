@@ -87,6 +87,17 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-280-2026-03-19">Jitter 2.8.0 (2026-03-19)</h3>
+<ul>
+<li>Added <code>RigidBody.AddImpulse</code> methods for applying instantaneous impulses (linear and at a world-space position).</li>
+<li>Fixed corner case in wake-up logic: setting velocity to zero no longer unnecessarily activates sleeping bodies.</li>
+<li>Introduced <code>ISink&lt;T&gt;</code> interface and <code>CollectionSink&lt;T&gt;</code> adapter as a struct-friendly alternative to <code>ICollection&lt;T&gt;</code> on hot paths.</li>
+<li>Added <code>ref TSink</code> overloads for <code>ShapeHelper.Tessellate</code> and <code>DynamicTree.Query</code>.</li>
+<li>Extracted default constraint tuning values into named constants on the <code>Constraint</code> base class (<code>DefaultLinearBias</code>, <code>DefaultLinearSoftness</code>, <code>DefaultAngularBias</code>, etc.).</li>
+<li><strong>Breaking Change:</strong> <code>DynamicTree.Nodes</code> changed from <code>Node[]</code> to <code>ReadOnlySpan&lt;Node&gt;</code>, exposing only the occupied portion of the internal array.</li>
+<li><strong>Breaking Change:</strong> <code>World.DebugTimings</code> is now <code>ReadOnlySpan&lt;double&gt;</code> instead of <code>double[]</code>.</li>
+<li>Renamed generic type parameters in <code>NarrowPhase</code> and <code>CollisionManifold</code> from <code>TA</code>/<code>TB</code> to <code>Ta</code>/<code>Tb</code>.</li>
+</ul>
 <h3 id="jitter-279-2026-02-14">Jitter 2.7.9 (2026-02-14)</h3>
 <ul>
 <li>Fixed distance calculation in <code>SpringConstraint</code>.</li>

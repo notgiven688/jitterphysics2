@@ -3320,66 +3320,66 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SimplexSolver.Reset
   nameWithType: SimplexSolver.Reset
-- uid: Jitter2.Collision.SimplexSolverAb
-  name: SimplexSolverAb
-  href: api/Jitter2.Collision.SimplexSolverAb.html
-  commentId: T:Jitter2.Collision.SimplexSolverAb
-  fullName: Jitter2.Collision.SimplexSolverAb
-  nameWithType: SimplexSolverAb
-- uid: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
+- uid: Jitter2.Collision.SimplexSolverAB
+  name: SimplexSolverAB
+  href: api/Jitter2.Collision.SimplexSolverAB.html
+  commentId: T:Jitter2.Collision.SimplexSolverAB
+  fullName: Jitter2.Collision.SimplexSolverAB
+  nameWithType: SimplexSolverAB
+- uid: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
   name: AddVertex(in Vertex, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@,Jitter2.LinearMath.JVector@)
   name.vb: AddVertex(Vertex, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex(in Jitter2.Collision.MinkowskiDifference.Vertex, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAb.AddVertex(in MinkowskiDifference.Vertex, out JVector)
-  nameWithType.vb: SimplexSolverAb.AddVertex(MinkowskiDifference.Vertex, JVector)
-- uid: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex(in Jitter2.Collision.MinkowskiDifference.Vertex, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAB.AddVertex(in MinkowskiDifference.Vertex, out JVector)
+  nameWithType.vb: SimplexSolverAB.AddVertex(MinkowskiDifference.Vertex, JVector)
+- uid: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: AddVertex(in JVector, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name.vb: AddVertex(JVector, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAb.AddVertex(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAb.AddVertex(in JVector, out JVector)
-  nameWithType.vb: SimplexSolverAb.AddVertex(JVector, JVector)
-- uid: Jitter2.Collision.SimplexSolverAb.AddVertex*
+  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAB.AddVertex(in JVector, out JVector)
+  nameWithType.vb: SimplexSolverAB.AddVertex(JVector, JVector)
+- uid: Jitter2.Collision.SimplexSolverAB.AddVertex*
   name: AddVertex
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_AddVertex_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAb.AddVertex
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAB.AddVertex
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAb.AddVertex
-  nameWithType: SimplexSolverAb.AddVertex
-- uid: Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex
+  nameWithType: SimplexSolverAB.AddVertex
+- uid: Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: GetClosest(out JVector, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_GetClosest_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name.vb: GetClosest(JVector, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAb.GetClosest(out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAb.GetClosest(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAb.GetClosest(out JVector, out JVector)
-  nameWithType.vb: SimplexSolverAb.GetClosest(JVector, JVector)
-- uid: Jitter2.Collision.SimplexSolverAb.GetClosest*
+  fullName: Jitter2.Collision.SimplexSolverAB.GetClosest(out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.SimplexSolverAB.GetClosest(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: SimplexSolverAB.GetClosest(out JVector, out JVector)
+  nameWithType.vb: SimplexSolverAB.GetClosest(JVector, JVector)
+- uid: Jitter2.Collision.SimplexSolverAB.GetClosest*
   name: GetClosest
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_GetClosest_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAb.GetClosest
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_GetClosest_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAB.GetClosest
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAb.GetClosest
-  nameWithType: SimplexSolverAb.GetClosest
-- uid: Jitter2.Collision.SimplexSolverAb.Reset
+  fullName: Jitter2.Collision.SimplexSolverAB.GetClosest
+  nameWithType: SimplexSolverAB.GetClosest
+- uid: Jitter2.Collision.SimplexSolverAB.Reset
   name: Reset()
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_Reset
-  commentId: M:Jitter2.Collision.SimplexSolverAb.Reset
-  fullName: Jitter2.Collision.SimplexSolverAb.Reset()
-  nameWithType: SimplexSolverAb.Reset()
-- uid: Jitter2.Collision.SimplexSolverAb.Reset*
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_Reset
+  commentId: M:Jitter2.Collision.SimplexSolverAB.Reset
+  fullName: Jitter2.Collision.SimplexSolverAB.Reset()
+  nameWithType: SimplexSolverAB.Reset()
+- uid: Jitter2.Collision.SimplexSolverAB.Reset*
   name: Reset
-  href: api/Jitter2.Collision.SimplexSolverAb.html#Jitter2_Collision_SimplexSolverAb_Reset_
-  commentId: Overload:Jitter2.Collision.SimplexSolverAb.Reset
+  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_Reset_
+  commentId: Overload:Jitter2.Collision.SimplexSolverAB.Reset
   isSpec: "True"
-  fullName: Jitter2.Collision.SimplexSolverAb.Reset
-  nameWithType: SimplexSolverAb.Reset
+  fullName: Jitter2.Collision.SimplexSolverAB.Reset
+  nameWithType: SimplexSolverAB.Reset
 - uid: Jitter2.Collision.TreeBox
   name: TreeBox
   href: api/Jitter2.Collision.TreeBox.html

@@ -106,11 +106,14 @@ Internally, <code>UpdateWorldBoundingBox</code> is called for active proxies imp
 Overlaps can be queried using <code>tree.EnumerateOverlaps</code>.</p>
 <h2 id="querying-the-tree">Querying the tree</h2>
 <p>All tree proxies that overlap a given axis-aligned box can be queried:</p>
-<pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JBBox box) where T : class, ICollection&lt;IDynamicTreeProxy&gt;
+<pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JBoundingBox box) where T : class, ICollection&lt;IDynamicTreeProxy&gt;
+public void Query&lt;TSink&gt;(ref TSink hits, in JBoundingBox box) where TSink : ISink&lt;IDynamicTreeProxy&gt;
 </code></pre>
 <p>As well as all proxies which overlap with a ray:</p>
 <pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JVector rayOrigin, in JVector rayDirection) where T : class, ICollection&lt;IDynamicTreeProxy&gt;
+public void Query&lt;TSink&gt;(ref TSink hits, in JVector rayOrigin, in JVector rayDirection) where TSink : ISink&lt;IDynamicTreeProxy&gt;
 </code></pre>
+<h2 id="custom-queries">Custom queries</h2>
 <p>Custom queries can easily be implemented.
 An implementation which queries all proxies overlapping with a single point:</p>
 <pre><code class="lang-cs">var stack = new Stack&lt;int&gt;();
