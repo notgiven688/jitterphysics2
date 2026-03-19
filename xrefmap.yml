@@ -8923,6 +8923,31 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.AngularVelocity
   nameWithType: RigidBody.AngularVelocity
+- uid: Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name: ApplyImpulse(in JVector, in JVector, bool)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ApplyImpulse_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_
+  commentId: M:Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name.vb: ApplyImpulse(JVector, JVector, Boolean)
+  fullName: Jitter2.Dynamics.RigidBody.ApplyImpulse(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: RigidBody.ApplyImpulse(in JVector, in JVector, bool)
+  nameWithType.vb: RigidBody.ApplyImpulse(JVector, JVector, Boolean)
+- uid: Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,System.Boolean)
+  name: ApplyImpulse(in JVector, bool)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ApplyImpulse_Jitter2_LinearMath_JVector__System_Boolean_
+  commentId: M:Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,System.Boolean)
+  name.vb: ApplyImpulse(JVector, Boolean)
+  fullName: Jitter2.Dynamics.RigidBody.ApplyImpulse(in Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: RigidBody.ApplyImpulse(in JVector, bool)
+  nameWithType.vb: RigidBody.ApplyImpulse(JVector, Boolean)
+- uid: Jitter2.Dynamics.RigidBody.ApplyImpulse*
+  name: ApplyImpulse
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ApplyImpulse_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.ApplyImpulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.ApplyImpulse
+  nameWithType: RigidBody.ApplyImpulse
 - uid: Jitter2.Dynamics.RigidBody.BeginCollide
   name: BeginCollide
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_BeginCollide
