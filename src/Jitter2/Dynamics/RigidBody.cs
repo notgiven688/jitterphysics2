@@ -558,8 +558,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => handle.Data.Velocity;
         set
         {
-            Debug.Assert(handle.Data.MotionType != MotionType.Static);
-
             if (handle.Data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
@@ -591,8 +589,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => handle.Data.AngularVelocity;
         set
         {
-            Debug.Assert(handle.Data.MotionType != MotionType.Static);
-
             if (handle.Data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
