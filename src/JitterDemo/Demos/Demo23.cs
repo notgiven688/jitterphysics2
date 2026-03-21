@@ -29,7 +29,7 @@ public class Demo23 : IDemo, IDrawUpdate
         var bs4 = new TransformedShape(new BoxShape(size, size, 1), new JVector(0,0, +size / 2));
         var bs5 = new TransformedShape(new BoxShape(size, size, 1), new JVector(0,0, -size / 2));
 
-        rotatingBox.AddShape([bs0, bs1, bs2, bs3, bs4, bs5]);
+        rotatingBox.AddShapes([bs0, bs1, bs2, bs3, bs4, bs5]);
         rotatingBox.Tag = new RigidBodyTag(true);
 
         rotatingBox.MotionType = MotionType.Kinematic;

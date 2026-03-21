@@ -35,8 +35,8 @@ public class Player
 
         // Add the shapes without recalculating mass and inertia, we take mass and inertia from the capsule
         // shape we added before.
-        Body.AddShape(arm1, false);
-        Body.AddShape(arm2, false);
+        Body.AddShape(arm1, MassInertiaUpdateMode.Preserve);
+        Body.AddShape(arm2, MassInertiaUpdateMode.Preserve);
 
         // Make the capsule stand upright, but able to rotate 360 degrees.
         var ur = world.CreateConstraint<HingeAngle>(Body, world.NullBody);

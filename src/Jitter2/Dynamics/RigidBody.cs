@@ -19,6 +19,22 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics;
 
 /// <summary>
+/// Specifies whether a shape add/remove operation recomputes the body's mass and inertia.
+/// </summary>
+public enum MassInertiaUpdateMode
+{
+    /// <summary>
+    /// Recompute mass and inertia from the currently attached shapes.
+    /// </summary>
+    Update = 0,
+
+    /// <summary>
+    /// Keep the current mass and inertia unchanged.
+    /// </summary>
+    Preserve = 1
+}
+
+/// <summary>
 /// Specifies how a rigid body participates in the simulation.
 /// </summary>
 public enum MotionType
@@ -736,29 +752,57 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         World.DynamicTree.AddProxy(shape, IsActive);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool ShouldUpdateMassInertia(MassInertiaUpdateMode massInertiaMode)
+    {
+        return massInertiaMode switch
+        {
+            MassInertiaUpdateMode.Update => true,
+            MassInertiaUpdateMode.Preserve => false,
+            _ => throw new ArgumentOutOfRangeException(nameof(massInertiaMode), massInertiaMode, null)
+        };
+    }
+
     /// <summary>
     /// Adds several shapes to the rigid body at once. Mass properties are
     /// recalculated only once, if requested.
     /// </summary>
     /// <param name="shapes">The shapes to add.</param>
-    /// <param name="setMassInertia">If true, uses the mass properties of the shapes to determine the
-    /// body's mass properties, assuming unit density for the shapes. If false, the inertia and mass remain
-    /// unchanged.</param>
     /// <exception cref="ArgumentException">Thrown if any shape is already attached to a body.</exception>
-    public void AddShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
+    public void AddShapes(IEnumerable<RigidBodyShape> shapes)
+        => AddShapes(shapes, MassInertiaUpdateMode.Update);
+
+    /// <summary>
+    /// Adds several shapes to the rigid body at once. Mass properties are
+    /// recalculated only once, if requested.
+    /// </summary>
+    /// <remarks>
+    /// Shapes are added sequentially. If an exception is thrown, shapes processed before the
+    /// failure remain attached to the body.
+    /// </remarks>
+    /// <param name="shapes">The shapes to add.</param>
+    /// <param name="massInertiaMode">
+    /// Controls whether the body's mass and inertia are recomputed after the shapes are added.
+    /// </param>
+    /// <exception cref="ArgumentException">Thrown if any shape is already attached to a body.</exception>
+    public void AddShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
+        ArgumentNullException.ThrowIfNull(shapes);
+
         foreach (RigidBodyShape shape in shapes)
         {
+            ArgumentNullException.ThrowIfNull(shape);
+
             if (shape.IsRegistered)
             {
                 throw new ArgumentException("Shape can not be added. Shape already registered elsewhere.", nameof(shapes));
             }
 
             AttachToShape(shape);
-            this.InternalShapes.Add(shape);
+            InternalShapes.Add(shape);
         }
 
-        if (setMassInertia) SetMassInertia();
+        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
     }
 
     /// <summary>
@@ -787,13 +831,26 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Adds a shape to the body.
     /// </summary>
     /// <param name="shape">The shape to be added.</param>
-    /// <param name="setMassInertia">If true, utilizes the shape's mass properties to determine the body's
-    /// mass properties, assuming a unit density for the shape. If false, the inertia and mass remain unchanged.</param>
     /// <exception cref="ArgumentException">
     /// Thrown if the shape is already registered elsewhere.
     /// </exception>
-    public void AddShape(RigidBodyShape shape, bool setMassInertia = true)
+    public void AddShape(RigidBodyShape shape)
+        => AddShape(shape, MassInertiaUpdateMode.Update);
+
+    /// <summary>
+    /// Adds a shape to the body.
+    /// </summary>
+    /// <param name="shape">The shape to be added.</param>
+    /// <param name="massInertiaMode">
+    /// Controls whether the body's mass and inertia are recomputed after the shape is added.
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the shape is already registered elsewhere.
+    /// </exception>
+    public void AddShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
+        ArgumentNullException.ThrowIfNull(shape);
+
         if (shape.IsRegistered)
         {
             throw new ArgumentException("Shape can not be added. Shape already registered elsewhere.", nameof(shape));
@@ -801,8 +858,17 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         AttachToShape(shape);
         InternalShapes.Add(shape);
-        if (setMassInertia) SetMassInertia();
+
+        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
     }
+    
+    [Obsolete($"Use {nameof(AddShapes)} with {nameof(MassInertiaUpdateMode)} instead.")]
+    public void AddShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
+        => AddShapes(shapes, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
+    
+    [Obsolete($"Use {nameof(AddShape)} with {nameof(MassInertiaUpdateMode)} instead.")]
+    public void AddShape(RigidBodyShape shape, bool setMassInertia = true)
+        => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
     /// Represents the force to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
@@ -832,7 +898,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(force)) return;
 
-        if(wakeup) SetActivationState(true);
+        if (wakeup) SetActivationState(true);
         else if (!IsActive) return;
 
         Force += force;
@@ -854,7 +920,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(force)) return;
 
-        if(wakeup) SetActivationState(true);
+        if (wakeup) SetActivationState(true);
         else if (!IsActive) return;
 
         ref RigidBodyData data = ref Data;
@@ -899,7 +965,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
         if (!wakeup && !IsActive) return;
-        
+
         World.ActivateBodyNextStep(this);
 
         ref RigidBodyData data = ref Data;
@@ -909,10 +975,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         data.Velocity += impulse * inverseMass;
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
     }
-
+    
     [Obsolete("Use ApplyImpulse instead.")]
     public void AddImpulse(in JVector impulse, bool wakeup = true) => ApplyImpulse(impulse, wakeup);
-
+    
     [Obsolete("Use ApplyImpulse instead.")]
     public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = true) => ApplyImpulse(impulse, position, wakeup);
 
@@ -954,12 +1020,27 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shape">The shape to remove from the rigid body.</param>
-    /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removing the shape. The default value is true.</param>
     /// <exception cref="ArgumentException">
     /// Thrown if the specified shape is not part of this rigid body.
     /// </exception>
-    public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
+    public void RemoveShape(RigidBodyShape shape)
+        => RemoveShape(shape, MassInertiaUpdateMode.Update);
+
+    /// <summary>
+    /// Removes a specified shape from the rigid body.
+    /// </summary>
+    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
+    /// <param name="shape">The shape to remove from the rigid body.</param>
+    /// <param name="massInertiaMode">
+    /// Controls whether the body's mass and inertia are recomputed after the shape is removed.
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown if the specified shape is not part of this rigid body.
+    /// </exception>
+    public void RemoveShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
+        ArgumentNullException.ThrowIfNull(shape);
+
         if (!InternalShapes.Remove(shape))
         {
             throw new ArgumentException("Shape is not part of this body.", nameof(shape));
@@ -978,7 +1059,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         World.DynamicTree.RemoveProxy(shape);
         shape.RigidBody = null!;
 
-        if (setMassInertia) SetMassInertia();
+        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
     }
 
     /// <summary>
@@ -986,14 +1067,29 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
     /// <param name="shapes">The shapes to remove from the rigid body.</param>
-    /// <param name="setMassInertia">Specifies whether to adjust the mass inertia properties of the rigid body after removal. The default value is true.</param>
     /// <exception cref="ArgumentException">Thrown if at least one shape is not part of this rigid body.</exception>
-    public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
+    public void RemoveShapes(IEnumerable<RigidBodyShape> shapes)
+        => RemoveShapes(shapes, MassInertiaUpdateMode.Update);
+
+    /// <summary>
+    /// Removes several shapes from the body.
+    /// </summary>
+    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
+    /// <param name="shapes">The shapes to remove from the rigid body.</param>
+    /// <param name="massInertiaMode">
+    /// Controls whether the body's mass and inertia are recomputed after the shapes are removed.
+    /// </param>
+    /// <exception cref="ArgumentException">Thrown if at least one shape is not part of this rigid body.</exception>
+    public void RemoveShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
+        ArgumentNullException.ThrowIfNull(shapes);
+
         HashSet<ulong> sids = new();
 
         foreach (var shape in shapes)
         {
+            ArgumentNullException.ThrowIfNull(shape);
+
             if (shape.RigidBody != this)
             {
                 throw new ArgumentException($"Shape {shape} is not attached to this body.", nameof(shapes));
@@ -1012,32 +1108,52 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
         }
 
-        for (int i = this.InternalShapes.Count; i-- > 0;)
+        for (int i = InternalShapes.Count; i-- > 0;)
         {
-            var shape = this.InternalShapes[i];
+            var shape = InternalShapes[i];
 
             if (sids.Contains(shape.ShapeId))
             {
                 World.DynamicTree.RemoveProxy(shape);
                 shape.RigidBody = null!;
-                this.InternalShapes.RemoveAt(i);
+                InternalShapes.RemoveAt(i);
             }
         }
 
-        if (setMassInertia) SetMassInertia();
+        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
 
         sids.Clear();
     }
+    
+    [Obsolete($"Use {nameof(RemoveShape)} with {nameof(MassInertiaUpdateMode)} instead.")]
+    public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
+        => RemoveShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
+    
+    [Obsolete($"Use {nameof(RemoveShapes)} with {nameof(MassInertiaUpdateMode)} instead.")]
+    public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
+        => RemoveShapes(shapes, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
     /// Removes all shapes associated with the rigid body.
     /// </summary>
-    /// <remarks>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</remarks>
-    /// <param name="setMassInertia">If set to false, the mass properties of the rigid body remain unchanged.</param>
-    [Obsolete($"{nameof(ClearShapes)} is deprecated, please use {nameof(RemoveShape)} instead.")]
+    public void ClearShapes()
+        => ClearShapes(MassInertiaUpdateMode.Update);
+
+    /// <summary>
+    /// Removes all shapes associated with the rigid body.
+    /// </summary>
+    /// <param name="massInertiaMode">
+    /// Controls whether the body's mass and inertia are recomputed after the shapes are removed.
+    /// </param>
+    public void ClearShapes(MassInertiaUpdateMode massInertiaMode)
+    {
+        RemoveShapes(InternalShapes, massInertiaMode);
+    }
+    
+    [Obsolete($"Use {nameof(ClearShapes)} with {nameof(MassInertiaUpdateMode)} instead.")]
     public void ClearShapes(bool setMassInertia = true)
     {
-        RemoveShape(InternalShapes, setMassInertia);
+        ClearShapes(setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
     }
 
     /// <summary>
@@ -1075,7 +1191,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         {
             throw new InvalidOperationException("Inertia matrix is not invertible. This might happen if a shape has " +
                                                 "invalid mass properties. If you encounter this while calling " +
-                                                "RigidBody.AddShape, call AddShape with setMassInertia set to false.");
+                                                "AddShape or AddShapes, call the method with massInertiaMode set to " +
+                                                nameof(MassInertiaUpdateMode.Preserve) + ".");
         }
 
         inverseMass = (Real)1.0 / mass;

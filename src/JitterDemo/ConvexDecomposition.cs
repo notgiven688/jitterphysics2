@@ -29,7 +29,7 @@ public class ConvexDecomposition<T> where T : MultiMesh, new()
 
         foreach (ConvexHullShape s in shapesToAdd)
         {
-            body.AddShape(s.Clone(), false);
+            body.AddShape(s.Clone(), MassInertiaUpdateMode.Preserve);
         }
 
         body.SetMassInertia();

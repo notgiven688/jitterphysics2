@@ -55,7 +55,7 @@ public class Demo05 : IDemo, IDrawUpdate
         pg.AddFloor();
 
         level = world.CreateRigidBody();
-        level.AddShape(CreateShapes(), false);
+        level.AddShapes(CreateShapes(), MassInertiaUpdateMode.Preserve);
         level.Tag = new RigidBodyTag(doNotDraw:true);
         level.MotionType = MotionType.Static;
 
