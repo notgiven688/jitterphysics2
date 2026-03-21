@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Namespace Jitter2.Dynamics | Jitter2 </title>
+      <title>Enum MassInertiaUpdateMode | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Namespace Jitter2.Dynamics | Jitter2 ">
+      <meta name="title" content="Enum MassInertiaUpdateMode | Jitter2 ">
       
-      
+      <meta name="description" content="Specifies whether a shape add/remove operation recomputes the body&#39;s mass and inertia.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Dynamics_MassInertiaUpdateMode.md&amp;value=---%0Auid%3A%20Jitter2.Dynamics.MassInertiaUpdateMode%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,77 +84,55 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Dynamics">
+        <article data-uid="Jitter2.Dynamics.MassInertiaUpdateMode">
 
-  <h1 id="Jitter2_Dynamics" data-uid="Jitter2.Dynamics" class="text-break">Namespace Jitter2.Dynamics</h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
 
-    <h3 id="classes">
-Classes
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a></dt>
-      <dd><p>Manages contact information between two different rigid bodies.</p>
+
+
+  <h1 id="Jitter2_Dynamics_MassInertiaUpdateMode" data-uid="Jitter2.Dynamics.MassInertiaUpdateMode" class="text-break">
+Enum MassInertiaUpdateMode  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Dynamics.html">Dynamics</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Specifies whether a shape add/remove operation recomputes the body's mass and inertia.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public enum MassInertiaUpdateMode</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h2 id="fields">Fields
+</h2>
+  <dl class="parameters">
+    <dt id="Jitter2_Dynamics_MassInertiaUpdateMode_Preserve"><code>Preserve = 1</code></dt>
+  
+  <dd><p>Keep the current mass and inertia unchanged.</p>
 </dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
-      <dd><p>Represents the primary entity in the Jitter physics world.</p>
+    <dt id="Jitter2_Dynamics_MassInertiaUpdateMode_Update"><code>Update = 0</code></dt>
+  
+  <dd><p>Recompute mass and inertia from the currently attached shapes.</p>
 </dd>
-    </dl>
-    <h3 id="structs">
-Structs
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.ArbiterKey.html">ArbiterKey</a></dt>
-      <dd><p>Represents an ordered pair of identifiers used to look up an <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a>.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a></dt>
-      <dd><p>Holds up to four <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html">ContactData.Contact</a> structs for a single shape-to-shape collision.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html">ContactData.Contact</a></dt>
-      <dd><p>Represents a single contact point between two rigid bodies.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.RigidBodyData.html">RigidBodyData</a></dt>
-      <dd><p>Low-level simulation state for a <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a>, stored in unmanaged memory.</p>
-</dd>
-    </dl>
-    <h3 id="enums">
-Enums
-</h3>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.ContactData.Contact.Flags.html">ContactData.Contact.Flags</a></dt>
-      <dd><p>Flags indicating contact state.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.ContactData.SolveMode.html">ContactData.SolveMode</a></dt>
-      <dd><p>Specifies which velocity components the solver should update for each body.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.MassInertiaUpdateMode.html">MassInertiaUpdateMode</a></dt>
-      <dd><p>Specifies whether a shape add/remove operation recomputes the body's mass and inertia.</p>
-</dd>
-    </dl>
-    <dl class="jumplist">
-      <dt><a class="xref" href="Jitter2.Dynamics.MotionType.html">MotionType</a></dt>
-      <dd><p>Specifies how a rigid body participates in the simulation.</p>
-</dd>
-    </dl>
+  </dl>
+
 
 
 </article>
 
         <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L24" class="edit-link">Edit this page</a>
         </div>
 
 

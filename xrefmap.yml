@@ -8792,6 +8792,24 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.UsageMask
   fullName: Jitter2.Dynamics.ContactData.UsageMask
   nameWithType: ContactData.UsageMask
+- uid: Jitter2.Dynamics.MassInertiaUpdateMode
+  name: MassInertiaUpdateMode
+  href: api/Jitter2.Dynamics.MassInertiaUpdateMode.html
+  commentId: T:Jitter2.Dynamics.MassInertiaUpdateMode
+  fullName: Jitter2.Dynamics.MassInertiaUpdateMode
+  nameWithType: MassInertiaUpdateMode
+- uid: Jitter2.Dynamics.MassInertiaUpdateMode.Preserve
+  name: Preserve
+  href: api/Jitter2.Dynamics.MassInertiaUpdateMode.html#Jitter2_Dynamics_MassInertiaUpdateMode_Preserve
+  commentId: F:Jitter2.Dynamics.MassInertiaUpdateMode.Preserve
+  fullName: Jitter2.Dynamics.MassInertiaUpdateMode.Preserve
+  nameWithType: MassInertiaUpdateMode.Preserve
+- uid: Jitter2.Dynamics.MassInertiaUpdateMode.Update
+  name: Update
+  href: api/Jitter2.Dynamics.MassInertiaUpdateMode.html#Jitter2_Dynamics_MassInertiaUpdateMode_Update
+  commentId: F:Jitter2.Dynamics.MassInertiaUpdateMode.Update
+  fullName: Jitter2.Dynamics.MassInertiaUpdateMode.Update
+  nameWithType: MassInertiaUpdateMode.Update
 - uid: Jitter2.Dynamics.MotionType
   name: MotionType
   href: api/Jitter2.Dynamics.MotionType.html
@@ -8872,6 +8890,18 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.AddImpulse
   nameWithType: RigidBody.AddImpulse
+- uid: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  name: AddShape(RigidBodyShape)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_
+  commentId: M:Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  fullName: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  nameWithType: RigidBody.AddShape(RigidBodyShape)
+- uid: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)
+  name: AddShape(RigidBodyShape, MassInertiaUpdateMode)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode_
+  commentId: M:Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)
+  fullName: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape, Jitter2.Dynamics.MassInertiaUpdateMode)
+  nameWithType: RigidBody.AddShape(RigidBodyShape, MassInertiaUpdateMode)
 - uid: Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)
   name: AddShape(RigidBodyShape, bool)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_
@@ -8897,6 +8927,31 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.AddShape
   nameWithType: RigidBody.AddShape
+- uid: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})
+  name: AddShapes(IEnumerable<RigidBodyShape>)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__
+  commentId: M:Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})
+  name.vb: AddShapes(IEnumerable(Of RigidBodyShape))
+  fullName: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable<Jitter2.Collision.Shapes.RigidBodyShape>)
+  fullName.vb: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable(Of Jitter2.Collision.Shapes.RigidBodyShape))
+  nameWithType: RigidBody.AddShapes(IEnumerable<RigidBodyShape>)
+  nameWithType.vb: RigidBody.AddShapes(IEnumerable(Of RigidBodyShape))
+- uid: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)
+  name: AddShapes(IEnumerable<RigidBodyShape>, MassInertiaUpdateMode)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode_
+  commentId: M:Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)
+  name.vb: AddShapes(IEnumerable(Of RigidBodyShape), MassInertiaUpdateMode)
+  fullName: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable<Jitter2.Collision.Shapes.RigidBodyShape>, Jitter2.Dynamics.MassInertiaUpdateMode)
+  fullName.vb: Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable(Of Jitter2.Collision.Shapes.RigidBodyShape), Jitter2.Dynamics.MassInertiaUpdateMode)
+  nameWithType: RigidBody.AddShapes(IEnumerable<RigidBodyShape>, MassInertiaUpdateMode)
+  nameWithType.vb: RigidBody.AddShapes(IEnumerable(Of RigidBodyShape), MassInertiaUpdateMode)
+- uid: Jitter2.Dynamics.RigidBody.AddShapes*
+  name: AddShapes
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AddShapes_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.AddShapes
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.AddShapes
+  nameWithType: RigidBody.AddShapes
 - uid: Jitter2.Dynamics.RigidBody.AffectedByGravity
   name: AffectedByGravity
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AffectedByGravity
@@ -8954,6 +9009,18 @@ references:
   commentId: E:Jitter2.Dynamics.RigidBody.BeginCollide
   fullName: Jitter2.Dynamics.RigidBody.BeginCollide
   nameWithType: RigidBody.BeginCollide
+- uid: Jitter2.Dynamics.RigidBody.ClearShapes
+  name: ClearShapes()
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearShapes
+  commentId: M:Jitter2.Dynamics.RigidBody.ClearShapes
+  fullName: Jitter2.Dynamics.RigidBody.ClearShapes()
+  nameWithType: RigidBody.ClearShapes()
+- uid: Jitter2.Dynamics.RigidBody.ClearShapes(Jitter2.Dynamics.MassInertiaUpdateMode)
+  name: ClearShapes(MassInertiaUpdateMode)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearShapes_Jitter2_Dynamics_MassInertiaUpdateMode_
+  commentId: M:Jitter2.Dynamics.RigidBody.ClearShapes(Jitter2.Dynamics.MassInertiaUpdateMode)
+  fullName: Jitter2.Dynamics.RigidBody.ClearShapes(Jitter2.Dynamics.MassInertiaUpdateMode)
+  nameWithType: RigidBody.ClearShapes(MassInertiaUpdateMode)
 - uid: Jitter2.Dynamics.RigidBody.ClearShapes(System.Boolean)
   name: ClearShapes(bool)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearShapes_System_Boolean_
@@ -9297,6 +9364,18 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.PredictPosition
   nameWithType: RigidBody.PredictPosition
+- uid: Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  name: RemoveShape(RigidBodyShape)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_
+  commentId: M:Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  fullName: Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape)
+  nameWithType: RigidBody.RemoveShape(RigidBodyShape)
+- uid: Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)
+  name: RemoveShape(RigidBodyShape, MassInertiaUpdateMode)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode_
+  commentId: M:Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)
+  fullName: Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape, Jitter2.Dynamics.MassInertiaUpdateMode)
+  nameWithType: RigidBody.RemoveShape(RigidBodyShape, MassInertiaUpdateMode)
 - uid: Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)
   name: RemoveShape(RigidBodyShape, bool)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_
@@ -9322,6 +9401,31 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.RemoveShape
   nameWithType: RigidBody.RemoveShape
+- uid: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})
+  name: RemoveShapes(IEnumerable<RigidBodyShape>)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__
+  commentId: M:Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})
+  name.vb: RemoveShapes(IEnumerable(Of RigidBodyShape))
+  fullName: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable<Jitter2.Collision.Shapes.RigidBodyShape>)
+  fullName.vb: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable(Of Jitter2.Collision.Shapes.RigidBodyShape))
+  nameWithType: RigidBody.RemoveShapes(IEnumerable<RigidBodyShape>)
+  nameWithType.vb: RigidBody.RemoveShapes(IEnumerable(Of RigidBodyShape))
+- uid: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)
+  name: RemoveShapes(IEnumerable<RigidBodyShape>, MassInertiaUpdateMode)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode_
+  commentId: M:Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)
+  name.vb: RemoveShapes(IEnumerable(Of RigidBodyShape), MassInertiaUpdateMode)
+  fullName: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable<Jitter2.Collision.Shapes.RigidBodyShape>, Jitter2.Dynamics.MassInertiaUpdateMode)
+  fullName.vb: Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable(Of Jitter2.Collision.Shapes.RigidBodyShape), Jitter2.Dynamics.MassInertiaUpdateMode)
+  nameWithType: RigidBody.RemoveShapes(IEnumerable<RigidBodyShape>, MassInertiaUpdateMode)
+  nameWithType.vb: RigidBody.RemoveShapes(IEnumerable(Of RigidBodyShape), MassInertiaUpdateMode)
+- uid: Jitter2.Dynamics.RigidBody.RemoveShapes*
+  name: RemoveShapes
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_RemoveShapes_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.RemoveShapes
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.RemoveShapes
+  nameWithType: RigidBody.RemoveShapes
 - uid: Jitter2.Dynamics.RigidBody.Restitution
   name: Restitution
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_Restitution
