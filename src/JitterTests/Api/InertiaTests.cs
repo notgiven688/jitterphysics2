@@ -1,4 +1,4 @@
-namespace JitterTests;
+namespace JitterTests.Api;
 
 [TestFixture]
 public class InertiaTests

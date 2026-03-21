@@ -1,4 +1,4 @@
-namespace JitterTests;
+namespace JitterTests.Behavior;
 
 public class StackingTests
 {

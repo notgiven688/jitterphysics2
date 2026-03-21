@@ -1,6 +1,6 @@
 using JVector = Jitter2.LinearMath.JVector;
 
-namespace JitterTests;
+namespace JitterTests.Behavior;
 
 public class CollisionTests
 {

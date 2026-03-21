@@ -1,6 +1,6 @@
 using Jitter2.DataStructures;
 
-namespace JitterTests;
+namespace JitterTests.Behavior;
 
 public class MiscTests
 {

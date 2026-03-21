@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JitterTests
+namespace JitterTests.Robustness
 {
     public class LockTests
     {

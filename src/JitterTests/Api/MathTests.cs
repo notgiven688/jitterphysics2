@@ -1,6 +1,6 @@
 using Jitter2.Dynamics.Constraints;
 
-namespace JitterTests;
+namespace JitterTests.Api;
 
 public class MathTests
 {

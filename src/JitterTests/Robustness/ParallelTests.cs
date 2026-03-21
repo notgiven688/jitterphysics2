@@ -3,7 +3,7 @@ using Parallel = Jitter2.Parallelization.Parallel;
 using ReaderWriterLock = Jitter2.Parallelization.ReaderWriterLock;
 using ThreadPool = Jitter2.Parallelization.ThreadPool;
 
-namespace JitterTests;
+namespace JitterTests.Robustness;
 
 public class ParallelTests
 {

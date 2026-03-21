@@ -1,6 +1,6 @@
 using Jitter2.DataStructures;
 
-namespace JitterTests;
+namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {

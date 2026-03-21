@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace JitterTests;
+namespace JitterTests.Api;
 
 [TestFixture]
 public sealed class InteropTests

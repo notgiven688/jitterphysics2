@@ -1,4 +1,5 @@
 global using NUnit.Framework;
+global using JitterTests;
 global using Jitter2;
 global using Jitter2.Collision;
 global using Jitter2.Dynamics;

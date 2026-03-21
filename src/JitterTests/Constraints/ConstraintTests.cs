@@ -1,7 +1,7 @@
 using Jitter2.Dynamics.Constraints;
 using Jitter2.SoftBodies;
 
-namespace JitterTests;
+namespace JitterTests.Constraints;
 
 public class ConstraintTests
 {

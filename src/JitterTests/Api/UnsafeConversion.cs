@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace JitterTests;
+namespace JitterTests.Api;
 
 [TestFixture]
 public sealed class UnsafeConversion

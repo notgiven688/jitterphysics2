@@ -1,6 +1,6 @@
 using Jitter2.SoftBodies;
 
-namespace JitterTests;
+namespace JitterTests.Api;
 
 public class BoundingBoxTests
 {
