@@ -24,7 +24,7 @@ First, create a new directory named "TeaDrop" and navigate into it:
 mkdir TeaDrop && cd TeaDrop
 ```
 
-Download and unzip the [teapot.obj](ahttps://github.com/notgiven688/jitterphysics2/raw/refs/heads/main/src/JitterDemo/assets/teapot.obj.zip) model.
+Download and unzip the [teapot.obj](https://github.com/notgiven688/jitterphysics2/raw/refs/heads/main/src/JitterDemo/assets/teapot.obj.zip) model.
 
 ```sh
 wget https://github.com/notgiven688/jitterphysics2/raw/refs/heads/main/src/JitterDemo/assets/teapot.obj.zip

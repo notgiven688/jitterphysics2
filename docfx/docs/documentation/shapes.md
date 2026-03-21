@@ -141,7 +141,7 @@ Mass properties and bounding boxes are automatically calculated from the support
 Performance can be optimized by providing overrides directly in the shape class:
 
 ```cs
-public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
 
 public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
 

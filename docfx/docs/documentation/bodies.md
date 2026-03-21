@@ -16,7 +16,7 @@ var body = world.CreateRigidBody();
 Multiple shapes can be added to a rigid body, for example:
 
 ```cs
-body.AddShape([new SphereShape(radius: 2), new BoxShape(size: 1)]);
+body.AddShapes([new SphereShape(radius: 2), new BoxShape(size: 1)]);
 ```
 
 Shapes determine how bodies collide with each other.
@@ -45,7 +45,7 @@ body.AddShape(new SphereShape(radius: 1));
 will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.
 
 The mass properties of the body can also be set directly using `body.SetMassInertia`.
-Setting `setMassProperties: false` in `body.AddShape(...)` prevents the shapes' mass properties from being used.
+Passing `MassInertiaUpdateMode.Preserve` to `body.AddShape(...)` or `body.AddShapes(...)` prevents the automatic recalculation of mass properties when shapes are added.
 
 ***The position of the rigid body has to align with the center of mass.**
 So in the local reference frame of the body, the center of mass is $(0, 0, 0)$. Shapes or combinations of shapes must be translated accordingly.*
@@ -64,14 +64,14 @@ The coordinates of the triangles are in world space and can be drawn to debug th
 
 Forces and torques can be applied using `body.AddForce`. Forces accumulate over the current step and are reset after integration.
 
-For instantaneous velocity changes, use `body.AddImpulse`:
+For instantaneous velocity changes, use `body.ApplyImpulse`:
 
 ```cs
 // Linear impulse — changes velocity immediately.
-body.AddImpulse(new JVector(0, 10, 0));
+body.ApplyImpulse(new JVector(0, 10, 0));
 
 // Impulse at a world-space position — changes both linear and angular velocity.
-body.AddImpulse(new JVector(0, 10, 0), hitPosition);
+body.ApplyImpulse(new JVector(0, 10, 0), hitPosition);
 ```
 
 Both overloads accept an optional `wakeup` parameter (default `true`).
@@ -129,13 +129,13 @@ Calling e.g. `body.SetActivationState(false)` on a falling body with a velocity 
 
 ## Static bodies
 
-Static bodies (`body.BodyType == BodyType.Static`) have infinite mass and therefore are not affected by collisions or constraints.
+Static bodies (`body.MotionType == MotionType.Static`) have infinite mass and therefore are not affected by collisions or constraints.
 They also do not join islands.
 Static bodies do not generate collisions with other static or inactive bodies.
 Because of this, the position of static bodies should not be altered while in contact with other bodies.
 
 ## Kinematic bodies
 
-Kinematic bodies (`body.BodyType == BodyType.Kinematic`) can have a velocity and therefore change their position.
+Kinematic bodies (`body.MotionType == MotionType.Kinematic`) can have a velocity and therefore change their position.
 They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
 They do take part in collision islands.
