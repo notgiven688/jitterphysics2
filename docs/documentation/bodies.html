@@ -95,7 +95,7 @@ var body = world.CreateRigidBody();
 </code></pre>
 <h2 id="adding-shapes">Adding shapes</h2>
 <p>Multiple shapes can be added to a rigid body, for example:</p>
-<pre><code class="lang-cs">body.AddShape([new SphereShape(radius: 2), new BoxShape(size: 1)]);
+<pre><code class="lang-cs">body.AddShapes([new SphereShape(radius: 2), new BoxShape(size: 1)]);
 </code></pre>
 <p>Shapes determine how bodies collide with each other.</p>
 <div class="WARNING">
@@ -118,7 +118,7 @@ Unit density is assumed for the calculations.</p>
 </code></pre>
 <p>will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.</p>
 <p>The mass properties of the body can also be set directly using <code>body.SetMassInertia</code>.
-Setting <code>setMassProperties: false</code> in <code>body.AddShape(...)</code> prevents the shapes' mass properties from being used.</p>
+Passing <code>MassInertiaUpdateMode.Preserve</code> to <code>body.AddShape(...)</code> or <code>body.AddShapes(...)</code> prevents the automatic recalculation of mass properties when shapes are added.</p>
 <p><em><strong>The position of the rigid body has to align with the center of mass.</strong>
 So in the local reference frame of the body, the center of mass is <span class="math">\((0, 0, 0)\)</span>. Shapes or combinations of shapes must be translated accordingly.</em></p>
 <h3 id="debugging-shapes">Debugging shapes</h3>
@@ -132,12 +132,12 @@ Since this is a slow operation the method should only be called for debugging pu
 </div>
 <h2 id="forces-and-impulses">Forces and impulses</h2>
 <p>Forces and torques can be applied using <code>body.AddForce</code>. Forces accumulate over the current step and are reset after integration.</p>
-<p>For instantaneous velocity changes, use <code>body.AddImpulse</code>:</p>
+<p>For instantaneous velocity changes, use <code>body.ApplyImpulse</code>:</p>
 <pre><code class="lang-cs">// Linear impulse — changes velocity immediately.
-body.AddImpulse(new JVector(0, 10, 0));
+body.ApplyImpulse(new JVector(0, 10, 0));
 
 // Impulse at a world-space position — changes both linear and angular velocity.
-body.AddImpulse(new JVector(0, 10, 0), hitPosition);
+body.ApplyImpulse(new JVector(0, 10, 0), hitPosition);
 </code></pre>
 <p>Both overloads accept an optional <code>wakeup</code> parameter (default <code>true</code>).
 When set to <code>false</code>, the impulse is silently ignored if the body is sleeping.</p>
@@ -178,12 +178,12 @@ It will not immediately change the activation state of the body (<code>body.IsAc
 The next <code>world.Step</code> will then consider this body and its connected island for activation or deactivation.
 Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no effect.</p>
 <h2 id="static-bodies">Static bodies</h2>
-<p>Static bodies (<code>body.BodyType == BodyType.Static</code>) have infinite mass and therefore are not affected by collisions or constraints.
+<p>Static bodies (<code>body.MotionType == MotionType.Static</code>) have infinite mass and therefore are not affected by collisions or constraints.
 They also do not join islands.
 Static bodies do not generate collisions with other static or inactive bodies.
 Because of this, the position of static bodies should not be altered while in contact with other bodies.</p>
 <h2 id="kinematic-bodies">Kinematic bodies</h2>
-<p>Kinematic bodies (<code>body.BodyType == BodyType.Kinematic</code>) can have a velocity and therefore change their position.
+<p>Kinematic bodies (<code>body.MotionType == MotionType.Kinematic</code>) can have a velocity and therefore change their position.
 They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
 They do take part in collision islands.</p>
 

@@ -194,7 +194,7 @@ A shape is defined by its support function—which can be looked up or derived.<
 </code></pre>
 <p>Mass properties and bounding boxes are automatically calculated from the support map using methods in the <code>ShapeHelper</code> class.
 Performance can be optimized by providing overrides directly in the shape class:</p>
-<pre><code class="lang-cs">public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBBox box)
+<pre><code class="lang-cs">public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
 
 public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
 
