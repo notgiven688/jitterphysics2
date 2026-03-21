@@ -1,5 +1,10 @@
 # Changelog
 
+### Jitter 2.8.1 (2026-03-21)
+
+- Fixed velocity setter bug in `RigidBody` - introduced in 2.8.0.
+- Minor API improvements.
+
 ### Jitter 2.8.0 (2026-03-19)
 
 - Added `RigidBody.AddImpulse` methods for applying instantaneous impulses (linear and at a world-space position).
