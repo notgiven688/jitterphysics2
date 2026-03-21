@@ -423,7 +423,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     private void SetDefaultMassInertia()
     {
         inverseInertia = JMatrix.Identity;
-        Data.InverseMass = (Real)1.0;
+        inverseMass = (Real)1.0;
         UpdateWorldInertia();
     }
 
@@ -546,16 +546,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             if (handle.Data.MotionType == MotionType.Static)
             {
-                // Throw an exception here, since we change the behavior of the engine with version 2.7.4.
-                // Maybe return to assert-only later.
                 throw new InvalidOperationException(
                     $"Can not set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            if (MathHelper.CloseToZero(value)) return;
-
-            World.ActivateBodyNextStep(this);
             handle.Data.Velocity = value;
+
+            if (!MathHelper.CloseToZero(value))
+            {
+                World.ActivateBodyNextStep(this);
+            }
         }
     }
 
@@ -579,16 +579,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             if (handle.Data.MotionType == MotionType.Static)
             {
-                // Throw an exception here, since we change the behavior of the engine with version 2.7.4.
-                // Maybe return to assert-only later.
                 throw new InvalidOperationException(
                     $"Can not set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            if (MathHelper.CloseToZero(value)) return;
-
-            World.ActivateBodyNextStep(this);
             handle.Data.AngularVelocity = value;
+
+            if (!MathHelper.CloseToZero(value))
+            {
+                World.ActivateBodyNextStep(this);
+            }
         }
     }
 
