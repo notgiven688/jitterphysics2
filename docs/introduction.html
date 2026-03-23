@@ -117,6 +117,12 @@ Work in progress—contributions are welcome.</p>
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+html[data-bs-theme="light"] .demo-card,
+html[data-bs-theme="light"] .demo-frame-wrap {
+  background: linear-gradient(160deg, #eef3f8 0%, #dde8f2 100%);
+  border-color: rgba(34, 48, 60, 0.12);
+}
+
 .demo-card {
   display: flex;
   flex-direction: column;
@@ -140,9 +146,17 @@ Work in progress—contributions are welcome.</p>
   color: #fff;
 }
 
+html[data-bs-theme="light"] .demo-copy strong {
+  color: #22303c;
+}
+
 .demo-copy span {
   color: #b6c2d0;
   line-height: 1.5;
+}
+
+html[data-bs-theme="light"] .demo-copy span {
+  color: #5f6f80;
 }
 
 .demo-button {
@@ -160,6 +174,16 @@ Work in progress—contributions are welcome.</p>
 .demo-button:hover,
 .demo-button:focus-visible {
   background: #7cbaf8;
+}
+
+html[data-bs-theme="light"] .demo-button {
+  background: #22303c;
+  color: #f4f8fb;
+}
+
+html[data-bs-theme="light"] .demo-button:hover,
+html[data-bs-theme="light"] .demo-button:focus-visible {
+  background: #314253;
 }
 
 .demo-frame-wrap iframe {
