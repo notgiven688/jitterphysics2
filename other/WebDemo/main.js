@@ -2,6 +2,8 @@ import { dotnet } from './_framework/dotnet.js';
 
 async function initialize() {
     const canvas = document.getElementById('canvas');
+    const params = new URLSearchParams(window.location.search);
+    const lightTheme = params.get('theme') === 'light';
 
     const { getAssemblyExports, getConfig, runMain } = await dotnet
     .withDiagnosticTracing(false)
@@ -64,6 +66,7 @@ async function initialize() {
 
     await runMain();
 
+    exports.WebDemo.Application.SetTheme(lightTheme);
     resizeCanvasToDisplaySize();
 
     document.getElementById('spinner')?.remove();

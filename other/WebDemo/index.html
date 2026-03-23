@@ -58,6 +58,30 @@ canvas.emscripten {
     background: #555;
   }
 
+  html.embed-mode #github-link {
+    display: none;
+  }
+
+  html.light-theme,
+  html.light-theme body {
+    background: #eef3f8;
+    color: #22303c;
+  }
+
+  html.light-theme #github-link {
+    color: #22303c;
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(34, 48, 60, 0.18);
+  }
+
+  html.light-theme #github-link:hover {
+    background: #ffffff;
+  }
+
+  html.light-theme .hint {
+    color: #5f6f80;
+  }
+
   h1 { color: #fff; font-size: 1.6em; margin: 24px 0 8px; }
   h2 { color: #ccc; font-size: 1.2em; margin: 20px 0 8px; }
   p, li { line-height: 1.6; color: #bbb; font-size: 0.95em; }
@@ -97,6 +121,17 @@ canvas.emscripten {
     }
   }
 </style>
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get('embed') === '1') {
+    document.documentElement.classList.add('embed-mode');
+  }
+
+  if (params.get('theme') === 'light') {
+    document.documentElement.classList.add('light-theme');
+  }
+</script>
 </head>
 
 <body>

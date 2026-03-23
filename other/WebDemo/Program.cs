@@ -442,6 +442,10 @@ public class Playground
     private static readonly Color TabInactive = new(50, 50, 50, 200);
     private static readonly Color HintColor  = new(180, 180, 180, 255);
     private static readonly Color CtrlColor  = new(130, 130, 130, 255);
+    private static readonly Color SceneBgDark = new(28, 30, 36, 255);
+    private static readonly Color SceneBgLight = new(238, 243, 248, 255);
+
+    private Color _sceneBackground = SceneBgDark;
 
     public Playground()
     {
@@ -560,6 +564,11 @@ public class Playground
         return body;
     }
 
+    public void SetTheme(bool lightTheme)
+    {
+        _sceneBackground = lightTheme ? SceneBgLight : SceneBgDark;
+    }
+
     // ─── Frame ───────────────────────────────────────────────────────────────
 
     public void UpdateFrame()
@@ -578,7 +587,7 @@ public class Playground
         UpdateCamera(ref _camera, CameraMode.Orbital);
 
         BeginDrawing();
-        ClearBackground(new Color(28, 30, 36, 255));
+        ClearBackground(_sceneBackground);
 
         BeginMode3D(_camera);
         DrawGround();
@@ -813,6 +822,7 @@ public partial class Application
 
     [JSExport] public static void UpdateFrame() => _playground.UpdateFrame();
     [JSExport] public static void Resize(int w, int h) => SetWindowSize(w, h);
+    [JSExport] public static void SetTheme(bool lightTheme) => _playground.SetTheme(lightTheme);
     [JSExport] public static void PointerTap(float x, float y) => _playground.QueuePointerTap(x, y);
     [JSExport] public static void Shutdown() => _playground.Dispose();
 
