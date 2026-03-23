@@ -31,7 +31,7 @@ Jitter is cross-platform. The `src` directory contains four projects:
 | Jitter2          | The main library housing Jitter2's functionalities.         |
 | JitterDemo       | Features demo scenes rendered with OpenGL, tested on Linux and Windows. |
 | JitterBenchmark  | The setup for conducting benchmarks using BenchmarkDotNet.  |
-| JitterTests      | Unit tests utilizing NUnit.
+| JitterTests      | Unit tests utilizing NUnit.                                |
 
 To run the demo scenes:
 
