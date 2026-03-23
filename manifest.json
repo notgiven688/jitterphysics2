@@ -52,16 +52,6 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/System.Diagnostics.TraceSource.wasm",
-      "output": {
-        "resource": {
-          "relative_path": "AppBundle/_framework/System.Diagnostics.TraceSource.wasm"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Resource",
       "source_relative_path": "AppBundle/_framework/System.Private.CoreLib.wasm",
       "output": {
         "resource": {
@@ -162,40 +152,60 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/supportFiles/0_lighting.fs",
+      "source_relative_path": "AppBundle/_framework/supportFiles/0_JetBrainsMono-LICENSE.txt",
       "output": {
         "resource": {
-          "relative_path": "AppBundle/_framework/supportFiles/0_lighting.fs"
+          "relative_path": "AppBundle/_framework/supportFiles/0_JetBrainsMono-LICENSE.txt"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/supportFiles/1_lighting.vs",
+      "source_relative_path": "AppBundle/_framework/supportFiles/1_JetBrainsMono-Regular.ttf",
       "output": {
         "resource": {
-          "relative_path": "AppBundle/_framework/supportFiles/1_lighting.vs"
+          "relative_path": "AppBundle/_framework/supportFiles/1_JetBrainsMono-Regular.ttf"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/supportFiles/2_texel_checker.png",
+      "source_relative_path": "AppBundle/_framework/supportFiles/2_lighting.fs",
       "output": {
         "resource": {
-          "relative_path": "AppBundle/_framework/supportFiles/2_texel_checker.png"
+          "relative_path": "AppBundle/_framework/supportFiles/2_lighting.fs"
         }
       },
       "version": ""
     },
     {
       "type": "Resource",
-      "source_relative_path": "AppBundle/_framework/supportFiles/3_runtimeconfig.bin",
+      "source_relative_path": "AppBundle/_framework/supportFiles/3_lighting.vs",
       "output": {
         "resource": {
-          "relative_path": "AppBundle/_framework/supportFiles/3_runtimeconfig.bin"
+          "relative_path": "AppBundle/_framework/supportFiles/3_lighting.vs"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/4_texel_checker.png",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/4_texel_checker.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "AppBundle/_framework/supportFiles/5_runtimeconfig.bin",
+      "output": {
+        "resource": {
+          "relative_path": "AppBundle/_framework/supportFiles/5_runtimeconfig.bin"
         }
       },
       "version": ""

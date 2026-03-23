@@ -12,6 +12,19 @@ async function initialize() {
 
     dotnet.instance.Module['canvas'] = canvas;
 
+    function pointerToCanvasPixels(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const localX = clientX - rect.left;
+        const localY = clientY - rect.top;
+        const scaleX = rect.width > 0 ? canvas.width / rect.width : 1;
+        const scaleY = rect.height > 0 ? canvas.height / rect.height : 1;
+
+        return {
+            x: localX * scaleX,
+            y: localY * scaleY
+        };
+    }
+
     function resizeCanvasToDisplaySize() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
@@ -35,8 +48,19 @@ async function initialize() {
         window.requestAnimationFrame(mainLoop);
     }
 
+    function queuePointerTap(clientX, clientY) {
+        const point = pointerToCanvasPixels(clientX, clientY);
+        exports.WebDemo.Application.PointerTap(point.x, point.y);
+    }
+
     window.addEventListener('resize', resizeCanvasToDisplaySize);
     window.addEventListener('orientationchange', resizeCanvasToDisplaySize);
+    canvas.addEventListener('pointerdown', evt => {
+        queuePointerTap(evt.clientX, evt.clientY);
+        if (evt.pointerType === 'touch') {
+            evt.preventDefault();
+        }
+    }, { passive: false });
 
     await runMain();
 
