@@ -13,6 +13,8 @@
     <TrimMode>full</TrimMode>
     <!-- This is to basically disable globalization to exclude icudt.dat (1.5MB) and reduce size of dotnet.wasm -->
     <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- raylib.a predates Raylib 5.x; unused DllImports are harmless -->
+    <WasmAllowUndefinedSymbols>true</WasmAllowUndefinedSymbols>
   </PropertyGroup>
 
   <Choose>
@@ -37,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jitter2" Version="2.4.7" />
+    <ProjectReference Include="..\..\src\Jitter2\Jitter2.csproj" />
     <PackageReference Include="Raylib-cs" Version="6.1.1" />
   </ItemGroup>
 

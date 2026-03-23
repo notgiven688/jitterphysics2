@@ -1,40 +1,45 @@
 {
   "mainAssemblyName": "WebDemo.dll",
   "resources": {
-    "hash": "sha256-zxJFO3PkpY+EM+GX3xxS/7UPWHnF3UsBciG+QNZqkVI=",
+    "hash": "sha256-GxcqOiU1ArstxMYvTb65UDyeLtOYm49JD34Ei1tbQjA=",
     "jsModuleNative": {
-      "dotnet.native.js": "sha256-1uG0tUdq6HjpKWTWADub5Uop0W3xsWmQSWgwdnv5h9w="
+      "dotnet.native.js": "sha256-bsAlkUHNzEy7M1xAKWKxFZ316eDqWLpHZebl87Mpitg="
     },
     "jsModuleRuntime": {
       "dotnet.runtime.js": "sha256-3egSZfVHFUpXw3QwgiaxDQns5wWmrugiXEFPbJyCk2g="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-Gwe9xwoDDIxJZSzUbeg6fRDFQXzI/4DjAtT9rTUK/OM="
+      "dotnet.native.wasm": "sha256-hnDFyZOL4WxhrNCrYnZquwsXbwUmDoEH/3jNSEOzjAc="
     },
     "coreAssembly": {
-      "Jitter2.wasm": "sha256-wYytxKRKlJ0zW9Wl0J7suE8BdIjoZV3zs/Gs78u+MvY=",
-      "Raylib-cs.wasm": "sha256-EicnTWxbFx696al3Dbo8D9cmUD3Gxx2AZVvm4132pCc=",
-      "System.Collections.wasm": "sha256-W6mBpFgM+YvQ0dnHymZugCYXjquFgkwARGkecYYbevQ=",
-      "System.Diagnostics.TraceSource.wasm": "sha256-FUpc2rONENqEmpEMl9PymTHhgmNZAJHrzQ4IxjPICMM=",
-      "System.Private.CoreLib.wasm": "sha256-S4uOCO7o4RYSu+CI7M9mlqW3WM/9wxDae4jRLa268t0=",
-      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-y2VN4WBYa4FVd+GPyZMi1F1SNj6ROGlIz3KPEIaUQKs=",
-      "WebDemo.wasm": "sha256-rymcAXNe18B9k+kCqbbfsLDNemJpF0CsivwrwrQrkdc="
+      "Jitter2.wasm": "sha256-q+HZQAMAjZu3wVAPTPPP4MQVV3HsrPnXLcXmoJOOock=",
+      "Raylib-cs.wasm": "sha256-ZHIy9NvA/3MR8CiC+lBzr45adi0RDX3Vp7U6rZthRjc=",
+      "System.Collections.wasm": "sha256-ptn/+tzEZ/NpPs/MNR9RUUFYOfpXiKHnJCzl2/XZVIs=",
+      "System.Private.CoreLib.wasm": "sha256-pJuzEen1G4VvJ1R7qYf5n2Dl2KISKrGVi1hpoMB4FjY=",
+      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-lVvOwVVAcGscK3VBJ+hQEpg2LDQdyj1/v8Bso4pvL84=",
+      "WebDemo.wasm": "sha256-imS49ax0zy6pJZjg5fNgmIvPi9Ucb+VXuZ11ZOJg9+s="
     },
     "assembly": {},
     "coreVfs": {
       "runtimeconfig.bin": {
-        "supportFiles/3_runtimeconfig.bin": "sha256-65l+4uofoVjFHnghWH/N0CP6P3I+PzGORhkPInxhR3g="
+        "supportFiles/5_runtimeconfig.bin": "sha256-65l+4uofoVjFHnghWH/N0CP6P3I+PzGORhkPInxhR3g="
       }
     },
     "vfs": {
+      "assets/JetBrainsMono-LICENSE.txt": {
+        "supportFiles/0_JetBrainsMono-LICENSE.txt": "sha256-MPDBNuPIjkItB5Gs2XI4hw+QVKlym8NM8v8NTtjKxK0="
+      },
+      "assets/JetBrainsMono-Regular.ttf": {
+        "supportFiles/1_JetBrainsMono-Regular.ttf": "sha256-oL9g7w+Dxe1NenXUWDhUix9oczct+siPcYBEkYmNE48="
+      },
       "assets/lighting.fs": {
-        "supportFiles/0_lighting.fs": "sha256-9P7bpnmnFzpHKF+2l7LLdMsUr3+eHrSVFvOYCzJ9QRM="
+        "supportFiles/2_lighting.fs": "sha256-9P7bpnmnFzpHKF+2l7LLdMsUr3+eHrSVFvOYCzJ9QRM="
       },
       "assets/lighting.vs": {
-        "supportFiles/1_lighting.vs": "sha256-J7tfxNROREVTHbd5xFSmwN74ufTd78DeWF/DD2wSKeI="
+        "supportFiles/3_lighting.vs": "sha256-J7tfxNROREVTHbd5xFSmwN74ufTd78DeWF/DD2wSKeI="
       },
       "assets/texel_checker.png": {
-        "supportFiles/2_texel_checker.png": "sha256-RlKqyTT0KikXcijV/O5Qm0m/AT2TSMH4gRT/JR+AvTY="
+        "supportFiles/4_texel_checker.png": "sha256-RlKqyTT0KikXcijV/O5Qm0m/AT2TSMH4gRT/JR+AvTY="
       }
     }
   },
