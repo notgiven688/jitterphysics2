@@ -437,15 +437,15 @@ public class Playground
     private int _sceneIndex;
     private IScene Current => _scenes[_sceneIndex];
 
-    private static readonly Color PanelBg   = new(0, 0, 0, 180);
-    private static readonly Color TabActive  = new(91, 168, 245, 230);
-    private static readonly Color TabInactive = new(50, 50, 50, 200);
-    private static readonly Color HintColor  = new(180, 180, 180, 255);
-    private static readonly Color CtrlColor  = new(130, 130, 130, 255);
     private static readonly Color SceneBgDark = new(28, 30, 36, 255);
     private static readonly Color SceneBgLight = new(238, 243, 248, 255);
 
     private Color _sceneBackground = SceneBgDark;
+    private Color _panelBackground = new(18, 20, 26, 255);
+    private Color _tabActive = new(91, 168, 245, 255);
+    private Color _tabInactive = new(50, 50, 50, 255);
+    private Color _hintColor = new(180, 180, 180, 255);
+    private Color _ctrlColor = new(130, 130, 130, 255);
 
     public Playground()
     {
@@ -567,6 +567,11 @@ public class Playground
     public void SetTheme(bool lightTheme)
     {
         _sceneBackground = lightTheme ? SceneBgLight : SceneBgDark;
+        _panelBackground = lightTheme ? new Color(34, 48, 60, 255) : new Color(18, 20, 26, 255);
+        _tabActive = lightTheme ? new Color(91, 168, 245, 255) : new Color(91, 168, 245, 255);
+        _tabInactive = lightTheme ? new Color(78, 96, 114, 255) : new Color(50, 50, 50, 255);
+        _hintColor = lightTheme ? new Color(214, 224, 235, 255) : new Color(180, 180, 180, 255);
+        _ctrlColor = lightTheme ? new Color(176, 193, 209, 255) : new Color(130, 130, 130, 255);
     }
 
     // ─── Frame ───────────────────────────────────────────────────────────────
@@ -781,19 +786,19 @@ public class Playground
         int topBarHeight = 54;
         int tabH = 40;
 
-        DrawRectangle(0, 0, sw, topBarHeight, PanelBg);
+        DrawRectangle(0, 0, sw, topBarHeight, _panelBackground);
         DrawTextF(Current.Name, 12, 7, titleSize, Color.White);
-        DrawTextF(Current.Hint, 12, 34, hintSize, HintColor);
+        DrawTextF(Current.Hint, 12, 34, hintSize, _hintColor);
         string ctrl = $"Arrow Keys to Switch Scene   R Reset   {GetFPS()} fps";
-        DrawTextF(ctrl, sw - MeasureTextF(ctrl, ctrlSize) - 10, 10, ctrlSize, CtrlColor);
+        DrawTextF(ctrl, sw - MeasureTextF(ctrl, ctrlSize) - 10, 10, ctrlSize, _ctrlColor);
 
-        DrawRectangle(0, sh - tabH, sw, tabH, PanelBg);
+        DrawRectangle(0, sh - tabH, sw, tabH, _panelBackground);
         int tabW = sw / _scenes.Count;
         for (int i = 0; i < _scenes.Count; i++)
         {
             int tx = i * tabW;
             DrawRectangle(tx + 1, sh - tabH + 2, tabW - 2, tabH - 4,
-                i == _sceneIndex ? TabActive : TabInactive);
+                i == _sceneIndex ? _tabActive : _tabInactive);
             string label = _scenes[i].Name;
             float lw = MeasureTextF(label, tabLabelSize);
             DrawTextF(label, tx + (tabW - lw) / 2f, sh - tabH + 13, tabLabelSize, Color.White);
