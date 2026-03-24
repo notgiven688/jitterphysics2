@@ -235,6 +235,72 @@ public sealed partial class World
         Tracer.ProfileEnd(TraceName.Step);
     }
 
+    /// <summary>
+    /// Solves the existing contacts and constraints at the velocity level without advancing body transforms.
+    /// </summary>
+    /// <param name="dt">The reference timestep in seconds used to scale bias and softness terms.</param>
+    /// <param name="solverIterations">The number of solver iterations to execute.</param>
+    /// <param name="relaxationIterations">The number of relaxation iterations to execute after solving.</param>
+    /// <param name="multiThread">If <see langword="true"/>, uses the internal thread pool for parallel execution.</param>
+    /// <remarks>
+    /// Unlike <see cref="Step"/>, this method does not perform broadphase or narrowphase collision detection,
+    /// does not integrate forces, and does not integrate positions or orientations. It only processes the
+    /// existing active contacts and constraints already present in the world at the velocity level.
+    /// This is primarily useful after loading a previously saved scene: restore the saved contacts and
+    /// constraints first, then call <see cref="Stabilize"/> to warm-start and solve the restored system
+    /// before resuming normal simulation with <see cref="Step"/>.
+    /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// Thrown if <paramref name="dt"/> is negative, <paramref name="solverIterations"/> is less than 1,
+    /// or <paramref name="relaxationIterations"/> is negative.
+    /// </exception>
+    public void Stabilize(Real dt, int solverIterations, int relaxationIterations = 0, bool multiThread = true)
+    {
+        ThrowIfDisposed();
+        AssertNullBody();
+
+        switch (dt)
+        {
+            case < (Real)0.0:
+                throw new ArgumentException("Time step cannot be negative.", nameof(dt));
+            case < Real.Epsilon:
+                return; // nothing to do
+        }
+
+        if (solverIterations < 1)
+        {
+            throw new ArgumentException("Solver iterations can not be smaller than one.", nameof(solverIterations));
+        }
+
+        if (relaxationIterations < 0)
+        {
+            throw new ArgumentException("Relaxation iterations can not be smaller than zero.", nameof(relaxationIterations));
+        }
+
+        stepDt = dt;
+        invStepDt = (Real)1.0 / dt;
+        substepDt = dt / substeps;
+
+        if (multiThread)
+        {
+            ThreadPool.Instance.ResumeWorkers();
+        }
+
+        CheckDeactivation();
+
+        for (int i = 0; i < substeps; i++)
+        {
+            SolveVelocities(multiThread, solverIterations);
+            RelaxVelocities(multiThread, relaxationIterations);
+        }
+
+        if ((ThreadModel == ThreadModelType.Regular || !multiThread)
+            && ThreadPool.InstanceInitialized)
+        {
+            ThreadPool.Instance.PauseWorkers();
+        }
+    }
+
     #region Prepare and Solve Contacts and Constraints
 
     private readonly ThreadLocal<Queue<int>> deferredContacts = new(() => new Queue<int>());

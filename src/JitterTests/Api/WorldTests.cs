@@ -155,6 +155,78 @@ public class WorldTests
         world.Dispose();
     }
 
+    [TestCase]
+    public void Stabilize_NegativeDt_Throws()
+    {
+        var world = new World();
+        Assert.Throws<ArgumentException>(() => world.Stabilize(-1f / 60f, 1, 0, false));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_ZeroDt_DoesNotThrow()
+    {
+        var world = new World();
+        Assert.DoesNotThrow(() => world.Stabilize(0f, 1, 0, false));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_SolverIterationsBelowOne_Throws()
+    {
+        var world = new World();
+        Assert.Throws<ArgumentException>(() => world.Stabilize(1f / 60f, 0, 0, false));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_RelaxationIterationsBelowZero_Throws()
+    {
+        var world = new World();
+        Assert.Throws<ArgumentException>(() => world.Stabilize(1f / 60f, 1, -1, false));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_WithConstraintError_SolvesWithoutChangingPositions()
+    {
+        var world = new World();
+        world.AllowDeactivation = false;
+        world.Gravity = JVector.Zero;
+
+        var bodyA = world.CreateRigidBody();
+        bodyA.AddShape(new SphereShape(1));
+
+        var bodyB = world.CreateRigidBody();
+        bodyB.AddShape(new SphereShape(1));
+
+        var socket = world.CreateConstraint<BallSocket>(bodyA, bodyB);
+        socket.Initialize(JVector.Zero);
+
+        bodyB.Position = new JVector(1, 0, 0);
+        bodyA.Velocity = JVector.Zero;
+        bodyB.Velocity = JVector.Zero;
+        bodyA.AngularVelocity = JVector.Zero;
+        bodyB.AngularVelocity = JVector.Zero;
+
+        JVector positionA = bodyA.Position;
+        JVector positionB = bodyB.Position;
+
+        world.Stabilize(1f / 60f, 4, 2, false);
+
+        Assert.That(bodyA.Position.X, Is.EqualTo(positionA.X).Within(1e-6f));
+        Assert.That(bodyA.Position.Y, Is.EqualTo(positionA.Y).Within(1e-6f));
+        Assert.That(bodyA.Position.Z, Is.EqualTo(positionA.Z).Within(1e-6f));
+
+        Assert.That(bodyB.Position.X, Is.EqualTo(positionB.X).Within(1e-6f));
+        Assert.That(bodyB.Position.Y, Is.EqualTo(positionB.Y).Within(1e-6f));
+        Assert.That(bodyB.Position.Z, Is.EqualTo(positionB.Z).Within(1e-6f));
+        Assert.That(bodyA.Velocity.LengthSquared() + bodyB.Velocity.LengthSquared(), Is.GreaterThan((Real)0.0));
+        Assert.That(socket.Impulse.LengthSquared(), Is.GreaterThan((Real)0.0));
+
+        world.Dispose();
+    }
+
     // -------------------------------------------------------------------------
     // Events
     // -------------------------------------------------------------------------
@@ -190,6 +262,23 @@ public class WorldTests
         const Real expectedDt = 1f / 60f;
         world.Step(expectedDt, false);
         Assert.That(receivedDt, Is.EqualTo(expectedDt).Within(1e-6f));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_DoesNotFireStepEvents()
+    {
+        var world = new World();
+        bool preFired = false;
+        bool postFired = false;
+
+        world.PreStep += _ => preFired = true;
+        world.PostStep += _ => postFired = true;
+
+        world.Stabilize(1f / 60f, 1, 0, false);
+
+        Assert.That(preFired, Is.False);
+        Assert.That(postFired, Is.False);
         world.Dispose();
     }
 

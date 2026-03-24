@@ -3,6 +3,7 @@ global using JitterTests;
 global using Jitter2;
 global using Jitter2.Collision;
 global using Jitter2.Dynamics;
+global using Jitter2.Dynamics.Constraints;
 global using Jitter2.LinearMath;
 global using Jitter2.Collision.Shapes;
 
