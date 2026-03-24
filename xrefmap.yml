@@ -15960,6 +15960,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.SpeculativeVelocityThreshold
   nameWithType: World.SpeculativeVelocityThreshold
+- uid: Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)
+  name: Stabilize(float, int, int, bool)
+  href: api/Jitter2.World.html#Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_
+  commentId: M:Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)
+  name.vb: Stabilize(Single, Integer, Integer, Boolean)
+  fullName: Jitter2.World.Stabilize(float, int, int, bool)
+  fullName.vb: Jitter2.World.Stabilize(Single, Integer, Integer, Boolean)
+  nameWithType: World.Stabilize(float, int, int, bool)
+  nameWithType.vb: World.Stabilize(Single, Integer, Integer, Boolean)
+- uid: Jitter2.World.Stabilize*
+  name: Stabilize
+  href: api/Jitter2.World.html#Jitter2_World_Stabilize_
+  commentId: Overload:Jitter2.World.Stabilize
+  isSpec: "True"
+  fullName: Jitter2.World.Stabilize
+  nameWithType: World.Stabilize
 - uid: Jitter2.World.Step(System.Single,System.Boolean)
   name: Step(float, bool)
   href: api/Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_

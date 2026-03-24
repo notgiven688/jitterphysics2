@@ -1052,7 +1052,7 @@ and registered internally. The body arguments are used only when a new arbiter i
 
   <h3 id="Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   LockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L793"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L859"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Acquires locks on two rigid bodies using a spin-wait loop. The lock order is determined
@@ -1436,6 +1436,63 @@ bound is exclusive.</p>
 
 
 
+  <a id="Jitter2_World_Stabilize_" data-uid="Jitter2.World.Stabilize*"></a>
+
+  <h3 id="Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_" data-uid="Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)">
+  Stabilize(float, int, int, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L257"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Solves the existing contacts and constraints at the velocity level without advancing body transforms.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Stabilize(float dt, int solverIterations, int relaxationIterations = 0, bool multiThread = true)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>dt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The reference timestep in seconds used to scale bias and softness terms.</p>
+</dd>
+    <dt><code>solverIterations</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of solver iterations to execute.</p>
+</dd>
+    <dt><code>relaxationIterations</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of relaxation iterations to execute after solving.</p>
+</dd>
+    <dt><code>multiThread</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>If <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>, uses the internal thread pool for parallel execution.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Unlike <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>, this method does not perform broadphase or narrowphase collision detection,
+does not integrate forces, and does not integrate positions or orientations. It only processes the
+existing active contacts and constraints already present in the world at the velocity level.
+This is primarily useful after loading a previously saved scene: restore the saved contacts and
+constraints first, then call <a class="xref" href="Jitter2.World.html#Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_">Stabilize(float, int, int, bool)</a> to warm-start and solve the restored system
+before resuming normal simulation with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown if <code class="paramref">dt</code> is negative, <code class="paramref">solverIterations</code> is less than 1,
+or <code class="paramref">relaxationIterations</code> is negative.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Jitter2_World_Step_" data-uid="Jitter2.World.Step*"></a>
 
   <h3 id="Jitter2_World_Step_System_Single_System_Boolean_" data-uid="Jitter2.World.Step(System.Single,System.Boolean)">
@@ -1489,7 +1546,7 @@ may be called concurrently from worker threads.</p>
 
   <h3 id="Jitter2_World_TryLockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L722"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L788"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempts to lock two rigid bodies. Briefly waits on contention, then backs off if unsuccessful.
@@ -1532,7 +1589,7 @@ The lock order is determined by memory address to prevent deadlocks.</p>
 
   <h3 id="Jitter2_World_UnlockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   UnlockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L832"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L898"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases locks on two rigid bodies previously acquired by <a class="xref" href="Jitter2.World.html#Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__">LockTwoBody(ref RigidBodyData, ref RigidBodyData)</a>
