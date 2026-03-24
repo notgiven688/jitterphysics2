@@ -5,6 +5,20 @@ async function initialize() {
     const params = new URLSearchParams(window.location.search);
     const lightTheme = params.get('theme') === 'light';
 
+    // Force an opaque WebGL backbuffer so browser page colors cannot bleed
+    // through anti-aliased canvas content such as UI text.
+    const originalGetContext = canvas.getContext.bind(canvas);
+    canvas.getContext = function(type, attrs) {
+        if (type === 'webgl' || type === 'webgl2' || type === 'experimental-webgl') {
+            return originalGetContext(type, {
+                ...attrs,
+                alpha: false
+            });
+        }
+
+        return originalGetContext(type, attrs);
+    };
+
     const { getAssemblyExports, getConfig, runMain } = await dotnet
     .withDiagnosticTracing(false)
     .create();
