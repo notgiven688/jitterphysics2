@@ -417,7 +417,7 @@ public class Playground
     private Camera3D _camera;
     private Shader   _shader;
     private Model    _modelBox, _modelSphere, _modelGround, _modelRope;
-    private Texture2D _texFull, _texQuad;
+    private Texture2D _texFull, _texQuad, _texBlue, _texYellow, _texGray;
     private Font     _fontTitle, _fontBody, _fontSmall;
     private bool     _disposed;
     private float    _accumulatedTime;
@@ -471,9 +471,22 @@ public class Playground
         _texQuad     = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 512, 512)));
         UnloadImage(img);
 
-        SetMaterialTexture(ref _modelBox,    0, MaterialMapIndex.Albedo, ref _texQuad);
-        SetMaterialTexture(ref _modelSphere, 0, MaterialMapIndex.Albedo, ref _texFull);
+        var imgBlue   = GenImageChecked(1024, 1024, 256, 256, new Color(30, 90, 165, 255), new Color(55, 130, 210, 255));
+        _texBlue      = LoadTextureFromImage(imgBlue);
+        UnloadImage(imgBlue);
+
+        var imgYellow = GenImageChecked(1024, 1024, 128, 128, new Color(180, 140, 20, 255), new Color(235, 195, 50, 255));
+        _texYellow    = LoadTextureFromImage(imgYellow);
+        UnloadImage(imgYellow);
+
+        var imgGray = GenImageColor(16, 16, new Color(90, 93, 100, 255));
+        _texGray    = LoadTextureFromImage(imgGray);
+        UnloadImage(imgGray);
+
+        SetMaterialTexture(ref _modelBox,    0, MaterialMapIndex.Albedo, ref _texBlue);
+        SetMaterialTexture(ref _modelSphere, 0, MaterialMapIndex.Albedo, ref _texYellow);
         SetMaterialTexture(ref _modelGround, 0, MaterialMapIndex.Albedo, ref _texFull);
+        SetMaterialTexture(ref _modelRope,   0, MaterialMapIndex.Albedo, ref _texGray);
 
         _shader = LoadShader("assets/lighting.vs", "assets/lighting.fs");
         unsafe
@@ -540,6 +553,9 @@ public class Playground
         UnloadModel(_modelRope);
         UnloadTexture(_texQuad);
         UnloadTexture(_texFull);
+        UnloadTexture(_texBlue);
+        UnloadTexture(_texYellow);
+        UnloadTexture(_texGray);
         UnloadShader(_shader);
     }
 
