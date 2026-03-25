@@ -10,11 +10,9 @@ Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven6
 
 ---
 
-▶️ Run a small demo directly [in the browser](https://jitterphysics.com/AppBundle/index.html)!
+▶️ Try the interactive demo and explore the docs at **[jitterphysics.com](https://jitterphysics.com/docs/introduction.html)**.
 
 There is also a tiny demo available for the [Godot engine](other/GodotDemo) 🎮.
-
-See below for a fully-featured demo.
 
 ---
 
