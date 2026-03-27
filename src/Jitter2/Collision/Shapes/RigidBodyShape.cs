@@ -105,4 +105,47 @@ public abstract class RigidBodyShape : Shape
 
         return result;
     }
+
+    [ReferenceFrame(ReferenceFrame.World)]
+    public sealed override bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position, in JVector sweep,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+    {
+        if (RigidBody == null)
+        {
+            bool hit = NarrowPhase.Sweep(this, support,
+                orientation, position, sweep,
+                out pointB, out pointA, out normal, out lambda);
+
+            JVector.NegateInPlace(ref normal);
+            return hit;
+        }
+
+        ref var data = ref RigidBody.Data;
+
+        return NarrowPhase.Sweep(support, this,
+            orientation, data.Orientation,
+            position, data.Position,
+            sweep, JVector.Zero,
+            out pointA, out pointB, out normal, out lambda);
+    }
+
+    [ReferenceFrame(ReferenceFrame.World)]
+    public sealed override bool Distance<T>(in T support, in JQuaternion orientation, in JVector position,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
+    {
+        if (RigidBody == null)
+        {
+            return NarrowPhase.Distance(support, this,
+                orientation, JQuaternion.Identity,
+                position, JVector.Zero,
+                out pointA, out pointB, out normal, out distance);
+        }
+
+        ref var data = ref RigidBody.Data;
+
+        return NarrowPhase.Distance(support, this,
+            orientation, data.Orientation,
+            position, data.Position,
+            out pointA, out pointB, out normal, out distance);
+    }
 }
