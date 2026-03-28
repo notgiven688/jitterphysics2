@@ -168,6 +168,39 @@ public class CollisionTests
     }
 
     [TestCase]
+    public void SweepCastableMatchesNarrowPhaseSweep()
+    {
+        var world = new World();
+        SupportPrimitives.Sphere query = new((Real)0.5);
+        BoxShape target = new BoxShape(1);
+        var body = world.CreateRigidBody();
+        body.AddShape(target);
+
+        var orientation = JQuaternion.CreateRotationZ(MathR.PI / (Real)4.0);
+        var position = new JVector(1, 1, 3);
+        var sweep = JVector.Normalize(new JVector(1, 1, 0));
+        body.Orientation = JQuaternion.CreateRotationZ(MathR.PI / (Real)4.0);
+        body.Position = new JVector(11, 11, 3);
+
+        bool narrowHit = NarrowPhase.Sweep(query, target,
+            orientation, body.Orientation,
+            position, body.Position,
+            sweep, JVector.Zero,
+            out JVector narrowA, out JVector narrowB, out JVector narrowNormal, out Real narrowLambda);
+
+        bool castHit = target.Sweep(query,
+            orientation, position, sweep,
+            out JVector castA, out JVector castB, out JVector castNormal, out Real castLambda);
+
+        Assert.That(castHit, Is.EqualTo(narrowHit));
+        Assert.That((castA - narrowA).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That((castB - narrowB).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That((castNormal - narrowNormal).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That(MathR.Abs(castLambda - narrowLambda), Is.LessThan((Real)1e-6));
+        world.Dispose();
+    }
+
+    [TestCase]
     public void TransformedShapeOverlapDistance()
     {
         var box = new BoxShape(1);
