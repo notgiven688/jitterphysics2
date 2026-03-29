@@ -104,7 +104,7 @@ this shape should ideally be used for a small number of points (~300).</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PointCloudShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ICloneableShape&lt;PointCloudShape&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class PointCloudShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, ICloneableShape&lt;PointCloudShape&gt;</code></pre>
   </div>
 
 
@@ -128,6 +128,8 @@ this shape should ideally be used for a small number of points (~300).</p>
       <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></div>
       <div><a class="xref" href="Jitter2.Collision.Shapes.ICloneableShape-1.html">ICloneableShape</a>&lt;<a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a>&gt;</div>
     </dd>
   </dl>
@@ -150,6 +152,12 @@ this shape should ideally be used for a small number of points (~300).</p>
     </div>
     <div>
       <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">RigidBodyShape.RayCast(in JVector, in JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">RigidBodyShape.Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">RigidBodyShape.Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_ShapeId">Shape.ShapeId</a>

@@ -115,6 +115,11 @@ Classes
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.html">SupportPrimitives</a></dt>
+      <dd><p>Provides built-in primitive support-mapped query types and helper methods for constructing them.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.TriangleEdgeCollisionFilter.html">TriangleEdgeCollisionFilter</a></dt>
       <dd><p>Filters internal edge collisions for <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> geometry. Adjusts collision
 normals at shared edges to match neighboring triangles, or discards the collision if the normal
@@ -141,6 +146,11 @@ for computing penetration depth and contact information.</p>
       <dd></dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.FindNearestResult.html">DynamicTree.FindNearestResult</a></dt>
+      <dd><p>Represents the result of a distance query against the dynamic tree.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.DynamicTree.Node.html">DynamicTree.Node</a></dt>
       <dd><p>Represents a node in the AABB tree.</p>
 </dd>
@@ -148,6 +158,11 @@ for computing penetration depth and contact information.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.DynamicTree.RayCastResult.html">DynamicTree.RayCastResult</a></dt>
       <dd><p>Represents the result of a ray cast against the dynamic tree.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.SweepCastResult.html">DynamicTree.SweepCastResult</a></dt>
+      <dd><p>Represents the result of a sweep against the dynamic tree.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -168,6 +183,36 @@ the closest points on the original shapes (A and B spaces).</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Box.html">SupportPrimitives.Box</a></dt>
+      <dd><p>Represents a box as a lightweight support-mapped query primitive.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Capsule.html">SupportPrimitives.Capsule</a></dt>
+      <dd><p>Represents a capsule as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Cone.html">SupportPrimitives.Cone</a></dt>
+      <dd><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Cylinder.html">SupportPrimitives.Cylinder</a></dt>
+      <dd><p>Represents a cylinder as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Point.html">SupportPrimitives.Point</a></dt>
+      <dd><p>Represents a point as a lightweight support-mapped query primitive.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.html">SupportPrimitives.Sphere</a></dt>
+      <dd><p>Represents a sphere as a lightweight support-mapped query primitive.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a></dt>
       <dd><p>Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in
 acceleration structures such as <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.</p>
@@ -179,6 +224,11 @@ Interfaces
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.IBroadPhaseFilter.html">IBroadPhaseFilter</a></dt>
       <dd><p>Provides a hook into the broadphase collision detection pipeline.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></dt>
+      <dd><p>Represents an entity that supports closest-point distance queries against a support-mapped query shape.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -202,6 +252,11 @@ Interfaces
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></dt>
+      <dd><p>Represents an entity that can be sweep-tested against a moving support-mapped query shape.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></dt>
       <dd><p>Represents an entity whose bounding box can be recomputed.</p>
 </dd>
@@ -218,6 +273,16 @@ Enums
 Delegates
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.FindNearestFilterPost.html">DynamicTree.FindNearestFilterPost</a></dt>
+      <dd><p>Delegate for filtering distance query results after the exact shape distance test.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.FindNearestFilterPre.html">DynamicTree.FindNearestFilterPre</a></dt>
+      <dd><p>Delegate for filtering distance query candidates before the exact shape distance test.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.DynamicTree.RayCastFilterPost.html">DynamicTree.RayCastFilterPost</a></dt>
       <dd><p>Delegate for filtering ray cast results after the shape intersection test.</p>
 </dd>
@@ -225,6 +290,16 @@ Delegates
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.DynamicTree.RayCastFilterPre.html">DynamicTree.RayCastFilterPre</a></dt>
       <dd><p>Delegate for filtering ray cast candidates before the shape intersection test.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.SweepCastFilterPost.html">DynamicTree.SweepCastFilterPost</a></dt>
+      <dd><p>Delegate for filtering sweep results after the exact shape sweep test.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Collision.DynamicTree.SweepCastFilterPre.html">DynamicTree.SweepCastFilterPre</a></dt>
+      <dd><p>Delegate for filtering sweep candidates before the exact shape sweep test.</p>
 </dd>
     </dl>
 

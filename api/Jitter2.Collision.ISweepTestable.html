@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Interface IRayCastable | Jitter2 </title>
+      <title>Interface ISweepTestable | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Interface IRayCastable | Jitter2 ">
+      <meta name="title" content="Interface ISweepTestable | Jitter2 ">
       
-      <meta name="description" content="Represents an entity that can be intersected by a ray.">
+      <meta name="description" content="Represents an entity that can be sweep-tested against a moving support-mapped query shape.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_IRayCastable.md&amp;value=---%0Auid%3A%20Jitter2.Collision.IRayCastable%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_ISweepTestable.md&amp;value=---%0Auid%3A%20Jitter2.Collision.ISweepTestable%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Collision.IRayCastable">
+        <article data-uid="Jitter2.Collision.ISweepTestable">
 
 
 
-  <h1 id="Jitter2_Collision_IRayCastable" data-uid="Jitter2.Collision.IRayCastable" class="text-break">
-Interface IRayCastable  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Jitter2_Collision_ISweepTestable" data-uid="Jitter2.Collision.ISweepTestable" class="text-break">
+Interface ISweepTestable  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L106"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,12 @@ Interface IRayCastable  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents an entity that can be intersected by a ray.</p>
+  <div class="markdown summary"><p>Represents an entity that can be sweep-tested against a moving support-mapped query shape.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IRayCastable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ISweepTestable</code></pre>
   </div>
 
 
@@ -121,48 +121,63 @@ Interface IRayCastable  <a class="header-action link-secondary" title="View sour
 </h2>
 
 
-  <a id="Jitter2_Collision_IRayCastable_RayCast_" data-uid="Jitter2.Collision.IRayCastable.RayCast*"></a>
+  <a id="Jitter2_Collision_ISweepTestable_Sweep_" data-uid="Jitter2.Collision.ISweepTestable.Sweep*"></a>
 
-  <h3 id="Jitter2_Collision_IRayCastable_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.IRayCastable.RayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
-  RayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_ISweepTestable_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.ISweepTestable.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs a ray cast against this object.</p>
+  <div class="markdown level1 summary"><p>Performs a sweep test against this object.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">bool RayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)</code></pre>
+    <pre><code class="lang-csharp hljs">bool Sweep&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector sweep, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where T : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The starting point of the ray.</p>
+    <dt><code>support</code> <span class="xref">T</span></dt>
+    <dd><p>The query shape.</p>
 </dd>
-    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The direction of the ray. Does not need to be normalized.</p>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The query shape orientation in world space.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape position in world space.</p>
+</dd>
+    <dt><code>sweep</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape translation in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on the query shape in world space at the sweep origin. Undefined when the shapes already overlap.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on this object in world space at the sweep origin. Undefined when the shapes already overlap.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The surface normal at the intersection point, or <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the ray origin
-is inside the object. Use the return value, not this parameter, to test whether a hit occurred.</p>
+    <dd><p>Collision normal in world space, or <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the shapes already overlap.
+Use the return value to determine whether a hit occurred; do not rely on this being non-zero.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The distance along the ray to the intersection: <code>hitPoint = origin + lambda * direction</code>.
-Zero when the ray origin is inside the object.</p>
+    <dd><p>The time of impact expressed in units of <code class="paramref">sweep</code>. Zero if the shapes already overlap.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><code>true</code> if the ray intersects with the object; otherwise, <code>false</code>.
-Also returns <code>true</code> when the ray origin is inside the object, with <code class="paramref">lambda</code>
-set to zero and <code class="paramref">normal</code> set to <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a>.</p>
+    <dd><p><code>true</code> if the query shape hits or already overlaps this object; otherwise, <code>false</code>.</p>
 </dd>
   </dl>
 
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The query support-map type.</p>
+</dd>
+  </dl>
 
 
 
@@ -177,7 +192,7 @@ set to zero and <code class="paramref">normal</code> set to <a class="xref" href
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L51" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/IDynamicTreeProxy.cs/#L106" class="edit-link">Edit this page</a>
         </div>
 
 

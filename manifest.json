@@ -298,6 +298,48 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestFilterPost.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestFilterPost.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.FindNearestFilterPost",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.FindNearestFilterPost.yml\" sourcestartlinenumber=\"1\">Delegate for filtering distance query results after the exact shape distance test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestFilterPre.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestFilterPre.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.FindNearestFilterPre",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.FindNearestFilterPre.yml\" sourcestartlinenumber=\"1\">Delegate for filtering distance query candidates before the exact shape distance test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.FindNearestResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.FindNearestResult",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.FindNearestResult.yml\" sourcestartlinenumber=\"1\">Represents the result of a distance query against the dynamic tree.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Collision.DynamicTree.Node.yml",
       "output": {
         ".html": {
@@ -354,6 +396,48 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastFilterPost.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastFilterPost.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.SweepCastFilterPost",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.SweepCastFilterPost.yml\" sourcestartlinenumber=\"1\">Delegate for filtering sweep results after the exact shape sweep test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastFilterPre.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastFilterPre.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.SweepCastFilterPre",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.SweepCastFilterPre.yml\" sourcestartlinenumber=\"1\">Delegate for filtering sweep candidates before the exact shape sweep test.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.DynamicTree.SweepCastResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.DynamicTree.SweepCastResult",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.DynamicTree.SweepCastResult.yml\" sourcestartlinenumber=\"1\">Represents the result of a sweep against the dynamic tree.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Collision.DynamicTree.Timings.yml",
       "output": {
         ".html": {
@@ -393,6 +477,20 @@
       "IsMRef": true,
       "Title": "Jitter2.Collision.IBroadPhaseFilter",
       "Summary": "<p sourcefile=\"api/Jitter2.Collision.IBroadPhaseFilter.yml\" sourcestartlinenumber=\"1\">Provides a hook into the broadphase collision detection pipeline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IDistanceTestable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IDistanceTestable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IDistanceTestable",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IDistanceTestable.yml\" sourcestartlinenumber=\"1\">Represents an entity that supports closest-point distance queries against a support-mapped query shape.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -449,6 +547,20 @@
       "IsMRef": true,
       "Title": "Jitter2.Collision.ISupportMappable",
       "Summary": "<p sourcefile=\"api/Jitter2.Collision.ISupportMappable.yml\" sourcestartlinenumber=\"1\">Defines an interface for a generic convex shape characterized by its support function.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.ISweepTestable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.ISweepTestable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.ISweepTestable",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ISweepTestable.yml\" sourcestartlinenumber=\"1\">Represents an entity that can be sweep-tested against a moving support-mapped query shape.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -799,6 +911,104 @@
       "IsMRef": true,
       "Title": "Jitter2.Collision.SimplexSolverAB",
       "Summary": "<p sourcefile=\"api/Jitter2.Collision.SimplexSolverAB.yml\" sourcestartlinenumber=\"1\">Implements the Gilbert-Johnson-Keerthi (GJK) simplex solver with support for retrieving\nthe closest points on the original shapes (A and B spaces).</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Box.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Box.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Box",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Box.yml\" sourcestartlinenumber=\"1\">Represents a box as a lightweight support-mapped query primitive.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Capsule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Capsule.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Capsule",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Capsule.yml\" sourcestartlinenumber=\"1\">Represents a capsule as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Cone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Cone.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Cone",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Cone.yml\" sourcestartlinenumber=\"1\">Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Cylinder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Cylinder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Cylinder",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Cylinder.yml\" sourcestartlinenumber=\"1\">Represents a cylinder as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Point.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Point.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Point",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Point.yml\" sourcestartlinenumber=\"1\">Represents a point as a lightweight support-mapped query primitive.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.Sphere.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.Sphere.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives.Sphere",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Sphere.yml\" sourcestartlinenumber=\"1\">Represents a sphere as a lightweight support-mapped query primitive.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.SupportPrimitives.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.SupportPrimitives.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.SupportPrimitives",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.yml\" sourcestartlinenumber=\"1\">Provides built-in primitive support-mapped query types and helper methods for constructing them.</p>\n"
     },
     {
       "type": "ManagedReference",

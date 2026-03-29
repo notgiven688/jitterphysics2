@@ -102,7 +102,7 @@ Class RigidBodyShape  <a class="header-action link-secondary" title="View source
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class RigidBodyShape : Shape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class RigidBodyShape : Shape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable</code></pre>
   </div>
 
 
@@ -125,6 +125,8 @@ Class RigidBodyShape  <a class="header-action link-secondary" title="View source
       <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></div>
     </dd>
   </dl>
 
@@ -339,6 +341,71 @@ not the center of mass.</p>
 
 
 
+  <a id="Jitter2_Collision_Shapes_RigidBodyShape_Distance_" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Distance*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Distance``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Finds the closest points between this object and the query shape.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public override sealed bool Distance&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, out JVector pointA, out JVector pointB, out JVector normal, out float distance) where T : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">T</span></dt>
+    <dd><p>The query shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The query shape orientation in world space.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape position in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on the query shape in world space. Undefined when the shapes overlap.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Closest point on this object in world space. Undefined when the shapes overlap.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Unit direction from the query shape toward this object, or <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> when
+the shapes overlap. Do not use this to test whether a result was found.</p>
+</dd>
+    <dt><code>distance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The separation distance between the shapes. Zero when overlapping.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the shapes are separated; <code>false</code> if they overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The query support-map type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <a id="Jitter2_Collision_Shapes_RigidBodyShape_LocalRayCast_" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.LocalRayCast*"></a>
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_LocalRayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.LocalRayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
@@ -417,20 +484,92 @@ public override sealed bool RayCast(in JVector origin, in JVector direction, out
     <dd><p>The direction of the ray. Does not need to be normalized.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The surface normal at the intersection point.</p>
+    <dd><p>The surface normal at the intersection point, or <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the ray origin
+is inside the object. Use the return value, not this parameter, to test whether a hit occurred.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The distance along the ray to the intersection: <code>hitPoint = origin + lambda * direction</code>.</p>
+    <dd><p>The distance along the ray to the intersection: <code>hitPoint = origin + lambda * direction</code>.
+Zero when the ray origin is inside the object.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><code>true</code> if the ray intersects with the object; otherwise, <code>false</code>.</p>
+    <dd><p><code>true</code> if the ray intersects with the object; otherwise, <code>false</code>.
+Also returns <code>true</code> when the ray origin is inside the object, with <code class="paramref">lambda</code>
+set to zero and <code class="paramref">normal</code> set to <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a>.</p>
 </dd>
   </dl>
 
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_RigidBodyShape_Sweep_" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Performs a sweep test against this object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public override sealed bool Sweep&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector sweep, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where T : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">T</span></dt>
+    <dd><p>The query shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The query shape orientation in world space.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape position in world space.</p>
+</dd>
+    <dt><code>sweep</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape translation in world space.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on the query shape in world space at the sweep origin. Undefined when the shapes already overlap.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on this object in world space at the sweep origin. Undefined when the shapes already overlap.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision normal in world space, or <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the shapes already overlap.
+Use the return value to determine whether a hit occurred; do not rely on this being non-zero.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The time of impact expressed in units of <code class="paramref">sweep</code>. Zero if the shapes already overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p><code>true</code> if the query shape hits or already overlaps this object; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The query support-map type.</p>
+</dd>
+  </dl>
 
 
 
