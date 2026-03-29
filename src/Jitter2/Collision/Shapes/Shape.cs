@@ -16,7 +16,7 @@ namespace Jitter2.Collision.Shapes;
 /// The shape itself does not have a position or orientation. Shapes can be associated with
 /// instances of <see cref="RigidBody"/>.
 /// </summary>
-public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable
+public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable
 {
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
@@ -53,6 +53,16 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     [ReferenceFrame(ReferenceFrame.World)]
     public abstract bool RayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda);
+
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position, in JVector sweep,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+        where T : ISupportMappable;
+
+    [ReferenceFrame(ReferenceFrame.World)]
+    public abstract bool Distance<T>(in T support, in JQuaternion orientation, in JVector position,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
+        where T : ISupportMappable;
 
     /// <inheritdoc/>
     [ReferenceFrame(ReferenceFrame.Local)]

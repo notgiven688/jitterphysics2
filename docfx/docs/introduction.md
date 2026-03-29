@@ -100,7 +100,7 @@ _disableContribution: true
     <div class="jp-nav-card-title">Documentation</div>
     <div class="jp-nav-card-body">Dive into bodies, shapes, constraints, and the broad-phase tree.</div>
   </a>
-  <a class="jp-nav-card" href="../api/Jitter2.html">
+  <a class="jp-nav-card" href="~/api/Jitter2.yml">
     <div class="jp-nav-card-icon">&#128214;</div>
     <div class="jp-nav-card-title">API Reference</div>
     <div class="jp-nav-card-body">Full generated reference for every public type in Jitter2.</div>
