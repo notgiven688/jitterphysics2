@@ -23,7 +23,10 @@ public partial class DynamicTree
         /// <summary>The ray parameter at the hit: <c>hitPoint = origin + Lambda * direction</c>.</summary>
         public Real Lambda;
 
-        /// <summary>The surface normal at the hit point.</summary>
+        /// <summary>
+        /// The surface normal at the hit point, or <see cref="JVector.Zero"/> when the ray origin
+        /// is inside the hit shape. Do not use this to test whether a hit occurred.
+        /// </summary>
         public JVector Normal;
     }
 
@@ -37,9 +40,9 @@ public partial class DynamicTree
     /// <summary>
     /// Delegate for filtering ray cast candidates before the shape intersection test.
     /// </summary>
-    /// <param name="result">The proxy to evaluate.</param>
+    /// <param name="proxy">The proxy to evaluate.</param>
     /// <returns><c>false</c> to skip this proxy; <c>true</c> to test it.</returns>
-    public delegate bool RayCastFilterPre(IDynamicTreeProxy result);
+    public delegate bool RayCastFilterPre(IDynamicTreeProxy proxy);
 
     private struct Ray(in JVector origin, in JVector direction)
     {
@@ -60,8 +63,12 @@ public partial class DynamicTree
     /// <param name="pre">Optional pre-filter which allows to skip shapes in the detection.</param>
     /// <param name="post">Optional post-filter which allows to skip detections.</param>
     /// <param name="proxy">The shape which was hit.</param>
-    /// <param name="normal">The normal of the surface where the ray hits. Zero if ray does not hit.</param>
-    /// <param name="lambda">Distance from the origin to the ray hit point in units of the ray's direction.</param>
+    /// <param name="normal">
+    /// The surface normal at the hit point. <see cref="JVector.Zero"/> if the ray does not hit,
+    /// or if the ray origin is inside the hit shape. Use the return value to determine whether
+    /// a hit occurred; do not rely on this being non-zero as a hit indicator.
+    /// </param>
+    /// <param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)

@@ -75,4 +75,89 @@ public class BroadPhaseUpdateTests
         Assert.That(world.DynamicTree.IsActive(shape), Is.True);
         world.Dispose();
     }
+
+    [TestCase]
+    public void DynamicTreeSweepCast_ReturnsClosestBroadPhaseHit()
+    {
+        var world = new World();
+
+        var nearBody = world.CreateRigidBody();
+        var nearShape = new SphereShape(1);
+        nearBody.AddShape(nearShape);
+        nearBody.Position = new JVector(5, 0, 0);
+
+        var farBody = world.CreateRigidBody();
+        var farShape = new SphereShape(1);
+        farBody.AddShape(farShape);
+        farBody.Position = new JVector(9, 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        bool hit = world.DynamicTree.SweepCast(query,
+            JQuaternion.Identity, JVector.Zero, new JVector(10, 0, 0),
+            null, null,
+            out IDynamicTreeProxy? proxy, out _, out _, out _, out Real lambda);
+
+        Assert.That(hit, Is.True);
+        Assert.That(proxy, Is.EqualTo(nearShape));
+        Assert.That(lambda, Is.EqualTo((Real)0.3).Within((Real)1e-6));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeSweepCast_DefaultOverloadIsUnbounded()
+    {
+        var world = new World();
+
+        var body = world.CreateRigidBody();
+        var shape = new SphereShape(1);
+        body.AddShape(shape);
+        body.Position = new JVector(5, 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        bool hit = world.DynamicTree.SweepCast(query,
+            JQuaternion.Identity, JVector.Zero, new JVector(1, 0, 0),
+            null, null,
+            out IDynamicTreeProxy? proxy, out _, out _, out _, out Real lambda);
+
+        Assert.That(hit, Is.True);
+        Assert.That(proxy, Is.EqualTo(shape));
+        Assert.That(lambda, Is.EqualTo((Real)3.0).Within((Real)1e-6));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeSweepCast_PostFilterCanCaptureCandidatesWithinMaxLambda()
+    {
+        var world = new World();
+
+        var nearBody = world.CreateRigidBody();
+        var nearShape = new SphereShape(1);
+        nearBody.AddShape(nearShape);
+        nearBody.Position = new JVector(5, 0, 0);
+
+        var farBody = world.CreateRigidBody();
+        var farShape = new SphereShape(1);
+        farBody.AddShape(farShape);
+        farBody.Position = new JVector(9, 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.SweepCastResult> hits = [];
+
+        bool hit = world.DynamicTree.SweepCast(query,
+            JQuaternion.Identity, JVector.Zero, new JVector(10, 0, 0),
+            (Real)0.5,
+            null,
+            result =>
+            {
+                hits.Add(result);
+                return false;
+            },
+            out _, out _, out _, out _, out _);
+
+        Assert.That(hit, Is.False);
+        Assert.That(hits, Has.Count.EqualTo(1));
+        Assert.That(hits[0].Entity, Is.EqualTo(nearShape));
+        Assert.That(hits[0].Lambda, Is.EqualTo((Real)0.3).Within((Real)1e-6));
+        world.Dispose();
+    }
 }

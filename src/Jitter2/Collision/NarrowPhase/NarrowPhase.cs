@@ -495,7 +495,7 @@ public static class NarrowPhase
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
     /// <param name="lambda">Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.
-    /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> is the ray does not hit.</param>
+    /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> if the ray does not hit.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
     /// the ray origin overlaps with the shape.
@@ -525,7 +525,7 @@ public static class NarrowPhase
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray; normalization is not necessary.</param>
     /// <param name="lambda">Specifies the hit point of the ray, calculated as 'origin + lambda * direction'.
-    /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> is the ray does not hit.</param>
+    /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> if the ray does not hit.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
     /// the origin overlaps with the shape.
@@ -699,8 +699,9 @@ public static class NarrowPhase
     /// <param name="supportB">The support function of shape B.</param>
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
-    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
+    /// <param name="pointA">Closest point on shape A. Undefined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Undefined for the overlapping case.</param>
+    /// <param name="normal">Unit direction from shape A toward shape B. Undefined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
@@ -763,8 +764,9 @@ public static class NarrowPhase
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionA">The position of shape A in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <param name="pointA">Closest point on shape A. Not well-defined for the overlapping case.</param>
-    /// <param name="pointB">Closest point on shape B. Not well-defined for the overlapping case.</param>
+    /// <param name="pointA">Closest point on shape A. Undefined for the overlapping case.</param>
+    /// <param name="pointB">Closest point on shape B. Undefined for the overlapping case.</param>
+    /// <param name="normal">Unit direction from shape A toward shape B. Undefined for the overlapping case.</param>
     /// <param name="distance">The distance between the separating shapes. Zero if shapes overlap.</param>
     /// <returns>Returns true if the shapes do not overlap and distance information
     /// can be provided.</returns>
@@ -885,7 +887,7 @@ public static class NarrowPhase
     /// distance (determined by the penetration depth) to avoid overlap.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
-    /// <param name="epaThreshold">The threshold parameter.</param>
+    /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MprEpa<Ta,Tb>(in Ta supportA, in Tb supportB,
@@ -934,7 +936,7 @@ public static class NarrowPhase
     /// distance (determined by the penetration depth) to avoid overlap.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
-    /// <param name="epaThreshold">The threshold parameter.</param>
+    /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>
     /// <returns>Returns true if the shapes overlap (collide), and false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool MprEpa<Ta,Tb>(in Ta supportA, in Tb supportB,
@@ -952,8 +954,20 @@ public static class NarrowPhase
     /// velocities <paramref name="sweepA"/> and <paramref name="sweepB"/> and angular velocities
     /// <paramref name="sweepAngularA"/> and <paramref name="sweepAngularB"/>.
     /// </summary>
-    /// <param name="pointA">Collision point on shape A in world space at t = 0, where collision will occur.</param>
-    /// <param name="pointB">Collision point on shape B in world space at t = 0, where collision will occur.</param>
+    /// <param name="supportA">Shape A.</param>
+    /// <param name="supportB">Shape B.</param>
+    /// <param name="orientationA">Orientation of shape A in world space.</param>
+    /// <param name="orientationB">Orientation of shape B in world space.</param>
+    /// <param name="positionA">Position of shape A in world space.</param>
+    /// <param name="positionB">Position of shape B in world space.</param>
+    /// <param name="sweepA">Linear velocity of shape A.</param>
+    /// <param name="sweepB">Linear velocity of shape B.</param>
+    /// <param name="sweepAngularA">Angular velocity of shape A.</param>
+    /// <param name="sweepAngularB">Angular velocity of shape B.</param>
+    /// <param name="extentA">Bounding sphere radius of shape A. Used to bound the angular displacement contribution.</param>
+    /// <param name="extentB">Bounding sphere radius of shape B. Used to bound the angular displacement contribution.</param>
+    /// <param name="pointA">Collision point on shape A in world space at the sweep origin.</param>
+    /// <param name="pointB">Collision point on shape B in world space at the sweep origin.</param>
     /// <param name="normal">
     /// Normalized collision normal in world space at time of impact (points from A to B). Zero if the shapes already
     /// overlap or do not hit.
@@ -1058,13 +1072,21 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Calculates the time of impact and the collision points in world space for two shapes with velocities
-    /// sweepA and sweepB.
+    /// Calculates the time of impact and the collision points in world space for two shapes with linear velocities
+    /// <paramref name="sweepA"/> and <paramref name="sweepB"/>.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.</param>
-    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.</param>
+    /// <param name="supportA">Shape A.</param>
+    /// <param name="supportB">Shape B.</param>
+    /// <param name="orientationA">Orientation of shape A in world space.</param>
+    /// <param name="orientationB">Orientation of shape B in world space.</param>
+    /// <param name="positionA">Position of shape A in world space.</param>
+    /// <param name="positionB">Position of shape B in world space.</param>
+    /// <param name="sweepA">Linear velocity of shape A.</param>
+    /// <param name="sweepB">Linear velocity of shape B.</param>
+    /// <param name="pointA">Collision point on shape A in world space at the sweep origin.</param>
+    /// <param name="pointB">Collision point on shape B in world space at the sweep origin.</param>
+    /// <param name="normal">Normalized collision normal in world space (points from A to B). Zero if the shapes already overlap or do not hit.</param>
     /// <param name="lambda">Time of impact. <see cref="Real.PositiveInfinity"/> if no hit is detected, zero if shapes overlap.</param>
-    /// <param name="normal">Zero if the shapes already overlap or do not hit.</param>
     /// <returns>True if the shapes will hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep<Ta,Tb>(in Ta supportA, in Tb supportB,
@@ -1109,13 +1131,17 @@ public static class NarrowPhase
     }
 
     /// <summary>
-    /// Perform a sweep test where support shape A is at position zero, not rotated and has no sweep
-    /// direction.
+    /// Performs a sweep test where shape A is fixed at the origin with identity orientation and zero velocity.
     /// </summary>
-    /// <param name="pointA">Collision point on shapeA in world space at t = 0, where collision will occur.</param>
-    /// <param name="pointB">Collision point on shapeB in world space at t = 0, where collision will occur.</param>
+    /// <param name="supportA">Shape A (fixed at the origin, identity orientation).</param>
+    /// <param name="supportB">Shape B.</param>
+    /// <param name="orientationB">Orientation of shape B in world space.</param>
+    /// <param name="positionB">Position of shape B in world space.</param>
+    /// <param name="sweepB">Linear velocity of shape B.</param>
+    /// <param name="pointA">Collision point on shape A in world space at the sweep origin.</param>
+    /// <param name="pointB">Collision point on shape B in world space at the sweep origin.</param>
+    /// <param name="normal">Normalized collision normal in world space (points from A to B). Zero if the shapes already overlap or do not hit.</param>
     /// <param name="lambda">Time of impact. <see cref="Real.PositiveInfinity"/> if no hit is detected, zero if shapes overlap.</param>
-    /// <param name="normal">Zero if the shapes already overlap or do not hit.</param>
     /// <returns>True if the shapes hit or already overlap, false otherwise.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Sweep<Ta,Tb>(in Ta supportA, in Tb supportB,
