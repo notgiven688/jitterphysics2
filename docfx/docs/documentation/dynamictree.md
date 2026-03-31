@@ -201,24 +201,33 @@ Each has a bounded variant with a `maxDistance` parameter.
 Overlap checks can be composed by querying the tree with a bounding box first and then running an exact narrowphase overlap test against the returned candidates:
 
 ```cs
-var sphere = SupportPrimitives.CreateSphere(radius);
-ShapeHelper.CalculateBoundingBox(sphere, JQuaternion.Identity, center, out JBoundingBox box);
-
-List<IDynamicTreeProxy> candidates = [];
-tree.Query(candidates, box);
-
-bool overlap = false;
-
-foreach (var candidate in candidates)
+// Returns all RigidBodyShapes overlapping a sphere at 'center' with 'radius'.
+static IEnumerable<RigidBodyShape> OverlapSphere(World world, JVector center, float radius)
 {
-    if (candidate is not RigidBodyShape shape) continue;
+    var queryBox = new JBoundingBox(
+        center - new JVector(radius),
+        center + new JVector(radius));
 
-    if (NarrowPhase.Overlap(sphere, shape,
-        JQuaternion.Identity, shape.RigidBody.Orientation,
-        center, shape.RigidBody.Position))
+    var candidates = new List<IDynamicTreeProxy>();
+    world.DynamicTree.Query(candidates, queryBox);
+
+    var querySphere = SupportPrimitives.CreateSphere(radius);
+
+    foreach (var proxy in candidates)
     {
-        overlap = true;
-        break;
+        if (proxy is not RigidBodyShape shape) continue;
+
+        ref var data = ref shape.RigidBody.Data;
+
+        bool hit = NarrowPhase.Overlap(
+            querySphere,
+            shape,
+            JQuaternion.Identity,
+            data.Orientation,
+            center,
+            data.Position);
+
+        if (hit) yield return shape;
     }
 }
 ```
