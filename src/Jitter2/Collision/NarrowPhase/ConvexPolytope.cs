@@ -85,7 +85,7 @@ public unsafe struct ConvexPolytope
 
     /// <summary>
     /// Indicates whether the origin is enclosed within the polyhedron.
-    /// Important: This property returns correct values after invoking <see cref="GetClosestTriangle"/>.
+    /// Only valid after <see cref="GetClosestTriangle"/> has been called, which updates this flag.
     /// </summary>
     public readonly bool OriginEnclosed => originEnclosed;
 

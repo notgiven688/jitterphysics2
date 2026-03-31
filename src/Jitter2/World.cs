@@ -202,11 +202,7 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Defines the two available thread models. The <see cref="ThreadModelType.Persistent"/> model keeps the worker
-    /// threads active continuously, even when the <see cref="World.Step(Real, bool)"/> is not in operation, which might
-    /// consume more CPU cycles and possibly affect the performance of other operations such as rendering. However, it ensures that the threads
-    /// remain 'warm' for the next invocation of <see cref="World.Step(Real, bool)"/>. Conversely, the <see cref="ThreadModelType.Regular"/> model allows
-    /// the worker threads to yield and undertake other tasks.
+    /// Gets or sets the threading model used between calls to <see cref="Step(Real, bool)"/>.
     /// </summary>
     public ThreadModelType ThreadModel { get; set; } = ThreadModelType.Regular;
 

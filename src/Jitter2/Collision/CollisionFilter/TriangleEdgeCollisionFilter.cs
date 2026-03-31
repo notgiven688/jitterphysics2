@@ -24,9 +24,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// Gets or sets the distance threshold for edge collision detection, in world units.
     /// </summary>
     /// <remarks>
-    /// Collision points closer than this distance to a triangle edge are considered edge collisions
-    /// and may have their normals adjusted or be discarded. Larger values are more aggressive at
-    /// filtering edges but may incorrectly affect legitimate collisions near triangle boundaries.
+    /// Larger values are more aggressive at filtering edges but may incorrectly affect
+    /// legitimate collisions near triangle boundaries.
     /// </remarks>
     /// <value>The default value is 0.01 world units.</value>
     public Real EdgeThreshold { get; set; } = (Real)0.01;
@@ -37,33 +36,19 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// Gets or sets the minimum length of the projected collision normal required to keep the contact.
     /// </summary>
     /// <remarks>
-    /// <para>
     /// When the collision normal is projected onto the plane formed by the triangle normal and its
     /// neighbor's normal, a very short projection indicates the collision is occurring along the
-    /// edge crease itself. Such collisions are discarded as they typically represent internal edge artifacts.
-    /// </para>
-    /// <para>
-    /// Lower values allow more edge collisions through; higher values are more aggressive at filtering.
-    /// </para>
+    /// edge crease itself and is discarded. Lower values allow more edge collisions through;
+    /// higher values are more aggressive at filtering.
     /// </remarks>
     /// <value>The default value is 0.5.</value>
     public Real ProjectionThreshold { get; set; } = (Real)0.5;
 
     /// <summary>
-    /// Gets or sets the angle threshold for determining when two triangle normals are considered identical.
+    /// Gets or sets the angle threshold used for two purposes: determining when two triangle normals
+    /// are considered coplanar (using simpler snapping logic), and discarding back-face collisions
+    /// whose normal is anti-parallel to the triangle normal within this angle.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// When a collision occurs near an edge, this threshold determines whether the current triangle
-    /// and its neighbor are treated as coplanar (same normal) or as forming a crease. Coplanar
-    /// neighbors use simpler normal snapping logic.
-    /// </para>
-    /// <para>
-    /// This threshold is also used to detect and discard back-face collisions: if the collision
-    /// normal points within this angle of being anti-parallel to the triangle normal,
-    /// the collision is filtered out.
-    /// </para>
-    /// </remarks>
     /// <value>The default value is approximately 2.5 degrees.</value>
     public JAngle AngleThreshold
     {

@@ -212,7 +212,8 @@ public unsafe struct CollisionManifold
     } // BuildManifold
 
     /// <summary>
-    /// Builds the contact manifold between two rigid body shapes using their current transforms.
+    /// Builds the contact manifold between two rigid body shapes, reading position and orientation
+    /// directly from their attached rigid bodies.
     /// </summary>
     /// <typeparam name="Ta">The type of shape A.</typeparam>
     /// <typeparam name="Tb">The type of shape B.</typeparam>

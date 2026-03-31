@@ -34,10 +34,9 @@ public class SphereShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SphereShape"/> class with an optional radius parameter.
-    /// The default radius is 1.0 units.
+    /// Initializes a new instance of the <see cref="SphereShape"/> class.
     /// </summary>
-    /// <param name="radius">The radius of the sphere. Defaults to (Real)1.0.</param>
+    /// <param name="radius">The radius of the sphere. Defaults to 1.0.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="radius"/> is less than or equal to zero.
     /// </exception>

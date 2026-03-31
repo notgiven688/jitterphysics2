@@ -28,6 +28,6 @@ public interface ISupportMappable
     /// <summary>
     /// Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.
     /// </summary>
-    /// <param name="point">A point guaranteed to be inside the convex hull, typically the center of mass.</param>
+    /// <param name="point">A point that must lie strictly inside the convex hull.</param>
     void GetCenter(out JVector point);
 }

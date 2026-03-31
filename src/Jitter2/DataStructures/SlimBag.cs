@@ -78,13 +78,11 @@ internal class SlimBag<T> : IEnumerable<T>
     /// <summary>
     /// Gets the length of the internal array.
     /// </summary>
-    /// <returns>The length of the internal array.</returns>
     public int InternalSize => array.Length;
 
     /// <summary>
-    /// Returns a span representing the valid portion of the internal array.
+    /// Returns a span over the valid elements of the internal array.
     /// </summary>
-    /// <returns>A <see cref="Span{T}"/> representing the valid portion of the internal array.</returns>
     public Span<T> AsSpan()
     {
         return new Span<T>(array, 0, counter);
@@ -116,7 +114,7 @@ internal class SlimBag<T> : IEnumerable<T>
     private Jitter2.Parallelization.ReaderWriterLock rwLock;
 
     /// <summary>
-    /// Adds an element to the <see cref="SlimBag{T}"/>.
+    /// Adds an element to the <see cref="SlimBag{T}"/> in a thread-safe manner.
     /// </summary>
     /// <param name="item">The element to add.</param>
     public void ConcurrentAdd(T item)

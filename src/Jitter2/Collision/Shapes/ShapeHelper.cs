@@ -47,9 +47,10 @@ public static class ShapeHelper
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="hullSink">The sink receiving the generated triangles.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
-    /// <remarks>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.</remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
+    /// <remarks>
+    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </remarks>
     public static void Tessellate<TSink>(ISupportMappable support, ref TSink hullSink, int subdivisions = 3)
         where TSink : ISink<JTriangle>
     {
@@ -107,9 +108,10 @@ public static class ShapeHelper
     /// </summary>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
-    /// <remarks>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.</remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
+    /// <remarks>
+    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </remarks>
     public static List<JTriangle> Tessellate(ISupportMappable support, int subdivisions = 3)
     {
         List<JTriangle> triangles = new();
@@ -123,9 +125,10 @@ public static class ShapeHelper
     /// <param name="vertices">The vertices used to approximate the hull.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
-    /// <remarks>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.</remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
+    /// <remarks>
+    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </remarks>
     public static List<JTriangle> Tessellate(ReadOnlySpan<JVector> vertices, int subdivisions = 3)
     {
         return Tessellate(new VertexSupportMap(vertices), subdivisions);
@@ -209,9 +212,8 @@ public static class ShapeHelper
     /// <remarks>
     /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
     /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
-    /// mapper to generate a hull point.
+    /// mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.
     /// </remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static List<JVector> SampleHull(ReadOnlySpan<JVector> vertices, int subdivisions = 3)
     {
         return SampleHull(new VertexSupportMap(vertices), subdivisions);
@@ -242,9 +244,8 @@ public static class ShapeHelper
     /// <remarks>
     /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
     /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
-    /// mapper to generate a hull point.
+    /// mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.
     /// </remarks>
-    /// <remarks>The time complexity is O(4^n), where n is the number of subdivisions.</remarks>
     public static List<JVector> SampleHull(ISupportMappable support, int subdivisions = 3)
     {
         Stack<(JTriangle triangle, int depth)> stack = new();

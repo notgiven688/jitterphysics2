@@ -97,7 +97,7 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
     /// Attempts to get the value associated with the specified key.
     /// </summary>
     /// <param name="key">The key to locate.</param>
-    /// <param name="value">When this method returns, contains the value if found; otherwise, the default value.</param>
+    /// <param name="value">The value associated with the key, if found; otherwise, the default value.</param>
     /// <returns><see langword="true"/> if the key was found; otherwise, <see langword="false"/>.</returns>
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {

@@ -18,13 +18,8 @@ namespace Jitter2.Collision;
 /// Represents a dynamic AABB tree for broadphase collision detection.
 /// </summary>
 /// <remarks>
-/// <para>
-/// Uses a bounding volume hierarchy with Surface Area Heuristic (SAH) for efficient
-/// insertion and query operations. Supports incremental updates for moving objects.
-/// </para>
-/// <para>
-/// Complexity: O(log n) for insertion/removal, O(n) worst-case for overlap queries.
-/// </para>
+/// Uses a bounding volume hierarchy with Surface Area Heuristic (SAH) for O(log n)
+/// insertion and removal. Supports incremental updates for moving objects.
 /// </remarks>
 public partial class DynamicTree
 {
@@ -154,8 +149,10 @@ public partial class DynamicTree
     /// <summary>
     /// Initializes a new instance of the <see cref="DynamicTree"/> class.
     /// </summary>
-    /// <param name="filter">A collision filter function, used in Jitter to exclude collisions between Shapes belonging
-    /// to the same body. The collision is filtered out if the function returns false.</param>
+    /// <param name="filter">
+    /// A function that returns <c>false</c> to exclude a proxy pair from collision detection.
+    /// See <see cref="Filter"/>.
+    /// </param>
     public DynamicTree(Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> filter)
     {
         enumerateOverlaps = EnumerateOverlapsCallback;
@@ -206,8 +203,8 @@ public partial class DynamicTree
     public int UpdatedProxyCount => movedProxies.Count;
 
     /// <summary>
-    /// Retrieve information of the size and filling of the internal hash set used to
-    /// store potential overlaps.
+    /// Gets the total allocated slot count and the number of entries in the internal hash set
+    /// used to store potential overlaps.
     /// </summary>
     public (int TotalSize, int Count) HashSetInfo => (potentialPairs.Slots.Length, potentialPairs.Count);
 
