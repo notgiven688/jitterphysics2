@@ -87,6 +87,11 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-282-2026-03-30">Jitter 2.8.2 (2026-03-30)</h3>
+<ul>
+<li>Added <code>DynamicTree.SweepCast</code> and <code>DynamicTree.FindNearest</code> - new tree queries combining broadphase pruning with exact narrowphase tests. <code>SweepCast</code> sweeps a shape through the tree; <code>FindNearest</code> finds the closest proxy by distance. Both include bounded variants and convenience overloads for common shapes.</li>
+<li>Added <code>World.Stabilize</code> - solves existing contacts and constraints at the velocity level without advancing body transforms. Useful for warm-starting a restored scene before resuming normal simulation.</li>
+</ul>
 <h3 id="jitter-281-2026-03-21">Jitter 2.8.1 (2026-03-21)</h3>
 <ul>
 <li>Fixed velocity setter bug in <code>RigidBody</code> - introduced in 2.8.0.</li>
