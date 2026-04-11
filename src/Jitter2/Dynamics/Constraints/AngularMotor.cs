@@ -46,6 +46,8 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         PrepareForIteration = &PrepareForIterationAngularMotor;
         base.Create();
     }
+    
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the motor with separate axes for each body.

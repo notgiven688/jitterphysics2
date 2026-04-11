@@ -50,6 +50,8 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+
     /// <summary>
     /// Initializes the constraint using the current relative orientation of the bodies.
     /// </summary>

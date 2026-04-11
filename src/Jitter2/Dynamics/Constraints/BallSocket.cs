@@ -50,6 +50,8 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+
     /// <summary>
     /// Initializes the constraint from a world-space anchor point.
     /// </summary>

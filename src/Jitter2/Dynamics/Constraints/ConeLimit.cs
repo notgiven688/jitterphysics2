@@ -52,6 +52,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+
     /// <summary>
     /// Initializes the cone limit using two world-space axes and an angular range.
     /// </summary>

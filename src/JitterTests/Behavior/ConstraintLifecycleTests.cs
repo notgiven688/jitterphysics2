@@ -90,4 +90,52 @@ public class ConstraintLifecycleTests
         Assert.That(bodyB.IsActive, Is.True);
         world.Dispose();
     }
+
+    [TestCase]
+    public void ResetWarmStart_ClearsCachedConstraintImpulse()
+    {
+        var world = new World();
+        world.AllowDeactivation = false;
+        world.Gravity = JVector.Zero;
+
+        var bodyA = world.CreateRigidBody();
+        bodyA.AddShape(new SphereShape(1));
+
+        var bodyB = world.CreateRigidBody();
+        bodyB.AddShape(new SphereShape(1));
+
+        var socket = world.CreateConstraint<BallSocket>(bodyA, bodyB);
+        socket.Initialize(JVector.Zero);
+
+        bodyB.Position = new JVector(1, 0, 0);
+        bodyA.Velocity = JVector.Zero;
+        bodyB.Velocity = JVector.Zero;
+        bodyA.AngularVelocity = JVector.Zero;
+        bodyB.AngularVelocity = JVector.Zero;
+
+        world.Stabilize(1f / 60f, 4, 2, false);
+
+        Assert.That(socket.Impulse.LengthSquared(), Is.GreaterThan((Real)0.0));
+
+        socket.ResetWarmStart();
+
+        Assert.That(socket.Impulse, Is.EqualTo(JVector.Zero));
+
+        var motor = world.CreateConstraint<LinearMotor>(bodyA, bodyB);
+        motor.Initialize(JVector.UnitX, JVector.UnitX);
+        motor.TargetVelocity = (Real)2.0;
+        motor.MaximumForce = (Real)100.0;
+
+        bodyA.Velocity = JVector.Zero;
+        bodyB.Velocity = JVector.Zero;
+
+        world.Step(1f / 60f, false);
+
+        Assert.That(MathR.Abs(motor.Impulse), Is.GreaterThan((Real)0.0));
+
+        motor.ResetWarmStart();
+
+        Assert.That(motor.Impulse, Is.EqualTo((Real)0.0));
+        world.Dispose();
+    }
 }

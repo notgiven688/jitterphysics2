@@ -51,6 +51,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+
     /// <summary>
     /// Initializes the constraint from world-space axes and angular limits.
     /// </summary>

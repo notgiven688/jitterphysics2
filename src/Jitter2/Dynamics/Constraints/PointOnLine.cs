@@ -59,6 +59,8 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
     {

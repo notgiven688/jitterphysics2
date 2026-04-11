@@ -56,6 +56,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+
     /// <summary>
     /// Initializes the constraint with a fixed distance between anchor points.
     /// </summary>

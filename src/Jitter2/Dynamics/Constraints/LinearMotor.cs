@@ -47,6 +47,8 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+
     /// <summary>
     /// Gets or sets the motor axis on the first body in local space.
     /// </summary>
