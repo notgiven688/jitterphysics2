@@ -1099,7 +1099,11 @@ public sealed partial class World
             bool needsUpdate = island.NeedsUpdate;
             island.NeedsUpdate = false;
 
-            if (!deactivateIsland && !needsUpdate) continue;
+            if (!deactivateIsland && !needsUpdate)
+            {
+                AssertIslandActivationInvariant(island);
+                continue;
+            }
 
             foreach (RigidBody body in island.InternalBodies)
             {
@@ -1186,11 +1190,17 @@ public sealed partial class World
             {
                 inactivateIslands.Push(island);
             }
+            else
+            {
+                AssertIslandActivationInvariant(island);
+            }
         }
 
         while (inactivateIslands.Count > 0)
         {
-            islands.MoveToInactive(inactivateIslands.Pop());
+            Island island = inactivateIslands.Pop();
+            islands.MoveToInactive(island);
+            AssertIslandActivationInvariant(island);
         }
     }
 }

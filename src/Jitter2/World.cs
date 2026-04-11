@@ -613,8 +613,28 @@ public sealed partial class World : IDisposable
     /// <param name="island">The island to activate.</param>
     private void AddToActiveList(Island island)
     {
+        bool wasActive = islands.IsActive(island);
         island.MarkedAsActive = true;
+        if (!wasActive) island.NeedsUpdate = true;
+
         islands.MoveToActive(island);
+        AssertIslandActivationInvariant(island);
+    }
+
+    [Conditional("DEBUG")]
+    private void AssertIslandActivationInvariant(Island island)
+    {
+        if (island.NeedsUpdate) return;
+
+        bool shouldBeActive = islands.IsActive(island);
+
+        foreach (RigidBody body in island.InternalBodies)
+        {
+            if (body.Data.MotionType == MotionType.Static) continue;
+
+            Debug.Assert(body.Data.IsActive == shouldBeActive,
+                "Islands without pending updates must not contain mixed dynamic body activation state.");
+        }
     }
 
     /// <summary>
