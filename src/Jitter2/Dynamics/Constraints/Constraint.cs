@@ -180,6 +180,18 @@ public abstract class Constraint : IDebugDrawable
     {
     }
 
+    /// <summary>
+    /// Resets the cached warm-start state used by the solver for this constraint.
+    /// </summary>
+    /// <remarks>
+    /// This clears only persistent solver impulses. Constraint configuration remains unchanged.
+    /// Useful after restoring snapshots or other discontinuous state changes where preserving
+    /// warm-starting is undesirable.
+    /// </remarks>
+    public virtual void ResetWarmStart()
+    {
+    }
+
     protected unsafe delegate*<ref ConstraintData, Real, void> Iterate = null;
     protected unsafe delegate*<ref ConstraintData, Real, void> PrepareForIteration = null;
 

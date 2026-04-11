@@ -124,7 +124,7 @@ public struct ContactData
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
-        if (Vector.IsHardwareAccelerated)
+        if (IsHardwareAccelerated)
         {
             if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, idt);
             if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, idt);
@@ -148,7 +148,7 @@ public struct ContactData
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
-        if (Vector.IsHardwareAccelerated)
+        if (IsHardwareAccelerated)
         {
             if ((UsageMask & MaskContact0) != 0) Contact0.IterateAccelerated(ptr, applyBias);
             if ((UsageMask & MaskContact1) != 0) Contact1.IterateAccelerated(ptr, applyBias);
@@ -162,6 +162,46 @@ public struct ContactData
             if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr, applyBias);
             if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr, applyBias);
         }
+    }
+
+    internal unsafe void PrepareForIterationAccelerated(Real idt)
+    {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, idt);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, idt);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, idt);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, idt);
+    }
+
+    internal unsafe void PrepareForIterationScalar(Real idt)
+    {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, idt);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, idt);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, idt);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, idt);
+    }
+
+    internal unsafe void IterateAccelerated(bool applyBias)
+    {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.IterateAccelerated(ptr, applyBias);
+        if ((UsageMask & MaskContact1) != 0) Contact1.IterateAccelerated(ptr, applyBias);
+        if ((UsageMask & MaskContact2) != 0) Contact2.IterateAccelerated(ptr, applyBias);
+        if ((UsageMask & MaskContact3) != 0) Contact3.IterateAccelerated(ptr, applyBias);
+    }
+
+    internal unsafe void IterateScalar(bool applyBias)
+    {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
+        if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr, applyBias);
+        if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr, applyBias);
     }
 
     /// <summary>
@@ -630,13 +670,11 @@ public struct ContactData
             Real accumulatedTangentImpulse1 = Accumulated.GetElement(1);
             Real accumulatedTangentImpulse2 = Accumulated.GetElement(2);
 
-            var normal = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
-            var tangent1 = new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
-            var tangent2 = new JVector(NormalTangentX.GetElement(2), NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
-            // End read from VectorReal
-
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
+            JVector normal = Normal;
+            JVector tangent1 = Tangent1;
+            JVector tangent2 = Tangent2;
 
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
@@ -664,8 +702,13 @@ public struct ContactData
             Real kTangent1 = inverseMass;
             Real kTangent2 = inverseMass;
             Real kNormal = inverseMass;
+            JVector angularNormalContribution = JVector.Zero;
+            JVector angularTangent1Contribution = JVector.Zero;
+            JVector angularTangent2Contribution = JVector.Zero;
 
-            JVector impulse = normal * accumulatedNormalImpulse + tangent1 * accumulatedTangentImpulse1 + tangent2 * accumulatedTangentImpulse2;
+            JVector impulse = accumulatedNormalImpulse * normal;
+            impulse += accumulatedTangentImpulse1 * tangent1;
+            impulse += accumulatedTangentImpulse2 * tangent2;
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
@@ -674,27 +717,18 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                // prepare
-                JVector.Cross(RelativePosition1, normal, out JVector tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mN1);
+                JVector angularNormal = TransformSymmetricInertia(RelativePosition1 % normal, b1.InverseInertiaWorld);
+                JVector angularTangent1 = TransformSymmetricInertia(RelativePosition1 % tangent1, b1.InverseInertiaWorld);
+                JVector angularTangent2 = TransformSymmetricInertia(RelativePosition1 % tangent2, b1.InverseInertiaWorld);
 
-                JVector.Cross(RelativePosition1, tangent1, out tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mT1);
+                angularNormalContribution += angularNormal % RelativePosition1;
+                angularTangent1Contribution += angularTangent1 % RelativePosition1;
+                angularTangent2Contribution += angularTangent2 % RelativePosition1;
 
-                JVector.Cross(RelativePosition1, tangent2, out tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mTt1);
-
-                JVector.Cross(mT1, RelativePosition1, out JVector rantra);
-                kTangent1 += JVector.Dot(rantra, tangent1);
-
-                JVector.Cross(mTt1, RelativePosition1, out rantra);
-                kTangent2 += JVector.Dot(rantra, tangent2);
-
-                JVector.Cross(mN1, RelativePosition1, out rantra);
-                kNormal += JVector.Dot(rantra, normal);
-
-                b1.AngularVelocity -= accumulatedNormalImpulse * mN1 + accumulatedTangentImpulse1 * mT1 +
-                                      accumulatedTangentImpulse2 * mTt1;
+                JVector angularImpulse = accumulatedNormalImpulse * angularNormal;
+                angularImpulse += accumulatedTangentImpulse1 * angularTangent1;
+                angularImpulse += accumulatedTangentImpulse2 * angularTangent2;
+                b1.AngularVelocity -= angularImpulse;
             }
 
 
@@ -705,27 +739,23 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                JVector.Cross(RelativePosition2, normal, out JVector tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mN2);
+                JVector angularNormal = TransformSymmetricInertia(RelativePosition2 % normal, b2.InverseInertiaWorld);
+                JVector angularTangent1 = TransformSymmetricInertia(RelativePosition2 % tangent1, b2.InverseInertiaWorld);
+                JVector angularTangent2 = TransformSymmetricInertia(RelativePosition2 % tangent2, b2.InverseInertiaWorld);
 
-                JVector.Cross(RelativePosition2, tangent1, out tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mT2);
+                angularNormalContribution += angularNormal % RelativePosition2;
+                angularTangent1Contribution += angularTangent1 % RelativePosition2;
+                angularTangent2Contribution += angularTangent2 % RelativePosition2;
 
-                JVector.Cross(RelativePosition2, tangent2, out tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mTt2);
-
-                JVector.Cross(mT2, RelativePosition2, out JVector rbntrb);
-                kTangent1 += JVector.Dot(rbntrb, tangent1);
-
-                JVector.Cross(mTt2, RelativePosition2, out rbntrb);
-                kTangent2 += JVector.Dot(rbntrb, tangent2);
-
-                JVector.Cross(mN2, RelativePosition2, out rbntrb);
-                kNormal += JVector.Dot(rbntrb, normal);
-
-                b2.AngularVelocity += accumulatedNormalImpulse * mN2 + accumulatedTangentImpulse1 * mT2 +
-                                      accumulatedTangentImpulse2 * mTt2;
+                JVector angularImpulse = accumulatedNormalImpulse * angularNormal;
+                angularImpulse += accumulatedTangentImpulse1 * angularTangent1;
+                angularImpulse += accumulatedTangentImpulse2 * angularTangent2;
+                b2.AngularVelocity += angularImpulse;
             }
+
+            kNormal += JVector.Dot(normal, angularNormalContribution);
+            kTangent1 += JVector.Dot(tangent1, angularTangent1Contribution);
+            kTangent2 += JVector.Dot(tangent2, angularTangent2Contribution);
 
             Real massTangent1 = (Real)1.0 / kTangent1;
             Real massTangent2 = (Real)1.0 / kTangent2;
@@ -753,13 +783,11 @@ public struct ContactData
             Real accumulatedTangentImpulse1 = Accumulated.GetElement(1);
             Real accumulatedTangentImpulse2 = Accumulated.GetElement(2);
 
-            var normal = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
-            var tangent1 = new JVector(NormalTangentX.GetElement(1), NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
-            var tangent2 = new JVector(NormalTangentX.GetElement(2), NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
-            // End read from VectorReal
-
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
+            JVector normal = Normal;
+            JVector tangent1 = Tangent1;
+            JVector tangent2 = Tangent2;
 
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
@@ -796,7 +824,9 @@ public struct ContactData
 
             Accumulated = Vector.Create(accumulatedNormalImpulse, accumulatedTangentImpulse1, accumulatedTangentImpulse2, 0);
 
-            JVector impulse = normalImpulse * normal + tangentImpulse1 * tangent1 + tangentImpulse2 * tangent2;
+            JVector impulse = normalImpulse * normal;
+            impulse += tangentImpulse1 * tangent1;
+            impulse += tangentImpulse2 * tangent2;
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
@@ -805,16 +835,14 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                JVector.Cross(RelativePosition1, normal, out JVector tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mN1);
+                JVector angularImpulse = normalImpulse *
+                    TransformSymmetricInertia(RelativePosition1 % normal, b1.InverseInertiaWorld);
+                angularImpulse += tangentImpulse1 *
+                    TransformSymmetricInertia(RelativePosition1 % tangent1, b1.InverseInertiaWorld);
+                angularImpulse += tangentImpulse2 *
+                    TransformSymmetricInertia(RelativePosition1 % tangent2, b1.InverseInertiaWorld);
 
-                JVector.Cross(RelativePosition1, tangent1, out tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mT1);
-
-                JVector.Cross(RelativePosition1, tangent2, out tt);
-                JVector.Transform(tt, b1.InverseInertiaWorld, out var mTt1);
-
-                b1.AngularVelocity -= normalImpulse * mN1 + tangentImpulse1 * mT1 + tangentImpulse2 * mTt1;
+                b1.AngularVelocity -= angularImpulse;
             }
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
@@ -824,16 +852,14 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                JVector.Cross(RelativePosition2, normal, out JVector tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mN2);
+                JVector angularImpulse = normalImpulse *
+                    TransformSymmetricInertia(RelativePosition2 % normal, b2.InverseInertiaWorld);
+                angularImpulse += tangentImpulse1 *
+                    TransformSymmetricInertia(RelativePosition2 % tangent1, b2.InverseInertiaWorld);
+                angularImpulse += tangentImpulse2 *
+                    TransformSymmetricInertia(RelativePosition2 % tangent2, b2.InverseInertiaWorld);
 
-                JVector.Cross(RelativePosition2, tangent1, out tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mT2);
-
-                JVector.Cross(RelativePosition2, tangent2, out tt);
-                JVector.Transform(tt, b2.InverseInertiaWorld, out var mTt2);
-
-                b2.AngularVelocity += normalImpulse * mN2 + tangentImpulse1 * mT2 + tangentImpulse2 * mTt2;
+                b2.AngularVelocity += angularImpulse;
             }
 
         }
@@ -844,6 +870,16 @@ public struct ContactData
         private static Real GetSum3(VectorReal vector)
         {
             return vector.GetElement(0) + vector.GetElement(1) + vector.GetElement(2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static JVector TransformSymmetricInertia(in JVector vector, in JMatrix matrix)
+        {
+            Unsafe.SkipInit(out JVector result);
+            result.X = vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31;
+            result.Y = vector.X * matrix.M21 + vector.Y * matrix.M22 + vector.Z * matrix.M23;
+            result.Z = vector.X * matrix.M31 + vector.Y * matrix.M23 + vector.Z * matrix.M33;
+            return result;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

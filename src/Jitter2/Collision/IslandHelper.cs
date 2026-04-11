@@ -141,6 +141,10 @@ internal static class IslandHelper
     {
         Debug.Assert(body1.InternalIsland == body2.InternalIsland, "Islands not the same or null.");
 
+        bool sourceIslandActive = islands.IsActive(body1.InternalIsland);
+        bool sourceNeedsUpdate = body1.InternalIsland.NeedsUpdate;
+        bool sourceMarkedAsActive = body1.InternalIsland.MarkedAsActive;
+
         leftSearchQueue.Enqueue(body1);
         rightSearchQueue.Enqueue(body2);
 
@@ -198,12 +202,12 @@ internal static class IslandHelper
         }
 
         Island island = GetFromPool();
-        islands.Add(island, true);
+        island.NeedsUpdate = sourceNeedsUpdate;
+        island.MarkedAsActive = sourceMarkedAsActive;
+        islands.Add(island, sourceIslandActive);
 
         if (leftSearchQueue.Count == 0)
         {
-            island.NeedsUpdate = body2.InternalIsland.NeedsUpdate;
-
             for (int i = 0; i < visitedBodiesLeft.Count; i++)
             {
                 RigidBody body = visitedBodiesLeft[i];
@@ -216,8 +220,6 @@ internal static class IslandHelper
         }
         else if (rightSearchQueue.Count == 0)
         {
-            island.NeedsUpdate = body1.InternalIsland.NeedsUpdate;
-
             for (int i = 0; i < visitedBodiesRight.Count; i++)
             {
                 RigidBody body = visitedBodiesRight[i];
@@ -250,6 +252,9 @@ internal static class IslandHelper
     {
         if (body1.InternalIsland == body2.InternalIsland) return;
 
+        bool needsUpdate = body1.InternalIsland.NeedsUpdate || body2.InternalIsland.NeedsUpdate;
+        bool markedAsActive = body1.InternalIsland.MarkedAsActive || body2.InternalIsland.MarkedAsActive;
+
         // merge smaller into larger
         RigidBody smallIslandOwner, largeIslandOwner;
 
@@ -274,6 +279,9 @@ internal static class IslandHelper
             b.InternalIsland = largeIslandOwner.InternalIsland;
             largeIslandOwner.InternalIsland.InternalBodies.Add(b);
         }
+
+        largeIslandOwner.InternalIsland.NeedsUpdate |= needsUpdate;
+        largeIslandOwner.InternalIsland.MarkedAsActive |= markedAsActive;
 
         giveBackIsland.ClearLists();
     }

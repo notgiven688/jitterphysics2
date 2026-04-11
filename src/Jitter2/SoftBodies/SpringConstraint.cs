@@ -63,6 +63,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+
     /// <summary>
     /// Initializes the constraint from world-space anchor points.
     /// </summary>

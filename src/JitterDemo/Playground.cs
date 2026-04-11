@@ -92,6 +92,7 @@ public partial class Playground : RenderWindow
         world.Gravity = new JVector(0, -9.81f, 0);
         world.SubstepCount = 1;
         world.SolverIterations = (8, 4);
+        world.SolveMode = SolveMode.Deterministic;
     }
 
     public void AddFloor()

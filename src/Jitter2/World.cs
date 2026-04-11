@@ -148,6 +148,9 @@ public sealed partial class World : IDisposable
     /// This event is invoked once per substep and receives the substep duration
     /// (<c>dt / substepCount</c>). It is called immediately before force integration
     /// and constraint solving for the substep.
+    /// Do not perform topology-changing world modifications here (for example
+    /// adding or removing bodies, constraints, or contacts, or changing body
+    /// motion types).
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreSubStep;
@@ -159,6 +162,9 @@ public sealed partial class World : IDisposable
     /// This event is invoked once per substep and receives the substep duration.
     /// It is called after integration and constraint solving for the substep
     /// have completed.
+    /// Do not perform topology-changing world modifications here (for example
+    /// adding or removing bodies, constraints, or contacts, or changing body
+    /// motion types).
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
@@ -613,8 +619,36 @@ public sealed partial class World : IDisposable
     /// <param name="island">The island to activate.</param>
     private void AddToActiveList(Island island)
     {
+        bool wasActive = islands.IsActive(island);
         island.MarkedAsActive = true;
+        if (!wasActive) island.NeedsUpdate = true;
+
         islands.MoveToActive(island);
+    }
+
+    [Conditional("DEBUG")]
+    private void AssertIslandActivationInvariant(Island island)
+    {
+        if (island.NeedsUpdate) return;
+
+        bool shouldBeActive = islands.IsActive(island);
+
+        foreach (RigidBody body in island.InternalBodies)
+        {
+            if (body.Data.MotionType == MotionType.Static) continue;
+
+            Debug.Assert(body.Data.IsActive == shouldBeActive,
+                "Islands without pending updates must not contain mixed dynamic body activation state.");
+        }
+    }
+
+    [Conditional("DEBUG")]
+    private void AssertIslandActivationInvariants()
+    {
+        for (int i = 0; i < islands.Count; i++)
+        {
+            AssertIslandActivationInvariant(islands[i]);
+        }
     }
 
     /// <summary>

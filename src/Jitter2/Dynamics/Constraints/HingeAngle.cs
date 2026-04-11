@@ -55,6 +55,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         base.Create();
     }
 
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+
     /// <summary>
     /// Initializes the constraint with a rotation axis and angular limits.
     /// </summary>
