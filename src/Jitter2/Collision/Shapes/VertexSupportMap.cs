@@ -59,6 +59,12 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
         else SupportMapScalar(direction, out result);
     }
 
+    internal readonly void SupportMapAcceleratedForTests(in JVector direction, out JVector result)
+        => SupportMapAccelerated(direction, out result);
+
+    internal readonly void SupportMapScalarForTests(in JVector direction, out JVector result)
+        => SupportMapScalar(direction, out result);
+
     private readonly void SupportMapAccelerated(in JVector direction, out JVector result)
     {
         Real maxDotProduct = Real.MinValue;
@@ -87,17 +93,20 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
             Real d2 = sum.GetElement(2);
             Real d3 = sum.GetElement(3);
 
-            if (d0 > maxDotProduct) { maxDotProduct = d0; index = i + 0; }
-            if (d1 > maxDotProduct) { maxDotProduct = d1; index = i + 1; }
-            if (d2 > maxDotProduct) { maxDotProduct = d2; index = i + 2; }
-            if (d3 > maxDotProduct) { maxDotProduct = d3; index = i + 3; }
+            // Use the same "last maximum wins" tie-break as the scalar path.
+            if (d0 >= maxDotProduct) { maxDotProduct = d0; index = i + 0; }
+            if (d1 >= maxDotProduct) { maxDotProduct = d1; index = i + 1; }
+            if (d2 >= maxDotProduct) { maxDotProduct = d2; index = i + 2; }
+            if (d3 >= maxDotProduct) { maxDotProduct = d3; index = i + 3; }
         }
 
         for (; i < length; i++)
         {
-            Real dotProduct = xvalues[i] * direction.X +
-                              yvalues[i] * direction.Y +
-                              zvalues[i] * direction.Z;
+            Real dx = xvalues[i] * direction.X;
+            Real dy = yvalues[i] * direction.Y;
+            Real dz = zvalues[i] * direction.Z;
+
+            Real dotProduct = dx + (dy + dz);
 
             if (dotProduct < maxDotProduct) continue;
             maxDotProduct = dotProduct;
@@ -115,9 +124,11 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
 
         for (int i = 0; i < length; i++)
         {
-            Real dotProduct = xvalues[i] * direction.X +
-                              yvalues[i] * direction.Y +
-                              zvalues[i] * direction.Z;
+            Real dx = xvalues[i] * direction.X;
+            Real dy = yvalues[i] * direction.Y;
+            Real dz = zvalues[i] * direction.Z;
+
+            Real dotProduct = dx + (dy + dz);
 
             if (dotProduct < maxDotProduct) continue;
             maxDotProduct = dotProduct;
