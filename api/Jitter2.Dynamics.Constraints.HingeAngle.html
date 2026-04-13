@@ -179,10 +179,13 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero">Constraint.VerifyNotZero()</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Constraint.Iterate</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">Constraint.PrepareForIteration</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -223,7 +226,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Angle" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Angle">
   Angle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L188"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current angle of rotation around the hinge axis relative to the initial pose.</p>
@@ -255,7 +258,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Bias" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L233"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L238"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively angular error is corrected.</p>
@@ -288,7 +291,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Impulse" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L254"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L259"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
@@ -320,7 +323,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Limit" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Limit">
   Limit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the angular limits for the hinge rotation.</p>
@@ -352,7 +355,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_LimitBias" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.LimitBias">
   LimitBias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L250"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor for angular limit correction.</p>
@@ -385,7 +388,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_LimitSoftness" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.LimitSoftness">
   LimitSoftness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L226"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) applied when angular limits are active.</p>
@@ -418,7 +421,7 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Softness" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L209"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L214"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the angular constraint.</p>
@@ -455,13 +458,12 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Create" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
-fields on this instance. Override this in derived classes to assign the correct solver
-methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
-constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
+to assign the correct registered solver pair. The id is later written into the
+unmanaged header when the constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -485,7 +487,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L295"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L300"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -524,7 +526,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_Initialize_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.Initialize(Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit)">
   Initialize(JVector, AngularLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint with a rotation axis and angular limits.</p>
@@ -565,7 +567,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.ht
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   IterateHingeAngle(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L261"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -598,7 +600,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.ht
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   PrepareForIterationHingeAngle(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L109"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -623,6 +625,38 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.ht
 
 
 
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart">
+  ResetWarmStart()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ResetWarmStart()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
+Useful after restoring snapshots or other discontinuous state changes where preserving
+warm-starting is undesirable.</p>
+</div>
 
 
 

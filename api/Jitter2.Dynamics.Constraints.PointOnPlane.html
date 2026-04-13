@@ -180,10 +180,13 @@ freedom if the limit is enforced.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero">Constraint.VerifyNotZero()</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Constraint.Iterate</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">Constraint.PrepareForIteration</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -224,7 +227,7 @@ freedom if the limit is enforced.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Bias" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L185"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively positional error is corrected.</p>
@@ -257,7 +260,7 @@ freedom if the limit is enforced.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Impulse" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L194"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
@@ -289,7 +292,7 @@ freedom if the limit is enforced.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Softness" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L169"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the constraint.</p>
@@ -326,13 +329,12 @@ freedom if the limit is enforced.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Create" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
-fields on this instance. Override this in derived classes to assign the correct solver
-methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
-constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
+to assign the correct registered solver pair. The id is later written into the
+unmanaged header when the constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -356,7 +358,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L235"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -395,7 +397,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   Initialize(JVector, JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint from world-space parameters.</p>
@@ -438,7 +440,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit)">
   Initialize(JVector, JVector, JVector, LinearLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint from world-space parameters.</p>
@@ -484,7 +486,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_IteratePointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   IteratePointOnPlane(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L196"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -517,7 +519,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.
 
   <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_PrepareForIterationPointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   PrepareForIterationPointOnPlane(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L104"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -542,6 +544,38 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnPlane.
 
 
 
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_PointOnPlane_ResetWarmStart_" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_PointOnPlane_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart">
+  ResetWarmStart()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnPlane.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ResetWarmStart()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_PointOnPlane_ResetWarmStart_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
+Useful after restoring snapshots or other discontinuous state changes where preserving
+warm-starting is undesirable.</p>
+</div>
 
 
 

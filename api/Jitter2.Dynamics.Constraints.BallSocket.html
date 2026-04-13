@@ -179,10 +179,13 @@ removing three translational degrees of freedom.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero">Constraint.VerifyNotZero()</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Constraint.Iterate</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">Constraint.PrepareForIteration</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -223,7 +226,7 @@ removing three translational degrees of freedom.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Anchor1" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Anchor1">
   Anchor1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the first rigid body in world space. The anchor point is
@@ -257,7 +260,7 @@ public JVector Anchor1 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Anchor2" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Anchor2">
   Anchor2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the second rigid body in world space. The anchor point is
@@ -291,7 +294,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Bias" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L188"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively positional error is corrected.</p>
@@ -324,7 +327,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Impulse" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L197"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
@@ -356,7 +359,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Softness" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L176"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the constraint.</p>
@@ -394,13 +397,12 @@ Scaled by inverse timestep during solving.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Create" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
-fields on this instance. Override this in derived classes to assign the correct solver
-methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
-constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
+to assign the correct registered solver pair. The id is later written into the
+unmanaged header when the constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -424,7 +426,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L224"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -463,7 +465,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_Initialize_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.Initialize(Jitter2.LinearMath.JVector)">
   Initialize(JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint from a world-space anchor point.</p>
@@ -500,7 +502,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   IterateBallSocket(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L199"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -533,7 +535,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
 
   <h3 id="Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   PrepareForIterationBallSocket(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -558,6 +560,38 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
 
 
 
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_BallSocket_ResetWarmStart_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_BallSocket_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart">
+  ResetWarmStart()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ResetWarmStart()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_BallSocket_ResetWarmStart_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
+Useful after restoring snapshots or other discontinuous state changes where preserving
+warm-starting is undesirable.</p>
+</div>
 
 
 

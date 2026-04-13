@@ -142,6 +142,16 @@ A singleton pattern is used here, as demonstrated below:</p>
 <p>This adjusts the number of additional (with respect to the main thread) worker threads to <span class="math">\(4-1=3\)</span>.</p>
 <p>The <code>world.ThreadModel</code> property may be used to keep the thread pool in a tight loop waiting for work to be processed after <code>world.Step</code> has been run (<code>ThreadModelType.Persistent</code>), or to yield threads afterwards (<code>ThreadModelType.Regular</code>).
 The latter option is recommended to free processing power for other code, such as rendering.</p>
+<h2 id="solver-mode">Solver Mode</h2>
+<p>Jitter2 offers two solver strategies through <a class="xref" href="../../api/Jitter2.World.html#Jitter2_World_SolveMode">SolveMode</a>:</p>
+<pre><code class="lang-cs">world.SolveMode = SolveMode.Regular;       // default
+world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+</code></pre>
+<p><code>SolveMode.Regular</code> is the default and optimized for throughput. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.</p>
+<p><code>SolveMode.Deterministic</code> is the best-effort cross-platform deterministic path. It processes each simulation island in a stable order and uses deterministic tie-breakers for contacts and constraints. Islands can still be distributed across threads, so <code>world.Step(dt, multiThread: true)</code> remains valid in deterministic mode.</p>
+<p>Use deterministic mode when repeatability matters more than raw performance, for example for tests, replays, debugging, or deterministic gameplay simulation. It can be significantly slower than <code>SolveMode.Regular</code>, so it should generally be enabled deliberately rather than used as the default for all worlds.</p>
+<p>By contrast, <code>SolveMode.Regular</code> with <code>multiThread: false</code> can still look reproducible when the world is built in the exact same way inside the same .NET process, but that is a much weaker property and should not be confused with cross-platform determinism.</p>
+<p>For deterministic mode, it is not necessary that the entire world was built through the same history. What must match is the setup order inside each interacting island: the participating bodies, shapes, and constraints must be added in the same order. Precision still matters: a float build and a double build are both deterministic, but they will not produce the same bit pattern. See <a href="general.html#deterministic-simulation">General</a> for a summary of what each solver configuration guarantees and the current CI coverage behind that claim.</p>
 <h2 id="solver-iterations">Solver Iterations</h2>
 <p>Jitter2 employs an iterative solver to solve contacts and constraints.
 The number of iterations can be raised to improve simulation quality (<code>world.SolverIterations</code>).</p>
@@ -163,6 +173,21 @@ world.SolverIterations = (solver: 2, relaxation: 1);
 <p>does perform <span class="math">\(12\)</span> solver iterations in total for each call to <code>world.Step</code>.
 The runtime is slower than a single regular step with <span class="math">\(12\)</span> iterations but this approach enhances the stability of the simulation.
 Substepping is excellent for enhancing the overall quality of constraints, stabilizing large stacks of objects, and simulating large mass ratios (like heavy objects resting on light objects) with greater accuracy.</p>
+<h2 id="contact-manifold-persistence">Contact Manifold Persistence</h2>
+<p>By default, Jitter2 caches contact points and their accumulated impulses between frames (<code>world.PersistentContactManifold = true</code>). This allows the solver to warm-start from the previous solution and lets the manifold grow over several steps, which improves stability for resting contacts.</p>
+<p>Setting <code>world.PersistentContactManifold = false</code> discards all contact data at the end of each frame, so every contact is treated as brand-new. This removes frame-to-frame contact memory at the cost of solver convergence speed.</p>
+<p>Individual bodies can discard their cached contacts without changing the global setting:</p>
+<pre><code class="lang-cs">body.ClearContactCache();  // discard cached manifold for this body
+</code></pre>
+<p>This is useful after discontinuous user-driven transforms such as teleports. When <code>SolveMode.Deterministic</code> is active, setting a body's <code>Position</code> or <code>Orientation</code> property automatically calls <code>ClearContactCache()</code>.</p>
+<h2 id="warm-start-reset">Warm-Start Reset</h2>
+<p>The iterative solver warm-starts each frame from the accumulated impulses of the previous frame. After restoring a snapshot or any other discontinuous state change, this cached state can be stale. Every constraint exposes a <code>ResetWarmStart()</code> method that clears its accumulated impulses without removing the constraint:</p>
+<pre><code class="lang-cs">foreach (var constraint in body.Constraints)
+{
+    constraint.ResetWarmStart();
+}
+</code></pre>
+<p><code>World.Stabilize</code> can then be called to re-solve the restored contacts and constraints before resuming normal simulation. <code>Stabilize</code> respects <code>SolveMode.Deterministic</code> when it is set.</p>
 <h2 id="auxiliary-contacts">Auxiliary Contacts</h2>
 <p>Jitter2 employs a technique termed 'auxiliary contacts', where additional contacts are generated for the general case where two flat surfaces of shapes are in contact.
 These additional contacts are calculated within one frame, generating the full contact manifold in a 'single pass' and preventing jitter commonly encountered with incrementally constructed collision manifolds.

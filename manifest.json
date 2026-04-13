@@ -2230,6 +2230,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.SolveMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.SolveMode.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.SolveMode",
+      "Summary": "<p sourcefile=\"api/Jitter2.SolveMode.yml\" sourcestartlinenumber=\"1\">Controls which solver strategy is used during <xref href=\"Jitter2.World.Step(System.Single%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.ThreadContext.yml",
       "output": {
         ".html": {

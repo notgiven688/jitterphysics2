@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_ConstraintData" data-uid="Jitter2.Dynamics.Constraints.ConstraintData" class="text-break">
-Struct ConstraintData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L54"><i class="bi bi-code-slash"></i></a>
+Struct ConstraintData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -140,7 +140,7 @@ Struct ConstraintData  <a class="header-action link-secondary" title="View sourc
   <h2 id="Jitter2_Dynamics_Constraints_ConstraintData_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
 This structure is stored in unmanaged memory and accessed via <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Handle">Handle</a>.
-It contains function pointers for the solver and handles to the connected bodies.
+It contains a solver dispatch id, a stable constraint identifier, and handles to the connected bodies.
 </p>
 <p>
 The data is valid only while the constraint is registered with the world. Do not cache references
@@ -156,7 +156,7 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Body1" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handle to the first body's simulation data.</p>
@@ -187,7 +187,7 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Body2" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handle to the second body's simulation data.</p>
@@ -216,17 +216,17 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
 
 
-  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate">
-  Iterate
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_ConstraintId" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.ConstraintId">
+  ConstraintId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Function pointer to the constraint's iteration solver.</p>
+  <div class="markdown level1 summary"><p>Stable creation-order identifier used for deterministic sorting.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate*&lt;ref ConstraintData, float, void&gt; Iterate</code></pre>
+    <pre><code class="lang-csharp hljs">public ulong ConstraintId</code></pre>
   </div>
 
 
@@ -234,7 +234,7 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt>delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint64">ulong</a></dt>
     <dd></dd>
   </dl>
 
@@ -247,17 +247,17 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
 
 
-  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration">
-  PrepareForIteration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_DispatchId" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.DispatchId">
+  DispatchId
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L78"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Function pointer to the constraint's pre-iteration setup.</p>
+  <div class="markdown level1 summary"><p>Identifier of the registered solver dispatch pair for this constraint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate*&lt;ref ConstraintData, float, void&gt; PrepareForIteration</code></pre>
+    <pre><code class="lang-csharp hljs">public uint DispatchId</code></pre>
   </div>
 
 
@@ -265,9 +265,115 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt>delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
     <dd></dd>
   </dl>
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_Dynamics_Constraints_ConstraintData_IsEnabled_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_IsEnabled" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled">
+  IsEnabled
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets whether this constraint is enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly bool IsEnabled { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
+  Iterate(ref ConstraintData, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly void Iterate(ref ConstraintData constraint, float idt)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
+    <dd></dd>
+    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
+  PrepareForIteration(ref ConstraintData, float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly void PrepareForIteration(ref ConstraintData constraint, float idt)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
+    <dd></dd>
+    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
 
 
 
@@ -281,7 +387,7 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L54" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L73" class="edit-link">Edit this page</a>
         </div>
 
 

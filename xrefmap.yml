@@ -5827,12 +5827,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.EffectiveMass
   nameWithType: AngularMotor.AngularMotorData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html#Jitter2_Dynamics_Constraints_AngularMotor_AngularMotorData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.Iterate
-  nameWithType: AngularMotor.AngularMotorData.Iterate
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.LocalAxis1
   name: LocalAxis1
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html#Jitter2_Dynamics_Constraints_AngularMotor_AngularMotorData_LocalAxis1
@@ -5857,12 +5851,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.MaxLambda
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.MaxLambda
   nameWithType: AngularMotor.AngularMotorData.MaxLambda
-- uid: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html#Jitter2_Dynamics_Constraints_AngularMotor_AngularMotorData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.PrepareForIteration
-  nameWithType: AngularMotor.AngularMotorData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.Velocity
   name: Velocity
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html#Jitter2_Dynamics_Constraints_AngularMotor_AngularMotorData_Velocity
@@ -5985,6 +5973,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor
   nameWithType: AngularMotor.PrepareForIterationAngularMotor
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart()
+  nameWithType: AngularMotor.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.ResetWarmStart
+  nameWithType: AngularMotor.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.TargetVelocity
   name: TargetVelocity
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_TargetVelocity
@@ -6072,12 +6073,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.EffectiveMass
   nameWithType: BallSocket.BallSocketData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html#Jitter2_Dynamics_Constraints_BallSocket_BallSocketData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.Iterate
-  nameWithType: BallSocket.BallSocketData.Iterate
 - uid: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.LocalAnchor1
   name: LocalAnchor1
   href: api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html#Jitter2_Dynamics_Constraints_BallSocket_BallSocketData_LocalAnchor1
@@ -6090,12 +6085,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.LocalAnchor2
   fullName: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.LocalAnchor2
   nameWithType: BallSocket.BallSocketData.LocalAnchor2
-- uid: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html#Jitter2_Dynamics_Constraints_BallSocket_BallSocketData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.PrepareForIteration
-  nameWithType: BallSocket.BallSocketData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.R1
   name: R1
   href: api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.html#Jitter2_Dynamics_Constraints_BallSocket_BallSocketData_R1
@@ -6217,6 +6206,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket
   nameWithType: BallSocket.PrepareForIterationBallSocket
+- uid: Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart()
+  nameWithType: BallSocket.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.ResetWarmStart
+  nameWithType: BallSocket.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.BallSocket.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_Softness
@@ -6336,12 +6338,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.EffectiveMass
   nameWithType: ConeLimit.ConeLimitData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.Iterate
-  nameWithType: ConeLimit.ConeLimitData.Iterate
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.J0
   name: J0
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_J0
@@ -6372,12 +6368,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LocalAxis2
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LocalAxis2
   nameWithType: ConeLimit.ConeLimitData.LocalAxis2
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.PrepareForIteration
-  nameWithType: ConeLimit.ConeLimitData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_Softness
@@ -6487,6 +6477,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit
   nameWithType: ConeLimit.PrepareForIterationConeLimit
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart()
+  nameWithType: ConeLimit.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart
+  nameWithType: ConeLimit.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_Softness
@@ -6622,6 +6625,19 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.Constraint.DefaultLinearSoftness
   fullName: Jitter2.Dynamics.Constraints.Constraint.DefaultLinearSoftness
   nameWithType: Constraint.DefaultLinearSoftness
+- uid: Jitter2.Dynamics.Constraints.Constraint.DispatchId
+  name: DispatchId
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId
+  commentId: P:Jitter2.Dynamics.Constraints.Constraint.DispatchId
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DispatchId
+  nameWithType: Constraint.DispatchId
+- uid: Jitter2.Dynamics.Constraints.Constraint.DispatchId*
+  name: DispatchId
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.DispatchId
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DispatchId
+  nameWithType: Constraint.DispatchId
 - uid: Jitter2.Dynamics.Constraints.Constraint.Handle
   name: Handle
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Handle
@@ -6661,18 +6677,51 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.IsSmallConstraint
   nameWithType: Constraint.IsSmallConstraint
-- uid: Jitter2.Dynamics.Constraints.Constraint.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.Constraint.Iterate
-  fullName: Jitter2.Dynamics.Constraints.Constraint.Iterate
-  nameWithType: Constraint.Iterate
-- uid: Jitter2.Dynamics.Constraints.Constraint.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.Constraint.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.Constraint.PrepareForIteration
-  nameWithType: Constraint.PrepareForIteration
+- uid: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)
+  name: RegisterFullConstraint(delegate*<ref ConstraintData, float, void>, delegate*<ref ConstraintData, float, void>)
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)
+  name.vb: RegisterFullConstraint(, )
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, float, void>, delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, float, void>)
+  fullName.vb: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(, )
+  nameWithType: Constraint.RegisterFullConstraint(delegate*<ref ConstraintData, float, void>, delegate*<ref ConstraintData, float, void>)
+  nameWithType.vb: Constraint.RegisterFullConstraint(, )
+- uid: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint*
+  name: RegisterFullConstraint
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint
+  nameWithType: Constraint.RegisterFullConstraint
+- uid: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)
+  name: RegisterSmallConstraint(delegate*<ref SmallConstraintData, float, void>, delegate*<ref SmallConstraintData, float, void>)
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)
+  name.vb: RegisterSmallConstraint(, )
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, float, void>, delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, float, void>)
+  fullName.vb: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(, )
+  nameWithType: Constraint.RegisterSmallConstraint(delegate*<ref SmallConstraintData, float, void>, delegate*<ref SmallConstraintData, float, void>)
+  nameWithType.vb: Constraint.RegisterSmallConstraint(, )
+- uid: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint*
+  name: RegisterSmallConstraint
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint
+  nameWithType: Constraint.RegisterSmallConstraint
+- uid: Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart()
+  nameWithType: Constraint.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart
+  nameWithType: Constraint.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.Constraint.SmallHandle
   name: SmallHandle
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_SmallHandle
@@ -6717,16 +6766,61 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.ConstraintData.Body2
   fullName: Jitter2.Dynamics.Constraints.ConstraintData.Body2
   nameWithType: ConstraintData.Body2
-- uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.ConstraintId
+  name: ConstraintId
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_ConstraintId
+  commentId: F:Jitter2.Dynamics.Constraints.ConstraintData.ConstraintId
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.ConstraintId
+  nameWithType: ConstraintData.ConstraintId
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.DispatchId
+  name: DispatchId
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_DispatchId
+  commentId: F:Jitter2.Dynamics.Constraints.ConstraintData.DispatchId
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.DispatchId
+  nameWithType: ConstraintData.DispatchId
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
+  name: IsEnabled
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_IsEnabled
+  commentId: P:Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
+  nameWithType: ConstraintData.IsEnabled
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled*
+  name: IsEnabled
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_IsEnabled_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
+  nameWithType: ConstraintData.IsEnabled
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name: Iterate(ref ConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name.vb: Iterate(ConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData, Single)
+  nameWithType: ConstraintData.Iterate(ref ConstraintData, float)
+  nameWithType.vb: ConstraintData.Iterate(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate*
   name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.ConstraintData.Iterate
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConstraintData.Iterate
+  isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConstraintData.Iterate
   nameWithType: ConstraintData.Iterate
-- uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name: PrepareForIteration(ref ConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name.vb: PrepareForIteration(ConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData, Single)
+  nameWithType: ConstraintData.PrepareForIteration(ref ConstraintData, float)
+  nameWithType.vb: ConstraintData.PrepareForIteration(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration*
   name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration
+  isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration
   nameWithType: ConstraintData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.Constraint`1
@@ -6927,12 +7021,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.EffectiveMass
   nameWithType: DistanceLimit.DistanceLimitData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html#Jitter2_Dynamics_Constraints_DistanceLimit_DistanceLimitData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.Iterate
-  nameWithType: DistanceLimit.DistanceLimitData.Iterate
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.J0
   name: J0
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html#Jitter2_Dynamics_Constraints_DistanceLimit_DistanceLimitData_J0
@@ -6963,12 +7051,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.LocalAnchor2
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.LocalAnchor2
   nameWithType: DistanceLimit.DistanceLimitData.LocalAnchor2
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html#Jitter2_Dynamics_Constraints_DistanceLimit_DistanceLimitData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.PrepareForIteration
-  nameWithType: DistanceLimit.DistanceLimitData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.DistanceLimitData.html#Jitter2_Dynamics_Constraints_DistanceLimit_DistanceLimitData_Softness
@@ -7039,6 +7121,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle
   nameWithType: DistanceLimit.PrepareForIterationFixedAngle
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart()
+  nameWithType: DistanceLimit.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart
+  nameWithType: DistanceLimit.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_Softness
@@ -7158,12 +7253,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.EffectiveMass
   nameWithType: FixedAngle.FixedAngleData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Iterate
-  nameWithType: FixedAngle.FixedAngleData.Iterate
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_Jacobian
@@ -7182,12 +7271,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.MinAngle
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.MinAngle
   nameWithType: FixedAngle.FixedAngleData.MinAngle
-- uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.PrepareForIteration
-  nameWithType: FixedAngle.FixedAngleData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Q0
   name: Q0
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_Q0
@@ -7258,6 +7341,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle
   nameWithType: FixedAngle.PrepareForIterationFixedAngle
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart()
+  nameWithType: FixedAngle.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.ResetWarmStart
+  nameWithType: FixedAngle.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_Softness
@@ -7383,12 +7479,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.EffectiveMass
   nameWithType: HingeAngle.HingeAngleData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Iterate
-  nameWithType: HingeAngle.HingeAngleData.Iterate
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Jacobian
@@ -7419,12 +7509,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.MinAngle
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.MinAngle
   nameWithType: HingeAngle.HingeAngleData.MinAngle
-- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.PrepareForIteration
-  nameWithType: HingeAngle.HingeAngleData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Q0
   name: Q0
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Q0
@@ -7534,6 +7618,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle
   nameWithType: HingeAngle.PrepareForIterationHingeAngle
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart()
+  nameWithType: HingeAngle.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.ResetWarmStart
+  nameWithType: HingeAngle.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_Softness
@@ -7942,12 +8039,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.EffectiveMass
   nameWithType: LinearMotor.LinearMotorData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html#Jitter2_Dynamics_Constraints_LinearMotor_LinearMotorData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.Iterate
-  nameWithType: LinearMotor.LinearMotorData.Iterate
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.LocalAxis1
   name: LocalAxis1
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html#Jitter2_Dynamics_Constraints_LinearMotor_LinearMotorData_LocalAxis1
@@ -7972,12 +8063,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.MaxLambda
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.MaxLambda
   nameWithType: LinearMotor.LinearMotorData.MaxLambda
-- uid: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html#Jitter2_Dynamics_Constraints_LinearMotor_LinearMotorData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.PrepareForIteration
-  nameWithType: LinearMotor.LinearMotorData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.Velocity
   name: Velocity
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html#Jitter2_Dynamics_Constraints_LinearMotor_LinearMotorData_Velocity
@@ -8039,6 +8124,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor
   nameWithType: LinearMotor.PrepareForIterationLinearMotor
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart()
+  nameWithType: LinearMotor.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.ResetWarmStart
+  nameWithType: LinearMotor.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.TargetVelocity
   name: TargetVelocity
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_TargetVelocity
@@ -8232,12 +8330,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.EffectiveMass
   nameWithType: PointOnLine.PointOnLineData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Iterate
-  nameWithType: PointOnLine.PointOnLineData.Iterate
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.LimitBias
   name: LimitBias
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_LimitBias
@@ -8280,12 +8372,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Min
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Min
   nameWithType: PointOnLine.PointOnLineData.Min
-- uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.PrepareForIteration
-  nameWithType: PointOnLine.PointOnLineData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_Softness
@@ -8308,6 +8394,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine
   nameWithType: PointOnLine.PrepareForIterationPointOnLine
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart()
+  nameWithType: PointOnLine.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.ResetWarmStart
+  nameWithType: PointOnLine.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_Softness
@@ -8430,6 +8529,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane
   nameWithType: PointOnPlane.PrepareForIterationPointOnPlane
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart()
+  nameWithType: PointOnPlane.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.ResetWarmStart
+  nameWithType: PointOnPlane.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData
   name: PointOnPlane.SliderData
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html
@@ -8478,12 +8590,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.EffectiveMass
   nameWithType: PointOnPlane.SliderData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html#Jitter2_Dynamics_Constraints_PointOnPlane_SliderData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Iterate
-  nameWithType: PointOnPlane.SliderData.Iterate
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.J0
   name: J0
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html#Jitter2_Dynamics_Constraints_PointOnPlane_SliderData_J0
@@ -8520,12 +8626,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Min
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Min
   nameWithType: PointOnPlane.SliderData.Min
-- uid: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html#Jitter2_Dynamics_Constraints_PointOnPlane_SliderData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.PrepareForIteration
-  nameWithType: PointOnPlane.SliderData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.SliderData.html#Jitter2_Dynamics_Constraints_PointOnPlane_SliderData_Softness
@@ -8675,16 +8775,61 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.SmallConstraintData.Body2
   fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Body2
   nameWithType: SmallConstraintData.Body2
-- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.ConstraintId
+  name: ConstraintId
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_ConstraintId
+  commentId: F:Jitter2.Dynamics.Constraints.SmallConstraintData.ConstraintId
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.ConstraintId
+  nameWithType: SmallConstraintData.ConstraintId
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.DispatchId
+  name: DispatchId
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_DispatchId
+  commentId: F:Jitter2.Dynamics.Constraints.SmallConstraintData.DispatchId
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.DispatchId
+  nameWithType: SmallConstraintData.DispatchId
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
+  name: IsEnabled
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_IsEnabled
+  commentId: P:Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
+  nameWithType: SmallConstraintData.IsEnabled
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled*
+  name: IsEnabled
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_IsEnabled_
+  commentId: Overload:Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
+  nameWithType: SmallConstraintData.IsEnabled
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
+  name: Iterate(ref SmallConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate_Jitter2_Dynamics_Constraints_SmallConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
+  name.vb: Iterate(SmallConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.SmallConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData, Single)
+  nameWithType: SmallConstraintData.Iterate(ref SmallConstraintData, float)
+  nameWithType.vb: SmallConstraintData.Iterate(SmallConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate*
   name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate_
+  commentId: Overload:Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate
+  isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate
   nameWithType: SmallConstraintData.Iterate
-- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
+  name: PrepareForIteration(ref SmallConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_SmallConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
+  name.vb: PrepareForIteration(SmallConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.SmallConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData, Single)
+  nameWithType: SmallConstraintData.PrepareForIteration(ref SmallConstraintData, float)
+  nameWithType.vb: SmallConstraintData.PrepareForIteration(SmallConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration*
   name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration_
+  commentId: Overload:Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration
+  isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration
   nameWithType: SmallConstraintData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.TwistAngle
@@ -8822,6 +8967,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle
   nameWithType: TwistAngle.PrepareForIterationTwistAngle
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart()
+  nameWithType: TwistAngle.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.ResetWarmStart
+  nameWithType: TwistAngle.ResetWarmStart
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_Softness
@@ -8901,24 +9059,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.EffectiveMass
   nameWithType: TwistAngle.TwistLimitData.EffectiveMass
-- uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Iterate
-  name: Iterate
-  href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Iterate
-  commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Iterate
-  fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Iterate
-  nameWithType: TwistAngle.TwistLimitData.Iterate
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Jacobian
   commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Jacobian
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Jacobian
   nameWithType: TwistAngle.TwistLimitData.Jacobian
-- uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.PrepareForIteration
-  name: PrepareForIteration
-  href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_PrepareForIteration
-  commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.PrepareForIteration
-  fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.PrepareForIteration
-  nameWithType: TwistAngle.TwistLimitData.PrepareForIteration
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Q0
   name: Q0
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Q0
@@ -9832,6 +9978,19 @@ references:
   commentId: E:Jitter2.Dynamics.RigidBody.BeginCollide
   fullName: Jitter2.Dynamics.RigidBody.BeginCollide
   nameWithType: RigidBody.BeginCollide
+- uid: Jitter2.Dynamics.RigidBody.ClearContactCache
+  name: ClearContactCache()
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearContactCache
+  commentId: M:Jitter2.Dynamics.RigidBody.ClearContactCache
+  fullName: Jitter2.Dynamics.RigidBody.ClearContactCache()
+  nameWithType: RigidBody.ClearContactCache()
+- uid: Jitter2.Dynamics.RigidBody.ClearContactCache*
+  name: ClearContactCache
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearContactCache_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.ClearContactCache
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.ClearContactCache
+  nameWithType: RigidBody.ClearContactCache
 - uid: Jitter2.Dynamics.RigidBody.ClearShapes
   name: ClearShapes()
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ClearShapes
@@ -15363,6 +15522,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint
   nameWithType: SpringConstraint.PrepareForIterationSpringConstraint
+- uid: Jitter2.SoftBodies.SpringConstraint.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_ResetWarmStart
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.ResetWarmStart
+  fullName: Jitter2.SoftBodies.SpringConstraint.ResetWarmStart()
+  nameWithType: SpringConstraint.ResetWarmStart()
+- uid: Jitter2.SoftBodies.SpringConstraint.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_ResetWarmStart_
+  commentId: Overload:Jitter2.SoftBodies.SpringConstraint.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SpringConstraint.ResetWarmStart
+  nameWithType: SpringConstraint.ResetWarmStart
 - uid: Jitter2.SoftBodies.SpringConstraint.SetSpringParameters(System.Single,System.Single,System.Single)
   name: SetSpringParameters(float, float, float)
   href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_SetSpringParameters_System_Single_System_Single_System_Single_
@@ -15477,6 +15649,24 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.TargetDistance
   nameWithType: SpringConstraint.TargetDistance
+- uid: Jitter2.SolveMode
+  name: SolveMode
+  href: api/Jitter2.SolveMode.html
+  commentId: T:Jitter2.SolveMode
+  fullName: Jitter2.SolveMode
+  nameWithType: SolveMode
+- uid: Jitter2.SolveMode.Deterministic
+  name: Deterministic
+  href: api/Jitter2.SolveMode.html#Jitter2_SolveMode_Deterministic
+  commentId: F:Jitter2.SolveMode.Deterministic
+  fullName: Jitter2.SolveMode.Deterministic
+  nameWithType: SolveMode.Deterministic
+- uid: Jitter2.SolveMode.Regular
+  name: Regular
+  href: api/Jitter2.SolveMode.html#Jitter2_SolveMode_Regular
+  commentId: F:Jitter2.SolveMode.Regular
+  fullName: Jitter2.SolveMode.Regular
+  nameWithType: SolveMode.Regular
 - uid: Jitter2.ThreadContext
   name: ThreadContext
   href: api/Jitter2.ThreadContext.html
@@ -16451,6 +16641,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.NullBody
   nameWithType: World.NullBody
+- uid: Jitter2.World.PersistentContactManifold
+  name: PersistentContactManifold
+  href: api/Jitter2.World.html#Jitter2_World_PersistentContactManifold
+  commentId: P:Jitter2.World.PersistentContactManifold
+  fullName: Jitter2.World.PersistentContactManifold
+  nameWithType: World.PersistentContactManifold
+- uid: Jitter2.World.PersistentContactManifold*
+  name: PersistentContactManifold
+  href: api/Jitter2.World.html#Jitter2_World_PersistentContactManifold_
+  commentId: Overload:Jitter2.World.PersistentContactManifold
+  isSpec: "True"
+  fullName: Jitter2.World.PersistentContactManifold
+  nameWithType: World.PersistentContactManifold
 - uid: Jitter2.World.PostStep
   name: PostStep
   href: api/Jitter2.World.html#Jitter2_World_PostStep
@@ -16582,6 +16785,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.RigidBodies
   nameWithType: World.RigidBodies
+- uid: Jitter2.World.SolveMode
+  name: SolveMode
+  href: api/Jitter2.World.html#Jitter2_World_SolveMode
+  commentId: P:Jitter2.World.SolveMode
+  fullName: Jitter2.World.SolveMode
+  nameWithType: World.SolveMode
+- uid: Jitter2.World.SolveMode*
+  name: SolveMode
+  href: api/Jitter2.World.html#Jitter2_World_SolveMode_
+  commentId: Overload:Jitter2.World.SolveMode
+  isSpec: "True"
+  fullName: Jitter2.World.SolveMode
+  nameWithType: World.SolveMode
 - uid: Jitter2.World.SolverIterations
   name: SolverIterations
   href: api/Jitter2.World.html#Jitter2_World_SolverIterations

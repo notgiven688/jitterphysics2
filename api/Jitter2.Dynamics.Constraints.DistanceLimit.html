@@ -180,10 +180,13 @@ of freedom. For a distance of zero, use the <a class="xref" href="Jitter2.Dynami
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero">Constraint.VerifyNotZero()</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Constraint.Iterate</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">Constraint.PrepareForIteration</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -224,7 +227,7 @@ of freedom. For a distance of zero, use the <a class="xref" href="Jitter2.Dynami
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Anchor1" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Anchor1">
   Anchor1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the first rigid body in world space. The anchor point is
@@ -258,7 +261,7 @@ public JVector Anchor1 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Anchor2" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Anchor2">
   Anchor2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the second rigid body in world space. The anchor point is
@@ -292,7 +295,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Bias" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L269"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively distance error is corrected.</p>
@@ -325,7 +328,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Distance" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Distance">
   Distance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L169"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current distance between anchor points in world space.</p>
@@ -357,7 +360,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Impulse" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L273"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L278"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
@@ -389,7 +392,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Softness" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L257"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the constraint.</p>
@@ -422,7 +425,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_TargetDistance" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.TargetDistance">
   TargetDistance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the target distance between anchor points.</p>
@@ -459,13 +462,12 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Create" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Iterate">Iterate</a> and <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_PrepareForIteration">PrepareForIteration</a> function pointer
-fields on this instance. Override this in derived classes to assign the correct solver
-methods. The pointers are later written into <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a> when the
-constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
+to assign the correct registered solver pair. The id is later written into the
+unmanaged header when the constraint is enabled.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -489,7 +491,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L317"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L322"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -528,7 +530,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   Initialize(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint with a fixed distance between anchor points.</p>
@@ -564,7 +566,7 @@ constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit)">
   Initialize(JVector, JVector, LinearLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint with distance limits between anchor points.</p>
@@ -607,7 +609,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   IterateFixedAngle(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L275"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L280"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -640,7 +642,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   PrepareForIterationFixedAngle(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L184"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L189"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -665,6 +667,38 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit
 
 
 
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart">
+  ResetWarmStart()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ResetWarmStart()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
+Useful after restoring snapshots or other discontinuous state changes where preserving
+warm-starting is undesirable.</p>
+</div>
 
 
 
