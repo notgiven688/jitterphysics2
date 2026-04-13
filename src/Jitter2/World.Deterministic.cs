@@ -31,7 +31,7 @@ public enum SolveMode
     /// <summary>
     /// Island-based deterministic solver. Each simulation island is solved sequentially
     /// as an independent task. Islands are distributed across threads, so multithreading
-    /// is still used. This mode is significantly slower than <see cref="Regular"/>.
+    /// is still used. This mode can be significantly slower than <see cref="Regular"/>.
     /// </summary>
     Deterministic
 }
@@ -42,7 +42,7 @@ public sealed partial class World
 
     /// <summary>
     /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.Regular"/>.
-    /// <remarks> <see cref="Jitter2.SolveMode.Deterministic"/> is significantly slower than
+    /// <remarks> <see cref="Jitter2.SolveMode.Deterministic"/> can be significantly slower than
     /// <see cref="Jitter2.SolveMode.Regular"/>.</remarks>
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when an undefined <see cref="Jitter2.SolveMode"/>
@@ -95,7 +95,7 @@ public sealed partial class World
         public ulong ConstraintId;
     }
 
-    // Maps RigidBodyData._index → island SetIndex. Grown on demand, never shrunk.
+    // Maps RigidBodyData._index → island SetIndex. Cleared each frame; capacity grows on demand but is not trimmed.
     private readonly Dictionary<int, int> handleToIsland = new();
 
     // Per-frame island ranges built from the sorted buffers.
@@ -244,7 +244,7 @@ public sealed partial class World
     // of islands sequentially. No locking needed — islands are independent.
     // -------------------------------------------------------------------------
 
-    private unsafe void SolveIslandBatch(Parallel.Batch batch)
+    private void SolveIslandBatch(Parallel.Batch batch)
     {
         var allContacts = memContacts.Active;
         var orderedContacts = CollectionsMarshal.AsSpan(sortedContacts);
@@ -309,7 +309,7 @@ public sealed partial class World
         }
     }
 
-    private unsafe void RelaxIslandBatch(Parallel.Batch batch)
+    private void RelaxIslandBatch(Parallel.Batch batch)
     {
         var allContacts = memContacts.Active;
         var orderedContacts = CollectionsMarshal.AsSpan(sortedContacts);

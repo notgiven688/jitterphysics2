@@ -200,22 +200,19 @@ internal static class StableMath
 
     private static Real AtanTaylor(Real value)
     {
-        // 17th-order odd Taylor series for atan(x). The caller keeps |x| small enough that the
-        // notoriously slow convergence near x = 1 does not dominate the error.
+        // 17th-order odd Taylor series for atan(x) in Horner form. The caller keeps |x| small
+        // enough that the notoriously slow convergence near x = 1 does not dominate the error.
         Real x2 = value * value;
-        Real power = value;
-        Real result = power;
-
-        power *= x2; result -= power / (Real)3.0;
-        power *= x2; result += power / (Real)5.0;
-        power *= x2; result -= power / (Real)7.0;
-        power *= x2; result += power / (Real)9.0;
-        power *= x2; result -= power / (Real)11.0;
-        power *= x2; result += power / (Real)13.0;
-        power *= x2; result -= power / (Real)15.0;
-        power *= x2; result += power / (Real)17.0;
-
-        return result;
+        Real poly = (Real)(1.0 / 17.0);
+        poly = poly * x2 - (Real)(1.0 / 15.0);
+        poly = poly * x2 + (Real)(1.0 / 13.0);
+        poly = poly * x2 - (Real)(1.0 / 11.0);
+        poly = poly * x2 + (Real)(1.0 / 9.0);
+        poly = poly * x2 - (Real)(1.0 / 7.0);
+        poly = poly * x2 + (Real)(1.0 / 5.0);
+        poly = poly * x2 - (Real)(1.0 / 3.0);
+        poly = poly * x2 + (Real)1.0;
+        return value * poly;
     }
 
     private static Real Atan(Real value)

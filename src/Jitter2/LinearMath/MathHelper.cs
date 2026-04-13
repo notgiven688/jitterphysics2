@@ -149,8 +149,8 @@ public static class MathHelper
             // M32
             if (MathR.Abs(m.M23) > (Real)1e-6)
             {
-            phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M22) / ((Real)2.0 * m.M23)) / (Real)2.0;
-            (sp, cp) = StableMath.SinCos(phi);
+                phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M22) / ((Real)2.0 * m.M23)) / (Real)2.0;
+                (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(1, 0, 0, 0, cp, sp, 0, -sp, cp);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);
@@ -160,8 +160,8 @@ public static class MathHelper
             // M21
             if (MathR.Abs(m.M21) > (Real)1e-6)
             {
-            phi = StableMath.Atan2((Real)1.0, (m.M22 - m.M11) / ((Real)2.0 * m.M21)) / (Real)2.0;
-            (sp, cp) = StableMath.SinCos(phi);
+                phi = StableMath.Atan2((Real)1.0, (m.M22 - m.M11) / ((Real)2.0 * m.M21)) / (Real)2.0;
+                (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(cp, sp, 0, -sp, cp, 0, 0, 0, 1);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);
@@ -171,8 +171,8 @@ public static class MathHelper
             // M31
             if (MathR.Abs(m.M31) > (Real)1e-6)
             {
-            phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M11) / ((Real)2.0 * m.M31)) / (Real)2.0;
-            (sp, cp) = StableMath.SinCos(phi);
+                phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M11) / ((Real)2.0 * m.M31)) / (Real)2.0;
+                (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(cp, 0, sp, 0, 1, 0, -sp, 0, cp);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);

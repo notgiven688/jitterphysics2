@@ -135,7 +135,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector a1);
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector a2);
 
-        return (JAngle)StableMath.Acos(JVector.Dot(a1, a2));
+            return (JAngle)StableMath.Acos(JVector.Dot(a1, a2));
         }
     }
 

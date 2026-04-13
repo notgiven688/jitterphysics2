@@ -690,10 +690,10 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         }
         else
         {
-        Real omega = StableMath.Acos(dot);
-        Real invSinOmega = (Real)1.0 / StableMath.Sin(omega);
-        scale0 = StableMath.Sin(((Real)1.0 - amount) * omega) * invSinOmega;
-        scale1 = StableMath.Sin(amount * omega) * invSinOmega;
+            Real omega = StableMath.Acos(dot);
+            Real invSinOmega = (Real)1.0 / StableMath.Sin(omega);
+            scale0 = StableMath.Sin(((Real)1.0 - amount) * omega) * invSinOmega;
+            scale1 = StableMath.Sin(amount * omega) * invSinOmega;
         }
 
         return new JQuaternion(

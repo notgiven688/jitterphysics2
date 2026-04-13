@@ -314,10 +314,23 @@ public sealed partial class World
 
         CheckDeactivation();
 
-        for (int i = 0; i < substeps; i++)
+        if (SolveMode == Jitter2.SolveMode.Deterministic)
         {
-            SolveVelocities(multiThread, solverIterations);
-            RelaxVelocities(multiThread, relaxationIterations);
+            PrepareIslandSolveOrder();
+
+            for (int i = 0; i < substeps; i++)
+            {
+                SolveIslands(solverIterations);
+                RelaxIslands();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < substeps; i++)
+            {
+                SolveVelocities(multiThread, solverIterations);
+                RelaxVelocities(multiThread, relaxationIterations);
+            }
         }
 
         if ((ThreadModel == ThreadModelType.Regular || !multiThread)

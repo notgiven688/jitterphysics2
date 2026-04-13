@@ -110,8 +110,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         set
         {
             ref TwistLimitData data = ref Data;
-        data.Angle1 = StableMath.Sin((Real)value.From / (Real)2.0);
-        data.Angle2 = StableMath.Sin((Real)value.To / (Real)2.0);
+            data.Angle1 = StableMath.Sin((Real)value.From / (Real)2.0);
+            data.Angle2 = StableMath.Sin((Real)value.To / (Real)2.0);
         }
     }
 
@@ -198,7 +198,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
             }
 
             Real error = JVector.Dot(data.B, new JVector(quat0.X, quat0.Y, quat0.Z));
-        return (JAngle)((Real)2.0 * StableMath.Asin(error));
+            return (JAngle)((Real)2.0 * StableMath.Asin(error));
         }
     }
 
