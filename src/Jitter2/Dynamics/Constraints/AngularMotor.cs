@@ -22,8 +22,8 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     public struct AngularMotorData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -40,12 +40,17 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         public Real AccumulatedImpulse;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationAngularMotor, &IterateAngularMotor);
+
     protected override void Create()
     {
-        Iterate = &IterateAngularMotor;
-        PrepareForIteration = &PrepareForIterationAngularMotor;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+    
+    /// <inheritdoc />
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the motor with separate axes for each body.

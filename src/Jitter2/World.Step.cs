@@ -41,7 +41,7 @@ public sealed partial class World
         /// <summary>Time spent creating deferred arbiters.</summary>
         AddArbiter,
 
-        /// <summary>Time spent reordering contacts for cache efficiency.</summary>
+        /// <summary>Time spent reordering contacts (for cache optimization or deterministic results)</summary>
         ReorderContacts,
 
         /// <summary>Time spent evaluating body deactivation (sleeping).</summary>
@@ -81,6 +81,8 @@ public sealed partial class World
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
+    private Action<Parallel.Batch> solveIsland;
+    private Action<Parallel.Batch> relaxIsland;
 
     private void InitParallelCallbacks()
     {
@@ -96,6 +98,8 @@ public sealed partial class World
         updateContacts = UpdateContacts;
         updateBodies = UpdateBodies;
         detect = Detect;
+        solveIsland = SolveIslandBatch;
+        relaxIsland = RelaxIslandBatch;
     }
 
     private readonly double[] debugTimings = new double[(int)Timings.Last];
@@ -174,16 +178,27 @@ public sealed partial class World
         Tracer.ProfileEnd(TraceName.AddArbiter);
         SetTime(Timings.AddArbiter);
 
-        Tracer.ProfileBegin(TraceName.ReorderContacts);
-        ReorderContacts();
-        Tracer.ProfileEnd(TraceName.ReorderContacts);
-        SetTime(Timings.ReorderContacts);
-
         Tracer.ProfileBegin(TraceName.CheckDeactivation);
         CheckDeactivation();
         Tracer.ProfileEnd(TraceName.CheckDeactivation);
         SetTime(Timings.CheckDeactivation);
+        AssertIslandActivationInvariants();
+        
+        Tracer.ProfileBegin(TraceName.ReorderContacts);
+        
+        switch (SolveMode)
+        {
+            case SolveMode.Regular:
+                ReorderContacts();
+                break;
+            case SolveMode.Deterministic:
+                PrepareIslandSolveOrder();
+                break;
+        }
 
+        Tracer.ProfileEnd(TraceName.ReorderContacts);
+        SetTime(Timings.ReorderContacts);
+        
         Tracer.ProfileBegin(TraceName.Solve);
 
         // Sub-stepping
@@ -191,9 +206,19 @@ public sealed partial class World
         {
             PreSubStep?.Invoke(substepDt);
             IntegrateForces(multiThread);                       // FAST SWEEP
-            SolveVelocities(multiThread, solverIterations);     // FAST SWEEP
-            IntegrateVelocities(multiThread);                   // FAST SWEEP
-            RelaxVelocities(multiThread, velocityRelaxations);  // FAST SWEEP
+
+            if (SolveMode == Jitter2.SolveMode.Deterministic)
+            {
+                SolveIslands(solverIterations);                    // FAST SWEEP
+                IntegrateVelocities(multiThread);                  // FAST SWEEP
+                RelaxIslands();                                    // FAST SWEEP
+            }
+            else
+            {
+                SolveVelocities(multiThread, solverIterations);    // FAST SWEEP
+                IntegrateVelocities(multiThread);                  // FAST SWEEP
+                RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
+            }
             PostSubStep?.Invoke(substepDt);
         }
 
@@ -204,6 +229,7 @@ public sealed partial class World
         RemoveBrokenArbiters();
         Tracer.ProfileEnd(TraceName.RemoveArbiter);
         SetTime(Timings.RemoveArbiter);
+        AssertIslandActivationInvariants();
 
         Tracer.ProfileBegin(TraceName.UpdateContacts);
         UpdateContacts(multiThread);                            // FAST SWEEP
@@ -288,10 +314,23 @@ public sealed partial class World
 
         CheckDeactivation();
 
-        for (int i = 0; i < substeps; i++)
+        if (SolveMode == Jitter2.SolveMode.Deterministic)
         {
-            SolveVelocities(multiThread, solverIterations);
-            RelaxVelocities(multiThread, relaxationIterations);
+            PrepareIslandSolveOrder();
+
+            for (int i = 0; i < substeps; i++)
+            {
+                SolveIslands(solverIterations);
+                RelaxIslands();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < substeps; i++)
+            {
+                SolveVelocities(multiThread, solverIterations);
+                RelaxVelocities(multiThread, relaxationIterations);
+            }
         }
 
         if ((ThreadModel == ThreadModelType.Regular || !multiThread)
@@ -402,7 +441,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (constraint.PrepareForIteration == null) continue;
+            if (!constraint.IsEnabled) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -442,7 +481,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (constraint.Iterate == null) continue;
+            if (!constraint.IsEnabled) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -483,7 +522,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (constraint.PrepareForIteration == null) continue;
+            if (!constraint.IsEnabled) continue;
 
             Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
                 "Invalid constraint: both bodies are non-dynamic.");
@@ -526,7 +565,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (constraint.Iterate == null) continue;
+            if (!constraint.IsEnabled) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -1182,15 +1221,13 @@ public sealed partial class World
                 }
             }
 
-            if (deactivateIsland)
-            {
-                inactivateIslands.Push(island);
-            }
+            if (deactivateIsland) inactivateIslands.Push(island);
         }
 
         while (inactivateIslands.Count > 0)
         {
-            islands.MoveToInactive(inactivateIslands.Pop());
+            Island island = inactivateIslands.Pop();
+            islands.MoveToInactive(island);
         }
     }
 }

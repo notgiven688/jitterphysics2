@@ -7,6 +7,10 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(DoublePrecision)' == 'true'">
+        <DefineConstants>$(DefineConstants);USE_DOUBLE_PRECISION</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="JunitXml.TestLogger" Version="4.1.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

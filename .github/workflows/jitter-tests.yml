@@ -17,8 +17,15 @@ env:
 
 jobs:
   build-and-test:
+    name: Build and Test (${{ matrix.precision }})
 
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        precision:
+          - single
+          - double
 
     defaults:
       run:
@@ -35,18 +42,26 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
+      - name: Build single-precision tests
+        if: matrix.precision == 'single'
         run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
 
-      - name: Run Tests
+      - name: Build double-precision tests
+        if: matrix.precision == 'double'
+        run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore -p:DoublePrecision=true
+
+      - name: Run single-precision tests
+        if: matrix.precision == 'single'
         run: |
           mkdir -p ${{ env.TEST_RESULTS_DIR }}
-          
-          # Run Single Precision Tests
+
           dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore \
             --test-adapter-path:. --logger "trx;LogFileName=single-precision.trx"
 
-          # Run Double Precision Tests
-          dotnet test --configuration ${{ env.CONFIGURATION }} -p:DefineConstants="USE_DOUBLE_PRECISION" --no-restore \
+      - name: Run double-precision tests
+        if: matrix.precision == 'double'
+        run: |
+          mkdir -p ${{ env.TEST_RESULTS_DIR }}
+
+          dotnet test --configuration ${{ env.CONFIGURATION }} --no-restore -p:DoublePrecision=true \
             --test-adapter-path:. --logger "trx;LogFileName=double-precision.trx"
-        if: always()

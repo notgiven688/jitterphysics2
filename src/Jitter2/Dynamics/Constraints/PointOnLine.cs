@@ -23,9 +23,8 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     public struct PointOnLineData
     {
         internal int _internal;
-
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -52,12 +51,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         // public MemBlock96 J0;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationPointOnLine, &IteratePointOnLine);
+
     protected override void Create()
     {
-        Iterate = &IteratePointOnLine;
-        PrepareForIteration = &PrepareForIterationPointOnLine;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    /// <inheritdoc />
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)

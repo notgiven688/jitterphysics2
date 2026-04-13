@@ -72,6 +72,25 @@ This adjusts the number of additional (with respect to the main thread) worker t
 The `world.ThreadModel` property may be used to keep the thread pool in a tight loop waiting for work to be processed after `world.Step` has been run (`ThreadModelType.Persistent`), or to yield threads afterwards (`ThreadModelType.Regular`).
 The latter option is recommended to free processing power for other code, such as rendering.
 
+## Solver Mode
+
+Jitter2 offers two solver strategies through <xref:Jitter2.World.SolveMode>:
+
+```cs
+world.SolveMode = SolveMode.Regular;       // default
+world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+```
+
+`SolveMode.Regular` is the default and optimized for throughput. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
+
+`SolveMode.Deterministic` is the best-effort cross-platform deterministic path. It processes each simulation island in a stable order and uses deterministic tie-breakers for contacts and constraints. Islands can still be distributed across threads, so `world.Step(dt, multiThread: true)` remains valid in deterministic mode.
+
+Use deterministic mode when repeatability matters more than raw performance, for example for tests, replays, debugging, or deterministic gameplay simulation. It can be significantly slower than `SolveMode.Regular`, so it should generally be enabled deliberately rather than used as the default for all worlds.
+
+By contrast, `SolveMode.Regular` with `multiThread: false` can still look reproducible when the world is built in the exact same way inside the same .NET process, but that is a much weaker property and should not be confused with cross-platform determinism.
+
+For deterministic mode, it is not necessary that the entire world was built through the same history. What must match is the setup order inside each interacting island: the participating bodies, shapes, and constraints must be added in the same order. Precision still matters: a float build and a double build are both deterministic, but they will not produce the same bit pattern. See [General](general.md#deterministic-simulation) for a summary of what each solver configuration guarantees and the current CI coverage behind that claim.
+
 ## Solver Iterations
 
 Jitter2 employs an iterative solver to solve contacts and constraints.
@@ -102,6 +121,33 @@ world.SolverIterations = (solver: 2, relaxation: 1);
 does perform $12$ solver iterations in total for each call to `world.Step`.
 The runtime is slower than a single regular step with $12$ iterations but this approach enhances the stability of the simulation.
 Substepping is excellent for enhancing the overall quality of constraints, stabilizing large stacks of objects, and simulating large mass ratios (like heavy objects resting on light objects) with greater accuracy.
+
+## Contact Manifold Persistence
+
+By default, Jitter2 caches contact points and their accumulated impulses between frames (`world.PersistentContactManifold = true`). This allows the solver to warm-start from the previous solution and lets the manifold grow over several steps, which improves stability for resting contacts.
+
+Setting `world.PersistentContactManifold = false` discards all contact data at the end of each frame, so every contact is treated as brand-new. This removes frame-to-frame contact memory at the cost of solver convergence speed.
+
+Individual bodies can discard their cached contacts without changing the global setting:
+
+```cs
+body.ClearContactCache();  // discard cached manifold for this body
+```
+
+This is useful after discontinuous user-driven transforms such as teleports. When `SolveMode.Deterministic` is active, setting a body's `Position` or `Orientation` property automatically calls `ClearContactCache()`.
+
+## Warm-Start Reset
+
+The iterative solver warm-starts each frame from the accumulated impulses of the previous frame. After restoring a snapshot or any other discontinuous state change, this cached state can be stale. Every constraint exposes a `ResetWarmStart()` method that clears its accumulated impulses without removing the constraint:
+
+```cs
+foreach (var constraint in body.Constraints)
+{
+    constraint.ResetWarmStart();
+}
+```
+
+`World.Stabilize` can then be called to re-solve the restored contacts and constraints before resuming normal simulation. `Stabilize` respects `SolveMode.Deterministic` when it is set.
 
 ## Auxiliary Contacts
 

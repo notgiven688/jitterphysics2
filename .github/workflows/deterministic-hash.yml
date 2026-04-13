@@ -1,0 +1,45 @@
+name: Deterministic Hash
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  stacked-columns-hash:
+    name: Stacked Columns Hash (${{ matrix.os }}, ${{ matrix.precision }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        precision:
+          - single
+          - double
+
+    defaults:
+      run:
+        working-directory: ./src/JitterTests
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run deterministic hash repro (single precision)
+        if: matrix.precision == 'single'
+        run: dotnet test --configuration Release --no-restore --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicScene_MatchesAcrossThreadingForTwentySeconds"
+
+      - name: Run deterministic hash repro (double precision)
+        if: matrix.precision == 'double'
+        run: dotnet test --configuration Release --no-restore -p:DoublePrecision=true --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicScene_MatchesAcrossThreadingForTwentySeconds"

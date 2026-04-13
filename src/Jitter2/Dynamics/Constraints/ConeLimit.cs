@@ -21,8 +21,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     public struct ConeLimitData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -44,13 +44,18 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         public MemoryHelper.MemBlock6Real J0;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationConeLimit, &IterateConeLimit);
+
 
     protected override void Create()
     {
-        Iterate = &IterateConeLimit;
-        PrepareForIteration = &PrepareForIterationConeLimit;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    /// <inheritdoc />
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the cone limit using two world-space axes and an angular range.
@@ -86,8 +91,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         Real lower = (Real)limit.From;
         Real upper = (Real)limit.To;
 
-        data.LimitLow = MathR.Cos(lower);
-        data.LimitHigh = MathR.Cos(upper);
+        data.LimitLow = StableMath.Cos(lower);
+        data.LimitHigh = StableMath.Cos(upper);
     }
 
     /// <summary>
@@ -131,7 +136,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
             JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector a1);
             JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector a2);
 
-            return (JAngle)MathR.Acos(JVector.Dot(a1, a2));
+            return (JAngle)StableMath.Acos(JVector.Dot(a1, a2));
         }
     }
 
@@ -193,8 +198,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         get
         {
             ref ConeLimitData data = ref Data;
-            return new AngularLimit((JAngle)MathR.Acos(data.LimitLow),
-                (JAngle)MathR.Acos(data.LimitHigh));
+            return new AngularLimit((JAngle)StableMath.Acos(data.LimitLow),
+                (JAngle)StableMath.Acos(data.LimitHigh));
         }
         set
         {
@@ -203,8 +208,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
             ArgumentOutOfRangeException.ThrowIfLessThan((Real)value.To, (Real)value.From);
 
             ref ConeLimitData data = ref Data;
-            data.LimitLow = MathR.Cos((Real)value.From);
-            data.LimitHigh = MathR.Cos((Real)value.To);
+            data.LimitLow = StableMath.Cos((Real)value.From);
+            data.LimitHigh = StableMath.Cos((Real)value.To);
         }
     }
 

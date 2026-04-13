@@ -21,9 +21,8 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     public struct BallSocketData
     {
         internal int _internal;
-
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -43,12 +42,17 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         public JVector Bias;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationBallSocket, &IterateBallSocket);
+
     protected override void Create()
     {
-        Iterate = &IterateBallSocket;
-        PrepareForIteration = &PrepareForIterationBallSocket;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    /// <inheritdoc />
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
 
     /// <summary>
     /// Initializes the constraint from a world-space anchor point.

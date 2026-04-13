@@ -23,8 +23,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     public struct DistanceLimitData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -48,13 +48,18 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         public short Clamp;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationFixedAngle, &IterateFixedAngle);
+
 
     protected override void Create()
     {
-        Iterate = &IterateFixedAngle;
-        PrepareForIteration = &PrepareForIterationFixedAngle;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    /// <inheritdoc />
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the constraint with a fixed distance between anchor points.
