@@ -1,5 +1,11 @@
 # Changelog
 
+### Jitter 2.8.3 (2026-04-13)
+
+- Added `SolveMode.Deterministic` - an optional cross-platform deterministic solver mode.
+- Fixed bugs in sleeping logic.
+- Added `PersistentContactManifold` property.
+
 ### Jitter 2.8.2 (2026-03-30)
 
 - Added `DynamicTree.SweepCast` and `DynamicTree.FindNearest` - new tree queries combining broadphase pruning with exact narrowphase tests. `SweepCast` sweeps a shape through the tree; `FindNearest` finds the closest proxy by distance. Both include bounded variants and convenience overloads for common shapes.
