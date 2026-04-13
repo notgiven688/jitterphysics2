@@ -38,12 +38,9 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Calculates the rotation quaternion corresponding to the given (constant) angular
-    /// velocity vector and time step.
+    /// Calculates the rotation quaternion corresponding to the given angular velocity using
+    /// deterministic trigonometric approximations.
     /// </summary>
-    /// <param name="omega">The angular velocity vector in radians per second.</param>
-    /// <param name="dt">The time step in seconds.</param>
-    /// <returns>A unit quaternion representing the rotation.</returns>
     public static JQuaternion RotationQuaternion(in JVector omega, Real dt)
     {
         Real angle = omega.Length();
@@ -57,7 +54,7 @@ public static class MathHelper
             Real scale = (Real)0.5 * dt - ((Real)1.0 / (Real)48.0) * dt3 * angle2;
             JVector.Multiply(omega, scale, out var axis);
 
-            Real cos = (Real)1.0 - ((Real)1.0/(Real)8.0) * theta * theta;
+            Real cos = (Real)1.0 - ((Real)1.0 / (Real)8.0) * theta * theta;
 
             JQuaternion res = new JQuaternion(axis.X, axis.Y, axis.Z, cos);
             Debug.Assert(MathHelper.IsZero(res.Length() - 1, (Real)1e-2));
@@ -66,7 +63,7 @@ public static class MathHelper
         else
         {
             Real halfAngleDt = (Real)0.5 * angle * dt;
-            (Real sinD, Real cosD) = MathR.SinCos(halfAngleDt);
+            (Real sinD, Real cosD) = StableMath.SinCos(halfAngleDt);
 
             Real scale = sinD / angle;
             JVector.Multiply(omega, scale, out var axis);
@@ -152,8 +149,8 @@ public static class MathHelper
             // M32
             if (MathR.Abs(m.M23) > (Real)1e-6)
             {
-                phi = MathR.Atan2(1, (m.M33 - m.M22) / ((Real)2.0 * m.M23)) / (Real)2.0;
-                (sp, cp) = MathR.SinCos(phi);
+            phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M22) / ((Real)2.0 * m.M23)) / (Real)2.0;
+            (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(1, 0, 0, 0, cp, sp, 0, -sp, cp);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);
@@ -163,8 +160,8 @@ public static class MathHelper
             // M21
             if (MathR.Abs(m.M21) > (Real)1e-6)
             {
-                phi = MathR.Atan2(1, (m.M22 - m.M11) / ((Real)2.0 * m.M21)) / (Real)2.0;
-                (sp, cp) = MathR.SinCos(phi);
+            phi = StableMath.Atan2((Real)1.0, (m.M22 - m.M11) / ((Real)2.0 * m.M21)) / (Real)2.0;
+            (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(cp, sp, 0, -sp, cp, 0, 0, 0, 1);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);
@@ -174,8 +171,8 @@ public static class MathHelper
             // M31
             if (MathR.Abs(m.M31) > (Real)1e-6)
             {
-                phi = MathR.Atan2(1, (m.M33 - m.M11) / ((Real)2.0 * m.M31)) / (Real)2.0;
-                (sp, cp) = MathR.SinCos(phi);
+            phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M11) / ((Real)2.0 * m.M31)) / (Real)2.0;
+            (sp, cp) = StableMath.SinCos(phi);
                 r = new JMatrix(cp, 0, sp, 0, 1, 0, -sp, 0, cp);
                 JMatrix.Multiply(m, r, out m);
                 JMatrix.TransposedMultiply(r, m, out m);

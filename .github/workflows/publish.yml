@@ -90,10 +90,17 @@ jobs:
   run_test:
 
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        precision:
+          - single
+          - double
+    name: Run Tests (${{ matrix.precision }})
 
     defaults:
       run:
-        working-directory: ./src/Jitter2
+        working-directory: ./src/JitterTests
 
     steps:
       - uses: actions/checkout@v4
@@ -102,11 +109,16 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Run Tests - Single Precision
-        run: dotnet test --configuration Release
+        if: matrix.precision == 'single'
+        run: dotnet test --configuration Release --no-restore
 
       - name: Run Tests - Double Precision
-        run: dotnet test --configuration Release -p:DoublePrecision=true
+        if: matrix.precision == 'double'
+        run: dotnet test --configuration Release --no-restore -p:DoublePrecision=true
 
   deploy:
 

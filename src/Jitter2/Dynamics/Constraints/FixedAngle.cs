@@ -20,8 +20,8 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     public struct FixedAngleData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -43,12 +43,16 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         public ushort Clamp;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationFixedAngle, &IterateFixedAngle);
+
     protected override void Create()
     {
-        Iterate = &IterateFixedAngle;
-        PrepareForIteration = &PrepareForIterationFixedAngle;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
 
     /// <summary>
     /// Initializes the constraint using the current relative orientation of the bodies.

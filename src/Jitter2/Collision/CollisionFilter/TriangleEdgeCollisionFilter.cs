@@ -67,8 +67,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     /// <value>The default value is approximately 2.5 degrees.</value>
     public JAngle AngleThreshold
     {
-        get => JAngle.FromRadian(MathR.Acos(cosAngle));
-        set => cosAngle = MathR.Cos(value.Radian);
+        get => JAngle.FromRadian(StableMath.Acos(cosAngle));
+        set => cosAngle = StableMath.Cos(value.Radian);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

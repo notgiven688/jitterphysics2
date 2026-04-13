@@ -83,4 +83,32 @@ public class ContactLifecycleTests
         Assert.That(bodyA.Connections, Is.Empty);
         world.Dispose();
     }
+
+    [TestCase]
+    public void MovingBody_ClearsCachedContactState()
+    {
+        using var world = new World();
+        world.Gravity = JVector.Zero;
+
+        var bodyA = world.CreateRigidBody();
+        bodyA.AddShape(new SphereShape(1));
+
+        var bodyB = world.CreateRigidBody();
+        bodyB.AddShape(new SphereShape(1));
+        bodyB.Position = new JVector(1.5f, 0, 0);
+
+        world.Step(1f / 60f, false);
+
+        Arbiter arbiter = bodyA.Contacts.Single();
+        Assert.That(arbiter.Handle.Data.UsageMask & ContactData.MaskContactAll, Is.Not.EqualTo(0u));
+
+        bodyB.Position = new JVector(1.4f, 0, 0);
+
+        Assert.That(arbiter.Handle.Data.UsageMask & ContactData.MaskContactAll, Is.EqualTo(0u));
+
+        world.Step(1f / 60f, false);
+
+        Assert.That(bodyA.Contacts, Has.Count.EqualTo(1));
+        Assert.That(arbiter.Handle.Data.UsageMask & ContactData.MaskContactAll, Is.Not.EqualTo(0u));
+    }
 }

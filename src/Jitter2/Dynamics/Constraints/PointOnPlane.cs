@@ -23,9 +23,8 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     public struct SliderData
     {
         internal int _internal;
-
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -50,12 +49,16 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         public MemoryHelper.MemBlock12Real J0;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationPointOnPlane, &IteratePointOnPlane);
+
     protected override void Create()
     {
-        Iterate = &IteratePointOnPlane;
-        PrepareForIteration = &PrepareForIterationPointOnPlane;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)

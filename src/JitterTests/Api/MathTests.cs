@@ -5,6 +5,111 @@ namespace JitterTests.Api;
 public class MathTests
 {
     [TestCase]
+    public static void StableMath_MatchesMathROnRepresentativeInputs()
+    {
+        Real[] angles =
+        [
+            (Real)(-16.0) * MathR.PI,
+            (Real)(-3.0) * MathR.PI,
+            -MathR.PI,
+            (Real)(-0.75) * MathR.PI,
+            (Real)(-0.5) * MathR.PI,
+            (Real)(-0.25) * MathR.PI,
+            (Real)(-0.1),
+            (Real)0.0,
+            (Real)0.1,
+            (Real)0.25 * MathR.PI,
+            (Real)0.5 * MathR.PI,
+            (Real)0.75 * MathR.PI,
+            MathR.PI,
+            (Real)3.0 * MathR.PI,
+            (Real)16.0 * MathR.PI
+        ];
+
+        foreach (Real angle in angles)
+        {
+            var (sinDet, cosDet) = StableMath.SinCos(angle);
+
+            Assert.That(MathR.Abs(sinDet - MathR.Sin(angle)), Is.LessThan((Real)2e-6), $"sin({angle})");
+            Assert.That(MathR.Abs(cosDet - MathR.Cos(angle)), Is.LessThan((Real)2e-6), $"cos({angle})");
+            Assert.That(MathR.Abs(StableMath.Sin(angle) - MathR.Sin(angle)), Is.LessThan((Real)2e-6), $"single sin({angle})");
+            Assert.That(MathR.Abs(StableMath.Cos(angle) - MathR.Cos(angle)), Is.LessThan((Real)2e-6), $"single cos({angle})");
+        }
+
+        (Real y, Real x)[] atanInputs =
+        [
+            ((Real)1.0, (Real)1.0),
+            ((Real)1.0, (Real)(-1.0)),
+            ((Real)(-1.0), (Real)1.0),
+            ((Real)(-1.0), (Real)(-1.0)),
+            ((Real)0.2, (Real)3.0),
+            ((Real)3.0, (Real)0.2),
+            ((Real)(-0.2), (Real)3.0),
+            ((Real)3.0, (Real)(-0.2)),
+            ((Real)0.0, (Real)1.0),
+            ((Real)1.0, (Real)0.0)
+        ];
+
+        foreach (var (y, x) in atanInputs)
+        {
+            Assert.That(MathR.Abs(StableMath.Atan2(y, x) - MathR.Atan2(y, x)),
+                Is.LessThan((Real)2e-6), $"atan2({y}, {x})");
+        }
+
+        Real[] unitInputs = [(Real)(-1.0), (Real)(-0.75), (Real)(-0.25), (Real)0.0, (Real)0.25, (Real)0.75, (Real)1.0];
+
+        foreach (Real value in unitInputs)
+        {
+            Assert.That(MathR.Abs(StableMath.Asin(value) - MathR.Asin(value)),
+                Is.LessThan((Real)2e-6), $"asin({value})");
+            Assert.That(MathR.Abs(StableMath.Acos(value) - MathR.Acos(value)),
+                Is.LessThan((Real)2e-6), $"acos({value})");
+        }
+    }
+
+    [TestCase]
+    public static void StableMath_MatchesMathROnNonReducedBoundaryInputs()
+    {
+        Real epsilon = (Real)1e-4;
+        Real[] angles =
+        [
+            -StableMath.Pi,
+            -StableMath.Pi + epsilon,
+            -StableMath.HalfPi,
+            -StableMath.QuarterPi,
+            (Real)0.0,
+            StableMath.QuarterPi,
+            StableMath.HalfPi,
+            StableMath.Pi - epsilon,
+            StableMath.Pi
+        ];
+
+        foreach (Real angle in angles)
+        {
+            var (sinDet, cosDet) = StableMath.SinCos(angle);
+
+            Assert.That(MathR.Abs(sinDet - MathR.Sin(angle)), Is.LessThan((Real)2e-6), $"sin({angle})");
+            Assert.That(MathR.Abs(cosDet - MathR.Cos(angle)), Is.LessThan((Real)2e-6), $"cos({angle})");
+            Assert.That(MathR.Abs(StableMath.Sin(angle) - MathR.Sin(angle)), Is.LessThan((Real)2e-6), $"single sin({angle})");
+            Assert.That(MathR.Abs(StableMath.Cos(angle) - MathR.Cos(angle)), Is.LessThan((Real)2e-6), $"single cos({angle})");
+        }
+    }
+
+    [TestCase]
+    public static void DeterministicInverseTrig_MatchesMathROnUnitInterval()
+    {
+        for (int i = -2000; i <= 2000; i++)
+        {
+            Real value = i / (Real)2000.0;
+
+            Assert.That(MathR.Abs(StableMath.Asin(value) - MathR.Asin(value)),
+                Is.LessThan((Real)5e-6), $"asin({value})");
+            Assert.That(MathR.Abs(StableMath.Acos(value) - MathR.Acos(value)),
+                Is.LessThan((Real)5e-6), $"acos({value})");
+        }
+    }
+
+    [TestCase]
     public static void QMatrixProjectMultiplyLeftRight()
     {
         JQuaternion jq1 = new((Real)0.2, (Real)0.3, (Real)0.4, (Real)0.5);

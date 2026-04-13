@@ -22,8 +22,8 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     public struct LinearMotorData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -40,12 +40,16 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         public Real AccumulatedImpulse;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationLinearMotor, &IterateLinearMotor);
+
     protected override void Create()
     {
-        Iterate = &IterateLinearMotor;
-        PrepareForIteration = &PrepareForIterationLinearMotor;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Gets or sets the motor axis on the first body in local space.

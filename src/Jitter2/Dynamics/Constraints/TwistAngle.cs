@@ -21,8 +21,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     public struct TwistLimitData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -44,12 +44,16 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         public JVector Jacobian;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationTwistAngle, &IterateTwistAngle);
+
     protected override void Create()
     {
-        Iterate = &IterateTwistAngle;
-        PrepareForIteration = &PrepareForIterationTwistAngle;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the constraint from world-space axes and angular limits.
@@ -74,8 +78,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         JVector.NormalizeInPlace(ref axis1);
         JVector.NormalizeInPlace(ref axis2);
 
-        data.Angle1 = MathR.Sin((Real)limit.From / (Real)2.0);
-        data.Angle2 = MathR.Sin((Real)limit.To / (Real)2.0);
+        data.Angle1 = StableMath.Sin((Real)limit.From / (Real)2.0);
+        data.Angle2 = StableMath.Sin((Real)limit.To / (Real)2.0);
 
         // Calculate local axes
         JVector u1 = JVector.ConjugatedTransform(axis1, body1.Orientation);
@@ -106,8 +110,8 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         set
         {
             ref TwistLimitData data = ref Data;
-            data.Angle1 = MathR.Sin((Real)value.From / (Real)2.0);
-            data.Angle2 = MathR.Sin((Real)value.To / (Real)2.0);
+        data.Angle1 = StableMath.Sin((Real)value.From / (Real)2.0);
+        data.Angle2 = StableMath.Sin((Real)value.To / (Real)2.0);
         }
     }
 
@@ -194,7 +198,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
             }
 
             Real error = JVector.Dot(data.B, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)((Real)2.0 * MathR.Asin(error));
+        return (JAngle)((Real)2.0 * StableMath.Asin(error));
         }
     }
 

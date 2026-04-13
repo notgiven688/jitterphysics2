@@ -264,7 +264,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     public static JQuaternion CreateRotationX(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
-        (Real sha, Real cha) = MathR.SinCos(halfAngle);
+        (Real sha, Real cha) = StableMath.SinCos(halfAngle);
         return new JQuaternion(sha, 0, 0, cha);
     }
 
@@ -276,7 +276,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     public static JQuaternion CreateRotationY(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
-        (Real sha, Real cha) = MathR.SinCos(halfAngle);
+        (Real sha, Real cha) = StableMath.SinCos(halfAngle);
         return new JQuaternion(0, sha, 0, cha);
     }
 
@@ -288,7 +288,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     public static JQuaternion CreateRotationZ(Real radians)
     {
         Real halfAngle = radians * (Real)0.5;
-        (Real sha, Real cha) = MathR.SinCos(halfAngle);
+        (Real sha, Real cha) = StableMath.SinCos(halfAngle);
         return new JQuaternion(0, 0, sha, cha);
     }
 
@@ -304,7 +304,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     public static JQuaternion CreateFromAxisAngle(in JVector axis, Real angle)
     {
         Real halfAngle = angle * (Real)0.5;
-        (Real s, Real c) = MathR.SinCos(halfAngle);
+        (Real s, Real c) = StableMath.SinCos(halfAngle);
         return new JQuaternion(axis.X * s, axis.Y * s, axis.Z * s, c);
     }
 
@@ -333,7 +333,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
 
         Real invS = (Real)1.0 / s;
         axis = new JVector(quaternion.X * invS, quaternion.Y * invS, quaternion.Z * invS);
-        angle = (Real)2.0 * MathR.Acos(quaternion.W);
+        angle = (Real)2.0 * StableMath.Acos(quaternion.W);
 
         // Enforce the shortest-arc representation (angle between 0 and PI)
         if (angle > MathR.PI)
@@ -690,10 +690,10 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
         }
         else
         {
-            Real omega = MathR.Acos(dot);
-            Real invSinOmega = (Real)1.0 / MathR.Sin(omega);
-            scale0 = MathR.Sin(((Real)1.0 - amount) * omega) * invSinOmega;
-            scale1 = MathR.Sin(amount * omega) * invSinOmega;
+        Real omega = StableMath.Acos(dot);
+        Real invSinOmega = (Real)1.0 / StableMath.Sin(omega);
+        scale0 = StableMath.Sin(((Real)1.0 - amount) * omega) * invSinOmega;
+        scale1 = StableMath.Sin(amount * omega) * invSinOmega;
         }
 
         return new JQuaternion(

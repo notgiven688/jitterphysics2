@@ -18,6 +18,31 @@ dotnet build -c Release -p:DoublePrecision=true
 
 The active precision mode can be checked at runtime via `Precision.IsDoublePrecision`. In single precision, `JVector.X` is a `float`; in double precision, it is a `double`.
 
+## Deterministic Simulation
+
+Jitter2 provides an optional cross-platform deterministic solver mode:
+
+```cs
+world.SolveMode = SolveMode.Deterministic;
+```
+
+This mode is intended for reproducible simulation across platforms when the same Jitter2 version, precision mode, and stepping inputs are used. It is useful for automated tests, replay systems, debugging, and lockstep-style simulation.
+
+The important requirement is not that the entire world matches. What matters is that each interacting island is assembled in the same order: the bodies, shapes, and constraints that participate in that island must be added in the same sequence. If the same island is created in the same order and receives the same inputs, it will evolve the same even if unrelated parts of the world were built differently.
+
+The deterministic path keeps contacts and constraints in a stable order and uses internal stable trigonometric helpers (`StableMath`) so critical math does not depend on platform-specific `Math`/`MathF` behavior.
+
+| Configuration | What is guaranteed | What must match | What is not guaranteed |
+| --- | --- | --- | --- |
+| `SolveMode.Deterministic` | Cross-platform reproducible simulation results, independent of threading mode and internal SIMD/scalar execution path | Same Jitter2 version, same precision mode, same step sequence / fixed time step, same order in which the participating bodies, shapes, and constraints are added within each interacting island | Float and double matching each other, results across different engine versions |
+| `SolveMode.Regular` with `multiThread: false` | Reproducibility only in the narrow sense that the exact same world build can produce the same result again within the same .NET process | Exact same construction path, exact same addition order, same step sequence, same .NET process / runtime run | Cross-platform determinism, rebuilding the same final scene through a different history, matching results across different process launches |
+| `SolveMode.Regular` with `multiThread: true` | No deterministic guarantee | None | Reproducible ordering or cross-platform bit identity |
+
+> [!WARNING]
+> To the best of our current knowledge, this feature is cross-platform deterministic for the cases described above, but the claim is based on the current implementation and test coverage. At the time of writing, CI exercises the deterministic hash test on `ubuntu-latest`, `windows-latest`, and `macos-latest`, which currently correspond to x64 Linux, x64 Windows, and arm64 macOS on GitHub-hosted runners.
+
+`SolveMode.Deterministic` can be significantly slower than `SolveMode.Regular`, which remains the default and recommended option for normal gameplay or interactive sandbox scenes.
+
 ## Coordinate System
 
 Jitter2 uses a right-handed coordinate system.

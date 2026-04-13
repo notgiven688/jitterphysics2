@@ -71,5 +71,24 @@ public class SupportMapTests
             Assert.That(center, Is.EqualTo(JVector.Zero));
         }
     }
+    
+    [Test]
+    public void VertexSupportMap_ScalarAndAcceleratedAgreeOnTiedMaximum()
+    {
+        VertexSupportMap map =
+            new([
+                new JVector((Real)1.0, (Real)0.0, (Real)0.0),
+                new JVector((Real)1.0, (Real)1.0, (Real)0.0),
+                new JVector((Real)2.0, (Real)0.0, (Real)0.0),
+                new JVector((Real)2.0, (Real)1.0, (Real)0.0)
+            ]);
 
+        JVector direction = JVector.UnitX;
+
+        map.SupportMapScalarForTests(direction, out JVector scalar);
+        map.SupportMapAcceleratedForTests(direction, out JVector accelerated);
+
+        Assert.That(accelerated, Is.EqualTo(scalar));
+        Assert.That(accelerated, Is.EqualTo(new JVector((Real)2.0, (Real)1.0, (Real)0.0)));
+    }
 }

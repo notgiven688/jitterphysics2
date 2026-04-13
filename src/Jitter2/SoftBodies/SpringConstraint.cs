@@ -34,8 +34,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     public struct SpringData
     {
         internal int _internal;
-        private readonly delegate*<ref ConstraintData, void> iterate;
-        private readonly delegate*<ref ConstraintData, Real, void> prepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -54,14 +54,17 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         public JVector Jacobian;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationSpringConstraint, &IterateSpringConstraint);
+
     /// <inheritdoc/>
     protected override void Create()
     {
-        Iterate = &IterateSpringConstraint;
-        PrepareForIteration = &PrepareForIterationSpringConstraint;
-
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>
     /// Initializes the constraint from world-space anchor points.

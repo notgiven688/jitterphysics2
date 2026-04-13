@@ -21,8 +21,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     public struct HingeAngleData
     {
         internal int _internal;
-        public delegate*<ref ConstraintData, void> Iterate;
-        public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+        internal uint DispatchId;
+        internal ulong ConstraintId;
 
         public JHandle<RigidBodyData> Body1;
         public JHandle<RigidBodyData> Body2;
@@ -48,12 +48,16 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         public ushort Clamp;
     }
 
+    private static readonly uint RegisteredDispatchId =
+        RegisterFullConstraint(&PrepareForIterationHingeAngle, &IterateHingeAngle);
+
     protected override void Create()
     {
-        Iterate = &IterateHingeAngle;
-        PrepareForIteration = &PrepareForIterationHingeAngle;
+        DispatchId = RegisteredDispatchId;
         base.Create();
     }
+
+    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
 
     /// <summary>
     /// Initializes the constraint with a rotation axis and angular limits.
@@ -77,8 +81,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         data.BiasFactor = Constraint.DefaultAngularBias;
         data.LimitBias = Constraint.DefaultAngularLimitBias;
 
-        data.MinAngle = MathR.Sin((Real)limit.From / (Real)2.0);
-        data.MaxAngle = MathR.Sin((Real)limit.To / (Real)2.0);
+        data.MinAngle = StableMath.Sin((Real)limit.From / (Real)2.0);
+        data.MaxAngle = StableMath.Sin((Real)limit.To / (Real)2.0);
 
         data.Axis = JVector.ConjugatedTransform(axis, body2.Orientation);
 
@@ -96,8 +100,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         set
         {
             ref HingeAngleData data = ref Data;
-            data.MinAngle = MathR.Sin((Real)value.From / (Real)2.0);
-            data.MaxAngle = MathR.Sin((Real)value.To / (Real)2.0);
+        data.MinAngle = StableMath.Sin((Real)value.From / (Real)2.0);
+        data.MaxAngle = StableMath.Sin((Real)value.To / (Real)2.0);
         }
     }
 
@@ -196,7 +200,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             }
 
             Real error = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)((Real)2.0 * MathR.Asin(error));
+        return (JAngle)((Real)2.0 * StableMath.Asin(error));
         }
     }
 

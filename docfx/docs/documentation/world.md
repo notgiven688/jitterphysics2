@@ -72,6 +72,25 @@ This adjusts the number of additional (with respect to the main thread) worker t
 The `world.ThreadModel` property may be used to keep the thread pool in a tight loop waiting for work to be processed after `world.Step` has been run (`ThreadModelType.Persistent`), or to yield threads afterwards (`ThreadModelType.Regular`).
 The latter option is recommended to free processing power for other code, such as rendering.
 
+## Solver Mode
+
+Jitter2 offers two solver strategies through `world.SolveMode`:
+
+```cs
+world.SolveMode = SolveMode.Regular;       // default
+world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+```
+
+`SolveMode.Regular` is the default and optimized for throughput. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
+
+`SolveMode.Deterministic` is the best-effort cross-platform deterministic path. It processes each simulation island in a stable order and uses deterministic tie-breakers for contacts and constraints. Islands can still be distributed across threads, so `world.Step(dt, multiThread: true)` remains valid in deterministic mode.
+
+Use deterministic mode when repeatability matters more than raw performance, for example for tests, replays, debugging, or deterministic gameplay simulation. It can be significantly slower than `SolveMode.Regular`, so it should generally be enabled deliberately rather than used as the default for all worlds.
+
+By contrast, `SolveMode.Regular` with `multiThread: false` can still look reproducible when the world is built in the exact same way inside the same .NET process, but that is a much weaker property and should not be confused with cross-platform determinism.
+
+For deterministic mode, it is not necessary that the entire world was built through the same history. What must match is the setup order inside each interacting island: the participating bodies, shapes, and constraints must be added in the same order. Precision still matters: a float build and a double build are both deterministic, but they will not produce the same bit pattern. See [General](general.md#deterministic-simulation) for a summary of what each solver configuration guarantees and the current CI coverage behind that claim.
+
 ## Solver Iterations
 
 Jitter2 employs an iterative solver to solve contacts and constraints.

@@ -5,6 +5,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.Unmanaged;
 
@@ -16,7 +18,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// <remarks>
 /// <para>
 /// This structure is stored in unmanaged memory and accessed via <see cref="Constraint.SmallHandle"/>.
-/// It contains function pointers for the solver and handles to the connected bodies.
+/// It contains a solver dispatch id, a stable constraint identifier, and handles to the connected bodies.
 /// </para>
 /// <para>
 /// The data is valid only while the constraint is registered with the world. Do not cache references
@@ -27,15 +29,32 @@ namespace Jitter2.Dynamics.Constraints;
 public unsafe struct SmallConstraintData
 {
     internal int _internal;
-    /// <summary>Function pointer to the constraint's iteration solver.</summary>
-    public delegate*<ref SmallConstraintData, Real, void> Iterate;
-    /// <summary>Function pointer to the constraint's pre-iteration setup.</summary>
-    public delegate*<ref SmallConstraintData, Real, void> PrepareForIteration;
+    /// <summary>Identifier of the registered solver dispatch pair for this constraint.</summary>
+    public uint DispatchId;
+    /// <summary>Stable creation-order identifier used for deterministic sorting.</summary>
+    public ulong ConstraintId;
 
     /// <summary>Handle to the first body's simulation data.</summary>
     public JHandle<RigidBodyData> Body1;
     /// <summary>Handle to the second body's simulation data.</summary>
     public JHandle<RigidBodyData> Body2;
+
+    /// <summary>Gets whether this constraint is enabled.</summary>
+    public readonly bool IsEnabled => DispatchId != 0;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void PrepareForIteration(ref SmallConstraintData constraint, Real idt)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        ((delegate*<ref SmallConstraintData, Real, void>)dispatch.Prepare)(ref constraint, idt);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void Iterate(ref SmallConstraintData constraint, Real idt)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        ((delegate*<ref SmallConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
+    }
 }
 
 /// <summary>
@@ -44,7 +63,7 @@ public unsafe struct SmallConstraintData
 /// <remarks>
 /// <para>
 /// This structure is stored in unmanaged memory and accessed via <see cref="Constraint.Handle"/>.
-/// It contains function pointers for the solver and handles to the connected bodies.
+/// It contains a solver dispatch id, a stable constraint identifier, and handles to the connected bodies.
 /// </para>
 /// <para>
 /// The data is valid only while the constraint is registered with the world. Do not cache references
@@ -55,15 +74,88 @@ public unsafe struct SmallConstraintData
 public unsafe struct ConstraintData
 {
     internal int _internal;
-    /// <summary>Function pointer to the constraint's iteration solver.</summary>
-    public delegate*<ref ConstraintData, Real, void> Iterate;
-    /// <summary>Function pointer to the constraint's pre-iteration setup.</summary>
-    public delegate*<ref ConstraintData, Real, void> PrepareForIteration;
+    /// <summary>Identifier of the registered solver dispatch pair for this constraint.</summary>
+    public uint DispatchId;
+    /// <summary>Stable creation-order identifier used for deterministic sorting.</summary>
+    public ulong ConstraintId;
 
     /// <summary>Handle to the first body's simulation data.</summary>
     public JHandle<RigidBodyData> Body1;
     /// <summary>Handle to the second body's simulation data.</summary>
     public JHandle<RigidBodyData> Body2;
+
+    /// <summary>Gets whether this constraint is enabled.</summary>
+    public readonly bool IsEnabled => DispatchId != 0;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        ((delegate*<ref ConstraintData, Real, void>)dispatch.Prepare)(ref constraint, idt);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void Iterate(ref ConstraintData constraint, Real idt)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        ((delegate*<ref ConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
+    }
+}
+
+internal static unsafe class ConstraintDispatchTable
+{
+    internal readonly struct Entry(nint prepare, nint iterate)
+    {
+        public readonly nint Prepare = prepare;
+        public readonly nint Iterate = iterate;
+    }
+
+    private static readonly object Sync = new();
+    private static readonly List<Entry> Entries = [default];
+
+    public static uint Register(
+        delegate*<ref ConstraintData, Real, void> prepare,
+        delegate*<ref ConstraintData, Real, void> iterate)
+    {
+        if (prepare == null) throw new ArgumentNullException(nameof(prepare));
+        if (iterate == null) throw new ArgumentNullException(nameof(iterate));
+
+        lock (Sync)
+        {
+            if (Entries.Count == int.MaxValue)
+            {
+                throw new InvalidOperationException("Too many registered constraint dispatch entries.");
+            }
+
+            Entries.Add(new Entry((nint)prepare, (nint)iterate));
+            return (uint)(Entries.Count - 1);
+        }
+    }
+
+    public static uint Register(
+        delegate*<ref SmallConstraintData, Real, void> prepare,
+        delegate*<ref SmallConstraintData, Real, void> iterate)
+    {
+        if (prepare == null) throw new ArgumentNullException(nameof(prepare));
+        if (iterate == null) throw new ArgumentNullException(nameof(iterate));
+
+        lock (Sync)
+        {
+            if (Entries.Count == int.MaxValue)
+            {
+                throw new InvalidOperationException("Too many registered constraint dispatch entries.");
+            }
+
+            Entries.Add(new Entry((nint)prepare, (nint)iterate));
+            return (uint)(Entries.Count - 1);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ref readonly Entry Get(uint dispatchId)
+    {
+        return ref CollectionsMarshal.AsSpan(Entries)[(int)dispatchId];
+    }
 }
 
 /// <summary>
@@ -171,17 +263,41 @@ public abstract class Constraint : IDebugDrawable
     }
 
     /// <summary>
-    /// Sets the <see cref="Iterate"/> and <see cref="PrepareForIteration"/> function pointer
-    /// fields on this instance. Override this in derived classes to assign the correct solver
-    /// methods. The pointers are later written into <see cref="ConstraintData"/> when the
-    /// constraint is enabled.
+    /// Sets the solver dispatch id used by this instance. Override this in derived classes
+    /// to assign the correct registered solver pair. The id is later written into the
+    /// unmanaged header when the constraint is enabled.
     /// </summary>
     protected virtual void Create()
     {
     }
 
-    protected unsafe delegate*<ref ConstraintData, Real, void> Iterate = null;
-    protected unsafe delegate*<ref ConstraintData, Real, void> PrepareForIteration = null;
+    /// <summary>
+    /// Resets the cached warm-start state used by the solver for this constraint.
+    /// </summary>
+    /// <remarks>
+    /// This clears only persistent solver impulses. Constraint configuration remains unchanged.
+    /// Useful after restoring snapshots or other discontinuous state changes where preserving
+    /// warm-starting is undesirable.
+    /// </remarks>
+    public virtual void ResetWarmStart()
+    {
+    }
+
+    protected uint DispatchId { get; set; }
+
+    protected static unsafe uint RegisterFullConstraint(
+        delegate*<ref ConstraintData, Real, void> prepare,
+        delegate*<ref ConstraintData, Real, void> iterate)
+    {
+        return ConstraintDispatchTable.Register(prepare, iterate);
+    }
+
+    protected static unsafe uint RegisterSmallConstraint(
+        delegate*<ref SmallConstraintData, Real, void> prepare,
+        delegate*<ref SmallConstraintData, Real, void> iterate)
+    {
+        return ConstraintDispatchTable.Register(prepare, iterate);
+    }
 
     /// <summary>
     /// Gets or sets whether this constraint is enabled.
@@ -191,11 +307,17 @@ public abstract class Constraint : IDebugDrawable
     /// </remarks>
     public unsafe bool IsEnabled
     {
-        get => Handle.Data.Iterate != null;
+        get => Handle.Data.DispatchId != 0;
         set
         {
-            Handle.Data.Iterate = value ? Iterate : null;
-            Handle.Data.PrepareForIteration = value ? PrepareForIteration : null;
+            if (value && DispatchId == 0)
+            {
+                throw new InvalidOperationException(
+                    $"The constraint has no registered solver dispatch. " +
+                    $"Set {nameof(DispatchId)} in {nameof(Create)}().");
+            }
+
+            Handle.Data.DispatchId = value ? DispatchId : 0u;
         }
     }
 

@@ -34,6 +34,11 @@ _disableContribution: true
     <div class="jp-feature-body">Semi-implicit Euler integrator with sub-stepping for stable, stiff simulations at interactive frame rates.</div>
   </div>
   <div class="jp-feature-card">
+    <div class="jp-feature-icon">&#129513;</div>
+    <div class="jp-feature-title">Deterministic Solver</div>
+    <div class="jp-feature-body">Optional cross-platform deterministic mode for reproducible simulation across supported platforms and precision builds.</div>
+  </div>
+  <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128164;</div>
     <div class="jp-feature-title">Massive Sleeping Worlds</div>
     <div class="jp-feature-body">Deactivation system keeps large simulations fast — 100k+ inactive bodies have near-zero per-frame cost.</div>
