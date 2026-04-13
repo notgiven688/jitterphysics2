@@ -58,6 +58,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>

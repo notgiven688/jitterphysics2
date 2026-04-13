@@ -20,7 +20,7 @@ The active precision mode can be checked at runtime via `Precision.IsDoublePreci
 
 ## Deterministic Simulation
 
-Jitter2 provides an optional cross-platform deterministic solver mode:
+Jitter2 provides an optional cross-platform deterministic solver mode via <xref:Jitter2.SolveMode>:
 
 ```cs
 world.SolveMode = SolveMode.Deterministic;

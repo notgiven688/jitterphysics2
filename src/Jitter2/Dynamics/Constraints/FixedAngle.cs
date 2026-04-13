@@ -52,6 +52,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
 
     /// <summary>

@@ -49,6 +49,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         base.Create();
     }
     
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>

@@ -49,6 +49,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>

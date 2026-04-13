@@ -64,6 +64,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>

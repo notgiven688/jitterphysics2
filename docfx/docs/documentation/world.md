@@ -74,7 +74,7 @@ The latter option is recommended to free processing power for other code, such a
 
 ## Solver Mode
 
-Jitter2 offers two solver strategies through `world.SolveMode`:
+Jitter2 offers two solver strategies through <xref:Jitter2.World.SolveMode>:
 
 ```cs
 world.SolveMode = SolveMode.Regular;       // default
@@ -121,6 +121,33 @@ world.SolverIterations = (solver: 2, relaxation: 1);
 does perform $12$ solver iterations in total for each call to `world.Step`.
 The runtime is slower than a single regular step with $12$ iterations but this approach enhances the stability of the simulation.
 Substepping is excellent for enhancing the overall quality of constraints, stabilizing large stacks of objects, and simulating large mass ratios (like heavy objects resting on light objects) with greater accuracy.
+
+## Contact Manifold Persistence
+
+By default, Jitter2 caches contact points and their accumulated impulses between frames (`world.PersistentContactManifold = true`). This allows the solver to warm-start from the previous solution and lets the manifold grow over several steps, which improves stability for resting contacts.
+
+Setting `world.PersistentContactManifold = false` discards all contact data at the end of each frame, so every contact is treated as brand-new. This removes frame-to-frame contact memory at the cost of solver convergence speed.
+
+Individual bodies can discard their cached contacts without changing the global setting:
+
+```cs
+body.ClearContactCache();  // discard cached manifold for this body
+```
+
+This is useful after discontinuous user-driven transforms such as teleports. When `SolveMode.Deterministic` is active, setting a body's `Position` or `Orientation` property automatically calls `ClearContactCache()`.
+
+## Warm-Start Reset
+
+The iterative solver warm-starts each frame from the accumulated impulses of the previous frame. After restoring a snapshot or any other discontinuous state change, this cached state can be stale. Every constraint exposes a `ResetWarmStart()` method that clears its accumulated impulses without removing the constraint:
+
+```cs
+foreach (var constraint in body.Constraints)
+{
+    constraint.ResetWarmStart();
+}
+```
+
+`World.Stabilize` can then be called to re-solve the restored contacts and constraints before resuming normal simulation. `Stabilize` respects `SolveMode.Deterministic` when it is set.
 
 ## Auxiliary Contacts
 

@@ -58,6 +58,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>

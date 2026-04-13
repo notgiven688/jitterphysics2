@@ -54,6 +54,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         base.Create();
     }
 
+    /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 
     /// <summary>

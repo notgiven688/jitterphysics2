@@ -41,6 +41,9 @@ public static class MathHelper
     /// Calculates the rotation quaternion corresponding to the given angular velocity using
     /// deterministic trigonometric approximations.
     /// </summary>
+    /// <param name="omega">The angular velocity vector in radians per second.</param>
+    /// <param name="dt">The time step in seconds.</param>
+    /// <returns>A unit quaternion representing the rotation.</returns>
     public static JQuaternion RotationQuaternion(in JVector omega, Real dt)
     {
         Real angle = omega.Length();
