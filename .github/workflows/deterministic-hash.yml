@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  stacked-columns-hash:
-    name: Stacked Columns Hash (${{ matrix.os }}, ${{ matrix.precision }})
+  deterministic-hash:
+    name: Deterministic Hash (${{ matrix.os }}, ${{ matrix.precision }})
     runs-on: ${{ matrix.os }}
 
     strategy:

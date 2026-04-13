@@ -36,7 +36,7 @@ _disableContribution: true
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#129513;</div>
     <div class="jp-feature-title">Deterministic Solver</div>
-    <div class="jp-feature-body">Optional cross-platform deterministic mode for reproducible simulation across supported platforms and precision builds.</div>
+    <div class="jp-feature-body">Optional cross-platform deterministic mode for reproducible simulations.</div>
   </div>
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128164;</div>
