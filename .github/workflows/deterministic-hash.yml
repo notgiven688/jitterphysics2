@@ -38,8 +38,8 @@ jobs:
 
       - name: Run deterministic hash repro (single precision)
         if: matrix.precision == 'single'
-        run: dotnet test --configuration Release --no-restore --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicStackedColumnsWithSleeping_MatchesAcrossThreadingForTwentySeconds"
+        run: dotnet test --configuration Release --no-restore --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicScene_MatchesAcrossThreadingForTwentySeconds"
 
       - name: Run deterministic hash repro (double precision)
         if: matrix.precision == 'double'
-        run: dotnet test --configuration Release --no-restore -p:DoublePrecision=true --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicStackedColumnsWithSleeping_MatchesAcrossThreadingForTwentySeconds"
+        run: dotnet test --configuration Release --no-restore -p:DoublePrecision=true --filter "FullyQualifiedName~JitterTests.Robustness.ReproducibilityTest.DeterministicScene_MatchesAcrossThreadingForTwentySeconds"

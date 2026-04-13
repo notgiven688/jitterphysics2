@@ -10,8 +10,8 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    private const ulong ExpectedStackedColumnsPositionHashSingle = 0xFBA322E9C6394C66;
-    private const ulong ExpectedStackedColumnsPositionHashDouble = 0xF3C0D42629A9F003;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0xD82519114E87DA0A;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0xFE788CF34D3A5700;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -86,16 +86,16 @@ public class ReproducibilityTest
     }
 
     [Test]
-    public static void DeterministicStackedColumnsWithSleeping_MatchesAcrossThreadingForTwentySeconds()
+    public static void DeterministicScene_MatchesAcrossThreadingForTwentySeconds()
     {
         const Real dt = (Real)(1.0 / 100.0);
         const int totalSteps = 2000;
 
         using var singleThreadWorld = CreateDeterministicSleepingWorld();
-        var singleThreadBodies = BuildStackedColumnsScene(singleThreadWorld);
+        var singleThreadBodies = BuildDeterministicScene(singleThreadWorld);
 
         using var multiThreadWorld = CreateDeterministicSleepingWorld();
-        var multiThreadBodies = BuildStackedColumnsScene(multiThreadWorld);
+        var multiThreadBodies = BuildDeterministicScene(multiThreadWorld);
 
         bool sawSleepingBodies = false;
 
@@ -120,8 +120,8 @@ public class ReproducibilityTest
             $"Position hash mismatch: single-thread=0x{singleThreadHash:X16}, multi-thread=0x{multiThreadHash:X16}.");
 
         ulong expectedHash = Precision.IsDoublePrecision
-            ? ExpectedStackedColumnsPositionHashDouble
-            : ExpectedStackedColumnsPositionHashSingle;
+            ? ExpectedDeterministicSceneHashDouble
+            : ExpectedDeterministicSceneHashSingle;
 
         Assert.That(singleThreadHash, Is.EqualTo(expectedHash),
             $"Expected position hash 0x{expectedHash:X16}, actual 0x{singleThreadHash:X16}.");
@@ -329,9 +329,9 @@ public class ReproducibilityTest
         };
     }
 
-    private static RigidBody[] BuildStackedColumnsScene(World world)
+    private static RigidBody[] BuildDeterministicScene(World world)
     {
-        var bodies = new List<RigidBody>(capacity: 353);
+        var bodies = new List<RigidBody>();
 
         var floor = world.CreateRigidBody();
         floor.Position = new JVector(0, -100, 0);
@@ -355,6 +355,11 @@ public class ReproducibilityTest
             body.AddShape(new TransformedShape(new ConeShape(), JVector.Zero, JMatrix.CreateScale((Real)0.4, 1, 1)));
             body.Damping = ((Real)0.002, (Real)0.002);
             bodies.Add(body);
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            BuildRagdoll(world, new JVector(-5, 3 + 2 * i, 0), bodies);
         }
 
         world.SolverIterations = (4, 2);
