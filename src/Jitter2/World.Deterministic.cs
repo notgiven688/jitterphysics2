@@ -77,7 +77,6 @@ public sealed partial class World
     {
         public int Index;
         public int IslandIndex;
-        public int HandleId;
         public ArbiterKey Key;
     }
 
@@ -146,7 +145,6 @@ public sealed partial class World
             {
                 Index = i,
                 IslandIndex = IslandOf(contact.Body1, contact.Body2),
-                HandleId = contact._internal,
                 Key = contact.Key
             });
         }
@@ -156,7 +154,7 @@ public sealed partial class World
             if (a.IslandIndex != b.IslandIndex) return a.IslandIndex.CompareTo(b.IslandIndex);
             if (a.Key.Key1 != b.Key.Key1) return a.Key.Key1 < b.Key.Key1 ? -1 : 1;
             if (a.Key.Key2 != b.Key.Key2) return a.Key.Key2 < b.Key.Key2 ? -1 : 1;
-            return a.HandleId.CompareTo(b.HandleId);
+            return 0; // Contacts must be the same. Sort *does* compare objects to themselves.
         });
 
         sortedSmallConstraints.Clear();
