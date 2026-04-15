@@ -69,6 +69,10 @@ public class TriangleMesh
     /// </summary>
     /// <param name="vertices">The vertex buffer.</param>
     /// <param name="indices">The index buffer (must be a multiple of 3).</param>
+    /// <remarks>
+    /// Vertices with exactly identical positions are canonicalized so adjacency detection also works
+    /// across duplicated seam vertices in indexed meshes.
+    /// </remarks>
     public TriangleMesh(ReadOnlySpan<JVector> vertices, ReadOnlySpan<int> indices, bool ignoreDegenerated = false)
     {
         BuildFromIndexed(vertices, indices, ignoreDegenerated);
@@ -178,20 +182,41 @@ public class TriangleMesh
     {
         if (indices.Length % 3 != 0) throw new ArgumentException("Indices must be a multiple of 3.");
 
-        // Direct copy of vertices (Trusting the user's topology)
-        Unsafe.AsRef(in this.vertices) = vertices.ToArray();
+        var deduplicatedVertices = new List<JVector>(vertices.Length);
+        var vertexMap = new Dictionary<JVector, int>(vertices.Length);
+        int[] remap = new int[vertices.Length];
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            JVector vertex = vertices[i];
+
+            if (!vertexMap.TryGetValue(vertex, out int canonicalIndex))
+            {
+                canonicalIndex = deduplicatedVertices.Count;
+                vertexMap[vertex] = canonicalIndex;
+                deduplicatedVertices.Add(vertex);
+            }
+
+            remap[i] = canonicalIndex;
+        }
+
+        Unsafe.AsRef(in this.vertices) = deduplicatedVertices.ToArray();
 
         var triangleList = new List<Triangle>(indices.Length / 3);
 
         for (int i = 0; i < indices.Length; i += 3)
         {
-            int i0 = indices[i];
-            int i1 = indices[i + 1];
-            int i2 = indices[i + 2];
+            int inputI0 = indices[i];
+            int inputI1 = indices[i + 1];
+            int inputI2 = indices[i + 2];
 
             // Safety check for bounds
-            if ((uint)i0 >= this.vertices.Length || (uint)i1 >= this.vertices.Length || (uint)i2 >= this.vertices.Length)
-                throw new IndexOutOfRangeException($"Indices {i0},{i1},{i2} out of bounds.");
+            if ((uint)inputI0 >= vertices.Length || (uint)inputI1 >= vertices.Length || (uint)inputI2 >= vertices.Length)
+                throw new IndexOutOfRangeException($"Indices {inputI0},{inputI1},{inputI2} out of bounds.");
+
+            int i0 = remap[inputI0];
+            int i1 = remap[inputI1];
+            int i2 = remap[inputI2];
 
             JVector v0 = this.vertices[i0];
             JVector v1 = this.vertices[i1];
