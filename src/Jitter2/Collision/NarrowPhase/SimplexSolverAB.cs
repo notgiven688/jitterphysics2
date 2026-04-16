@@ -294,6 +294,7 @@ public unsafe struct SimplexSolverAB
     /// <c>true</c> if the origin is not contained within the simplex;
     /// <c>false</c> if the origin is enclosed by the tetrahedron.
     /// </returns>
+    [SkipLocalsInit]
     public bool AddVertex(in Vertex vertex, out JVector closest)
     {
         Unsafe.SkipInit(out closest);
