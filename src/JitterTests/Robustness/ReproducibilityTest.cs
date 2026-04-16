@@ -10,8 +10,8 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    private const ulong ExpectedDeterministicSceneHashSingle = 0xD82519114E87DA0A;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0xFE788CF34D3A5700;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x5EB996CFE011ABAB;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x4CC8692B99B9CE6D;
 
     [TestCase]
     public static void BasicReproducibilityTest()
