@@ -3739,15 +3739,6 @@ references:
   fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex, Jitter2.LinearMath.JVector)
   nameWithType: SimplexSolverAB.AddVertex(in MinkowskiDifference.Vertex, out JVector)
   nameWithType.vb: SimplexSolverAB.AddVertex(MinkowskiDifference.Vertex, JVector)
-- uid: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: AddVertex(in JVector, out JVector)
-  href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: AddVertex(JVector, JVector)
-  fullName: Jitter2.Collision.SimplexSolverAB.AddVertex(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.Collision.SimplexSolverAB.AddVertex(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: SimplexSolverAB.AddVertex(in JVector, out JVector)
-  nameWithType.vb: SimplexSolverAB.AddVertex(JVector, JVector)
 - uid: Jitter2.Collision.SimplexSolverAB.AddVertex*
   name: AddVertex
   href: api/Jitter2.Collision.SimplexSolverAB.html#Jitter2_Collision_SimplexSolverAB_AddVertex_

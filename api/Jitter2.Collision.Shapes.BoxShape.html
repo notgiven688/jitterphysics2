@@ -459,7 +459,7 @@ not the center of mass.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point guaranteed to be inside the convex hull, typically the center of mass.</p>
+    <dd><p>A point that must lie strictly inside the convex hull.</p>
 </dd>
   </dl>
 
@@ -500,10 +500,10 @@ transformation of the associated rigid body.</p>
     <dd><p>The direction of the ray. This vector does not need to be normalized.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.</p>
+    <dd><p>The surface normal at the point of intersection, if an intersection occurs.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    <dd><p>The scalar value representing the distance along the ray's direction vector
 from the <code class="paramref">origin</code> to the intersection point. The hit point can be calculated as:
 <code>origin + lambda * direction</code>.</p>
 </dd>

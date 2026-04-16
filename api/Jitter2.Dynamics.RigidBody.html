@@ -857,7 +857,7 @@ public bool IsStatic { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Mass" data-uid="Jitter2.Dynamics.RigidBody.Mass">
   Mass
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1339"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1335"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the mass of the rigid body. To modify the mass, use
@@ -1733,7 +1733,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes">
   ClearShapes()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1151"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all shapes associated with the rigid body.</p>
@@ -1760,7 +1760,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes_Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes(Jitter2.Dynamics.MassInertiaUpdateMode)">
   ClearShapes(MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1160"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all shapes associated with the rigid body.</p>
@@ -1793,7 +1793,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes(System.Boolean)">
   ClearShapes(bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1169"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1825,7 +1825,7 @@ public void ClearShapes(bool setMassInertia = true)</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBody_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1309"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1305"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Generates a rough triangle approximation of the shapes of the body.
@@ -1984,7 +1984,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape)">
   RemoveShape(RigidBodyShape)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1042"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1041"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specified shape from the rigid body.</p>
@@ -2009,9 +2009,6 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
 
 
-  <h4 class="section" id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</p>
-</div>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
@@ -2026,7 +2023,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)">
   RemoveShape(RigidBodyShape, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1056"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1054"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specified shape from the rigid body.</p>
@@ -2054,9 +2051,6 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
 
 
-  <h4 class="section" id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</p>
-</div>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
@@ -2071,7 +2065,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)">
   RemoveShape(RigidBodyShape, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1144"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2105,7 +2099,7 @@ public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)</code>
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},System.Boolean)">
   RemoveShape(IEnumerable&lt;RigidBodyShape&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2139,7 +2133,7 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__" data-uid="Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})">
   RemoveShapes(IEnumerable&lt;RigidBodyShape&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1087"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1084"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes several shapes from the body.</p>
@@ -2164,9 +2158,6 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
 
 
-  <h4 class="section" id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</p>
-</div>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
@@ -2181,7 +2172,7 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)">
   RemoveShapes(IEnumerable&lt;RigidBodyShape&gt;, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1099"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1095"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes several shapes from the body.</p>
@@ -2209,9 +2200,6 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
 
 
-  <h4 class="section" id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This operation has a time complexity of O(n), where n is the number of shapes attached to the body.</p>
-</div>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
@@ -2260,7 +2248,7 @@ the next time step. The current state does not change immediately.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia">
   SetMassInertia()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1185"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the mass and inertia of this body from all attached shapes, assuming unit density.</p>
@@ -2297,7 +2285,7 @@ is assigned a mass of 1 and an identity inertia tensor.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia_Jitter2_LinearMath_JMatrix__System_Single_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JMatrix@,System.Single,System.Boolean)">
   SetMassInertia(in JMatrix, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1267"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1263"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the new mass properties of this body by specifying both inertia and mass directly.</p>
@@ -2346,7 +2334,7 @@ interpreted as inverse values.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia_System_Single_" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia(System.Single)">
   SetMassInertia(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1229"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1225"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the inertia from all attached shapes, then uniformly scales it to match the specified mass.</p>

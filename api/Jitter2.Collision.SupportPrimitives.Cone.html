@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct SupportPrimitives.Cone | Jitter2 ">
       
-      <meta name="description" content="Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.">
+      <meta name="description" content="Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis. The cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_SupportPrimitives_Cone" data-uid="Jitter2.Collision.SupportPrimitives.Cone" class="text-break">
-Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L121"><i class="bi bi-code-slash"></i></a>
+Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,8 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>
+  <div class="markdown summary"><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
+The cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -153,10 +154,11 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone__ctor_System_Single_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.Cone.#ctor(System.Single,System.Single)">
   Cone(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L121"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>
+  <div class="markdown level1 summary"><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
+The cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -191,7 +193,7 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SupportPrimitives.Cone.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L144"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
@@ -205,7 +207,7 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point guaranteed to be inside the convex hull, typically the center of mass.</p>
+    <dd><p>A point that must lie strictly inside the convex hull.</p>
 </dd>
   </dl>
 
@@ -224,7 +226,7 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SupportPrimitives.Cone.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -260,7 +262,7 @@ Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="Vi
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L121" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L122" class="edit-link">Edit this page</a>
         </div>
 
 

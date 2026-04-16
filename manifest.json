@@ -952,7 +952,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.SupportPrimitives.Cone",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Cone.yml\" sourcestartlinenumber=\"1\">Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportPrimitives.Cone.yml\" sourcestartlinenumber=\"1\">Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.\nThe cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.</p>\n"
     },
     {
       "type": "ManagedReference",

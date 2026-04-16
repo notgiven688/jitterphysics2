@@ -198,11 +198,10 @@ Class SphereShape  <a class="header-action link-secondary" title="View source" h
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape__ctor_System_Single_" data-uid="Jitter2.Collision.Shapes.SphereShape.#ctor(System.Single)">
   SphereShape(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.SphereShape.html">SphereShape</a> class with an optional radius parameter.
-The default radius is 1.0 units.</p>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.SphereShape.html">SphereShape</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -213,7 +212,7 @@ The default radius is 1.0 units.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The radius of the sphere. Defaults to (Real)1.0.</p>
+    <dd><p>The radius of the sphere. Defaults to 1.0.</p>
 </dd>
   </dl>
 
@@ -284,7 +283,7 @@ The default radius is 1.0 units.</p>
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.SphereShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -319,7 +318,7 @@ The default radius is 1.0 units.</p>
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
@@ -361,7 +360,7 @@ not the center of mass.</p>
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.SphereShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
@@ -375,7 +374,7 @@ not the center of mass.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point guaranteed to be inside the convex hull, typically the center of mass.</p>
+    <dd><p>A point that must lie strictly inside the convex hull.</p>
 </dd>
   </dl>
 
@@ -394,7 +393,7 @@ not the center of mass.</p>
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape_LocalRayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.SphereShape.LocalRayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   LocalRayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a local ray cast against the shape, checking if a ray originating from a specified point
@@ -416,10 +415,10 @@ transformation of the associated rigid body.</p>
     <dd><p>The direction of the ray. This vector does not need to be normalized.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.</p>
+    <dd><p>The surface normal at the point of intersection, if an intersection occurs.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    <dd><p>The scalar value representing the distance along the ray's direction vector
 from the <code class="paramref">origin</code> to the intersection point. The hit point can be calculated as:
 <code>origin + lambda * direction</code>.</p>
 </dd>
@@ -446,7 +445,7 @@ from the <code class="paramref">origin</code> to the intersection point. The hit
 
   <h3 id="Jitter2_Collision_Shapes_SphereShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.SphereShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/SphereShape.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
