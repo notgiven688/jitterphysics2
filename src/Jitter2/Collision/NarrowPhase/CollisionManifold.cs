@@ -546,6 +546,7 @@ public unsafe struct CollisionManifold
         return MathR.Abs(JVector.Dot(area, normal));
     }
 
+    [SkipLocalsInit]
     private static void ReducePolygon(Span<ClipPoint> polygon, ref int count)
     {
         if (count <= MaxManifoldPoints) return;
@@ -617,6 +618,7 @@ public unsafe struct CollisionManifold
     }
 
     // Keep only the 4 contacts that span the largest area in the contact plane.
+    [SkipLocalsInit]
     internal void ReduceToSolverContacts(in JVector normal)
     {
         if (manifoldCount <= SolverContactLimit) return;
@@ -771,7 +773,6 @@ public unsafe struct CollisionManifold
     /// <param name="pB">Initial contact point on shape B.</param>
     /// <param name="normal">The collision normal (from B to A).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    [SkipLocalsInit]
     public void BuildManifold<Ta,Tb>(Ta shapeA, Tb shapeB,
         in JVector pA, in JVector pB, in JVector normal) where Ta : RigidBodyShape where Tb : RigidBodyShape
     {

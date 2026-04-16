@@ -240,6 +240,7 @@ public unsafe struct SimplexSolver
     /// <c>true</c> if the origin is not contained within the simplex (continue iterating);
     /// <c>false</c> if the origin is enclosed by the tetrahedron (collision detected).
     /// </returns>
+    [SkipLocalsInit]
     public bool AddVertex(in JVector vertex, out JVector closest)
     {
         Unsafe.SkipInit(out closest);
