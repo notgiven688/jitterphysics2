@@ -20,14 +20,9 @@ namespace Jitter2.Collision;
 /// the closest points on the original shapes (A and B spaces).
 /// </summary>
 /// <remarks>
-/// <para>
 /// Unlike <see cref="SimplexSolver"/>, this solver tracks barycentric coordinates and
 /// the original support points, enabling extraction of the closest points on each shape
 /// via <see cref="GetClosest"/>.
-/// </para>
-/// <para>
-/// Complexity: O(1) per vertex addition with early-out optimizations.
-/// </para>
 /// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolverAB
@@ -288,27 +283,13 @@ public unsafe struct SimplexSolverAB
     }
 
     /// <summary>
-    /// Adds a vertex to the simplex and computes the new closest point to the origin.
-    /// </summary>
-    /// <param name="vertex">The vertex position on the Minkowski difference.</param>
-    /// <param name="closest">The point on the reduced simplex closest to the origin.</param>
-    /// <returns>
-    /// <c>true</c> if the origin is not contained within the simplex;
-    /// <c>false</c> if the origin is enclosed by the tetrahedron.
-    /// </returns>
-    public bool AddVertex(in JVector vertex, out JVector closest)
-    {
-        Unsafe.SkipInit(out Vertex fullVertex);
-        fullVertex.V = vertex;
-        return AddVertex(fullVertex, out closest);
-    }
-
-    /// <summary>
     /// Adds a vertex (with full A/B support point data) to the simplex and computes
     /// the new closest point to the origin.
     /// </summary>
     /// <param name="vertex">The Minkowski difference vertex including support points from both shapes.</param>
-    /// <param name="closest">The point on the reduced simplex closest to the origin.</param>
+    /// <param name="closest">
+    /// When this method returns, contains the point on the reduced simplex closest to the origin.
+    /// </param>
     /// <returns>
     /// <c>true</c> if the origin is not contained within the simplex;
     /// <c>false</c> if the origin is enclosed by the tetrahedron.

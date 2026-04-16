@@ -292,11 +292,11 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs.
+    /// Gets an existing <see cref="Arbiter"/> instance for the given pair of IDs.
     /// </summary>
     /// <param name="id0">The first identifier (e.g., shape ID).</param>
     /// <param name="id1">The second identifier.</param>
-    /// <param name="arbiter">When this method returns true, contains the arbiter; otherwise, null.</param>
+    /// <param name="arbiter">The arbiter for the ordered ID pair, or <see langword="null"/> if none exists.</param>
     /// <returns><see langword="true"/> if an arbiter exists for the ordered ID pair; otherwise, <see langword="false"/>.</returns>
     /// <remarks>
     /// The order of <paramref name="id0"/> and <paramref name="id1"/> matters.
@@ -314,7 +314,7 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Retrieves an existing <see cref="Arbiter"/> instance for the given pair of IDs,
+    /// Gets an existing <see cref="Arbiter"/> instance for the given pair of IDs,
     /// or creates a new one if none exists.
     /// </summary>
     /// <remarks>

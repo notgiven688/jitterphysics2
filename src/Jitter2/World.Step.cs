@@ -113,7 +113,7 @@ public sealed partial class World
     /// <summary>
     /// Performs a single simulation step.
     /// </summary>
-    /// <param name="dt">The duration of time to simulate in seconds. Should remain fixed and typically not exceed 1/60 s.</param>
+    /// <param name="dt">The duration of time to simulate in seconds. Should remain fixed and not exceed 1/60 s.</param>
     /// <param name="multiThread">If <see langword="true"/>, uses the internal thread pool for parallel execution.
     /// Set to <see langword="false"/> for single-threaded execution (useful for debugging or platforms without threading).</param>
     /// <remarks>

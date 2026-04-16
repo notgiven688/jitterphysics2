@@ -124,7 +124,6 @@ public partial class DynamicTree
     /// is zero. <c>false</c> if no accepted proxy is found, in which case <paramref name="proxy"/> is <c>null</c>.
     /// </returns>
     /// <remarks>
-    /// This overload is unbounded and considers all <see cref="IDistanceTestable"/> proxies in the tree.
     /// To skip overlapping proxies and continue searching for separated ones, use a <paramref name="post"/>
     /// filter that returns <c>false</c> for results with <c>distance == 0</c>.
     /// </remarks>

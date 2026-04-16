@@ -71,7 +71,7 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Retrieves the vertices transformed to world space coordinates, as affected by the rigid body's transformation.
+    /// Gets the vertices transformed to world space coordinates, as affected by the rigid body's transformation.
     /// </summary>
     /// <param name="a">The transformed coordinate of the first vertex.</param>
     /// <param name="b">The transformed coordinate of the second vertex.</param>

@@ -348,7 +348,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Retrieves the target index of the handle.
+    /// Gets the index of the element referred to by the handle.
     /// </summary>
     /// <param name="handle">The handle to get the index for.</param>
     /// <returns>The index of the element in the buffer.</returns>

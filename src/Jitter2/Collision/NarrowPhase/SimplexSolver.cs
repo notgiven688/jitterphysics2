@@ -18,15 +18,9 @@ namespace Jitter2.Collision;
 /// to the origin on a simplex (point, line segment, triangle, or tetrahedron).
 /// </summary>
 /// <remarks>
-/// <para>
 /// This solver iteratively reduces the simplex to the feature closest to the origin.
 /// It handles degeneracy by falling back to lower-dimensional features when the current
 /// simplex is near-degenerate.
-/// </para>
-/// <para>
-/// Complexity: O(1) per vertex addition for point/segment, O(1) for triangle,
-/// O(1) for tetrahedron with early-out optimizations.
-/// </para>
 /// </remarks>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct SimplexSolver
@@ -237,8 +231,8 @@ public unsafe struct SimplexSolver
     /// When this method returns, contains the point on the reduced simplex closest to the origin.
     /// </param>
     /// <returns>
-    /// <c>true</c> if the origin is not contained within the simplex (continue iterating);
-    /// <c>false</c> if the origin is enclosed by the tetrahedron (collision detected).
+    /// <c>true</c> if the origin is not contained within the simplex;
+    /// <c>false</c> if the origin is enclosed by the tetrahedron.
     /// </returns>
     public bool AddVertex(in JVector vertex, out JVector closest)
     {

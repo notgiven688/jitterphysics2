@@ -44,16 +44,12 @@ public struct TreeBox : IEquatable<TreeBox>
     [FieldOffset(7 * sizeof(Real))] public Real MaxW;
 
     /// <summary>
-    /// Returns a <see cref="VectorReal"/> view of the <see cref="Min"/> vector,
-    /// reinterpreted as a SIMD vector for efficient processing.
-    /// This enables vectorized operations on the bounding box's minimum corner.
+    /// Returns a <see cref="VectorReal"/> view of the <see cref="Min"/> vector for SIMD operations.
     /// </summary>
     public readonly ref VectorReal VectorMin => ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in this.Min));
 
     /// <summary>
-    /// Returns a <see cref="VectorReal"/> view of the <see cref="Max"/> vector,
-    /// reinterpreted as a SIMD vector for efficient processing.
-    /// This enables vectorized operations on the bounding box's maximum corner.
+    /// Returns a <see cref="VectorReal"/> view of the <see cref="Max"/> vector for SIMD operations.
     /// </summary>
     public readonly ref VectorReal VectorMax => ref Unsafe.As<JVector, VectorReal>(ref Unsafe.AsRef(in this.Max));
 
@@ -260,7 +256,7 @@ public struct TreeBox : IEquatable<TreeBox>
     /// <summary>
     /// Calculates the surface area of the bounding box.
     /// </summary>
-    /// <returns>The total surface area ($2(xy + yz + zx)$).</returns>
+    /// <returns>The total surface area: 2*(ex*ey + ey*ez + ez*ex).</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly double GetSurfaceArea()
     {
@@ -278,7 +274,7 @@ public struct TreeBox : IEquatable<TreeBox>
     /// </summary>
     /// <param name="first">The first box.</param>
     /// <param name="second">The second box.</param>
-    /// <returns>The surface area of the union box. Used for SAH (Surface Area Heuristic) costs.</returns>
+    /// <returns>The surface area of the union box.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static double MergedSurface(in TreeBox first, in TreeBox second)
     {

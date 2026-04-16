@@ -218,7 +218,7 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     }
 
     /// <summary>
-    /// Retrieves the 8 corners of the bounding box.
+    /// Gets the 8 corners of the bounding box.
     /// </summary>
     /// <param name="destination">A span of at least 8 JVectors to hold the corners.</param>
     public readonly void GetCorners(Span<JVector> destination)

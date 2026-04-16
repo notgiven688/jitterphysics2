@@ -251,7 +251,7 @@ public sealed class ThreadPool
     public static bool InstanceInitialized => _instance != null;
 
     /// <summary>
-    /// Implements the singleton pattern to provide a single instance of the ThreadPool.
+    /// Gets the singleton instance of the <see cref="ThreadPool"/>.
     /// </summary>
     public static ThreadPool Instance
     {

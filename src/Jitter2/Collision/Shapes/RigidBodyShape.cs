@@ -68,10 +68,10 @@ public abstract class RigidBodyShape : Shape
     /// The direction of the ray. This vector does not need to be normalized.
     /// </param>
     /// <param name="normal">
-    /// When this method returns, contains the surface normal at the point of intersection, if an intersection occurs.
+    /// The surface normal at the point of intersection, if an intersection occurs.
     /// </param>
     /// <param name="lambda">
-    /// When this method returns, contains the scalar value representing the distance along the ray's direction vector
+    /// The scalar value representing the distance along the ray's direction vector
     /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
     /// <c>origin + lambda * direction</c>.
     /// </param>

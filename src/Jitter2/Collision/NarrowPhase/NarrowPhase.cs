@@ -498,7 +498,7 @@ public static class NarrowPhase
     /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> if the ray does not hit.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
-    /// the ray origin overlaps with the shape.
+    /// the ray origin is inside the shape.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -528,7 +528,7 @@ public static class NarrowPhase
     /// Zero if the origin is inside the shape, <see cref="Real.PositiveInfinity"/> if the ray does not hit.</param>
     /// <param name="normal">
     /// The normalized normal vector perpendicular to the surface, pointing outwards. Zero if the ray does not hit or
-    /// the origin overlaps with the shape.
+    /// the ray origin is inside the shape.
     /// </param>
     /// <returns>Returns true if the ray intersects with the shape; otherwise, false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

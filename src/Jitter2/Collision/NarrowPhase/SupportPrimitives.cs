@@ -117,6 +117,7 @@ public static class SupportPrimitives
 
     /// <summary>
     /// Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
+    /// The cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.
     /// </summary>
     public readonly struct Cone(Real radius, Real height) : ISupportMappable
     {
