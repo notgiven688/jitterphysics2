@@ -670,6 +670,11 @@ public unsafe struct CollisionManifold
         JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
         JVector crossVector2 = normal % crossVector1;
 
+        // Project clipping into a frame translated by -positionA: keeps support points near the
+        // origin and avoids inflating intermediates by |positionA| for bodies far from world origin.
+        JVector relPosB = positionB - positionA;
+        JVector pAloc = pA - positionA;
+
         Span<JVector> left = stackalloc JVector[MaxManifoldPoints];
         Span<JVector> right = stackalloc JVector[MaxManifoldPoints];
 
@@ -681,7 +686,6 @@ public unsafe struct CollisionManifold
             JVector.ConjugatedTransform(ptNormal, quaternionA, out JVector tmp);
             shapeA.SupportMap(tmp, out JVector np1);
             JVector.Transform(np1, quaternionA, out np1);
-            JVector.Add(np1, positionA, out np1);
             PushLeft(left, np1);
 
             JVector.NegateInPlace(ref ptNormal);
@@ -689,7 +693,7 @@ public unsafe struct CollisionManifold
             JVector.ConjugatedTransform(ptNormal, quaternionB, out tmp);
             shapeB.SupportMap(tmp, out JVector np2);
             JVector.Transform(np2, quaternionB, out np2);
-            JVector.Add(np2, positionB, out np2);
+            JVector.Add(np2, relPosB, out np2);
             PushRight(right, np2);
         }
 
@@ -703,12 +707,12 @@ public unsafe struct CollisionManifold
 
             for (int i = 0; i < leftCount; i++)
             {
-                left2[i] = ProjectToPlane(left[i], pA, crossVector1, crossVector2);
+                left2[i] = ProjectToPlane(left[i], pAloc, crossVector1, crossVector2);
             }
 
             for (int i = 0; i < rightCount; i++)
             {
-                right2[i] = ProjectToPlane(right[i], pA, crossVector1, crossVector2);
+                right2[i] = ProjectToPlane(right[i], pAloc, crossVector1, crossVector2);
             }
 
             CalculateClipTolerance(left2, leftCount, right2, rightCount,
