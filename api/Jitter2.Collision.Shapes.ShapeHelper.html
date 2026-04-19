@@ -155,9 +155,9 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox_Jitter2_Collision_ISupportMappable_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
-  CalculateBoundingBox(ISupportMappable, in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
+  CalculateBoundingBox&lt;TSupport&gt;(in TSupport, in JQuaternion, in JVector, out JBoundingBox)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the axis-aligned bounding box of a shape given its orientation and position.</p>
@@ -165,12 +165,12 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void CalculateBoundingBox(ISupportMappable support, in JQuaternion orientation, in JVector position, out JBoundingBox box)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void CalculateBoundingBox&lt;TSupport&gt;(in TSupport support, in JQuaternion orientation, in JVector position, out JBoundingBox box) where TSupport : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
     <dd><p>The support map interface implemented by the shape.</p>
 </dd>
     <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
@@ -185,6 +185,11 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
   </dl>
 
 
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+  </dl>
 
 
 
@@ -197,9 +202,9 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia_Jitter2_Collision_ISupportMappable_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)">
-  CalculateMassInertia(ISupportMappable, out JMatrix, out JVector, out float, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L309"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)">
+  CalculateMassInertia&lt;TSupport&gt;(in TSupport, out JMatrix, out JVector, out float, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L317"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the mass properties of an implicitly defined shape, assuming unit mass density.</p>
@@ -207,12 +212,12 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void CalculateMassInertia(ISupportMappable support, out JMatrix inertia, out JVector centerOfMass, out float mass, int subdivisions = 4)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void CalculateMassInertia&lt;TSupport&gt;(in TSupport support, out JMatrix inertia, out JVector centerOfMass, out float mass, int subdivisions = 4) where TSupport : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
     <dd><p>The support map interface implemented by the shape.</p>
 </dd>
     <dt><code>inertia</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
@@ -230,13 +235,18 @@ Class ShapeHelper  <a class="header-action link-secondary" title="View source" h
   </dl>
 
 
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+  </dl>
 
 
 
 
 
 
-  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia_Jitter2_Collision_ISupportMappable_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32__remarks">Remarks</h4>
+  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32__remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>
 The shape is approximated via surface tessellation using the specified number of <code class="paramref">subdivisions</code>.
 </p>
@@ -252,48 +262,9 @@ The calculated <code class="paramref">inertia</code> tensor is expressed relativ
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_Jitter2_Collision_ISupportMappable_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Jitter2.Collision.ISupportMappable,System.Int32)">
-  MakeHull(ISupportMappable, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L153"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
-public static List&lt;JTriangle&gt; MakeHull(ISupportMappable support, int subdivisions = 3)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
-    <dd></dd>
-    <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd></dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull*"></a>
-
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)">
   MakeHull(IEnumerable&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L145"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -332,7 +303,7 @@ public static List&lt;JTriangle&gt; MakeHull(IEnumerable&lt;JVector&gt; vertices
 
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.Int32)">
   MakeHull(ReadOnlySpan&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -369,8 +340,8 @@ public static List&lt;JTriangle&gt; MakeHull(ReadOnlySpan&lt;JVector&gt; vertice
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull__1_Jitter2_Collision_ISupportMappable___0_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)">
-  MakeHull&lt;T&gt;(ISupportMappable, T, int)
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull__1___0__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(``0@,System.Int32)">
+  MakeHull&lt;TSupport&gt;(in TSupport, int)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L157"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -379,14 +350,58 @@ public static List&lt;JTriangle&gt; MakeHull(ReadOnlySpan&lt;JVector&gt; vertice
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
-public static void MakeHull&lt;T&gt;(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : class, ICollection&lt;JTriangle&gt;</code></pre>
+public static List&lt;JTriangle&gt; MakeHull&lt;TSupport&gt;(in TSupport support, int subdivisions = 3) where TSupport : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
     <dd></dd>
-    <dt><code>hullCollection</code> <span class="xref">T</span></dt>
+    <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_MakeHull__2___0____1_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.MakeHull``2(``0@,``1,System.Int32)">
+  MakeHull&lt;TSupport, TCollection&gt;(in TSupport, TCollection, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
+public static void MakeHull&lt;TSupport, TCollection&gt;(in TSupport support, TCollection hullCollection, int subdivisions = 3) where TSupport : ISupportMappable where TCollection : class, ICollection&lt;JTriangle&gt;</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
+    <dd></dd>
+    <dt><code>hullCollection</code> <span class="xref">TCollection</span></dt>
     <dd></dd>
     <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd></dd>
@@ -395,7 +410,9 @@ public static void MakeHull&lt;T&gt;(ISupportMappable support, T hullCollection,
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>T</code></dt>
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+    <dt><code>TCollection</code></dt>
     <dd></dd>
   </dl>
 
@@ -410,60 +427,9 @@ public static void MakeHull&lt;T&gt;(ISupportMappable support, T hullCollection,
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_Jitter2_Collision_ISupportMappable_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Jitter2.Collision.ISupportMappable,System.Int32)">
-  SampleHull(ISupportMappable, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L249"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Samples a convex shape's hull by evaluating support directions generated through recursive subdivision of
-an icosahedron.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;JVector&gt; SampleHull(ISupportMappable support, int subdivisions = 3)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
-    <dd><p>An object implementing <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a>, representing a convex shape that can be queried
-with directional support mapping.</p>
-</dd>
-    <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The number of recursive subdivisions applied to each icosahedron triangle. Higher values produce more sampling
-directions and better coverage, but increase computation. Default is 3.</p>
-</dd>
-  </dl>
-
-  <h4 class="section">Returns</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
-    <dd><p>A list of <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a> points on the convex hull, sampled using directional support mapping from a
-refined spherical distribution.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_Jitter2_Collision_ISupportMappable_System_Int32__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
-triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
-mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.</p>
-</div>
-
-
-
-
-  <a id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull*"></a>
-
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)">
   SampleHull(IEnumerable&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L223"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L230"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Approximates the convex hull of a given set of 3D vertices by sampling support points
@@ -514,7 +480,7 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.Int32)">
   SampleHull(ReadOnlySpan&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L217"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L224"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Approximates the convex hull of a given set of 3D vertices by sampling support points
@@ -561,34 +527,45 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
 
 
-  <a id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate*"></a>
+  <a id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_Jitter2_Collision_ISupportMappable_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Jitter2.Collision.ISupportMappable,System.Int32)">
-  Tessellate(ISupportMappable, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull__1___0__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.SampleHull``1(``0@,System.Int32)">
+  SampleHull&lt;TSupport&gt;(in TSupport, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L256"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a tessellation of a shape defined by its support map.</p>
+  <div class="markdown level1 summary"><p>Samples a convex shape's hull by evaluating support directions generated through recursive subdivision of
+an icosahedron.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static List&lt;JTriangle&gt; Tessellate(ISupportMappable support, int subdivisions = 3)</code></pre>
+    <pre><code class="lang-csharp hljs">public static List&lt;JVector&gt; SampleHull&lt;TSupport&gt;(in TSupport support, int subdivisions = 3) where TSupport : ISupportMappable</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
-    <dd><p>The support map interface implemented by the shape.</p>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
+    <dd><p>An object implementing <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a>, representing a convex shape that can be queried
+with directional support mapping.</p>
 </dd>
     <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The number of subdivisions used for hull generation.</p>
+    <dd><p>The number of recursive subdivisions applied to each icosahedron triangle. Higher values produce more sampling
+directions and better coverage, but increase computation. Default is 3.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
+    <dd><p>A list of <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a> points on the convex hull, sampled using directional support mapping from a
+refined spherical distribution.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSupport</code></dt>
     <dd></dd>
   </dl>
 
@@ -597,10 +574,10 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
 
 
-
-  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_Jitter2_Collision_ISupportMappable_System_Int32__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-<a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>. The time complexity is O(4^n), where n is the number of subdivisions.</p>
+  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_SampleHull__1___0__System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
+triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
+mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.</p>
 </div>
 
 
@@ -610,7 +587,7 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)">
   Tessellate(IEnumerable&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L142"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a tessellation of the convex hull of a given set of 3D vertices.</p>
@@ -656,7 +633,7 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.Int32)">
   Tessellate(ReadOnlySpan&lt;JVector&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a tessellation of the convex hull of a given set of 3D vertices.</p>
@@ -700,8 +677,58 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)">
-  Tessellate&lt;T&gt;(ISupportMappable, T, int)
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1___0__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(``0@,System.Int32)">
+  Tessellate&lt;TSupport&gt;(in TSupport, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a tessellation of a shape defined by its support map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static List&lt;JTriangle&gt; Tessellate&lt;TSupport&gt;(in TSupport support, int subdivisions = 3) where TSupport : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
+    <dd><p>The support map interface implemented by the shape.</p>
+</dd>
+    <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of subdivisions used for hull generation.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1___0__System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
+<a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>. The time complexity is O(4^n), where n is the number of subdivisions.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1_System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1,System.Int32)">
+  Tessellate&lt;TSupport, TCollection&gt;(in TSupport, TCollection, int)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -710,15 +737,15 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Tessellate&lt;T&gt;(ISupportMappable support, T hullCollection, int subdivisions = 3) where T : class, ICollection&lt;JTriangle&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public static void Tessellate&lt;TSupport, TCollection&gt;(in TSupport support, TCollection hullCollection, int subdivisions = 3) where TSupport : ISupportMappable where TCollection : class, ICollection&lt;JTriangle&gt;</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
     <dd><p>The support map interface implemented by the shape.</p>
 </dd>
-    <dt><code>hullCollection</code> <span class="xref">T</span></dt>
+    <dt><code>hullCollection</code> <span class="xref">TCollection</span></dt>
     <dd><p>A collection to which the triangles are added.</p>
 </dd>
     <dt><code>subdivisions</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
@@ -729,7 +756,9 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
-    <dt><code>T</code></dt>
+    <dt><code>TSupport</code></dt>
+    <dd></dd>
+    <dt><code>TCollection</code></dt>
     <dd></dd>
   </dl>
 
@@ -738,7 +767,7 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
 
 
-  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0_System_Int32__remarks">Remarks</h4>
+  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1_System_Int32__remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
 <a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>. The time complexity is O(4^n), where n is the number of subdivisions.</p>
 </div>
@@ -748,9 +777,9 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <a id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0@,System.Int32)">
-  Tessellate&lt;TSink&gt;(ISupportMappable, ref TSink, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1__System_Int32_" data-uid="Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1@,System.Int32)">
+  Tessellate&lt;TSupport, TSink&gt;(in TSupport, ref TSink, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ShapeHelper.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a tessellation of a shape defined by its support map and appends all generated triangles to the specified sink.</p>
@@ -758,12 +787,12 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Tessellate&lt;TSink&gt;(ISupportMappable support, ref TSink hullSink, int subdivisions = 3) where TSink : ISink&lt;JTriangle&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public static void Tessellate&lt;TSupport, TSink&gt;(in TSupport support, ref TSink hullSink, int subdivisions = 3) where TSupport : ISupportMappable where TSink : ISink&lt;JTriangle&gt;</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>support</code> <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
+    <dt><code>support</code> <span class="xref">TSupport</span></dt>
     <dd><p>The support map interface implemented by the shape.</p>
 </dd>
     <dt><code>hullSink</code> <span class="xref">TSink</span></dt>
@@ -777,6 +806,9 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
   <h4 class="section">Type Parameters</h4>
   <dl class="parameters">
+    <dt><code>TSupport</code></dt>
+    <dd><p>The support shape type.</p>
+</dd>
     <dt><code>TSink</code></dt>
     <dd><p>The sink type receiving the generated triangles.</p>
 </dd>
@@ -787,7 +819,7 @@ mapper to generate a hull point. The time complexity is O(4^n), where n is the n
 
 
 
-  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0__System_Int32__remarks">Remarks</h4>
+  <h4 class="section" id="Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1__System_Int32__remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
 <a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>. The time complexity is O(4^n), where n is the number of subdivisions.</p>
 </div>

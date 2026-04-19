@@ -2766,15 +2766,6 @@ references:
   commentId: T:Jitter2.Collision.Shapes.ShapeHelper
   fullName: Jitter2.Collision.Shapes.ShapeHelper
   nameWithType: ShapeHelper
-- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
-  name: CalculateBoundingBox(ISupportMappable, in JQuaternion, in JVector, out JBoundingBox)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox_Jitter2_Collision_ISupportMappable_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
-  name.vb: CalculateBoundingBox(ISupportMappable, JQuaternion, JVector, JBoundingBox)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Jitter2.Collision.ISupportMappable, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JBoundingBox)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Jitter2.Collision.ISupportMappable, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JBoundingBox)
-  nameWithType: ShapeHelper.CalculateBoundingBox(ISupportMappable, in JQuaternion, in JVector, out JBoundingBox)
-  nameWithType.vb: ShapeHelper.CalculateBoundingBox(ISupportMappable, JQuaternion, JVector, JBoundingBox)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox*
   name: CalculateBoundingBox
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox_
@@ -2782,15 +2773,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox
   nameWithType: ShapeHelper.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
-  name: CalculateMassInertia(ISupportMappable, out JMatrix, out JVector, out float, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia_Jitter2_Collision_ISupportMappable_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Jitter2.Collision.ISupportMappable,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
-  name.vb: CalculateMassInertia(ISupportMappable, JMatrix, JVector, Single, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Jitter2.Collision.ISupportMappable, out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Jitter2.Collision.ISupportMappable, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single, Integer)
-  nameWithType: ShapeHelper.CalculateMassInertia(ISupportMappable, out JMatrix, out JVector, out float, int)
-  nameWithType.vb: ShapeHelper.CalculateMassInertia(ISupportMappable, JMatrix, JVector, Single, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
+  name: CalculateBoundingBox<TSupport>(in TSupport, in JQuaternion, in JVector, out JBoundingBox)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateBoundingBox__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
+  name.vb: CalculateBoundingBox(Of TSupport)(TSupport, JQuaternion, JVector, JBoundingBox)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox<TSupport>(in TSupport, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JBoundingBox)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateBoundingBox(Of TSupport)(TSupport, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JBoundingBox)
+  nameWithType: ShapeHelper.CalculateBoundingBox<TSupport>(in TSupport, in JQuaternion, in JVector, out JBoundingBox)
+  nameWithType.vb: ShapeHelper.CalculateBoundingBox(Of TSupport)(TSupport, JQuaternion, JVector, JBoundingBox)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia_
@@ -2798,15 +2789,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia
   nameWithType: ShapeHelper.CalculateMassInertia
-- uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Jitter2.Collision.ISupportMappable,System.Int32)
-  name: MakeHull(ISupportMappable, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull_Jitter2_Collision_ISupportMappable_System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Jitter2.Collision.ISupportMappable,System.Int32)
-  name.vb: MakeHull(ISupportMappable, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Jitter2.Collision.ISupportMappable, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Jitter2.Collision.ISupportMappable, Integer)
-  nameWithType: ShapeHelper.MakeHull(ISupportMappable, int)
-  nameWithType.vb: ShapeHelper.MakeHull(ISupportMappable, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
+  name: CalculateMassInertia<TSupport>(in TSupport, out JMatrix, out JVector, out float, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
+  name.vb: CalculateMassInertia(Of TSupport)(TSupport, JMatrix, JVector, Single, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single, Integer)
+  nameWithType: ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out JMatrix, out JVector, out float, int)
+  nameWithType.vb: ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, JMatrix, JVector, Single, Integer)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)
   name: MakeHull(IEnumerable<JVector>, int)
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_
@@ -2832,24 +2823,24 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.MakeHull
   nameWithType: ShapeHelper.MakeHull
-- uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)
-  name: MakeHull<T>(ISupportMappable, T, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull__1_Jitter2_Collision_ISupportMappable___0_System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)
-  name.vb: MakeHull(Of T)(ISupportMappable, T, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.MakeHull<T>(Jitter2.Collision.ISupportMappable, T, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Of T)(Jitter2.Collision.ISupportMappable, T, Integer)
-  nameWithType: ShapeHelper.MakeHull<T>(ISupportMappable, T, int)
-  nameWithType.vb: ShapeHelper.MakeHull(Of T)(ISupportMappable, T, Integer)
-- uid: Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Jitter2.Collision.ISupportMappable,System.Int32)
-  name: SampleHull(ISupportMappable, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_SampleHull_Jitter2_Collision_ISupportMappable_System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Jitter2.Collision.ISupportMappable,System.Int32)
-  name.vb: SampleHull(ISupportMappable, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Jitter2.Collision.ISupportMappable, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Jitter2.Collision.ISupportMappable, Integer)
-  nameWithType: ShapeHelper.SampleHull(ISupportMappable, int)
-  nameWithType.vb: ShapeHelper.SampleHull(ISupportMappable, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(``0@,System.Int32)
+  name: MakeHull<TSupport>(in TSupport, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull__1___0__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.MakeHull``1(``0@,System.Int32)
+  name.vb: MakeHull(Of TSupport)(TSupport, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.MakeHull<TSupport>(in TSupport, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Of TSupport)(TSupport, Integer)
+  nameWithType: ShapeHelper.MakeHull<TSupport>(in TSupport, int)
+  nameWithType.vb: ShapeHelper.MakeHull(Of TSupport)(TSupport, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull``2(``0@,``1,System.Int32)
+  name: MakeHull<TSupport, TCollection>(in TSupport, TCollection, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull__2___0____1_System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.MakeHull``2(``0@,``1,System.Int32)
+  name.vb: MakeHull(Of TSupport, TCollection)(TSupport, TCollection, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.MakeHull<TSupport, TCollection>(in TSupport, TCollection, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(Of TSupport, TCollection)(TSupport, TCollection, Integer)
+  nameWithType: ShapeHelper.MakeHull<TSupport, TCollection>(in TSupport, TCollection, int)
+  nameWithType.vb: ShapeHelper.MakeHull(Of TSupport, TCollection)(TSupport, TCollection, Integer)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.SampleHull(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)
   name: SampleHull(IEnumerable<JVector>, int)
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_SampleHull_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_
@@ -2875,15 +2866,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.SampleHull
   nameWithType: ShapeHelper.SampleHull
-- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Jitter2.Collision.ISupportMappable,System.Int32)
-  name: Tessellate(ISupportMappable, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate_Jitter2_Collision_ISupportMappable_System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Jitter2.Collision.ISupportMappable,System.Int32)
-  name.vb: Tessellate(ISupportMappable, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Jitter2.Collision.ISupportMappable, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Jitter2.Collision.ISupportMappable, Integer)
-  nameWithType: ShapeHelper.Tessellate(ISupportMappable, int)
-  nameWithType.vb: ShapeHelper.Tessellate(ISupportMappable, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.SampleHull``1(``0@,System.Int32)
+  name: SampleHull<TSupport>(in TSupport, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_SampleHull__1___0__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.SampleHull``1(``0@,System.Int32)
+  name.vb: SampleHull(Of TSupport)(TSupport, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.SampleHull<TSupport>(in TSupport, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.SampleHull(Of TSupport)(TSupport, Integer)
+  nameWithType: ShapeHelper.SampleHull<TSupport>(in TSupport, int)
+  nameWithType.vb: ShapeHelper.SampleHull(Of TSupport)(TSupport, Integer)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)
   name: Tessellate(IEnumerable<JVector>, int)
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_
@@ -2909,24 +2900,33 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate
   nameWithType: ShapeHelper.Tessellate
-- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)
-  name: Tessellate<T>(ISupportMappable, T, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0_System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0,System.Int32)
-  name.vb: Tessellate(Of T)(ISupportMappable, T, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<T>(Jitter2.Collision.ISupportMappable, T, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of T)(Jitter2.Collision.ISupportMappable, T, Integer)
-  nameWithType: ShapeHelper.Tessellate<T>(ISupportMappable, T, int)
-  nameWithType.vb: ShapeHelper.Tessellate(Of T)(ISupportMappable, T, Integer)
-- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0@,System.Int32)
-  name: Tessellate<TSink>(ISupportMappable, ref TSink, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1_Jitter2_Collision_ISupportMappable___0__System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(Jitter2.Collision.ISupportMappable,``0@,System.Int32)
-  name.vb: Tessellate(Of TSink)(ISupportMappable, TSink, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<TSink>(Jitter2.Collision.ISupportMappable, ref TSink, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of TSink)(Jitter2.Collision.ISupportMappable, TSink, Integer)
-  nameWithType: ShapeHelper.Tessellate<TSink>(ISupportMappable, ref TSink, int)
-  nameWithType.vb: ShapeHelper.Tessellate(Of TSink)(ISupportMappable, TSink, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(``0@,System.Int32)
+  name: Tessellate<TSupport>(in TSupport, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__1___0__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``1(``0@,System.Int32)
+  name.vb: Tessellate(Of TSupport)(TSupport, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<TSupport>(in TSupport, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of TSupport)(TSupport, Integer)
+  nameWithType: ShapeHelper.Tessellate<TSupport>(in TSupport, int)
+  nameWithType.vb: ShapeHelper.Tessellate(Of TSupport)(TSupport, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1,System.Int32)
+  name: Tessellate<TSupport, TCollection>(in TSupport, TCollection, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1_System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1,System.Int32)
+  name.vb: Tessellate(Of TSupport, TCollection)(TSupport, TCollection, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<TSupport, TCollection>(in TSupport, TCollection, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of TSupport, TCollection)(TSupport, TCollection, Integer)
+  nameWithType: ShapeHelper.Tessellate<TSupport, TCollection>(in TSupport, TCollection, int)
+  nameWithType.vb: ShapeHelper.Tessellate(Of TSupport, TCollection)(TSupport, TCollection, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1@,System.Int32)
+  name: Tessellate<TSupport, TSink>(in TSupport, ref TSink, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_Tessellate__2___0____1__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.Tessellate``2(``0@,``1@,System.Int32)
+  name.vb: Tessellate(Of TSupport, TSink)(TSupport, TSink, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.Tessellate<TSupport, TSink>(in TSupport, ref TSink, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.Tessellate(Of TSupport, TSink)(TSupport, TSink, Integer)
+  nameWithType: ShapeHelper.Tessellate<TSupport, TSink>(in TSupport, ref TSink, int)
+  nameWithType.vb: ShapeHelper.Tessellate(Of TSupport, TSink)(TSupport, TSink, Integer)
 - uid: Jitter2.Collision.Shapes.SphereShape
   name: SphereShape
   href: api/Jitter2.Collision.Shapes.SphereShape.html
