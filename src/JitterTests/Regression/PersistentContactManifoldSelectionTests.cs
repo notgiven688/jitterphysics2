@@ -105,63 +105,8 @@ public class PersistentContactManifoldSelectionTests
         }
     }
 
-    private static Real CalculateQuadrilateralArea(in JVector p0, in JVector p1, in JVector p2, in JVector p3, in JVector normal)
-    {
-        JVector area = p0 % p1;
-        area += p1 % p2;
-        area += p2 % p3;
-        area += p3 % p0;
-
-        return MathR.Abs(JVector.Dot(area, normal));
-    }
-
-    private static int[] SelectLargestQuadrilateralIndices(CollisionManifold manifold, in JVector normal)
-    {
-        Assert.That(manifold.Count, Is.GreaterThanOrEqualTo(4));
-
-        if (manifold.Count == 4)
-        {
-            return [0, 1, 2, 3];
-        }
-
-        Real bestArea = Real.MinValue;
-        int best0 = 0, best1 = 1, best2 = 2, best3 = 3;
-
-        for (int i0 = 0; i0 < manifold.Count - 3; i0++)
-        {
-            for (int i1 = i0 + 1; i1 < manifold.Count - 2; i1++)
-            {
-                for (int i2 = i1 + 1; i2 < manifold.Count - 1; i2++)
-                {
-                    for (int i3 = i2 + 1; i3 < manifold.Count; i3++)
-                    {
-                        Real area = CalculateQuadrilateralArea(
-                            manifold.ManifoldA[i0], manifold.ManifoldA[i1],
-                            manifold.ManifoldA[i2], manifold.ManifoldA[i3], normal);
-
-                        if (area <= bestArea) continue;
-
-                        bestArea = area;
-                        best0 = i0;
-                        best1 = i1;
-                        best2 = i2;
-                        best3 = i3;
-                    }
-                }
-            }
-        }
-
-        return [best0, best1, best2, best3];
-    }
-
-    private static List<JVector> SelectLargestQuadrilateral(CollisionManifold manifold, in JVector normal)
-    {
-        int[] indices = SelectLargestQuadrilateralIndices(manifold, normal);
-        return [manifold.ManifoldA[indices[0]], manifold.ManifoldA[indices[1]], manifold.ManifoldA[indices[2]], manifold.ManifoldA[indices[3]]];
-    }
-
     [Test]
-    public void RegisterContact_SelectsSameFourContactsRegardlessOfIncomingManifoldOrder()
+    public void RegisterContact_PreservesSameFourContactsRegardlessOfIncomingManifoldOrder()
     {
         using var worldA = new World();
         using var worldB = new World();
@@ -171,7 +116,7 @@ public class PersistentContactManifoldSelectionTests
         CreateRotatedFaceContactScenario(worldB, out RigidBody bodyA1, out RigidBody bodyB1, out BoxShape shapeA1, out BoxShape shapeB1,
             out CollisionManifold manifoldB, out JVector normalB);
 
-        Assert.That(manifoldA.Count, Is.GreaterThan(4));
+        Assert.That(manifoldA.Count, Is.EqualTo(4));
 
         CollisionManifold rotated = RotateManifold(manifoldB, 2);
 
@@ -190,16 +135,21 @@ public class PersistentContactManifoldSelectionTests
     }
 
     [Test]
-    public void RegisterContact_SelectsLargestQuadrilateralFromOrderedManifold()
+    public void RegisterContact_PreservesBuildManifoldContactsWhenAlreadyReduced()
     {
         using var world = new World();
 
         CreateRotatedFaceContactScenario(world, out RigidBody bodyA, out RigidBody bodyB, out BoxShape shapeA, out BoxShape shapeB,
             out CollisionManifold manifold, out JVector normal);
 
-        Assert.That(manifold.Count, Is.GreaterThan(4));
+        Assert.That(manifold.Count, Is.EqualTo(4));
 
-        List<JVector> expected = SelectLargestQuadrilateral(manifold, normal);
+        List<JVector> expected = [];
+
+        for (int i = 0; i < manifold.Count; i++)
+        {
+            expected.Add(manifold.ManifoldA[i]);
+        }
 
         world.RegisterContact(shapeA.ShapeId, shapeB.ShapeId, bodyA, bodyB, normal, ref manifold);
 

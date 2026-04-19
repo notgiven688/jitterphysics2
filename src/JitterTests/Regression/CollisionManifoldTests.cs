@@ -74,8 +74,7 @@ public class CollisionManifoldTests
 
         const Real epsilon = (Real)2e-4;
 
-        Assert.That(manifold.Count, Is.GreaterThanOrEqualTo(4));
-        Assert.That(manifold.Count, Is.LessThanOrEqualTo(6));
+        Assert.That(manifold.Count, Is.EqualTo(4));
         AssertUniqueContacts(manifold, epsilon * epsilon);
 
         for (int i = 0; i < manifold.Count; i++)

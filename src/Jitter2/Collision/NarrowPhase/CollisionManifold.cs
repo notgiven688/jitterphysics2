@@ -68,36 +68,6 @@ public unsafe struct CollisionManifold
     private static readonly Real[] hexagonVertices = [(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2,
         -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2];
 
-    // The solver always keeps 4 contacts. For 5- and 6-point manifolds we can enumerate all
-    // candidate quadrilaterals up front instead of generating combinations on the fly.
-    private static readonly byte[] quadrilateralCombinations5 =
-    [
-        0, 1, 2, 3,
-        0, 1, 2, 4,
-        0, 1, 3, 4,
-        0, 2, 3, 4,
-        1, 2, 3, 4
-    ];
-
-    private static readonly byte[] quadrilateralCombinations6 =
-    [
-        0, 1, 2, 3,
-        0, 1, 2, 4,
-        0, 1, 2, 5,
-        0, 1, 3, 4,
-        0, 1, 3, 5,
-        0, 1, 4, 5,
-        0, 2, 3, 4,
-        0, 2, 3, 5,
-        0, 2, 4, 5,
-        0, 3, 4, 5,
-        1, 2, 3, 4,
-        1, 2, 3, 5,
-        1, 2, 4, 5,
-        1, 3, 4, 5,
-        2, 3, 4, 5
-    ];
-
     /// <summary>
     /// Gets a span of contact points on shape A. Valid indices are <c>[0, Count)</c>.
     /// </summary>
@@ -551,21 +521,110 @@ public unsafe struct CollisionManifold
         return MathR.Abs(area * normal);
     }
 
-    [SkipLocalsInit]
-    private static void ReducePolygon(Span<ClipPoint> polygon, ref int count)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static Real CalculateQuadrilateralArea(in ClipPoint p0, in ClipPoint p1, in ClipPoint p2, in ClipPoint p3)
     {
-        if (count <= MaxManifoldPoints) return;
+        return MathR.Abs(Cross2D(p0, p1) + Cross2D(p1, p2) + Cross2D(p2, p3) + Cross2D(p3, p0));
+    }
 
-        Span<ClipPoint> reduced = stackalloc ClipPoint[MaxManifoldPoints];
-
-        for (int i = 0; i < MaxManifoldPoints; i++)
+    private static int SelectLargestQuadrilateral(ReadOnlySpan<ClipPoint> polygon, Span<int> selected)
+    {
+        if (selected.Length < SolverContactLimit)
         {
-            int index = ((2 * i + 1) * count) / (2 * MaxManifoldPoints);
-            reduced[i] = polygon[index];
+            throw new ArgumentException($"Selected span must hold at least {SolverContactLimit} indices.", nameof(selected));
         }
 
-        reduced.CopyTo(polygon);
-        count = MaxManifoldPoints;
+        if (polygon.Length <= SolverContactLimit)
+        {
+            for (int i = 0; i < polygon.Length; i++)
+            {
+                selected[i] = i;
+            }
+
+            return polygon.Length;
+        }
+
+        Real bestArea = Real.MinValue;
+        int best0 = 0, best1 = 1, best2 = 2, best3 = 3;
+
+        for (int i0 = 0; i0 < polygon.Length - 3; i0++)
+        {
+            for (int i1 = i0 + 1; i1 < polygon.Length - 2; i1++)
+            {
+                for (int i2 = i1 + 1; i2 < polygon.Length - 1; i2++)
+                {
+                    for (int i3 = i2 + 1; i3 < polygon.Length; i3++)
+                    {
+                        Real area = CalculateQuadrilateralArea(polygon[i0], polygon[i1], polygon[i2], polygon[i3]);
+
+                        if (area < bestArea) continue;
+
+                        bestArea = area;
+                        best0 = i0;
+                        best1 = i1;
+                        best2 = i2;
+                        best3 = i3;
+                    }
+                }
+            }
+        }
+
+        selected[0] = best0;
+        selected[1] = best1;
+        selected[2] = best2;
+        selected[3] = best3;
+
+        return SolverContactLimit;
+    }
+
+    private static int SelectLargestQuadrilateral(ReadOnlySpan<JVector> polygon, in JVector normal, Span<int> selected)
+    {
+        if (selected.Length < SolverContactLimit)
+        {
+            throw new ArgumentException($"Selected span must hold at least {SolverContactLimit} indices.", nameof(selected));
+        }
+
+        if (polygon.Length <= SolverContactLimit)
+        {
+            for (int i = 0; i < polygon.Length; i++)
+            {
+                selected[i] = i;
+            }
+
+            return polygon.Length;
+        }
+
+        Real bestArea = Real.MinValue;
+        int best0 = 0, best1 = 1, best2 = 2, best3 = 3;
+
+        for (int i0 = 0; i0 < polygon.Length - 3; i0++)
+        {
+            for (int i1 = i0 + 1; i1 < polygon.Length - 2; i1++)
+            {
+                for (int i2 = i1 + 1; i2 < polygon.Length - 1; i2++)
+                {
+                    for (int i3 = i2 + 1; i3 < polygon.Length; i3++)
+                    {
+                        Real area = CalculateQuadrilateralArea(polygon[i0], polygon[i1], polygon[i2], polygon[i3], normal);
+
+                        if (area < bestArea) continue;
+
+                        bestArea = area;
+                        best0 = i0;
+                        best1 = i1;
+                        best2 = i2;
+                        best3 = i3;
+                    }
+                }
+            }
+        }
+
+        selected[0] = best0;
+        selected[1] = best1;
+        selected[2] = best2;
+        selected[3] = best3;
+
+        return SolverContactLimit;
     }
 
     private int SelectSolverContacts(in JVector normal, Span<int> selected)
@@ -586,40 +645,7 @@ public unsafe struct CollisionManifold
         }
 
         ReadOnlySpan<JVector> manifold = ManifoldA;
-        ReadOnlySpan<byte> combinations = manifoldCount switch
-        {
-            5 => quadrilateralCombinations5,
-            6 => quadrilateralCombinations6,
-            _ => throw new InvalidOperationException($"Unexpected manifold count {manifoldCount}.")
-        };
-
-        Real bestArea = Real.MinValue;
-        int best0 = 0, best1 = 1, best2 = 2, best3 = 3;
-
-        for (int i = 0; i < combinations.Length; i += SolverContactLimit)
-        {
-            int i0 = combinations[i + 0];
-            int i1 = combinations[i + 1];
-            int i2 = combinations[i + 2];
-            int i3 = combinations[i + 3];
-
-            Real area = CalculateQuadrilateralArea(manifold[i0], manifold[i1], manifold[i2], manifold[i3], normal);
-
-            if (area <= bestArea) continue;
-
-            bestArea = area;
-            best0 = i0;
-            best1 = i1;
-            best2 = i2;
-            best3 = i3;
-        }
-
-        selected[0] = best0;
-        selected[1] = best1;
-        selected[2] = best2;
-        selected[3] = best3;
-
-        return SolverContactLimit;
+        return SelectLargestQuadrilateral(manifold[..manifoldCount], normal, selected);
     }
 
     // Keep only the 4 contacts that span the largest area in the contact plane.
@@ -749,19 +775,31 @@ public unsafe struct CollisionManifold
                     sideEpsilon, distanceEpsilonSq, areaEpsilon, clipped, out clippedCount);
             }
 
-            CompactPolygon(clipped, ref clippedCount, distanceEpsilonSq, areaEpsilon);
-            ReducePolygon(clipped, ref clippedCount);
-
             Real depth = JVector.Dot(pB - pA, normal);
             JVector depthNormal = depth * normal;
 
-            for (int i = 0; i < clippedCount; i++)
-            {
-                JVector pointOnA = LiftFromPlane(clipped[i], pA, crossVector1, crossVector2);
-                mA[manifoldCount] = pointOnA;
-                mB[manifoldCount++] = pointOnA + depthNormal;
+            CompactPolygon(clipped, ref clippedCount, distanceEpsilonSq, areaEpsilon);
 
-                if (manifoldCount == MaxManifoldPoints) return;
+            if (clippedCount > SolverContactLimit)
+            {
+                Span<int> selected = stackalloc int[SolverContactLimit];
+                int selectedCount = SelectLargestQuadrilateral(clipped[..clippedCount], selected);
+
+                for (int i = 0; i < selectedCount; i++)
+                {
+                    JVector pointOnA = LiftFromPlane(clipped[selected[i]], pA, crossVector1, crossVector2);
+                    mA[manifoldCount] = pointOnA;
+                    mB[manifoldCount++] = pointOnA + depthNormal;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < clippedCount; i++)
+                {
+                    JVector pointOnA = LiftFromPlane(clipped[i], pA, crossVector1, crossVector2);
+                    mA[manifoldCount] = pointOnA;
+                    mB[manifoldCount++] = pointOnA + depthNormal;
+                }
             }
         }
 
