@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct CollisionManifold | Jitter2 ">
       
-      <meta name="description" content="Represents a contact manifold between two convex shapes, storing up to six contact points.">
+      <meta name="description" content="Represents a contact manifold between two convex shapes.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,7 +97,7 @@ Struct CollisionManifold  <a class="header-action link-secondary" title="View so
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a contact manifold between two convex shapes, storing up to six contact points.</p>
+  <div class="markdown summary"><p>Represents a contact manifold between two convex shapes.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -138,8 +138,8 @@ Struct CollisionManifold  <a class="header-action link-secondary" title="View so
 
 
   <h2 id="Jitter2_Collision_CollisionManifold_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>The manifold is constructed by projecting support points along perturbed normals
-in a hexagonal pattern around the collision normal, then clipping to find the contact region.</p>
+  <div class="markdown level0 remarks"><p>The manifold is constructed from support points sampled around the collision normal,
+then reduced to a small contact set suitable for the solver.</p>
 </div>
 
 
@@ -151,7 +151,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h3 id="Jitter2_Collision_CollisionManifold_Count" data-uid="Jitter2.Collision.CollisionManifold.Count">
   Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of contact points in the manifold.</p>
@@ -183,7 +183,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h3 id="Jitter2_Collision_CollisionManifold_ManifoldA" data-uid="Jitter2.Collision.CollisionManifold.ManifoldA">
   ManifoldA
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a span of contact points on shape A. Valid indices are <code>[0, Count)</code>.</p>
@@ -215,7 +215,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h3 id="Jitter2_Collision_CollisionManifold_ManifoldB" data-uid="Jitter2.Collision.CollisionManifold.ManifoldB">
   ManifoldB
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a span of contact points on shape B. Valid indices are <code>[0, Count)</code>.</p>
@@ -251,7 +251,7 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L546"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L391"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the contact manifold between two shapes given their transforms and initial contact.</p>
@@ -317,11 +317,10 @@ in a hexagonal pattern around the collision normal, then clipping to find the co
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L670"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L566"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Builds the contact manifold between two rigid body shapes, reading position and orientation
-directly from their attached rigid bodies.</p>
+  <div class="markdown level1 summary"><p>Builds the contact manifold between two rigid body shapes using their current transforms.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

@@ -266,7 +266,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.CollisionManifold",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.CollisionManifold.yml\" sourcestartlinenumber=\"1\">Represents a contact manifold between two convex shapes, storing up to six contact points.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.CollisionManifold.yml\" sourcestartlinenumber=\"1\">Represents a contact manifold between two convex shapes.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2498,11 +2498,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -2631,11 +2631,11 @@
       "type": "Toc",
       "source_relative_path": "docs/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "docs/toc.html"
-        },
         ".json": {
           "relative_path": "docs/toc.json"
+        },
+        ".html": {
+          "relative_path": "docs/toc.html"
         }
       },
       "version": ""
@@ -2794,11 +2794,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""
