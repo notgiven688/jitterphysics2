@@ -88,8 +88,8 @@
 <h1 id="hello-world">Hello World</h1>
 
 <p>We will now add physics to the scene. We do this by creating a new instance of the World class and adding several rigid bodies to it.</p>
-<p>Replace the content of <code>Program.cs</code> with the following code (marked lines indicate the additions to the source code):</p>
-<pre><code class="lang-cs">using System.Numerics;
+<p>Replace the content of <code>Program.cs</code> with the following code (highlighted lines indicate the additions to the source code):</p>
+<pre><code class="lang-csharp" highlight-lines="3-6,9-18,28,41-63,88-94">using System.Numerics;
 using Raylib_cs;
 using Jitter2;
 using Jitter2.Collision.Shapes;
@@ -125,18 +125,18 @@ SetConfigFlags(ConfigFlags.Msaa4xHint);
 InitWindow(1200, 800, &quot;BoxDrop example&quot;);
 
 // dynamically create a plane model
-Texture2D texture = GenCheckedTexture(10, 1,  Color.LightGray, Color.Gray);
+Texture2D texture = GenCheckedTexture(10, 1, Color.LightGray, Color.Gray);
 Model planeModel = LoadModelFromMesh(GenMeshPlane(10, 10, 10, 10));
 SetMaterialTexture(ref planeModel, 0, MaterialMapIndex.Diffuse, ref texture);
 
 // dynamically create a box model
-texture = GenCheckedTexture(2, 1,  Color.White, Color.Magenta);
+texture = GenCheckedTexture(2, 1, Color.White, Color.Magenta);
 Mesh boxMesh = GenMeshCube(1, 1, 1);
 Material boxMat = LoadMaterialDefault();
 SetMaterialTexture(ref boxMat, MaterialMapIndex.Diffuse, texture);
 
 // initialize the Jitter physics world
-World world = new ();
+World world = new();
 world.SubstepCount = 4;
 
 // add a body representing the plane
@@ -146,7 +146,7 @@ planeBody.Position = new JVector(0, -5, 0);
 planeBody.MotionType = MotionType.Static;
 
 // add NumberOfBoxes cubes
-for(int i = 0; i &lt; NumberOfBoxes; i++)
+for (int i = 0; i &lt; NumberOfBoxes; i++)
 {
     RigidBody body = world.CreateRigidBody();
     body.AddShape(new BoxShape(1));
@@ -154,7 +154,7 @@ for(int i = 0; i &lt; NumberOfBoxes; i++)
 }
 
 // create a camera
-Camera3D camera = new ()
+Camera3D camera = new()
 {
     Position = new Vector3(-20.0f, 8.0f, 10.0f),
     Target = new Vector3(0.0f, 4.0f, 0.0f),
@@ -178,7 +178,7 @@ while (!WindowShouldClose())
 
     world.Step(1.0f / 100.0f, true);
 
-    foreach(var body in world.RigidBodies)
+    foreach (var body in world.RigidBodies)
     {
         if (body == planeBody || body == world.NullBody) continue; // do not draw this
         DrawMesh(boxMesh, boxMat, GetRayLibTransformMatrix(body));
