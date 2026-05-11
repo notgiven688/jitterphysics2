@@ -137,7 +137,7 @@ while (stack.TryPop(out int id))
     {
         if (node.IsLeaf)
         {
-            Console.WriteLine($'{node.Proxy} contains {point}.');
+            Console.WriteLine($&quot;{node.Proxy} contains {point}.&quot;);
         }
         else
         {
@@ -155,11 +155,11 @@ All exact query helpers return <code>true</code> on success and <code>false</cod
 <p>All proxies implementing <code>IRayCastable</code> can be ray cast, including all shapes:</p>
 <pre><code class="lang-cs">// Unbounded
 public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
+    out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
 
 // Bounded: only considers hits with lambda ≤ maxLambda
-public bool RayCast(JVector origin, JVector direction, Real maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
+public bool RayCast(JVector origin, JVector direction, float maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
+    out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
 </code></pre>
 <p>The pre- and post-filters can be used to discard hits during the ray cast.
 A ray is shot from the origin into the specified direction.
@@ -170,13 +170,13 @@ The point of collision is given by <code>hit = origin + lambda * direction</code
 <pre><code class="lang-cs">// Unbounded
 public bool SweepCast&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector direction,
     SweepCastFilterPre? pre, SweepCastFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
     where T : ISupportMappable
 
 // Bounded: only considers hits with lambda ≤ maxLambda
-public bool SweepCast&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector direction, Real maxLambda,
+public bool SweepCast&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector direction, float maxLambda,
     SweepCastFilterPre? pre, SweepCastFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
     where T : ISupportMappable
 </code></pre>
 <p>The query shape is defined by an <code>ISupportMappable</code> plus its world-space <code>orientation</code> and <code>position</code>.
@@ -192,10 +192,10 @@ The <strong>post-filter</strong> (<code>SweepCastFilterPost</code>) is called af
 Use it to reject hits based on geometry, or to collect multiple results rather than stopping at the first.
 Returning <code>false</code> from either filter skips that candidate without terminating the sweep.</p>
 <p>For common built-in query shapes, convenience overloads are available:</p>
-<pre><code class="lang-cs">public bool SweepCastSphere(Real radius, in JVector position, in JVector direction, ...)
+<pre><code class="lang-cs">public bool SweepCastSphere(float radius, in JVector position, in JVector direction, ...)
 public bool SweepCastBox(in JVector halfExtents, in JQuaternion orientation, in JVector position, in JVector direction, ...)
-public bool SweepCastCapsule(Real radius, Real halfLength, in JQuaternion orientation, in JVector position, in JVector direction, ...)
-public bool SweepCastCylinder(Real radius, Real halfHeight, in JQuaternion orientation, in JVector position, in JVector direction, ...)
+public bool SweepCastCapsule(float radius, float halfLength, in JQuaternion orientation, in JVector position, in JVector direction, ...)
+public bool SweepCastCylinder(float radius, float halfHeight, in JQuaternion orientation, in JVector position, in JVector direction, ...)
 </code></pre>
 <p>Each has a bounded variant with a <code>maxLambda</code> parameter.</p>
 <h4 id="find-nearest-query">Find nearest query</h4>
@@ -203,13 +203,13 @@ public bool SweepCastCylinder(Real radius, Real halfHeight, in JQuaternion orien
 <pre><code class="lang-cs">// Unbounded: considers all IDistanceTestable proxies in the tree
 public bool FindNearest&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position,
     FindNearestFilterPre? pre, FindNearestFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
+    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float distance)
     where T : ISupportMappable
 
 // Bounded: only considers proxies closer than maxDistance
-public bool FindNearest&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, Real maxDistance,
+public bool FindNearest&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, float maxDistance,
     FindNearestFilterPre? pre, FindNearestFilterPost? post,
-    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real distance)
+    out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float distance)
     where T : ISupportMappable
 </code></pre>
 <p>The query shape is defined by an <code>ISupportMappable</code> plus its world-space <code>orientation</code> and <code>position</code>.
@@ -229,7 +229,7 @@ Returning <code>false</code> from either filter skips that candidate and continu
 </code></pre>
 <p>For common built-in query shapes, convenience overloads are available:</p>
 <pre><code class="lang-cs">public bool FindNearestPoint(in JVector position, ...)
-public bool FindNearestSphere(Real radius, in JVector position, ...)
+public bool FindNearestSphere(float radius, in JVector position, ...)
 </code></pre>
 <p>Each has a bounded variant with a <code>maxDistance</code> parameter.</p>
 <h3 id="overlap-check-example">Overlap check example</h3>

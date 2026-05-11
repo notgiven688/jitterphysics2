@@ -105,7 +105,7 @@ The default value for gravity is 9.81 [len_unit/time_unit²], which aligns with 
 Therefore, it is reasonable to use metric units (kg, m, s) when conceptualizing these values.</p>
 </div>
 <p>The smaller the time step size, the more stable the simulation.
-Timesteps larger than <span class="math">\(\mathrm{dt}=1/60\,\mathrm{s}\)</span> are not advised.
+Time steps larger than <span class="math">\(\mathrm{dt}=1/60\,\mathrm{s}\)</span> are not advised.
 It is also recommended to use fixed time steps.
 Typical code accumulates delta times and calls <code>world.Step</code> only at fixed time intervals, as shown in the following example.</p>
 <pre><code class="lang-cs">private float accumulatedTime = 0.0f;
@@ -117,12 +117,12 @@ public void FixedTimeStep(float dt, int maxSteps = 4)
     int steps = 0;
     accumulatedTime += dt;
 
-    while (accumulatedTime &gt; fixedStep)
+    while (accumulatedTime &gt;= fixedStep)
     {
-        world.Step(fixedStep, multiThread);
+        world.Step(fixedStep);
         accumulatedTime -= fixedStep;
 
-        // we can not keep up with the real time, i.e. the simulation
+        // we cannot keep up with real time, i.e. the simulation
         // is running slower than the real time is passing.
         if (++steps &gt;= maxSteps) return;
     }
@@ -143,7 +143,7 @@ A singleton pattern is used here, as demonstrated below:</p>
 <p>The <code>world.ThreadModel</code> property may be used to keep the thread pool in a tight loop waiting for work to be processed after <code>world.Step</code> has been run (<code>ThreadModelType.Persistent</code>), or to yield threads afterwards (<code>ThreadModelType.Regular</code>).
 The latter option is recommended to free processing power for other code, such as rendering.</p>
 <h2 id="solver-mode">Solver Mode</h2>
-<p>Jitter2 offers two solver strategies through <a class="xref" href="../../api/Jitter2.World.html#Jitter2_World_SolveMode">SolveMode</a>:</p>
+<p>Jitter2 offers two solver strategies through <a class="xref" href="../../api/Jitter2.SolveMode.html">SolveMode</a>:</p>
 <pre><code class="lang-cs">world.SolveMode = SolveMode.Regular;       // default
 world.SolveMode = SolveMode.Deterministic; // reproducible, slower
 </code></pre>
@@ -164,13 +164,13 @@ The number of iterations in the relaxation phase ('relaxation iterations') is sp
 The runtime for solving contacts and constraints scales linearly with the number of iterations.</p>
 <h2 id="substep-count">Substep Count</h2>
 <p>The time step can be divided into smaller steps, defined by <code>world.SubstepCount</code>.
-These smaller time steps are solved similar to regular full steps, however collision information is not updated.
-Each sub step is solved with the number of solver iterations specified in <code>world.SolverIterations</code>.
+These smaller time steps are solved similarly to regular full steps; however, collision information is not updated.
+Each substep is solved with the number of solver iterations specified in <code>world.SolverIterations</code>.
 For example</p>
 <pre><code class="lang-cs">world.SubstepCount = 4;
 world.SolverIterations = (solver: 2, relaxation: 1);
 </code></pre>
-<p>does perform <span class="math">\(12\)</span> solver iterations in total for each call to <code>world.Step</code>.
+<p>performs <span class="math">\(12\)</span> solver iterations in total for each call to <code>world.Step</code>.
 The runtime is slower than a single regular step with <span class="math">\(12\)</span> iterations but this approach enhances the stability of the simulation.
 Substepping is excellent for enhancing the overall quality of constraints, stabilizing large stacks of objects, and simulating large mass ratios (like heavy objects resting on light objects) with greater accuracy.</p>
 <h2 id="contact-manifold-persistence">Contact Manifold Persistence</h2>
@@ -228,6 +228,18 @@ It can be used to create constraints that fix a body relative to world space (se
 <h2 id="deactivation">Deactivation</h2>
 <p>The deactivation system can be globally disabled using <code>world.AllowDeactivation</code>.
 Setting this to <code>false</code> prevents bodies from being deactivated but does not wake up already sleeping bodies.</p>
+<p>Jitter2 deactivates complete simulation islands, not individual bodies in isolation. An island remains
+active while at least one non-static body in it is moving, has been explicitly woken, or is connected
+to newly active contact or constraint data. Once every non-static body in the island remains below
+its deactivation thresholds for long enough, the island is moved to the inactive partition.</p>
+<p>Inactive islands have very little runtime cost: their bodies, contacts, constraints, and broad-phase
+proxies are skipped by the active simulation. They can be activated again when user code wakes a body
+or when an active body creates a contact with a sleeping island. If an active island and an inactive
+island become connected through a contact or constraint, Jitter2 marks the merged island for an update
+and moves its non-static bodies back into the active partition before solving.</p>
+<p>Static bodies are a special case. They are normally inactive, do not form regular simulation island
+connections, and do not by themselves keep an island awake. Moving a static body can still wake
+affected non-static bodies so contacts can be updated on the next step.</p>
 
 </article>
 

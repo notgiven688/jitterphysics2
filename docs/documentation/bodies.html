@@ -101,8 +101,8 @@ var body = world.CreateRigidBody();
 <div class="WARNING">
 <h5>Warning</h5>
 <p><strong>Creating many bodies at once</strong>
-When calling body.AddShape(shape), the shape is registered in the collision system of the engine and immediately added to the spatial tree structure (<code>DynamicTree</code>) for efficient broad-phase collision detection.
-Registering many objects at <span class="math">\((0, 0, 0)\)</span> must be prevented by specifying the rigid body position, before adding shapes.</p>
+When calling <code>body.AddShape(shape)</code>, the shape is registered in the collision system of the engine and immediately added to the spatial tree structure (<code>DynamicTree</code>) for efficient broad-phase collision detection.
+Avoid registering many objects at <span class="math">\((0, 0, 0)\)</span> by setting the rigid body position before adding shapes.</p>
 </div>
 <div class="WARNING">
 <h5>Warning</h5>
@@ -119,15 +119,19 @@ Unit density is assumed for the calculations.</p>
 <p>will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.</p>
 <p>The mass properties of the body can also be set directly using <code>body.SetMassInertia</code>.
 Passing <code>MassInertiaUpdateMode.Preserve</code> to <code>body.AddShape(...)</code> or <code>body.AddShapes(...)</code> prevents the automatic recalculation of mass properties when shapes are added.</p>
-<p><em><strong>The position of the rigid body has to align with the center of mass.</strong>
-So in the local reference frame of the body, the center of mass is <span class="math">\((0, 0, 0)\)</span>. Shapes or combinations of shapes must be translated accordingly.</em></p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>The position of a rigid body must align with its center of mass.
+In the body's local reference frame, the center of mass is <span class="math">\((0, 0, 0)\)</span>.
+Shapes or combinations of shapes must be translated accordingly.</p>
+</div>
 <h3 id="debugging-shapes">Debugging shapes</h3>
 <p>The <code>RigidBody</code> class offers the <code>body.DebugDraw(IDebugDrawer drawer)</code> method which creates a triangle hull for each shape added to the body and calls the <code>drawer.DrawTriangle</code> method in the provided <code>IDebugDrawer</code> implementation.
 The coordinates of the triangles are in world space and can be drawn to debug the collision shape of the rigid body.</p>
 <div class="WARNING">
 <h5>Warning</h5>
 <p><strong>body.DebugDraw performance</strong>
-Every call to <code>body.DebugDraw</code> the triangle hulls are generated on the fly.
+Every call to <code>body.DebugDraw</code> generates the triangle hulls on the fly.
 Since this is a slow operation the method should only be called for debugging purposes.</p>
 </div>
 <h2 id="forces-and-impulses">Forces and impulses</h2>
@@ -148,9 +152,9 @@ The property <code>body.AffectedByGravity</code> can be used to disable gravity 
 <p>Jitter2 uses a simple damping system to slow rigid bodies down.
 This improves simulation stability and also resembles mechanical systems losing energy in the real world.
 There is a linear and an angular damping factor for each body which can be set using <code>body.Damping</code>.
-With each <code>world.Step</code>, the angular and linear velocity of each rigid body is multiplied by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the damping factor.
+With each <code>world.Step</code>, the angular and linear velocity of each dynamic rigid body is multiplied by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the damping factor.
 For performance reasons there is no time dependency for the damping system.
-As a result, bodies in a simulation with smaller timesteps experience greater damping.</p>
+As a result, bodies in a simulation with smaller time steps experience greater damping.</p>
 <h2 id="speculative-contacts">Speculative contacts</h2>
 <p>Speculative contacts can be utilized to prevent fast and small objects from tunneling through thin objects.
 An object moving quickly enough might 'miss' a collision since the distance traveled between two frames exceeds the thickness of another object.
@@ -170,22 +174,33 @@ See <a href="arbiters.html#collision-events">Arbiters</a> for details and exampl
 Islands are formed by bodies which are pairwise interacting with each other through contacts or constraints.
 Different islands are not interacting with each other in any way.</p>
 <p>Active rigid bodies may be marked for deactivation by the world once their angular and linear velocity remain below the thresholds defined in <code>body.DeactivationThreshold</code> for a period defined by <code>body.DeactivationTime</code>.
-If all bodies within an island are marked for deactivation the whole island gets deactivated.
+If all non-static bodies within an island are ready to sleep, the whole island gets deactivated.
 The simulation cost for inactive bodies is effectively zero.
 Islands (and their associated bodies) may get woken up as soon as a collision with an active body is registered.</p>
-<p>Using <code>body.SetActivationState</code>, the user can reset the internal deactivation time clock for the rigid body.
+<p>Using <code>body.SetActivationState</code>, the user can schedule a body for activation or deactivation.
 It will not immediately change the activation state of the body (<code>body.IsActive</code>).
 The next <code>world.Step</code> will then consider this body and its connected island for activation or deactivation.
-Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no effect.</p>
+Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no lasting effect, because the body marks its island active again during the update.</p>
+<p>Activation state is most meaningful for dynamic and kinematic bodies:</p>
+<ul>
+<li>Dynamic bodies are actively simulated while awake and skipped while sleeping.</li>
+<li>Kinematic bodies can be part of islands. They are treated as infinite-mass bodies by the solver, but they can wake connected dynamic bodies through contacts or constraints.</li>
+<li>Static bodies are normally inactive bookkeeping objects. They do not form regular island connections and <code>body.SetActivationState(true)</code> does not make the static body itself active.</li>
+</ul>
 <h2 id="static-bodies">Static bodies</h2>
 <p>Static bodies (<code>body.MotionType == MotionType.Static</code>) have infinite mass and therefore are not affected by collisions or constraints.
 They also do not join islands.
 Static bodies do not generate collisions with other static or inactive bodies.
-Because of this, the position of static bodies should not be altered while in contact with other bodies.</p>
+Static bodies are normally inactive even if <code>body.SetActivationState(true)</code> is called.</p>
+<p>Changing the position or orientation of a static body updates its broad-phase proxies and wakes affected non-static bodies on the next step.
+The static body itself remains inactive; the bodies that have to react to the changed contact state are activated.
+This is useful for occasional edits to static level geometry, but it is a discontinuous transform from the solver's point of view.
+For continuously moving platforms or obstacles, prefer kinematic bodies.</p>
 <h2 id="kinematic-bodies">Kinematic bodies</h2>
 <p>Kinematic bodies (<code>body.MotionType == MotionType.Kinematic</code>) can have a velocity and therefore change their position.
 They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
-They do take part in collision islands.</p>
+They do take part in collision islands.
+Because of that, kinematic bodies participate in island activation and deactivation like other non-static bodies.</p>
 
 </article>
 
