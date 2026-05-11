@@ -16577,6 +16577,18 @@ references:
   fullName.vb: Jitter2.World.InvalidCollisionTypeException.New
   nameWithType: World.InvalidCollisionTypeException.InvalidCollisionTypeException
   nameWithType.vb: World.InvalidCollisionTypeException.New
+- uid: Jitter2.World.IslandActivated
+  name: IslandActivated
+  href: api/Jitter2.World.html#Jitter2_World_IslandActivated
+  commentId: E:Jitter2.World.IslandActivated
+  fullName: Jitter2.World.IslandActivated
+  nameWithType: World.IslandActivated
+- uid: Jitter2.World.IslandDeactivated
+  name: IslandDeactivated
+  href: api/Jitter2.World.html#Jitter2_World_IslandDeactivated
+  commentId: E:Jitter2.World.IslandDeactivated
+  fullName: Jitter2.World.IslandDeactivated
+  nameWithType: World.IslandDeactivated
 - uid: Jitter2.World.Islands
   name: Islands
   href: api/Jitter2.World.html#Jitter2_World_Islands
