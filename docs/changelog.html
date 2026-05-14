@@ -87,6 +87,14 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-286-2026-05-15">Jitter 2.8.6 (2026-05-15)</h3>
+<ul>
+<li>Added support for using multiple <code>World</code> instances from different host threads.</li>
+<li>Fixed deterministic solver iteration handling in <code>SolveMode.Deterministic</code>.</li>
+<li>Fixed nested dynamic tree queries so callbacks may safely perform additional <code>RayCast</code>, <code>SweepCast</code>, and <code>FindNearest</code> queries.</li>
+<li>Fixed stale queued forces and torques when changing a body's <code>MotionType</code>.</li>
+<li><strong>Breaking Change:</strong> Previously obsolete compatibility APIs now produce compile-time errors. Use the replacement APIs named in the obsolete messages.</li>
+</ul>
 <h3 id="jitter-285-2026-04-25">Jitter 2.8.5 (2026-04-25)</h3>
 <ul>
 <li>Improved <code>CollisionManifold</code>.</li>
