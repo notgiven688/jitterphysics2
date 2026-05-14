@@ -142,6 +142,24 @@ A singleton pattern is used here, as demonstrated below:</p>
 <p>This adjusts the number of additional (with respect to the main thread) worker threads to <span class="math">\(4-1=3\)</span>.</p>
 <p>The <code>world.ThreadModel</code> property may be used to keep the thread pool in a tight loop waiting for work to be processed after <code>world.Step</code> has been run (<code>ThreadModelType.Persistent</code>), or to yield threads afterwards (<code>ThreadModelType.Regular</code>).
 The latter option is recommended to free processing power for other code, such as rendering.</p>
+<h4 id="threading-contract">Threading Contract</h4>
+<p>Each <code>World</code> instance has a single external owner at a time.
+Do not call <code>Step</code>, <code>Stabilize</code>, <code>CreateRigidBody</code>, <code>CreateConstraint</code>, <code>Remove</code>, <code>Clear</code>, or other world-changing APIs on the same world concurrently from multiple external threads.
+Also avoid reading world state from one thread while another thread is stepping or modifying that same world.</p>
+<p>Multiple worlds may be stepped concurrently from different host threads when every world uses single-threaded stepping:</p>
+<pre><code class="lang-cs">world.Step(dt, multiThread: false);
+world.Stabilize(dt, iterations, multiThread: false);
+</code></pre>
+<p>This is the recommended setup when an application wants to parallelize many independent worlds.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p><code>world.Step(dt, multiThread: true)</code> and <code>world.Stabilize(..., multiThread: true)</code> use Jitter's process-wide worker pool.
+If several worlds call these methods at the same time, Jitter serializes the calls with a process-wide lock: one multithreaded step runs while the others wait.
+To step many independent worlds in parallel, run those worlds on your own host threads and call <code>world.Step(dt, multiThread: false)</code> for each world.</p>
+</div>
+<p>Callbacks and global hooks shared by multiple worlds must be thread-safe.
+When separate worlds are stepped concurrently, Jitter may invoke shared callbacks from different external threads at the same time.
+This includes <code>Logger.Listener</code>, broad-phase and narrow-phase filters, collision callbacks, step callbacks, and debug drawers.</p>
 <h2 id="solver-mode">Solver Mode</h2>
 <p>Jitter2 offers two solver strategies through <a class="xref" href="../../api/Jitter2.SolveMode.html">SolveMode</a>:</p>
 <pre><code class="lang-cs">world.SolveMode = SolveMode.Regular;       // default

@@ -837,7 +837,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Contains instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Contains instead.&quot;, true)]
 public readonly bool Encompasses(in JBoundingBox box)</code></pre>
   </div>
 
@@ -1103,7 +1103,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;, true)]
 public static bool NotDisjoint(in TreeBox first, in TreeBox second)</code></pre>
   </div>
 
@@ -1146,7 +1146,7 @@ public static bool NotDisjoint(in TreeBox first, in TreeBox second)</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;, true)]
 public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
   </div>
 

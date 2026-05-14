@@ -383,7 +383,7 @@ Struct JBoundingBox  <a class="header-action link-secondary" title="View source"
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use static AddPointInPlace instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use static AddPointInPlace instead.&quot;, true)]
 public void AddPoint(in JVector point)</code></pre>
   </div>
 
@@ -779,7 +779,7 @@ public void AddPoint(in JVector point)</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Contains instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Contains instead.&quot;, true)]
 public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</code></pre>
   </div>
 
@@ -1030,7 +1030,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use !Disjoint instead.&quot;, true)]
 public static bool NotDisjoint(in JBoundingBox left, in JBoundingBox right)</code></pre>
   </div>
 
@@ -1231,7 +1231,7 @@ public static bool NotDisjoint(in JBoundingBox left, in JBoundingBox right)</cod
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use static CreateTransformed instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use static CreateTransformed instead.&quot;, true)]
 public void Transform(in JMatrix orientation)</code></pre>
   </div>
 

@@ -271,7 +271,7 @@ The calculated <code class="paramref">inertia</code> tensor is expressed relativ
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;, true)]
 public static List&lt;JTriangle&gt; MakeHull(IEnumerable&lt;JVector&gt; vertices, int subdivisions = 3)</code></pre>
   </div>
 
@@ -310,7 +310,7 @@ public static List&lt;JTriangle&gt; MakeHull(IEnumerable&lt;JVector&gt; vertices
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;, true)]
 public static List&lt;JTriangle&gt; MakeHull(ReadOnlySpan&lt;JVector&gt; vertices, int subdivisions = 3)</code></pre>
   </div>
 
@@ -349,7 +349,7 @@ public static List&lt;JTriangle&gt; MakeHull(ReadOnlySpan&lt;JVector&gt; vertice
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;, true)]
 public static List&lt;JTriangle&gt; MakeHull&lt;TSupport&gt;(in TSupport support, int subdivisions = 3) where TSupport : ISupportMappable</code></pre>
   </div>
 
@@ -393,7 +393,7 @@ public static List&lt;JTriangle&gt; MakeHull&lt;TSupport&gt;(in TSupport support
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Tessellate instead.&quot;, true)]
 public static void MakeHull&lt;TSupport, TCollection&gt;(in TSupport support, TCollection hullCollection, int subdivisions = 3) where TSupport : ISupportMappable where TCollection : class, ICollection&lt;JTriangle&gt;</code></pre>
   </div>
 
