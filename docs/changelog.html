@@ -90,6 +90,7 @@
 <h3 id="jitter-286-2026-05-15">Jitter 2.8.6 (2026-05-15)</h3>
 <ul>
 <li>Added support for using multiple <code>World</code> instances from different host threads.</li>
+<li>Added <code>World.IslandActivated</code> and <code>World.IslandDeactivated</code> events for observing simulation island wake/sleep transitions.</li>
 <li>Fixed deterministic solver iteration handling in <code>SolveMode.Deterministic</code>.</li>
 <li>Fixed nested dynamic tree queries so callbacks may safely perform additional <code>RayCast</code>, <code>SweepCast</code>, and <code>FindNearest</code> queries.</li>
 <li>Fixed stale queued forces and torques when changing a body's <code>MotionType</code>.</li>
