@@ -14660,6 +14660,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Parallelization.ThreadPool.InstanceInitialized
   nameWithType: ThreadPool.InstanceInitialized
+- uid: Jitter2.Parallelization.ThreadPool.IsPaused
+  name: IsPaused
+  href: api/Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_IsPaused
+  commentId: P:Jitter2.Parallelization.ThreadPool.IsPaused
+  fullName: Jitter2.Parallelization.ThreadPool.IsPaused
+  nameWithType: ThreadPool.IsPaused
+- uid: Jitter2.Parallelization.ThreadPool.IsPaused*
+  name: IsPaused
+  href: api/Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_IsPaused_
+  commentId: Overload:Jitter2.Parallelization.ThreadPool.IsPaused
+  isSpec: "True"
+  fullName: Jitter2.Parallelization.ThreadPool.IsPaused
+  nameWithType: ThreadPool.IsPaused
 - uid: Jitter2.Parallelization.ThreadPool.PauseWorkers
   name: PauseWorkers()
   href: api/Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_PauseWorkers
