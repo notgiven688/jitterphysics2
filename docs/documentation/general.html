@@ -96,6 +96,10 @@
 <pre><code class="lang-bash">dotnet build -c Release -p:DoublePrecision=true
 </code></pre>
 <p>The active precision mode can be checked at runtime via <code>Precision.IsDoublePrecision</code>. In single precision, <code>JVector.X</code> is a <code>float</code>; in double precision, it is a <code>double</code>.</p>
+<h2 id="build-configuration-and-validation">Build Configuration and Validation</h2>
+<p>Object creation and configuration validate values that would leave the engine in an invalid state, such as shape dimensions, masses, constraint axes, and invalid limits. These checks throw normal .NET exceptions in Debug and Release builds.</p>
+<p>Debug builds add extra sanity checks on runtime state mutation paths, such as non-finite positions, velocities, forces, and non-normalized orientations. These checks are compiled behind the <code>DEBUG</code> symbol and are stripped from Release builds.</p>
+<p>NuGet packages are Release builds. When Jitter2 is consumed from NuGet, only the Release-visible contract checks are present. To get the additional Debug-only sanity checks, reference or build Jitter2 from source using a Debug configuration.</p>
 <h2 id="deterministic-simulation">Deterministic Simulation</h2>
 <p>Jitter2 provides an optional cross-platform deterministic solver mode via <a class="xref" href="../../api/Jitter2.SolveMode.html">SolveMode</a>:</p>
 <pre><code class="lang-cs">world.SolveMode = SolveMode.Deterministic;

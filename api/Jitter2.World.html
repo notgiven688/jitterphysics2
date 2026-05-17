@@ -166,7 +166,7 @@ the process-wide Jitter worker pool.</p>
 
   <h3 id="Jitter2_World__ctor" data-uid="Jitter2.World.#ctor">
   World()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L350"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L359"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates an instance of the World class.</p>
@@ -832,7 +832,7 @@ Default value: 1.</p>
 
   <h3 id="Jitter2_World_Clear" data-uid="Jitter2.World.Clear">
   Clear()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L385"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L394"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all entities from the simulation world. Also clears all proxies from the dynamic tree,
@@ -860,7 +860,7 @@ including any user-added proxies not owned by the world.</p>
 
   <h3 id="Jitter2_World_CreateConstraint__1_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.World.CreateConstraint``1(Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)">
   CreateConstraint&lt;T&gt;(RigidBody, RigidBody)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L615"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L624"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a constraint of the specified type. After creation, initialize the constraint
@@ -918,7 +918,7 @@ by calling its <code>Initialize</code> method.</p>
 
   <h3 id="Jitter2_World_CreateRigidBody" data-uid="Jitter2.World.CreateRigidBody">
   CreateRigidBody()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L691"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L700"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates and adds a new rigid body to the simulation world.</p>
@@ -957,7 +957,7 @@ by calling its <code>Initialize</code> method.</p>
 
   <h3 id="Jitter2_World_DefaultDynamicTreeFilter_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy_" data-uid="Jitter2.World.DefaultDynamicTreeFilter(Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy)">
   DefaultDynamicTreeFilter(IDynamicTreeProxy, IDynamicTreeProxy)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L371"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Default filter function for the DynamicTree. Returns true if both proxies are of type RigidBodyShape
@@ -997,7 +997,7 @@ and belong to different RigidBody instances.</p>
 
   <h3 id="Jitter2_World_Dispose" data-uid="Jitter2.World.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L720"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L729"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases all unmanaged memory buffers used by this simulation world.</p>
@@ -1132,7 +1132,7 @@ and registered internally. The body arguments are used only when a new arbiter i
 
   <h3 id="Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   LockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L947"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L949"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Acquires locks on two rigid bodies using a spin-wait loop. The lock order is determined
@@ -1341,7 +1341,7 @@ The provided contact points and normal must be in world space. The <code class="
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_Arbiter_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.Arbiter)">
   Remove(Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L475"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L484"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a particular arbiter from the world.</p>
@@ -1373,7 +1373,7 @@ The provided contact points and normal must be in world space. The <code class="
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_Constraints_Constraint_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.Constraints.Constraint)">
   Remove(Constraint)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L450"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L459"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specific constraint from the world. For temporary deactivation of constraints, consider using the
@@ -1407,7 +1407,7 @@ The provided contact points and normal must be in world space. The <code class="
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.RigidBody)">
   Remove(RigidBody)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L404"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L413"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes the specified body from the world. This operation also automatically discards any associated contacts
@@ -1520,7 +1520,7 @@ bound is exclusive.</p>
 
   <h3 id="Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_" data-uid="Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)">
   Stabilize(float, int, int, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L316"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Solves the existing contacts and constraints at the velocity level without advancing body transforms.</p>
@@ -1631,7 +1631,7 @@ may be called concurrently from worker threads.</p>
 
   <h3 id="Jitter2_World_TryLockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L876"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L878"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempts to lock two rigid bodies. Briefly waits on contention, then backs off if unsuccessful.
@@ -1674,7 +1674,7 @@ The lock order is determined by memory address to prevent deadlocks.</p>
 
   <h3 id="Jitter2_World_UnlockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   UnlockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L986"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L988"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases locks on two rigid bodies previously acquired by <a class="xref" href="Jitter2.World.html#Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__">LockTwoBody(ref RigidBodyData, ref RigidBodyData)</a>
