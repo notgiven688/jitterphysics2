@@ -16520,6 +16520,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.EnableAuxiliaryContactPoints
   nameWithType: World.EnableAuxiliaryContactPoints
+- uid: Jitter2.World.ForceSleepIsland(Jitter2.Collision.Island)
+  name: ForceSleepIsland(Island)
+  href: api/Jitter2.World.html#Jitter2_World_ForceSleepIsland_Jitter2_Collision_Island_
+  commentId: M:Jitter2.World.ForceSleepIsland(Jitter2.Collision.Island)
+  fullName: Jitter2.World.ForceSleepIsland(Jitter2.Collision.Island)
+  nameWithType: World.ForceSleepIsland(Island)
+- uid: Jitter2.World.ForceSleepIsland*
+  name: ForceSleepIsland
+  href: api/Jitter2.World.html#Jitter2_World_ForceSleepIsland_
+  commentId: Overload:Jitter2.World.ForceSleepIsland
+  isSpec: "True"
+  fullName: Jitter2.World.ForceSleepIsland
+  nameWithType: World.ForceSleepIsland
 - uid: Jitter2.World.GetArbiter(System.UInt64,System.UInt64,Jitter2.Dynamics.Arbiter@)
   name: GetArbiter(ulong, ulong, out Arbiter)
   href: api/Jitter2.World.html#Jitter2_World_GetArbiter_System_UInt64_System_UInt64_Jitter2_Dynamics_Arbiter__

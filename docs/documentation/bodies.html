@@ -181,6 +181,8 @@ Islands (and their associated bodies) may get woken up as soon as a collision wi
 It will not immediately change the activation state of the body (<code>body.IsActive</code>).
 The next <code>world.Step</code> will then consider this body and its connected island for activation or deactivation.
 Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no lasting effect, because the body marks its island active again during the update.</p>
+<p>For explicit immediate deactivation, use <code>world.ForceSleepIsland(island)</code>.
+This deactivates the whole island at once, ignores the normal deactivation thresholds, and clears linear velocity, angular velocity, queued forces, and queued torques for all bodies in the island.</p>
 <p>Activation state is most meaningful for dynamic and kinematic bodies:</p>
 <ul>
 <li>Dynamic bodies are actively simulated while awake and skipped while sleeping.</li>
