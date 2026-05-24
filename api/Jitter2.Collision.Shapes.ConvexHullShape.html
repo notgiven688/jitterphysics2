@@ -202,7 +202,7 @@ Class ConvexHullShape  <a class="header-action link-secondary" title="View sourc
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape__ctor_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JTriangle__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.#ctor(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JTriangle})">
   ConvexHullShape(IEnumerable&lt;JTriangle&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the ConvexHullShape class, creating a convex hull.</p>
@@ -232,10 +232,11 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
-    <dd><p>Thrown when <code class="paramref">triangles</code> is empty.</p>
+    <dd><p>Thrown when <code class="paramref">triangles</code> is empty, or when the convex hull consists of more than
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16.maxvalue">MaxValue</a> vertices.</p>
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
-    <dd><p>Thrown when the convex hull consists of more than <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16.maxvalue">MaxValue</a> vertices.</p>
+    <dd><p>Thrown when <code class="paramref">triangles</code> does not define a non-degenerate volume.</p>
 </dd>
   </dl>
 
@@ -245,7 +246,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JTriangle__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JTriangle})">
   ConvexHullShape(ReadOnlySpan&lt;JTriangle&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the ConvexHullShape class, creating a convex hull.</p>
@@ -275,10 +276,11 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
-    <dd><p>Thrown when <code class="paramref">triangles</code> is empty.</p>
+    <dd><p>Thrown when <code class="paramref">triangles</code> is empty, or when the convex hull consists of more than
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16.maxvalue">MaxValue</a> vertices.</p>
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
-    <dd><p>Thrown when the convex hull consists of more than <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint16.maxvalue">MaxValue</a> vertices.</p>
+    <dd><p>Thrown when <code class="paramref">triangles</code> does not define a non-degenerate volume.</p>
 </dd>
   </dl>
 
@@ -292,7 +294,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_Shift" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.Shift">
   Shift
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L212"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L213"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the shift applied to the convex hull vertices.</p>
@@ -328,7 +330,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L313"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -363,7 +365,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_CalculateMassInertia" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia">
   CalculateMassInertia()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L242"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L249"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Recalculates the mass, center of mass, and inertia tensor from the convex hull triangles.</p>
@@ -383,6 +385,12 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the convex hull does not define a non-degenerate volume.</p>
+</dd>
+  </dl>
 
 
 
@@ -390,7 +398,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L236"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
@@ -432,7 +440,7 @@ not the center of mass.</p>
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_Clone" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L193"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L194"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.</p>
@@ -466,7 +474,7 @@ original instance.</p>
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L424"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L438"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
@@ -499,7 +507,7 @@ original instance.</p>
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L418"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L432"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -535,7 +543,7 @@ original instance.</p>
 
   <h3 id="Jitter2_Collision_Shapes_ConvexHullShape_UpdateShape" data-uid="Jitter2.Collision.Shapes.ConvexHullShape.UpdateShape">
   UpdateShape()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L229"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates the shape's cached mass, inertia, and bounding box.</p>
@@ -555,6 +563,12 @@ original instance.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the convex hull does not define a non-degenerate volume.</p>
+</dd>
+  </dl>
 
 
 
