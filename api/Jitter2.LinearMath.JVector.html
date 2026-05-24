@@ -2132,7 +2132,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_UnsafeAs__1" data-uid="Jitter2.LinearMath.JVector.UnsafeAs``1">
   UnsafeAs&lt;T&gt;()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reinterprets the bits of this <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a> as <code class="typeparamref">T</code>.</p>
@@ -2167,6 +2167,12 @@ public void Set(float x, float y, float z)</code></pre>
   <div class="markdown level1 remarks"><p>Valid only if <code class="typeparamref">T</code> has identical size and compatible layout.</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="typeparamref">T</code> does not have the same size as <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>.</p>
+</dd>
+  </dl>
 
 
 
@@ -2174,7 +2180,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_UnsafeFrom__1___0__" data-uid="Jitter2.LinearMath.JVector.UnsafeFrom``1(``0@)">
   UnsafeFrom&lt;T&gt;(in T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reinterprets the bits of <code class="paramref">value</code> as a <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>.</p>
@@ -2215,6 +2221,12 @@ public void Set(float x, float y, float z)</code></pre>
   <div class="markdown level1 remarks"><p>Valid only if <code class="typeparamref">T</code> has identical size and compatible layout.</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="typeparamref">T</code> does not have the same size as <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>.</p>
+</dd>
+  </dl>
 
 
 
@@ -2339,7 +2351,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Implicit_Jitter2_LinearMath_JVector___System_Numerics_Vector3" data-uid="Jitter2.LinearMath.JVector.op_Implicit(Jitter2.LinearMath.JVector@)~System.Numerics.Vector3">
   implicit operator Vector3(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2375,7 +2387,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Implicit_System_Numerics_Vector3___Jitter2_LinearMath_JVector" data-uid="Jitter2.LinearMath.JVector.op_Implicit(System.Numerics.Vector3@)~Jitter2.LinearMath.JVector">
   implicit operator JVector(in Vector3)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2411,7 +2423,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Implicit_System_ValueTuple_System_Single_System_Single_System_Single___Jitter2_LinearMath_JVector" data-uid="Jitter2.LinearMath.JVector.op_Implicit(System.ValueTuple{System.Single,System.Single,System.Single})~Jitter2.LinearMath.JVector">
   implicit operator JVector((float x, float y, float z))
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L79"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

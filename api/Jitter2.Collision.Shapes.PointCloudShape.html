@@ -204,7 +204,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape__ctor_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.PointCloudShape.#ctor(Jitter2.Collision.Shapes.VertexSupportMap)">
   PointCloudShape(VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a> class.</p>
@@ -229,6 +229,12 @@ this shape should ideally be used for a small number of points (~300).</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="paramref">supportMap</code> does not define a non-degenerate volume.</p>
+</dd>
+  </dl>
 
 
 
@@ -267,6 +273,9 @@ this shape should ideally be used for a small number of points (~300).</p>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
     <dd><p>Thrown when <code class="paramref">vertices</code> is empty.</p>
 </dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="paramref">vertices</code> does not define a non-degenerate volume.</p>
+</dd>
   </dl>
 
 
@@ -275,7 +284,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector})">
   PointCloudShape(ReadOnlySpan&lt;JVector&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L45"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a> class.</p>
@@ -306,6 +315,9 @@ this shape should ideally be used for a small number of points (~300).</p>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
     <dd><p>Thrown when <code class="paramref">vertices</code> is empty.</p>
 </dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="paramref">vertices</code> does not define a non-degenerate volume.</p>
+</dd>
   </dl>
 
 
@@ -318,7 +330,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_Shift" data-uid="Jitter2.Collision.Shapes.PointCloudShape.Shift">
   Shift
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the shift value for the shape. This property can be used when constructing a rigid
@@ -355,7 +367,7 @@ body that contains one or more shapes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L138"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -390,7 +402,7 @@ body that contains one or more shapes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia">
   CalculateMassInertia()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Recalculates the mass, center of mass, and inertia tensor.</p>
@@ -410,6 +422,12 @@ body that contains one or more shapes.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the point cloud does not define a non-degenerate volume.</p>
+</dd>
+  </dl>
 
 
 
@@ -417,7 +435,7 @@ body that contains one or more shapes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
@@ -459,7 +477,7 @@ not the center of mass.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_Clone" data-uid="Jitter2.Collision.Shapes.PointCloudShape.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a copy of this shape. The underlying data structure is shared
@@ -492,7 +510,7 @@ among the instances.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L190"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
@@ -525,7 +543,7 @@ among the instances.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L183"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -561,7 +579,7 @@ among the instances.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_UpdateShape" data-uid="Jitter2.Collision.Shapes.PointCloudShape.UpdateShape">
   UpdateShape()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates the shape's cached mass, inertia, and bounding box.</p>
@@ -581,6 +599,12 @@ among the instances.</p>
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when the point cloud does not define a non-degenerate volume.</p>
+</dd>
+  </dl>
 
 
 

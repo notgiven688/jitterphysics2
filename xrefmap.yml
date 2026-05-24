@@ -3292,6 +3292,15 @@ references:
   commentId: T:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException
   fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException
   nameWithType: TriangleMesh.DegenerateTriangleException
+- uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor
+  name: DegenerateTriangleException()
+  href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor
+  commentId: M:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor
+  name.vb: New()
+  fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.DegenerateTriangleException()
+  fullName.vb: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.New()
+  nameWithType: TriangleMesh.DegenerateTriangleException.DegenerateTriangleException()
+  nameWithType.vb: TriangleMesh.DegenerateTriangleException.New()
 - uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(Jitter2.LinearMath.JTriangle)
   name: DegenerateTriangleException(JTriangle)
   href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_Jitter2_LinearMath_JTriangle_
@@ -3301,6 +3310,24 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.New(Jitter2.LinearMath.JTriangle)
   nameWithType: TriangleMesh.DegenerateTriangleException.DegenerateTriangleException(JTriangle)
   nameWithType.vb: TriangleMesh.DegenerateTriangleException.New(JTriangle)
+- uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String)
+  name: DegenerateTriangleException(string)
+  href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_System_String_
+  commentId: M:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.DegenerateTriangleException(string)
+  fullName.vb: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.New(String)
+  nameWithType: TriangleMesh.DegenerateTriangleException.DegenerateTriangleException(string)
+  nameWithType.vb: TriangleMesh.DegenerateTriangleException.New(String)
+- uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String,System.Exception)
+  name: DegenerateTriangleException(string, Exception)
+  href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_System_String_System_Exception_
+  commentId: M:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String,System.Exception)
+  name.vb: New(String, Exception)
+  fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.DegenerateTriangleException(string, System.Exception)
+  fullName.vb: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.New(String, System.Exception)
+  nameWithType: TriangleMesh.DegenerateTriangleException.DegenerateTriangleException(string, Exception)
+  nameWithType.vb: TriangleMesh.DegenerateTriangleException.New(String, Exception)
 - uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor*
   name: DegenerateTriangleException
   href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_
@@ -3311,6 +3338,19 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.New
   nameWithType: TriangleMesh.DegenerateTriangleException.DegenerateTriangleException
   nameWithType.vb: TriangleMesh.DegenerateTriangleException.New
+- uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle
+  name: Triangle
+  href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException_Triangle
+  commentId: P:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle
+  fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle
+  nameWithType: TriangleMesh.DegenerateTriangleException.Triangle
+- uid: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle*
+  name: Triangle
+  href: api/Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.html#Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException_Triangle_
+  commentId: Overload:Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle
+  nameWithType: TriangleMesh.DegenerateTriangleException.Triangle
 - uid: Jitter2.Collision.Shapes.TriangleMesh.Indices
   name: Indices
   href: api/Jitter2.Collision.Shapes.TriangleMesh.html#Jitter2_Collision_Shapes_TriangleMesh_Indices
@@ -14824,6 +14864,67 @@ references:
   isSpec: "True"
   fullName: Jitter2.ReferenceFrameAttribute.Frame
   nameWithType: ReferenceFrameAttribute.Frame
+- uid: Jitter2.SameBodyException
+  name: SameBodyException
+  href: api/Jitter2.SameBodyException.html
+  commentId: T:Jitter2.SameBodyException
+  fullName: Jitter2.SameBodyException
+  nameWithType: SameBodyException
+- uid: Jitter2.SameBodyException.#ctor
+  name: SameBodyException()
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor
+  commentId: M:Jitter2.SameBodyException.#ctor
+  name.vb: New()
+  fullName: Jitter2.SameBodyException.SameBodyException()
+  fullName.vb: Jitter2.SameBodyException.New()
+  nameWithType: SameBodyException.SameBodyException()
+  nameWithType.vb: SameBodyException.New()
+- uid: Jitter2.SameBodyException.#ctor(System.String)
+  name: SameBodyException(string)
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor_System_String_
+  commentId: M:Jitter2.SameBodyException.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Jitter2.SameBodyException.SameBodyException(string)
+  fullName.vb: Jitter2.SameBodyException.New(String)
+  nameWithType: SameBodyException.SameBodyException(string)
+  nameWithType.vb: SameBodyException.New(String)
+- uid: Jitter2.SameBodyException.#ctor(System.String,System.Exception)
+  name: SameBodyException(string, Exception)
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor_System_String_System_Exception_
+  commentId: M:Jitter2.SameBodyException.#ctor(System.String,System.Exception)
+  name.vb: New(String, Exception)
+  fullName: Jitter2.SameBodyException.SameBodyException(string, System.Exception)
+  fullName.vb: Jitter2.SameBodyException.New(String, System.Exception)
+  nameWithType: SameBodyException.SameBodyException(string, Exception)
+  nameWithType.vb: SameBodyException.New(String, Exception)
+- uid: Jitter2.SameBodyException.#ctor(System.String,System.String)
+  name: SameBodyException(string, string)
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor_System_String_System_String_
+  commentId: M:Jitter2.SameBodyException.#ctor(System.String,System.String)
+  name.vb: New(String, String)
+  fullName: Jitter2.SameBodyException.SameBodyException(string, string)
+  fullName.vb: Jitter2.SameBodyException.New(String, String)
+  nameWithType: SameBodyException.SameBodyException(string, string)
+  nameWithType.vb: SameBodyException.New(String, String)
+- uid: Jitter2.SameBodyException.#ctor(System.String,System.String,System.Exception)
+  name: SameBodyException(string, string, Exception)
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor_System_String_System_String_System_Exception_
+  commentId: M:Jitter2.SameBodyException.#ctor(System.String,System.String,System.Exception)
+  name.vb: New(String, String, Exception)
+  fullName: Jitter2.SameBodyException.SameBodyException(string, string, System.Exception)
+  fullName.vb: Jitter2.SameBodyException.New(String, String, System.Exception)
+  nameWithType: SameBodyException.SameBodyException(string, string, Exception)
+  nameWithType.vb: SameBodyException.New(String, String, Exception)
+- uid: Jitter2.SameBodyException.#ctor*
+  name: SameBodyException
+  href: api/Jitter2.SameBodyException.html#Jitter2_SameBodyException__ctor_
+  commentId: Overload:Jitter2.SameBodyException.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.SameBodyException.SameBodyException
+  fullName.vb: Jitter2.SameBodyException.New
+  nameWithType: SameBodyException.SameBodyException
+  nameWithType.vb: SameBodyException.New
 - uid: Jitter2.SoftBodies
   name: Jitter2.SoftBodies
   href: api/Jitter2.SoftBodies.html
@@ -16584,6 +16685,33 @@ references:
   commentId: T:Jitter2.World.InvalidCollisionTypeException
   fullName: Jitter2.World.InvalidCollisionTypeException
   nameWithType: World.InvalidCollisionTypeException
+- uid: Jitter2.World.InvalidCollisionTypeException.#ctor
+  name: InvalidCollisionTypeException()
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException__ctor
+  commentId: M:Jitter2.World.InvalidCollisionTypeException.#ctor
+  name.vb: New()
+  fullName: Jitter2.World.InvalidCollisionTypeException.InvalidCollisionTypeException()
+  fullName.vb: Jitter2.World.InvalidCollisionTypeException.New()
+  nameWithType: World.InvalidCollisionTypeException.InvalidCollisionTypeException()
+  nameWithType.vb: World.InvalidCollisionTypeException.New()
+- uid: Jitter2.World.InvalidCollisionTypeException.#ctor(System.String)
+  name: InvalidCollisionTypeException(string)
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException__ctor_System_String_
+  commentId: M:Jitter2.World.InvalidCollisionTypeException.#ctor(System.String)
+  name.vb: New(String)
+  fullName: Jitter2.World.InvalidCollisionTypeException.InvalidCollisionTypeException(string)
+  fullName.vb: Jitter2.World.InvalidCollisionTypeException.New(String)
+  nameWithType: World.InvalidCollisionTypeException.InvalidCollisionTypeException(string)
+  nameWithType.vb: World.InvalidCollisionTypeException.New(String)
+- uid: Jitter2.World.InvalidCollisionTypeException.#ctor(System.String,System.Exception)
+  name: InvalidCollisionTypeException(string, Exception)
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException__ctor_System_String_System_Exception_
+  commentId: M:Jitter2.World.InvalidCollisionTypeException.#ctor(System.String,System.Exception)
+  name.vb: New(String, Exception)
+  fullName: Jitter2.World.InvalidCollisionTypeException.InvalidCollisionTypeException(string, System.Exception)
+  fullName.vb: Jitter2.World.InvalidCollisionTypeException.New(String, System.Exception)
+  nameWithType: World.InvalidCollisionTypeException.InvalidCollisionTypeException(string, Exception)
+  nameWithType.vb: World.InvalidCollisionTypeException.New(String, Exception)
 - uid: Jitter2.World.InvalidCollisionTypeException.#ctor(System.Type,System.Type)
   name: InvalidCollisionTypeException(Type, Type)
   href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException__ctor_System_Type_System_Type_
@@ -16603,6 +16731,32 @@ references:
   fullName.vb: Jitter2.World.InvalidCollisionTypeException.New
   nameWithType: World.InvalidCollisionTypeException.InvalidCollisionTypeException
   nameWithType.vb: World.InvalidCollisionTypeException.New
+- uid: Jitter2.World.InvalidCollisionTypeException.ProxyA
+  name: ProxyA
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException_ProxyA
+  commentId: P:Jitter2.World.InvalidCollisionTypeException.ProxyA
+  fullName: Jitter2.World.InvalidCollisionTypeException.ProxyA
+  nameWithType: World.InvalidCollisionTypeException.ProxyA
+- uid: Jitter2.World.InvalidCollisionTypeException.ProxyA*
+  name: ProxyA
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException_ProxyA_
+  commentId: Overload:Jitter2.World.InvalidCollisionTypeException.ProxyA
+  isSpec: "True"
+  fullName: Jitter2.World.InvalidCollisionTypeException.ProxyA
+  nameWithType: World.InvalidCollisionTypeException.ProxyA
+- uid: Jitter2.World.InvalidCollisionTypeException.ProxyB
+  name: ProxyB
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException_ProxyB
+  commentId: P:Jitter2.World.InvalidCollisionTypeException.ProxyB
+  fullName: Jitter2.World.InvalidCollisionTypeException.ProxyB
+  nameWithType: World.InvalidCollisionTypeException.ProxyB
+- uid: Jitter2.World.InvalidCollisionTypeException.ProxyB*
+  name: ProxyB
+  href: api/Jitter2.World.InvalidCollisionTypeException.html#Jitter2_World_InvalidCollisionTypeException_ProxyB_
+  commentId: Overload:Jitter2.World.InvalidCollisionTypeException.ProxyB
+  isSpec: "True"
+  fullName: Jitter2.World.InvalidCollisionTypeException.ProxyB
+  nameWithType: World.InvalidCollisionTypeException.ProxyB
 - uid: Jitter2.World.IslandActivated
   name: IslandActivated
   href: api/Jitter2.World.html#Jitter2_World_IslandActivated

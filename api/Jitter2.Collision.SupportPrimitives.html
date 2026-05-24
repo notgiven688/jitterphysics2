@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_SupportPrimitives" data-uid="Jitter2.Collision.SupportPrimitives" class="text-break">
-Class SupportPrimitives  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L14"><i class="bi bi-code-slash"></i></a>
+Class SupportPrimitives  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -157,10 +157,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreateBox_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Collision.SupportPrimitives.CreateBox(Jitter2.LinearMath.JVector)">
   CreateBox(JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a box support primitive.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -170,7 +171,8 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>halfExtents</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The positive half-extents of the box.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -186,6 +188,12 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when any component of <code class="paramref">halfExtents</code> is less than or equal to zero or not finite.</p>
+</dd>
+  </dl>
 
 
 
@@ -193,10 +201,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreateCapsule_System_Single_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.CreateCapsule(System.Single,System.Single)">
   CreateCapsule(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L49"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a capsule support primitive whose symmetry axis is the Y-axis.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -206,9 +215,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The capsule radius.</p>
+</dd>
     <dt><code>halfLength</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The non-negative half-length of the capsule segment.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -224,6 +235,13 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">radius</code> is less than or equal to zero, when
+<code class="paramref">halfLength</code> is negative, or when either value is not finite.</p>
+</dd>
+  </dl>
 
 
 
@@ -231,10 +249,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreateCone_System_Single_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.CreateCone(System.Single,System.Single)">
   CreateCone(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a cone support primitive whose symmetry axis is the Y-axis.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -244,9 +263,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The cone radius.</p>
+</dd>
     <dt><code>height</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The cone height.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -262,6 +283,13 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">radius</code> or <code class="paramref">height</code> is less than or equal to zero
+or not finite.</p>
+</dd>
+  </dl>
 
 
 
@@ -269,10 +297,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreateCylinder_System_Single_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.CreateCylinder(System.Single,System.Single)">
   CreateCylinder(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a cylinder support primitive whose symmetry axis is the Y-axis.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -282,9 +311,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The cylinder radius.</p>
+</dd>
     <dt><code>halfHeight</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The positive half-height of the cylinder.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -300,6 +331,13 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">radius</code> or <code class="paramref">halfHeight</code> is less than or equal to zero
+or not finite.</p>
+</dd>
+  </dl>
 
 
 
@@ -307,10 +345,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreatePoint" data-uid="Jitter2.Collision.SupportPrimitives.CreatePoint">
   CreatePoint()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L16"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a point support primitive at the origin.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -338,10 +377,11 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_SupportPrimitives_CreateSphere_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.CreateSphere(System.Single)">
   CreateSphere(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Creates a sphere support primitive.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -351,7 +391,8 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The sphere radius.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -367,6 +408,12 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>Thrown when <code class="paramref">radius</code> is less than or equal to zero or not finite.</p>
+</dd>
+  </dl>
 
 
 
@@ -374,7 +421,7 @@ Class SupportPrimitives  <a class="header-action link-secondary" title="View sou
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L14" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
 

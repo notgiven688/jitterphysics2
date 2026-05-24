@@ -185,10 +185,11 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,System.Boolean)">
   HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -221,6 +222,14 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
+<code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
+to <code class="paramref">world</code>, or when both body references are the same.</p>
+</dd>
+  </dl>
 
 
 
@@ -228,10 +237,11 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)">
   HingeJoint(World, RigidBody, RigidBody, JVector, JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -262,6 +272,14 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
+<code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
+to <code class="paramref">world</code>, or when both body references are the same.</p>
+</dd>
+  </dl>
 
 
 

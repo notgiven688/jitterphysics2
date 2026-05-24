@@ -1973,7 +1973,7 @@ Returns the shortest arc (angle in [0, π]).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_UnsafeAs__1" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeAs``1">
   UnsafeAs&lt;T&gt;()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reinterprets the bits of this <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a> as <code class="typeparamref">T</code>.</p>
@@ -2009,6 +2009,12 @@ Returns the shortest arc (angle in [0, π]).</p>
 Memory order is X, Y, Z, W (W is last).</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="typeparamref">T</code> does not have the same size as <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a>.</p>
+</dd>
+  </dl>
 
 
 
@@ -2016,7 +2022,7 @@ Memory order is X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_UnsafeFrom__1___0__" data-uid="Jitter2.LinearMath.JQuaternion.UnsafeFrom``1(``0@)">
   UnsafeFrom&lt;T&gt;(in T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reinterprets the bits of <code class="paramref">value</code> as a <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a>.</p>
@@ -2058,6 +2064,12 @@ Memory order is X, Y, Z, W (W is last).</p>
 Expects memory order X, Y, Z, W (W is last).</p>
 </div>
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidoperationexception">InvalidOperationException</a></dt>
+    <dd><p>Thrown when <code class="typeparamref">T</code> does not have the same size as <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a>.</p>
+</dd>
+  </dl>
 
 
 
@@ -2146,7 +2158,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_Jitter2_LinearMath_JQuaternion___System_Numerics_Quaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(Jitter2.LinearMath.JQuaternion@)~System.Numerics.Quaternion">
   implicit operator Quaternion(in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2182,7 +2194,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_System_Numerics_Quaternion___Jitter2_LinearMath_JQuaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(System.Numerics.Quaternion@)~Jitter2.LinearMath.JQuaternion">
   implicit operator JQuaternion(in Quaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L139"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2218,7 +2230,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Implicit_System_ValueTuple_System_Single_System_Single_System_Single_System_Single___Jitter2_LinearMath_JQuaternion" data-uid="Jitter2.LinearMath.JQuaternion.op_Implicit(System.ValueTuple{System.Single,System.Single,System.Single,System.Single})~Jitter2.LinearMath.JQuaternion">
   implicit operator JQuaternion((float x, float y, float z, float w))
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/Interop.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

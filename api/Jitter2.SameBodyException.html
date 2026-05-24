@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Class TriangleMesh.DegenerateTriangleException | Jitter2 </title>
+      <title>Class SameBodyException | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Class TriangleMesh.DegenerateTriangleException | Jitter2 ">
+      <meta name="title" content="Class SameBodyException | Jitter2 ">
       
-      
+      <meta name="description" content="Thrown when two body arguments are required to reference different bodies.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException.md&amp;value=---%0Auid%3A%20Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_SameBodyException.md&amp;value=---%0Auid%3A%20Jitter2.SameBodyException%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,24 +84,25 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException">
+        <article data-uid="Jitter2.SameBodyException">
 
 
 
-  <h1 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException" class="text-break">
-Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Jitter2_SameBodyException" data-uid="Jitter2.SameBodyException" class="text-break">
+Class SameBodyException  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Collision.html">Collision</a>.<a class="xref" href="Jitter2.Collision.Shapes.html">Shapes</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"></div>
+  <div class="markdown summary"><p>Thrown when two body arguments are required to reference different bodies.</p>
+</div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class TriangleMesh.DegenerateTriangleException : Exception, ISerializable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SameBodyException : ArgumentException, ISerializable</code></pre>
   </div>
 
 
@@ -112,7 +113,9 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></div>
-      <div><span class="xref">TriangleMesh.DegenerateTriangleException</span></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.systemexception">SystemException</a></div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></div>
+      <div><span class="xref">SameBodyException</span></div>
     </dd>
   </dl>
 
@@ -127,6 +130,18 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
   <dl class="typelist inheritedMembers">
     <dt>Inherited Members</dt>
     <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception.throwifnullorempty">ArgumentException.ThrowIfNullOrEmpty(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception.throwifnullorwhitespace">ArgumentException.ThrowIfNullOrWhiteSpace(string, string)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception.message">ArgumentException.Message</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception.paramname">ArgumentException.ParamName</a>
+    </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.getbaseexception">Exception.GetBaseException()</a>
     </div>
@@ -147,9 +162,6 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.innerexception">Exception.InnerException</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.message">Exception.Message</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception.source">Exception.Source</a>
@@ -183,18 +195,18 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
 </h2>
 
 
-  <a id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor*"></a>
+  <a id="Jitter2_SameBodyException__ctor_" data-uid="Jitter2.SameBodyException.#ctor*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor">
-  DegenerateTriangleException()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_SameBodyException__ctor" data-uid="Jitter2.SameBodyException.#ctor">
+  SameBodyException()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DegenerateTriangleException()</code></pre>
+    <pre><code class="lang-csharp hljs">public SameBodyException()</code></pre>
   </div>
 
 
@@ -209,49 +221,18 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
 
 
 
-  <a id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor*"></a>
+  <a id="Jitter2_SameBodyException__ctor_" data-uid="Jitter2.SameBodyException.#ctor*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_Jitter2_LinearMath_JTriangle_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(Jitter2.LinearMath.JTriangle)">
-  DegenerateTriangleException(JTriangle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L37"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_SameBodyException__ctor_System_String_" data-uid="Jitter2.SameBodyException.#ctor(System.String)">
+  SameBodyException(string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DegenerateTriangleException(JTriangle triangle)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>triangle</code> <a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-  <a id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor*"></a>
-
-  <h3 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_System_String_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String)">
-  DegenerateTriangleException(string)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L27"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DegenerateTriangleException(string message)</code></pre>
+    <pre><code class="lang-csharp hljs">public SameBodyException(string message)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -271,18 +252,18 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
 
 
 
-  <a id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor*"></a>
+  <a id="Jitter2_SameBodyException__ctor_" data-uid="Jitter2.SameBodyException.#ctor*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException__ctor_System_String_System_Exception_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.#ctor(System.String,System.Exception)">
-  DegenerateTriangleException(string, Exception)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_SameBodyException__ctor_System_String_System_Exception_" data-uid="Jitter2.SameBodyException.#ctor(System.String,System.Exception)">
+  SameBodyException(string, Exception)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DegenerateTriangleException(string message, Exception innerException)</code></pre>
+    <pre><code class="lang-csharp hljs">public SameBodyException(string message, Exception innerException)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -304,33 +285,66 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
 
 
 
-  <h2 class="section" id="properties">Properties
-</h2>
+  <a id="Jitter2_SameBodyException__ctor_" data-uid="Jitter2.SameBodyException.#ctor*"></a>
 
-
-  <a id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException_Triangle_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle*"></a>
-
-  <h3 id="Jitter2_Collision_Shapes_TriangleMesh_DegenerateTriangleException_Triangle" data-uid="Jitter2.Collision.Shapes.TriangleMesh.DegenerateTriangleException.Triangle">
-  Triangle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_SameBodyException__ctor_System_String_System_String_" data-uid="Jitter2.SameBodyException.#ctor(System.String,System.String)">
+  SameBodyException(string, string)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JTriangle Triangle { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public SameBodyException(string message, string paramName)</code></pre>
   </div>
 
-
-
-
-
-  <h4 class="section">Property Value</h4>
+  <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a></dt>
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>paramName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
     <dd></dd>
   </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SameBodyException__ctor_" data-uid="Jitter2.SameBodyException.#ctor*"></a>
+
+  <h3 id="Jitter2_SameBodyException__ctor_System_String_System_String_System_Exception_" data-uid="Jitter2.SameBodyException.#ctor(System.String,System.String,System.Exception)">
+  SameBodyException(string, string, Exception)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SameBodyException(string message, string paramName, Exception innerException)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>message</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>paramName</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+    <dt><code>innerException</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.exception">Exception</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
 
 
 
@@ -343,7 +357,7 @@ Class TriangleMesh.DegenerateTriangleException  <a class="header-action link-sec
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L21" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L27" class="edit-link">Edit this page</a>
         </div>
 
 

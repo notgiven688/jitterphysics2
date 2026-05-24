@@ -148,10 +148,11 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap__ctor_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.#ctor(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector})">
   VertexSupportMap(IEnumerable&lt;JVector&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L58"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new support map from a set of vertices.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -161,7 +162,8 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>vertices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The vertices defining the convex hull.</p>
+</dd>
   </dl>
 
 
@@ -172,6 +174,12 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">vertices</code> is empty.</p>
+</dd>
+  </dl>
 
 
 
@@ -179,10 +187,11 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector})">
   VertexSupportMap(ReadOnlySpan&lt;JVector&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Initializes a new support map from a set of vertices.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -192,7 +201,8 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>vertices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
-    <dd></dd>
+    <dd><p>The vertices defining the convex hull.</p>
+</dd>
   </dl>
 
 
@@ -203,6 +213,12 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
 
 
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">vertices</code> is empty.</p>
+</dd>
+  </dl>
 
 
 
@@ -214,7 +230,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_Equals_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.Equals(Jitter2.Collision.Shapes.VertexSupportMap)">
   Equals(VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L143"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L151"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -253,7 +269,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_Equals_System_Object_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -292,7 +308,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
@@ -325,7 +341,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_GetHashCode" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L157"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -358,7 +374,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -398,7 +414,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_op_Equality_Jitter2_Collision_Shapes_VertexSupportMap_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.op_Equality(Jitter2.Collision.Shapes.VertexSupportMap,Jitter2.Collision.Shapes.VertexSupportMap)">
   operator ==(VertexSupportMap, VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -436,7 +452,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_op_Inequality_Jitter2_Collision_Shapes_VertexSupportMap_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.op_Inequality(Jitter2.Collision.Shapes.VertexSupportMap,Jitter2.Collision.Shapes.VertexSupportMap)">
   operator !=(VertexSupportMap, VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
