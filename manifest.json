@@ -2356,6 +2356,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Unmanaged.MemoryHelper.PaddedInt",
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.yml\" sourcestartlinenumber=\"1\">Represents an integer value padded to one cache-line-sized array element.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Unmanaged.MemoryHelper.yml",
       "output": {
         ".html": {
@@ -2512,11 +2526,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "api/toc.json"
-        },
         ".html": {
           "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
         }
       },
       "version": ""
@@ -2645,11 +2659,11 @@
       "type": "Toc",
       "source_relative_path": "docs/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "docs/toc.json"
-        },
         ".html": {
           "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
         }
       },
       "version": ""
@@ -2808,11 +2822,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "toc.json"
-        },
         ".html": {
           "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
         }
       },
       "version": ""

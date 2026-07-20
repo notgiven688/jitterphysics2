@@ -16102,6 +16102,18 @@ references:
   isSpec: "True"
   fullName: Jitter2.Unmanaged.MemoryHelper.MemSet
   nameWithType: MemoryHelper.MemSet
+- uid: Jitter2.Unmanaged.MemoryHelper.PaddedInt
+  name: MemoryHelper.PaddedInt
+  href: api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.html
+  commentId: T:Jitter2.Unmanaged.MemoryHelper.PaddedInt
+  fullName: Jitter2.Unmanaged.MemoryHelper.PaddedInt
+  nameWithType: MemoryHelper.PaddedInt
+- uid: Jitter2.Unmanaged.MemoryHelper.PaddedInt.Value
+  name: Value
+  href: api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.html#Jitter2_Unmanaged_MemoryHelper_PaddedInt_Value
+  commentId: F:Jitter2.Unmanaged.MemoryHelper.PaddedInt.Value
+  fullName: Jitter2.Unmanaged.MemoryHelper.PaddedInt.Value
+  nameWithType: MemoryHelper.PaddedInt.Value
 - uid: Jitter2.Unmanaged.PartitionedBuffer`1
   name: PartitionedBuffer<T>
   href: api/Jitter2.Unmanaged.PartitionedBuffer-1.html

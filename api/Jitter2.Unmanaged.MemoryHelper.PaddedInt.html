@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
-      <title>Struct MemoryHelper.MemBlock16Real | Jitter2 </title>
+      <title>Struct MemoryHelper.PaddedInt | Jitter2 </title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="title" content="Struct MemoryHelper.MemBlock16Real | Jitter2 ">
+      <meta name="title" content="Struct MemoryHelper.PaddedInt | Jitter2 ">
       
-      <meta name="description" content="A memory block with a size equivalent to sixteen instances of the  type.">
+      <meta name="description" content="Represents an integer value padded to one cache-line-sized array element.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Unmanaged_MemoryHelper_MemBlock16Real.md&amp;value=---%0Auid%3A%20Jitter2.Unmanaged.MemoryHelper.MemBlock16Real%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Unmanaged_MemoryHelper_PaddedInt.md&amp;value=---%0Auid%3A%20Jitter2.Unmanaged.MemoryHelper.PaddedInt%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -84,12 +84,12 @@
           <nav id="breadcrumb"></nav>
         </div>
 
-        <article data-uid="Jitter2.Unmanaged.MemoryHelper.MemBlock16Real">
+        <article data-uid="Jitter2.Unmanaged.MemoryHelper.PaddedInt">
 
 
 
-  <h1 id="Jitter2_Unmanaged_MemoryHelper_MemBlock16Real" data-uid="Jitter2.Unmanaged.MemoryHelper.MemBlock16Real" class="text-break">
-Struct MemoryHelper.MemBlock16Real  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <h1 id="Jitter2_Unmanaged_MemoryHelper_PaddedInt" data-uid="Jitter2.Unmanaged.MemoryHelper.PaddedInt" class="text-break">
+Struct MemoryHelper.PaddedInt  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,12 +97,12 @@ Struct MemoryHelper.MemBlock16Real  <a class="header-action link-secondary" titl
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>A memory block with a size equivalent to sixteen instances of the <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> type.</p>
+  <div class="markdown summary"><p>Represents an integer value padded to one cache-line-sized array element.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct MemoryHelper.MemBlock16Real</code></pre>
+    <pre><code class="lang-csharp hljs">public struct MemoryHelper.PaddedInt</code></pre>
   </div>
 
 
@@ -137,16 +137,51 @@ Struct MemoryHelper.MemBlock16Real  <a class="header-action link-secondary" titl
 
 
 
-  <h2 id="Jitter2_Unmanaged_MemoryHelper_MemBlock16Real_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.</p>
+  <h2 id="Jitter2_Unmanaged_MemoryHelper_PaddedInt_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>This type is intended for arrays of counters where adjacent <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.PaddedInt.html#Jitter2_Unmanaged_MemoryHelper_PaddedInt_Value">Value</a> fields
+should not share a cache line. For standalone fields, use <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.IsolatedInt.html">MemoryHelper.IsolatedInt</a>.</p>
 </div>
+
+
+  <h2 class="section" id="fields">Fields
+</h2>
+
+
+
+  <h3 id="Jitter2_Unmanaged_MemoryHelper_PaddedInt_Value" data-uid="Jitter2.Unmanaged.MemoryHelper.PaddedInt.Value">
+  Value
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Value</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
 
 
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L96" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L56" class="edit-link">Edit this page</a>
         </div>
 
 
