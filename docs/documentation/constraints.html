@@ -234,6 +234,27 @@ The softness and bias parameters can be tweaked for optimal results.
 Better constraint behavior can also be achieved by sub-stepping, see <a href="world.html">World</a>.</p>
 <h3 id="enabledisable-constraints">Enable/Disable constraints</h3>
 <p>Constraints can be temporarily enabled or disabled using <code>constraint.IsEnabled</code>.</p>
+<h2 id="constraint-lifetime">Constraint lifetime</h2>
+<p>Constraints are attached to their two rigid bodies. They can become invalid without an explicit
+call to <code>world.Remove(constraint)</code> when:</p>
+<ul>
+<li>either connected body is removed;</li>
+<li>changing a body's motion type leaves both connected bodies non-dynamic;</li>
+<li><code>world.Clear()</code> removes the connected bodies; or</li>
+<li>the world is disposed.</li>
+</ul>
+<p>Use <code>constraint.IsValid</code> before accessing a retained constraint reference when another operation
+may have removed it:</p>
+<pre><code class="lang-cs">world.Remove(body1); // also removes constraints attached to body1
+
+if (constraint.IsValid)
+{
+    constraint.IsEnabled = false;
+}
+</code></pre>
+<p>Once <code>IsValid</code> is <code>false</code>, the constraint's unmanaged data is no longer available and its
+data-backed properties and methods must not be accessed. Rigid bodies provide the equivalent
+<code>body.IsValid</code> check after body removal or world disposal.</p>
 
 </article>
 

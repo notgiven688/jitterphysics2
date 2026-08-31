@@ -232,7 +232,9 @@ Although reading the raw data of objects is generally safe, modifying data can c
 <h5>Warning</h5>
 <p><strong>Accessing Removed Entities</strong>
 Instances of <code>RigidBody</code>, <code>Arbiter</code>, and <code>Constraint</code> store some of their data in unmanaged memory, which is automatically freed once the entities are removed (<code>world.Remove</code>) from the world.
-These entities must not be used any longer, i.e., their functions and properties must not be called or accessed, otherwise, a <code>NullReferenceException</code> is thrown.</p>
+Before accessing a retained <code>RigidBody</code> or <code>Constraint</code> reference, check its <code>IsValid</code> property.
+If <code>IsValid</code> is <code>false</code>, its unmanaged data is no longer available and data-backed properties and methods must not be accessed.
+Arbiter references must not be used after their collision event lifetime ends.</p>
 </div>
 <h2 id="removing-entities">Removing Entities</h2>
 <p>Rigid bodies, constraints, and shapes can be removed from the world:</p>
@@ -240,6 +242,11 @@ These entities must not be used any longer, i.e., their functions and properties
 world.Remove(constraint);  // removes a constraint
 world.Clear();             // removes all entities
 </code></pre>
+<p>Removing a rigid body also removes its shapes, contacts, and attached constraints. Consequently,
+a constraint can become invalid even when <code>world.Remove(constraint)</code> was not called directly.
+Changing body motion types can also remove a constraint when neither connected body remains dynamic.
+Use <code>constraint.IsValid</code> when retaining constraint references across such operations. See
+<a href="constraints.html#constraint-lifetime">Constraint lifetime</a> for details.</p>
 <h2 id="nullbody">NullBody</h2>
 <p>The world provides a special static body <code>world.NullBody</code> that is pinned to the world.
 It can be used to create constraints that fix a body relative to world space (see <a href="constraints.html">Constraints</a>).</p>

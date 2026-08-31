@@ -6708,6 +6708,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.IsSmallConstraint
   nameWithType: Constraint.IsSmallConstraint
+- uid: Jitter2.Dynamics.Constraints.Constraint.IsValid
+  name: IsValid
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsValid
+  commentId: P:Jitter2.Dynamics.Constraints.Constraint.IsValid
+  fullName: Jitter2.Dynamics.Constraints.Constraint.IsValid
+  nameWithType: Constraint.IsValid
+- uid: Jitter2.Dynamics.Constraints.Constraint.IsValid*
+  name: IsValid
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsValid_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.IsValid
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.IsValid
+  nameWithType: Constraint.IsValid
 - uid: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)
   name: RegisterFullConstraint(delegate*<ref ConstraintData, float, void>, delegate*<ref ConstraintData, float, void>)
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___
@@ -10264,6 +10277,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.IsStatic
   nameWithType: RigidBody.IsStatic
+- uid: Jitter2.Dynamics.RigidBody.IsValid
+  name: IsValid
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_IsValid
+  commentId: P:Jitter2.Dynamics.RigidBody.IsValid
+  fullName: Jitter2.Dynamics.RigidBody.IsValid
+  nameWithType: RigidBody.IsValid
+- uid: Jitter2.Dynamics.RigidBody.IsValid*
+  name: IsValid
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_IsValid_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.IsValid
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.IsValid
+  nameWithType: RigidBody.IsValid
 - uid: Jitter2.Dynamics.RigidBody.Island
   name: Island
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_Island
@@ -16769,6 +16795,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.InvalidCollisionTypeException.ProxyB
   nameWithType: World.InvalidCollisionTypeException.ProxyB
+- uid: Jitter2.World.IsDisposed
+  name: IsDisposed
+  href: api/Jitter2.World.html#Jitter2_World_IsDisposed
+  commentId: P:Jitter2.World.IsDisposed
+  fullName: Jitter2.World.IsDisposed
+  nameWithType: World.IsDisposed
+- uid: Jitter2.World.IsDisposed*
+  name: IsDisposed
+  href: api/Jitter2.World.html#Jitter2_World_IsDisposed_
+  commentId: Overload:Jitter2.World.IsDisposed
+  isSpec: "True"
+  fullName: Jitter2.World.IsDisposed
+  nameWithType: World.IsDisposed
 - uid: Jitter2.World.IslandActivated
   name: IslandActivated
   href: api/Jitter2.World.html#Jitter2_World_IslandActivated
