@@ -87,6 +87,12 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-2810-2026-08-31">Jitter 2.8.10 (2026-08-31)</h3>
+<ul>
+<li>Added <code>World.IsDisposed</code> and <code>IsValid</code> properties for rigid bodies and constraints, allowing unavailable native state—including automatically removed constraints—to be detected safely.</li>
+<li>Ensured arbiters remain valid while <code>EndCollide</code> callbacks are running.</li>
+<li>Improved contact allocation and removal performance by eliminating unnecessary data movement between buffer partitions.</li>
+</ul>
 <h3 id="jitter-289-2026-07-24">Jitter 2.8.9 (2026-07-24)</h3>
 <ul>
 <li>Improved multithreading performance by reducing contention and cache-line ping-pong in reader-writer locks.</li>
