@@ -209,7 +209,9 @@ Jitter2 relocates native structures so that active objects are stored in contigu
 > [!WARNING]
 > **Accessing Removed Entities**
 > Instances of `RigidBody`, `Arbiter`, and `Constraint` store some of their data in unmanaged memory, which is automatically freed once the entities are removed (`world.Remove`) from the world.
-> These entities must not be used any longer, i.e., their functions and properties must not be called or accessed, otherwise, a `NullReferenceException` is thrown.
+> Before accessing a retained `RigidBody` or `Constraint` reference, check its `IsValid` property.
+> If `IsValid` is `false`, its unmanaged data is no longer available and data-backed properties and methods must not be accessed.
+> Arbiter references must not be used after their collision event lifetime ends.
 
 ## Removing Entities
 
@@ -220,6 +222,12 @@ world.Remove(body);        // removes body and its shapes
 world.Remove(constraint);  // removes a constraint
 world.Clear();             // removes all entities
 ```
+
+Removing a rigid body also removes its shapes, contacts, and attached constraints. Consequently,
+a constraint can become invalid even when `world.Remove(constraint)` was not called directly.
+Changing body motion types can also remove a constraint when neither connected body remains dynamic.
+Use `constraint.IsValid` when retaining constraint references across such operations. See
+[Constraint lifetime](constraints.md#constraint-lifetime) for details.
 
 ## NullBody
 

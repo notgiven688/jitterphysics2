@@ -96,3 +96,29 @@ Better constraint behavior can also be achieved by sub-stepping, see [World](wor
 ### Enable/Disable constraints
 
 Constraints can be temporarily enabled or disabled using `constraint.IsEnabled`.
+
+## Constraint lifetime
+
+Constraints are attached to their two rigid bodies. They can become invalid without an explicit
+call to `world.Remove(constraint)` when:
+
+- either connected body is removed;
+- changing a body's motion type leaves both connected bodies non-dynamic;
+- `world.Clear()` removes the connected bodies; or
+- the world is disposed.
+
+Use `constraint.IsValid` before accessing a retained constraint reference when another operation
+may have removed it:
+
+```cs
+world.Remove(body1); // also removes constraints attached to body1
+
+if (constraint.IsValid)
+{
+    constraint.IsEnabled = false;
+}
+```
+
+Once `IsValid` is `false`, the constraint's unmanaged data is no longer available and its
+data-backed properties and methods must not be accessed. Rigid bodies provide the equivalent
+`body.IsValid` check after body removal or world disposal.
