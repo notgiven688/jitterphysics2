@@ -248,15 +248,42 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     {
         Debug.Assert(!disposed);
 
-        MoveToInactive(handle);
+        T* element = *handle.Pointer;
+        int index = (int)(element - memory);
+        int lastIndex = Count - 1;
+        int freedId = Unsafe.Read<int>(element);
 
-        Count -= 1;
-        // Swap with the last element
-        (**handle.Pointer, memory[Count]) = (memory[Count], **handle.Pointer);
+        Debug.Assert((uint)index < (uint)Count);
 
-        // Update the handle slots for the two swapped elements
-        *GetHandleSlot(Unsafe.Read<int>(*handle.Pointer)) = *handle.Pointer;
-        *GetHandleSlot(Unsafe.Read<int>(&memory[Count])) = &memory[Count];
+        // Only surviving elements need to be preserved. Fill the active hole from the
+        // active boundary, then fill the resulting inactive hole from the last element.
+        if (index < activeCount)
+        {
+            int lastActiveIndex = activeCount - 1;
+
+            if (index != lastActiveIndex)
+            {
+                memory[index] = memory[lastActiveIndex];
+                *GetHandleSlot(Unsafe.Read<int>(&memory[index])) = &memory[index];
+            }
+
+            activeCount = lastActiveIndex;
+
+            if (lastActiveIndex != lastIndex)
+            {
+                memory[lastActiveIndex] = memory[lastIndex];
+                *GetHandleSlot(Unsafe.Read<int>(&memory[lastActiveIndex])) = &memory[lastActiveIndex];
+            }
+        }
+        else if (index != lastIndex)
+        {
+            memory[index] = memory[lastIndex];
+            *GetHandleSlot(Unsafe.Read<int>(&memory[index])) = &memory[index];
+        }
+
+        Count = lastIndex;
+        Unsafe.AsRef<int>(&memory[lastIndex]) = freedId;
+        *handle.Pointer = &memory[lastIndex];
     }
 
     /// <summary>
@@ -430,9 +457,23 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
             }
         }
 
-        int hdlId = Unsafe.Read<int>(&memory[Count]);
+        int freeIndex = Count;
+        int hdlId = Unsafe.Read<int>(&memory[freeIndex]);
         T** slot = GetHandleSlot(hdlId);
-        *slot = &memory[Count];
+
+        int targetIndex = freeIndex;
+
+        // Place a new active element directly at the active boundary. The inactive
+        // element displaced from there only needs to be moved once, into the free slot.
+        if (active && activeCount != Count)
+        {
+            targetIndex = activeCount;
+            memory[freeIndex] = memory[targetIndex];
+            *GetHandleSlot(Unsafe.Read<int>(&memory[freeIndex])) = &memory[freeIndex];
+            Unsafe.AsRef<int>(&memory[targetIndex]) = hdlId;
+        }
+
+        *slot = &memory[targetIndex];
 
         var handle = new JHandle<T>(slot);
 
@@ -443,7 +484,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
         }
 
         Count += 1;
-        if (active) MoveToActive(handle);
+        if (active) activeCount += 1;
 
         return handle;
     }
