@@ -235,6 +235,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         get => handle; internal set => handle = value;
     }
 
+    /// <summary>
+    /// Gets a value indicating whether the underlying rigid body data is still valid.
+    /// </summary>
+    public bool IsValid => !handle.IsZero && !World.IsDisposed;
+
     // There is only one way to create a body: world.CreateRigidBody. There, we add an island
     // to the new body. This should never be null.
     internal Island InternalIsland = null!;

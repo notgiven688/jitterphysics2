@@ -28,8 +28,11 @@ public class ConstraintLifecycleTests
         var bodyB = world.CreateRigidBody();
 
         var constraint = world.CreateConstraint<BallSocket>(bodyA, bodyB);
+
+        Assert.That(constraint.IsValid, Is.True);
         world.Remove(constraint);
 
+        Assert.That(constraint.IsValid, Is.False);
         Assert.That(bodyA.Constraints, Does.Not.Contain(constraint));
         Assert.That(bodyB.Constraints, Does.Not.Contain(constraint));
         Assert.That(bodyA.Connections, Does.Not.Contain(bodyB));
@@ -45,8 +48,16 @@ public class ConstraintLifecycleTests
         var bodyB = world.CreateRigidBody();
 
         var constraint = world.CreateConstraint<BallSocket>(bodyA, bodyB);
+
+        Assert.That(bodyA.IsValid, Is.True);
+        Assert.That(bodyB.IsValid, Is.True);
+        Assert.That(constraint.IsValid, Is.True);
+
         world.Remove(bodyA);
 
+        Assert.That(bodyA.IsValid, Is.False);
+        Assert.That(bodyB.IsValid, Is.True);
+        Assert.That(constraint.IsValid, Is.False);
         Assert.That(bodyB.Constraints, Does.Not.Contain(constraint));
         Assert.That(bodyB.Connections, Does.Not.Contain(bodyA));
         world.Dispose();

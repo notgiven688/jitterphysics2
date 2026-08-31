@@ -233,6 +233,11 @@ public abstract class Constraint : IDebugDrawable
     public JHandle<ConstraintData> Handle { internal set; get; }
 
     /// <summary>
+    /// Gets a value indicating whether the underlying constraint data is still valid.
+    /// </summary>
+    public bool IsValid => !Handle.IsZero && !Body1.World.IsDisposed;
+
+    /// <summary>
     /// Gets a handle to the constraint data reinterpreted as <see cref="SmallConstraintData"/>.
     /// </summary>
     public JHandle<SmallConstraintData> SmallHandle => JHandle<ConstraintData>.AsHandle<SmallConstraintData>(Handle);

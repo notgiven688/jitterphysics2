@@ -812,6 +812,11 @@ public sealed partial class World : IDisposable
 
     private bool disposed;
 
+    /// <summary>
+    /// Gets a value indicating whether this world has been disposed.
+    /// </summary>
+    public bool IsDisposed => disposed;
+
     private void ThrowIfDisposed()
     {
         ObjectDisposedException.ThrowIf(disposed, this);

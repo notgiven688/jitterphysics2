@@ -821,13 +821,13 @@ public sealed partial class World
             AddToActiveList(arb.Body1.InternalIsland);
             AddToActiveList(arb.Body2.InternalIsland);
 
-            memContacts.Free(handle);
             IslandHelper.ArbiterRemoved(islands, arb);
             arbiters.Remove(handle.Data.Key);
 
             arb.Body1.RaiseEndCollide(arb);
             arb.Body2.RaiseEndCollide(arb);
 
+            memContacts.Free(handle);
             Arbiter.ReturnToPool(arb);
         }
 
