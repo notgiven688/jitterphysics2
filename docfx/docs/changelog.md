@@ -1,5 +1,11 @@
 # Changelog
 
+### Jitter 2.8.10 (2026-08-31)
+
+- Added `World.IsDisposed` and `IsValid` properties for rigid bodies and constraints, allowing unavailable native state—including automatically removed constraints—to be detected safely.
+- Ensured arbiters remain valid while `EndCollide` callbacks are running.
+- Improved contact allocation and removal performance by eliminating unnecessary data movement between buffer partitions.
+
 ### Jitter 2.8.9 (2026-07-24)
 
 - Improved multithreading performance by reducing contention and cache-line ping-pong in reader-writer locks.
