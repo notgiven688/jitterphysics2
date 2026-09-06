@@ -122,3 +122,16 @@ if (constraint.IsValid)
 Once `IsValid` is `false`, the constraint's unmanaged data is no longer available and its
 data-backed properties and methods must not be accessed. Rigid bodies provide the equivalent
 `body.IsValid` check after body removal or world disposal.
+
+For reactive cleanup, `World.ConstraintRemoved` is raised when a constraint is removed explicitly
+or automatically:
+
+```cs
+world.ConstraintRemoved += removedConstraint =>
+{
+    // Drop any application-side state associated with removedConstraint.
+};
+```
+
+The constraint is already invalid when the callback runs. Disabling a constraint and disposing the
+world do not raise this event.

@@ -240,6 +240,19 @@ public sealed partial class World : IDisposable
     public event Action<Island>? IslandDeactivated;
 
     /// <summary>
+    /// Raised after a constraint has been permanently removed from the world.
+    /// </summary>
+    /// <remarks>
+    /// The event is raised for explicit removal as well as automatic removal caused by removing a
+    /// body, clearing the world, or changing a body's motion type so that neither constrained body
+    /// is dynamic. It is not raised when a constraint is disabled or when the world is disposed.
+    /// The constraint is invalid when the callback runs, but its <see cref="Constraint.Body1"/> and
+    /// <see cref="Constraint.Body2"/> references remain available.
+    /// </remarks>
+    [CallbackThread(ThreadContext.MainThread)]
+    public event Action<Constraint>? ConstraintRemoved;
+
+    /// <summary>
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use
     /// the corresponding managed properties where possible to mitigate risk.
     /// </summary>
@@ -519,6 +532,7 @@ public sealed partial class World : IDisposable
         }
 
         constraint.Handle = JHandle<ConstraintData>.Zero;
+        ConstraintRemoved?.Invoke(constraint);
     }
 
     /// <summary>
