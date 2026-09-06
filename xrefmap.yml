@@ -16565,6 +16565,12 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.Clear
   nameWithType: World.Clear
+- uid: Jitter2.World.ConstraintRemoved
+  name: ConstraintRemoved
+  href: api/Jitter2.World.html#Jitter2_World_ConstraintRemoved
+  commentId: E:Jitter2.World.ConstraintRemoved
+  fullName: Jitter2.World.ConstraintRemoved
+  nameWithType: World.ConstraintRemoved
 - uid: Jitter2.World.CreateConstraint*
   name: CreateConstraint
   href: api/Jitter2.World.html#Jitter2_World_CreateConstraint_
