@@ -28,6 +28,7 @@ public partial class Playground : RenderWindow
     private readonly double[] debugTimes = new double[(int)World.Timings.Last];
     private readonly StringBuilder gcText = new();
     private readonly float[] physicsTime = new float[100];
+    private readonly float[] treeCost = new float[100];
     private readonly HashSet<UiKey> uiPressedKeys = new();
     private readonly HashSet<UiMouseButton> uiDownMouseButtons = new();
     private readonly StringBuilder uiTextInput = new();
@@ -41,6 +42,10 @@ public partial class Playground : RenderWindow
     private double totalTime;
     private int samplingRate = 5;
     private int accSteps;
+    private bool treeCostSampleDue;
+    private int treeDepth;
+    private int maximumTreeImbalance;
+    private double treeAreaRatio;
     private double lastTime;
     private ushort frameCount;
     private ushort fps = 100;
@@ -49,6 +54,7 @@ public partial class Playground : RenderWindow
     private bool optionsSectionOpen = true;
     private bool debugDrawSectionOpen;
     private bool broadphaseSectionOpen;
+    private bool treeQualitySectionOpen;
     private bool timingsSectionOpen = true;
     private bool gcSectionOpen = true;
 
@@ -134,11 +140,47 @@ public partial class Playground : RenderWindow
             physicsTime[i] = physicsTime[i - 1];
 
         physicsTime[0] = (float)totalTime;
+        treeCostSampleDue = true;
 
         gcText.Append("gen0: ").Append(GC.CollectionCount(0))
               .Append("; gen1: ").Append(GC.CollectionCount(1))
               .Append("; gen2: ").AppendLine(GC.CollectionCount(2).ToString());
         gcText.Append("pause total: ").Append(GC.GetTotalPauseDuration().TotalSeconds).AppendLine(" s");
+    }
+
+    private void SampleTreeQuality()
+    {
+        for (int i = treeCost.Length; i-- > 1;)
+            treeCost[i] = treeCost[i - 1];
+
+        DynamicTree tree = World.DynamicTree;
+        double cost = tree.CalculateCost();
+        treeCost[0] = (float)cost;
+        treeDepth = 0;
+        maximumTreeImbalance = 0;
+        treeAreaRatio = 0.0d;
+
+        if (tree.Root != DynamicTree.NullNode)
+        {
+            ReadOnlySpan<DynamicTree.Node> nodes = tree.Nodes;
+            DynamicTree.Node rootNode = nodes[tree.Root];
+            treeDepth = rootNode.Height + 1;
+
+            double rootArea = rootNode.ExpandedBox.GetSurfaceArea();
+            if (rootArea > 0.0d) treeAreaRatio = cost / rootArea;
+
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                DynamicTree.Node node = nodes[i];
+                if (node.Left == DynamicTree.NullNode || node.Right == DynamicTree.NullNode)
+                    continue;
+
+                int imbalance = int.Abs(nodes[node.Left].Height - nodes[node.Right].Height);
+                maximumTreeImbalance = int.Max(maximumTreeImbalance, imbalance);
+            }
+        }
+
+        treeCostSampleDue = false;
     }
 
     private void PrepareCustomOverlayFrame(int logicalWidth, int logicalHeight,
@@ -307,6 +349,7 @@ public partial class Playground : RenderWindow
                 });
             }
 
+            bool broadphaseWasOpen = broadphaseSectionOpen;
             content.CollapsingHeader($"{MaterialSymbols.AccountTree} Broadphase", ref broadphaseSectionOpen, width: content.AvailableWidth);
             if (broadphaseSectionOpen)
             {
@@ -320,7 +363,7 @@ public partial class Playground : RenderWindow
                     for (int i = 0; i < (int)DynamicTree.Timings.Last; i++)
                         TableRow(labels, ((DynamicTree.Timings)i).ToString(), $"{World.DynamicTree.DebugTimings[i]:N2}", 72f);
                 });
-                
+
                 content.Spacing(4f);
                 content.Column(controls =>
                 {
@@ -331,6 +374,33 @@ public partial class Playground : RenderWindow
                         id: "tree-depth").Changed)
                         debugDrawTree = true;
                 });
+
+                content.Spacing(4f);
+                bool treeQualityWasOpen = treeQualitySectionOpen;
+                content.CollapsingHeader($"{MaterialSymbols.QueryStats} Tree quality", ref treeQualitySectionOpen,
+                    width: content.AvailableWidth, id: "tree-quality");
+                if (treeQualitySectionOpen)
+                {
+                    if (treeCostSampleDue || !broadphaseWasOpen || !treeQualityWasOpen)
+                        SampleTreeQuality();
+
+                    content.Column(labels =>
+                    {
+                        labels.ItemSpacing(0f);
+                        TableRow(labels, "Tree Depth", treeDepth.ToString(), 72f);
+                        TableRow(labels, "Max Imbalance", maximumTreeImbalance.ToString(), 72f);
+                        TableRow(labels, "Area Ratio", $"{treeAreaRatio:N2}", 72f);
+                    });
+
+                    float maxTreeCost = 0f;
+                    for (int i = 0; i < treeCost.Length; i++)
+                        maxTreeCost = MathF.Max(maxTreeCost, treeCost[i]);
+
+                    content.Spacing(4f);
+                    content.Histogram(treeCost, content.AvailableWidth, 80f,
+                        $"SAH current {treeCost[0] / 1000f:N0}k; max {maxTreeCost / 1000f:N0}k",
+                        scaleMin: 0f);
+                }
                 
             }
 
