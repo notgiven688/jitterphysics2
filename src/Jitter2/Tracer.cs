@@ -60,6 +60,7 @@ internal enum TraceName : long
     Queue,
     PreStep,
     PostStep,
+    OptimizeBroadPhase,
 }
 
 internal enum TracePhase : byte
