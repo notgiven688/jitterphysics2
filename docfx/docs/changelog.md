@@ -1,5 +1,10 @@
 # Changelog
 
+### Jitter 2.8.11 (2026-09-09)
+
+- Added `World.ConstraintRemoved` for reacting to explicit and automatic constraint removal.
+- Improved `DynamicTree` quality during regular updates with automatic incremental optimization and non-cost-increasing rotations.
+
 ### Jitter 2.8.10 (2026-08-31)
 
 - Added `World.IsDisposed` and `IsValid` properties for rigid bodies and constraints, allowing unavailable native state—including automatically removed constraints—to be detected safely.
