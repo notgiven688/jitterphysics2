@@ -379,6 +379,19 @@ references:
   fullName.vb: Jitter2.Collision.DynamicTree.AddProxy(Of T)(T, Boolean)
   nameWithType: DynamicTree.AddProxy<T>(T, bool)
   nameWithType.vb: DynamicTree.AddProxy(Of T)(T, Boolean)
+- uid: Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget
+  name: AutomaticOptimizationBudget
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_AutomaticOptimizationBudget
+  commentId: P:Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget
+  fullName: Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget
+  nameWithType: DynamicTree.AutomaticOptimizationBudget
+- uid: Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget*
+  name: AutomaticOptimizationBudget
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_AutomaticOptimizationBudget_
+  commentId: Overload:Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget
+  isSpec: "True"
+  fullName: Jitter2.Collision.DynamicTree.AutomaticOptimizationBudget
+  nameWithType: DynamicTree.AutomaticOptimizationBudget
 - uid: Jitter2.Collision.DynamicTree.CalculateCost
   name: CalculateCost()
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_CalculateCost
@@ -421,6 +434,25 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.DynamicTree.DebugTimings
   nameWithType: DynamicTree.DebugTimings
+- uid: Jitter2.Collision.DynamicTree.DefaultIncrementalOptimizationBudget
+  name: DefaultIncrementalOptimizationBudget
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_DefaultIncrementalOptimizationBudget
+  commentId: F:Jitter2.Collision.DynamicTree.DefaultIncrementalOptimizationBudget
+  fullName: Jitter2.Collision.DynamicTree.DefaultIncrementalOptimizationBudget
+  nameWithType: DynamicTree.DefaultIncrementalOptimizationBudget
+- uid: Jitter2.Collision.DynamicTree.EnableAutomaticOptimization
+  name: EnableAutomaticOptimization
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_EnableAutomaticOptimization
+  commentId: P:Jitter2.Collision.DynamicTree.EnableAutomaticOptimization
+  fullName: Jitter2.Collision.DynamicTree.EnableAutomaticOptimization
+  nameWithType: DynamicTree.EnableAutomaticOptimization
+- uid: Jitter2.Collision.DynamicTree.EnableAutomaticOptimization*
+  name: EnableAutomaticOptimization
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_EnableAutomaticOptimization_
+  commentId: Overload:Jitter2.Collision.DynamicTree.EnableAutomaticOptimization
+  isSpec: "True"
+  fullName: Jitter2.Collision.DynamicTree.EnableAutomaticOptimization
+  nameWithType: DynamicTree.EnableAutomaticOptimization
 - uid: Jitter2.Collision.DynamicTree.EnumerateOverlaps(System.Action{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy},System.Boolean)
   name: EnumerateOverlaps(Action<IDynamicTreeProxy, IDynamicTreeProxy>, bool)
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_EnumerateOverlaps_System_Action_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy__System_Boolean_
@@ -654,6 +686,12 @@ references:
   commentId: F:Jitter2.Collision.DynamicTree.Node.ForceUpdate
   fullName: Jitter2.Collision.DynamicTree.Node.ForceUpdate
   nameWithType: DynamicTree.Node.ForceUpdate
+- uid: Jitter2.Collision.DynamicTree.Node.Height
+  name: Height
+  href: api/Jitter2.Collision.DynamicTree.Node.html#Jitter2_Collision_DynamicTree_Node_Height
+  commentId: F:Jitter2.Collision.DynamicTree.Node.Height
+  fullName: Jitter2.Collision.DynamicTree.Node.Height
+  nameWithType: DynamicTree.Node.Height
 - uid: Jitter2.Collision.DynamicTree.Node.IsLeaf
   name: IsLeaf
   href: api/Jitter2.Collision.DynamicTree.Node.html#Jitter2_Collision_DynamicTree_Node_IsLeaf
@@ -667,6 +705,12 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.DynamicTree.Node.IsLeaf
   nameWithType: DynamicTree.Node.IsLeaf
+- uid: Jitter2.Collision.DynamicTree.Node.LeafCount
+  name: LeafCount
+  href: api/Jitter2.Collision.DynamicTree.Node.html#Jitter2_Collision_DynamicTree_Node_LeafCount
+  commentId: F:Jitter2.Collision.DynamicTree.Node.LeafCount
+  fullName: Jitter2.Collision.DynamicTree.Node.LeafCount
+  nameWithType: DynamicTree.Node.LeafCount
 - uid: Jitter2.Collision.DynamicTree.Node.Left
   name: Left
   href: api/Jitter2.Collision.DynamicTree.Node.html#Jitter2_Collision_DynamicTree_Node_Left
@@ -1069,6 +1113,12 @@ references:
   commentId: F:Jitter2.Collision.DynamicTree.Timings.Last
   fullName: Jitter2.Collision.DynamicTree.Timings.Last
   nameWithType: DynamicTree.Timings.Last
+- uid: Jitter2.Collision.DynamicTree.Timings.Optimize
+  name: Optimize
+  href: api/Jitter2.Collision.DynamicTree.Timings.html#Jitter2_Collision_DynamicTree_Timings_Optimize
+  commentId: F:Jitter2.Collision.DynamicTree.Timings.Optimize
+  fullName: Jitter2.Collision.DynamicTree.Timings.Optimize
+  nameWithType: DynamicTree.Timings.Optimize
 - uid: Jitter2.Collision.DynamicTree.Timings.PruneInvalidPairs
   name: PruneInvalidPairs
   href: api/Jitter2.Collision.DynamicTree.Timings.html#Jitter2_Collision_DynamicTree_Timings_PruneInvalidPairs
