@@ -148,6 +148,16 @@ public class WorldTests
     }
 
     [TestCase]
+    public void Step_NonFiniteDt_Throws()
+    {
+        using var world = new World();
+
+        Assert.Throws<ArgumentException>(() => world.Step(Real.NaN, false));
+        Assert.Throws<ArgumentException>(() => world.Step(Real.PositiveInfinity, false));
+        Assert.Throws<ArgumentException>(() => world.Step(Real.NegativeInfinity, false));
+    }
+
+    [TestCase]
     public void Step_WithNoBody_DoesNotThrow()
     {
         var world = new World();
@@ -185,6 +195,25 @@ public class WorldTests
         var world = new World();
         Assert.DoesNotThrow(() => world.Stabilize(0f, 1, 0, false));
         world.Dispose();
+    }
+
+    [TestCase]
+    public void Stabilize_NonFiniteDt_Throws()
+    {
+        using var world = new World();
+
+        Assert.Throws<ArgumentException>(() => world.Stabilize(Real.NaN, 1, 0, false));
+        Assert.Throws<ArgumentException>(() => world.Stabilize(Real.PositiveInfinity, 1, 0, false));
+        Assert.Throws<ArgumentException>(() => world.Stabilize(Real.NegativeInfinity, 1, 0, false));
+    }
+
+    [TestCase]
+    public void Stabilize_ZeroDt_StillValidatesIterationCounts()
+    {
+        using var world = new World();
+
+        Assert.Throws<ArgumentException>(() => world.Stabilize(0, 0, 0, false));
+        Assert.Throws<ArgumentException>(() => world.Stabilize(0, 1, -1, false));
     }
 
     [TestCase]

@@ -256,7 +256,15 @@ public sealed partial class World : IDisposable
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use
     /// the corresponding managed properties where possible to mitigate risk.
     /// </summary>
-    public SpanData RawData => new(this);
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
+    public SpanData RawData
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return new SpanData(this);
+        }
+    }
 
     private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
         new(Parallelization.ThreadPool.ThreadCountSuggestion);
@@ -466,9 +474,14 @@ public sealed partial class World : IDisposable
     /// and constraints.
     /// </summary>
     /// <param name="body">The rigid body to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="body"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="body"/> does not belong to this world.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(RigidBody body)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(body);
+
         if (body.World != this)
             throw new ArgumentException("The body does not belong to this world.", nameof(body));
 
@@ -513,11 +526,16 @@ public sealed partial class World : IDisposable
     /// <see cref="Constraint.IsEnabled"/> property.
     /// </summary>
     /// <param name="constraint">The constraint to be removed.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="constraint"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="constraint"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Constraint constraint)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(constraint);
+
         if (constraint.Body1.World != this)
             throw new ArgumentException("The constraint does not belong to this world.", nameof(constraint));
 
@@ -543,11 +561,16 @@ public sealed partial class World : IDisposable
     /// Removes a particular arbiter from the world.
     /// </summary>
     /// <param name="arbiter">The arbiter to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="arbiter"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="arbiter"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Arbiter arbiter)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(arbiter);
+
         if (arbiter.Body1.World != this)
             throw new ArgumentException("The arbiter does not belong to this world.", nameof(arbiter));
 

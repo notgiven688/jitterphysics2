@@ -69,6 +69,30 @@ public class DisposedWorldTests
     }
 
     [TestCase]
+    public void Remove_AfterDispose_ThrowsObjectDisposedException()
+    {
+        var world = new World();
+        var bodyA = world.CreateRigidBody();
+        var bodyB = world.CreateRigidBody();
+        var constraint = world.CreateConstraint<BallSocket>(bodyA, bodyB);
+        world.GetOrCreateArbiter(1, 2, bodyA, bodyB, out var arbiter);
+        world.Dispose();
+
+        Assert.Throws<ObjectDisposedException>(() => world.Remove(bodyA));
+        Assert.Throws<ObjectDisposedException>(() => world.Remove(constraint));
+        Assert.Throws<ObjectDisposedException>(() => world.Remove(arbiter));
+    }
+
+    [TestCase]
+    public void RawData_AfterDispose_ThrowsObjectDisposedException()
+    {
+        var world = new World();
+        world.Dispose();
+
+        Assert.Throws<ObjectDisposedException>(() => _ = world.RawData);
+    }
+
+    [TestCase]
     public void Dispose_CanBeCalledTwice()
     {
         var world = new World();

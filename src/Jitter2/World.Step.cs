@@ -134,7 +134,7 @@ public sealed partial class World
     /// When <paramref name="multiThread"/> is true, <see cref="BroadPhaseFilter"/> and <see cref="NarrowPhaseFilter"/>
     /// may be called concurrently from worker threads.
     /// </remarks>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative.</exception>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative or not finite.</exception>
     public void Step(Real dt, bool multiThread = true)
     {
         if (!multiThread)
@@ -151,7 +151,7 @@ public sealed partial class World
     {
         ThrowIfDisposed();
         AssertNullBody();
-        DebugCheck.IsFinite(dt, nameof(dt));
+        ArgumentCheck.Finite(dt, nameof(dt));
 
         switch (dt)
         {
@@ -310,8 +310,8 @@ public sealed partial class World
     /// before resuming normal simulation with <see cref="Step"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
-    /// Thrown if <paramref name="dt"/> is negative, <paramref name="solverIterations"/> is less than 1,
-    /// or <paramref name="relaxationIterations"/> is negative.
+    /// Thrown if <paramref name="dt"/> is negative or not finite, <paramref name="solverIterations"/>
+    /// is less than 1, or <paramref name="relaxationIterations"/> is negative.
     /// </exception>
     public void Stabilize(Real dt, int solverIterations, int relaxationIterations = 0, bool multiThread = true)
     {
@@ -329,14 +329,11 @@ public sealed partial class World
     {
         ThrowIfDisposed();
         AssertNullBody();
-        DebugCheck.IsFinite(dt, nameof(dt));
+        ArgumentCheck.Finite(dt, nameof(dt));
 
-        switch (dt)
+        if (dt < (Real)0.0)
         {
-            case < (Real)0.0:
-                throw new ArgumentException("Time step cannot be negative.", nameof(dt));
-            case < Real.Epsilon:
-                return; // nothing to do
+            throw new ArgumentException("Time step cannot be negative.", nameof(dt));
         }
 
         if (solverIterations < 1)
@@ -348,6 +345,8 @@ public sealed partial class World
         {
             throw new ArgumentException("Relaxation iterations can not be smaller than zero.", nameof(relaxationIterations));
         }
+
+        if (dt < Real.Epsilon) return; // nothing to do
 
         try
         {
