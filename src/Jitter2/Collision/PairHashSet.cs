@@ -128,6 +128,11 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public const int TrimFactor = 8;
 
     /// <summary>
+    /// Factor used to leave growth headroom after shrinking the hash set.
+    /// </summary>
+    public const int TrimTargetFactor = 4;
+
+    /// <summary>
     /// Gets the number of pairs in the hash set.
     /// </summary>
     public int Count => count;
@@ -372,7 +377,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         if (Slots.Length > MinimumSize && count * TrimFactor < Slots.Length)
         {
-            Resize(PickSize(count * 2));
+            Resize(PickSize(count * TrimTargetFactor));
         }
 
         return true;
