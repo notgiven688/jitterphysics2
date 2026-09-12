@@ -181,7 +181,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
             }
         }
 
-        Slots = newSlots;
+        Volatile.Write(ref Slots, newSlots);
     }
 
     private static int FindSlot(Pair[] slots, int hash, long id)
@@ -279,7 +279,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         // Fast path: This is a *huge* optimization in case of frequent additions
         // of already existing entries. Entirely bypassing any locks or synchronization.
-        Pair[] fpSlots = Slots;
+        Pair[] fpSlots = Volatile.Read(ref Slots);
         _ = FindSlotConcurrent(fpSlots, hash, pair.ID, out long fpSlotId);
         if (fpSlotId == pair.ID) return false;
 
@@ -307,17 +307,23 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
                 Interlocked.Increment(ref count);
                 rwLock.ExitReadLock();
 
-                if (Slots.Length < 2 * count)
+                Pair[] currentSlots = Volatile.Read(ref Slots);
+                if (currentSlots.Length < 2 * count)
                 {
                     rwLock.EnterWriteLock();
 
-                    // check if another thread already performed a resize.
-                    if (Slots.Length < 2 * count)
+                    try
                     {
-                        Resize(PickSize(Slots.Length * 2));
+                        // Check if another thread already performed a resize.
+                        if (Slots.Length < 2 * count)
+                        {
+                            Resize(PickSize(Slots.Length * 2));
+                        }
                     }
-
-                    rwLock.ExitWriteLock();
+                    finally
+                    {
+                        rwLock.ExitWriteLock();
+                    }
                 }
 
                 return true;

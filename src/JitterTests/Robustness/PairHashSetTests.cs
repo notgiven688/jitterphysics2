@@ -6,6 +6,40 @@ namespace JitterTests.Robustness;
 public class PairHashSetTests
 {
     [Test]
+    public void ConcurrentAdd_ResizesAndPreservesEntries()
+    {
+        const int pairCount = PairHashSet.MinimumSize / 2 + 512;
+
+        PairHashSet hashSet = new();
+        PairHashSet.Pair[] pairs = new PairHashSet.Pair[pairCount];
+        int rejected = 0;
+
+        for (int i = 0; i < pairs.Length; i++)
+        {
+            pairs[i] = new PairHashSet.Pair(i + 1, i + pairCount + 1);
+        }
+
+        System.Threading.Tasks.Parallel.For(0, pairs.Length, i =>
+        {
+            if (!hashSet.ConcurrentAdd(pairs[i])) Interlocked.Increment(ref rejected);
+        });
+
+        int missing = 0;
+        foreach (PairHashSet.Pair pair in pairs)
+        {
+            if (!hashSet.Contains(pair)) missing++;
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(rejected, Is.Zero);
+            Assert.That(missing, Is.Zero);
+            Assert.That(hashSet.Count, Is.EqualTo(pairCount));
+            Assert.That(hashSet.Slots, Has.Length.EqualTo(PairHashSet.MinimumSize * 2));
+        });
+    }
+
+    [Test]
     public void ConcurrentAdd_WithDuplicateAndCollidingPairs_PreservesSetSemantics()
     {
         const int workerCount = 64;
