@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -196,6 +197,29 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static long ReadConcurrentId(Pair[] slots, int index)
+    {
+        // ConcurrentAdd publishes IDs with an atomic 64-bit compare-exchange. Native
+        // 64-bit loads are atomic, but a regular long read may tear in a 32-bit process.
+        if (Environment.Is64BitProcess) return slots[index].ID;
+        return Interlocked.Read(ref Unsafe.As<Pair, long>(ref slots[index]));
+    }
+
+    private static int FindSlotConcurrent(Pair[] slots, int hash, long id, out long slotId)
+    {
+        int modder = slots.Length - 1;
+
+        hash &= modder;
+
+        while (true)
+        {
+            slotId = ReadConcurrentId(slots, hash);
+            if (slotId == 0 || slotId == id) return hash;
+            hash = (hash + 1) & modder;
+        }
+    }
+
     /// <summary>
     /// Checks whether the hash set contains the specified pair.
     /// </summary>
@@ -255,19 +279,21 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         // Fast path: This is a *huge* optimization in case of frequent additions
         // of already existing entries. Entirely bypassing any locks or synchronization.
-        int fpHashIndex = FindSlot(Slots, hash, pair.ID);
-        if (Slots[fpHashIndex].ID != 0) return false;
+        Pair[] fpSlots = Slots;
+        _ = FindSlotConcurrent(fpSlots, hash, pair.ID, out long fpSlotId);
+        if (fpSlotId == pair.ID) return false;
 
         rwLock.EnterReadLock();
 
-        fixed (Pair* slotsPtr = Slots)
+        Pair[] slots = Slots;
+        fixed (Pair* slotsPtr = slots)
         {
             while (true)
             {
-                var hashIndex = FindSlot(Slots, hash, pair.ID);
+                var hashIndex = FindSlotConcurrent(slots, hash, pair.ID, out long slotId);
                 var slotPtr = &slotsPtr[hashIndex];
 
-                if (slotPtr->ID == pair.ID)
+                if (slotId == pair.ID)
                 {
                     rwLock.ExitReadLock();
                     return false;
