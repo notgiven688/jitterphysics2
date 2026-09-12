@@ -717,7 +717,7 @@ public partial class DynamicTree
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
-        if (chance is < 0 or > 1) throw new ArgumentOutOfRangeException(nameof(chance), "Chance must be between 0 and 1.");
+        ArgumentCheck.InRange(chance, (Real)0.0, (Real)1.0, nameof(chance));
 
         for (int e = 0; e < sweeps; e++)
         {

@@ -194,6 +194,16 @@ public class DynamicTreeBalanceTests
         AssertValidTree(tree, shapes.Count);
     }
 
+    [Test]
+    public void OptimizeRejectsNonFiniteChance()
+    {
+        using World world = new();
+        DynamicTree tree = world.DynamicTree;
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            tree.Optimize(sweeps: 1, chance: Real.NaN, incremental: true));
+    }
+
     private static int AssertValidTree(DynamicTree tree, int expectedLeafCount)
     {
         if (expectedLeafCount == 0)
