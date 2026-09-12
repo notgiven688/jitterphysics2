@@ -19,6 +19,27 @@ public class PartitionedBufferTests
         public bool Active = active;
     }
 
+    [TestCase(-1)]
+    [TestCase(0)]
+    [TestCase(int.MaxValue)]
+    public void Constructor_WithInvalidInitialSize_Throws(int initialSize)
+    {
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            _ = new PartitionedBuffer<BufferItem>(initialSize));
+
+        Assert.That(exception!.ParamName, Is.EqualTo("initialSize"));
+    }
+
+    [TestCase]
+    public unsafe void MemoryHelper_WithInvalidSizesOrAlignment_Throws()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => MemoryHelper.AllocateHeap(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => MemoryHelper.AllocateHeap<int>(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => MemoryHelper.AlignedAllocateHeap(16, 3));
+        Assert.Throws<ArgumentOutOfRangeException>(() => MemoryHelper.AlignedAllocateHeap<int>(1, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => MemoryHelper.MemSet(null, -1));
+    }
+
     [TestCase]
     public void FreeActive_PreservesRemainingElementsAndPartitions()
     {

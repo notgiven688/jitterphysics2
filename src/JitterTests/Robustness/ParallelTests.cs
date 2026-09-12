@@ -93,6 +93,26 @@ public class ParallelTests
         }
     }
 
+    [TestCase(-1)]
+    [TestCase(0)]
+    public static void ThreadPool_RejectsInvalidThreadCountWithoutChangingState(int threadCount)
+    {
+        var threadPool = ThreadPool.Instance;
+        int originalThreadCount = threadPool.ThreadCount;
+
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            threadPool.ChangeThreadCount(threadCount));
+
+        Assert.That(exception!.ParamName, Is.EqualTo("numThreads"));
+        Assert.That(threadPool.ThreadCount, Is.EqualTo(originalThreadCount));
+    }
+
+    [TestCase]
+    public static void ThreadPool_RejectsNullTask()
+    {
+        Assert.Throws<ArgumentNullException>(() => ThreadPool.Instance.AddTask<int>(null!, 0));
+    }
+
     [TestCase]
     public static void PartitionedBuffer_ResizePreservesHandlesAndReleasesLock()
     {

@@ -202,8 +202,13 @@ public sealed class ThreadPool
     /// Existing worker threads are stopped and new ones are created.
     /// This operation blocks until all previous threads have terminated.
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="numThreads"/> is less than one.
+    /// </exception>
     public void ChangeThreadCount(int numThreads)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(numThreads, 1);
+
         if (numThreads == threadCount) return;
 
         running = false;
@@ -253,8 +258,11 @@ public sealed class ThreadPool
     /// Tasks are not executed until <see cref="Execute"/> is called.
     /// This method is not thread-safe and must be called from a single thread.
     /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="action"/> is <see langword="null"/>.</exception>
     public void AddTask<T>(Action<T> action, T parameter)
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         var instance = Task<T>.GetFree();
         instance.Action = action;
         instance.Parameter = parameter;

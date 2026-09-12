@@ -141,6 +141,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     private const int PageMask = PageSize - 1;
     private const int PageShift = 12; // 2^12 = 4096
     private const int MaxPages = 1024 * 16; // Capacity for ~67 million handles
+    private const int MaximumCapacity = MaxPages * PageSize;
 
     private T* memory;
     private T*** pages; // Array of pointers to pages (indirection table)
@@ -175,8 +176,14 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <exception cref="ArgumentException">
     /// Thrown when <typeparamref name="T"/> is too small to store the internal element ID.
     /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="initialSize"/> is less than one or exceeds the maximum capacity.
+    /// </exception>
     public PartitionedBuffer(int initialSize = 1024, bool aligned64 = false)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(initialSize, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(initialSize, MaximumCapacity);
+
         if (sizeof(T) < sizeof(int))
         {
             throw new ArgumentException($"Type {typeof(T).Name} is too small. It must be at least {sizeof(int)} bytes to store the internal ID.");
@@ -189,7 +196,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
         if (aligned64)
         {
-            try { memory = (T*)MemoryHelper.AlignedAllocateHeap(size * sizeof(T), 64); }
+            try { memory = MemoryHelper.AlignedAllocateHeap<T>(size, 64); }
             catch
             {
                 Logger.Warning("Could not allocate aligned memory. Falling back to unaligned memory.");
@@ -199,7 +206,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
         if (!aligned64)
         {
-            memory = (T*)MemoryHelper.AllocateHeap(size * sizeof(T));
+            memory = MemoryHelper.AllocateHeap<T>(size);
         }
 
         this.Aligned64 = aligned64;
@@ -414,11 +421,16 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
             try
             {
                 int oldSize = size;
-                int newSize = checked(size * 2);
+                if (size == MaximumCapacity)
+                {
+                    throw new MaximumSizeException("Internal indirection table limit reached.");
+                }
+
+                int newSize = Math.Min(checked(size * 2), MaximumCapacity);
                 T* oldMemory = memory;
 
-                if (Aligned64) newMemory = (T*)MemoryHelper.AlignedAllocateHeap(newSize * sizeof(T), 64);
-                else newMemory = (T*)MemoryHelper.AllocateHeap(newSize * sizeof(T));
+                if (Aligned64) newMemory = MemoryHelper.AlignedAllocateHeap<T>(newSize, 64);
+                else newMemory = MemoryHelper.AllocateHeap<T>(newSize);
 
                 // Ensure handles are ready before publishing any new data pointers.
                 EnsureHandleCapacity(newSize);
