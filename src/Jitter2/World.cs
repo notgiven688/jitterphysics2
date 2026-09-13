@@ -471,6 +471,62 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
+    /// Reduces excess capacity in internal world storage.
+    /// </summary>
+    /// <remarks>
+    /// This method trims world-level sets, broadphase scratch storage, island pools, deterministic
+    /// solver scratch containers, and per-body/per-island collection backing storage.
+    ///
+    /// <para>
+    /// Existing bodies, constraints, contacts, and arbiters remain valid. Unmanaged simulation
+    /// buffers are not compacted by this method.
+    /// </para>
+    ///
+    /// <para>
+    /// Treat trimming as an exclusive maintenance operation. Do not call it concurrently with
+    /// <see cref="Step(Real, bool)"/>, contact registration, body/constraint/shape changes, or broadphase queries.
+    /// </para>
+    /// </remarks>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
+    public void Trim()
+    {
+        ThrowIfDisposed();
+
+        bodies.Trim();
+        islands.Trim();
+
+        deferredArbiters.Trim();
+        brokenArbiters.Trim();
+
+        arbiters.TrimExcess();
+
+        foreach (Island island in islandPool)
+        {
+            island.TrimLists();
+        }
+
+        islandPool.TrimExcess();
+
+        DynamicTree.Trim();
+
+        handleToIsland.TrimExcess();
+        islandRanges.TrimExcess();
+        sortedContacts.TrimExcess();
+        sortedSmallConstraints.TrimExcess();
+        sortedConstraints.TrimExcess();
+
+        foreach (RigidBody body in bodies)
+        {
+            body.TrimLists();
+        }
+
+        foreach (Island island in islands)
+        {
+            island.TrimLists();
+        }
+    }
+
+    /// <summary>
     /// Removes the specified body from the world. This operation also automatically discards any associated contacts
     /// and constraints.
     /// </summary>

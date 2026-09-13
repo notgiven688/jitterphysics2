@@ -94,6 +94,17 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
     }
 
     /// <summary>
+    /// Sets the capacity of each shard to the actual number of entries it contains.
+    /// </summary>
+    public void TrimExcess()
+    {
+        for (int i = 0; i < dictionaries.Length; i++)
+        {
+            dictionaries[i].TrimExcess();
+        }
+    }
+
+    /// <summary>
     /// Attempts to get the value associated with the specified key.
     /// </summary>
     /// <param name="key">The key to locate.</param>

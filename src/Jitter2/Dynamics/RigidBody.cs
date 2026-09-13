@@ -288,6 +288,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         EndCollide?.Invoke(arbiter);
     }
 
+    internal void TrimLists()
+    {
+        InternalShapes.TrimExcess();
+        InternalConnections.TrimExcess();
+        InternalContacts.TrimExcess();
+        InternalConstraints.TrimExcess();
+    }
+
     /// <summary>
     /// Contains all bodies this body is in contact with or shares a constraint with.
     /// </summary>

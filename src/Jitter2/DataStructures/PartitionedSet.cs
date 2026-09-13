@@ -116,6 +116,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         }
     }
 
+    private readonly int initialSize;
     private T[] elements;
 
     /// <summary>Gets the number of active elements in the set.</summary>
@@ -127,8 +128,14 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
     /// <param name="initialSize">The initial capacity of the internal array.</param>
     public PartitionedSet(int initialSize = 1024)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(initialSize, 1);
+
+        this.initialSize = initialSize;
         elements = new T[initialSize];
     }
+
+    /// <summary>Gets the number of elements the set can hold before the next resize.</summary>
+    public int Capacity => elements.Length;
 
     /// <summary>Gets the element at the specified index.</summary>
     public T this[int i] => elements[i];
@@ -157,6 +164,25 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
     /// <summary>Gets the total number of elements in the set.</summary>
     public int Count { get; private set; }
+
+    /// <summary>
+    /// Shrinks the internal storage to the smallest retained capacity that can hold the current elements.
+    /// </summary>
+    /// <returns><see langword="true"/> if the set was resized; otherwise, <see langword="false"/>.</returns>
+    public bool Trim()
+    {
+        int newSize = initialSize;
+
+        while (newSize < Count)
+        {
+            newSize = checked(newSize * 2);
+        }
+
+        if (newSize >= elements.Length) return false;
+
+        Array.Resize(ref elements, newSize);
+        return true;
+    }
 
     /// <summary>Returns a span of all elements in the set.</summary>
     public Span<T> AsSpan() => this.elements.AsSpan(0, Count);

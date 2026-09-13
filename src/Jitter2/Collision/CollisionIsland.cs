@@ -45,4 +45,9 @@ public sealed class Island : IPartitionedSetIndex
     {
         InternalBodies.Clear();
     }
+
+    internal void TrimLists()
+    {
+        InternalBodies.TrimExcess();
+    }
 }

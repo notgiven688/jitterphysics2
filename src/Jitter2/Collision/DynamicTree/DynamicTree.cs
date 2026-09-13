@@ -38,6 +38,14 @@ public partial class DynamicTree
     /// </summary>
     public ReadOnlyPartitionedSet<IDynamicTreeProxy> Proxies => new(proxies);
 
+    internal void Trim()
+    {
+        proxies.Trim();
+        movedProxies.Trim();
+        tempList.TrimExcess();
+        freeNodes.TrimExcess();
+    }
+
     private readonly PairHashSet potentialPairs = [];
 
     /// <summary>
