@@ -49,7 +49,8 @@ public sealed class Arbiter
     /// </summary>
     /// <remarks>
     /// The underlying data is valid only while this arbiter is registered with the world.
-    /// After removal, accessing <see cref="JHandle{T}.Data"/> results in undefined behavior.
+    /// After removal, the arbiter object may be recycled for a different contact pair; do not retain
+    /// or access the handle after the arbiter's collision lifetime ends.
     /// </remarks>
     public JHandle<ContactData> Handle { get; internal set; }
 }

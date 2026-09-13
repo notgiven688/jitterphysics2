@@ -217,8 +217,14 @@ public sealed partial class World
     /// and normal. All input vectors must be in world space. The <paramref name="normal"/> vector must be normalized.
     /// This method assumes that the <paramref name="arbiter"/> is already valid and mapped to the correct pair of bodies.
     /// <para>
-    /// Concurrent contact creation and registration are supported during collision detection.
-    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
+    /// Calls that create or register contacts may run concurrently with each other. They must not run
+    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
+    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// If custom contact generation uses external worker threads, all such work must finish before the
+    /// world is stepped or modified.
+    /// </para>
+    /// <para>
+    /// Do not pass an arbiter after it has been removed from the world; removed arbiters may be recycled.
     /// </para>
     /// </remarks>
     /// <param name="arbiter">The existing <see cref="Arbiter"/> instance to which the contact will be added.</param>
@@ -255,8 +261,13 @@ public sealed partial class World
     /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
     /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
     ///
-    /// Concurrent contact creation and registration are supported during collision detection.
-    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
+    /// <para>
+    /// Calls that create or register contacts may run concurrently with each other. They must not run
+    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
+    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// If custom contact generation uses external worker threads, all such work must finish before the
+    /// world is stepped or modified.
+    /// </para>
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
@@ -311,8 +322,13 @@ public sealed partial class World
     /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
     /// The provided contact points and normal must be in world space. The <paramref name="normal"/> vector must be normalized.
     ///
-    /// Concurrent contact creation and registration are supported during collision detection.
-    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
+    /// <para>
+    /// Calls that create or register contacts may run concurrently with each other. They must not run
+    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
+    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// If custom contact generation uses external worker threads, all such work must finish before the
+    /// world is stepped or modified.
+    /// </para>
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
@@ -347,6 +363,11 @@ public sealed partial class World
     /// The order of <paramref name="id0"/> and <paramref name="id1"/> matters.
     /// For arbiters created by the engine, <paramref name="id0"/> &lt; <paramref name="id1"/> holds
     /// for <see cref="RigidBodyShape"/>s.
+    /// <para>
+    /// This method may run concurrently with contact creation and registration. It must not run
+    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
+    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// </para>
     /// </remarks>
     public bool GetArbiter(ulong id0, ulong id1, [MaybeNullWhen(false)] out Arbiter arbiter)
     {
@@ -368,8 +389,13 @@ public sealed partial class World
     /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
     /// and registered internally. The body arguments are used only when a new arbiter is created.
     ///
-    /// Concurrent contact creation and registration are supported during collision detection.
-    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
+    /// <para>
+    /// Calls that create or register contacts may run concurrently with each other. They must not run
+    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
+    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// If custom contact generation uses external worker threads, all such work must finish before the
+    /// world is stepped or modified.
+    /// </para>
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
