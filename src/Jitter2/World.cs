@@ -275,6 +275,7 @@ public sealed partial class World : IDisposable
 
     private readonly PartitionedSet<Island> islands = [];
     private readonly PartitionedSet<RigidBody> bodies = [];
+    private readonly Stack<Island> islandPool = [];
 
     private static ulong _idCounter;
 
@@ -514,7 +515,7 @@ public sealed partial class World : IDisposable
 
         body.Handle = JHandle<RigidBodyData>.Zero;
 
-        IslandHelper.BodyRemoved(islands, body);
+        IslandHelper.BodyRemoved(islands, islandPool, body);
 
         body.InternalIsland = null!;
 
@@ -542,7 +543,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(constraint.Body1);
         ActivateBodyNextStep(constraint.Body2);
 
-        IslandHelper.ConstraintRemoved(islands, constraint);
+        IslandHelper.ConstraintRemoved(islands, islandPool, constraint);
 
         if (constraint.IsSmallConstraint)
         {
@@ -577,7 +578,7 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body1);
         ActivateBodyNextStep(arbiter.Body2);
 
-        IslandHelper.ArbiterRemoved(islands, arbiter);
+        IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
@@ -651,12 +652,12 @@ public sealed partial class World : IDisposable
     {
         foreach (var constraint in body.InternalConstraints)
         {
-            IslandHelper.AddConnection(islands, constraint.Body1, constraint.Body2);
+            IslandHelper.AddConnection(islands, islandPool, constraint.Body1, constraint.Body2);
         }
 
         foreach (var contact in body.InternalContacts)
         {
-            IslandHelper.AddConnection(islands, contact.Body1, contact.Body2);
+            IslandHelper.AddConnection(islands, islandPool, contact.Body1, contact.Body2);
         }
     }
 
@@ -677,7 +678,7 @@ public sealed partial class World : IDisposable
 
                 for (int i = 0; i < count; i++)
                 {
-                    IslandHelper.RemoveConnection(islands, body, connections[i]);
+                    IslandHelper.RemoveConnection(islands, islandPool, body, connections[i]);
                 }
             }
             finally
@@ -785,7 +786,7 @@ public sealed partial class World : IDisposable
             constraint.Handle.Data.ConstraintId = constraintId;
         }
 
-        IslandHelper.ConstraintCreated(islands, constraint);
+        IslandHelper.ConstraintCreated(islands, islandPool, constraint);
 
         AddToActiveList(body1.InternalIsland);
         AddToActiveList(body2.InternalIsland);
@@ -844,7 +845,7 @@ public sealed partial class World : IDisposable
 
         bodies.Add(body, true);
 
-        IslandHelper.BodyAdded(islands, body);
+        IslandHelper.BodyAdded(islands, islandPool, body);
 
         AddToActiveList(body.InternalIsland);
 

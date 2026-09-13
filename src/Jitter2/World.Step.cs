@@ -820,7 +820,7 @@ public sealed partial class World
             AddToActiveList(arb.Body1.InternalIsland);
             AddToActiveList(arb.Body2.InternalIsland);
 
-            IslandHelper.ArbiterRemoved(islands, arb);
+            IslandHelper.ArbiterRemoved(islands, islandPool, arb);
             arbiters.Remove(handle.Data.Key);
 
             arb.Body1.RaiseEndCollide(arb);
@@ -855,7 +855,7 @@ public sealed partial class World
     {
         foreach (var arb in deferredArbiters)
         {
-            IslandHelper.ArbiterCreated(islands, arb);
+            IslandHelper.ArbiterCreated(islands, islandPool, arb);
 
             AddToActiveList(arb.Body1.InternalIsland);
             AddToActiveList(arb.Body2.InternalIsland);

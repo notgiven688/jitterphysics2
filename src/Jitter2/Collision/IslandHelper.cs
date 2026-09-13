@@ -17,27 +17,25 @@ namespace Jitter2.Collision;
 /// Helper class to update islands. Methods must not be called concurrently for the same world.
 /// </summary>
 /// <remarks>
-/// Scratch data and pooled islands are stored per thread. Separate worlds may use this helper
-/// concurrently on different external threads as long as each individual world is not used
-/// concurrently.
+/// Search scratch data is stored per thread. Pooled islands are stored by the owning world.
+/// Separate worlds may use this helper concurrently on different external threads as long as
+/// each individual world is not used concurrently.
 /// </remarks>
 internal static class IslandHelper
 {
-    [ThreadStatic] private static Stack<Island>? pool;
     [ThreadStatic] private static Queue<RigidBody>? leftSearchQueue;
     [ThreadStatic] private static Queue<RigidBody>? rightSearchQueue;
     [ThreadStatic] private static List<RigidBody>? visitedBodiesLeft;
     [ThreadStatic] private static List<RigidBody>? visitedBodiesRight;
 
-    private static Stack<Island> Pool => pool ??= new Stack<Island>();
     private static Queue<RigidBody> LeftSearchQueue => leftSearchQueue ??= new Queue<RigidBody>();
     private static Queue<RigidBody> RightSearchQueue => rightSearchQueue ??= new Queue<RigidBody>();
     private static List<RigidBody> VisitedBodiesLeft => visitedBodiesLeft ??= [];
     private static List<RigidBody> VisitedBodiesRight => visitedBodiesRight ??= [];
 
-    private static Island GetFromPool()
+    private static Island GetFromPool(Stack<Island> pool)
     {
-        if (!Pool.TryPop(out var island))
+        if (!pool.TryPop(out var island))
         {
             island = new Island();
         }
@@ -48,12 +46,12 @@ internal static class IslandHelper
         return island;
     }
 
-    private static void ReturnToPool(Island island)
+    private static void ReturnToPool(Stack<Island> pool, Island island)
     {
-        Pool.Push(island);
+        pool.Push(island);
     }
 
-    public static void ArbiterCreated(IslandSet islands, Arbiter arbiter)
+    public static void ArbiterCreated(IslandSet islands, Stack<Island> islandPool, Arbiter arbiter)
     {
         RigidBody b1 = arbiter.Body1;
         RigidBody b2 = arbiter.Body2;
@@ -61,55 +59,55 @@ internal static class IslandHelper
         b1.InternalContacts.Add(arbiter);
         b2.InternalContacts.Add(arbiter);
 
-        AddConnection(islands, b1, b2);
+        AddConnection(islands, islandPool, b1, b2);
     }
 
-    public static void ArbiterRemoved(IslandSet islands, Arbiter arbiter)
+    public static void ArbiterRemoved(IslandSet islands, Stack<Island> islandPool, Arbiter arbiter)
     {
         arbiter.Body1.InternalContacts.Remove(arbiter);
         arbiter.Body2.InternalContacts.Remove(arbiter);
 
-        RemoveConnection(islands, arbiter.Body1, arbiter.Body2);
+        RemoveConnection(islands, islandPool, arbiter.Body1, arbiter.Body2);
     }
 
-    public static void ConstraintCreated(IslandSet islands, Constraint constraint)
+    public static void ConstraintCreated(IslandSet islands, Stack<Island> islandPool, Constraint constraint)
     {
         constraint.Body1.InternalConstraints.Add(constraint);
         constraint.Body2.InternalConstraints.Add(constraint);
 
-        AddConnection(islands, constraint.Body1, constraint.Body2);
+        AddConnection(islands, islandPool, constraint.Body1, constraint.Body2);
     }
 
-    public static void ConstraintRemoved(IslandSet islands, Constraint constraint)
+    public static void ConstraintRemoved(IslandSet islands, Stack<Island> islandPool, Constraint constraint)
     {
         constraint.Body1.InternalConstraints.Remove(constraint);
         constraint.Body2.InternalConstraints.Remove(constraint);
 
-        RemoveConnection(islands, constraint.Body1, constraint.Body2);
+        RemoveConnection(islands, islandPool, constraint.Body1, constraint.Body2);
     }
 
-    public static void BodyAdded(IslandSet islands, RigidBody body)
+    public static void BodyAdded(IslandSet islands, Stack<Island> islandPool, RigidBody body)
     {
-        body.InternalIsland = GetFromPool();
+        body.InternalIsland = GetFromPool(islandPool);
         islands.Add(body.InternalIsland, true);
         body.InternalIsland.InternalBodies.Add(body);
     }
 
-    public static void BodyRemoved(IslandSet islands, RigidBody body)
+    public static void BodyRemoved(IslandSet islands, Stack<Island> islandPool, RigidBody body)
     {
         body.InternalIsland.ClearLists();
-        ReturnToPool(body.InternalIsland);
+        ReturnToPool(islandPool, body.InternalIsland);
         islands.Remove(body.InternalIsland);
     }
 
-    public static void AddConnection(IslandSet islands, RigidBody body1, RigidBody body2)
+    public static void AddConnection(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
         bool needsUpdate = (!islands.IsActive(body1.Island) || !islands.IsActive(body2.Island));
         bool bothNotStatic = body1.Data.MotionType != MotionType.Static && body2.Data.MotionType != MotionType.Static;
 
         if (bothNotStatic)
         {
-            MergeIslands(islands, body1, body2);
+            MergeIslands(islands, islandPool, body1, body2);
             body1.InternalConnections.Add(body2);
             body2.InternalConnections.Add(body1);
         }
@@ -121,7 +119,7 @@ internal static class IslandHelper
         }
     }
 
-    public static void RemoveConnection(IslandSet islands, RigidBody body1, RigidBody body2)
+    public static void RemoveConnection(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
         static void RemoveRef(List<RigidBody> list, RigidBody body)
         {
@@ -138,11 +136,11 @@ internal static class IslandHelper
 
         if (body1.InternalIsland == body2.InternalIsland)
         {
-            SplitIslands(islands, body1, body2);
+            SplitIslands(islands, islandPool, body1, body2);
         }
     }
 
-    private static void SplitIslands(IslandSet islands, RigidBody body1, RigidBody body2)
+    private static void SplitIslands(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
         Debug.Assert(body1.InternalIsland == body2.InternalIsland, "Islands not the same or null.");
 
@@ -209,7 +207,7 @@ internal static class IslandHelper
                 }
             }
 
-            Island island = GetFromPool();
+            Island island = GetFromPool(islandPool);
             island.NeedsUpdate = sourceNeedsUpdate;
             island.MarkedAsActive = sourceMarkedAsActive;
             islands.Add(island, sourceIslandActive);
@@ -255,7 +253,7 @@ internal static class IslandHelper
     }
 
     // Both bodies must be !static
-    private static void MergeIslands(IslandSet islands, RigidBody body1, RigidBody body2)
+    private static void MergeIslands(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
         if (body1.InternalIsland == body2.InternalIsland) return;
 
@@ -278,7 +276,7 @@ internal static class IslandHelper
 
         Island giveBackIsland = smallIslandOwner.InternalIsland;
 
-        ReturnToPool(giveBackIsland);
+        ReturnToPool(islandPool, giveBackIsland);
         islands.Remove(giveBackIsland);
 
         foreach (RigidBody b in giveBackIsland.InternalBodies)
