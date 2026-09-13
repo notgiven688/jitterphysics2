@@ -828,7 +828,7 @@ public sealed partial class World
             arb.Body2.RaiseEndCollide(arb);
 
             memContacts.Free(handle);
-            Arbiter.ReturnToPool(arb);
+            ReturnArbiter(arb);
         }
 
         brokenArbiters.Clear();

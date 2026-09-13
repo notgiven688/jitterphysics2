@@ -261,6 +261,10 @@ public sealed partial class World : IDisposable
     private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
         new(Parallelization.ThreadPool.ThreadCountSuggestion);
 
+    // Accessed under lock (memContacts) during creation/rollback. Removal is exclusive:
+    // either during Step after collision workers finish, or between simulation steps.
+    private readonly Stack<Arbiter> arbiterPool = [];
+
     private readonly PartitionedSet<Island> islands = [];
     private readonly PartitionedSet<RigidBody> bodies = [];
 
@@ -556,7 +560,7 @@ public sealed partial class World : IDisposable
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
-        Arbiter.ReturnToPool(arbiter);
+        ReturnArbiter(arbiter);
     }
 
     /// <summary>

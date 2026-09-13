@@ -12,6 +12,7 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
+using Jitter2.Unmanaged;
 
 namespace Jitter2;
 
@@ -215,6 +216,10 @@ public sealed partial class World
     /// This method adds a contact point to the specified <paramref name="arbiter"/>, using the provided contact points
     /// and normal. All input vectors must be in world space. The <paramref name="normal"/> vector must be normalized.
     /// This method assumes that the <paramref name="arbiter"/> is already valid and mapped to the correct pair of bodies.
+    /// <para>
+    /// Concurrent contact creation and registration are supported during collision detection.
+    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
+    /// </para>
     /// </remarks>
     /// <param name="arbiter">The existing <see cref="Arbiter"/> instance to which the contact will be added.</param>
     /// <param name="point1">The contact point on the first body, in world space.</param>
@@ -250,7 +255,8 @@ public sealed partial class World
     /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
     /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
     ///
-    /// This method is thread-safe.
+    /// Concurrent contact creation and registration are supported during collision detection.
+    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
@@ -305,7 +311,8 @@ public sealed partial class World
     /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
     /// The provided contact points and normal must be in world space. The <paramref name="normal"/> vector must be normalized.
     ///
-    /// This method is thread-safe.
+    /// Concurrent contact creation and registration are supported during collision detection.
+    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
@@ -361,7 +368,8 @@ public sealed partial class World
     /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
     /// and registered internally. The body arguments are used only when a new arbiter is created.
     ///
-    /// This method is thread-safe.
+    /// Concurrent contact creation and registration are supported during collision detection.
+    /// They must not overlap with body or arbiter removal, disposal, or other simulation phases.
     ///
     /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
     /// </remarks>
@@ -383,9 +391,33 @@ public sealed partial class World
                 return;
             }
 
+            arbiter = CreateArbiter(arbiterKey, body1, body2);
+        }
+    }
+
+    private Arbiter RentArbiter()
+    {
+        return arbiterPool.TryPop(out Arbiter? arbiter) ? arbiter : new Arbiter();
+    }
+
+    private void ReturnArbiter(Arbiter arbiter)
+    {
+        arbiter.Handle = JHandle<ContactData>.Zero;
+        arbiter.Body1 = null!;
+        arbiter.Body2 = null!;
+        arbiterPool.Push(arbiter);
+    }
+
+    // The caller holds the shard lock until initialization and publication complete.
+    private Arbiter CreateArbiter(ArbiterKey arbiterKey, RigidBody body1, RigidBody body2)
+    {
+        Arbiter? arbiter = null;
+
+        try
+        {
             lock (memContacts)
             {
-                arbiter = Arbiter.GetFromPool();
+                arbiter = RentArbiter();
 
                 var handle = memContacts.Allocate(true);
                 arbiter.Handle = handle;
@@ -394,11 +426,43 @@ public sealed partial class World
                 arbiter.Body1 = body1;
                 arbiter.Body2 = body2;
 
-                arbiters.Add(arbiterKey, arbiter);
                 deferredArbiters.Add(arbiter);
 
                 Debug.Assert(memContacts.IsActive(arbiter.Handle));
             }
+
+            // Dictionary growth only blocks this shard, not every contact creator.
+            arbiters.Add(arbiterKey, arbiter);
+            return arbiter;
+        }
+        catch
+        {
+            if (arbiter != null)
+            {
+                lock (memContacts)
+                {
+                    deferredArbiters.Remove(arbiter);
+
+                    if (!arbiter.Handle.IsZero)
+                    {
+                        // Free can move another, already published contact. Exclude
+                        // concurrent RegisterContact calls while its data is moved.
+                        memContacts.ResizeLock.EnterWriteLock();
+                        try
+                        {
+                            memContacts.Free(arbiter.Handle);
+                        }
+                        finally
+                        {
+                            memContacts.ResizeLock.ExitWriteLock();
+                        }
+                    }
+
+                    ReturnArbiter(arbiter);
+                }
+            }
+
+            throw;
         }
     }
 }

@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics;
@@ -28,26 +27,13 @@ namespace Jitter2.Dynamics;
 /// stored in unmanaged memory. This data is only valid while the arbiter exists and must not
 /// be accessed concurrently with <see cref="World.Step(Real, bool)"/>.
 /// </para>
+/// <para>
+/// Removed arbiters are recycled by their owning world. Do not retain an arbiter after
+/// removal: the same instance may subsequently represent a different pair of bodies.
+/// </para>
 /// </remarks>
 public sealed class Arbiter
 {
-    [ThreadStatic] private static Stack<Arbiter>? pool;
-
-    private static Stack<Arbiter> Pool => pool ??= new Stack<Arbiter>();
-
-    internal static Arbiter GetFromPool()
-    {
-        return Pool.TryPop(out var arbiter) ? arbiter : new Arbiter();
-    }
-
-    internal static void ReturnToPool(Arbiter arbiter)
-    {
-        arbiter.Handle = JHandle<ContactData>.Zero;
-        arbiter.Body1 = null!;
-        arbiter.Body2 = null!;
-        Pool.Push(arbiter);
-    }
-
     /// <summary>
     /// Gets the first rigid body involved in this contact.
     /// </summary>
