@@ -413,7 +413,7 @@ public JVector Anchor2 { get; set; }</code></pre>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Default is 0.001. Higher values allow more distance error but improve stability.</p>
+    <dd><p>Default is <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>. Higher values allow more distance error but improve stability.</p>
 </dd>
   </dl>
 
@@ -621,10 +621,10 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
 
 
-  <a id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateFixedAngle_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle*"></a>
+  <a id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IterateFixedAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
+  IterateDistanceLimit(ref ConstraintData, float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L306"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -632,7 +632,7 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IterateFixedAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IterateDistanceLimit(ref ConstraintData constraint, float idt)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -654,10 +654,10 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
 
 
-  <a id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationFixedAngle_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle*"></a>
+  <a id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationFixedAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
+  PrepareForIterationDistanceLimit(ref ConstraintData, float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -665,7 +665,7 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationDistanceLimit(ref ConstraintData constraint, float idt)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>

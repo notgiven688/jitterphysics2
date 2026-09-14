@@ -4955,6 +4955,23 @@ references:
   fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).AsSpan
   nameWithType: PartitionedSet<T>.AsSpan
   nameWithType.vb: PartitionedSet(Of T).AsSpan
+- uid: Jitter2.DataStructures.PartitionedSet`1.Capacity
+  name: Capacity
+  href: api/Jitter2.DataStructures.PartitionedSet-1.html#Jitter2_DataStructures_PartitionedSet_1_Capacity
+  commentId: P:Jitter2.DataStructures.PartitionedSet`1.Capacity
+  fullName: Jitter2.DataStructures.PartitionedSet<T>.Capacity
+  fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).Capacity
+  nameWithType: PartitionedSet<T>.Capacity
+  nameWithType.vb: PartitionedSet(Of T).Capacity
+- uid: Jitter2.DataStructures.PartitionedSet`1.Capacity*
+  name: Capacity
+  href: api/Jitter2.DataStructures.PartitionedSet-1.html#Jitter2_DataStructures_PartitionedSet_1_Capacity_
+  commentId: Overload:Jitter2.DataStructures.PartitionedSet`1.Capacity
+  isSpec: "True"
+  fullName: Jitter2.DataStructures.PartitionedSet<T>.Capacity
+  fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).Capacity
+  nameWithType: PartitionedSet<T>.Capacity
+  nameWithType.vb: PartitionedSet(Of T).Capacity
 - uid: Jitter2.DataStructures.PartitionedSet`1.Clear
   name: Clear()
   href: api/Jitter2.DataStructures.PartitionedSet-1.html#Jitter2_DataStructures_PartitionedSet_1_Clear
@@ -5240,6 +5257,23 @@ references:
   fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).Remove
   nameWithType: PartitionedSet<T>.Remove
   nameWithType.vb: PartitionedSet(Of T).Remove
+- uid: Jitter2.DataStructures.PartitionedSet`1.Trim
+  name: Trim()
+  href: api/Jitter2.DataStructures.PartitionedSet-1.html#Jitter2_DataStructures_PartitionedSet_1_Trim
+  commentId: M:Jitter2.DataStructures.PartitionedSet`1.Trim
+  fullName: Jitter2.DataStructures.PartitionedSet<T>.Trim()
+  fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).Trim()
+  nameWithType: PartitionedSet<T>.Trim()
+  nameWithType.vb: PartitionedSet(Of T).Trim()
+- uid: Jitter2.DataStructures.PartitionedSet`1.Trim*
+  name: Trim
+  href: api/Jitter2.DataStructures.PartitionedSet-1.html#Jitter2_DataStructures_PartitionedSet_1_Trim_
+  commentId: Overload:Jitter2.DataStructures.PartitionedSet`1.Trim
+  isSpec: "True"
+  fullName: Jitter2.DataStructures.PartitionedSet<T>.Trim
+  fullName.vb: Jitter2.DataStructures.PartitionedSet(Of T).Trim
+  nameWithType: PartitionedSet<T>.Trim
+  nameWithType.vb: PartitionedSet(Of T).Trim
 - uid: Jitter2.DataStructures.ReadOnlyHashSet`1
   name: ReadOnlyHashSet<T>
   href: api/Jitter2.DataStructures.ReadOnlyHashSet-1.html
@@ -7183,38 +7217,38 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.Initialize
   nameWithType: DistanceLimit.Initialize
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateFixedAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateFixedAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: DistanceLimit.IterateFixedAngle(ref ConstraintData, float)
-  nameWithType.vb: DistanceLimit.IterateFixedAngle(ConstraintData, Single)
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle*
-  name: IterateFixedAngle
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateFixedAngle_
-  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name: IterateDistanceLimit(ref ConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name.vb: IterateDistanceLimit(ConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
+  nameWithType: DistanceLimit.IterateDistanceLimit(ref ConstraintData, float)
+  nameWithType.vb: DistanceLimit.IterateDistanceLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit*
+  name: IterateDistanceLimit
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_
+  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit
   isSpec: "True"
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateFixedAngle
-  nameWithType: DistanceLimit.IterateFixedAngle
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationFixedAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationFixedAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: DistanceLimit.PrepareForIterationFixedAngle(ref ConstraintData, float)
-  nameWithType.vb: DistanceLimit.PrepareForIterationFixedAngle(ConstraintData, Single)
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle*
-  name: PrepareForIterationFixedAngle
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationFixedAngle_
-  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit
+  nameWithType: DistanceLimit.IterateDistanceLimit
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name: PrepareForIterationDistanceLimit(ref ConstraintData, float)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
+  name.vb: PrepareForIterationDistanceLimit(ConstraintData, Single)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
+  nameWithType: DistanceLimit.PrepareForIterationDistanceLimit(ref ConstraintData, float)
+  nameWithType.vb: DistanceLimit.PrepareForIterationDistanceLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit*
+  name: PrepareForIterationDistanceLimit
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_
+  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit
   isSpec: "True"
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationFixedAngle
-  nameWithType: DistanceLimit.PrepareForIterationFixedAngle
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit
+  nameWithType: DistanceLimit.PrepareForIterationDistanceLimit
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart
   name: ResetWarmStart()
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart
@@ -17475,6 +17509,19 @@ references:
   commentId: F:Jitter2.World.Timings.UpdateContacts
   fullName: Jitter2.World.Timings.UpdateContacts
   nameWithType: World.Timings.UpdateContacts
+- uid: Jitter2.World.Trim
+  name: Trim()
+  href: api/Jitter2.World.html#Jitter2_World_Trim
+  commentId: M:Jitter2.World.Trim
+  fullName: Jitter2.World.Trim()
+  nameWithType: World.Trim()
+- uid: Jitter2.World.Trim*
+  name: Trim
+  href: api/Jitter2.World.html#Jitter2_World_Trim_
+  commentId: Overload:Jitter2.World.Trim
+  isSpec: "True"
+  fullName: Jitter2.World.Trim
+  nameWithType: World.Trim
 - uid: Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
   name: TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
   href: api/Jitter2.World.html#Jitter2_World_TryLockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__

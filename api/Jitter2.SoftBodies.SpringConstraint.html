@@ -416,7 +416,7 @@ which can be set directly or computed from physical parameters using
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Default is 0.001. Higher values allow more positional error but produce a softer spring.
+    <dd><p>Default is <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>. Higher values allow more positional error but produce a softer spring.
 Scaled by inverse timestep during solving.</p>
 </dd>
   </dl>
@@ -693,7 +693,7 @@ warm-starting is undesirable.</p>
 
   <div class="markdown level1 summary"><p>Sets the spring parameters using physical properties. This method calculates and sets
 the <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Softness">Softness</a> and <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Bias">Bias</a> properties. It assumes that the mass
-of the involved bodies and the timestep size does not change.</p>
+of the involved bodies and the timestep size do not change.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

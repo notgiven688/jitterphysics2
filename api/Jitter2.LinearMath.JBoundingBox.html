@@ -340,7 +340,7 @@ Struct JBoundingBox  <a class="header-action link-secondary" title="View source"
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Center" data-uid="Jitter2.LinearMath.JBoundingBox.Center">
   Center
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L371"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L369"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the center point of the bounding box.</p>
@@ -444,7 +444,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Contains_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.Contains(Jitter2.LinearMath.JBoundingBox@)">
   Contains(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L283"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L281"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines the relationship between this box and another box.</p>
@@ -466,8 +466,8 @@ public void AddPoint(in JVector point)</code></pre>
   <dl class="parameters">
     <dt><a class="xref" href="Jitter2.LinearMath.JBoundingBox.html">JBoundingBox</a>.<a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html">ContainmentType</a></dt>
     <dd><p><a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html#Jitter2_LinearMath_JBoundingBox_ContainmentType_Disjoint">Disjoint</a> if they do not touch.<br>
-<a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html#Jitter2_LinearMath_JBoundingBox_ContainmentType_Contains">Contains</a> if <code class="paramref">box</code> is strictly inside this box.<br>
-<a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html#Jitter2_LinearMath_JBoundingBox_ContainmentType_Intersects">Intersects</a> if they overlap but one does not strictly contain the other.</p>
+<a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html#Jitter2_LinearMath_JBoundingBox_ContainmentType_Contains">Contains</a> if <code class="paramref">box</code> is fully contained by this box.<br>
+<a class="xref" href="Jitter2.LinearMath.JBoundingBox.ContainmentType.html#Jitter2_LinearMath_JBoundingBox_ContainmentType_Intersects">Intersects</a> if they overlap but this box does not fully contain the other.</p>
 </dd>
   </dl>
 
@@ -485,7 +485,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Contains_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.Contains(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   Contains(in JBoundingBox, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L327"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L325"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the <code class="paramref">outer</code> box completely contains the <code class="paramref">inner</code> box.</p>
@@ -603,7 +603,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_CreateMerged_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.CreateMerged(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   CreateMerged(in JBoundingBox, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L350"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L348"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new bounding box that is the union of two other bounding boxes.</p>
@@ -645,7 +645,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_CreateMerged_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.CreateMerged(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   CreateMerged(in JBoundingBox, in JBoundingBox, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L362"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L360"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new bounding box that is the union of two other bounding boxes.</p>
@@ -729,7 +729,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Disjoint_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.Disjoint(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   Disjoint(in JBoundingBox, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L313"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the two boxes are completely separated (disjoint).</p>
@@ -771,7 +771,7 @@ public void AddPoint(in JVector point)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Encompasses_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.Encompasses(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   Encompasses(in JBoundingBox, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L337"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L335"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the <code class="paramref">outer</code> box completely contains the <code class="paramref">inner</code> box.</p>
@@ -814,7 +814,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Equals_Jitter2_LinearMath_JBoundingBox_" data-uid="Jitter2.LinearMath.JBoundingBox.Equals(Jitter2.LinearMath.JBoundingBox)">
   Equals(JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L391"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L389"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -853,7 +853,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_Equals_System_Object_" data-uid="Jitter2.LinearMath.JBoundingBox.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L396"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L394"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -925,7 +925,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_GetHashCode" data-uid="Jitter2.LinearMath.JBoundingBox.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L401"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L399"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -958,7 +958,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_GetSurfaceArea" data-uid="Jitter2.LinearMath.JBoundingBox.GetSurfaceArea">
   GetSurfaceArea()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L385"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L383"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the surface area of the bounding box.</p>
@@ -990,7 +990,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_GetVolume" data-uid="Jitter2.LinearMath.JBoundingBox.GetVolume">
   GetVolume()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L376"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L374"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the volume of the bounding box.</p>
@@ -1022,7 +1022,7 @@ public static bool Encompasses(in JBoundingBox outer, in JBoundingBox inner)</co
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_NotDisjoint_Jitter2_LinearMath_JBoundingBox__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.LinearMath.JBoundingBox.NotDisjoint(Jitter2.LinearMath.JBoundingBox@,Jitter2.LinearMath.JBoundingBox@)">
   NotDisjoint(in JBoundingBox, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L302"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L300"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the two boxes intersect or overlap.</p>
@@ -1260,7 +1260,7 @@ public void Transform(in JMatrix orientation)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_op_Equality_Jitter2_LinearMath_JBoundingBox_Jitter2_LinearMath_JBoundingBox_" data-uid="Jitter2.LinearMath.JBoundingBox.op_Equality(Jitter2.LinearMath.JBoundingBox,Jitter2.LinearMath.JBoundingBox)">
   operator ==(JBoundingBox, JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L403"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L401"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1298,7 +1298,7 @@ public void Transform(in JMatrix orientation)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JBoundingBox_op_Inequality_Jitter2_LinearMath_JBoundingBox_Jitter2_LinearMath_JBoundingBox_" data-uid="Jitter2.LinearMath.JBoundingBox.op_Inequality(Jitter2.LinearMath.JBoundingBox,Jitter2.LinearMath.JBoundingBox)">
   operator !=(JBoundingBox, JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L408"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JBoundingBox.cs/#L406"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

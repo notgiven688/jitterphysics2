@@ -180,13 +180,13 @@ Class Parallel  <a class="header-action link-secondary" title="View source" href
     <dd><p>The exclusive upper bound of the range to be processed.</p>
 </dd>
     <dt><code>numTasks</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The number of batches to divide the work into.</p>
+    <dd><p>The number of batches to create.</p>
 </dd>
     <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="Jitter2.Parallelization.Parallel.html">Parallel</a>.<a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Batch</a>&gt;</dt>
-    <dd><p>The callback function to execute for each batch.</p>
+    <dd><p>The callback to execute for each batch.</p>
 </dd>
     <dt><code>execute</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>Indicates whether to execute the tasks immediately after adding them to the thread pool.</p>
+    <dd><p>Whether to execute the queued batches immediately.</p>
 </dd>
   </dl>
 

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct Parallel.Batch | Jitter2 ">
       
-      <meta name="description" content="Represents a batch defined by a start index, an end index, and a batch index. This struct is utilized in  to facilitate multithreaded batch processing within a for-loop.">
+      <meta name="description" content="Represents a half-open index range processed by a parallel batch. This struct is used by  to split a for-loop into worker tasks.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Struct Parallel.Batch  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a batch defined by a start index, an end index, and a batch index.
-This struct is utilized in <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to facilitate multithreaded batch processing within a for-loop.</p>
+  <div class="markdown summary"><p>Represents a half-open index range processed by a parallel batch.
+This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -148,8 +148,8 @@ This struct is utilized in <a class="xref" href="Jitter2.Parallelization.Paralle
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Represents a batch defined by a start index, an end index, and a batch index.
-This struct is utilized in <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to facilitate multithreaded batch processing within a for-loop.</p>
+  <div class="markdown level1 summary"><p>Represents a half-open index range processed by a parallel batch.
+This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

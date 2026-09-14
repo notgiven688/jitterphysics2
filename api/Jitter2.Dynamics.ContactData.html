@@ -655,8 +655,8 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The least four significant bits indicate which contacts are considered intact (bit set), broken (bit unset).
-Bits 5-8 indicate which contacts were intact/broken during the solving-phase.</p>
+  <div class="markdown level1 summary"><p>The low nibble indicates which contacts are currently intact (bit set) or broken (bit unset).
+The next nibble indicates which contacts were intact or broken during the solving phase.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

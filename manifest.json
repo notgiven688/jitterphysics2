@@ -1988,7 +1988,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Parallelization.Parallel.Batch",
-      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.Parallel.Batch.yml\" sourcestartlinenumber=\"1\">Represents a batch defined by a start index, an end index, and a batch index.\nThis struct is utilized in <xref href=\"Jitter2.Parallelization.Parallel.ForBatch(System.Int32%2cSystem.Int32%2cSystem.Int32%2cSystem.Action%7bJitter2.Parallelization.Parallel.Batch%7d%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref> to facilitate multithreaded batch processing within a for-loop.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Parallelization.Parallel.Batch.yml\" sourcestartlinenumber=\"1\">Represents a half-open index range processed by a parallel batch.\nThis struct is used by <xref href=\"Jitter2.Parallelization.Parallel.ForBatch(System.Int32%2cSystem.Int32%2cSystem.Int32%2cSystem.Action%7bJitter2.Parallelization.Parallel.Batch%7d%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref> to split a for-loop into worker tasks.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2366,7 +2366,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Unmanaged.MemoryHelper.PaddedInt",
-      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.yml\" sourcestartlinenumber=\"1\">Represents an integer value padded to one cache-line-sized array element.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Unmanaged.MemoryHelper.PaddedInt.yml\" sourcestartlinenumber=\"1\">Represents a padded array element intended to keep adjacent integer values off the same cache line.</p>\n"
     },
     {
       "type": "ManagedReference",

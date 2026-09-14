@@ -119,8 +119,8 @@ Structs
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Parallel.Batch</a></dt>
-      <dd><p>Represents a batch defined by a start index, an end index, and a batch index.
-This struct is utilized in <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to facilitate multithreaded batch processing within a for-loop.</p>
+      <dd><p>Represents a half-open index range processed by a parallel batch.
+This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
 </dd>
     </dl>
 
