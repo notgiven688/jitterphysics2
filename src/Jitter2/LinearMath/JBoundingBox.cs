@@ -269,16 +269,14 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
         return box;
     }
 
-
-
     /// <summary>
     /// Determines the relationship between this box and another box.
     /// </summary>
     /// <param name="box">The other bounding box to test.</param>
     /// <returns>
     /// <see cref="ContainmentType.Disjoint"/> if they do not touch.<br/>
-    /// <see cref="ContainmentType.Contains"/> if <paramref name="box"/> is strictly inside this box.<br/>
-    /// <see cref="ContainmentType.Intersects"/> if they overlap but one does not strictly contain the other.
+    /// <see cref="ContainmentType.Contains"/> if <paramref name="box"/> is fully contained by this box.<br/>
+    /// <see cref="ContainmentType.Intersects"/> if they overlap but this box does not fully contain the other.
     /// </returns>
     public readonly ContainmentType Contains(in JBoundingBox box)
     {

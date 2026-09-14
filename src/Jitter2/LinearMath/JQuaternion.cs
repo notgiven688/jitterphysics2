@@ -490,12 +490,12 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
-        Real num2 = X * X + Y * Y + Z * Z + W * W;
-        Real num = (Real)1.0 / MathR.Sqrt(num2);
-        X *= num;
-        Y *= num;
-        Z *= num;
-        W *= num;
+        Real lengthSquared = X * X + Y * Y + Z * Z + W * W;
+        Real invLength = (Real)1.0 / MathR.Sqrt(lengthSquared);
+        X *= invLength;
+        Y *= invLength;
+        Z *= invLength;
+        W *= invLength;
     }
 
     /// <summary>
@@ -504,12 +504,12 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <param name="quaternion">The quaternion to normalize.</param>
     public static void NormalizeInPlace(ref JQuaternion quaternion)
     {
-        Real num2 = quaternion.LengthSquared();
-        Real num = (Real)1.0 / MathR.Sqrt(num2);
-        quaternion.X *= num;
-        quaternion.Y *= num;
-        quaternion.Z *= num;
-        quaternion.W *= num;
+        Real lengthSquared = quaternion.LengthSquared();
+        Real invLength = (Real)1.0 / MathR.Sqrt(lengthSquared);
+        quaternion.X *= invLength;
+        quaternion.Y *= invLength;
+        quaternion.Z *= invLength;
+        quaternion.W *= invLength;
     }
 
     /// <summary>

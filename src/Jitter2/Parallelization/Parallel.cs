@@ -18,8 +18,8 @@ namespace Jitter2.Parallelization;
 public static class Parallel
 {
     /// <summary>
-    /// Represents a batch defined by a start index, an end index, and a batch index.
-    /// This struct is utilized in <see cref="ForBatch"/> to facilitate multithreaded batch processing within a for-loop.
+    /// Represents a half-open index range processed by a parallel batch.
+    /// This struct is used by <see cref="ForBatch"/> to split a for-loop into worker tasks.
     /// </summary>
     public readonly struct Batch(int start, int end)
     {
@@ -65,9 +65,9 @@ public static class Parallel
     /// </summary>
     /// <param name="lower">The inclusive lower bound of the range to be processed.</param>
     /// <param name="upper">The exclusive upper bound of the range to be processed.</param>
-    /// <param name="numTasks">The number of batches to divide the work into.</param>
-    /// <param name="action">The callback function to execute for each batch.</param>
-    /// <param name="execute">Indicates whether to execute the tasks immediately after adding them to the thread pool.</param>
+    /// <param name="numTasks">The number of batches to create.</param>
+    /// <param name="action">The callback to execute for each batch.</param>
+    /// <param name="execute">Whether to execute the queued batches immediately.</param>
     /// <remarks>
     /// This method splits the range [lower, upper) into <paramref name="numTasks"/> batches and processes each batch in parallel.
     /// The <paramref name="action"/> callback is invoked for each batch, which is represented by a <see cref="Batch"/> struct.

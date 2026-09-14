@@ -60,11 +60,11 @@ public struct JMatrix(
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix FromColumns(in JVector col1, in JVector col2, in JVector col3)
     {
-        Unsafe.SkipInit(out JMatrix res);
-        res.UnsafeGet(0) = col1;
-        res.UnsafeGet(1) = col2;
-        res.UnsafeGet(2) = col3;
-        return res;
+        Unsafe.SkipInit(out JMatrix result);
+        result.UnsafeGet(0) = col1;
+        result.UnsafeGet(1) = col2;
+        result.UnsafeGet(2) = col3;
+        return result;
     }
 
     /// <summary>
@@ -458,16 +458,15 @@ public struct JMatrix(
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Multiply(in JMatrix matrix1, Real scaleFactor, out JMatrix result)
     {
-        Real num = scaleFactor;
-        result.M11 = matrix1.M11 * num;
-        result.M12 = matrix1.M12 * num;
-        result.M13 = matrix1.M13 * num;
-        result.M21 = matrix1.M21 * num;
-        result.M22 = matrix1.M22 * num;
-        result.M23 = matrix1.M23 * num;
-        result.M31 = matrix1.M31 * num;
-        result.M32 = matrix1.M32 * num;
-        result.M33 = matrix1.M33 * num;
+        result.M11 = matrix1.M11 * scaleFactor;
+        result.M12 = matrix1.M12 * scaleFactor;
+        result.M13 = matrix1.M13 * scaleFactor;
+        result.M21 = matrix1.M21 * scaleFactor;
+        result.M22 = matrix1.M22 * scaleFactor;
+        result.M23 = matrix1.M23 * scaleFactor;
+        result.M31 = matrix1.M31 * scaleFactor;
+        result.M32 = matrix1.M32 * scaleFactor;
+        result.M33 = matrix1.M33 * scaleFactor;
     }
 
     /// <summary>

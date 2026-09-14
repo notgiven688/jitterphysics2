@@ -182,8 +182,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             data.EffectiveMass.M31 = data.EffectiveMass.M13 = 0;
             data.EffectiveMass.M32 = data.EffectiveMass.M23 = 0;
 
-            // TODO: do he have to set them to zero here, explicitly?
-            //       does this also has to be done in PointOnLine?
+            // TODO: Check whether these rows must be cleared explicitly here
+            //       and whether PointOnLine needs the same treatment.
             data.Jacobian.M13 = data.Jacobian.M23 = data.Jacobian.M33 = 0;
         }
 

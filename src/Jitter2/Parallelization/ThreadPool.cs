@@ -202,8 +202,13 @@ public sealed class ThreadPool
     /// Existing worker threads are stopped and new ones are created.
     /// This operation blocks until all previous threads have terminated.
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="numThreads"/> is less than one.
+    /// </exception>
     public void ChangeThreadCount(int numThreads)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(numThreads, 1);
+
         if (numThreads == threadCount) return;
 
         running = false;
@@ -223,7 +228,7 @@ public sealed class ThreadPool
 
         threads = new Thread[threadCount - 1];
 
-        var initWaitHandle = new AutoResetEvent(false);
+        using AutoResetEvent initWaitHandle = new(false);
 
         for (int i = 0; i < threadCount - 1; i++)
         {
@@ -253,8 +258,11 @@ public sealed class ThreadPool
     /// Tasks are not executed until <see cref="Execute"/> is called.
     /// This method is not thread-safe and must be called from a single thread.
     /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="action"/> is <see langword="null"/>.</exception>
     public void AddTask<T>(Action<T> action, T parameter)
     {
+        ArgumentNullException.ThrowIfNull(action);
+
         var instance = Task<T>.GetFree();
         instance.Action = action;
         instance.Parameter = parameter;
@@ -321,9 +329,10 @@ public sealed class ThreadPool
             if (performedTasks > 0)
             {
                 // steal from other queues
-                for (int i = 1; i < queues.Length; i++)
+                int queueCount = queues.Length;
+                for (int i = 1; i < queueCount; i++)
                 {
-                    int queueIndex = (i + index) % queues.Length;
+                    int queueIndex = (i + index) % queueCount;
 
                     while (queues[queueIndex].TryDequeue(out var task))
                     {
@@ -375,16 +384,17 @@ public sealed class ThreadPool
         Interlocked.Exchange(ref capturedException, null);
 
         int totalTasks = taskList.Count;
+        int queueCount = ThreadCount;
         Volatile.Write(ref tasksLeft.Value, totalTasks);
 
         for (int i = 0; i < totalTasks; i++)
         {
-            queues[i % this.ThreadCount].Enqueue(taskList[i]);
+            queues[i % queueCount].Enqueue(taskList[i]);
         }
 
         taskList.Clear();
 
-        // the main thread's queue.
+        // Process the main thread's queue first.
         var myQueue = queues[0];
 
         while (myQueue.TryDequeue(out var task))
@@ -392,7 +402,7 @@ public sealed class ThreadPool
             PerformTask(task);
         }
 
-        // steal from other queues
+        // Steal from other queues.
         for (int i = 1; i < queues.Length; i++)
         {
             while (queues[i].TryDequeue(out var task))

@@ -546,11 +546,11 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Normalize()
     {
-        Real num2 = X * X + Y * Y + Z * Z;
-        Real num = (Real)1.0 / MathR.Sqrt(num2);
-        X *= num;
-        Y *= num;
-        Z *= num;
+        Real lengthSquared = X * X + Y * Y + Z * Z;
+        Real invLength = (Real)1.0 / MathR.Sqrt(lengthSquared);
+        X *= invLength;
+        Y *= invLength;
+        Z *= invLength;
     }
 
     /// <summary>
@@ -559,11 +559,11 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     /// <param name="toNormalize">The vector to normalize.</param>
     public static void NormalizeInPlace(ref JVector toNormalize)
     {
-        Real num2 = toNormalize.LengthSquared();
-        Real num = (Real)1.0 / MathR.Sqrt(num2);
-        toNormalize.X *= num;
-        toNormalize.Y *= num;
-        toNormalize.Z *= num;
+        Real lengthSquared = toNormalize.LengthSquared();
+        Real invLength = (Real)1.0 / MathR.Sqrt(lengthSquared);
+        toNormalize.X *= invLength;
+        toNormalize.Y *= invLength;
+        toNormalize.Z *= invLength;
     }
 
     /// <summary>

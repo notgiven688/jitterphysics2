@@ -67,12 +67,12 @@ public sealed class SoftBodyTriangle : SoftBodyShape
     /// <inheritdoc/>
     public override RigidBody GetClosest(in JVector pos)
     {
-        Real len1 = (pos - v1.Position).LengthSquared();
-        Real len2 = (pos - v2.Position).LengthSquared();
-        Real len3 = (pos - v3.Position).LengthSquared();
+        Real distance1Squared = (pos - v1.Position).LengthSquared();
+        Real distance2Squared = (pos - v2.Position).LengthSquared();
+        Real distance3Squared = (pos - v3.Position).LengthSquared();
 
-        return (len1 < len2 && len1 < len3) ? v1 :
-            (len2 < len3) ? v2 : v3;
+        return (distance1Squared < distance2Squared && distance1Squared < distance3Squared) ? v1 :
+            (distance2Squared < distance3Squared) ? v2 : v3;
     }
 
     /// <inheritdoc/>
@@ -101,20 +101,20 @@ public sealed class SoftBodyTriangle : SoftBodyShape
         JVector b = v2.Position;
         JVector c = v3.Position;
 
-        Real min = JVector.Dot(a, direction);
+        Real maxDot = JVector.Dot(a, direction);
         Real dot = JVector.Dot(b, direction);
 
         result = a;
 
-        if (dot > min)
+        if (dot > maxDot)
         {
-            min = dot;
+            maxDot = dot;
             result = b;
         }
 
         dot = JVector.Dot(c, direction);
 
-        if (dot > min)
+        if (dot > maxDot)
         {
             result = c;
         }

@@ -60,8 +60,8 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="origin">Origin of the ray.</param>
     /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
-    /// <param name="pre">Optional pre-filter which allows to skip shapes in the detection.</param>
-    /// <param name="post">Optional post-filter which allows to skip detections.</param>
+    /// <param name="pre">Optional pre-filter that can skip candidate shapes.</param>
+    /// <param name="post">Optional post-filter that can skip candidate results.</param>
     /// <param name="proxy">The shape which was hit.</param>
     /// <param name="normal">
     /// The surface normal at the hit point. <see cref="JVector.Zero"/> if the ray does not hit,
@@ -107,7 +107,7 @@ public partial class DynamicTree
     {
         result = new RayCastResult();
 
-        if (root == -1)
+        if (root == NullNode)
         {
             return false;
         }
@@ -122,19 +122,20 @@ public partial class DynamicTree
 
         while (stack.Count > baseCount)
         {
-            int pop = stack.Pop();
+            int index = stack.Pop();
 
-            ref Node node = ref nodes[pop];
+            ref Node node = ref nodes[index];
 
             if (node.IsLeaf)
             {
-                if (node.Proxy is not IRayCastable irc) continue;
+                IDynamicTreeProxy proxy = node.Proxy!;
+                if (proxy is not IRayCastable rayCastable) continue;
 
-                if (ray.FilterPre != null && !ray.FilterPre(node.Proxy)) continue;
+                if (ray.FilterPre != null && !ray.FilterPre(proxy)) continue;
 
                 Unsafe.SkipInit(out RayCastResult res);
-                bool hit = irc.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
-                res.Entity = node.Proxy;
+                bool hit = rayCastable.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
+                res.Entity = proxy;
 
                 if (hit && res.Lambda < result.Lambda)
                 {

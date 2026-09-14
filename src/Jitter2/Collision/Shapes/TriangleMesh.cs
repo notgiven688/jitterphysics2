@@ -189,8 +189,9 @@ public class TriangleMesh
 
     private void BuildFromSoup(ReadOnlySpan<JTriangle> triangles, bool ignoreDegenerated)
     {
-        var vertexMap = new Dictionary<JVector, int>();
-        var vertexList = new List<JVector>();
+        int maxVertexCount = triangles.Length * 3;
+        var vertexMap = new Dictionary<JVector, int>(maxVertexCount);
+        var vertexList = new List<JVector>(maxVertexCount);
         var triangleList = new List<Triangle>(triangles.Length);
 
         // Helper to deduplicate vertices
@@ -294,7 +295,7 @@ public class TriangleMesh
 
     private void AssignNeighbors()
     {
-        var edgeToTriangle = new Dictionary<Edge, int>();
+        var edgeToTriangle = new Dictionary<Edge, int>(indices.Length * 3);
 
         for (int i = 0; i < indices.Length; i++)
         {

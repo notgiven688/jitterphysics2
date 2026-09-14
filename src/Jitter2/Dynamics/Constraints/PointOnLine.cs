@@ -48,7 +48,6 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         public ushort Clamp;
 
-        // public MemBlock96 J0;
     }
 
     private static readonly uint RegisteredDispatchId =
@@ -275,7 +274,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     /// Gets or sets the bias factor controlling how aggressively positional error is corrected.
     /// </summary>
     /// <value>
-    /// Default is 0.01. Higher values correct errors faster but may cause instability.
+    /// Default is <see cref="Constraint.DefaultLinearBias"/>. Higher values correct errors faster but may cause instability.
     /// </value>
     public Real Bias
     {

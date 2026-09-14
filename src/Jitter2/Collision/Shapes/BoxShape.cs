@@ -157,7 +157,6 @@ public class BoxShape : RigidBodyShape
                 lambda = t0;
                 normal = direction.Z < (Real)0.0 ? JVector.UnitZ : -JVector.UnitZ;
             }
-            //if (t1 < exit) exit = t1;
         }
         else if (origin.Z < min.Z || origin.Z > max.Z)
         {

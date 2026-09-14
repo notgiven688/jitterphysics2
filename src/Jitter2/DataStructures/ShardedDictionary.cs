@@ -17,8 +17,8 @@ using Lock = System.Object;
 namespace Jitter2.DataStructures;
 
 /// <summary>
-/// A thread-safe dictionary that partitions entries across multiple shards to reduce lock contention.
-/// Each shard has its own lock, allowing concurrent access to different shards.
+/// A sharded dictionary whose entries are partitioned to reduce lock contention.
+/// Each shard has its own lock, allowing callers to synchronize different shards independently.
 /// </summary>
 /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
 /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
@@ -90,6 +90,17 @@ internal class ShardedDictionary<TKey, TValue> where TKey : notnull
         {
             locks[i] = new Lock();
             dictionaries[i] = new Dictionary<TKey, TValue>();
+        }
+    }
+
+    /// <summary>
+    /// Sets the capacity of each shard to the actual number of entries it contains.
+    /// </summary>
+    public void TrimExcess()
+    {
+        for (int i = 0; i < dictionaries.Length; i++)
+        {
+            dictionaries[i].TrimExcess();
         }
     }
 

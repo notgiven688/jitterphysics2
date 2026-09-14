@@ -76,8 +76,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             throw new ArgumentException("Triangle set must contain at least one triangle.", nameof(triangles));
         }
 
-        Dictionary<CHullVector, ushort> tmpIndices = new();
-        List<CHullVector> tmpVertices = [];
+        int maxVertexCount = triangles.Length * 3;
+        Dictionary<CHullVector, ushort> tmpIndices = new(maxVertexCount);
+        List<CHullVector> tmpVertices = new(maxVertexCount);
 
         ushort PushVector(CHullVector v)
         {
@@ -165,7 +166,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     /// Helper to sort and add unique elements from source to destination.
     /// Replaces LINQ Distinct() for better performance and zero allocations.
     /// </summary>
-    private static void AddDistinct(List<ushort> source, List<ushort> destination)
+    private static void AddDistinct(List<ushort>? source, List<ushort> destination)
     {
         if (source == null || source.Count == 0) return;
 

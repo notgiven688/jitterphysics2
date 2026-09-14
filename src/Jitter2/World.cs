@@ -154,7 +154,7 @@ public sealed partial class World : IDisposable
     /// </param>
     public delegate void WorldStep(Real dt);
 
-    // Post- and Pre-step
+    // Step callbacks.
 
     /// <summary>
     /// Raised at the beginning of a simulation step, before any collision detection,
@@ -256,7 +256,15 @@ public sealed partial class World : IDisposable
     /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use
     /// the corresponding managed properties where possible to mitigate risk.
     /// </summary>
-    public SpanData RawData => new(this);
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
+    public SpanData RawData
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return new SpanData(this);
+        }
+    }
 
     private readonly ShardedDictionary<ArbiterKey, Arbiter> arbiters =
         new(Parallelization.ThreadPool.ThreadCountSuggestion);
@@ -267,6 +275,7 @@ public sealed partial class World : IDisposable
 
     private readonly PartitionedSet<Island> islands = [];
     private readonly PartitionedSet<RigidBody> bodies = [];
+    private readonly Stack<Island> islandPool = [];
 
     private static ulong _idCounter;
 
@@ -288,7 +297,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="ArgumentOutOfRangeException">Thrown when count is less than 1.</exception>
     public static (ulong min, ulong max) RequestId(int count)
     {
-        if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater zero.");
+        if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than zero.");
         ulong count64 = (ulong)count;
         ulong max = Interlocked.Add(ref _idCounter, count64) + 1;
         return (max - count64, max);
@@ -346,14 +355,14 @@ public sealed partial class World : IDisposable
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value.solver), value.solver,
-                    "Solver iterations can not be smaller than one.");
+                    "Solver iterations cannot be smaller than one.");
             }
 
             if (value.relaxation < 0)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value.relaxation), value.relaxation,
-                    "Relaxation iterations can not be smaller than zero.");
+                    "Relaxation iterations cannot be smaller than zero.");
             }
 
             solverIterations = value.solver;
@@ -377,7 +386,7 @@ public sealed partial class World : IDisposable
             if (value < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    "The number of substeps has to be larger than zero.");
+                    "The number of substeps must be greater than zero.");
             }
 
             substeps = value;
@@ -462,13 +471,74 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
+    /// Reduces excess capacity in internal world storage.
+    /// </summary>
+    /// <remarks>
+    /// This method trims world-level sets, broadphase scratch storage, island pools, deterministic
+    /// solver scratch containers, and per-body/per-island collection backing storage.
+    ///
+    /// <para>
+    /// Existing bodies, constraints, contacts, and arbiters remain valid. Unmanaged simulation
+    /// buffers are not compacted by this method.
+    /// </para>
+    ///
+    /// <para>
+    /// Treat trimming as an exclusive maintenance operation. Do not call it concurrently with
+    /// <see cref="Step(Real, bool)"/>, contact registration, body/constraint/shape changes, or broadphase queries.
+    /// </para>
+    /// </remarks>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
+    public void Trim()
+    {
+        ThrowIfDisposed();
+
+        bodies.Trim();
+        islands.Trim();
+
+        deferredArbiters.Trim();
+        brokenArbiters.Trim();
+
+        arbiters.TrimExcess();
+
+        foreach (Island island in islandPool)
+        {
+            island.TrimLists();
+        }
+
+        islandPool.TrimExcess();
+
+        DynamicTree.Trim();
+
+        handleToIsland.TrimExcess();
+        islandRanges.TrimExcess();
+        sortedContacts.TrimExcess();
+        sortedSmallConstraints.TrimExcess();
+        sortedConstraints.TrimExcess();
+
+        foreach (RigidBody body in bodies)
+        {
+            body.TrimLists();
+        }
+
+        foreach (Island island in islands)
+        {
+            island.TrimLists();
+        }
+    }
+
+    /// <summary>
     /// Removes the specified body from the world. This operation also automatically discards any associated contacts
     /// and constraints.
     /// </summary>
     /// <param name="body">The rigid body to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="body"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="body"/> does not belong to this world.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(RigidBody body)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(body);
+
         if (body.World != this)
             throw new ArgumentException("The body does not belong to this world.", nameof(body));
 
@@ -501,7 +571,7 @@ public sealed partial class World : IDisposable
 
         body.Handle = JHandle<RigidBodyData>.Zero;
 
-        IslandHelper.BodyRemoved(islands, body);
+        IslandHelper.BodyRemoved(islands, islandPool, body);
 
         body.InternalIsland = null!;
 
@@ -513,18 +583,23 @@ public sealed partial class World : IDisposable
     /// <see cref="Constraint.IsEnabled"/> property.
     /// </summary>
     /// <param name="constraint">The constraint to be removed.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="constraint"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="constraint"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Constraint constraint)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(constraint);
+
         if (constraint.Body1.World != this)
             throw new ArgumentException("The constraint does not belong to this world.", nameof(constraint));
 
         ActivateBodyNextStep(constraint.Body1);
         ActivateBodyNextStep(constraint.Body2);
 
-        IslandHelper.ConstraintRemoved(islands, constraint);
+        IslandHelper.ConstraintRemoved(islands, islandPool, constraint);
 
         if (constraint.IsSmallConstraint)
         {
@@ -543,18 +618,23 @@ public sealed partial class World : IDisposable
     /// Removes a particular arbiter from the world.
     /// </summary>
     /// <param name="arbiter">The arbiter to remove.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="arbiter"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="arbiter"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Arbiter arbiter)
     {
+        ThrowIfDisposed();
+        ArgumentNullException.ThrowIfNull(arbiter);
+
         if (arbiter.Body1.World != this)
             throw new ArgumentException("The arbiter does not belong to this world.", nameof(arbiter));
 
         ActivateBodyNextStep(arbiter.Body1);
         ActivateBodyNextStep(arbiter.Body2);
 
-        IslandHelper.ArbiterRemoved(islands, arbiter);
+        IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
@@ -588,7 +668,7 @@ public sealed partial class World : IDisposable
 
             foreach (var c in body.Contacts)
             {
-               ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
             }
         }
 
@@ -628,12 +708,12 @@ public sealed partial class World : IDisposable
     {
         foreach (var constraint in body.InternalConstraints)
         {
-            IslandHelper.AddConnection(islands, constraint.Body1, constraint.Body2);
+            IslandHelper.AddConnection(islands, islandPool, constraint.Body1, constraint.Body2);
         }
 
         foreach (var contact in body.InternalContacts)
         {
-            IslandHelper.AddConnection(islands, contact.Body1, contact.Body2);
+            IslandHelper.AddConnection(islands, islandPool, contact.Body1, contact.Body2);
         }
     }
 
@@ -654,7 +734,7 @@ public sealed partial class World : IDisposable
 
                 for (int i = 0; i < count; i++)
                 {
-                    IslandHelper.RemoveConnection(islands, body, connections[i]);
+                    IslandHelper.RemoveConnection(islands, islandPool, body, connections[i]);
                 }
             }
             finally
@@ -736,7 +816,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="SameBodyException">
     /// Thrown if <paramref name="body1"/> and <paramref name="body2"/> are the same.
     /// </exception>
-    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the constraint buffer maximum size is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
         ThrowIfDisposed();
@@ -762,7 +842,7 @@ public sealed partial class World : IDisposable
             constraint.Handle.Data.ConstraintId = constraintId;
         }
 
-        IslandHelper.ConstraintCreated(islands, constraint);
+        IslandHelper.ConstraintCreated(islands, islandPool, constraint);
 
         AddToActiveList(body1.InternalIsland);
         AddToActiveList(body2.InternalIsland);
@@ -812,7 +892,7 @@ public sealed partial class World : IDisposable
     /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
     /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
-    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the rigid-body buffer maximum size is exceeded.</exception>
     public RigidBody CreateRigidBody()
     {
         ThrowIfDisposed();
@@ -821,7 +901,7 @@ public sealed partial class World : IDisposable
 
         bodies.Add(body, true);
 
-        IslandHelper.BodyAdded(islands, body);
+        IslandHelper.BodyAdded(islands, islandPool, body);
 
         AddToActiveList(body.InternalIsland);
 

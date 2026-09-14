@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -47,7 +48,7 @@ public static unsafe class MemoryHelper
     }
 
     /// <summary>
-    /// Represents an integer value padded to one cache-line-sized array element.
+    /// Represents a padded array element intended to keep adjacent integer values off the same cache line.
     /// </summary>
     /// <remarks>
     /// This type is intended for arrays of counters where adjacent <see cref="Value"/> fields
@@ -106,9 +107,13 @@ public static unsafe class MemoryHelper
     /// <b>Safety:</b> The caller must free the returned pointer using <see cref="Free{T}"/>.
     /// The memory is not zero-initialized.
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="num"/> is negative.</exception>
+    /// <exception cref="OverflowException">Thrown when the requested byte count exceeds the native address space.</exception>
     public static T* AllocateHeap<T>(int num) where T : unmanaged
     {
-        return (T*)AllocateHeap(num * sizeof(T));
+        ArgumentOutOfRangeException.ThrowIfNegative(num);
+        nuint byteCount = checked((nuint)num * (nuint)sizeof(T));
+        return (T*)NativeMemory.Alloc(byteCount);
     }
 
     /// <summary>
@@ -122,9 +127,16 @@ public static unsafe class MemoryHelper
     /// <b>Safety:</b> The caller must free the returned pointer using <see cref="AlignedFree"/>.
     /// The memory is not zero-initialized.
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="num"/> is negative or <paramref name="alignment"/> is not a positive power of two.
+    /// </exception>
+    /// <exception cref="OverflowException">Thrown when the requested byte count exceeds the native address space.</exception>
     public static T* AlignedAllocateHeap<T>(int num, int alignment) where T : unmanaged
     {
-        return (T*)AlignedAllocateHeap(num * sizeof(T), alignment);
+        ArgumentOutOfRangeException.ThrowIfNegative(num);
+        ValidateAlignment(alignment);
+        nuint byteCount = checked((nuint)num * (nuint)sizeof(T));
+        return (T*)NativeMemory.AlignedAlloc(byteCount, (nuint)alignment);
     }
 
     /// <summary>
@@ -146,7 +158,12 @@ public static unsafe class MemoryHelper
     /// <b>Safety:</b> The caller must free the returned pointer using <see cref="Free(void*)"/>.
     /// The memory is not zero-initialized.
     /// </remarks>
-    public static void* AllocateHeap(int len) => NativeMemory.Alloc((nuint)len);
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="len"/> is negative.</exception>
+    public static void* AllocateHeap(int len)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(len);
+        return NativeMemory.Alloc((nuint)len);
+    }
 
     /// <summary>
     /// Allocates a block of aligned unmanaged memory of the specified length in bytes.
@@ -158,7 +175,15 @@ public static unsafe class MemoryHelper
     /// <b>Safety:</b> The caller must free the returned pointer using <see cref="AlignedFree"/>.
     /// The memory is not zero-initialized.
     /// </remarks>
-    public static void* AlignedAllocateHeap(int len, int alignment) => NativeMemory.AlignedAlloc((nuint)len, (nuint)alignment);
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="len"/> is negative or <paramref name="alignment"/> is not a positive power of two.
+    /// </exception>
+    public static void* AlignedAllocateHeap(int len, int alignment)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(len);
+        ValidateAlignment(alignment);
+        return NativeMemory.AlignedAlloc((nuint)len, (nuint)alignment);
+    }
 
     /// <summary>
     /// Frees a block of unmanaged memory previously allocated.
@@ -177,5 +202,19 @@ public static unsafe class MemoryHelper
     /// </summary>
     /// <param name="buffer">A pointer to the memory block to zero out.</param>
     /// <param name="len">The length of the memory block to zero out, in bytes.</param>
-    public static void MemSet(void* buffer, int len)  => Unsafe.InitBlock(buffer, 0, (uint)len);
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="len"/> is negative.</exception>
+    public static void MemSet(void* buffer, int len)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(len);
+        Unsafe.InitBlockUnaligned(buffer, 0, (uint)len);
+    }
+
+    private static void ValidateAlignment(int alignment)
+    {
+        if (alignment <= 0 || (alignment & (alignment - 1)) != 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(alignment), alignment,
+                "Alignment must be a positive power of two.");
+        }
+    }
 }

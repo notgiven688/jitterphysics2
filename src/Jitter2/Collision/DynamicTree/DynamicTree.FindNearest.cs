@@ -95,7 +95,8 @@ public partial class DynamicTree
 
     private struct DistanceQuery(in JBoundingBox box, in JQuaternion orientation, in JVector position)
     {
-        public readonly JBoundingBox Box = box;
+        public readonly JVector BoxExtents = (box.Max - box.Min) * (Real)0.5;
+        public readonly JVector BoxCenter = (box.Max + box.Min) * (Real)0.5;
         public readonly JQuaternion Orientation = orientation;
         public readonly JVector Position = position;
 
@@ -181,14 +182,11 @@ public partial class DynamicTree
     // Returns the minimum distance between the query AABB and a tree node's expanded AABB.
     // Uses the Minkowski sum: expand the target by the query half-extents, then measure
     // point-to-AABB distance from the query center. Returns 0 if the AABBs overlap.
-    private static Real MinDistBox(in JBoundingBox queryBox, in TreeBox targetBox)
+    private static Real MinDistBox(in JVector queryExtents, in JVector queryCenter, in TreeBox targetBox)
     {
-        JVector extents = (queryBox.Max - queryBox.Min) * (Real)0.5;
-        JVector center = (queryBox.Max + queryBox.Min) * (Real)0.5;
-
-        Real dx = MathR.Max(MathR.Max(targetBox.Min.X - extents.X - center.X, center.X - targetBox.Max.X - extents.X), (Real)0.0);
-        Real dy = MathR.Max(MathR.Max(targetBox.Min.Y - extents.Y - center.Y, center.Y - targetBox.Max.Y - extents.Y), (Real)0.0);
-        Real dz = MathR.Max(MathR.Max(targetBox.Min.Z - extents.Z - center.Z, center.Z - targetBox.Max.Z - extents.Z), (Real)0.0);
+        Real dx = MathR.Max(MathR.Max(targetBox.Min.X - queryExtents.X - queryCenter.X, queryCenter.X - targetBox.Max.X - queryExtents.X), (Real)0.0);
+        Real dy = MathR.Max(MathR.Max(targetBox.Min.Y - queryExtents.Y - queryCenter.Y, queryCenter.Y - targetBox.Max.Y - queryExtents.Y), (Real)0.0);
+        Real dz = MathR.Max(MathR.Max(targetBox.Min.Z - queryExtents.Z - queryCenter.Z, queryCenter.Z - targetBox.Max.Z - queryExtents.Z), (Real)0.0);
 
         return MathR.Sqrt(dx * dx + dy * dy + dz * dz);
     }
@@ -217,14 +215,15 @@ public partial class DynamicTree
 
             if (node.IsLeaf)
             {
-                if (node.Proxy is not IDistanceTestable distCastable) continue;
-                if (query.FilterPre != null && !query.FilterPre(node.Proxy!)) continue;
+                IDynamicTreeProxy proxy = node.Proxy!;
+                if (proxy is not IDistanceTestable distanceTestable) continue;
+                if (query.FilterPre != null && !query.FilterPre(proxy)) continue;
 
                 Unsafe.SkipInit(out FindNearestResult res);
-                bool separated = distCastable.Distance(support,
+                bool separated = distanceTestable.Distance(support,
                     query.Orientation, query.Position,
                     out res.PointA, out res.PointB, out res.Normal, out res.Distance);
-                res.Entity = node.Proxy;
+                res.Entity = proxy;
 
                 if (!separated)
                 {
@@ -246,8 +245,8 @@ public partial class DynamicTree
             ref Node leftNode = ref nodes[node.Left];
             ref Node rightNode = ref nodes[node.Right];
 
-            Real leftDist = MinDistBox(query.Box, leftNode.ExpandedBox);
-            Real rightDist = MinDistBox(query.Box, rightNode.ExpandedBox);
+            Real leftDist = MinDistBox(query.BoxExtents, query.BoxCenter, leftNode.ExpandedBox);
+            Real rightDist = MinDistBox(query.BoxExtents, query.BoxCenter, rightNode.ExpandedBox);
 
             bool leftHit = leftDist <= result.Distance;
             bool rightHit = rightDist <= result.Distance;

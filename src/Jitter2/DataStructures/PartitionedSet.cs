@@ -116,6 +116,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         }
     }
 
+    private readonly int initialSize;
     private T[] elements;
 
     /// <summary>Gets the number of active elements in the set.</summary>
@@ -127,8 +128,14 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
     /// <param name="initialSize">The initial capacity of the internal array.</param>
     public PartitionedSet(int initialSize = 1024)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(initialSize, 1);
+
+        this.initialSize = initialSize;
         elements = new T[initialSize];
     }
+
+    /// <summary>Gets the number of elements the set can hold before the next resize.</summary>
+    public int Capacity => elements.Length;
 
     /// <summary>Gets the element at the specified index.</summary>
     public T this[int i] => elements[i];
@@ -157,6 +164,25 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
     /// <summary>Gets the total number of elements in the set.</summary>
     public int Count { get; private set; }
+
+    /// <summary>
+    /// Shrinks the internal storage to the smallest retained capacity that can hold the current elements.
+    /// </summary>
+    /// <returns><see langword="true"/> if the set was resized; otherwise, <see langword="false"/>.</returns>
+    public bool Trim()
+    {
+        int newSize = initialSize;
+
+        while (newSize < Count)
+        {
+            newSize = checked(newSize * 2);
+        }
+
+        if (newSize >= elements.Length) return false;
+
+        Array.Resize(ref elements, newSize);
+        return true;
+    }
 
     /// <summary>Returns a span of all elements in the set.</summary>
     public Span<T> AsSpan() => this.elements.AsSpan(0, Count);
@@ -214,8 +240,9 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         Debug.Assert(element.SetIndex != -1);
         Debug.Assert(elements[element.SetIndex] == element);
 
-        if (element.SetIndex < ActiveCount) return false;
-        Swap(ActiveCount, element.SetIndex);
+        int index = element.SetIndex;
+        if (index < ActiveCount) return false;
+        if (index != ActiveCount) Swap(ActiveCount, index);
         ActiveCount += 1;
         return true;
     }
@@ -230,9 +257,10 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         Debug.Assert(element.SetIndex != -1);
         Debug.Assert(elements[element.SetIndex] == element);
 
-        if (element.SetIndex >= ActiveCount) return false;
+        int index = element.SetIndex;
+        if (index >= ActiveCount) return false;
         ActiveCount -= 1;
-        Swap(ActiveCount, element.SetIndex);
+        if (index != ActiveCount) Swap(ActiveCount, index);
         return true;
     }
 
@@ -243,7 +271,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
     /// <returns><see langword="true"/> if the element is found; otherwise, <see langword="false"/>.</returns>
     public bool Contains(T element)
     {
-        if(element.SetIndex >= Count || element.SetIndex < 0) return false;
+        if (element.SetIndex >= Count || element.SetIndex < 0) return false;
         return (elements[element.SetIndex] == element);
     }
 
@@ -258,13 +286,19 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
         MoveToInactive(element);
 
-        int li = element.SetIndex;
+        int index = element.SetIndex;
+        int lastIndex = Count - 1;
 
-        Count -= 1;
+        Count = lastIndex;
 
-        elements[li] = elements[Count];
-        elements[li].SetIndex = li;
-        elements[Count] = null!;
+        if (index != lastIndex)
+        {
+            T moved = elements[lastIndex];
+            elements[index] = moved;
+            moved.SetIndex = index;
+        }
+
+        elements[lastIndex] = null!;
 
         element.SetIndex = -1;
     }

@@ -77,8 +77,8 @@ public struct ContactData
 #pragma warning restore CS0649
 
     /// <summary>
-    /// The least four significant bits indicate which contacts are considered intact (bit set), broken (bit unset).
-    /// Bits 5-8 indicate which contacts were intact/broken during the solving-phase.
+    /// The low nibble indicates which contacts are currently intact (bit set) or broken (bit unset).
+    /// The next nibble indicates which contacts were intact or broken during the solving phase.
     /// </summary>
     /// <example>
     /// A sphere may slide down a ramp. Within one timestep Jitter may detect the collision, create the contact,

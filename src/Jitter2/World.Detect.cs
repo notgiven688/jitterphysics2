@@ -119,9 +119,10 @@ public sealed partial class World
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        if (BroadPhaseFilter != null)
+        IBroadPhaseFilter? broadPhaseFilter = BroadPhaseFilter;
+        if (broadPhaseFilter != null)
         {
-            if (!BroadPhaseFilter.Filter(proxyA, proxyB))
+            if (!broadPhaseFilter.Filter(proxyA, proxyB))
             {
                 return;
             }
@@ -137,22 +138,24 @@ public sealed partial class World
             (sA, sB) = (sB, sA);
         }
 
-        Debug.Assert(sA.RigidBody != sB.RigidBody);
-        Debug.Assert(sA.RigidBody.World == this);
-        Debug.Assert(sB.RigidBody.World == this);
+        RigidBody bodyA = sA.RigidBody;
+        RigidBody bodyB = sB.RigidBody;
 
-        Debug.Assert(sA.RigidBody != null);
-        Debug.Assert(sB.RigidBody != null);
+        Debug.Assert(bodyA != null);
+        Debug.Assert(bodyB != null);
+        Debug.Assert(bodyA != bodyB);
+        Debug.Assert(bodyA.World == this);
+        Debug.Assert(bodyB.World == this);
 
-        if (!sA.RigidBody.Data.IsActive && !sB.RigidBody.Data.IsActive) return;
+        ref RigidBodyData b1 = ref bodyA.Data;
+        ref RigidBodyData b2 = ref bodyB.Data;
 
-        if ((sA.RigidBody.Data.MotionType != MotionType.Dynamic) &&
-            (sB.RigidBody.Data.MotionType != MotionType.Dynamic)) return;
+        if (!b1.IsActive && !b2.IsActive) return;
 
-        ref RigidBodyData b1 = ref sA.RigidBody.Data;
-        ref RigidBodyData b2 = ref sB.RigidBody.Data;
+        if (b1.MotionType != MotionType.Dynamic && b2.MotionType != MotionType.Dynamic) return;
 
-        bool speculative = sA.RigidBody.EnableSpeculativeContacts || sB.RigidBody.EnableSpeculativeContacts;
+        bool speculative = bodyA.EnableSpeculativeContacts || bodyB.EnableSpeculativeContacts;
+        INarrowPhaseFilter? narrowPhaseFilter = NarrowPhaseFilter;
 
         var colliding = NarrowPhase.MprEpa(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
             out JVector pA, out JVector pB, out JVector normal, out var penetration);
@@ -161,7 +164,7 @@ public sealed partial class World
         {
             if (!speculative) return;
 
-            JVector dv = sB.RigidBody.Velocity - sA.RigidBody.Velocity;
+            JVector dv = b2.Velocity - b1.Velocity;
 
             if (dv.LengthSquared() < SpeculativeVelocityThreshold * SpeculativeVelocityThreshold) return;
 
@@ -174,23 +177,23 @@ public sealed partial class World
 
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
 
-            if (NarrowPhaseFilter != null)
+            if (narrowPhaseFilter != null)
             {
-                if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
+                if (!narrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
                 {
                     return;
                 }
             }
 
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody,
+            RegisterContact(sA.ShapeId, sB.ShapeId, bodyA, bodyB,
                 pA, pB, normal, ContactData.SolveMode.Angular);
 
             return;
         }
 
-        if (NarrowPhaseFilter != null)
+        if (narrowPhaseFilter != null)
         {
-            if (!NarrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
+            if (!narrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
             {
                 return;
             }
@@ -201,11 +204,11 @@ public sealed partial class World
             Unsafe.SkipInit(out CollisionManifold manifold);
             manifold.BuildManifold(sA, sB, pA, pB, normal);
 
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, normal, ref manifold);
+            RegisterContact(sA.ShapeId, sB.ShapeId, bodyA, bodyB, normal, ref manifold);
         }
         else
         {
-            RegisterContact(sA.ShapeId, sB.ShapeId, sA.RigidBody, sB.RigidBody, pA, pB, normal);
+            RegisterContact(sA.ShapeId, sB.ShapeId, bodyA, bodyB, pA, pB, normal);
         }
     }
 

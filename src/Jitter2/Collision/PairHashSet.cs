@@ -128,6 +128,11 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     public const int TrimFactor = 8;
 
     /// <summary>
+    /// Factor used to leave growth headroom after shrinking the hash set.
+    /// </summary>
+    public const int TrimTargetFactor = 4;
+
+    /// <summary>
     /// Gets the number of pairs in the hash set.
     /// </summary>
     public int Count => count;
@@ -181,7 +186,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
             }
         }
 
-        Slots = newSlots;
+        Volatile.Write(ref Slots, newSlots);
     }
 
     private static int FindSlot(Pair[] slots, int hash, long id)
@@ -279,7 +284,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         // Fast path: This is a *huge* optimization in case of frequent additions
         // of already existing entries. Entirely bypassing any locks or synchronization.
-        Pair[] fpSlots = Slots;
+        Pair[] fpSlots = Volatile.Read(ref Slots);
         _ = FindSlotConcurrent(fpSlots, hash, pair.ID, out long fpSlotId);
         if (fpSlotId == pair.ID) return false;
 
@@ -307,17 +312,23 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
                 Interlocked.Increment(ref count);
                 rwLock.ExitReadLock();
 
-                if (Slots.Length < 2 * count)
+                Pair[] currentSlots = Volatile.Read(ref Slots);
+                if (currentSlots.Length < 2 * count)
                 {
                     rwLock.EnterWriteLock();
 
-                    // check if another thread already performed a resize.
-                    if (Slots.Length < 2 * count)
+                    try
                     {
-                        Resize(PickSize(Slots.Length * 2));
+                        // Check if another thread already performed a resize.
+                        if (Slots.Length < 2 * count)
+                        {
+                            Resize(PickSize(Slots.Length * 2));
+                        }
                     }
-
-                    rwLock.ExitWriteLock();
+                    finally
+                    {
+                        rwLock.ExitWriteLock();
+                    }
                 }
 
                 return true;
@@ -366,7 +377,7 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         if (Slots.Length > MinimumSize && count * TrimFactor < Slots.Length)
         {
-            Resize(PickSize(count * 2));
+            Resize(PickSize(count * TrimTargetFactor));
         }
 
         return true;
@@ -385,9 +396,14 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     }
 
     /// <inheritdoc/>
-    public IEnumerator<Pair> GetEnumerator()
+    public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
+    }
+
+    IEnumerator<Pair> IEnumerable<Pair>.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
