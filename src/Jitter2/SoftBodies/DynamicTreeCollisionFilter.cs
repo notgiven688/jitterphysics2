@@ -32,9 +32,9 @@ public static class DynamicTreeCollisionFilter
         else if (proxyA is SoftBodyShape softBodyShapeA &&
                  proxyB is SoftBodyShape softBodyShapeB)
         {
-            SoftBody ta = softBodyShapeA.SoftBody;
-            SoftBody tb = softBodyShapeB.SoftBody;
-            return ta != tb;
+            SoftBody softBodyA = softBodyShapeA.SoftBody;
+            SoftBody softBodyB = softBodyShapeB.SoftBody;
+            return softBodyA != softBodyB;
         }
 
         return true;

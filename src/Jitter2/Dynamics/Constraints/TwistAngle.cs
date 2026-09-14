@@ -226,7 +226,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// Gets or sets the softness (compliance) of the constraint.
     /// </summary>
     /// <value>
-    /// Default is 0.0001. Higher values allow more angular error but improve stability.
+    /// Default is <see cref="Constraint.DefaultAngularSoftness"/>. Higher values allow more angular error but improve stability.
     /// </value>
     public Real Softness
     {

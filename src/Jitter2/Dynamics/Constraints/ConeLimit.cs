@@ -125,7 +125,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         if (limit.From > (JAngle)0.0)
         {
             Logger.Warning(
-                "{0}.{1}(): The lower limit is larger 0 but this overload initializes both body axes " +
+                "{0}.{1}(): The lower limit is greater than 0, but this overload initializes both body axes " +
                 "from the same world-space axis (rest angle = 0). Use the two-axis overload " +
                 "if you need a non-zero minimum angle.",
                 nameof(ConeLimit),

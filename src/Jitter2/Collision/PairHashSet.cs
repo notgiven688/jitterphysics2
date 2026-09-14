@@ -396,9 +396,14 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     }
 
     /// <inheritdoc/>
-    public IEnumerator<Pair> GetEnumerator()
+    public Enumerator GetEnumerator()
     {
         return new Enumerator(this);
+    }
+
+    IEnumerator<Pair> IEnumerable<Pair>.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

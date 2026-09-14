@@ -15,15 +15,15 @@ namespace Jitter2.Dynamics.Constraints;
 public class Joint : IDebugDrawable
 {
     private readonly List<Constraint> constraints = new(2);
-    public ReadOnlyList<Constraint> Constraints => new (constraints);
+    public ReadOnlyList<Constraint> Constraints => new(constraints);
 
     /// <summary>
-    /// Add a constraint to the internal bookkeeping
+    /// Adds a constraint to the internal bookkeeping.
     /// </summary>
     protected void Register(Constraint constraint) => constraints.Add(constraint);
 
     /// <summary>
-    /// Remove a constraint from the internal bookkeeping
+    /// Removes a constraint from the internal bookkeeping.
     /// </summary>
     protected void Deregister(Constraint constraint) => constraints.Remove(constraint);
 

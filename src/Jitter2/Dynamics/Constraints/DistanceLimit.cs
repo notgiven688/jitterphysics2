@@ -49,7 +49,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationFixedAngle, &IterateFixedAngle);
+        RegisterFullConstraint(&PrepareForIterationDistanceLimit, &IterateDistanceLimit);
 
 
     protected override void Create()
@@ -204,7 +204,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         }
     }
 
-    public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationDistanceLimit(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -270,7 +270,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// Gets or sets the softness (compliance) of the constraint.
     /// </summary>
     /// <value>
-    /// Default is 0.001. Higher values allow more distance error but improve stability.
+    /// Default is <see cref="Constraint.DefaultLinearSoftness"/>. Higher values allow more distance error but improve stability.
     /// </value>
     public Real Softness
     {
@@ -303,7 +303,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
+    public static void IterateDistanceLimit(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;

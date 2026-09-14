@@ -244,8 +244,8 @@ public partial class DynamicTree
             var proxyA = nodes[node.ID1].Proxy;
             var proxyB = nodes[node.ID2].Proxy;
 
-            if(proxyA == null || proxyB == null) continue;
-            if(!Filter(proxyA, proxyB)) continue;
+            if (proxyA == null || proxyB == null) continue;
+            if (!Filter(proxyA, proxyB)) continue;
 
             if (!JBoundingBox.Disjoint(proxyA.WorldBoundingBox, proxyB.WorldBoundingBox))
             {
@@ -280,7 +280,7 @@ public partial class DynamicTree
             {
                 Parallel.GetBounds(slotsLength, taskCount, i, out int start, out int end);
                 overlapEnumerationParam.Batch = new Parallel.Batch(start, end);
-                ThreadPool.Instance.AddTask(enumerateOverlaps, overlapEnumerationParam);
+                tpi.AddTask(enumerateOverlaps, overlapEnumerationParam);
             }
 
             tpi.Execute();
@@ -536,8 +536,8 @@ public partial class DynamicTree
     private uint stepper;
 
     /// <summary>
-    /// Removes entries from the internal bookkeeping which are both marked as inactive or
-    /// whose expanded bounding box do not overlap any longer.
+    /// Removes entries from the internal bookkeeping when both proxies are inactive or
+    /// their expanded bounding boxes no longer overlap.
     /// Only searches a small subset of all elements per call to reduce overhead.
     /// </summary>
     private void PruneInvalidPairs()
@@ -916,7 +916,7 @@ public partial class DynamicTree
 
         // InsertLeaf takes 'where' as a hint, i.e. it still walks up the tree until
         // the new node is fully contained. Note: The insertion node could also be found when searching
-        // from the root, since the search always descents into child nodes fully containing the new node.
+        // from the root, since the search always descends into child nodes fully containing the new node.
         InsertLeaf(index, parent);
     }
 
@@ -1196,7 +1196,7 @@ public partial class DynamicTree
         while (!nodes[where].IsLeaf)
         {
             int left = nodes[where].Left;
-            int rght = nodes[where].Right;
+            int right = nodes[where].Right;
 
             double cost = 2.0d * nodes[where].ExpandedBox.GetSurfaceArea();
 
@@ -1215,20 +1215,20 @@ public partial class DynamicTree
                 leftCost = newArea - oldArea;
             }
 
-            if (nodes[rght].IsLeaf)
+            if (nodes[right].IsLeaf)
             {
-                rightCost = TreeBox.MergedSurface(nodes[rght].ExpandedBox, nodeTreeBox);
+                rightCost = TreeBox.MergedSurface(nodes[right].ExpandedBox, nodeTreeBox);
             }
             else
             {
-                double oldArea = nodes[rght].ExpandedBox.GetSurfaceArea();
-                double newArea = TreeBox.MergedSurface(nodes[rght].ExpandedBox, nodeTreeBox);
+                double oldArea = nodes[right].ExpandedBox.GetSurfaceArea();
+                double newArea = TreeBox.MergedSurface(nodes[right].ExpandedBox, nodeTreeBox);
                 rightCost = newArea - oldArea;
             }
 
             if (cost < leftCost && cost < rightCost) break;
 
-            where = leftCost < rightCost ? left : rght;
+            where = leftCost < rightCost ? left : right;
         }
 
         return where;

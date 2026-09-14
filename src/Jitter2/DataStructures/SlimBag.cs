@@ -118,6 +118,17 @@ internal class SlimBag<T> : IEnumerable<T>
     /// <param name="list">The collection of elements to add.</param>
     public void AddRange(IEnumerable<T> list)
     {
+        ArgumentNullException.ThrowIfNull(list);
+
+        if (list is ICollection<T> collection)
+        {
+            EnsureCapacity(checked(counter + collection.Count));
+        }
+        else if (list is IReadOnlyCollection<T> readOnlyCollection)
+        {
+            EnsureCapacity(checked(counter + readOnlyCollection.Count));
+        }
+
         foreach (T elem in list) Add(elem);
     }
 
@@ -127,12 +138,23 @@ internal class SlimBag<T> : IEnumerable<T>
     /// <param name="item">The element to add.</param>
     public void Add(T item)
     {
-        if (counter == array.Length)
-        {
-            Array.Resize(ref array, array.Length * 2);
-        }
+        EnsureCapacity(counter + 1);
 
         array[counter++] = item;
+    }
+
+    private void EnsureCapacity(int capacity)
+    {
+        if (capacity <= array.Length) return;
+
+        int newLength = array.Length;
+        do
+        {
+            newLength = checked(newLength * 2);
+        }
+        while (newLength < capacity);
+
+        Array.Resize(ref array, newLength);
     }
 
     private readonly Jitter2.Parallelization.ReaderWriterLock rwLock = new();
@@ -194,7 +216,8 @@ internal class SlimBag<T> : IEnumerable<T>
     /// <param name="index">The zero-based index of the element to remove.</param>
     public void RemoveAt(int index)
     {
-        array[index] = array[--counter];
+        counter -= 1;
+        if (index != counter) array[index] = array[counter];
     }
 
     /// <summary>

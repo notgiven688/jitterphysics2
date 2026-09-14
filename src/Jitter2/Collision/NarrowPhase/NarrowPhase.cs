@@ -403,7 +403,7 @@ public static class NarrowPhase
             point1 = point2 = normal = JVector.Zero;
             penetration = (Real)0.0;
 
-            Logger.Warning("{0}: EPA, Could not converge within {1} iterations.\"", nameof(NarrowPhase), maxIter);
+            Logger.Warning("{0}: EPA, Could not converge within {1} iterations.", nameof(NarrowPhase), maxIter);
 
             return false;
 
@@ -948,8 +948,7 @@ public static class NarrowPhase
         Real epaThreshold = EpaPenetrationThreshold)
         where Ta : ISupportMappable where Tb : ISupportMappable
     {
-        // ..perform collision detection..
-        return _solver.SolveMpr(supportA, supportB, orientationB, positionB , epaThreshold, out pointA, out pointB, out normal, out penetration);
+        return _solver.SolveMpr(supportA, supportB, orientationB, positionB, epaThreshold, out pointA, out pointB, out normal, out penetration);
     }
 
     /// <summary>
@@ -1025,16 +1024,16 @@ public static class NarrowPhase
             Real sweepLinearProj = JVector.Dot(normal, sweepA - sweepB);
             Real sweepLen = sweepLinearProj + maxAngularSpeed;
 
-            if(sweepLen < NumericEpsilon || (sweepLinearProj < 0 && distance > combinedRadius))
+            if (sweepLen < NumericEpsilon || (sweepLinearProj < 0 && distance > combinedRadius))
             {
                 normal = JVector.Zero;
                 lambda = Real.PositiveInfinity;
                 return false;
             }
 
-            Real tmpLambda = distance / sweepLen;
+            Real lambdaStep = distance / sweepLen;
 
-            lambda += tmpLambda;
+            lambda += lambdaStep;
 
             Debug.Assert(!Real.IsNaN(lambda));
 
@@ -1049,13 +1048,13 @@ public static class NarrowPhase
 
             if (iter++ > maxIter) break;
 
-            bool res = Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector nn, out distance);
+            bool hasDistance = Distance(supportA, supportB, oriA, oriB, posA, posB, out pointA, out pointB, out JVector newNormal, out distance);
 
             // We are a bit in a pickle here.
             // If the advanced shapes are slightly overlapping (Distance returns false; this can either happen if the
             // simplex solver encompasses the origin or the closest point on the simplex is close enough to the origin),
             // we have valid posA and posB information, but the normal is not well-defined. So we keep the old normal.
-            if(res) normal = nn;
+            if (hasDistance) normal = newNormal;
 
             if (distance < collideEpsilon)
                 break;

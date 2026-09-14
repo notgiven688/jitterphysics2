@@ -17,6 +17,11 @@ namespace Jitter2.Collision.Shapes;
 public static class ShapeHelper
 {
     private const Real GoldenRatio = (Real)1.6180339887498948482045;
+    private static readonly JMatrix canonicalTetrahedronInertia = new(
+        (Real)(1.0 / 60.0), (Real)(1.0 / 120.0), (Real)(1.0 / 120.0),
+        (Real)(1.0 / 120.0), (Real)(1.0 / 60.0), (Real)(1.0 / 120.0),
+        (Real)(1.0 / 120.0), (Real)(1.0 / 120.0), (Real)(1.0 / 60.0));
+
     private static readonly JVector[] icosahedronVertices =
     [
         new(0, +1, +GoldenRatio), new(0, -1, +GoldenRatio), new(0, +1, -GoldenRatio), new(0, -1, -GoldenRatio),
@@ -30,6 +35,18 @@ public static class ShapeHelper
         { 2, 3, 11 }, { 3, 2, 9 }, { 4, 2, 6 }, { 2, 4, 9 }, { 6, 2, 11 }, { 3, 5, 7 }, { 5, 3, 9 }, { 3, 7, 11 },
         { 4, 8, 9 }, { 8, 5, 9 }, { 10, 6, 11 }, { 7, 10, 11 }
     };
+
+    private static int GetTessellationTriangleCapacity(int subdivisions)
+    {
+        int capacity = 20;
+
+        for (int i = 1; i < subdivisions; i++)
+        {
+            capacity = checked(capacity * 4);
+        }
+
+        return capacity;
+    }
 
     /// <inheritdoc cref="Tessellate{TSupport}(in TSupport, int)"/>
     /// <param name="hullCollection">A collection to which the triangles are added.</param>
@@ -87,9 +104,9 @@ public static class ShapeHelper
             return;
         }
 
-        // There is a re-project onto the sphere missing here and here.
-        // The quality of the points does not suffer that badly from it, and
-        // we get rid of many, many normalize-calls. So we keep it like this.
+        // Deliberately skip re-projecting the midpoint directions onto the sphere.
+        // The resulting samples are still good enough for this approximation, and
+        // avoiding those normalization calls keeps tessellation inexpensive.
         JVector h1 = (v1 + v2) * (Real)0.5;
         JVector h2 = (v2 + v3) * (Real)0.5;
         JVector h3 = (v3 + v1) * (Real)0.5;
@@ -118,7 +135,7 @@ public static class ShapeHelper
     public static List<JTriangle> Tessellate<TSupport>(in TSupport support, int subdivisions = 3)
         where TSupport : ISupportMappable
     {
-        List<JTriangle> triangles = new();
+        List<JTriangle> triangles = new(GetTessellationTriangleCapacity(subdivisions));
         Tessellate(in support, triangles, subdivisions);
         return triangles;
     }
@@ -183,23 +200,27 @@ public static class ShapeHelper
     {
         JMatrix oriT = JMatrix.Transpose(JMatrix.CreateFromQuaternion(orientation));
 
-        support.SupportMap(oriT.GetColumn(0), out JVector res);
-        box.Max.X = JVector.Dot(oriT.GetColumn(0), res);
+        JVector axisX = oriT.GetColumn(0);
+        JVector axisY = oriT.GetColumn(1);
+        JVector axisZ = oriT.GetColumn(2);
 
-        support.SupportMap(oriT.GetColumn(1), out res);
-        box.Max.Y = JVector.Dot(oriT.GetColumn(1), res);
+        support.SupportMap(axisX, out JVector res);
+        box.Max.X = JVector.Dot(axisX, res);
 
-        support.SupportMap(oriT.GetColumn(2), out res);
-        box.Max.Z = JVector.Dot(oriT.GetColumn(2), res);
+        support.SupportMap(axisY, out res);
+        box.Max.Y = JVector.Dot(axisY, res);
 
-        support.SupportMap(-oriT.GetColumn(0), out res);
-        box.Min.X = JVector.Dot(oriT.GetColumn(0), res);
+        support.SupportMap(axisZ, out res);
+        box.Max.Z = JVector.Dot(axisZ, res);
 
-        support.SupportMap(-oriT.GetColumn(1), out res);
-        box.Min.Y = JVector.Dot(oriT.GetColumn(1), res);
+        support.SupportMap(-axisX, out res);
+        box.Min.X = JVector.Dot(axisX, res);
 
-        support.SupportMap(-oriT.GetColumn(2), out res);
-        box.Min.Z = JVector.Dot(oriT.GetColumn(2), res);
+        support.SupportMap(-axisY, out res);
+        box.Min.Y = JVector.Dot(axisY, res);
+
+        support.SupportMap(-axisZ, out res);
+        box.Min.Z = JVector.Dot(axisZ, res);
 
         JVector.Add(box.Min, position, out box.Min);
         JVector.Add(box.Max, position, out box.Max);
@@ -262,7 +283,8 @@ public static class ShapeHelper
     public static List<JVector> SampleHull<TSupport>(in TSupport support, int subdivisions = 3)
         where TSupport : ISupportMappable
     {
-        Stack<(JTriangle triangle, int depth)> stack = new();
+        int triangleCapacity = GetTessellationTriangleCapacity(subdivisions);
+        Stack<(JTriangle triangle, int depth)> stack = new(triangleCapacity);
 
         for (int i = 0; i < 20; i++)
         {
@@ -272,7 +294,7 @@ public static class ShapeHelper
             stack.Push((new JTriangle(v1, v2, v3), subdivisions));
         }
 
-        HashSet<JVector> hull = new();
+        HashSet<JVector> hull = new(triangleCapacity);
 
         while (stack.Count > 0)
         {
@@ -300,6 +322,29 @@ public static class ShapeHelper
         return new List<JVector>(hull);
     }
 
+    private struct MassInertiaSink : ISink<JTriangle>
+    {
+        public JMatrix Inertia;
+        public JVector CenterOfMass;
+        public Real Mass;
+
+        public void Add(in JTriangle triangle)
+        {
+            JMatrix transformation = JMatrix.FromColumns(triangle.V0, triangle.V1, triangle.V2);
+            Real detA = transformation.Determinant();
+
+            JMatrix tetrahedronInertia =
+                JMatrix.Multiply(transformation * canonicalTetrahedronInertia * JMatrix.Transpose(transformation), detA);
+
+            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (triangle.V0 + triangle.V1 + triangle.V2);
+            Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
+
+            Inertia += tetrahedronInertia;
+            CenterOfMass += tetrahedronMass * tetrahedronCom;
+            Mass += tetrahedronMass;
+        }
+    }
+
     /// <summary>
     /// Calculates the mass properties of an implicitly defined shape, assuming unit mass density.
     /// </summary>
@@ -324,31 +369,11 @@ public static class ShapeHelper
         out Real mass, int subdivisions = 4)
         where TSupport : ISupportMappable
     {
-        centerOfMass = JVector.Zero;
-        inertia = JMatrix.Zero;
-        mass = 0;
+        MassInertiaSink sink = default;
+        Tessellate(in support, ref sink, subdivisions);
 
-        const Real a = (Real)(1.0 / 60.0), b = (Real)(1.0 / 120.0);
-        JMatrix canonicalInertia = new(a, b, b, b, a, b, b, b, a);
-
-        foreach (JTriangle triangle in Tessellate(in support, subdivisions))
-        {
-            JMatrix transformation = JMatrix.FromColumns(triangle.V0, triangle.V1, triangle.V2);
-            Real detA = transformation.Determinant();
-
-            // now transform this canonical tetrahedron to the target tetrahedron
-            // inertia by a linear transformation A
-            JMatrix tetrahedronInertia = JMatrix.Multiply(transformation * canonicalInertia * JMatrix.Transpose(transformation), detA);
-
-            JVector tetrahedronCom = (Real)(1.0 / 4.0) * (triangle.V0 + triangle.V1 + triangle.V2);
-            Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
-
-            inertia += tetrahedronInertia;
-            centerOfMass += tetrahedronMass * tetrahedronCom;
-            mass += tetrahedronMass;
-        }
-
-        inertia = JMatrix.Multiply(JMatrix.Identity, inertia.Trace()) - inertia;
-        centerOfMass *= (Real)1.0 / mass;
+        inertia = JMatrix.Multiply(JMatrix.Identity, sink.Inertia.Trace()) - sink.Inertia;
+        centerOfMass = sink.CenterOfMass * ((Real)1.0 / sink.Mass);
+        mass = sink.Mass;
     }
 }

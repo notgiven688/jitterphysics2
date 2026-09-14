@@ -42,9 +42,11 @@ public sealed partial class World
 
     /// <summary>
     /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.Regular"/>.
-    /// <remarks> <see cref="Jitter2.SolveMode.Deterministic"/> can be significantly slower than
-    /// <see cref="Jitter2.SolveMode.Regular"/>.</remarks>
     /// </summary>
+    /// <remarks>
+    /// <see cref="Jitter2.SolveMode.Deterministic"/> can be significantly slower than
+    /// <see cref="Jitter2.SolveMode.Regular"/>.
+    /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when an undefined <see cref="Jitter2.SolveMode"/>
     /// value is assigned.</exception>
     public SolveMode SolveMode
@@ -94,7 +96,7 @@ public sealed partial class World
         public ulong ConstraintId;
     }
 
-    // Maps RigidBodyData._index → island SetIndex. Cleared each frame; capacity grows on demand but is not trimmed.
+    // Maps RigidBodyData._index to island SetIndex. Cleared each frame; capacity grows on demand and can be reduced by Trim().
     private readonly Dictionary<int, int> handleToIsland = new();
 
     // Per-frame island ranges built from the sorted buffers.

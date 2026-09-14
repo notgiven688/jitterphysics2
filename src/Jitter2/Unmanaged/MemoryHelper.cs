@@ -48,7 +48,7 @@ public static unsafe class MemoryHelper
     }
 
     /// <summary>
-    /// Represents an integer value padded to one cache-line-sized array element.
+    /// Represents a padded array element intended to keep adjacent integer values off the same cache line.
     /// </summary>
     /// <remarks>
     /// This type is intended for arrays of counters where adjacent <see cref="Value"/> fields

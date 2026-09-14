@@ -32,26 +32,26 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
     /// <inheritdoc/>
     public bool Filter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        SoftBodyShape? i1 = proxyA as SoftBodyShape;
-        SoftBodyShape? i2 = proxyB as SoftBodyShape;
+        SoftBodyShape? softShapeA = proxyA as SoftBodyShape;
+        SoftBodyShape? softShapeB = proxyB as SoftBodyShape;
 
-        if (i1 != null && i2 != null)
+        if (softShapeA != null && softShapeB != null)
         {
-            if (i2.ShapeId < i1.ShapeId)
+            if (softShapeB.ShapeId < softShapeA.ShapeId)
             {
-                (i1, i2) = (i2, i1);
+                (softShapeA, softShapeB) = (softShapeB, softShapeA);
             }
 
-            if (!i1.SoftBody.IsActive && !i2.SoftBody.IsActive) return false;
+            if (!softShapeA.SoftBody.IsActive && !softShapeB.SoftBody.IsActive) return false;
 
-            bool colliding = NarrowPhase.MprEpa(i1, i2,
+            bool colliding = NarrowPhase.MprEpa(softShapeA, softShapeB,
                 JQuaternion.Identity, JVector.Zero,
                 out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 
-            var closestA = i1.GetClosest(pA);
-            var closestB = i2.GetClosest(pB);
+            var closestA = softShapeA.GetClosest(pA);
+            var closestB = softShapeB.GetClosest(pB);
 
             world.RegisterContact(closestA.RigidBodyId, closestB.RigidBodyId, closestA, closestB,
                 pA, pB, normal);
@@ -59,39 +59,41 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             return false;
         }
 
-        if (i1 != null)
+        if (softShapeA != null)
         {
-            var rb = (proxyB as RigidBodyShape)!.RigidBody;
+            var rigidShapeB = (proxyB as RigidBodyShape)!;
+            var rigidBodyB = rigidShapeB.RigidBody;
 
-            if (!i1.SoftBody.IsActive && !rb.Data.IsActive) return false;
+            if (!softShapeA.SoftBody.IsActive && !rigidBodyB.Data.IsActive) return false;
 
-            bool colliding = NarrowPhase.MprEpa(i1, (proxyB as RigidBodyShape)!, rb.Orientation, rb.Position,
+            bool colliding = NarrowPhase.MprEpa(softShapeA, rigidShapeB, rigidBodyB.Orientation, rigidBodyB.Position,
                 out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 
-            var closest = i1.GetClosest(pA);
+            var closest = softShapeA.GetClosest(pA);
 
-            world.RegisterContact(closest.RigidBodyId, rb.RigidBodyId, closest, rb,
+            world.RegisterContact(closest.RigidBodyId, rigidBodyB.RigidBodyId, closest, rigidBodyB,
                 pA, pB, normal, ContactData.SolveMode.AngularBody1);
 
             return false;
         }
 
-        if (i2 != null)
+        if (softShapeB != null)
         {
-            var ra = (proxyA as RigidBodyShape)!.RigidBody;
+            var rigidShapeA = (proxyA as RigidBodyShape)!;
+            var rigidBodyA = rigidShapeA.RigidBody;
 
-            if (!i2.SoftBody.IsActive && !ra.Data.IsActive) return false;
+            if (!softShapeB.SoftBody.IsActive && !rigidBodyA.Data.IsActive) return false;
 
-            bool colliding = NarrowPhase.MprEpa(i2, (proxyA as RigidBodyShape)!, ra.Orientation, ra.Position,
+            bool colliding = NarrowPhase.MprEpa(softShapeB, rigidShapeA, rigidBodyA.Orientation, rigidBodyA.Position,
                 out JVector pA, out JVector pB, out JVector normal, out _);
 
             if (!colliding) return false;
 
-            var closest = i2.GetClosest(pA);
+            var closest = softShapeB.GetClosest(pA);
 
-            world.RegisterContact(closest.RigidBodyId, ra.RigidBodyId, closest, ra,
+            world.RegisterContact(closest.RigidBodyId, rigidBodyA.RigidBodyId, closest, rigidBodyA,
                 pA, pB, normal, ContactData.SolveMode.AngularBody1);
 
             return false;

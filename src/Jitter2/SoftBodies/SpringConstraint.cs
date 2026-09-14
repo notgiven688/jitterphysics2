@@ -102,7 +102,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <summary>
     /// Sets the spring parameters using physical properties. This method calculates and sets
     /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
-    /// of the involved bodies and the timestep size does not change.
+    /// of the involved bodies and the timestep size do not change.
     /// </summary>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
@@ -124,12 +124,12 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         Real effectiveMass = (Real)1.0 / (body1.InverseMass + body2.InverseMass);
 
         Real omega = (Real)2.0 * MathR.PI * frequency;
-        Real d = (Real)2.0 * effectiveMass * damping * omega;
-        Real k = effectiveMass * omega * omega;
+        Real dampingCoefficient = (Real)2.0 * effectiveMass * damping * omega;
+        Real springStiffness = effectiveMass * omega * omega;
 
         Real h = dt;
-        data.Softness = (Real)1.0 / (d + h * k);
-        data.BiasFactor = h * k * data.Softness;
+        data.Softness = (Real)1.0 / (dampingCoefficient + h * springStiffness);
+        data.BiasFactor = h * springStiffness * data.Softness;
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         Real error = dp.Length() - data.Distance;
 
-        JVector n = p2 - p1;
+        JVector n = dp;
         if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
 
         data.Jacobian = n;
@@ -263,7 +263,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// Gets or sets the softness (compliance) of the spring constraint.
     /// </summary>
     /// <value>
-    /// Default is 0.001. Higher values allow more positional error but produce a softer spring.
+    /// Default is <see cref="Constraint.DefaultLinearSoftness"/>. Higher values allow more positional error but produce a softer spring.
     /// Scaled by inverse timestep during solving.
     /// </value>
     public Real Softness

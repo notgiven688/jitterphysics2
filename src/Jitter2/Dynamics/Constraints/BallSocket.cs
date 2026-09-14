@@ -180,7 +180,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     /// Gets or sets the softness (compliance) of the constraint.
     /// </summary>
     /// <value>
-    /// Default is 0. Higher values allow more positional error but improve stability.
+    /// Default is <see cref="Constraint.DefaultLinearSoftness"/>. Higher values allow more positional error but improve stability.
     /// Scaled by inverse timestep during solving.
     /// </value>
     public Real Softness

@@ -338,12 +338,12 @@ public sealed partial class World
 
         if (solverIterations < 1)
         {
-            throw new ArgumentException("Solver iterations can not be smaller than one.", nameof(solverIterations));
+            throw new ArgumentException("Solver iterations cannot be smaller than one.", nameof(solverIterations));
         }
 
         if (relaxationIterations < 0)
         {
-            throw new ArgumentException("Relaxation iterations can not be smaller than zero.", nameof(relaxationIterations));
+            throw new ArgumentException("Relaxation iterations cannot be smaller than zero.", nameof(relaxationIterations));
         }
 
         if (dt < Real.Epsilon) return; // nothing to do
@@ -1040,12 +1040,11 @@ public sealed partial class World
         // we solve the same implicit equation directly in **world space** using
         //   I_w = R_n I_b R_nᵀ (assembled from the orientation at t_n).
         //
-        // The two approaches are algebraically equivalent:           -
-        //   • Catto:  keep I_b fixed, rotate ω′ with R_n             |
-        //   • Here:   keep I_w fixed (= R_n I_b R_nᵀ) while solving  |
-        // Both introduce the same first-order O(h) approximation - either “freeze”
-        // the inertia tensor (our method) or rotate ω′ with an orientation that is one
-        // step out of date (Catto).
+        // The two approaches are algebraically equivalent:
+        // - Catto keeps I_b fixed and rotates omega' with R_n.
+        // - This method keeps I_w fixed (= R_n I_b R_n^T) while solving.
+        // Both introduce the same first-order O(h) approximation: either freeze
+        // the inertia tensor or rotate omega' with an orientation that is one step out of date.
 
         JVector f = dt * (omega % JVector.Transform(omega, inertiaWorld));
 
@@ -1065,8 +1064,8 @@ public sealed partial class World
         {
             ref RigidBodyData rigidBody = ref span[i];
 
-            // only dynamic and kinematic objects have a velocity
-            if(rigidBody.MotionType == MotionType.Static) continue;
+            // Only dynamic and kinematic objects have a velocity.
+            if (rigidBody.MotionType == MotionType.Static) continue;
 
             JVector linearVelocity = rigidBody.Velocity;
             JVector angularVelocity = rigidBody.AngularVelocity;
@@ -1212,8 +1211,8 @@ public sealed partial class World
         bool deactivatedBody = wasActive && body.MotionType != MotionType.Static;
 
         // Static bodies have contacts and constraints, but they do not form
-        // collision islands. Do not deactivate contacts or constraints of
-        // static bodies, as the island of the static body goes to sleep.
+        // collision islands. Do not deactivate their contacts or constraints
+        // when a connected dynamic island goes to sleep.
         if (body.MotionType != MotionType.Static)
         {
             foreach (var c in body.InternalContacts)

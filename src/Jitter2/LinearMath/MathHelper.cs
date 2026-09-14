@@ -54,27 +54,25 @@ public static class MathHelper
             Real dt3 = dt * dt * dt;
             Real angle2 = angle * angle;
 
-            Real scale = (Real)0.5 * dt - ((Real)1.0 / (Real)48.0) * dt3 * angle2;
-            JVector.Multiply(omega, scale, out var axis);
+            Real smallAngleScale = (Real)0.5 * dt - ((Real)1.0 / (Real)48.0) * dt3 * angle2;
+            JVector.Multiply(omega, smallAngleScale, out var smallAngleAxis);
 
             Real cos = (Real)1.0 - ((Real)1.0 / (Real)8.0) * theta * theta;
 
-            JQuaternion res = new JQuaternion(axis.X, axis.Y, axis.Z, cos);
-            Debug.Assert(MathHelper.IsZero(res.Length() - 1, (Real)1e-2));
-            return res;
+            JQuaternion smallAngleResult = new JQuaternion(smallAngleAxis.X, smallAngleAxis.Y, smallAngleAxis.Z, cos);
+            Debug.Assert(MathHelper.IsZero(smallAngleResult.Length() - 1, (Real)1e-2));
+            return smallAngleResult;
         }
-        else
-        {
-            Real halfAngleDt = (Real)0.5 * angle * dt;
-            (Real sinD, Real cosD) = StableMath.SinCos(halfAngleDt);
 
-            Real scale = sinD / angle;
-            JVector.Multiply(omega, scale, out var axis);
+        Real halfAngleDt = (Real)0.5 * angle * dt;
+        (Real sinD, Real cosD) = StableMath.SinCos(halfAngleDt);
 
-            JQuaternion res = new JQuaternion(axis.X, axis.Y, axis.Z, cosD);
-            Debug.Assert(MathHelper.IsZero(res.Length() - 1, (Real)1e-2));
-            return res;
-        }
+        Real scale = sinD / angle;
+        JVector.Multiply(omega, scale, out var axis);
+
+        JQuaternion result = new JQuaternion(axis.X, axis.Y, axis.Z, cosD);
+        Debug.Assert(MathHelper.IsZero(result.Length() - 1, (Real)1e-2));
+        return result;
     }
 
     /// <summary>
@@ -149,7 +147,7 @@ public static class MathHelper
         {
             Real phi, cp, sp;
 
-            // M32
+            // M23
             if (MathR.Abs(m.M23) > (Real)1e-6)
             {
                 phi = StableMath.Atan2((Real)1.0, (m.M33 - m.M22) / ((Real)2.0 * m.M23)) / (Real)2.0;
@@ -203,9 +201,9 @@ public static class MathHelper
     {
         Debug.Assert(!CloseToZero(vec), "Cannot create orthonormal of a zero vector");
 
-        Real ax = Math.Abs(vec.X);
-        Real ay = Math.Abs(vec.Y);
-        Real az = Math.Abs(vec.Z);
+        Real ax = MathR.Abs(vec.X);
+        Real ay = MathR.Abs(vec.Y);
+        Real az = MathR.Abs(vec.Z);
 
         JVector r;
 

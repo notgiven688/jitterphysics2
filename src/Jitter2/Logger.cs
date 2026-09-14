@@ -74,7 +74,7 @@ public static class Logger
     public static void Error<T1, T2, T3>(scoped ReadOnlySpan<char> format, T1 arg1, T2 arg2, T3 arg3) => LogFormat(LogLevel.Error, format, arg1, arg2, arg3);
 
     /// <summary>
-    /// Internal logging method that invokes all registered listeners with the given message.
+    /// Internal logging method that invokes the registered listener with the given message.
     /// </summary>
     /// <param name="level">The log level of the message.</param>
     /// <param name="format">The message to log.</param>
@@ -84,7 +84,7 @@ public static class Logger
     }
 
     /// <summary>
-    /// Formats a log message with one argument and invokes the listeners.
+    /// Formats a log message with one argument and invokes the registered listener.
     /// </summary>
     private static void LogFormat<T1>(LogLevel level, scoped ReadOnlySpan<char> format, T1 arg1)
     {

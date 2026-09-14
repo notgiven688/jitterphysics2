@@ -228,7 +228,7 @@ public sealed class ThreadPool
 
         threads = new Thread[threadCount - 1];
 
-        var initWaitHandle = new AutoResetEvent(false);
+        using AutoResetEvent initWaitHandle = new(false);
 
         for (int i = 0; i < threadCount - 1; i++)
         {
@@ -329,9 +329,10 @@ public sealed class ThreadPool
             if (performedTasks > 0)
             {
                 // steal from other queues
-                for (int i = 1; i < queues.Length; i++)
+                int queueCount = queues.Length;
+                for (int i = 1; i < queueCount; i++)
                 {
-                    int queueIndex = (i + index) % queues.Length;
+                    int queueIndex = (i + index) % queueCount;
 
                     while (queues[queueIndex].TryDequeue(out var task))
                     {
@@ -383,16 +384,17 @@ public sealed class ThreadPool
         Interlocked.Exchange(ref capturedException, null);
 
         int totalTasks = taskList.Count;
+        int queueCount = ThreadCount;
         Volatile.Write(ref tasksLeft.Value, totalTasks);
 
         for (int i = 0; i < totalTasks; i++)
         {
-            queues[i % this.ThreadCount].Enqueue(taskList[i]);
+            queues[i % queueCount].Enqueue(taskList[i]);
         }
 
         taskList.Clear();
 
-        // the main thread's queue.
+        // Process the main thread's queue first.
         var myQueue = queues[0];
 
         while (myQueue.TryDequeue(out var task))
@@ -400,7 +402,7 @@ public sealed class ThreadPool
             PerformTask(task);
         }
 
-        // steal from other queues
+        // Steal from other queues.
         for (int i = 1; i < queues.Length; i++)
         {
             while (queues[i].TryDequeue(out var task))

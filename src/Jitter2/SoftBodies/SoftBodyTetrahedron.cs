@@ -60,15 +60,15 @@ public sealed class SoftBodyTetrahedron : SoftBodyShape
     /// <inheritdoc/>
     public override RigidBody GetClosest(in JVector pos)
     {
-        Real dist = Real.MaxValue;
+        Real minDistanceSquared = Real.MaxValue;
         int closest = 0;
 
         for (int i = 0; i < 4; i++)
         {
-            Real len = (pos - Vertices[i].Position).LengthSquared();
-            if (len < dist)
+            Real distanceSquared = (pos - Vertices[i].Position).LengthSquared();
+            if (distanceSquared < minDistanceSquared)
             {
-                dist = len;
+                minDistanceSquared = distanceSquared;
                 closest = i;
             }
         }

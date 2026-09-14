@@ -160,7 +160,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         }
 
         EdgeContactEvaluation evaluation = EvaluateTriangleContact(triangleShape, c2,
-            c1 ? pointA : pointB, normal, out JVector tnormal, out JVector nnormal);
+            c1 ? pointA : pointB, normal, out JVector triangleNormal, out JVector neighborNormal);
 
         if (evaluation == EdgeContactEvaluation.Discard) return false;
         if (evaluation == EdgeContactEvaluation.Keep) return true;
@@ -184,12 +184,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
             if (!result)
             {
-                // this should not happen
+                // MPR refinement failed; reject the contact.
                 return false;
             }
 
             evaluation = EvaluateTriangleContact(triangleShape, c2,
-                c1 ? pointA : pointB, normal, out tnormal, out nnormal);
+                c1 ? pointA : pointB, normal, out triangleNormal, out neighborNormal);
 
             if (evaluation == EdgeContactEvaluation.Discard) return false;
             if (evaluation == EdgeContactEvaluation.Keep) return true;
@@ -197,24 +197,24 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
         JVector midPoint = (Real)0.5 * (pointA + pointB);
 
-        // now the fun part
+        // Now the fun part.
         //
         // we have a collision close to an edge, with
         //
-        // tnormal -> the triangle normal where collision occurred
-        // nnormal -> the normal of neighboring triangle
-        // normal  -> the collision normal
-        if (JVector.Dot(tnormal, nnormal) > cosAngle)
+        // triangleNormal -> the triangle normal where collision occurred
+        // neighborNormal -> the normal of the neighboring triangle
+        // normal         -> the collision normal
+        if (JVector.Dot(triangleNormal, neighborNormal) > cosAngle)
         {
-            // tnormal and nnormal are the same
-            // --------------------------------
-            Real f5 = JVector.Dot(normal, nnormal);
-            Real f6 = JVector.Dot(normal, tnormal);
+            // triangleNormal and neighborNormal are the same
+            // ----------------------------------------------
+            Real f5 = JVector.Dot(normal, neighborNormal);
+            Real f6 = JVector.Dot(normal, triangleNormal);
 
             if (f5 > f6)
             {
 #if DEBUG_EDGEFILTER
-                Console.WriteLine($"case #1: adjusting; normal {normal} -> {nnormal}");
+                Console.WriteLine($"case #1: adjusting; normal {normal} -> {neighborNormal}");
 #endif
 
                 if (!isSpeculative)
@@ -223,12 +223,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                     pointA = pointB = midPoint;
                 }
 
-                normal = nnormal;
+                normal = neighborNormal;
             }
             else
             {
 #if DEBUG_EDGEFILTER
-                Console.WriteLine($"case #1: adjusting; normal {normal} -> {tnormal}");
+                Console.WriteLine($"case #1: adjusting; normal {normal} -> {triangleNormal}");
 #endif
 
                 if (!isSpeculative)
@@ -237,17 +237,17 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                     pointA = pointB = midPoint;
                 }
 
-                normal = tnormal;
+                normal = triangleNormal;
             }
 
             return true;
         }
-        // nnormal and tnormal are different
-        // ----------------------------------
+        // neighborNormal and triangleNormal are different
+        // -----------------------------------------------
 
-        // 1st step, project the normal onto the plane given by tnormal and nnormal
+        // 1st step, project the normal onto the plane given by triangleNormal and neighborNormal
         // by removing the component along the cross product axis
-        JVector cross = nnormal % tnormal;
+        JVector cross = neighborNormal % triangleNormal;
         Real crossLenSq = cross.LengthSquared();
         JVector proj = normal - (cross * normal / crossLenSq) * cross;
 
@@ -257,34 +257,34 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
             Console.WriteLine($"case #3: discarding");
 
 #endif
-            // can not project onto the plane, discard
+            // Cannot project onto the plane, discard.
             return false;
         }
 
-        // 2nd step, determine if "proj" is between nnormal and tnormal
+        // 2nd step, determine if "proj" is between neighborNormal and triangleNormal
         //
-        //    /    nnormal
+        //    /    neighborNormal
         //   /
         //  /
         //  -----  proj
         // \
         //  \
-        //   \     tnormal
-        Real f1 = proj % nnormal * cross;
-        Real f2 = proj % tnormal * cross;
+        //   \     triangleNormal
+        Real f1 = proj % neighborNormal * cross;
+        Real f2 = proj % triangleNormal * cross;
 
         bool between = f1 <= (Real)0.0 && f2 >= (Real)0.0;
 
         if (!between)
         {
             // not in-between, snap normal
-            Real f3 = JVector.Dot(normal, nnormal);
-            Real f4 = JVector.Dot(normal, tnormal);
+            Real f3 = JVector.Dot(normal, neighborNormal);
+            Real f4 = JVector.Dot(normal, triangleNormal);
 
             if (f3 > f4)
             {
 #if DEBUG_EDGEFILTER
-                Console.WriteLine($"case #2: adjusting; normal {normal} -> {nnormal}");
+                Console.WriteLine($"case #2: adjusting; normal {normal} -> {neighborNormal}");
 
 #endif
                 if (!isSpeculative)
@@ -293,12 +293,12 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                     pointA = pointB = midPoint;
                 }
 
-                normal = nnormal;
+                normal = neighborNormal;
             }
             else
             {
 #if DEBUG_EDGEFILTER
-                Console.WriteLine($"case #2: adjusting; normal {normal} -> {tnormal}");
+                Console.WriteLine($"case #2: adjusting; normal {normal} -> {triangleNormal}");
 #endif
                 if (!isSpeculative)
                 {
@@ -306,7 +306,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                     pointA = pointB = midPoint;
                 }
 
-                normal = tnormal;
+                normal = triangleNormal;
             }
         }
 

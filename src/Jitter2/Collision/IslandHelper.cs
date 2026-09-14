@@ -114,8 +114,8 @@ internal static class IslandHelper
 
         if (needsUpdate)
         {
-            if(body1.Data.MotionType != MotionType.Static) body1.Island.NeedsUpdate = true;
-            if(body2.Data.MotionType != MotionType.Static) body2.Island.NeedsUpdate = true;
+            if (body1.Data.MotionType != MotionType.Static) body1.Island.NeedsUpdate = true;
+            if (body2.Data.MotionType != MotionType.Static) body2.Island.NeedsUpdate = true;
         }
     }
 

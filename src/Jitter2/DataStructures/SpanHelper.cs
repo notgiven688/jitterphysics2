@@ -30,6 +30,8 @@ internal static class SpanHelper
     /// </remarks>
     public static ReadOnlySpan<T> AsReadOnlySpan<T>(IEnumerable<T> elements, out T[]? backingArray) where T : struct
     {
+        ArgumentNullException.ThrowIfNull(elements);
+
         backingArray = null;
 
         switch (elements)

@@ -154,7 +154,7 @@ public sealed partial class World : IDisposable
     /// </param>
     public delegate void WorldStep(Real dt);
 
-    // Post- and Pre-step
+    // Step callbacks.
 
     /// <summary>
     /// Raised at the beginning of a simulation step, before any collision detection,
@@ -297,7 +297,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="ArgumentOutOfRangeException">Thrown when count is less than 1.</exception>
     public static (ulong min, ulong max) RequestId(int count)
     {
-        if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater zero.");
+        if (count < 1) throw new ArgumentOutOfRangeException(nameof(count), "Count must be greater than zero.");
         ulong count64 = (ulong)count;
         ulong max = Interlocked.Add(ref _idCounter, count64) + 1;
         return (max - count64, max);
@@ -355,14 +355,14 @@ public sealed partial class World : IDisposable
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value.solver), value.solver,
-                    "Solver iterations can not be smaller than one.");
+                    "Solver iterations cannot be smaller than one.");
             }
 
             if (value.relaxation < 0)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(value.relaxation), value.relaxation,
-                    "Relaxation iterations can not be smaller than zero.");
+                    "Relaxation iterations cannot be smaller than zero.");
             }
 
             solverIterations = value.solver;
@@ -386,7 +386,7 @@ public sealed partial class World : IDisposable
             if (value < 1)
             {
                 throw new ArgumentOutOfRangeException(nameof(value),
-                    "The number of substeps has to be larger than zero.");
+                    "The number of substeps must be greater than zero.");
             }
 
             substeps = value;
@@ -668,7 +668,7 @@ public sealed partial class World : IDisposable
 
             foreach (var c in body.Contacts)
             {
-               ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
             }
         }
 
@@ -816,7 +816,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="SameBodyException">
     /// Thrown if <paramref name="body1"/> and <paramref name="body2"/> are the same.
     /// </exception>
-    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the constraint buffer maximum size is exceeded.</exception>
     public T CreateConstraint<T>(RigidBody body1, RigidBody body2) where T : Constraint, new()
     {
         ThrowIfDisposed();
@@ -892,7 +892,7 @@ public sealed partial class World : IDisposable
     /// Creates and adds a new rigid body to the simulation world.
     /// </summary>
     /// <returns>A newly created instance of <see cref="RigidBody"/>.</returns>
-    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the maximum size limit is exceeded.</exception>
+    /// <exception cref="PartitionedBuffer{T}.MaximumSizeException">Raised when the rigid-body buffer maximum size is exceeded.</exception>
     public RigidBody CreateRigidBody()
     {
         ThrowIfDisposed();

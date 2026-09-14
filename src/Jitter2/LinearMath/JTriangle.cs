@@ -72,7 +72,7 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
 
         if (Math.Abs(denominator) < (Real)1e-06)
         {
-            // triangle and ray are parallel
+            // Triangle and ray are parallel.
             goto return_false;
         }
 

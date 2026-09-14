@@ -244,7 +244,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Removes the associated native structure from the buffer and invalidates the handle.
+    /// Removes the associated unmanaged element from the buffer and invalidates the handle.
     /// </summary>
     /// <param name="handle">The handle to free.</param>
     /// <remarks>

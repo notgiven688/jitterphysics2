@@ -601,7 +601,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             if (handle.Data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
-                    $"Can not set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
+                    $"Cannot set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
             handle.Data.Velocity = value;
@@ -634,7 +634,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             if (handle.Data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
-                    $"Can not set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
+                    $"Cannot set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
             handle.Data.AngularVelocity = value;
@@ -656,7 +656,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public bool AffectedByGravity { get; set; } = true;
 
     /// <summary>
-    /// A managed pointer to custom user data. This is not utilized by the engine.
+    /// A managed pointer to custom user data. This is not used by the engine.
     /// </summary>
     public object? Tag { get; set; }
 
@@ -861,7 +861,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             if (shape.IsRegistered)
             {
-                throw new ArgumentException("Shape can not be added. Shape already registered elsewhere.", nameof(shapes));
+                throw new ArgumentException("Shape cannot be added. Shape already registered elsewhere.", nameof(shapes));
             }
 
             AttachToShape(shape);
@@ -928,7 +928,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         if (shape.IsRegistered)
         {
-            throw new ArgumentException("Shape can not be added. Shape already registered elsewhere.", nameof(shape));
+            throw new ArgumentException("Shape cannot be added. Shape already registered elsewhere.", nameof(shape));
         }
 
         AttachToShape(shape);
@@ -1331,7 +1331,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         if (mass <= (Real)0.0)
         {
-            throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
+            throw new ArgumentException("Mass cannot be zero or negative.", nameof(mass));
         }
 
         SetMassInertia();
@@ -1382,7 +1382,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         {
             if (mass <= (Real)0.0)
             {
-                throw new ArgumentException("Mass can not be zero or negative.", nameof(mass));
+                throw new ArgumentException("Mass cannot be zero or negative.", nameof(mass));
             }
 
             if (!JMatrix.Inverse(inertia, out inverseInertia))
