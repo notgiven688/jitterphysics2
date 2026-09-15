@@ -317,30 +317,30 @@ public unsafe struct SimplexSolverAB
         switch (useCount)
         {
             case 1:
-            {
-                int i0 = ix[0];
-                closest = ptr[i0].V;
-                usageMask = 1u << i0;
-                barycentric[i0] = (Real)1.0;
-                return true;
-            }
+                {
+                    int i0 = ix[0];
+                    closest = ptr[i0].V;
+                    usageMask = 1u << i0;
+                    barycentric[i0] = (Real)1.0;
+                    return true;
+                }
             case 2:
-            {
-                int i0 = ix[0], i1 = ix[1];
-                closest = ClosestSegment(i0, i1, ref barycentric, out usageMask);
-                return true;
-            }
+                {
+                    int i0 = ix[0], i1 = ix[1];
+                    closest = ClosestSegment(i0, i1, ref barycentric, out usageMask);
+                    return true;
+                }
             case 3:
-            {
-                int i0 = ix[0], i1 = ix[1], i2 = ix[2];
-                closest = ClosestTriangle(i0, i1, i2, ref barycentric, out usageMask);
-                return true;
-            }
+                {
+                    int i0 = ix[0], i1 = ix[1], i2 = ix[2];
+                    closest = ClosestTriangle(i0, i1, i2, ref barycentric, out usageMask);
+                    return true;
+                }
             case 4:
-            {
-                closest = ClosestTetrahedron(ref barycentric, out usageMask);
-                return usageMask != 0b1111;
-            }
+                {
+                    closest = ClosestTetrahedron(ref barycentric, out usageMask);
+                    return usageMask != 0b1111;
+                }
         }
 
         Debug.Assert(false, "Unreachable.");

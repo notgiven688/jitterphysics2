@@ -87,40 +87,40 @@ public struct RigidBodyData
     /// <summary>
     /// World-space position of the rigid body (center of mass).
     /// </summary>
-    [FieldOffset(8 + 0*sizeof(Real))]
+    [FieldOffset(8 + 0 * sizeof(Real))]
     public JVector Position;
 
     /// <summary>
     /// Linear velocity in world space, measured in units per second.
     /// </summary>
-    [FieldOffset(8 + 3*sizeof(Real))]
+    [FieldOffset(8 + 3 * sizeof(Real))]
     public JVector Velocity;
 
     /// <summary>
     /// Angular velocity in world space, measured in radians per second. The vector direction
     /// is the rotation axis, and its magnitude is the rotation speed.
     /// </summary>
-    [FieldOffset(8 + 6*sizeof(Real))]
+    [FieldOffset(8 + 6 * sizeof(Real))]
     public JVector AngularVelocity;
 
     /// <summary>
     /// Accumulated linear velocity change for the current substep (from forces and gravity).
     /// Internal use only.
     /// </summary>
-    [FieldOffset(8 + 9*sizeof(Real))]
+    [FieldOffset(8 + 9 * sizeof(Real))]
     public JVector DeltaVelocity;
 
     /// <summary>
     /// Accumulated angular velocity change for the current substep (from torques).
     /// Internal use only.
     /// </summary>
-    [FieldOffset(8 + 12*sizeof(Real))]
+    [FieldOffset(8 + 12 * sizeof(Real))]
     public JVector DeltaAngularVelocity;
 
     /// <summary>
     /// World-space orientation of the rigid body.
     /// </summary>
-    [FieldOffset(8 + 15*sizeof(Real))]
+    [FieldOffset(8 + 15 * sizeof(Real))]
     public JQuaternion Orientation;
 
     /// <summary>
@@ -128,21 +128,21 @@ public struct RigidBodyData
     /// from the body-space inverse inertia and current orientation. For static and kinematic
     /// bodies, this is zero (representing infinite inertia).
     /// </summary>
-    [FieldOffset(8 + 19*sizeof(Real))]
+    [FieldOffset(8 + 19 * sizeof(Real))]
     public JMatrix InverseInertiaWorld;
 
     /// <summary>
     /// Inverse mass of the body. A value of zero represents infinite mass (used for static
     /// and kinematic bodies in the solver).
     /// </summary>
-    [FieldOffset(8 + 28*sizeof(Real))]
+    [FieldOffset(8 + 28 * sizeof(Real))]
     public Real InverseMass;
 
     /// <summary>
     /// Bitfield encoding motion type (bits 0–1), active state (bit 2), and gyroscopic forces (bit 3).
     /// Use the corresponding properties instead of manipulating this directly.
     /// </summary>
-    [FieldOffset(8 + 29*sizeof(Real))]
+    [FieldOffset(8 + 29 * sizeof(Real))]
     public int Flags;
 
     /// <summary>
@@ -730,36 +730,36 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     UpdateWorldInertia();
                     break;
                 case MotionType.Kinematic:
-                {
-                    ClearQueuedForces();
-                    // Switch to kinematic
-                    if (Data.MotionType == MotionType.Static)
                     {
+                        ClearQueuedForces();
+                        // Switch to kinematic
+                        if (Data.MotionType == MotionType.Static)
+                        {
+                            Data.MotionType = MotionType.Kinematic;
+                            World.BuildConnectionsFromExistingContacts(this);
+                        }
+
                         Data.MotionType = MotionType.Kinematic;
-                        World.BuildConnectionsFromExistingContacts(this);
+                        World.RemoveStaticStaticConstraints(this);
+                        World.ActivateBodyNextStep(this, true);
+                        UpdateWorldInertia();
+                        break;
                     }
-
-                    Data.MotionType = MotionType.Kinematic;
-                    World.RemoveStaticStaticConstraints(this);
-                    World.ActivateBodyNextStep(this, true);
-                    UpdateWorldInertia();
-                    break;
-                }
                 case MotionType.Dynamic:
-                {
-                    ClearQueuedForces();
-                    // Switch to dynamic
-                    if (Data.MotionType == MotionType.Static)
                     {
-                        Data.MotionType = MotionType.Dynamic;
-                        World.BuildConnectionsFromExistingContacts(this);
-                    }
+                        ClearQueuedForces();
+                        // Switch to dynamic
+                        if (Data.MotionType == MotionType.Static)
+                        {
+                            Data.MotionType = MotionType.Dynamic;
+                            World.BuildConnectionsFromExistingContacts(this);
+                        }
 
-                    Data.MotionType = MotionType.Dynamic;
-                    World.ActivateBodyNextStep(this, true);
-                    UpdateWorldInertia();
-                    break;
-                }
+                        Data.MotionType = MotionType.Dynamic;
+                        World.ActivateBodyNextStep(this, true);
+                        UpdateWorldInertia();
+                        break;
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
@@ -936,11 +936,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
     }
-    
+
     [Obsolete($"Use {nameof(AddShapes)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
     public void AddShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
         => AddShapes(shapes, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
-    
+
     [Obsolete($"Use {nameof(AddShape)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
     public void AddShape(RigidBodyShape shape, bool setMassInertia = true)
         => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
@@ -1076,10 +1076,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         data.Velocity += impulse * inverseMass;
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
     }
-    
+
     [Obsolete("Use ApplyImpulse instead.", true)]
     public void AddImpulse(in JVector impulse, bool wakeup = true) => ApplyImpulse(impulse, wakeup);
-    
+
     [Obsolete("Use ApplyImpulse instead.", true)]
     public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = true) => ApplyImpulse(impulse, position, wakeup);
 
@@ -1239,11 +1239,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         sids.Clear();
     }
-    
+
     [Obsolete($"Use {nameof(RemoveShape)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
     public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)
         => RemoveShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
-    
+
     [Obsolete($"Use {nameof(RemoveShapes)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
     public void RemoveShape(IEnumerable<RigidBodyShape> shapes, bool setMassInertia = true)
         => RemoveShapes(shapes, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
@@ -1264,7 +1264,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         RemoveShapes(InternalShapes, massInertiaMode);
     }
-    
+
     [Obsolete($"Use {nameof(ClearShapes)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
     public void ClearShapes(bool setMassInertia = true)
     {

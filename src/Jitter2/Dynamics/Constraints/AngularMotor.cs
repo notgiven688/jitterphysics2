@@ -48,7 +48,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         DispatchId = RegisteredDispatchId;
         base.Create();
     }
-    
+
     /// <inheritdoc />
     public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
 

@@ -13,7 +13,7 @@ namespace Jitter2.LinearMath;
 /// <summary>
 /// Represents a triangle defined by three vertices.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 9*sizeof(Real))]
+[StructLayout(LayoutKind.Explicit, Size = 9 * sizeof(Real))]
 public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatable<JTriangle>
 {
     /// <summary>
@@ -104,7 +104,7 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
             return true;
         }
 
-        return_false:
+    return_false:
 
         lambda = Real.MaxValue; normal = JVector.Zero;
         return false;

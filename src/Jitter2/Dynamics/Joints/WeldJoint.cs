@@ -34,7 +34,7 @@ public class WeldJoint : Joint
     {
         Body1 = body1;
         Body2 = body2;
-        
+
         FixedAngle = world.CreateConstraint<FixedAngle>(body1, body2);
         FixedAngle.Initialize();
         Register(FixedAngle);

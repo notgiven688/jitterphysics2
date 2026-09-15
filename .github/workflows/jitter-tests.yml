@@ -16,6 +16,29 @@ env:
   TEST_RESULTS_DIR: ./TestResults
 
 jobs:
+  format:
+    name: Check Formatting
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./src
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Jitter2/Jitter2.csproj
+
+      - name: Check formatting
+        run: dotnet format Jitter2/Jitter2.csproj --verify-no-changes --no-restore
+
   build-and-test:
     name: Build and Test (${{ matrix.precision }})
 

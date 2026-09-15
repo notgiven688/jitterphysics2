@@ -360,7 +360,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         ushort current = 0;
         Real dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
-        main:
+    main:
         bool needsVerify = false;
         JVector verifyDir = JVector.Arbitrary;
 
@@ -395,7 +395,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         {
             Real d0 = JVector.Dot(verifyDir, vertices[current].Vertex);
 
-            secondary:
+        secondary:
             min = vertices[current].NeighborMinIndex;
             max = vertices[current].NeighborMaxIndex;
 

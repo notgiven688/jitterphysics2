@@ -220,18 +220,18 @@ public sealed partial class World
         {
             // Find the lowest island index among the three current scan positions.
             int minIsland = int.MaxValue;
-            if (ci < contacts.Length)    minIsland = Math.Min(minIsland, contacts[ci].IslandIndex);
-            if (si < small.Length)       minIsland = Math.Min(minIsland, small[si].IslandIndex);
+            if (ci < contacts.Length) minIsland = Math.Min(minIsland, contacts[ci].IslandIndex);
+            if (si < small.Length) minIsland = Math.Min(minIsland, small[si].IslandIndex);
             if (ri < constraints.Length) minIsland = Math.Min(minIsland, constraints[ri].IslandIndex);
 
             IslandRange range = new();
 
             range.ContactStart = ci;
-            while (ci < contacts.Length    && contacts[ci].IslandIndex    == minIsland) ci++;
+            while (ci < contacts.Length && contacts[ci].IslandIndex == minIsland) ci++;
             range.ContactEnd = ci;
 
             range.SmallStart = si;
-            while (si < small.Length       && small[si].IslandIndex       == minIsland) si++;
+            while (si < small.Length && small[si].IslandIndex == minIsland) si++;
             range.SmallEnd = si;
 
             range.ConstraintStart = ri;

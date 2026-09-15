@@ -13,13 +13,13 @@ namespace Jitter2.LinearMath;
 /// A floating point variable of type <see cref="Real"/> representing an angle. This structure exists to eliminate
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
-[StructLayout(LayoutKind.Explicit, Size = 1*sizeof(Real))]
+[StructLayout(LayoutKind.Explicit, Size = 1 * sizeof(Real))]
 public struct JAngle : IEquatable<JAngle>
 {
     /// <summary>
     /// Gets or sets the angle value in radians.
     /// </summary>
-    [field: FieldOffset(0*sizeof(Real))]
+    [field: FieldOffset(0 * sizeof(Real))]
     public Real Radian { get; set; }
 
     /// <summary>

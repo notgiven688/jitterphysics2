@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-
 using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -610,22 +609,24 @@ public struct ContactData
 
         [FieldOffset(4 + 14 * sizeof(Real))] internal VectorReal Accumulated;
 
-        [FieldOffset(4 + 18 * sizeof(Real))] [ReferenceFrame(ReferenceFrame.Local)]
+        [FieldOffset(4 + 18 * sizeof(Real))]
+        [ReferenceFrame(ReferenceFrame.Local)]
         internal JVector Position1;
 
-        [FieldOffset(4 + 21 * sizeof(Real))] [ReferenceFrame(ReferenceFrame.Local)]
+        [FieldOffset(4 + 21 * sizeof(Real))]
+        [ReferenceFrame(ReferenceFrame.Local)]
         internal JVector Position2;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the first body.
         /// </summary>
-        [FieldOffset(4+25*sizeof(Real))]
+        [FieldOffset(4 + 25 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
         /// Position of the contact relative to the center of mass on the second body.
         /// </summary>
-        [FieldOffset(4+28*sizeof(Real))]
+        [FieldOffset(4 + 28 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         /// <summary>
@@ -633,20 +634,23 @@ public struct ContactData
         /// Pointing from the collision point on the surface of <see cref="ContactData.Body2"/> to the collision point
         /// on the surface of <see cref="ContactData.Body1"/>.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Normal => new (NormalTangentX.GetElement(0),
+        [ReferenceFrame(ReferenceFrame.World)]
+        public readonly JVector Normal => new(NormalTangentX.GetElement(0),
             NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
 
         /// <summary>
         /// Tangent (normalized) to the contact <see cref="Normal"/> in the direction of the relative movement of
         /// both bodies, at the time when the contact is created.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Tangent1 => new (NormalTangentX.GetElement(1),
+        [ReferenceFrame(ReferenceFrame.World)]
+        public readonly JVector Tangent1 => new(NormalTangentX.GetElement(1),
             NormalTangentY.GetElement(1), NormalTangentZ.GetElement(1));
 
         /// <summary>
         /// A second tangent forming an orthonormal basis with <see cref="Normal"/> and <see cref="Tangent1"/>.
         /// </summary>
-        [ReferenceFrame(ReferenceFrame.World)] public readonly JVector Tangent2 => new JVector(NormalTangentX.GetElement(2),
+        [ReferenceFrame(ReferenceFrame.World)]
+        public readonly JVector Tangent2 => new JVector(NormalTangentX.GetElement(2),
             NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
 
         /// <summary>
@@ -853,7 +857,7 @@ public struct ContactData
             Real massTangent2 = (Real)1.0 / kTangent2;
             Real massNormal = (Real)1.0 / kNormal;
 
-            JVector mass = new (massNormal, massTangent1, massTangent2);
+            JVector mass = new(massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
 
             PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);

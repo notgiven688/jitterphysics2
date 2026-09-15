@@ -167,7 +167,7 @@ internal class SlimBag<T> : IEnumerable<T>
     {
         int lc = Interlocked.Increment(ref counter) - 1;
 
-        again:
+    again:
 
         rwLock.EnterReadLock();
 

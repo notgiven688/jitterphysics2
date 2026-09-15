@@ -142,7 +142,7 @@ public partial class DynamicTree
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
         SweepCast(SupportPrimitives.CreateCylinder(radius, halfHeight), orientation, position, direction, maxLambda, pre,
             post, out proxy, out pointA, out pointB, out normal, out lambda);
-    
+
     private struct SweepQuery(in JBoundingBox box, in JQuaternion orientation, in JVector position, in JVector direction)
     {
         public readonly JBoundingBox Box = box;

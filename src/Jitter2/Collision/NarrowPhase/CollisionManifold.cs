@@ -390,7 +390,7 @@ public unsafe struct CollisionManifold
     /// <param name="normal">The collision normal (from B to A).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]
-    public void BuildManifold<Ta,Tb>(Ta shapeA, Tb shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
+    public void BuildManifold<Ta, Tb>(Ta shapeA, Tb shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
         in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal)
         where Ta : ISupportMappable where Tb : ISupportMappable
     {
@@ -530,7 +530,7 @@ public unsafe struct CollisionManifold
                         AddPointPair(mA, mB, ref manifoldCount, clippedA[k], clippedB[k], normal);
                         if (manifoldCount == MaxManifoldPoints) goto Finalize;
                     }
-                }            
+                }
             }
         }
 
@@ -541,7 +541,7 @@ public unsafe struct CollisionManifold
             mB[manifoldCount++] = pBloc;
         }
 
-        Finalize:
+    Finalize:
         // Final reduction from raw manifold candidates to the solver-facing contact set.
         ReduceManifold(mA, mB, ref manifoldCount, normal);
 
@@ -565,7 +565,7 @@ public unsafe struct CollisionManifold
     /// <param name="normal">The collision normal (from B to A).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [SkipLocalsInit]
-    public void BuildManifold<Ta,Tb>(Ta shapeA, Tb shapeB,
+    public void BuildManifold<Ta, Tb>(Ta shapeA, Tb shapeB,
         in JVector pA, in JVector pB, in JVector normal) where Ta : RigidBodyShape where Tb : RigidBodyShape
     {
         BuildManifold(shapeA, shapeB, shapeA.RigidBody.Orientation, shapeB.RigidBody.Orientation,

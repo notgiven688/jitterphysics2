@@ -1030,14 +1030,14 @@ public partial class DynamicTree
             double inhCostAfterNode = cost - oldSurface;
 
             // Expand to children
-            double leftMerged  = TreeBox.MergedSurface(nodes[cn.Left].ExpandedBox, nb.ExpandedBox);
+            double leftMerged = TreeBox.MergedSurface(nodes[cn.Left].ExpandedBox, nb.ExpandedBox);
             double rightMerged = TreeBox.MergedSurface(nodes[cn.Right].ExpandedBox, nb.ExpandedBox);
 
-            double leftCost  = inhCostAfterNode + leftMerged;
+            double leftCost = inhCostAfterNode + leftMerged;
             double rightCost = inhCostAfterNode + rightMerged;
 
             // Store only index + full cost; inhCost will be reconstructed on pop
-            priorityQueue.Enqueue(cn.Left,  leftCost);
+            priorityQueue.Enqueue(cn.Left, leftCost);
             priorityQueue.Enqueue(cn.Right, rightCost);
         }
 
@@ -1247,7 +1247,7 @@ public partial class DynamicTree
 
         while (where != root)
         {
-            if (TreeBox.Contains(nodes[where].ExpandedBox,nodeTreeBox))
+            if (TreeBox.Contains(nodes[where].ExpandedBox, nodeTreeBox))
             {
                 break;
             }
