@@ -1,5 +1,13 @@
 # Changelog
 
+### Jitter 2.8.12 (2026-09-15)
+
+- Added `World.Trim` to release excess internal storage after large scene changes.
+- Fixed a multithreaded contact creation race that could create duplicate collision pairs.
+- Fixed managed memory growth from arbiter pooling across worker threads.
+- Improved validation and exception behavior for disposed worlds, removal calls, dynamic tree optimization, worker pools, and unmanaged memory helpers.
+- Improved XML documentation for contact registration threading rules, arbiter lifetime, and public exception behavior.
+
 ### Jitter 2.8.11 (2026-09-09)
 
 - Added `World.ConstraintRemoved` for reacting to explicit and automatic constraint removal.
