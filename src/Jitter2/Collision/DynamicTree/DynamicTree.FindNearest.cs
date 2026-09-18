@@ -215,62 +215,62 @@ public partial class DynamicTree
                 int index = stack.Pop();
                 ref Node node = ref nodes[index];
 
-            if (node.IsLeaf)
-            {
-                IDynamicTreeProxy proxy = node.Proxy!;
-                if (proxy is not IDistanceTestable distanceTestable) continue;
-                if (query.FilterPre != null && !query.FilterPre(proxy)) continue;
-
-                Unsafe.SkipInit(out FindNearestResult res);
-                bool separated = distanceTestable.Distance(support,
-                    query.Orientation, query.Position,
-                    out res.PointA, out res.PointB, out res.Normal, out res.Distance);
-                res.Entity = proxy;
-
-                if (!separated)
+                if (node.IsLeaf)
                 {
-                    res.Distance = (Real)0.0;
-                    res.Normal = JVector.Zero;
+                    IDynamicTreeProxy proxy = node.Proxy!;
+                    if (proxy is not IDistanceTestable distanceTestable) continue;
+                    if (query.FilterPre != null && !query.FilterPre(proxy)) continue;
+
+                    Unsafe.SkipInit(out FindNearestResult res);
+                    bool separated = distanceTestable.Distance(support,
+                        query.Orientation, query.Position,
+                        out res.PointA, out res.PointB, out res.Normal, out res.Distance);
+                    res.Entity = proxy;
+
+                    if (!separated)
+                    {
+                        res.Distance = (Real)0.0;
+                        res.Normal = JVector.Zero;
+                        if (query.FilterPost != null && !query.FilterPost(res)) continue;
+                        result = res;
+                        return true;
+                    }
+
+                    if (res.Distance > result.Distance) continue;
                     if (query.FilterPost != null && !query.FilterPost(res)) continue;
+
                     result = res;
-                    return true;
+                    continue;
                 }
 
-                if (res.Distance > result.Distance) continue;
-                if (query.FilterPost != null && !query.FilterPost(res)) continue;
+                ref Node leftNode = ref nodes[node.Left];
+                ref Node rightNode = ref nodes[node.Right];
 
-                result = res;
-                continue;
-            }
+                Real leftDist = MinDistBox(query.BoxExtents, query.BoxCenter, leftNode.ExpandedBox);
+                Real rightDist = MinDistBox(query.BoxExtents, query.BoxCenter, rightNode.ExpandedBox);
 
-            ref Node leftNode = ref nodes[node.Left];
-            ref Node rightNode = ref nodes[node.Right];
+                bool leftHit = leftDist <= result.Distance;
+                bool rightHit = rightDist <= result.Distance;
 
-            Real leftDist = MinDistBox(query.BoxExtents, query.BoxCenter, leftNode.ExpandedBox);
-            Real rightDist = MinDistBox(query.BoxExtents, query.BoxCenter, rightNode.ExpandedBox);
-
-            bool leftHit = leftDist <= result.Distance;
-            bool rightHit = rightDist <= result.Distance;
-
-            if (leftHit && rightHit)
-            {
-                if (leftDist < rightDist)
+                if (leftHit && rightHit)
                 {
-                    stack.Push(node.Right);
-                    stack.Push(node.Left);
+                    if (leftDist < rightDist)
+                    {
+                        stack.Push(node.Right);
+                        stack.Push(node.Left);
+                    }
+                    else
+                    {
+                        stack.Push(node.Left);
+                        stack.Push(node.Right);
+                    }
                 }
                 else
                 {
-                    stack.Push(node.Left);
-                    stack.Push(node.Right);
+                    if (leftHit) stack.Push(node.Left);
+                    if (rightHit) stack.Push(node.Right);
                 }
             }
-            else
-            {
-                if (leftHit) stack.Push(node.Left);
-                if (rightHit) stack.Push(node.Right);
-            }
-        }
 
             return result.Entity != null;
         }

@@ -128,55 +128,55 @@ public partial class DynamicTree
 
                 ref Node node = ref nodes[index];
 
-            if (node.IsLeaf)
-            {
-                IDynamicTreeProxy proxy = node.Proxy!;
-                if (proxy is not IRayCastable rayCastable) continue;
-
-                if (ray.FilterPre != null && !ray.FilterPre(proxy)) continue;
-
-                Unsafe.SkipInit(out RayCastResult res);
-                bool hit = rayCastable.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
-                res.Entity = proxy;
-
-                if (hit && res.Lambda < result.Lambda)
+                if (node.IsLeaf)
                 {
-                    if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
-                    result = res;
-                    globalHit = true;
+                    IDynamicTreeProxy proxy = node.Proxy!;
+                    if (proxy is not IRayCastable rayCastable) continue;
+
+                    if (ray.FilterPre != null && !ray.FilterPre(proxy)) continue;
+
+                    Unsafe.SkipInit(out RayCastResult res);
+                    bool hit = rayCastable.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
+                    res.Entity = proxy;
+
+                    if (hit && res.Lambda < result.Lambda)
+                    {
+                        if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
+                        result = res;
+                        globalHit = true;
+                    }
+
+                    continue;
                 }
 
-                continue;
-            }
+                ref Node lNode = ref nodes[node.Left];
+                ref Node rNode = ref nodes[node.Right];
 
-            ref Node lNode = ref nodes[node.Left];
-            ref Node rNode = ref nodes[node.Right];
+                bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real lEnter);
+                bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real rEnter);
 
-            bool lRes = lNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real lEnter);
-            bool rRes = rNode.ExpandedBox.RayIntersect(ray.Origin, ray.Direction, out Real rEnter);
+                if (lEnter > result.Lambda) lRes = false;
+                if (rEnter > result.Lambda) rRes = false;
 
-            if (lEnter > result.Lambda) lRes = false;
-            if (rEnter > result.Lambda) rRes = false;
-
-            if (lRes && rRes)
-            {
-                if (lEnter < rEnter)
+                if (lRes && rRes)
                 {
-                    stack.Push(node.Right);
-                    stack.Push(node.Left);
+                    if (lEnter < rEnter)
+                    {
+                        stack.Push(node.Right);
+                        stack.Push(node.Left);
+                    }
+                    else
+                    {
+                        stack.Push(node.Left);
+                        stack.Push(node.Right);
+                    }
                 }
                 else
                 {
-                    stack.Push(node.Left);
-                    stack.Push(node.Right);
+                    if (lRes) stack.Push(node.Left);
+                    if (rRes) stack.Push(node.Right);
                 }
             }
-            else
-            {
-                if (lRes) stack.Push(node.Left);
-                if (rRes) stack.Push(node.Right);
-            }
-        }
 
             return globalHit;
         }

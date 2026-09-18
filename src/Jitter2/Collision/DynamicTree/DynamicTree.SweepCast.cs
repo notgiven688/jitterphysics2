@@ -259,52 +259,52 @@ public partial class DynamicTree
                 int index = stack.Pop();
                 ref Node node = ref nodes[index];
 
-            if (node.IsLeaf)
-            {
-                if (node.Proxy is not ISweepTestable sweepCastable) continue;
-                if (sweep.FilterPre != null && !sweep.FilterPre(node.Proxy!)) continue;
-
-                Unsafe.SkipInit(out SweepCastResult res);
-                bool hit = sweepCastable.Sweep(support,
-                    sweep.Orientation, sweep.Position, sweep.Direction,
-                    out res.PointA, out res.PointB, out res.Normal, out res.Lambda);
-                res.Entity = node.Proxy;
-
-                if (!hit || res.Lambda > result.Lambda) continue;
-                if (sweep.FilterPost != null && !sweep.FilterPost(res)) continue;
-
-                result = res;
-                continue;
-            }
-
-            ref Node leftNode = ref nodes[node.Left];
-            ref Node rightNode = ref nodes[node.Right];
-
-            bool leftHit = SweepBox(sweep.Box, sweep.Direction, leftNode.ExpandedBox, out Real leftEnter);
-            bool rightHit = SweepBox(sweep.Box, sweep.Direction, rightNode.ExpandedBox, out Real rightEnter);
-
-            if (leftEnter > result.Lambda) leftHit = false;
-            if (rightEnter > result.Lambda) rightHit = false;
-
-            if (leftHit && rightHit)
-            {
-                if (leftEnter < rightEnter)
+                if (node.IsLeaf)
                 {
-                    stack.Push(node.Right);
-                    stack.Push(node.Left);
+                    if (node.Proxy is not ISweepTestable sweepCastable) continue;
+                    if (sweep.FilterPre != null && !sweep.FilterPre(node.Proxy!)) continue;
+
+                    Unsafe.SkipInit(out SweepCastResult res);
+                    bool hit = sweepCastable.Sweep(support,
+                        sweep.Orientation, sweep.Position, sweep.Direction,
+                        out res.PointA, out res.PointB, out res.Normal, out res.Lambda);
+                    res.Entity = node.Proxy;
+
+                    if (!hit || res.Lambda > result.Lambda) continue;
+                    if (sweep.FilterPost != null && !sweep.FilterPost(res)) continue;
+
+                    result = res;
+                    continue;
+                }
+
+                ref Node leftNode = ref nodes[node.Left];
+                ref Node rightNode = ref nodes[node.Right];
+
+                bool leftHit = SweepBox(sweep.Box, sweep.Direction, leftNode.ExpandedBox, out Real leftEnter);
+                bool rightHit = SweepBox(sweep.Box, sweep.Direction, rightNode.ExpandedBox, out Real rightEnter);
+
+                if (leftEnter > result.Lambda) leftHit = false;
+                if (rightEnter > result.Lambda) rightHit = false;
+
+                if (leftHit && rightHit)
+                {
+                    if (leftEnter < rightEnter)
+                    {
+                        stack.Push(node.Right);
+                        stack.Push(node.Left);
+                    }
+                    else
+                    {
+                        stack.Push(node.Left);
+                        stack.Push(node.Right);
+                    }
                 }
                 else
                 {
-                    stack.Push(node.Left);
-                    stack.Push(node.Right);
+                    if (leftHit) stack.Push(node.Left);
+                    if (rightHit) stack.Push(node.Right);
                 }
             }
-            else
-            {
-                if (leftHit) stack.Push(node.Left);
-                if (rightHit) stack.Push(node.Right);
-            }
-        }
 
             return result.Entity != null;
         }
