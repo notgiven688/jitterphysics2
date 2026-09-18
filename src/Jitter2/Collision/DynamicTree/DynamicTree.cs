@@ -589,35 +589,42 @@ public partial class DynamicTree
 
         Stack<int> stack = QueryStack;
         int baseCount = stack.Count;
-        stack.Push(root);
-
-        while (stack.Count > baseCount)
+        try
         {
-            int index = stack.Pop();
-            ref Node node = ref nodes[index];
+            stack.Push(root);
 
-            if (node.IsLeaf)
+            while (stack.Count > baseCount)
             {
-                if (node.Proxy!.WorldBoundingBox.RayIntersect(rayOrigin, rayDirection, out _))
+                int index = stack.Pop();
+                ref Node node = ref nodes[index];
+
+                if (node.IsLeaf)
                 {
-                    hits.Add(node.Proxy);
+                    if (node.Proxy!.WorldBoundingBox.RayIntersect(rayOrigin, rayDirection, out _))
+                    {
+                        hits.Add(node.Proxy);
+                    }
+
+                    continue;
                 }
 
-                continue;
-            }
+                int left = node.Left;
+                int right = node.Right;
 
-            int left = node.Left;
-            int right = node.Right;
+                if (nodes[left].ExpandedBox.RayIntersect(rayOrigin, rayDirection, out _))
+                {
+                    stack.Push(left);
+                }
 
-            if (nodes[left].ExpandedBox.RayIntersect(rayOrigin, rayDirection, out _))
-            {
-                stack.Push(left);
+                if (nodes[right].ExpandedBox.RayIntersect(rayOrigin, rayDirection, out _))
+                {
+                    stack.Push(right);
+                }
             }
-
-            if (nodes[right].ExpandedBox.RayIntersect(rayOrigin, rayDirection, out _))
-            {
-                stack.Push(right);
-            }
+        }
+        finally
+        {
+            PopTo(stack, baseCount);
         }
     }
 
@@ -636,35 +643,42 @@ public partial class DynamicTree
 
         Stack<int> stack = QueryStack;
         int baseCount = stack.Count;
-        stack.Push(root);
-
-        while (stack.Count > baseCount)
+        try
         {
-            int index = stack.Pop();
-            ref Node node = ref nodes[index];
+            stack.Push(root);
 
-            if (node.IsLeaf)
+            while (stack.Count > baseCount)
             {
-                if (!JBoundingBox.Disjoint(node.Proxy!.WorldBoundingBox, box))
+                int index = stack.Pop();
+                ref Node node = ref nodes[index];
+
+                if (node.IsLeaf)
                 {
-                    hits.Add(node.Proxy);
+                    if (!JBoundingBox.Disjoint(node.Proxy!.WorldBoundingBox, box))
+                    {
+                        hits.Add(node.Proxy);
+                    }
+
+                    continue;
                 }
 
-                continue;
-            }
+                int left = node.Left;
+                int right = node.Right;
 
-            int left = node.Left;
-            int right = node.Right;
+                if (!TreeBox.Disjoint(nodes[left].ExpandedBox, sbox))
+                {
+                    stack.Push(left);
+                }
 
-            if (!TreeBox.Disjoint(nodes[left].ExpandedBox, sbox))
-            {
-                stack.Push(left);
+                if (!TreeBox.Disjoint(nodes[right].ExpandedBox, sbox))
+                {
+                    stack.Push(right);
+                }
             }
-
-            if (!TreeBox.Disjoint(nodes[right].ExpandedBox, sbox))
-            {
-                stack.Push(right);
-            }
+        }
+        finally
+        {
+            PopTo(stack, baseCount);
         }
     }
 

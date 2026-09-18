@@ -114,17 +114,19 @@ public partial class DynamicTree
 
         Stack<int> stack = QueryStack;
         int baseCount = stack.Count;
-        stack.Push(root);
-
-        bool globalHit = false;
-
-        result.Lambda = ray.Lambda;
-
-        while (stack.Count > baseCount)
+        try
         {
-            int index = stack.Pop();
+            stack.Push(root);
 
-            ref Node node = ref nodes[index];
+            bool globalHit = false;
+
+            result.Lambda = ray.Lambda;
+
+            while (stack.Count > baseCount)
+            {
+                int index = stack.Pop();
+
+                ref Node node = ref nodes[index];
 
             if (node.IsLeaf)
             {
@@ -176,6 +178,11 @@ public partial class DynamicTree
             }
         }
 
-        return globalHit;
+            return globalHit;
+        }
+        finally
+        {
+            PopTo(stack, baseCount);
+        }
     }
 }

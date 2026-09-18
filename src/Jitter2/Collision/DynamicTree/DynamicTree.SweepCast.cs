@@ -250,12 +250,14 @@ public partial class DynamicTree
 
         Stack<int> stack = QueryStack;
         int baseCount = stack.Count;
-        stack.Push(root);
-
-        while (stack.Count > baseCount)
+        try
         {
-            int index = stack.Pop();
-            ref Node node = ref nodes[index];
+            stack.Push(root);
+
+            while (stack.Count > baseCount)
+            {
+                int index = stack.Pop();
+                ref Node node = ref nodes[index];
 
             if (node.IsLeaf)
             {
@@ -304,7 +306,12 @@ public partial class DynamicTree
             }
         }
 
-        return result.Entity != null;
+            return result.Entity != null;
+        }
+        finally
+        {
+            PopTo(stack, baseCount);
+        }
     }
 
 }
