@@ -1,5 +1,9 @@
 # Changelog
 
+### Jitter 2.8.13 (2026-09-19)
+
+- Improved recovery from invalid internal state when user-provided code throws exceptions.
+
 ### Jitter 2.8.12 (2026-09-15)
 
 - Added `World.Trim` to release excess internal storage after large scene changes.
