@@ -204,6 +204,35 @@ public class DynamicTreeBalanceTests
             tree.Optimize(sweeps: 1, chance: Real.NaN, incremental: true));
     }
 
+    [Test]
+    public void OptimizeRejectsNullRandomSource()
+    {
+        using World world = new();
+
+        Assert.Throws<ArgumentNullException>(() =>
+            world.DynamicTree.Optimize(null!, sweeps: 1, chance: (Real)1.0, incremental: false));
+    }
+
+    [Test]
+    public void Optimize_WhenRandomSourceThrows_RestoresDetachedLeaves()
+    {
+        using World world = new();
+        DynamicTree tree = world.DynamicTree;
+
+        for (int i = 0; i < 3; i++)
+        {
+            RigidBody body = world.CreateRigidBody();
+            body.Position = new JVector(i * 2, 0, 0);
+            body.AddShape(new SphereShape((Real)0.4));
+        }
+
+        Assert.Throws<InvalidOperationException>(() =>
+            tree.Optimize(() => throw new InvalidOperationException(), sweeps: 1,
+                chance: (Real)1.0, incremental: false));
+
+        AssertValidTree(tree, expectedLeafCount: 3);
+    }
+
     private static int AssertValidTree(DynamicTree tree, int expectedLeafCount)
     {
         if (expectedLeafCount == 0)

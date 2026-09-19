@@ -736,8 +736,10 @@ public partial class DynamicTree
 
     /// <inheritdoc cref="Optimize(int, Real, bool)"/>
     /// <param name="getNextRandom">A function returning random values in [0, 1).</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="getNextRandom"/> is <see langword="null"/>.</exception>
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {
+        ArgumentNullException.ThrowIfNull(getNextRandom);
         if (sweeps <= 0) throw new ArgumentOutOfRangeException(nameof(sweeps), "Sweeps must be greater than zero.");
         ArgumentCheck.InRange(chance, (Real)0.0, (Real)1.0, nameof(chance));
 
@@ -745,33 +747,39 @@ public partial class DynamicTree
         {
             bool takeAll = (e == 0) && !incremental;
 
-            for (int i = 0; i < proxies.Count; i++)
+            try
             {
-                if (!takeAll && getNextRandom() > chance) continue;
+                for (int i = 0; i < proxies.Count; i++)
+                {
+                    if (!takeAll && getNextRandom() > chance) continue;
 
-                var proxy = proxies[i];
-                tempList.Add(proxy);
-                int leaf = proxy.NodePtr;
-                RemoveLeaf(leaf, balance: true);
-                nodes[leaf].Parent = NullNode;
+                    var proxy = proxies[i];
+                    tempList.Add(proxy);
+                    int leaf = proxy.NodePtr;
+                    RemoveLeaf(leaf, balance: true);
+                    nodes[leaf].Parent = NullNode;
+                }
+
+                // Fisher-Yates shuffle
+                int n = tempList.Count;
+
+                for (int i = n - 1; i > 0; i--)
+                {
+                    double scaledValue = getNextRandom() * (i + 1);
+                    int j = (int)scaledValue;
+                    (tempList[i], tempList[j]) = (tempList[j], tempList[i]);
+                }
+
             }
-
-            // Fisher-Yates shuffle
-            int n = tempList.Count;
-
-            for (int i = n - 1; i > 0; i--)
+            finally
             {
-                double scaledValue = getNextRandom() * (i + 1);
-                int j = (int)scaledValue;
-                (tempList[i], tempList[j]) = (tempList[j], tempList[i]);
-            }
+                foreach (var proxy in tempList)
+                {
+                    InsertLeaf(proxy.NodePtr, root, balance: true);
+                }
 
-            foreach (var proxy in tempList)
-            {
-                InsertLeaf(proxy.NodePtr, root, balance: true);
+                tempList.Clear();
             }
-
-            tempList.Clear();
         }
 
         if (!incremental)
