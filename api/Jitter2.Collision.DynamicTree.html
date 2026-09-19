@@ -1344,7 +1344,7 @@ that limits the search to <code class="paramref">maxDistance</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Optimize_System_Func_System_Double__System_Int32_System_Single_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.Optimize(System.Func{System.Double},System.Int32,System.Single,System.Boolean)">
   Optimize(Func&lt;double&gt;, int, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L739"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L740"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempts to improve the tree topology by randomly reinserting existing leaf nodes.</p>
@@ -1390,6 +1390,9 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
     <dd><p>Thrown when <code class="paramref">sweeps</code> is less than one, or when <code class="paramref">chance</code> is outside [0, 1].</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>Thrown when <code class="paramref">getNextRandom</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
 </dd>
   </dl>
 
