@@ -1396,7 +1396,17 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         UpdateWorldInertia();
     }
 
-    [ThreadStatic] private static List<JTriangle>? _debugTriangles;
+    private readonly struct DebugDrawSink(IDebugDrawer drawer, JQuaternion orientation, JVector position)
+        : ISink<JTriangle>
+    {
+        public void Add(in JTriangle triangle)
+        {
+            drawer.DrawTriangle(
+                JVector.Transform(triangle.V0, orientation) + position,
+                JVector.Transform(triangle.V1, orientation) + position,
+                JVector.Transform(triangle.V2, orientation) + position);
+        }
+    }
 
     /// <summary>
     /// Generates a rough triangle approximation of the shapes of the body.
@@ -1405,26 +1415,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// This method tessellates all attached shapes and is not suitable for real-time use.
-    /// It uses a shared static list internally and is not thread-safe.
     /// </remarks>
     /// <param name="drawer">The debug drawer to receive the generated triangles.</param>
     public void DebugDraw(IDebugDrawer drawer)
     {
-        List<JTriangle> debugTriangles = _debugTriangles ??= [];
+        var sink = new DebugDrawSink(drawer, Data.Orientation, Data.Position);
 
         foreach (var shape in InternalShapes)
         {
-            ShapeHelper.Tessellate(shape, debugTriangles);
-
-            foreach (var tri in debugTriangles)
-            {
-                drawer.DrawTriangle(
-                    JVector.Transform(tri.V0, Data.Orientation) + Data.Position,
-                    JVector.Transform(tri.V1, Data.Orientation) + Data.Position,
-                    JVector.Transform(tri.V2, Data.Orientation) + Data.Position);
-            }
-
-            debugTriangles.Clear();
+            ShapeHelper.Tessellate(shape, ref sink);
         }
     }
 
