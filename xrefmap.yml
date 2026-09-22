@@ -4747,6 +4747,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.TriangleEdgeCollisionFilter.Filter
   nameWithType: TriangleEdgeCollisionFilter.Filter
+- uid: Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies
+  name: FilterDynamicBodies
+  href: api/Jitter2.Collision.TriangleEdgeCollisionFilter.html#Jitter2_Collision_TriangleEdgeCollisionFilter_FilterDynamicBodies
+  commentId: P:Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies
+  fullName: Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies
+  nameWithType: TriangleEdgeCollisionFilter.FilterDynamicBodies
+- uid: Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies*
+  name: FilterDynamicBodies
+  href: api/Jitter2.Collision.TriangleEdgeCollisionFilter.html#Jitter2_Collision_TriangleEdgeCollisionFilter_FilterDynamicBodies_
+  commentId: Overload:Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies
+  isSpec: "True"
+  fullName: Jitter2.Collision.TriangleEdgeCollisionFilter.FilterDynamicBodies
+  nameWithType: TriangleEdgeCollisionFilter.FilterDynamicBodies
 - uid: Jitter2.Collision.TriangleEdgeCollisionFilter.ProjectionThreshold
   name: ProjectionThreshold
   href: api/Jitter2.Collision.TriangleEdgeCollisionFilter.html#Jitter2_Collision_TriangleEdgeCollisionFilter_ProjectionThreshold
