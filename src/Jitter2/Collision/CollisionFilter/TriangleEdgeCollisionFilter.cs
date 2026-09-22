@@ -8,6 +8,7 @@
 
 using System.Runtime.CompilerServices;
 using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision;
@@ -38,6 +39,13 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     public Real EdgeThreshold { get; set; } = (Real)0.01;
 
     private Real cosAngle = (Real)0.999;
+
+    /// <summary>
+    /// Gets or sets whether dynamic triangle bodies receive edge filtering. Static and kinematic
+    /// triangle geometry is always filtered. Defaults to <see langword="false"/> because modifying
+    /// a moving triangle mesh's contact normals or penetration can destabilize its solver response.
+    /// </summary>
+    public bool FilterDynamicBodies { get; set; }
 
     /// <summary>
     /// Gets or sets the minimum length of the projected collision normal required to keep the contact.
@@ -158,6 +166,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         {
             triangleShape = ts2!;
         }
+
+        if (triangleShape.RigidBody.MotionType == MotionType.Dynamic && !FilterDynamicBodies) return true;
 
         EdgeContactEvaluation evaluation = EvaluateTriangleContact(triangleShape, c2,
             c1 ? pointA : pointB, normal, out JVector triangleNormal, out JVector neighborNormal);
