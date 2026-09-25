@@ -36,12 +36,12 @@ public class MotionAndPredictionTests
         var expectedMass = body.Mass;
 
         body.MotionType = MotionType.Static;
-        Assert.That(body.Data.InverseMass, Is.EqualTo((Real)0.0).Within((Real)1e-6));
+        Assert.That(body.Data.InverseMass, Is.EqualTo(JVector.Zero));
 
         body.MotionType = MotionType.Dynamic;
 
         Assert.That(body.Mass, Is.EqualTo(expectedMass).Within((Real)1e-6));
-        Assert.That(body.Data.InverseMass, Is.EqualTo((Real)1.0 / expectedMass).Within((Real)1e-6));
+        Assert.That(body.Data.InverseMass, Is.EqualTo(new JVector((Real)1.0 / expectedMass)));
         world.Dispose();
     }
 

@@ -279,6 +279,13 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         data.EffectiveMass = JVector.Transform(jacobian[0], body1.InverseInertiaWorld) * jacobian[0] +
                              JVector.Transform(jacobian[1], body2.InverseInertiaWorld) * jacobian[1];
 
+        if (data.EffectiveMass <= 0)
+        {
+            data.EffectiveMass = 0;
+            data.AccumulatedImpulse = 0;
+            return;
+        }
+
         data.EffectiveMass += data.Softness * idt;
 
         data.EffectiveMass = (Real)1.0 / data.EffectiveMass;

@@ -14,17 +14,17 @@ public class MotionTypeTests
 
         sphere.MotionType = MotionType.Kinematic;
 
-        Assert.That(sphere.Data.InverseMass, Is.EqualTo(0));
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(JVector.Zero));
         Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
 
         sphere.MotionType = MotionType.Dynamic;
 
-        Assert.That(sphere.Data.InverseMass, Is.EqualTo(1 / sphereMass));
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(new JVector(1 / sphereMass)));
         Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
 
         sphere.MotionType = MotionType.Static;
 
-        Assert.That(sphere.Data.InverseMass, Is.EqualTo(0));
+        Assert.That(sphere.Data.InverseMass, Is.EqualTo(JVector.Zero));
         Assert.That(sphere.Mass, Is.EqualTo(sphereMass));
 
         world.Dispose();

@@ -102,7 +102,9 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <summary>
     /// Sets the spring parameters using physical properties. This method calculates and sets
     /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
-    /// of the involved bodies and the timestep size do not change.
+    /// of the involved bodies and the timestep size do not change. With restricted motion,
+    /// the effective mass is measured along the current spring direction; call this again
+    /// if that direction or the permitted axes change.
     /// </summary>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
@@ -121,7 +123,16 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        Real effectiveMass = (Real)1.0 / (body1.InverseMass + body2.InverseMass);
+        JVector direction = body2.Position + data.LocalAnchor2 - body1.Position - data.LocalAnchor1;
+        if (direction.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref direction);
+        Real inverseEffectiveMass = body1.GetInverseMass(direction) + body2.GetInverseMass(direction);
+        if (inverseEffectiveMass <= 0)
+        {
+            data.Softness = 0;
+            data.BiasFactor = 0;
+            return;
+        }
+        Real effectiveMass = (Real)1.0 / inverseEffectiveMass;
 
         Real omega = (Real)2.0 * MathR.PI * frequency;
         Real dampingCoefficient = (Real)2.0 * effectiveMass * damping * omega;
@@ -249,14 +260,20 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
 
         data.Jacobian = n;
-        data.EffectiveMass = body1.InverseMass + body2.InverseMass;
+        data.EffectiveMass = body1.GetInverseMass(n) + body2.GetInverseMass(n);
+        if (data.EffectiveMass <= 0)
+        {
+            data.EffectiveMass = 0;
+            data.AccumulatedImpulse = 0;
+            return;
+        }
         data.EffectiveMass += data.Softness * idt;
         data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
 
         data.Bias = error * data.BiasFactor * idt;
 
-        body1.Velocity -= body1.InverseMass * data.AccumulatedImpulse * data.Jacobian;
-        body2.Velocity += body2.InverseMass * data.AccumulatedImpulse * data.Jacobian;
+        body1.Velocity -= JVector.Multiply(body1.InverseMass, data.AccumulatedImpulse * data.Jacobian);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, data.AccumulatedImpulse * data.Jacobian);
     }
 
     /// <summary>
@@ -313,8 +330,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         data.AccumulatedImpulse += lambda;
         lambda = data.AccumulatedImpulse - oldAccumulatedImpulse;
 
-        body1.Velocity -= body1.InverseMass * lambda * data.Jacobian;
-        body2.Velocity += body2.InverseMass * lambda * data.Jacobian;
+        body1.Velocity -= JVector.Multiply(body1.InverseMass, lambda * data.Jacobian);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, lambda * data.Jacobian);
     }
 
     /// <inheritdoc/>

@@ -186,18 +186,24 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         data.EffectiveMass = JMatrix.Identity;
 
-        data.EffectiveMass.M11 = body1.InverseMass + body2.InverseMass +
+        data.EffectiveMass.M11 = jacobian[0] * JVector.Multiply(body1.InverseMass, jacobian[0]) +
+                                 jacobian[2] * JVector.Multiply(body2.InverseMass, jacobian[2]) +
                                  JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[1] +
                                  JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[3];
 
-        data.EffectiveMass.M22 = body1.InverseMass + body2.InverseMass +
+        data.EffectiveMass.M22 = jacobian[4] * JVector.Multiply(body1.InverseMass, jacobian[4]) +
+                                 jacobian[6] * JVector.Multiply(body2.InverseMass, jacobian[6]) +
                                  JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[5] +
                                  JVector.Transform(jacobian[7], body2.InverseInertiaWorld) * jacobian[7];
 
-        data.EffectiveMass.M12 = JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[5] +
+        data.EffectiveMass.M12 = jacobian[0] * JVector.Multiply(body1.InverseMass, jacobian[4]) +
+                                 jacobian[2] * JVector.Multiply(body2.InverseMass, jacobian[6]) +
+                                 JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[5] +
                                  JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[7];
 
-        data.EffectiveMass.M21 = JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[1] +
+        data.EffectiveMass.M21 = jacobian[4] * JVector.Multiply(body1.InverseMass, jacobian[0]) +
+                                 jacobian[6] * JVector.Multiply(body2.InverseMass, jacobian[2]) +
+                                 JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[1] +
                                  JVector.Transform(jacobian[7], body2.InverseInertiaWorld) * jacobian[3];
 
         if (error.Z > data.Max)
@@ -217,20 +223,29 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         if (data.Clamp != 0)
         {
-            data.EffectiveMass.M33 = body1.InverseMass + body2.InverseMass +
+            data.EffectiveMass.M33 = jacobian[8] * JVector.Multiply(body1.InverseMass, jacobian[8]) +
+                                     jacobian[10] * JVector.Multiply(body2.InverseMass, jacobian[10]) +
                                      JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[9] +
                                      JVector.Transform(jacobian[11], body2.InverseInertiaWorld) * jacobian[11];
 
-            data.EffectiveMass.M13 = JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[9] +
+            data.EffectiveMass.M13 = jacobian[0] * JVector.Multiply(body1.InverseMass, jacobian[8]) +
+                                     jacobian[2] * JVector.Multiply(body2.InverseMass, jacobian[10]) +
+                                     JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[9] +
                                      JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[11];
 
-            data.EffectiveMass.M31 = JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[1] +
+            data.EffectiveMass.M31 = jacobian[8] * JVector.Multiply(body1.InverseMass, jacobian[0]) +
+                                     jacobian[10] * JVector.Multiply(body2.InverseMass, jacobian[2]) +
+                                     JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[1] +
                                      JVector.Transform(jacobian[11], body2.InverseInertiaWorld) * jacobian[3];
 
-            data.EffectiveMass.M23 = JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[9] +
+            data.EffectiveMass.M23 = jacobian[4] * JVector.Multiply(body1.InverseMass, jacobian[8]) +
+                                     jacobian[6] * JVector.Multiply(body2.InverseMass, jacobian[10]) +
+                                     JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[9] +
                                      JVector.Transform(jacobian[7], body2.InverseInertiaWorld) * jacobian[11];
 
-            data.EffectiveMass.M32 = JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[5] +
+            data.EffectiveMass.M32 = jacobian[8] * JVector.Multiply(body1.InverseMass, jacobian[4]) +
+                                     jacobian[10] * JVector.Multiply(body2.InverseMass, jacobian[6]) +
+                                     JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[5] +
                                      JVector.Transform(jacobian[11], body2.InverseInertiaWorld) * jacobian[7];
         }
 
@@ -238,7 +253,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.LimitSoftness * idt;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        InvertEffectiveMass(data.EffectiveMass, out data.EffectiveMass, body1, body2);
 
         data.Bias = error * idt;
         data.Bias.X *= data.BiasFactor;
@@ -247,10 +262,10 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity += body1.InverseMass * (jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z);
+        body1.Velocity += JVector.Multiply(body1.InverseMass, jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z);
         body1.AngularVelocity += JVector.Transform(jacobian[1] * acc.X + jacobian[5] * acc.Y + jacobian[9] * acc.Z, body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * (jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z);
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
     }
 
@@ -395,10 +410,10 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += body1.InverseMass * (jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z);
+        body1.Velocity += JVector.Multiply(body1.InverseMass, jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z);
         body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda.X + jacobian[5] * lambda.Y + jacobian[9] * lambda.Z, body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * (jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z);
         body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
     }
 

@@ -157,9 +157,16 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
             return;
         }
 
-        data.EffectiveMass = body1.InverseMass + body2.InverseMass +
+        data.EffectiveMass = body1.GetInverseMass(jacobian[0]) + body2.GetInverseMass(jacobian[2]) +
                              JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[1] +
                              JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[3];
+
+        if (data.EffectiveMass <= 0)
+        {
+            data.EffectiveMass = 0;
+            data.AccumulatedImpulse = 0;
+            return;
+        }
 
         data.EffectiveMass += (data.Softness * idt);
         data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
@@ -168,10 +175,10 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         Real acc = data.AccumulatedImpulse;
 
-        body1.Velocity += body1.InverseMass * (jacobian[0] * acc);
+        body1.Velocity += JVector.Multiply(body1.InverseMass, jacobian[0] * acc);
         body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * (jacobian[2] * acc);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, jacobian[2] * acc);
         body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
     }
 
@@ -244,10 +251,10 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += body1.InverseMass * (jacobian[0] * lambda);
+        body1.Velocity += JVector.Multiply(body1.InverseMass, jacobian[0] * lambda);
         body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda, body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * (jacobian[2] * lambda);
+        body2.Velocity += JVector.Multiply(body2.InverseMass, jacobian[2] * lambda);
         body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
     }
 

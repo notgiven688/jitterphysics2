@@ -84,6 +84,71 @@ When set to `false`, the impulse is silently ignored if the body is sleeping.
 The gravity for the world can be set using `world.Gravity`.
 The property `body.AffectedByGravity` can be used to disable gravity for individual bodies.
 
+## Restricting motion and planar simulations
+
+`body.AllowedMotion` specifies the translations and rotations permitted by the simulation.
+The default is `MotionAxes.All`. Each assignment replaces the previous selection.
+All axes are in **world space**, including the angular axes.
+
+For motion in the XY plane:
+
+```cs
+body.AllowedMotion = MotionAxes.PlaneXY;
+// Equivalent to LinearX | LinearY | AngularZ.
+```
+
+`PlaneXZ` and `PlaneYZ` provide the corresponding presets for the other coordinate planes.
+You can also combine individual axes:
+
+```cs
+body.AllowedMotion = MotionAxes.LinearX | MotionAxes.AngularZ;
+```
+
+An angular flag names the axis of rotation: `AngularZ` permits rotation around the world Z axis.
+`MotionAxes.Linear` permits all translations, and `MotionAxes.Angular` permits all rotations.
+
+Restrictions change the **effective inverse mass and inverse inertia used by the solver**.
+Prohibited directions behave as having infinite mass or inertia. `body.Mass` remains a scalar,
+and `body.InverseInertia` continues to describe the original inertia in body space.
+For coupled inertia tensors, restricting rotation also changes the effective response around
+the remaining axes. The engine derives this response from the original tensor.
+
+The original mass properties are preserved. Calls to `SetMassInertia` and shape changes update
+those properties while retaining the current restrictions. To restore unrestricted response
+from the latest mass properties, assign:
+
+```cs
+body.AllowedMotion = MotionAxes.All;
+```
+
+Changing `AllowedMotion` immediately clears prohibited velocity components, invalidates cached
+contact and joint impulses, and schedules the affected bodies for activation. Cleared velocities
+are not restored when motion is allowed again. Restrictions apply to forces, gravity, impulses,
+contacts, joints, and kinematic velocities. Position and orientation can still be assigned directly.
+Gyroscopic integration is skipped while any angular axis is restricted.
+Do not change the property concurrently with `World.Step`.
+
+`MotionAxes.None` prohibits simulated movement while preserving the body's `MotionType` and
+collision/island participation. Use `MotionType.Static` for ordinary static geometry.
+
+Planar motion uses the existing 3D collision shapes and contact generation. Bodies retain their
+initial coordinate along the prohibited translation axis; set that coordinate consistently when
+building a planar scene. This does not add separate 2D shape types or collision detection.
+
+### Custom constraints
+
+The low-level `RigidBodyData.InverseMass` is a `JVector`. Use
+`JVector.Multiply(data.InverseMass, impulse)` for the componentwise velocity response and
+`data.GetInverseMass(direction)` for a solver row's translational inverse effective mass.
+Multiplying two `JVector` values with `*` computes a dot product, so it cannot replace
+componentwise multiplication.
+
+`RigidBodyData.InverseInertiaWorld` is a `JSymmetricMatrix` stored in six scalars. It supports
+`JVector.Transform` and converts implicitly to `JMatrix`. Custom solvers must handle zero
+response in prohibited directions, including singular effective-mass matrices. The body data
+occupies 128 bytes in single precision and 256 bytes in double precision. Access its fields
+by name rather than relying on field offsets.
+
 ## Damping
 
 Jitter2 uses a simple damping system to slow rigid bodies down.

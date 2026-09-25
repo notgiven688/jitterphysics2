@@ -261,6 +261,72 @@ public static class MathHelper
         return UnsafeIsZero(ref delta, epsilon);
     }
 
+    // A restricted constraint can have rank one or two in any basis. Invert its
+    // responsive subspace, retaining useful rows when the full matrix is singular.
+    internal static void InverseSymmetric(in JMatrix matrix, out JMatrix result)
+    {
+        Real scale = MathR.Max(MathR.Abs(matrix.M11), MathR.Max(MathR.Abs(matrix.M22), MathR.Abs(matrix.M33)));
+        if (scale == 0)
+        {
+            result = JMatrix.Zero;
+            return;
+        }
+
+        JMatrix normalized = matrix * ((Real)1 / scale);
+        Real tolerance = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        if (normalized.Determinant() > tolerance && JMatrix.Inverse(matrix, out result)) return;
+
+        Span<Real> a = stackalloc Real[9]
+        {
+            normalized.M11, normalized.M12, normalized.M13,
+            normalized.M12, normalized.M22, normalized.M23,
+            normalized.M13, normalized.M23, normalized.M33
+        };
+        Span<Real> v = stackalloc Real[9] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+
+        // Jacobi diagonalization of a real symmetric 3-by-3 matrix.
+        for (int iteration = 0; iteration < 24; iteration++)
+        {
+            int p = 0, q = 1;
+            Real off = MathR.Abs(a[1]);
+            if (MathR.Abs(a[2]) > off) { p = 0; q = 2; off = MathR.Abs(a[2]); }
+            if (MathR.Abs(a[5]) > off) { p = 1; q = 2; off = MathR.Abs(a[5]); }
+            if (off <= tolerance) break;
+
+            Real angle = (Real)0.5 * StableMath.Atan2(2 * a[3 * p + q], a[3 * q + q] - a[3 * p + p]);
+            (Real s, Real c) = StableMath.SinCos(angle);
+            Real app = a[3 * p + p], aqq = a[3 * q + q], apq = a[3 * p + q];
+            a[3 * p + p] = c * c * app - 2 * s * c * apq + s * s * aqq;
+            a[3 * q + q] = s * s * app + 2 * s * c * apq + c * c * aqq;
+            a[3 * p + q] = a[3 * q + p] = 0;
+
+            for (int k = 0; k < 3; k++)
+            {
+                if (k != p && k != q)
+                {
+                    Real akp = a[3 * k + p], akq = a[3 * k + q];
+                    a[3 * k + p] = a[3 * p + k] = c * akp - s * akq;
+                    a[3 * k + q] = a[3 * q + k] = s * akp + c * akq;
+                }
+
+                Real vkp = v[3 * k + p], vkq = v[3 * k + q];
+                v[3 * k + p] = c * vkp - s * vkq;
+                v[3 * k + q] = s * vkp + c * vkq;
+            }
+        }
+
+        result = JMatrix.Zero;
+        Real threshold = tolerance * MathR.Max(a[0], MathR.Max(a[4], a[8]));
+        for (int k = 0; k < 3; k++)
+        {
+            Real eigenvalue = a[3 * k + k];
+            if (eigenvalue <= threshold) continue;
+            Real inverse = ((Real)1 / eigenvalue) / scale;
+            JVector axis = new(v[k], v[3 + k], v[6 + k]);
+            result += JMatrix.FromColumns(axis * (axis.X * inverse), axis * (axis.Y * inverse), axis * (axis.Z * inverse));
+        }
+    }
+
     /// <summary>
     /// Determines whether the length of the given vector is zero or close to zero.
     /// </summary>

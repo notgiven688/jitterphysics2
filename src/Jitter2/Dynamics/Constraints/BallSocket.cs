@@ -152,9 +152,9 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         JMatrix cr1 = JMatrix.CreateCrossProduct(data.R1);
         JMatrix cr2 = JMatrix.CreateCrossProduct(data.R2);
 
-        data.EffectiveMass = body1.InverseMass * JMatrix.Identity +
+        data.EffectiveMass = JMatrix.CreateScale(body1.InverseMass) +
                              JMatrix.Multiply(cr1, JMatrix.MultiplyTransposed(body1.InverseInertiaWorld, cr1)) +
-                             body2.InverseMass * JMatrix.Identity +
+                             JMatrix.CreateScale(body2.InverseMass) +
                              JMatrix.Multiply(cr2, JMatrix.MultiplyTransposed(body2.InverseInertiaWorld, cr2));
 
         Real softness = data.Softness * idt;
@@ -163,16 +163,16 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         data.EffectiveMass.M22 += softness;
         data.EffectiveMass.M33 += softness;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        InvertEffectiveMass(data.EffectiveMass, out data.EffectiveMass, body1, body2);
 
         data.Bias = (p2 - p1) * data.BiasFactor * idt;
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity -= body1.InverseMass * acc;
+        body1.Velocity -= JVector.Multiply(body1.InverseMass, acc);
         body1.AngularVelocity -= JVector.Transform(JVector.Transform(acc, cr1), body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * acc;
+        body2.Velocity += JVector.Multiply(body2.InverseMass, acc);
         body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
     }
 
@@ -232,10 +232,10 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         data.AccumulatedImpulse += lambda;
 
-        body1.Velocity -= body1.InverseMass * lambda;
+        body1.Velocity -= JVector.Multiply(body1.InverseMass, lambda);
         body1.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, cr1), body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * lambda;
+        body2.Velocity += JVector.Multiply(body2.InverseMass, lambda);
         body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
     }
 

@@ -19,6 +19,41 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics;
 
 /// <summary>
+/// Permitted translations and rotations about world-space axes.
+/// Used by <see cref="RigidBody.AllowedMotion"/>.
+/// </summary>
+[Flags]
+public enum MotionAxes
+{
+    /// <summary>No simulated translation or rotation.</summary>
+    None = 0,
+    /// <summary>Translation along the world X axis.</summary>
+    LinearX = 1 << 0,
+    /// <summary>Translation along the world Y axis.</summary>
+    LinearY = 1 << 1,
+    /// <summary>Translation along the world Z axis.</summary>
+    LinearZ = 1 << 2,
+    /// <summary>Rotation about the world X axis.</summary>
+    AngularX = 1 << 3,
+    /// <summary>Rotation about the world Y axis.</summary>
+    AngularY = 1 << 4,
+    /// <summary>Rotation about the world Z axis.</summary>
+    AngularZ = 1 << 5,
+    /// <summary>Translation along all world axes.</summary>
+    Linear = LinearX | LinearY | LinearZ,
+    /// <summary>Rotation about all world axes.</summary>
+    Angular = AngularX | AngularY | AngularZ,
+    /// <summary>Translation in XY and rotation about Z.</summary>
+    PlaneXY = LinearX | LinearY | AngularZ,
+    /// <summary>Translation in XZ and rotation about Y.</summary>
+    PlaneXZ = LinearX | LinearZ | AngularY,
+    /// <summary>Translation in YZ and rotation about X.</summary>
+    PlaneYZ = LinearY | LinearZ | AngularX,
+    /// <summary>Unrestricted translation and rotation (the default).</summary>
+    All = Linear | Angular
+}
+
+/// <summary>
 /// Specifies whether a shape add/remove operation recomputes the body's mass and inertia.
 /// </summary>
 public enum MassInertiaUpdateMode
@@ -67,7 +102,7 @@ public enum MotionType
 /// <see cref="RigidBody"/> properties instead of accessing fields directly.
 /// All spatial values (position, velocity, orientation, inertia) are in world space.
 /// The <see cref="Flags"/> field is a bitfield: bits 0–1 encode <see cref="MotionType"/>,
-/// bit 2 indicates active state, and bit 3 enables gyroscopic forces.
+/// bit 2 indicates active state, bit 3 enables gyroscopic forces, and bits 4–9 restrict motion.
 /// </remarks>
 [StructLayout(LayoutKind.Explicit, Size = Precision.RigidBodyDataSize)]
 public struct RigidBodyData
@@ -124,26 +159,60 @@ public struct RigidBodyData
     public JQuaternion Orientation;
 
     /// <summary>
-    /// Inverse inertia tensor in world space. For dynamic bodies, this is recomputed each step
-    /// from the body-space inverse inertia and current orientation. For static and kinematic
+    /// Effective inverse inertia tensor in world space, stored in six scalars. Derived from
+    /// the body's original inertia, orientation, and allowed motion. For static and kinematic
     /// bodies, this is zero (representing infinite inertia).
     /// </summary>
     [FieldOffset(8 + 19 * sizeof(Real))]
-    public JMatrix InverseInertiaWorld;
+    public JSymmetricMatrix InverseInertiaWorld;
 
     /// <summary>
-    /// Inverse mass of the body. A value of zero represents infinite mass (used for static
-    /// and kinematic bodies in the solver).
+    /// Effective inverse mass along each world axis. Restricted axes have zero inverse mass.
+    /// All components are zero for static and kinematic bodies. The original scalar mass is
+    /// available through <see cref="RigidBody.Mass"/>.
     /// </summary>
-    [FieldOffset(8 + 28 * sizeof(Real))]
-    public Real InverseMass;
+    [FieldOffset(8 + 25 * sizeof(Real))]
+    public JVector InverseMass;
 
     /// <summary>
-    /// Bitfield encoding motion type (bits 0–1), active state (bit 2), and gyroscopic forces (bit 3).
+    /// Bitfield encoding motion type (bits 0–1), active state (bit 2), gyroscopic forces (bit 3),
+    /// and prohibited motion axes (bits 4–9).
     /// Use the corresponding properties instead of manipulating this directly.
     /// </summary>
-    [FieldOffset(8 + 29 * sizeof(Real))]
+    [FieldOffset(8 + 28 * sizeof(Real))]
     public int Flags;
+
+    /// <summary>Permitted world-space motion. Set through <see cref="RigidBody.AllowedMotion"/>.</summary>
+    public MotionAxes AllowedMotion
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        readonly get => MotionAxes.All ^ (MotionAxes)((Flags >> 4) & (int)MotionAxes.All);
+        internal set => Flags = (Flags & ~((int)MotionAxes.All << 4)) | ((int)(MotionAxes.All ^ value) << 4);
+    }
+
+    /// <summary>Returns the translational contribution to a solver row's inverse effective mass.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly Real GetInverseMass(in JVector direction) => direction * JVector.Multiply(InverseMass, direction);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal readonly JVector RestrictLinear(in JVector value) => Restrict(value, (int)AllowedMotion);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal readonly JVector RestrictAngular(in JVector value) => Restrict(value, (int)AllowedMotion >> 3);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static JVector Restrict(in JVector value, int axes) => new(
+        value.X * (axes & 1),
+        value.Y * ((axes >> 1) & 1),
+        value.Z * ((axes >> 2) & 1));
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal void RestrictVelocities()
+    {
+        if (AllowedMotion == MotionAxes.All) return;
+        Velocity = RestrictLinear(Velocity);
+        AngularVelocity = RestrictAngular(AngularVelocity);
+    }
 
     /// <summary>
     /// Gets or sets whether the body is active (awake) and participating in simulation.
@@ -482,8 +551,48 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>
     /// For world-space inverse inertia, see <see cref="RigidBodyData.InverseInertiaWorld"/>.
     /// For non-dynamic bodies, the solver treats inertia as infinite regardless of this value.
+    /// <see cref="AllowedMotion"/> preserves this tensor and restricts the solver's effective inertia.
     /// </remarks>
     public JMatrix InverseInertia => inverseInertia;
+
+    /// <summary>Gets or sets the body's permitted translations and rotations in world space.</summary>
+    /// <value>Defaults to <see cref="MotionAxes.All"/>.</value>
+    /// <remarks>
+    /// Each assignment replaces the previous restrictions. For example,
+    /// <see cref="MotionAxes.PlaneXY"/> permits translation along X and Y and rotation about Z.
+    /// Restricted directions have zero effective inverse mass or inverse inertia in the solver.
+    /// Restrictions preserve the scalar <see cref="Mass"/> and body-space <see cref="InverseInertia"/>.
+    /// Changes to mass properties or shapes update the response while retaining the restrictions. Assigning
+    /// <see cref="MotionAxes.All"/> restores the response derived from those original properties.
+    /// <para>
+    /// Changes immediately clear prohibited velocity components, invalidate cached impulses,
+    /// and schedule activation. Restrictions also apply to kinematic velocity. They govern
+    /// simulated motion; position and orientation can still be assigned directly. Setting
+    /// <see cref="MotionAxes.None"/> does not change <see cref="MotionType"/>.
+    /// </para>
+    /// <para>Do not change this property concurrently with <see cref="World.Step(Real, bool)"/>.</para>
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value contains undefined flags.</exception>
+    public MotionAxes AllowedMotion
+    {
+        get => Data.AllowedMotion;
+        set
+        {
+            if ((value & ~MotionAxes.All) != 0) throw new ArgumentOutOfRangeException(nameof(value));
+            ref RigidBodyData data = ref Data;
+            if (data.AllowedMotion == value) return;
+
+            data.AllowedMotion = value;
+            data.Velocity = data.RestrictLinear(data.Velocity);
+            data.AngularVelocity = data.RestrictAngular(data.AngularVelocity);
+            data.DeltaVelocity = data.RestrictLinear(data.DeltaVelocity);
+            data.DeltaAngularVelocity = data.RestrictAngular(data.DeltaAngularVelocity);
+            UpdateWorldInertia();
+            ClearContactCache();
+            foreach (var constraint in InternalConstraints) constraint.ResetWarmStart();
+            World.ActivateBodyNextStep(this, true);
+        }
+    }
 
     /// <summary>
     /// Gets or sets the world-space position of the rigid body.
@@ -541,6 +650,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         ref RigidBodyData rigidBody = ref Data;
 
+        rigidBody.RestrictVelocities();
+
         if (rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
             rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq)
         {
@@ -558,26 +669,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         if (rigidBody.MotionType == MotionType.Dynamic)
         {
+            UpdateWorldInertia();
             rigidBody.AngularVelocity *= angularDampingMultiplier;
             rigidBody.Velocity *= linearDampingMultiplier;
 
-            rigidBody.DeltaVelocity = Force * rigidBody.InverseMass * substepDt;
+            rigidBody.DeltaVelocity = JVector.Multiply(rigidBody.InverseMass, Force) * substepDt;
             rigidBody.DeltaAngularVelocity = JVector.Transform(Torque, rigidBody.InverseInertiaWorld) * substepDt;
 
             if (AffectedByGravity)
             {
-                rigidBody.DeltaVelocity += World.Gravity * substepDt;
+                JVector gravity = rigidBody.AllowedMotion == MotionAxes.All
+                    ? World.Gravity : rigidBody.RestrictLinear(World.Gravity);
+                rigidBody.DeltaVelocity += gravity * substepDt;
             }
 
             Force = JVector.Zero;
             Torque = JVector.Zero;
-
-            var bodyOrientation = JMatrix.CreateFromQuaternion(rigidBody.Orientation);
-
-            JMatrix.Multiply(bodyOrientation, inverseInertia, out rigidBody.InverseInertiaWorld);
-            JMatrix.MultiplyTransposed(rigidBody.InverseInertiaWorld, bodyOrientation, out rigidBody.InverseInertiaWorld);
-
-            rigidBody.InverseMass = inverseMass;
         }
     }
 
@@ -604,7 +711,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     $"Cannot set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            handle.Data.Velocity = value;
+            handle.Data.Velocity = Data.RestrictLinear(value);
 
             if (!MathHelper.CloseToZero(value))
             {
@@ -637,7 +744,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     $"Cannot set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            handle.Data.AngularVelocity = value;
+            handle.Data.AngularVelocity = Data.RestrictAngular(value);
 
             if (!MathHelper.CloseToZero(value))
             {
@@ -675,14 +782,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         if (Data.MotionType == MotionType.Dynamic)
         {
             var bodyOrientation = JMatrix.CreateFromQuaternion(Data.Orientation);
-            JMatrix.Multiply(bodyOrientation, inverseInertia, out Data.InverseInertiaWorld);
-            JMatrix.MultiplyTransposed(Data.InverseInertiaWorld, bodyOrientation, out Data.InverseInertiaWorld);
-            Data.InverseMass = inverseMass;
+            JMatrix.Multiply(bodyOrientation, inverseInertia, out var worldInverseInertia);
+            JMatrix.MultiplyTransposed(worldInverseInertia, bodyOrientation, out worldInverseInertia);
+            Data.InverseInertiaWorld = new JSymmetricMatrix(worldInverseInertia).Restrict((int)AllowedMotion >> 3);
+            Data.InverseMass = AllowedMotion == MotionAxes.All
+                ? new JVector(inverseMass) : Data.RestrictLinear(new JVector(inverseMass));
         }
         else
         {
-            Data.InverseInertiaWorld = JMatrix.Zero;
-            Data.InverseMass = (Real)0.0;
+            Data.InverseInertiaWorld = JSymmetricMatrix.Zero;
+            Data.InverseMass = JVector.Zero;
         }
     }
 
@@ -882,6 +991,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
     /// whose principal inertia values differ by an order of magnitude. In those cases the flag eliminates artificial
     /// precession.
+    /// Gyroscopic correction is skipped while any angular axis is restricted by
+    /// <see cref="AllowedMotion"/>.
     /// </remarks>
     /// <value>
     /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
@@ -1044,7 +1155,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         if (!wakeup && !IsActive) return;
 
         World.ActivateBodyNextStep(this);
-        handle.Data.Velocity += inverseMass * impulse;
+        handle.Data.Velocity += JVector.Multiply(Data.InverseMass, impulse);
     }
 
     /// <summary>
@@ -1073,7 +1184,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         JVector.Subtract(position, data.Position, out JVector angularImpulse);
         JVector.Cross(angularImpulse, impulse, out angularImpulse);
 
-        data.Velocity += impulse * inverseMass;
+        data.Velocity += JVector.Multiply(data.InverseMass, impulse);
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
     }
 
@@ -1435,7 +1546,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>
     /// This value is only meaningful for <see cref="MotionType.Dynamic"/> bodies.
     /// Static and kinematic bodies are treated as having infinite mass by the solver
-    /// regardless of this value.
+    /// regardless of this value. <see cref="AllowedMotion"/> changes the effective response
+    /// along individual axes without changing this scalar mass.
     /// </remarks>
     public Real Mass => (Real)1.0 / inverseMass;
 

@@ -108,7 +108,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.Softness * idt;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        InvertEffectiveMass(data.EffectiveMass, out data.EffectiveMass, body1, body2);
 
         data.Bias = -error * data.BiasFactor * idt;
 

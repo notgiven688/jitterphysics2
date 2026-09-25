@@ -216,6 +216,13 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
         return result;
     }
 
+    /// <summary>Multiplies a symmetric matrix by a column vector.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector Transform(in JVector vector, in JSymmetricMatrix matrix) => new(
+        vector.X * matrix.M11 + vector.Y * matrix.M12 + vector.Z * matrix.M13,
+        vector.X * matrix.M12 + vector.Y * matrix.M22 + vector.Z * matrix.M23,
+        vector.X * matrix.M13 + vector.Y * matrix.M23 + vector.Z * matrix.M33);
+
     /// <summary>
     /// Transforms the vector by a quaternion rotation.
     /// </summary>
@@ -633,6 +640,18 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
         result.X = value1.X * scaleFactor;
         result.Y = value1.Y * scaleFactor;
         result.Z = value1.Z * scaleFactor;
+    }
+
+    /// <summary>
+    /// Multiplies two vectors componentwise.
+    /// </summary>
+    /// <param name="value1">The first vector.</param>
+    /// <param name="value2">The second vector.</param>
+    /// <returns>A vector containing the products of corresponding components.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JVector Multiply(in JVector value1, in JVector value2)
+    {
+        return new JVector(value1.X * value2.X, value1.Y * value2.Y, value1.Z * value2.Z);
     }
 
     /// <summary>

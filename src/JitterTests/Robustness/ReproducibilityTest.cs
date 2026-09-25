@@ -10,8 +10,9 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    private const ulong ExpectedDeterministicSceneHashSingle = 0xD2F01F87282B0D1B;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x5CE1037588259977;
+    // Baselines for symmetric inertia storage and directional inverse mass.
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x75411E526406440C;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x967C908C15DB45F2;
 
     [TestCase]
     public static void BasicReproducibilityTest()

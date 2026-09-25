@@ -163,6 +163,13 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.EffectiveMass = JVector.Transform(data.Jacobian, body1.InverseInertiaWorld + body2.InverseInertiaWorld) * data.Jacobian;
 
+        if (data.EffectiveMass <= 0)
+        {
+            data.EffectiveMass = 0;
+            data.AccumulatedImpulse = 0;
+            return;
+        }
+
         data.EffectiveMass += (data.Softness * idt);
 
         data.EffectiveMass = (Real)1.0 / data.EffectiveMass;

@@ -5,6 +5,7 @@
  */
 
 using System;
+using Jitter2.LinearMath;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -193,6 +194,15 @@ public abstract class Constraint<T> : Constraint where T : unmanaged
 /// </summary>
 public abstract class Constraint : IDebugDrawable
 {
+    internal static void InvertEffectiveMass(in JMatrix matrix, out JMatrix inverse,
+        in RigidBodyData body1, in RigidBodyData body2)
+    {
+        if (body1.AllowedMotion == MotionAxes.All && body2.AllowedMotion == MotionAxes.All)
+            JMatrix.Inverse(matrix, out inverse);
+        else
+            MathHelper.InverseSymmetric(matrix, out inverse);
+    }
+
     /// <summary>Default softness (compliance) for angular constraints.</summary>
     public const Real DefaultAngularSoftness = (Real)0.001;
 

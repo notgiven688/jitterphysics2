@@ -775,7 +775,9 @@ public struct ContactData
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
 
-            Real inverseMass = b1.InverseMass + b2.InverseMass;
+            JVector inverseMass = JVector.Zero;
+            if ((cd->Mode & SolveMode.LinearBody1) != 0) inverseMass += b1.InverseMass;
+            if ((cd->Mode & SolveMode.LinearBody2) != 0) inverseMass += b2.InverseMass;
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -795,9 +797,15 @@ public struct ContactData
 
             Flag &= ~Flags.NewContact;
 
-            Real kTangent1 = inverseMass;
-            Real kTangent2 = inverseMass;
-            Real kNormal = inverseMass;
+            Real kTangent1 = inverseMass.X;
+            Real kTangent2 = inverseMass.X;
+            Real kNormal = inverseMass.X;
+            if (inverseMass.X != inverseMass.Y || inverseMass.X != inverseMass.Z)
+            {
+                kTangent1 = LinearEffectiveMass(tangent1, inverseMass);
+                kTangent2 = LinearEffectiveMass(tangent2, inverseMass);
+                kNormal = LinearEffectiveMass(normal, inverseMass);
+            }
             JVector angularNormalContribution = JVector.Zero;
             JVector angularTangent1Contribution = JVector.Zero;
             JVector angularTangent2Contribution = JVector.Zero;
@@ -808,7 +816,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
-                b1.Velocity -= impulse * b1.InverseMass;
+                b1.Velocity -= JVector.Multiply(b1.InverseMass, impulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
@@ -830,7 +838,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
             {
-                b2.Velocity += impulse * b2.InverseMass;
+                b2.Velocity += JVector.Multiply(b2.InverseMass, impulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
@@ -853,12 +861,16 @@ public struct ContactData
             kTangent1 += JVector.Dot(tangent1, angularTangent1Contribution);
             kTangent2 += JVector.Dot(tangent2, angularTangent2Contribution);
 
-            Real massTangent1 = (Real)1.0 / kTangent1;
-            Real massTangent2 = (Real)1.0 / kTangent2;
-            Real massNormal = (Real)1.0 / kNormal;
+            Real massTangent1 = kTangent1 > 0 ? (Real)1.0 / kTangent1 : 0;
+            Real massTangent2 = kTangent2 > 0 ? (Real)1.0 / kTangent2 : 0;
+            Real massNormal = kNormal > 0 ? (Real)1.0 / kNormal : 0;
 
             JVector mass = new(massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
+            Accumulated = Vector.Create(
+                kNormal > 0 ? accumulatedNormalImpulse : 0,
+                kTangent1 > 0 ? accumulatedTangentImpulse1 : 0,
+                kTangent2 > 0 ? accumulatedTangentImpulse2 : 0, 0);
 
             PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
@@ -926,7 +938,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
-                b1.Velocity -= b1.InverseMass * impulse;
+                b1.Velocity -= JVector.Multiply(b1.InverseMass, impulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
@@ -943,7 +955,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
             {
-                b2.Velocity += b2.InverseMass * impulse;
+                b2.Velocity += JVector.Multiply(b2.InverseMass, impulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
@@ -969,7 +981,12 @@ public struct ContactData
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static JVector TransformSymmetricInertia(in JVector vector, in JMatrix matrix)
+        private static Real LinearEffectiveMass(in JVector direction, in JVector inverseMass) =>
+            direction.X * direction.X * inverseMass.X + direction.Y * direction.Y * inverseMass.Y +
+            direction.Z * direction.Z * inverseMass.Z;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static JVector TransformSymmetricInertia(in JVector vector, in JSymmetricMatrix matrix)
         {
             Unsafe.SkipInit(out JVector result);
             result.X = vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31;
@@ -987,7 +1004,17 @@ public struct ContactData
             JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
             JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
 
-            VectorReal kNormalTangent = Vector.Create(b1.InverseMass + b2.InverseMass);
+            JVector inverseMass = JVector.Zero;
+            if ((cd->Mode & SolveMode.LinearBody1) != 0) inverseMass += b1.InverseMass;
+            if ((cd->Mode & SolveMode.LinearBody2) != 0) inverseMass += b2.InverseMass;
+            VectorReal kNormalTangent = Vector.Create(inverseMass.X);
+            if (inverseMass.X != inverseMass.Y || inverseMass.X != inverseMass.Z)
+            {
+                kNormalTangent = Vector.Add(
+                    Vector.Add(Vector.Multiply(Vector.Multiply(NormalTangentX, NormalTangentX), Vector.Create(inverseMass.X)),
+                        Vector.Multiply(Vector.Multiply(NormalTangentY, NormalTangentY), Vector.Create(inverseMass.Y))),
+                    Vector.Multiply(Vector.Multiply(NormalTangentZ, NormalTangentZ), Vector.Create(inverseMass.Z)));
+            }
 
             if ((Flag & Flags.NewContact) == 0)
             {
@@ -1021,7 +1048,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
-                b1.Velocity -= b1.InverseMass * linearImpulse;
+                b1.Velocity -= JVector.Multiply(b1.InverseMass, linearImpulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
@@ -1059,7 +1086,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
             {
-                b2.Velocity += b2.InverseMass * linearImpulse;
+                b2.Velocity += JVector.Multiply(b2.InverseMass, linearImpulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
@@ -1100,8 +1127,11 @@ public struct ContactData
 
             kNormalTangent = Vector.Add(kNormalTangent, kres);
 
-            var mnt = Vector.Divide(Vector.Create((Real)1.0), kNormalTangent);
+            var responsive = Vector.GreaterThan(kNormalTangent, VectorReal.Zero);
+            var mnt = Vector.ConditionalSelect(responsive,
+                Vector.Divide(Vector.Create((Real)1.0), kNormalTangent), VectorReal.Zero);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 3 * sizeof(Real));
+            Accumulated = Vector.ConditionalSelect(responsive, Accumulated, VectorReal.Zero);
 
             PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
@@ -1143,7 +1173,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
-                b1.Velocity -= b1.InverseMass * linearImpulse;
+                b1.Velocity -= JVector.Multiply(b1.InverseMass, linearImpulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
@@ -1177,7 +1207,7 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
             {
-                b2.Velocity += b2.InverseMass * linearImpulse;
+                b2.Velocity += JVector.Multiply(b2.InverseMass, linearImpulse);
             }
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)

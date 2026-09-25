@@ -187,7 +187,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             data.Jacobian.M13 = data.Jacobian.M23 = data.Jacobian.M33 = 0;
         }
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        InvertEffectiveMass(data.EffectiveMass, out data.EffectiveMass, body1, body2);
 
         data.Bias = error * idt;
         data.Bias.X *= data.BiasFactor;

@@ -782,8 +782,8 @@ public sealed partial class World
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.MotionType == MotionType.Static);
-        Debug.Assert(rigidBody.InverseMass < Real.Epsilon);
-        Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
+        Debug.Assert(rigidBody.InverseMass == JVector.Zero);
+        Debug.Assert(rigidBody.InverseInertiaWorld == JSymmetricMatrix.Zero);
     }
 
     private void ForeachActiveBody(bool multiThread)
@@ -793,8 +793,8 @@ public sealed partial class World
         {
             if (body.Data.MotionType != MotionType.Dynamic)
             {
-                Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
-                Debug.Assert(body.Data.InverseMass < Real.Epsilon);
+                Debug.Assert(body.Data.InverseInertiaWorld == JSymmetricMatrix.Zero);
+                Debug.Assert(body.Data.InverseMass == JVector.Zero);
             }
         }
 #endif
@@ -1067,6 +1067,7 @@ public sealed partial class World
             // Only dynamic and kinematic objects have a velocity.
             if (rigidBody.MotionType == MotionType.Static) continue;
 
+            rigidBody.RestrictVelocities();
             JVector linearVelocity = rigidBody.Velocity;
             JVector angularVelocity = rigidBody.AngularVelocity;
 
@@ -1075,12 +1076,14 @@ public sealed partial class World
             JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
 
-            if (!rigidBody.EnableGyroscopicForces) continue;
+            if (!rigidBody.EnableGyroscopicForces || rigidBody.MotionType != MotionType.Dynamic) continue;
 
             // Note: We do not perform a symplectic Euler update here (i.e., we calculate the new orientation
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
-            JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
+            MotionAxes angularAxes = rigidBody.AllowedMotion & MotionAxes.Angular;
+            if (angularAxes != MotionAxes.Angular) continue;
+            if (!JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld)) continue;
             rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, substepDt);
         }
     }
