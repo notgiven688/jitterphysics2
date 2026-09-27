@@ -7620,6 +7620,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.EffectiveMass
   nameWithType: HingeAngle.HingeAngleData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.FixedAngle
+  name: FixedAngle
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_FixedAngle
+  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.FixedAngle
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.FixedAngle
+  nameWithType: HingeAngle.HingeAngleData.FixedAngle
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Jacobian
@@ -9200,6 +9206,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.EffectiveMass
   nameWithType: TwistAngle.TwistLimitData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.FixedAngle
+  name: FixedAngle
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_FixedAngle
+  commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.FixedAngle
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.FixedAngle
+  nameWithType: TwistAngle.TwistLimitData.FixedAngle
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Jacobian
