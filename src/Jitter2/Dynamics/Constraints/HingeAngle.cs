@@ -30,6 +30,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
         public Real MinAngle;
         public Real MaxAngle;
+        public Real FixedAngle;
 
         public Real BiasFactor;
         public Real LimitBias;
@@ -68,6 +69,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     /// <param name="limit">The angular limits defining the allowed rotation range.</param>
     /// <remarks>
     /// Stores the axis in the local frame of body 2 and records the initial relative orientation.
+    /// Equal or reversed limits fix the hinge at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultAngularLimitSoftness"/>,
     /// <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultAngularLimitBias"/>.
     /// </remarks>
@@ -93,6 +95,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
         data.MinAngle = StableMath.Sin((Real)limit.From / (Real)2.0);
         data.MaxAngle = StableMath.Sin((Real)limit.To / (Real)2.0);
+        data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)limit.From + (Real)0.25 * (Real)limit.To);
 
         JVector.NormalizeInPlace(ref axis);
         data.Axis = JVector.ConjugatedTransform(axis, body2.Orientation);
@@ -119,6 +122,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             ref HingeAngleData data = ref Data;
             data.MinAngle = StableMath.Sin((Real)value.From / (Real)2.0);
             data.MaxAngle = StableMath.Sin((Real)value.To / (Real)2.0);
+            data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)value.From + (Real)0.25 * (Real)value.To);
         }
     }
 
@@ -165,12 +169,17 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         Real maxA = data.MaxAngle;
         Real minA = data.MinAngle;
 
-        if (error.Z > maxA)
+        if (minA >= maxA)
+        {
+            data.Clamp = 3;
+            error.Z -= data.FixedAngle;
+        }
+        else if (error.Z >= maxA)
         {
             data.Clamp = 1;
             error.Z -= maxA;
         }
-        else if (error.Z < minA)
+        else if (error.Z <= minA)
         {
             data.Clamp = 2;
             error.Z -= minA;
@@ -317,7 +326,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         {
             data.AccumulatedImpulse.Z = MathR.Max(0, data.AccumulatedImpulse.Z);
         }
-        else
+        else if (data.Clamp == 0)
         {
             origAcc.Z = 0;
             data.AccumulatedImpulse.Z = 0;

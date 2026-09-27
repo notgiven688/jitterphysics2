@@ -44,6 +44,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         public Real Min;
         public Real Max;
 
+        // 0: inactive, 1: upper limit, 2: lower limit, 3: bilateral fixed limit.
         public ushort Clamp;
 
         public MemoryHelper.MemBlock12Real J0;
@@ -76,6 +77,8 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     /// <param name="limit">Distance limit from the plane.</param>
     /// <remarks>
     /// Computes local anchor points and axis from the current body poses.
+    /// Equal or reversed distance limits fix the point at their midpoint. This includes
+    /// <see cref="LinearLimit.Fixed"/> and permits correction impulses in both directions.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -141,12 +144,17 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         data.EffectiveMass = (Real)1.0;
 
-        if (error > data.Max)
+        if (data.Min >= data.Max)
+        {
+            error -= (Real)0.5 * data.Min + (Real)0.5 * data.Max;
+            data.Clamp = 3;
+        }
+        else if (error >= data.Max)
         {
             error -= data.Max;
             data.Clamp = 1;
         }
-        else if (error < data.Min)
+        else if (error <= data.Min)
         {
             error -= data.Min;
             data.Clamp = 2;
@@ -237,7 +245,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         {
             data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, (Real)0.0);
         }
-        else
+        else if (data.Clamp == 2)
         {
             data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }
