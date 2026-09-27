@@ -82,6 +82,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// <param name="limit">The allowed distance range between anchor points.</param>
     /// <remarks>
     /// Computes local anchor points and the initial distance from current poses.
+    /// Equal or reversed limits fix the distance offset at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -222,12 +223,17 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 
         data.Clamp = 0;
 
-        if (error >= data.LimitMax)
+        if (data.LimitMin >= data.LimitMax)
+        {
+            error -= (Real)0.5 * data.LimitMin + (Real)0.5 * data.LimitMax;
+            data.Clamp = 3;
+        }
+        else if (error >= data.LimitMax)
         {
             data.Clamp = 1;
             error -= data.LimitMax;
         }
-        else if (error < data.LimitMin)
+        else if (error <= data.LimitMin)
         {
             data.Clamp = 2;
             error -= data.LimitMin;
@@ -331,7 +337,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         {
             data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, (Real)0.0);
         }
-        else
+        else if (data.Clamp == 2)
         {
             data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }

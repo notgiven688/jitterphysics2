@@ -32,7 +32,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         public JQuaternion Q0;
 
-        public Real Angle1, Angle2;
+        public Real Angle1, Angle2, FixedAngle;
         public ushort Clamp;
 
         public Real BiasFactor;
@@ -65,6 +65,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// <param name="limit">The allowed relative twist angle range.</param>
     /// <remarks>
     /// Stores each axis in the local frame of its body and records the initial relative orientation.
+    /// Equal or reversed limits fix the twist at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -91,6 +92,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.Angle1 = StableMath.Sin((Real)limit.From / (Real)2.0);
         data.Angle2 = StableMath.Sin((Real)limit.To / (Real)2.0);
+        data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)limit.From + (Real)0.25 * (Real)limit.To);
 
         // Calculate local axes
         JVector u1 = JVector.ConjugatedTransform(axis1, body1.Orientation);
@@ -129,6 +131,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
             ref TwistLimitData data = ref Data;
             data.Angle1 = StableMath.Sin((Real)value.From / (Real)2.0);
             data.Angle2 = StableMath.Sin((Real)value.To / (Real)2.0);
+            data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)value.From + (Real)0.25 * (Real)value.To);
         }
     }
 
@@ -177,12 +180,17 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.Clamp = 0;
 
-        if (error >= data.Angle2)
+        if (data.Angle1 >= data.Angle2)
+        {
+            data.Clamp = 3;
+            error -= data.FixedAngle;
+        }
+        else if (error >= data.Angle2)
         {
             data.Clamp = 1;
             error -= data.Angle2;
         }
-        else if (error < data.Angle1)
+        else if (error <= data.Angle1)
         {
             data.Clamp = 2;
             error -= data.Angle1;
@@ -293,7 +301,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         {
             data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, (Real)0.0);
         }
-        else
+        else if (data.Clamp == 2)
         {
             data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, (Real)0.0);
         }

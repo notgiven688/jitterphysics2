@@ -77,6 +77,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     /// <param name="limit">Distance limit along the axis.</param>
     /// <remarks>
     /// Computes local anchor points and axis from the current body poses.
+    /// Equal or reversed distance limits fix the point at their midpoint.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>,
     /// <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultLinearLimitSoftness"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultLinearLimitBias"/>.
     /// </remarks>
@@ -200,12 +201,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         data.EffectiveMass.M21 = JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[1] +
                                  JVector.Transform(jacobian[7], body2.InverseInertiaWorld) * jacobian[3];
 
-        if (error.Z > data.Max)
+        if (data.Min >= data.Max)
+        {
+            error.Z -= (Real)0.5 * data.Min + (Real)0.5 * data.Max;
+            data.Clamp = 3;
+        }
+        else if (error.Z >= data.Max)
         {
             error.Z -= data.Max;
             data.Clamp = 1;
         }
-        else if (error.Z < data.Min)
+        else if (error.Z <= data.Min)
         {
             error.Z -= data.Min;
             data.Clamp = 2;
@@ -383,11 +389,11 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         data.AccumulatedImpulse += lambda;
 
-        if ((data.Clamp & 1) != 0)
+        if (data.Clamp == 1)
             data.AccumulatedImpulse.Z = MathR.Min(data.AccumulatedImpulse.Z, (Real)0.0);
-        else if ((data.Clamp & 2) != 0)
+        else if (data.Clamp == 2)
             data.AccumulatedImpulse.Z = MathR.Max(data.AccumulatedImpulse.Z, (Real)0.0);
-        else
+        else if (data.Clamp == 0)
         {
             data.AccumulatedImpulse.Z = (Real)0.0;
             origAcc.Z = (Real)0.0;
