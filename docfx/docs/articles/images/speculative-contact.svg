@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="380" viewBox="0 0 680 380" role="img" aria-labelledby="title desc">
+  <title id="title">A speculative contact changes the predicted motion</title>
+  <desc id="desc">The ball starts in the same place in both rows. Its original motion carries it through the wall. Reducing its velocity lets it reach the wall without crossing it. The lower row marks both speculative contact points at the sweep origin: one on the ball and one on the wall.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="context-stroke"/></marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2L2-2M0 8L8 0M6 10L10 6" stroke="#a7b2bf" stroke-width="1.5"/></pattern>
+  </defs>
+  <rect width="680" height="380" rx="16" fill="#f3f6fa"/>
+  <g font-family="system-ui, sans-serif" fill="#25364b">
+    <text x="28" y="37" font-size="26" font-weight="650">Before the velocity correction</text>
+    <rect x="388" y="60" width="24" height="107" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="388" y="60" width="24" height="107" fill="url(#hatch)"/>
+    <path d="M 135 110 H 543" fill="none" stroke="#a34631" stroke-width="3" marker-end="url(#arrow)"/>
+    <circle cx="140" cy="110" r="27" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="140" cy="110" r="4" fill="#2a64a9"/>
+    <circle cx="582" cy="110" r="27" fill="#f9e7e1" stroke="#a34631" stroke-width="3" stroke-dasharray="7 5"/>
+    <text x="140" y="161" text-anchor="middle" font-size="23">Now</text>
+    <text x="582" y="161" text-anchor="middle" font-size="23">Prediction</text>
+    <text x="258" y="88" text-anchor="middle" font-size="23">20 units of travel</text>
+    <path d="M 167 183 H 388 M 167 177 V 189 M 388 177 V 189" stroke="#697b90" fill="none" stroke-width="1.5"/>
+    <text x="277" y="210" text-anchor="middle" font-size="22">10-unit gap to the wall</text>
+    <path d="M 28 224 H 652" stroke="#d4dee9"/>
+    <text x="28" y="257" font-size="26" font-weight="650">After the velocity correction</text>
+    <rect x="388" y="274" width="24" height="84" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="388" y="274" width="24" height="84" fill="url(#hatch)"/>
+    <path d="M 135 315 H 322" fill="none" stroke="#21745e" stroke-width="3" marker-end="url(#arrow)"/>
+    <circle cx="140" cy="315" r="27" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="140" cy="315" r="4" fill="#2a64a9"/>
+    <circle cx="361" cy="315" r="27" fill="#e1f0e9" stroke="#21745e" stroke-width="3" stroke-dasharray="7 5"/>
+    <circle cx="167" cy="315" r="5" fill="#21745e" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="388" cy="315" r="5" fill="#a34631" stroke="#f3f6fa" stroke-width="2"/>
+    <text x="240" y="290" text-anchor="middle" font-size="23">10 units of travel</text>
+    <text x="440" y="307" font-size="22">The new prediction</text>
+    <text x="440" y="337" font-size="22">reaches the wall.</text>
+  </g>
+</svg>
