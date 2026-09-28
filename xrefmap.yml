@@ -9804,6 +9804,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.PrepareForIteration
   nameWithType: ContactData.PrepareForIteration
+- uid: Jitter2.Dynamics.ContactData.ResetImpulses
+  name: ResetImpulses()
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_ResetImpulses
+  commentId: M:Jitter2.Dynamics.ContactData.ResetImpulses
+  fullName: Jitter2.Dynamics.ContactData.ResetImpulses()
+  nameWithType: ContactData.ResetImpulses()
+- uid: Jitter2.Dynamics.ContactData.ResetImpulses*
+  name: ResetImpulses
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_ResetImpulses_
+  commentId: Overload:Jitter2.Dynamics.ContactData.ResetImpulses
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactData.ResetImpulses
+  nameWithType: ContactData.ResetImpulses
 - uid: Jitter2.Dynamics.ContactData.ResetMode(Jitter2.Dynamics.ContactData.SolveMode)
   name: ResetMode(SolveMode)
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_ResetMode_Jitter2_Dynamics_ContactData_SolveMode_
