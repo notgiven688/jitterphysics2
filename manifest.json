@@ -2537,6 +2537,86 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/box-speculative-contact.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/box-speculative-contact.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/iscd-demo-one-pass-miss.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/iscd-demo-one-pass-miss.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/iscd-demo-preview.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/iscd-demo-preview.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/iscd-demo-tunneling-preview.png",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/iscd-demo-tunneling-preview.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/iterative-speculative-contact-discovery.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/iterative-speculative-contact-discovery.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/images/speculative-contact.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/speculative-contact.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/iscd-demo.html",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/iscd-demo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/articles/iterative-speculative-contact-discovery.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/articles/iterative-speculative-contact-discovery.html"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "docs/changelog.md",
       "output": {

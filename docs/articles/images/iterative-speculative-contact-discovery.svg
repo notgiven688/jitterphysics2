@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="650" viewBox="0 0 680 650" role="img" aria-labelledby="title desc">
+  <title id="title">Iterative speculative contact discovery finds two contact points</title>
+  <desc id="desc">The first detection sweep predicts corner A touching the wall. A local response at A slows and turns the box. A second sweep predicts corner B touching the wall. Each contact is marked by one point on the box and one on the wall at the sweep origin.</desc>
+  <defs>
+    <marker id="blue-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2a64a9"/></marker>
+    <marker id="green-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#21745e"/></marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2L2-2M0 8L8 0M6 10L10 6" stroke="#a7b2bf" stroke-width="1.5"/></pattern>
+  </defs>
+
+  <rect width="680" height="650" rx="16" fill="#f3f6fa"/>
+  <g font-family="system-ui, sans-serif" fill="#25364b">
+    <text x="28" y="39" font-size="26" font-weight="650">1. Detection pass: find A</text>
+    <text x="28" y="68" font-size="20" fill="#53677e">Sweep using the original linear and angular velocities.</text>
+
+    <rect x="430" y="84" width="24" height="130" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="430" y="84" width="24" height="130" fill="url(#hatch)"/>
+    <rect x="82" y="100" width="92" height="92" rx="2" transform="rotate(12 128 146)" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="128" cy="146" r="4" fill="#2a64a9"/>
+    <path d="M191 146H278" fill="none" stroke="#2a64a9" stroke-width="3" marker-end="url(#blue-arrow)"/>
+    <rect x="326" y="100" width="92" height="92" rx="2" transform="rotate(12 372 146)" fill="#e0edff" fill-opacity="0.45" stroke="#2a64a9" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <circle cx="182.6" cy="110.6" r="5" fill="#2a64a9" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="430" cy="110.9" r="7" fill="#a34631" stroke="#f3f6fa" stroke-width="2"/>
+    <text x="465" y="108" font-size="22" font-weight="650" fill="#a34631">Contact A</text>
+    <text x="465" y="136" font-size="19" fill="#53677e">predicted</text>
+    <text x="128" y="220" text-anchor="middle" font-size="19">Current pose</text>
+    <text x="365" y="220" text-anchor="middle" font-size="19">First predicted pose</text>
+
+    <path d="M28 242H652" stroke="#d4dee9"/>
+    <text x="28" y="279" font-size="26" font-weight="650">2. Response pass: update motion</text>
+    <text x="28" y="308" font-size="20" fill="#53677e">An off-center impulse at A changes translation and rotation.</text>
+
+    <rect x="244" y="329" width="92" height="92" rx="2" transform="rotate(12 290 375)" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="290" cy="375" r="4" fill="#2a64a9"/>
+    <circle cx="346.6" cy="339.6" r="5" fill="#21745e"/>
+    <path d="M346 340H220" fill="none" stroke="#21745e" stroke-width="3" marker-end="url(#green-arrow)"/>
+    <path d="M328 360A54 54 0 0 1 326 411" fill="none" stroke="#21745e" stroke-width="3" marker-end="url(#green-arrow)"/>
+    <text x="389" y="349" font-size="21" font-weight="650" fill="#21745e">Impulse at A</text>
+    <text x="389" y="378" font-size="19" fill="#53677e">slows the box</text>
+    <text x="389" y="405" font-size="19" fill="#53677e">and makes it turn</text>
+
+    <path d="M28 445H652" stroke="#d4dee9"/>
+    <text x="28" y="482" font-size="26" font-weight="650">3. Detection pass: find B</text>
+    <text x="28" y="511" font-size="20" fill="#53677e">Sweep again with the updated velocities; keep A registered.</text>
+
+    <rect x="430" y="526" width="24" height="100" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="430" y="526" width="24" height="100" fill="url(#hatch)"/>
+    <rect x="82" y="532" width="82" height="82" rx="2" transform="rotate(12 123 573)" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <path d="M181 573H283" fill="none" stroke="#21745e" stroke-width="3" marker-end="url(#green-arrow)"/>
+    <rect x="332.25" y="532" width="82" height="82" rx="2" transform="rotate(-28 373.25 573)" fill="#e1f0e9" fill-opacity="0.55" stroke="#21745e" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <circle cx="171.6" cy="541.4" r="5" fill="#21745e" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="154.6" cy="621.6" r="5" fill="#21745e" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="430" cy="543" r="7" fill="#a34631" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="430" cy="590" r="7" fill="#a34631" stroke="#f3f6fa" stroke-width="2"/>
+    <path d="M454 543H479" stroke="#a34631" stroke-width="1.5"/>
+    <path d="M454 590H479" stroke="#a34631" stroke-width="1.5"/>
+    <text x="489" y="548" font-size="20" fill="#a34631"><tspan font-weight="650">A</tspan> retained</text>
+    <text x="489" y="595" font-size="20" fill="#a34631"><tspan font-weight="650">B</tspan> detected</text>
+    <text x="28" y="637" font-size="20" font-weight="650" fill="#25364b">Final contact set: A + B</text>
+  </g>
+</svg>
