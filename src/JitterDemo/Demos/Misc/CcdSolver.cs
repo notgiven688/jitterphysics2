@@ -12,10 +12,9 @@ namespace JitterDemo;
 
 
 /// <summary>
-/// A simple continuous collision detection (CCD) solver based on speculative contacts.
+/// A simple implementation of Iterative Speculative Contact Discovery (ISCD).
 /// This is more a proof-of-concept than a production-ready solution. There is no multithreading support
 /// and the solver is not very efficient. For very few shapes (~10), it works well.
-/// There is not really a 'right way' to implement CCD, so this is just one of many possible approaches.
 /// </summary>
 public class CcdSolver
 {
@@ -24,7 +23,8 @@ public class CcdSolver
     private readonly World world;
 
     private readonly List<RigidBody> bodies = new();
-    private readonly List<IDynamicTreeProxy> overlapList = new();
+    private readonly List<IDynamicTreeProxy> overlaps = new();
+    private readonly Dictionary<RigidBody, (JVector Linear, JVector Angular)> originalVelocities = new();
 
     public CcdSolver(World world)
     {
@@ -38,48 +38,59 @@ public class CcdSolver
     {
         if (!Enabled) return;
 
-        var spanBodies = CollectionsMarshal.AsSpan(bodies);
+        originalVelocities.Clear();
 
-        for (int iter = 0; iter < SelfConsistencyIterations; iter++)
+        try
         {
-            // Go through all rigid bodies which have been registered with the ccd-solver.
-            for (int i = 0; i < spanBodies.Length; i++)
+            var spanBodies = CollectionsMarshal.AsSpan(bodies);
+
+            for (int iter = 0; iter < SelfConsistencyIterations; iter++)
             {
-                ref var body = ref spanBodies[i];
-
-                if (body.Handle.IsZero)
+                // Go through all rigid bodies which have been registered with the ccd-solver.
+                for (int i = 0; i < spanBodies.Length; i++)
                 {
-                    throw new InvalidOperationException("RigidBody has been removed from the world, " +
-                                                        "but is still registered with the CCD solver.");
-                }
+                    ref var body = ref spanBodies[i];
 
-                ref var data = ref body.Data;
+                    if (body.Handle.IsZero)
+                    {
+                        throw new InvalidOperationException("RigidBody has been removed from the world, " +
+                                                            "but is still registered with the CCD solver.");
+                    }
 
-                // Predict the position and orientation of the rigid body after the time step.
-                body.PredictPose(dt, out var predPos, out var predOri);
-
-                foreach (var shape in body.Shapes)
-                {
-                    // Use the predicted position and orientation to calculate the future bounding box of the shape.
-                    // Then merge this box with the current bounding box of the shape.
-                    shape.CalculateBoundingBox(predOri, predPos, out var predBox);
-                    var box = JBoundingBox.CreateMerged(shape.WorldBoundingBox, predBox);
-
-                    // Query all tree proxies (read: shapes) which overlap with this extended bounding box.
-                    overlapList.Clear();
-                    world.DynamicTree.Query(overlapList, box);
-
-                    // Find the first future collision of the shape with any of the overlapping shapes.
-                    // If a collision is found, create an arbiter and solve it.
-                    CreateAndSolve(overlapList, shape, dt);
+                    foreach (var shape in body.Shapes)
+                    {
+                        // Find the first future collision among the candidates returned
+                        // by the broad phase. If a collision is found, create an arbiter
+                        // and solve it.
+                        CreateAndSolve(shape, dt);
+                    }
                 }
             }
         }
+        finally
+        {
+            // Discovery uses temporary responses. The normal solver starts from
+            // the original velocities and solves the discovered contacts afresh.
+            foreach (var (body, velocity) in originalVelocities)
+            {
+                if (body.Handle.IsZero) continue;
+                ref var data = ref body.Data;
+                data.Velocity = velocity.Linear;
+                data.AngularVelocity = velocity.Angular;
+            }
+
+            originalVelocities.Clear();
+            overlaps.Clear();
+        }
     }
 
-    private void CreateAndSolve(List<IDynamicTreeProxy> proxies, RigidBodyShape shape, float dt)
+    private void CreateAndSolve(RigidBodyShape shape, float dt)
     {
-        // Within proxies find the one which collides with 'shape' and has the smallest time of impact (TOI).
+        JBoundingBox sweptBox = CalculateSweptBoundingBox(shape, dt, out float extentA);
+        overlaps.Clear();
+        world.DynamicTree.Query(overlaps, sweptBox);
+
+        // Find the candidate which collides with 'shape' at the smallest time of impact (TOI).
 
         RigidBodyShape otherShape = null!;
 
@@ -89,23 +100,18 @@ public class CcdSolver
 
         float smallestToi = float.MaxValue;
 
-        for (int i = 0; i < proxies.Count; i++)
+        for (int i = 0; i < overlaps.Count; i++)
         {
-            var proxy = proxies[i];
+            if (overlaps[i] is not RigidBodyShape candidate) continue;
 
-            if (proxy is not RigidBodyShape pshape) continue;
-            if (pshape.RigidBody == shape.RigidBody) continue;
+            if (candidate.RigidBody == shape.RigidBody) continue;
+            if (world.BroadPhaseFilter != null && !world.BroadPhaseFilter.Filter(shape, candidate)) continue;
 
             ref var data = ref shape.RigidBody.Data;
-            ref var pdata = ref pshape.RigidBody.Data;
+            ref var pdata = ref candidate.RigidBody.Data;
+            float extentB = CalculateAngularExtent(candidate);
 
-            float extentA = MathF.Max((shape.WorldBoundingBox.Max - shape.RigidBody.Position).Length(),
-                (shape.WorldBoundingBox.Min - shape.RigidBody.Position).Length());
-
-            float extentB = MathF.Max((pshape.WorldBoundingBox.Max - pshape.RigidBody.Position).Length(),
-                (pshape.WorldBoundingBox.Min - pshape.RigidBody.Position).Length());
-
-            bool success = NarrowPhase.Sweep(shape, pshape, data.Orientation, pdata.Orientation,
+            bool success = NarrowPhase.Sweep(shape, candidate, data.Orientation, pdata.Orientation,
                 data.Position, pdata.Position, data.Velocity, pdata.Velocity,
                 data.AngularVelocity, pdata.AngularVelocity, extentA, extentB,
                 out JVector pA, out JVector pB, out JVector normal, out float toi);
@@ -114,7 +120,11 @@ public class CcdSolver
 
             if (world.NarrowPhaseFilter != null)
             {
-                bool result = world.NarrowPhaseFilter.Filter(shape, pshape, ref pA, ref pB, ref normal, ref toi);
+                // The filter contract expects signed separation, not time of impact.
+                // Keep TOI exclusively for ordering the swept hits.
+                float separation = JVector.Dot(normal, pA - pB) * world.SpeculativeRelaxationFactor;
+                bool result = world.NarrowPhaseFilter.Filter(shape, candidate,
+                    ref pA, ref pB, ref normal, ref separation);
                 if (!result) continue;
             }
 
@@ -124,7 +134,7 @@ public class CcdSolver
                 bestpA = pA;
                 bestpB = pB;
                 bestNormal = normal;
-                otherShape = pshape;
+                otherShape = candidate;
             }
         }
 
@@ -135,7 +145,7 @@ public class CcdSolver
 
         Arbiter arbiter;
 
-        if(shape.ShapeId < otherShape.ShapeId)
+        if (shape.ShapeId < otherShape.ShapeId)
         {
             world.GetOrCreateArbiter(shape.ShapeId, otherShape.ShapeId, shape.RigidBody, otherShape.RigidBody, out arbiter);
             world.RegisterContact(arbiter, bestpA, bestpB, bestNormal);
@@ -146,14 +156,74 @@ public class CcdSolver
             world.RegisterContact(arbiter, bestpB, bestpA, -bestNormal);
         }
 
-        arbiter.Handle.Data.PrepareForIteration((float)1.0 / dt);
-        arbiter.Handle.Data.Iterate(false);
+        SaveVelocity(shape.RigidBody);
+        SaveVelocity(otherShape.RigidBody);
+
+        // This proof of concept explores motion created by contacts only. Constraints
+        // are intentionally left to the normal world solver after discovery.
+        ref var contact = ref arbiter.Handle.Data;
+        try
+        {
+            contact.PrepareForIteration((float)1.0 / dt);
+            contact.Iterate(false);
+        }
+        finally
+        {
+            contact.ResetImpulses();
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static JBoundingBox CalculateSweptBoundingBox(RigidBodyShape shape, float dt, out float extent)
+    {
+        ref var data = ref shape.RigidBody.Data;
+        shape.CalculateBoundingBox(data.Orientation, data.Position, out JBoundingBox currentBox);
+
+        extent = CalculateAngularExtent(currentBox, data.Position);
+
+        JVector translation = data.Velocity * dt;
+        JBoundingBox endBox = new(currentBox.Min + translation, currentBox.Max + translation);
+        JBoundingBox result = JBoundingBox.CreateMerged(currentBox, endBox);
+
+        // Every point moves at most |omega| * radius * dt due to rotation.
+        // Expanding the translational sweep by that distance covers all
+        // intermediate orientations without using an excessively large sphere.
+        JVector angularExpansion = new(data.AngularVelocity.Length() * extent * dt);
+        result.Min -= angularExpansion;
+        result.Max += angularExpansion;
+        return result;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float CalculateAngularExtent(RigidBodyShape shape)
+    {
+        ref var data = ref shape.RigidBody.Data;
+        shape.CalculateBoundingBox(data.Orientation, data.Position, out JBoundingBox currentBox);
+
+        return CalculateAngularExtent(currentBox, data.Position);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static float CalculateAngularExtent(in JBoundingBox box, in JVector position)
+    {
+        JVector fromMin = JVector.Abs(box.Min - position);
+        JVector fromMax = JVector.Abs(box.Max - position);
+        return JVector.Max(fromMin, fromMax).Length();
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SaveVelocity(RigidBody body)
+    {
+        ref var data = ref body.Data;
+        originalVelocities.TryAdd(body, (data.Velocity, data.AngularVelocity));
     }
 
     public void Destroy()
     {
         world.PreStep -= PreStep;
         bodies.Clear();
+        overlaps.Clear();
+        originalVelocities.Clear();
     }
 
     public void Remove(RigidBody body) => bodies.Remove(body);

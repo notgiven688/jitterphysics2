@@ -139,6 +139,17 @@ public struct ContactData
         }
     }
 
+    /// <summary>Clears the accumulated normal and friction impulses of all active contacts.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void ResetImpulses()
+    {
+        var zero = Vector.Create((Real)0.0);
+        if ((UsageMask & MaskContact0) != 0) Contact0.Accumulated = zero;
+        if ((UsageMask & MaskContact1) != 0) Contact1.Accumulated = zero;
+        if ((UsageMask & MaskContact2) != 0) Contact2.Accumulated = zero;
+        if ((UsageMask & MaskContact3) != 0) Contact3.Accumulated = zero;
+    }
+
     /// <summary>
     /// Performs one solver iteration over all active contacts, applying corrective impulses.
     /// </summary>
