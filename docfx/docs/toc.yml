@@ -43,6 +43,7 @@
     - name: Collision Filters
       href: documentation/filters.md
 - name: Articles
+  expanded: true
   items:
     - name: Iterative Speculative Contact Discovery
       href: articles/iterative-speculative-contact-discovery.md
