@@ -29,6 +29,7 @@
         "files": [
           "images/**",
           "docs/**/images/**",
+          "docs/**/*.html",
           "logo.png",
           "favicon.ico",
           "AppBundle/**"

@@ -42,5 +42,9 @@
       href: documentation/dynamictree.md
     - name: Collision Filters
       href: documentation/filters.md
+- name: Articles
+  items:
+    - name: Iterative Speculative Contact Discovery
+      href: articles/iterative-speculative-contact-discovery.md
 - name: Changelog
   href: changelog.md

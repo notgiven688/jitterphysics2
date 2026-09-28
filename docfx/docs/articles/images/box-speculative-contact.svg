@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="640" viewBox="0 0 680 640" role="img" aria-labelledby="title desc">
+  <title id="title">A speculative response turns a tilted box into the wall</title>
+  <desc id="desc">Two predictions from the same starting pose. In the first row, paired markers show the detected contact at A: one point on the box and one on the wall. Its response makes the box turn, and the new prediction rotates into the wall without detecting another contact.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="context-stroke"/></marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2L2-2M0 8L8 0M6 10L10 6" stroke="#a7b2bf" stroke-width="1.5"/></pattern>
+    <clipPath id="wall"><rect x="388" y="390" width="24" height="158"/></clipPath>
+  </defs>
+  <rect width="680" height="640" rx="16" fill="#f3f6fa"/>
+  <g font-family="system-ui, sans-serif" fill="#25364b">
+    <text x="28" y="37" font-size="26" font-weight="650">1. The original prediction</text>
+    <text x="28" y="66" font-size="20" fill="#53677e">The box moves right without turning.</text>
+
+    <rect x="388" y="88" width="24" height="156" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="388" y="88" width="24" height="156" fill="url(#hatch)"/>
+    <path d="M 211 169 H 256" stroke="#2a64a9" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="90" y="119" width="100" height="100" rx="2" transform="rotate(12 140 169)" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="140" cy="169" r="4" fill="#2a64a9"/>
+    <text x="205" y="126" font-size="21" font-weight="650">A</text>
+    <text x="182" y="246" font-size="21" font-weight="650">B</text>
+    <rect x="278.7" y="119" width="100" height="100" rx="2" transform="rotate(12 328.7 169)" fill="#e0edff" fill-opacity="0.4" stroke="#2a64a9" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <circle cx="199.7" cy="130.5" r="5" fill="#2a64a9" stroke="#f3f6fa" stroke-width="2"/>
+    <circle cx="388" cy="130.5" r="6" fill="#a34631" stroke="#f3f6fa" stroke-width="2"/>
+    <path d="M 395 130.5 H 450" stroke="#a34631" stroke-width="1.5"/>
+    <text x="460" y="127" font-size="22" fill="#a34631">First contact</text>
+    <text x="460" y="155" font-size="22" fill="#a34631">at A</text>
+    <text x="354" y="246" font-size="21" font-weight="650" fill="#2a64a9">B</text>
+    <text x="140" y="273" text-anchor="middle" font-size="21">Now</text>
+    <text x="321" y="273" text-anchor="middle" font-size="21">First predicted hit</text>
+
+    <path d="M 28 297 H 652" stroke="#d4dee9"/>
+    <text x="28" y="332" font-size="26" font-weight="650">2. After the velocity correction</text>
+    <text x="28" y="361" font-size="20" fill="#53677e">The box slows down, but now it turns too.</text>
+
+    <rect x="388" y="390" width="24" height="158" fill="#d9e0e8" stroke="#8090a3" stroke-width="2"/>
+    <rect x="388" y="390" width="24" height="158" fill="url(#hatch)"/>
+    <path d="M 211 474 H 244" stroke="#21745e" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="90" y="424" width="100" height="100" rx="2" transform="rotate(12 140 474)" fill="#e0edff" stroke="#2a64a9" stroke-width="3"/>
+    <circle cx="140" cy="474" r="4" fill="#2a64a9"/>
+    <text x="205" y="431" font-size="21" font-weight="650">A</text>
+    <text x="182" y="551" font-size="21" font-weight="650">B</text>
+    <circle cx="199.3" cy="435.5" r="4" fill="#21745e"/>
+    <path d="M 199.3 435.5 H 126" stroke="#21745e" stroke-width="3" marker-end="url(#arrow)"/>
+    <text x="140" y="403" text-anchor="middle" font-size="20" fill="#21745e">Push back at A</text>
+
+    <rect x="319.7" y="424" width="100" height="100" rx="2" transform="rotate(-30 369.7 474)" fill="#faeee9" fill-opacity="0.6"/>
+    <g clip-path="url(#wall)">
+      <rect x="319.7" y="424" width="100" height="100" rx="2" transform="rotate(-30 369.7 474)" fill="#c45e43" fill-opacity="0.8"/>
+    </g>
+    <rect x="319.7" y="424" width="100" height="100" rx="2" transform="rotate(-30 369.7 474)" fill="none" stroke="#a34631" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <circle cx="388" cy="405.7" r="4" fill="#21745e"/>
+    <text x="364" y="407" font-size="21" font-weight="650" fill="#21745e">A</text>
+    <path d="M 359 424 A 52 52 0 0 0 318 461" stroke="#21745e" stroke-width="2.5" fill="none" marker-end="url(#arrow)"/>
+    <text x="452" y="487" font-size="22" fill="#a34631">Box rotated</text>
+    <text x="452" y="515" font-size="22" fill="#a34631">into obstacle</text>
+    <text x="140" y="575" text-anchor="middle" font-size="21">Same starting pose</text>
+    <text x="351" y="575" text-anchor="middle" font-size="21">New prediction</text>
+    <text x="28" y="618" font-size="20" fill="#53677e">Solid: now · Dashed: predicted poses</text>
+  </g>
+</svg>

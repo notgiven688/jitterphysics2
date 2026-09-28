@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISCD rigid-body solver demo</title>
+  <style>
+    :root { color-scheme: light dark; --bg: light-dark(#f3f6fa,#17202b); --panel: light-dark(#d9e0e8,#526070); --panel-edge: light-dark(#718298,#a5b1bf); --text: light-dark(#25364b,#e5edf5); --muted: light-dark(#5d7188,#aab8c7); --line: light-dark(#d4dee9,#344252); --blue: light-dark(#2a64a9,#78aef0); --blue-fill: light-dark(#e0edff,#243c59); --green: light-dark(#21745e,#65c9aa); --red: light-dark(#a34631,#ef9078); --orange: light-dark(#a86613,#eab564); --control: light-dark(#fff,#222e3b); }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: transparent; color: var(--text); font: 15px/1.4 system-ui,sans-serif; }
+    .demo { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+    .bar { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; padding: 11px 13px; border-bottom: 1px solid var(--line); }
+    button,select { min-height: 38px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--control); color: var(--text); font: inherit; font-weight: 600; }
+    button { cursor: pointer; } button:hover,select:hover { border-color: var(--blue); }
+    button:focus-visible,select:focus-visible { outline: 3px solid color-mix(in srgb,var(--blue) 35%,transparent); outline-offset: 2px; }
+    label { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); }
+    canvas { display: block; width: 100%; height: auto; aspect-ratio: 760/470; }
+    .readout { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 9px 13px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .readout strong { color: var(--text); font-weight: 650; }
+    .event { flex: 1 1 100%; min-height: 1.4em; color: var(--green); font-weight: 650; }
+    @media (max-width:640px) { select { max-width: 100%; } }
+  </style>
+</head>
+<body>
+  <main class="demo">
+    <div class="bar">
+      <button id="play" type="button">Pause</button>
+      <button id="step" type="button">Step 1/30 s</button>
+      <button id="reset" type="button">Reset</button>
+      <label>Method <select id="method"><option value="discrete">1. Standard Solver</option><option value="single">2. Speculative Contacts</option><option value="iscd" selected>3. ISCD - four passes</option></select></label>
+    </div>
+    <canvas id="scene" width="760" height="470" role="img" aria-label="Live rigid-body simulation. A fast sphere strikes the upper part of a center-pivoted panel. Its impulse rotates the panel toward a second sphere, and iterative speculative contact discovery detects both contacts before positions are integrated."></canvas>
+    <div class="readout" aria-live="polite">
+      <span>time <strong id="time">0.00 s</strong></span><span>sweeps <strong id="sweeps">0</strong></span><span>passes <strong id="passes">0</strong></span><span>contacts <strong id="contacts">0</strong></span><span>panel ω <strong id="omega">0.00 rad/s</strong></span>
+      <span class="event" id="event"></span>
+    </div>
+  </main>
+  <script>
+  (() => {
+    'use strict';
+    const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d');
+    const playButton=document.getElementById('play'),stepButton=document.getElementById('step'),resetButton=document.getElementById('reset'),methodSelect=document.getElementById('method');
+    const output={time:document.getElementById('time'),sweeps:document.getElementById('sweeps'),passes:document.getElementById('passes'),contacts:document.getElementById('contacts'),omega:document.getElementById('omega'),event:document.getElementById('event')};
+    // Demo-only: 200 iterations keep this deliberately extreme case converged;
+    // the panel-to-sphere mass ratio is unusually small.
+    const WIDTH=760,HEIGHT=470,SOLVER_ITERATIONS=200,MAX_DISCOVERY_PASSES=4,CONTACT_SLOP=.05,SWEEP_SAMPLES=32,TIME_SCALE=.72;
+    const DT=1/30;
+    const v=(x=0,y=0)=>({x,y}),add=(a,b)=>v(a.x+b.x,a.y+b.y),sub=(a,b)=>v(a.x-b.x,a.y-b.y),scale=(a,s)=>v(a.x*s,a.y*s),dot=(a,b)=>a.x*b.x+a.y*b.y,cross=(a,b)=>a.x*b.y-a.y*b.x,length=a=>Math.hypot(a.x,a.y),normalize=a=>{const m=length(a);return m>1e-9?scale(a,1/m):v(1,0)},rotate=(a,z)=>{const c=Math.cos(z),s=Math.sin(z);return v(a.x*c-a.y*s,a.x*s+a.y*c)},clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
+    let world,playing=true,accumulator=0,previousFrame=performance.now(),eventUntil=0,colorCache=new Map();
+
+    function makeWorld(){const mass=.1,w=4,h=216,inertia=mass*(w*w+h*h)/12;return{time:0,panel:{position:v(558,242),angle:0,omega:0,halfW:w/2,halfH:h/2,invInertia:1/inertia},spheres:[{id:'A',position:v(143,172),velocity:v(1080,0),radius:14,invMass:1},{id:'B',position:v(541.85,323),velocity:v(0,0),radius:14,invMass:1}],contacts:[],debugContacts:[],sweeps:0,passes:0,trailA:[],trailB:[]}}
+    function reset(){world=makeWorld();accumulator=0;eventUntil=0;output.event.textContent='';draw()}
+
+    // Signed separation and contact geometry for a circle against the panel OBB.
+    function geometry(sphere,panel,t=0){
+      const angle=panel.angle+panel.omega*t,spherePosition=add(sphere.position,scale(sphere.velocity,t)),local=rotate(sub(spherePosition,panel.position),-angle);
+      const q=v(clamp(local.x,-panel.halfW,panel.halfW),clamp(local.y,-panel.halfH,panel.halfH)),outside=sub(local,q),outsideDistance=length(outside);
+      let normalLocal,signedDistance;
+      if(outsideDistance>1e-9){normalLocal=scale(outside,1/outsideDistance);signedDistance=outsideDistance}
+      else{const dx=panel.halfW-Math.abs(local.x),dy=panel.halfH-Math.abs(local.y);if(dx<dy){normalLocal=v(local.x<0?-1:1,0);q.x=normalLocal.x*panel.halfW;signedDistance=-dx}else{normalLocal=v(0,local.y<0?-1:1);q.y=normalLocal.y*panel.halfH;signedDistance=-dy}}
+      const normal=rotate(normalLocal,angle),r=rotate(q,angle);return{gap:signedDistance-sphere.radius,normal,r,point:add(panel.position,r)}
+    }
+
+    // CCD sweep across the current fixed step, including panel rotation.
+    function sweep(sphere,panel){
+      world.sweeps++;const start=geometry(sphere,panel,0);if(start.gap<=CONTACT_SLOP)return{...start,toi:0};let previousT=0,previousGap=start.gap;
+      for(let i=1;i<=SWEEP_SAMPLES;i++){const t=DT*i/SWEEP_SAMPLES,sample=geometry(sphere,panel,t);if(sample.gap<=0&&previousGap>0){let lo=previousT,hi=t;for(let j=0;j<20;j++){const mid=(lo+hi)*.5;if(geometry(sphere,panel,mid).gap<=0)hi=mid;else lo=mid}return{...geometry(sphere,panel,hi),toi:hi}}previousT=t;previousGap=sample.gap}return null
+    }
+
+    function makeContact(sphere,source,toi=0){const g=geometry(sphere,world.panel,0);return{key:`panel-${sphere.id}`,sphere,normal:g.normal,r:g.r,point:g.point,gap:g.gap,toi,source,impulse:0}}
+    function contactVelocity(c){const panelPoint=v(-world.panel.omega*c.r.y,world.panel.omega*c.r.x);return sub(c.sphere.velocity,panelPoint)}
+
+    // Projected Gauss-Seidel normal constraint. The speculative bias permits
+    // exactly enough closing velocity to consume the current gap in one step.
+    function solveContact(c){
+      const arm=cross(c.r,c.normal),angularMass=arm*arm*world.panel.invInertia,effectiveMass=c.sphere.invMass+angularMass;if(effectiveMass<=0)return 0;
+      const vn=dot(contactVelocity(c),c.normal),bias=c.gap>=0?c.gap/DT:.2*c.gap/DT,delta=-(vn+bias)/effectiveMass,old=c.impulse;c.impulse=Math.max(0,old+delta);const applied=c.impulse-old;if(Math.abs(applied)<1e-10)return 0;
+      const impulse=scale(c.normal,applied);c.sphere.velocity=add(c.sphere.velocity,scale(impulse,c.sphere.invMass));const panelImpulse=scale(impulse,-1);world.panel.omega+=cross(c.r,panelImpulse)*world.panel.invInertia;return applied
+    }
+
+    function addDiscrete(contactMap){for(const sphere of world.spheres){if(geometry(sphere,world.panel,0).gap<=CONTACT_SLOP){const c=makeContact(sphere,'discrete');contactMap.set(c.key,c)}}}
+    function solveDiscoveryContacts(contactMap){let count=0;for(const c of contactMap.values()){if(c.source!=='speculative')continue;solveContact(c);count++}return count}
+    function discover(contactMap){
+      if(methodSelect.value==='discrete')return;const budget=methodSelect.value==='single'?1:MAX_DISCOVERY_PASSES;
+      for(let pass=0;pass<budget;pass++){
+        world.passes++;let earliest=null,selected=null;
+        for(const sphere of world.spheres){if(contactMap.has(`panel-${sphere.id}`))continue;const hit=sweep(sphere,world.panel);if(hit&&(!earliest||hit.toi<earliest.toi)){earliest=hit;selected=sphere}}
+        if(earliest){const c=makeContact(selected,'speculative',earliest.toi);contactMap.set(c.key,c)}
+        // Retain the accumulated impulses and iterate every speculative contact
+        // discovered so far. Later contacts can therefore correct earlier ones.
+        if(solveDiscoveryContacts(contactMap)===0)break;
+      }
+    }
+
+    function physicsStep(){
+      world.sweeps=0;world.passes=0;const contactMap=new Map();addDiscrete(contactMap);discover(contactMap);world.contacts=[...contactMap.values()];
+      // Discovery impulses already live in the velocities and accumulated
+      // lambdas. The main solver continues from that state without reapplying them.
+      for(let i=0;i<SOLVER_ITERATIONS;i++)for(const c of world.contacts)solveContact(c);
+      const foundA=world.contacts.some(c=>c.sphere.id==='A'&&c.source==='speculative'),foundB=world.contacts.some(c=>c.sphere.id==='B'&&c.source==='speculative');
+      if(foundA&&foundB){output.event.textContent='Same step: detected A → applied response → detected B';eventUntil=world.time+.65}else if(foundA&&methodSelect.value==='single'){output.event.textContent='One pass: the response at A creates an unchecked path through B';eventUntil=world.time+.65}else if(world.time>eventUntil)output.event.textContent='';
+      for(const sphere of world.spheres)sphere.position=add(sphere.position,scale(sphere.velocity,DT));world.panel.angle+=world.panel.omega*DT;world.time+=DT;
+      // The solver contacts belong to the pre-integration state. Recompute only
+      // their debug geometry so markers match the body poses currently drawn.
+      world.debugContacts=world.contacts.map(c=>{const g=geometry(c.sphere,world.panel,0);return{id:c.sphere.id,point:g.point,normal:g.normal,source:c.source,impulse:c.impulse,toi:c.toi}});
+      if(Math.round(world.time*60)%3===0){world.trailA.push({...world.spheres[0].position});world.trailB.push({...world.spheres[1].position});for(const trail of[world.trailA,world.trailB])if(trail.length>90)trail.shift()}
+      if(world.time>2.8)reset()
+    }
+
+    function color(name){const mode=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light',key=`${mode}:${name}`;if(colorCache.has(key))return colorCache.get(key);const probe=document.createElement('span');probe.style.color=`var(${name})`;probe.style.position='absolute';probe.style.visibility='hidden';document.body.appendChild(probe);const value=getComputedStyle(probe).color;probe.remove();colorCache.set(key,value);return value}
+    function drawTrail(points,stroke){if(points.length<2)return;ctx.save();ctx.strokeStyle=stroke;ctx.globalAlpha=.3;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);ctx.stroke();ctx.restore()}
+    function drawSphere(s,predicted=false){ctx.save();ctx.beginPath();ctx.arc(s.position.x,s.position.y,s.radius,0,Math.PI*2);ctx.fillStyle=predicted?color('--bg'):color('--blue-fill');ctx.strokeStyle=predicted?color('--green'):color('--blue');ctx.lineWidth=predicted?2:3;ctx.setLineDash(predicted?[7,6]:[]);ctx.globalAlpha=predicted?.72:1;ctx.fill();ctx.stroke();ctx.restore()}
+    function drawPanel(p,predicted=false){ctx.save();ctx.translate(p.position.x,p.position.y);ctx.rotate(p.angle);ctx.fillStyle=predicted?color('--bg'):color('--panel');ctx.strokeStyle=predicted?color('--green'):color('--panel-edge');ctx.lineWidth=predicted?2:3;ctx.setLineDash(predicted?[7,6]:[]);ctx.globalAlpha=predicted?.72:1;ctx.fillRect(-p.halfW,-p.halfH,p.halfW*2,p.halfH*2);ctx.strokeRect(-p.halfW,-p.halfH,p.halfW*2,p.halfH*2);ctx.restore()}
+    function arrow(from,to,stroke){const a=Math.atan2(to.y-from.y,to.x-from.x);ctx.save();ctx.strokeStyle=stroke;ctx.fillStyle=stroke;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);ctx.stroke();ctx.beginPath();ctx.moveTo(to.x,to.y);ctx.lineTo(to.x-10*Math.cos(a-.45),to.y-10*Math.sin(a-.45));ctx.lineTo(to.x-10*Math.cos(a+.45),to.y-10*Math.sin(a+.45));ctx.closePath();ctx.fill();ctx.restore()}
+    function drawContact(c){const ink=c.source==='speculative'?color('--red'):color('--orange');ctx.save();ctx.fillStyle=ink;ctx.beginPath();ctx.arc(c.point.x,c.point.y,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle=color('--bg');ctx.lineWidth=2;ctx.stroke();arrow(c.point,add(c.point,scale(c.normal,26)),ink);ctx.fillStyle=ink;ctx.font='600 15px system-ui';ctx.fillText(c.id,c.point.x+10,c.point.y-10);ctx.restore()}
+
+    function draw(){
+      ctx.clearRect(0,0,WIDTH,HEIGHT);const text=color('--text'),muted=color('--muted'),blue=color('--blue'),green=color('--green');drawTrail(world.trailA,blue);drawTrail(world.trailB,green);
+      drawPanel({...world.panel,angle:world.panel.angle+world.panel.omega*DT},true);for(const sphere of world.spheres)drawSphere({...sphere,position:add(sphere.position,scale(sphere.velocity,DT))},true);drawPanel(world.panel);for(const sphere of world.spheres)drawSphere(sphere);
+      ctx.save();ctx.fillStyle=text;ctx.beginPath();ctx.arc(world.panel.position.x,world.panel.position.y,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle=color('--bg');ctx.lineWidth=2;ctx.stroke();ctx.fillStyle=muted;ctx.font='14px system-ui';ctx.fillText('fixed center-of-mass pivot',world.panel.position.x+15,world.panel.position.y+5);ctx.fillText('incoming sphere',world.spheres[0].position.x-46,world.spheres[0].position.y-35);ctx.fillText('resting sphere',world.spheres[1].position.x-45,world.spheres[1].position.y+44);ctx.restore();
+      if(length(world.spheres[0].velocity)>1){const start=add(world.spheres[0].position,v(28,0));arrow(start,add(start,scale(normalize(world.spheres[0].velocity),75)),blue)}for(const c of world.debugContacts)drawContact(c);
+      ctx.save();ctx.fillStyle=muted;ctx.font='14px system-ui';ctx.fillText('Dashed outlines: one fixed step ahead',22,444);ctx.restore();
+      output.time.textContent=`${world.time.toFixed(2)} s`;output.sweeps.textContent=String(world.sweeps);output.passes.textContent=String(world.passes);output.contacts.textContent=String(world.contacts.length);output.omega.textContent=`${world.panel.omega.toFixed(2)} rad/s`;
+    }
+
+    function setPlaying(value){playing=value;playButton.textContent=playing?'Pause':'Play';previousFrame=performance.now()}
+    playButton.addEventListener('click',()=>setPlaying(!playing));stepButton.addEventListener('click',()=>{setPlaying(false);physicsStep();draw()});resetButton.addEventListener('click',()=>{setPlaying(false);reset()});methodSelect.addEventListener('change',reset);matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{colorCache.clear();draw()});
+    function frame(now){const elapsed=Math.min(.1,(now-previousFrame)/1000);previousFrame=now;if(playing){accumulator+=elapsed*TIME_SCALE;let steps=0;while(accumulator>=DT&&steps<6){physicsStep();accumulator-=DT;steps++}draw()}requestAnimationFrame(frame)}
+    methodSelect.value='iscd';reset();requestAnimationFrame(frame);
+  })();
+  </script>
+</body>
+</html>
