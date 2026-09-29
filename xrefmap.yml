@@ -9479,6 +9479,12 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Contact.Flags.NewContact
   fullName: Jitter2.Dynamics.ContactData.Contact.Flags.NewContact
   nameWithType: ContactData.Contact.Flags.NewContact
+- uid: Jitter2.Dynamics.ContactData.Contact.Flags.SkipWarmStart
+  name: SkipWarmStart
+  href: api/Jitter2.Dynamics.ContactData.Contact.Flags.html#Jitter2_Dynamics_ContactData_Contact_Flags_SkipWarmStart
+  commentId: F:Jitter2.Dynamics.ContactData.Contact.Flags.SkipWarmStart
+  fullName: Jitter2.Dynamics.ContactData.Contact.Flags.SkipWarmStart
+  nameWithType: ContactData.Contact.Flags.SkipWarmStart
 - uid: Jitter2.Dynamics.ContactData.Contact.Impulse
   name: Impulse
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Impulse
@@ -9836,6 +9842,19 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Restitution
   fullName: Jitter2.Dynamics.ContactData.Restitution
   nameWithType: ContactData.Restitution
+- uid: Jitter2.Dynamics.ContactData.SkipWarmStart
+  name: SkipWarmStart()
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_SkipWarmStart
+  commentId: M:Jitter2.Dynamics.ContactData.SkipWarmStart
+  fullName: Jitter2.Dynamics.ContactData.SkipWarmStart()
+  nameWithType: ContactData.SkipWarmStart()
+- uid: Jitter2.Dynamics.ContactData.SkipWarmStart*
+  name: SkipWarmStart
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_SkipWarmStart_
+  commentId: Overload:Jitter2.Dynamics.ContactData.SkipWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactData.SkipWarmStart
+  nameWithType: ContactData.SkipWarmStart
 - uid: Jitter2.Dynamics.ContactData.SolveMode
   name: ContactData.SolveMode
   href: api/Jitter2.Dynamics.ContactData.SolveMode.html
