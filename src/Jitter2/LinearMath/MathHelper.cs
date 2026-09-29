@@ -51,13 +51,15 @@ public static class MathHelper
 
         if (theta < (Real)1e-3)
         {
-            Real dt3 = dt * dt * dt;
-            Real angle2 = angle * angle;
-
-            Real smallAngleScale = (Real)0.5 * dt - ((Real)1.0 / (Real)48.0) * dt3 * angle2;
+            // Exact rotation: (omega * sin(theta/2) / |omega|, cos(theta/2)).
+            // For small theta, the vector scale is dt/2 * (1 - theta^2/24)
+            // and the scalar part is 1 - theta^2/8 (Taylor expansions).
+            // Using theta^2 avoids forming dt^3, which can overflow in a long sweep.
+            Real theta2 = theta * theta;
+            Real smallAngleScale = (Real)0.5 * dt * ((Real)1.0 - theta2 / (Real)24.0);
             JVector.Multiply(omega, smallAngleScale, out var smallAngleAxis);
 
-            Real cos = (Real)1.0 - ((Real)1.0 / (Real)8.0) * theta * theta;
+            Real cos = (Real)1.0 - ((Real)1.0 / (Real)8.0) * theta2;
 
             JQuaternion smallAngleResult = new JQuaternion(smallAngleAxis.X, smallAngleAxis.Y, smallAngleAxis.Z, cos);
             Debug.Assert(MathHelper.IsZero(smallAngleResult.Length() - 1, (Real)1e-2));

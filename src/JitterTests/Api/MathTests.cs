@@ -5,6 +5,20 @@ namespace JitterTests.Api;
 public class MathTests
 {
     [TestCase]
+    public static void RotationQuaternion_LongSweepWithTinyAngularVelocityRemainsFinite()
+    {
+        Real dt = (Real)1e13;
+
+        JQuaternion stationary = MathHelper.RotationQuaternion(JVector.Zero, dt);
+        Assert.That(stationary, Is.EqualTo(JQuaternion.Identity));
+
+        JQuaternion slowlyRotating = MathHelper.RotationQuaternion(new JVector((Real)1e-17, 0, 0), dt);
+        Assert.That(Real.IsFinite(slowlyRotating.X), Is.True);
+        Assert.That(slowlyRotating.X, Is.EqualTo((Real)5e-5).Within((Real)1e-7));
+        Assert.That(slowlyRotating.Length(), Is.EqualTo((Real)1).Within((Real)1e-6));
+    }
+
+    [TestCase]
     public static void StableMath_MatchesMathROnRepresentativeInputs()
     {
         Real[] angles =
