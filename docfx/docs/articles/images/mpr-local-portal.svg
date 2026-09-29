@@ -36,7 +36,6 @@
     <text x="635" y="214" font-size="18" fill="#a86613">v₁</text>
     <text x="635" y="293" font-size="18" fill="#a86613">v₂</text>
     <circle cx="485" cy="240" r="7" fill="#25364b" stroke="#f3f6fa" stroke-width="2"/>
-    <text x="495" y="260" font-size="19" font-weight="650">O</text>
 
     <path d="M30 350 H730" stroke="#d4dee9"/>
     <text x="30" y="383" font-size="18">The portal gives an upper bound: the true minimum is no greater than 2.</text>

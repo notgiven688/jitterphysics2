@@ -14,8 +14,6 @@ MPR starts with a point $v_0$ in the interior of $M$ and keeps it fixed. It obta
 
 The resulting portal supplies a normal, a penetration estimate, and contact points. MPR turns out to be very robust.
 
-The especially useful case is first contact. For a fixed pair of shapes approaching an isolated contact, the ray from the interior point through the origin reaches the nearby surface patch. Close enough to first touch, that local patch also gives the global minimum penetration. MPR can therefore return the contact geometry the solver needs without building a polytope. “Close enough” depends on the geometry; it is not a universal distance in world units.
-
 ## Where a local answer goes wrong
 
 Deep inside a long, thin Minkowski difference, the portal can settle on the wrong side. The figure shows a two-dimensional section, where the tetrahedron becomes a triangle. The origin lies inside the triangle made from an interior point $v_0$ and the two vertices on the right. Its right edge is a valid portal, with a normal pointing right. But the *top boundary of the Minkowski difference* is much closer to the origin.
