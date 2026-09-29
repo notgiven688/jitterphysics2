@@ -150,6 +150,17 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.Accumulated = zero;
     }
 
+    /// <summary>Skips replaying accumulated impulses on the next preparation of each active contact.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SkipWarmStart()
+    {
+        const Contact.Flags flag = Contact.Flags.SkipWarmStart;
+        if ((UsageMask & MaskContact0) != 0) Contact0.Flag |= flag;
+        if ((UsageMask & MaskContact1) != 0) Contact1.Flag |= flag;
+        if ((UsageMask & MaskContact2) != 0) Contact2.Flag |= flag;
+        if ((UsageMask & MaskContact3) != 0) Contact3.Flag |= flag;
+    }
+
     /// <summary>
     /// Performs one solver iteration over all active contacts, applying corrective impulses.
     /// </summary>
@@ -597,6 +608,8 @@ public struct ContactData
         {
             /// <summary>Indicates this contact was created in the current step.</summary>
             NewContact = 1 << 1,
+            /// <summary>Skips replaying the accumulated impulse on the next preparation only.</summary>
+            SkipWarmStart = 1 << 2,
         }
 
         /// <summary>Current contact state flags.</summary>
@@ -776,6 +789,16 @@ public struct ContactData
             Real accumulatedNormalImpulse = Accumulated.GetElement(0);
             Real accumulatedTangentImpulse1 = Accumulated.GetElement(1);
             Real accumulatedTangentImpulse2 = Accumulated.GetElement(2);
+
+            bool skipWarmStart = (Flag & Flags.SkipWarmStart) != 0;
+            Flag &= ~Flags.SkipWarmStart;
+            if (skipWarmStart)
+            {
+                // Keep Accumulated for Iterate; only omit its replay into velocities.
+                accumulatedNormalImpulse = 0;
+                accumulatedTangentImpulse1 = 0;
+                accumulatedTangentImpulse2 = 0;
+            }
 
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
@@ -992,6 +1015,10 @@ public struct ContactData
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public unsafe void PrepareForIterationAccelerated(ContactData* cd, Real idt)
         {
+            bool skipWarmStart = (Flag & Flags.SkipWarmStart) != 0;
+            Flag &= ~Flags.SkipWarmStart;
+            var warmStartImpulse = skipWarmStart ? Vector.Create((Real)0.0) : Accumulated;
+
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
@@ -1026,9 +1053,9 @@ public struct ContactData
 
             // warm-starting, linear
             Unsafe.SkipInit(out JVector linearImpulse);
-            linearImpulse.X = GetSum3(Vector.Multiply(Accumulated, NormalTangentX));
-            linearImpulse.Y = GetSum3(Vector.Multiply(Accumulated, NormalTangentY));
-            linearImpulse.Z = GetSum3(Vector.Multiply(Accumulated, NormalTangentZ));
+            linearImpulse.X = GetSum3(Vector.Multiply(warmStartImpulse, NormalTangentX));
+            linearImpulse.Y = GetSum3(Vector.Multiply(warmStartImpulse, NormalTangentY));
+            linearImpulse.Z = GetSum3(Vector.Multiply(warmStartImpulse, NormalTangentZ));
 
             if ((cd->Mode & SolveMode.LinearBody1) != 0)
             {
@@ -1057,9 +1084,9 @@ public struct ContactData
                 var e3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
 
                 Unsafe.SkipInit(out JVector angularImpulse1);
-                angularImpulse1.X = GetSum3(Vector.Multiply(Accumulated, e1));
-                angularImpulse1.Y = GetSum3(Vector.Multiply(Accumulated, e2));
-                angularImpulse1.Z = GetSum3(Vector.Multiply(Accumulated, e3));
+                angularImpulse1.X = GetSum3(Vector.Multiply(warmStartImpulse, e1));
+                angularImpulse1.Y = GetSum3(Vector.Multiply(warmStartImpulse, e2));
+                angularImpulse1.Z = GetSum3(Vector.Multiply(warmStartImpulse, e3));
 
                 b1.AngularVelocity -= angularImpulse1;
 
@@ -1095,9 +1122,9 @@ public struct ContactData
                 var f3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
 
                 Unsafe.SkipInit(out JVector angularImpulse2);
-                angularImpulse2.X = GetSum3(Vector.Multiply(Accumulated, f1));
-                angularImpulse2.Y = GetSum3(Vector.Multiply(Accumulated, f2));
-                angularImpulse2.Z = GetSum3(Vector.Multiply(Accumulated, f3));
+                angularImpulse2.X = GetSum3(Vector.Multiply(warmStartImpulse, f1));
+                angularImpulse2.Y = GetSum3(Vector.Multiply(warmStartImpulse, f2));
+                angularImpulse2.Z = GetSum3(Vector.Multiply(warmStartImpulse, f3));
 
                 b2.AngularVelocity += angularImpulse2;
 

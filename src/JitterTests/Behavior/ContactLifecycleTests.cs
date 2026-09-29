@@ -2,6 +2,47 @@ namespace JitterTests.Behavior;
 
 public class ContactLifecycleTests
 {
+    [TestCase(false)]
+    [TestCase(true)]
+    public void SkipWarmStart_AffectsOnlyTheNextPreparation(bool accelerated)
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(0.25f));
+        body.SetMassInertia(1);
+        body.Position = new JVector(-2, 0, 0);
+        body.Velocity = new JVector(400, 0, 0);
+
+        ContactData contact = default;
+        contact.Init(body, world.NullBody);
+        contact.Friction = contact.Restitution = 0;
+        contact.AddContact(new JVector(-1.75f, 0, 0), new JVector(-0.05f, 0, 0), JVector.UnitX);
+        contact.ResetMode();
+
+        void Prepare()
+        {
+            if (accelerated) contact.PrepareForIterationAccelerated(100);
+            else contact.PrepareForIterationScalar(100);
+        }
+
+        Prepare();
+        contact.Iterate(false);
+        Assert.That(contact.Contact0.Impulse, Is.GreaterThan(0));
+        JVector velocity = body.Velocity;
+        Real impulse = contact.Contact0.Impulse;
+
+        contact.SkipWarmStart();
+        Prepare();
+
+        Assert.That(body.Velocity, Is.EqualTo(velocity));
+        Assert.That(contact.Contact0.Impulse, Is.EqualTo(impulse));
+        Assert.That(contact.Contact0.Flag & ContactData.Contact.Flags.SkipWarmStart,
+            Is.EqualTo((ContactData.Contact.Flags)0));
+
+        Prepare();
+        Assert.That(body.Velocity, Is.Not.EqualTo(velocity));
+    }
+
     [TestCase]
     public void BeginCollide_FiresOnce_WhenBodiesStartTouching()
     {

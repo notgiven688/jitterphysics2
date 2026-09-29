@@ -24,9 +24,7 @@ public class CcdSolver
 
     private readonly List<RigidBody> bodies = new();
     private readonly List<IDynamicTreeProxy> overlaps = new();
-    private readonly Dictionary<RigidBody, (JVector Linear, JVector Angular)> originalVelocities = new();
     private readonly List<Arbiter> discoveredArbiters = new();
-    private readonly HashSet<Arbiter> discoveredArbiterSet = new();
 
     public CcdSolver(World world)
     {
@@ -40,9 +38,7 @@ public class CcdSolver
     {
         if (!Enabled) return;
 
-        originalVelocities.Clear();
         discoveredArbiters.Clear();
-        discoveredArbiterSet.Clear();
 
         try
         {
@@ -50,6 +46,7 @@ public class CcdSolver
 
             for (int iter = 0; iter < SelfConsistencyIterations; iter++)
             {
+
                 // Go through all rigid bodies which have been registered with the ccd-solver.
                 for (int i = 0; i < spanBodies.Length; i++)
                 {
@@ -69,15 +66,13 @@ public class CcdSolver
                     }
                 }
 
-                // Rebuild the discovery response from the original velocities. Preparing
-                // the contacts warm-starts their retained impulses exactly once, after
-                // which one Gauss-Seidel iteration makes the complete discovered set more
-                // consistent before the next sweep.
-                RestoreVelocities();
-
+                // The discovery solve starts with zero accumulated impulses. Later
+                // impulses are already reflected in body velocities, so preparation
+                // only recomputes the contact data.
                 for (int i = 0; i < discoveredArbiters.Count; i++)
                 {
                     ref var contact = ref discoveredArbiters[i].Handle.Data;
+                    contact.SkipWarmStart();
                     contact.PrepareForIteration((float)1.0 / dt);
                 }
 
@@ -90,18 +85,15 @@ public class CcdSolver
         }
         finally
         {
-            // Discovery uses temporary responses. The normal solver starts from
-            // the original velocities and solves the discovered contacts afresh.
-            RestoreVelocities();
-
+            // Discovery impulses are already reflected in body velocities. Keep
+            // them for the world solve, but do not replay them on its first prepare.
             for (int i = 0; i < discoveredArbiters.Count; i++)
             {
-                discoveredArbiters[i].Handle.Data.ResetImpulses();
+                ref var contact = ref discoveredArbiters[i].Handle.Data;
+                contact.SkipWarmStart();
             }
 
-            originalVelocities.Clear();
             discoveredArbiters.Clear();
-            discoveredArbiterSet.Clear();
             overlaps.Clear();
         }
     }
@@ -178,17 +170,12 @@ public class CcdSolver
             world.RegisterContact(arbiter, bestpB, bestpA, -bestNormal);
         }
 
-        SaveVelocity(shape.RigidBody);
-        SaveVelocity(otherShape.RigidBody);
-
         // This proof of concept explores motion created by contacts only. Constraints
         // are intentionally left to the normal world solver after discovery.
-        if (discoveredArbiterSet.Add(arbiter))
+        if (!discoveredArbiters.Contains(arbiter))
         {
             discoveredArbiters.Add(arbiter);
-
-            // Do not carry the world's cached impulses into the temporary discovery
-            // solve. Accumulated impulses are retained from now until discovery ends.
+            // Ignore impulses cached by an earlier world step during discovery.
             arbiter.Handle.Data.ResetImpulses();
         }
     }
@@ -231,33 +218,12 @@ public class CcdSolver
         return JVector.Max(fromMin, fromMax).Length();
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SaveVelocity(RigidBody body)
-    {
-        ref var data = ref body.Data;
-        originalVelocities.TryAdd(body, (data.Velocity, data.AngularVelocity));
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void RestoreVelocities()
-    {
-        foreach (var (body, velocity) in originalVelocities)
-        {
-            if (body.Handle.IsZero) continue;
-            ref var data = ref body.Data;
-            data.Velocity = velocity.Linear;
-            data.AngularVelocity = velocity.Angular;
-        }
-    }
-
     public void Destroy()
     {
         world.PreStep -= PreStep;
         bodies.Clear();
         overlaps.Clear();
-        originalVelocities.Clear();
         discoveredArbiters.Clear();
-        discoveredArbiterSet.Clear();
     }
 
     public void Remove(RigidBody body) => bodies.Remove(body);
