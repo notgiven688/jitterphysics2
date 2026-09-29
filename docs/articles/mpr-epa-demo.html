@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interactive example: MPR and EPA</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: light-dark(#f3f6fa, #17202b);
+      --text: light-dark(#25364b, #e5edf5);
+      --muted: light-dark(#596c82, #aab8c7);
+      --line: light-dark(#d4dee9, #344252);
+      --button: light-dark(#fff, #222e3b);
+      --green: light-dark(#21745e, #65c9aa);
+      --red: light-dark(#a34631, #ef9078);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: transparent; color: var(--text); font: 15px/1.4 system-ui, sans-serif; }
+    .demo { overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--background); }
+    .controls { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; padding: 11px 13px; border-bottom: 1px solid var(--line); }
+    .controls span { margin-right: auto; color: var(--muted); }
+    button { min-height: 36px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--button); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+    button:hover { border-color: var(--green); }
+    button:focus-visible, canvas:focus-visible { outline: 3px solid var(--green); outline-offset: -3px; }
+    canvas { display: block; width: 100%; height: auto; }
+    #scene { aspect-ratio: 760 / 420; touch-action: none; }
+    #minkowski { aspect-ratio: 760 / 260; }
+    .minkowski-heading { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 8px 13px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+    .minkowski-heading strong { color: var(--text); font-size: 15px; }
+    .minkowski-heading .origin-key { margin-left: auto; color: var(--text); }
+    .origin-key::before { content: ''; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border: 1.5px solid var(--text); border-radius: 50%; background: #fff; vertical-align: middle; }
+    .minkowski-heading .epa-key { color: var(--green); }
+    .readout { display: flex; flex-wrap: wrap; gap: 5px 20px; min-height: 100px; padding: 10px 14px 12px; border-top: 1px solid var(--line); }
+    .readout strong { flex: 1 1 100%; font-weight: 650; }
+    .readout span { font-variant-numeric: tabular-nums; }
+    .readout .good { color: var(--green); }
+    .readout .bad { color: var(--red); }
+    .readout .quiet { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="demo">
+    <div class="controls">
+      <span>Drag the blue circle across the fixed bar.</span>
+      <button type="button" id="near">Near contact</button>
+      <button type="button" id="miss">Wrong portal</button>
+    </div>
+    <canvas id="scene" width="760" height="420" tabindex="0" aria-label="Drag a circle across a fixed horizontal bar to compare MPR and EPA penetration normals and depths."></canvas>
+    <div class="minkowski-heading"><strong>Minkowski space</strong><span>Bar ⊕ disk, shifted by −circle center</span><span class="origin-key">Origin</span><span class="epa-key">● EPA nearest boundary point</span></div>
+    <canvas id="minkowski" width="760" height="260" role="img" aria-label="The translated Minkowski sum of the bar and disk, with the origin and MPR's final portal triangle. The portal edge is green when MPR finds a minimum-depth exit and red when EPA finds a shorter one."></canvas>
+    <div class="readout" aria-live="polite">
+      <strong id="status"></strong>
+      <span id="mpr"></span>
+      <span id="epa"></span>
+    </div>
+  </main>
+  <script>
+  (() => {
+    'use strict';
+
+    const canvas = document.getElementById('scene');
+    const ctx = canvas.getContext('2d');
+    const minkowskiCanvas = document.getElementById('minkowski');
+    const minkowskiCtx = minkowskiCanvas.getContext('2d');
+    const status = document.getElementById('status');
+    const mprText = document.getElementById('mpr');
+    const epaText = document.getElementById('epa');
+    const theme = matchMedia('(prefers-color-scheme: dark)');
+    const width = 760, height = 420, center = { x: 380, y: 210 };
+    const minkowskiCenter = { x: 380, y: 130 }, minkowskiScale = 0.6;
+    const halfWidth = 260, halfHeight = 28, radius = 20;
+    const tolerance = 0.001, visibleDifference = 0.01;
+    let circle = { x: 240, y: 20 }, dragging = false;
+
+    const point = (x, y) => ({ x, y });
+    const add = (a, b) => point(a.x + b.x, a.y + b.y);
+    const subtract = (a, b) => point(a.x - b.x, a.y - b.y);
+    const negate = a => point(-a.x, -a.y);
+    const dot = (a, b) => a.x * b.x + a.y * b.y;
+    const cross = (a, b) => a.x * b.y - a.y * b.x;
+    const length = a => Math.hypot(a.x, a.y);
+    const unit = a => { const d = length(a); return d > 1e-12 ? point(a.x / d, a.y / d) : point(1, 0); };
+    const clamp = (x, low, high) => Math.max(low, Math.min(high, x));
+    const screen = p => point(center.x + p.x, center.y - p.y);
+    const minkowskiScreen = p => point(minkowskiCenter.x + p.x * minkowskiScale, minkowskiCenter.y - p.y * minkowskiScale);
+
+    // Support of (bar - circle) in coordinates relative to the bar's center.
+    function support(direction) {
+      const n = unit(direction);
+      return point((direction.x >= 0 ? halfWidth : -halfWidth) - circle.x + radius * n.x,
+                   (direction.y >= 0 ? halfHeight : -halfHeight) - circle.y + radius * n.y);
+    }
+
+    // Only used to decide whether there is any overlap to display. The two
+    // penetration results below are computed from the support map.
+    function overlapDepth() {
+      const nearest = point(clamp(circle.x, -halfWidth, halfWidth), clamp(circle.y, -halfHeight, halfHeight));
+      const distance = length(subtract(circle, nearest));
+      return distance > 0 ? radius - distance
+        : radius + Math.min(halfWidth - Math.abs(circle.x), halfHeight - Math.abs(circle.y));
+    }
+
+    // 2D portal refinement: v0 stays inside the Minkowski difference. The
+    // segment v1-v2 remains across the ray from v0 through the origin.
+    function solveMpr() {
+      let v0 = negate(circle);
+      if (length(v0) < 1) v0 = add(v0, point(1.3, 0.7));
+      const ray = negate(v0);
+      let v1 = support(ray);
+      const edge = subtract(v1, v0);
+      const side = cross(edge, ray);
+      const initialDirection = side >= 0 ? point(-edge.y, edge.x) : point(edge.y, -edge.x);
+      let v2 = support(initialDirection);
+
+      for (let iteration = 0; iteration < 100; iteration++) {
+        const portal = subtract(v2, v1);
+        let normal = unit(point(portal.y, -portal.x));
+        if (dot(normal, subtract(v0, v1)) > 0) normal = negate(normal);
+        const portalDistance = dot(normal, v1);
+        const next = support(normal);
+        const depth = dot(normal, next);
+
+        if (depth - portalDistance < tolerance && portalDistance >= -1e-6)
+          return { normal, depth, triangle: [v0, v1, v2] };
+
+        const nextSide = cross(subtract(next, v0), ray);
+        const firstSide = cross(subtract(v1, v0), ray);
+        if (nextSide * firstSide >= 0) v1 = next;
+        else v2 = next;
+      }
+      return null;
+    }
+
+    // Rebuild the 2D convex hull after every support query. In particular,
+    // this lets EPA discard v0, which is inside the true boundary.
+    function convexHull(points) {
+      const sorted = [...points].sort((a, b) => a.x - b.x || a.y - b.y);
+      const lower = [], upper = [];
+      for (const p of sorted) {
+        while (lower.length >= 2 && cross(subtract(lower.at(-1), lower.at(-2)), subtract(p, lower.at(-1))) <= 1e-9) lower.pop();
+        lower.push(p);
+      }
+      for (const p of sorted.reverse()) {
+        while (upper.length >= 2 && cross(subtract(upper.at(-1), upper.at(-2)), subtract(p, upper.at(-1))) <= 1e-9) upper.pop();
+        upper.push(p);
+      }
+      lower.pop(); upper.pop();
+      return lower.concat(upper);
+    }
+
+    function solveEpa(triangle) {
+      const vertices = [...triangle];
+      for (let iteration = 0; iteration < 200; iteration++) {
+        const hull = convexHull(vertices);
+        let closest = null;
+        for (let i = 0; i < hull.length; i++) {
+          const a = hull[i], b = hull[(i + 1) % hull.length];
+          const edge = subtract(b, a);
+          const normal = unit(point(edge.y, -edge.x));
+          const distance = dot(normal, a);
+          if (!closest || distance < closest.distance) closest = { normal, distance };
+        }
+        const next = support(closest.normal);
+        const depth = dot(closest.normal, next);
+        if (depth - closest.distance < tolerance || vertices.some(v => length(subtract(v, next)) < 1e-8))
+          return { normal: closest.normal, depth };
+        vertices.push(next);
+      }
+      return null;
+    }
+
+    function colors() {
+      return theme.matches
+        ? { background: '#17202b', text: '#e5edf5', muted: '#aab8c7', bar: '#526070', barEdge: '#a5b1bf', circle: '#243c59', circleEdge: '#78aef0', green: '#65c9aa', red: '#ef9078', line: '#344252', portal: '#eab564', portalFill: 'rgba(234,181,100,0.20)' }
+        : { background: '#f3f6fa', text: '#25364b', muted: '#596c82', bar: '#d9e0e8', barEdge: '#718298', circle: '#e0edff', circleEdge: '#2a64a9', green: '#21745e', red: '#a34631', line: '#d4dee9', portal: '#a86613', portalFill: 'rgba(168,102,19,0.18)' };
+    }
+
+    function roundedRectangle(context, x, y, w, h, r) {
+      context.beginPath();
+      context.moveTo(x + r, y);
+      context.lineTo(x + w - r, y);
+      context.arcTo(x + w, y, x + w, y + r, r);
+      context.lineTo(x + w, y + h - r);
+      context.arcTo(x + w, y + h, x + w - r, y + h, r);
+      context.lineTo(x + r, y + h);
+      context.arcTo(x, y + h, x, y + h - r, r);
+      context.lineTo(x, y + r);
+      context.arcTo(x, y, x + r, y, r);
+      context.closePath();
+    }
+
+    function minkowskiDot(position, label, ink) {
+      const p = minkowskiScreen(position);
+      minkowskiCtx.fillStyle = ink;
+      minkowskiCtx.beginPath(); minkowskiCtx.arc(p.x, p.y, 4.5, 0, 2 * Math.PI); minkowskiCtx.fill();
+      minkowskiCtx.font = '15px system-ui';
+      minkowskiCtx.fillText(label, clamp(p.x + 7, 8, 725), clamp(p.y - 8, 17, 248));
+    }
+
+    function drawMinkowski(paint, mpr, epa, differs) {
+      const c = minkowskiCtx;
+      c.fillStyle = paint.background; c.fillRect(0, 0, 760, 260);
+      c.strokeStyle = paint.line; c.lineWidth = 1; c.setLineDash([4, 5]);
+      c.beginPath(); c.moveTo(0, minkowskiCenter.y); c.lineTo(760, minkowskiCenter.y);
+      c.moveTo(minkowskiCenter.x, 0); c.lineTo(minkowskiCenter.x, 260); c.stroke(); c.setLineDash([]);
+
+      const shapeCenter = minkowskiScreen(negate(circle));
+      const halfW = (halfWidth + radius) * minkowskiScale;
+      const halfH = (halfHeight + radius) * minkowskiScale;
+      roundedRectangle(c, shapeCenter.x - halfW, shapeCenter.y - halfH,
+        2 * halfW, 2 * halfH, radius * minkowskiScale);
+      c.fillStyle = paint.circle; c.strokeStyle = paint.circleEdge; c.lineWidth = 2;
+      c.fill(); c.stroke();
+
+      if (mpr) {
+        const [v0, v1, v2] = mpr.triangle;
+        const a = minkowskiScreen(v0), b = minkowskiScreen(v1), d = minkowskiScreen(v2);
+        c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.lineTo(d.x, d.y); c.closePath();
+        c.fillStyle = paint.portalFill; c.strokeStyle = paint.portal; c.lineWidth = 2;
+        c.fill(); c.stroke();
+        c.strokeStyle = differs ? paint.red : paint.green; c.lineWidth = 4;
+        c.beginPath(); c.moveTo(b.x, b.y); c.lineTo(d.x, d.y); c.stroke();
+        minkowskiDot(v0, 'v₀', paint.portal);
+        minkowskiDot(v1, 'v₁', paint.portal);
+        minkowskiDot(v2, 'v₂', paint.portal);
+      }
+
+      if (mpr && differs) {
+        // MPR's depth reaches its support plane. The projection need not be
+        // a boundary point, so mark the plane with a tick rather than a dot.
+        const projected = minkowskiScreen(point(mpr.normal.x * mpr.depth, mpr.normal.y * mpr.depth));
+        const tangent = point(mpr.normal.y * 7, mpr.normal.x * 7);
+        c.save(); c.strokeStyle = paint.red; c.lineWidth = 2;
+        c.setLineDash([6, 4]);
+        c.beginPath(); c.moveTo(minkowskiCenter.x, minkowskiCenter.y);
+        c.lineTo(projected.x, projected.y); c.stroke();
+        c.setLineDash([]);
+        c.beginPath(); c.moveTo(projected.x - tangent.x, projected.y - tangent.y);
+        c.lineTo(projected.x + tangent.x, projected.y + tangent.y); c.stroke();
+        c.restore();
+      }
+
+      if (epa) {
+        const nearest = minkowskiScreen(point(epa.normal.x * epa.depth, epa.normal.y * epa.depth));
+        c.strokeStyle = paint.green; c.lineWidth = 2;
+        c.beginPath(); c.moveTo(minkowskiCenter.x, minkowskiCenter.y); c.lineTo(nearest.x, nearest.y); c.stroke();
+        c.fillStyle = paint.green; c.beginPath(); c.arc(nearest.x, nearest.y, 5, 0, 2 * Math.PI); c.fill();
+      }
+      c.save();
+      c.fillStyle = '#fff'; c.strokeStyle = paint.text; c.lineWidth = 2;
+      c.beginPath(); c.arc(minkowskiCenter.x, minkowskiCenter.y, 5, 0, 2 * Math.PI);
+      c.fill(); c.stroke();
+      c.restore();
+    }
+
+    // Arrow length is fixed to make the direction legible; the numeric depth
+    // below is the measured translation distance.
+    function arrow(normal, color, dashed, pixels) {
+      const start = screen(circle);
+      const end = point(start.x + normal.x * pixels, start.y - normal.y * pixels);
+      const angle = Math.atan2(end.y - start.y, end.x - start.x);
+      ctx.save();
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 3;
+      ctx.setLineDash(dashed ? [7, 5] : []);
+      ctx.beginPath(); ctx.moveTo(start.x, start.y); ctx.lineTo(end.x, end.y); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(end.x, end.y);
+      ctx.lineTo(end.x - 11 * Math.cos(angle - 0.45), end.y - 11 * Math.sin(angle - 0.45));
+      ctx.lineTo(end.x - 11 * Math.cos(angle + 0.45), end.y - 11 * Math.sin(angle + 0.45));
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+
+    function describe(result) {
+      const rounded = x => Math.abs(x) < 0.005 ? '0.00' : x.toFixed(2);
+      return `${result.depth.toFixed(1)} units · normal (${rounded(result.normal.x)}, ${rounded(result.normal.y)})`;
+    }
+
+    function draw() {
+      const paint = colors();
+      ctx.fillStyle = paint.background; ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = paint.muted; ctx.font = '14px system-ui';
+      ctx.fillText('x →', 21, 31); ctx.fillText('y ↑', 21, 53);
+
+      ctx.fillStyle = paint.bar; ctx.strokeStyle = paint.barEdge; ctx.lineWidth = 2.5;
+      ctx.fillRect(center.x - halfWidth, center.y - halfHeight, 2 * halfWidth, 2 * halfHeight);
+      ctx.strokeRect(center.x - halfWidth, center.y - halfHeight, 2 * halfWidth, 2 * halfHeight);
+      ctx.fillStyle = paint.text;
+      ctx.fillText('Fixed bar', center.x - halfWidth + 12, center.y + 5);
+
+      const circleOnScreen = screen(circle);
+      ctx.beginPath(); ctx.arc(circleOnScreen.x, circleOnScreen.y, radius, 0, 2 * Math.PI);
+      ctx.fillStyle = paint.circle; ctx.globalAlpha = 0.88; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = paint.circleEdge; ctx.lineWidth = 3; ctx.stroke();
+
+      const overlap = overlapDepth();
+      mprText.className = 'quiet'; epaText.className = 'quiet';
+      if (overlap <= 0.001) {
+        drawMinkowski(paint, null, null, false);
+        status.textContent = 'No overlap';
+        mprText.textContent = 'Drag the circle into the bar to see the normals and penetration depths.';
+        epaText.textContent = '';
+        return;
+      }
+
+      const mpr = solveMpr();
+      const epa = mpr && solveEpa(mpr.triangle);
+      if (!mpr || !epa) {
+        drawMinkowski(paint, mpr, epa, false);
+        status.textContent = 'The search did not converge at this position.';
+        mprText.textContent = ''; epaText.textContent = '';
+        return;
+      }
+
+      const differs = mpr.depth - epa.depth > visibleDifference;
+      drawMinkowski(paint, mpr, epa, differs);
+      if (differs) {
+        arrow(mpr.normal, paint.red, true, 78);
+        arrow(epa.normal, paint.green, false, 65);
+        status.textContent = 'MPR found a longer exit; EPA found the nearest one.';
+        mprText.className = 'bad'; epaText.className = 'good';
+        mprText.textContent = `MPR (red): ${describe(mpr)}`;
+        epaText.textContent = `EPA (green): ${describe(epa)}`;
+      } else {
+        arrow(mpr.normal, paint.green, false, 65);
+        status.textContent = 'MPR found a minimum-depth exit.';
+        mprText.className = 'good';
+        mprText.textContent = `MPR (green): ${describe(mpr)}`;
+        epaText.textContent = '';
+      }
+    }
+
+    function positionFromPointer(event) {
+      const rect = canvas.getBoundingClientRect();
+      return point((event.clientX - rect.left) * width / rect.width - center.x,
+                   center.y - (event.clientY - rect.top) * height / rect.height);
+    }
+    function stopDrag() { dragging = false; canvas.style.cursor = 'default'; }
+    canvas.addEventListener('pointerdown', event => {
+      if (length(subtract(positionFromPointer(event), circle)) > radius + 14) return;
+      dragging = true; canvas.setPointerCapture(event.pointerId); canvas.style.cursor = 'grabbing';
+      event.preventDefault();
+    });
+    canvas.addEventListener('pointermove', event => {
+      const position = positionFromPointer(event);
+      if (!dragging) { canvas.style.cursor = length(subtract(position, circle)) < radius + 14 ? 'grab' : 'default'; return; }
+      circle = point(clamp(position.x, -300, 300), clamp(position.y, -120, 120));
+      draw(); event.preventDefault();
+    });
+    canvas.addEventListener('pointerup', stopDrag);
+    canvas.addEventListener('pointercancel', stopDrag);
+    canvas.addEventListener('lostpointercapture', stopDrag);
+    document.getElementById('near').addEventListener('click', () => { circle = point(120, 43); draw(); });
+    document.getElementById('miss').addEventListener('click', () => { circle = point(240, 20); draw(); });
+    canvas.addEventListener('keydown', event => {
+      const delta = event.shiftKey ? 10 : 2;
+      const movement = { ArrowLeft: point(-delta, 0), ArrowRight: point(delta, 0), ArrowUp: point(0, delta), ArrowDown: point(0, -delta) }[event.key];
+      if (!movement) return;
+      circle = point(clamp(circle.x + movement.x, -300, 300), clamp(circle.y + movement.y, -120, 120));
+      draw(); event.preventDefault();
+    });
+    theme.addEventListener('change', draw);
+    draw();
+  })();
+  </script>
+</body>
+</html>

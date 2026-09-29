@@ -2588,6 +2588,16 @@
     },
     {
       "type": "Resource",
+      "source_relative_path": "docs/articles/images/mpr-local-portal.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/images/mpr-local-portal.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
       "source_relative_path": "docs/articles/images/speculative-contact.svg",
       "output": {
         "resource": {
@@ -2612,6 +2622,26 @@
       "output": {
         ".html": {
           "relative_path": "docs/articles/iterative-speculative-contact-discovery.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/articles/mpr-and-epa.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/articles/mpr-and-epa.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/articles/mpr-epa-demo.html",
+      "output": {
+        "resource": {
+          "relative_path": "docs/articles/mpr-epa-demo.html"
         }
       },
       "version": ""
