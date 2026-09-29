@@ -47,5 +47,7 @@
   items:
     - name: Iterative Speculative Contact Discovery
       href: articles/iterative-speculative-contact-discovery.md
+    - name: MPR and EPA for Penetration Depth
+      href: articles/mpr-and-epa.md
 - name: Changelog
   href: changelog.md

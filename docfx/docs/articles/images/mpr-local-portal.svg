@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-labelledby="title desc">
+  <title id="title">A local MPR portal can miss the nearest Minkowski boundary</title>
+  <desc id="desc">A long, thin Minkowski difference contains the origin. A triangle from an interior point to the two right vertices contains the origin. MPR selects its right portal at distance 2 with a right-pointing normal. The actual nearest boundary is the top edge at distance 0.3 with an upward normal.</desc>
+  <defs>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a34631"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#21745e"/></marker>
+  </defs>
+  <rect width="760" height="440" rx="16" fill="#f3f6fa"/>
+  <g font-family="system-ui, sans-serif" fill="#25364b">
+    <text x="30" y="45" font-size="26" font-weight="650">The portal is not the nearest boundary</text>
+    <text x="30" y="76" font-size="18" fill="#53677e">2D cross-section of a long, thin Minkowski difference</text>
+
+    <rect x="135" y="219" width="490" height="56" fill="#e0edff" stroke="#2a64a9" stroke-width="2.5"/>
+    <text x="135" y="197" font-size="18" fill="#53677e">Minkowski difference</text>
+
+    <path d="M380 247 L625 219 L625 275 Z" fill="#f5d8b3" fill-opacity="0.7" stroke="#a86613" stroke-width="2.5"/>
+    <path d="M380 247 L625 231" fill="none" stroke="#a86613" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="285" y="315" font-size="17" fill="#a86613">origin ray</text>
+
+    <path d="M625 219 V275" stroke="#a34631" stroke-width="6"/>
+    <path d="M485 240 H705" stroke="#a34631" stroke-width="3.5" marker-end="url(#arrow-red)"/>
+    <text x="628" y="184" font-size="19" font-weight="650" fill="#a34631">MPR normal +x</text>
+    <path d="M485 292 V301 M485 297 H625 M625 292 V301" fill="none" stroke="#a34631" stroke-width="2"/>
+    <text x="555" y="326" text-anchor="middle" font-size="19" font-weight="650" fill="#a34631">depth 2</text>
+
+    <path d="M445 219 H525" stroke="#21745e" stroke-width="5"/>
+    <path d="M485 240 V151" stroke="#21745e" stroke-width="3.5" marker-end="url(#arrow-green)"/>
+    <text x="445" y="137" font-size="19" font-weight="650" fill="#21745e">nearest normal +y</text>
+    <path d="M445 219 H455 M450 219 V240 M445 240 H455" fill="none" stroke="#21745e" stroke-width="2"/>
+    <text x="432" y="236" text-anchor="end" font-size="18" font-weight="650" fill="#21745e">0.3</text>
+
+    <circle cx="380" cy="247" r="5" fill="#a86613" stroke="#f3f6fa" stroke-width="2"/>
+    <text x="349" y="238" font-size="19" font-weight="650" fill="#a86613">v₀</text>
+    <circle cx="625" cy="219" r="5" fill="#a86613"/>
+    <circle cx="625" cy="275" r="5" fill="#a86613"/>
+    <text x="635" y="214" font-size="18" fill="#a86613">v₁</text>
+    <text x="635" y="293" font-size="18" fill="#a86613">v₂</text>
+    <circle cx="485" cy="240" r="7" fill="#25364b" stroke="#f3f6fa" stroke-width="2"/>
+    <text x="495" y="260" font-size="19" font-weight="650">O</text>
+
+    <path d="M30 350 H730" stroke="#d4dee9"/>
+    <text x="30" y="383" font-size="18">The portal gives an upper bound: the true minimum is no greater than 2.</text>
+    <text x="30" y="411" font-size="17" fill="#53677e">Its slanted sides are interior chords; EPA expands beyond them to find the top edge.</text>
+  </g>
+</svg>
