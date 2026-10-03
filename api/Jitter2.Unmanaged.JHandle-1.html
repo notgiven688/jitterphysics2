@@ -231,10 +231,11 @@ the buffer. Use the handle to obtain a fresh reference when needed.
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_IsZero" data-uid="Jitter2.Unmanaged.JHandle`1.IsZero">
   IsZero
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a value indicating whether this handle is null/invalid.</p>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this is the zero handle. A freed handle can remain nonzero;
+this property does not establish that the referenced element is still valid.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -267,7 +268,7 @@ the buffer. Use the handle to obtain a fresh reference when needed.
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_AsHandle__1_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.AsHandle``1(Jitter2.Unmanaged.JHandle{`0})">
   AsHandle&lt;TConvert&gt;(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reinterprets a handle as a handle to a different type. Both types must have compatible layouts.</p>
@@ -316,7 +317,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Equals_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.Equals(Jitter2.Unmanaged.JHandle{`0})">
   Equals(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L69"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -355,7 +356,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Equals_System_Object_" data-uid="Jitter2.Unmanaged.JHandle`1.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -394,7 +395,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_GetHashCode" data-uid="Jitter2.Unmanaged.JHandle`1.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L79"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -431,7 +432,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_op_Equality_Jitter2_Unmanaged_JHandle__0__Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.op_Equality(Jitter2.Unmanaged.JHandle{`0},Jitter2.Unmanaged.JHandle{`0})">
   operator ==(JHandle&lt;T&gt;, JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -469,7 +470,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_op_Inequality_Jitter2_Unmanaged_JHandle__0__Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.op_Inequality(Jitter2.Unmanaged.JHandle{`0},Jitter2.Unmanaged.JHandle{`0})">
   operator !=(JHandle&lt;T&gt;, JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

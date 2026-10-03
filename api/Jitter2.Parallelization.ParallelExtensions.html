@@ -161,7 +161,7 @@ The batch count is determined by the task threshold and available threads.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch_System_Array_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch(System.Array,System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch(Array, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes array elements in parallel batches.</p>
@@ -178,7 +178,8 @@ The batch count is determined by the task threshold and available threads.</p>
     <dd><p>The array to process.</p>
 </dd>
     <dt><code>taskThreshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>Minimum elements per batch. Fewer elements result in a single batch.</p>
+    <dd><p>Positive target batch size used to choose the number of batches;
+actual batches can be smaller or larger.</p>
 </dd>
     <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="Jitter2.Parallelization.Parallel.html">Parallel</a>.<a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Batch</a>&gt;</dt>
     <dd><p>The callback to invoke for each batch.</p>
@@ -209,7 +210,7 @@ The batch count is determined by the task threshold and available threads.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch__1_Jitter2_DataStructures_ReadOnlyPartitionedSet___0__System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch``1(Jitter2.DataStructures.ReadOnlyPartitionedSet{``0},System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch&lt;T&gt;(ReadOnlyPartitionedSet&lt;T&gt;, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes active elements of a <a class="xref" href="Jitter2.DataStructures.ReadOnlyPartitionedSet-1.html">ReadOnlyPartitionedSet&lt;T&gt;</a> in parallel batches.</p>
@@ -226,7 +227,8 @@ The batch count is determined by the task threshold and available threads.</p>
     <dd><p>The set to process.</p>
 </dd>
     <dt><code>taskThreshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>Minimum elements per batch. Fewer elements result in a single batch.</p>
+    <dd><p>Positive target batch size used to choose the number of batches;
+actual batches can be smaller or larger.</p>
 </dd>
     <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="Jitter2.Parallelization.Parallel.html">Parallel</a>.<a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Batch</a>&gt;</dt>
     <dd><p>The callback to invoke for each batch.</p>
@@ -263,7 +265,7 @@ The batch count is determined by the task threshold and available threads.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch__1_Jitter2_Unmanaged_PartitionedBuffer___0__System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch``1(Jitter2.Unmanaged.PartitionedBuffer{``0},System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch&lt;T&gt;(PartitionedBuffer&lt;T&gt;, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes active elements of a <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html">PartitionedBuffer&lt;T&gt;</a> in parallel batches.</p>
@@ -280,7 +282,8 @@ The batch count is determined by the task threshold and available threads.</p>
     <dd><p>The buffer to process.</p>
 </dd>
     <dt><code>taskThreshold</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>Minimum elements per batch. Fewer elements result in a single batch.</p>
+    <dd><p>Positive target batch size used to choose the number of batches;
+actual batches can be smaller or larger.</p>
 </dd>
     <dt><code>action</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.action-1">Action</a>&lt;<a class="xref" href="Jitter2.Parallelization.Parallel.html">Parallel</a>.<a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Batch</a>&gt;</dt>
     <dd><p>The callback to invoke for each batch.</p>

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DynamicTreeCollisionFilter | Jitter2 ">
       
-      <meta name="description" content="Provides a collision filter that prevents self-collisions within soft bodies and shapes attached to the same rigid body.">
+      <meta name="description" content="Provides a collision filter that rejects pairs of soft-body shapes belonging to the same soft body and pairs of rigid-body shapes attached to the same rigid body. Mixed pairs pass.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Class DynamicTreeCollisionFilter  <a class="header-action link-secondary" title=
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides a collision filter that prevents self-collisions within soft bodies
-and shapes attached to the same rigid body.</p>
+  <div class="markdown summary"><p>Provides a collision filter that rejects pairs of soft-body shapes belonging to the same
+soft body and pairs of rigid-body shapes attached to the same rigid body. Mixed pairs pass.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -161,7 +161,7 @@ and shapes attached to the same rigid body.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/DynamicTreeCollisionFilter.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Filters collision pairs to exclude self-collisions.</p>
+  <div class="markdown level1 summary"><p>Filters matching soft-body and rigid-body shape pairs that share an owner.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

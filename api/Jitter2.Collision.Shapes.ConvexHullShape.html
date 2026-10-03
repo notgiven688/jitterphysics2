@@ -216,7 +216,7 @@ Class ConvexHullShape  <a class="header-action link-secondary" title="View sourc
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>triangles</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
-    <dd><p>All vertices defining the convex hull. The vertices must strictly lie
+    <dd><p>Triangles describing the convex hull surface. Their vertices must lie
 on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.</p>
 </dd>
   </dl>
@@ -260,7 +260,7 @@ on the surface of the convex hull to avoid incorrect results or indefinite hangs
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>triangles</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.readonlyspan-1">ReadOnlySpan</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</dt>
-    <dd><p>All vertices defining the convex hull. The vertices must strictly lie
+    <dd><p>Triangles describing the convex hull surface. Their vertices must lie
 on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.</p>
 </dd>
   </dl>
@@ -477,7 +477,7 @@ original instance.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConvexHullShape.cs/#L440"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -488,7 +488,7 @@ original instance.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point that must lie strictly inside the convex hull.</p>
+    <dd><p>A point inside the convex hull.</p>
 </dd>
   </dl>
 

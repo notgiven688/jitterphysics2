@@ -130,7 +130,7 @@ or filter out specific collisions.</p>
 
   <h3 id="Jitter2_Collision_INarrowPhaseFilter_Filter_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.INarrowPhaseFilter.Filter(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Filter(RigidBodyShape, RigidBodyShape, ref JVector, ref JVector, ref JVector, ref float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/INarrowPhaseFilter.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/CollisionFilter/INarrowPhaseFilter.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called for each detected collision with its contact data.</p>
@@ -157,10 +157,12 @@ bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pointA, re
     <dd><p>Contact point on shape B (modifiable).</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Collision normal from B to A (modifiable).</p>
+    <dd><p>Collision normal used to solve the contact (modifiable). A positive normal
+impulse pushes shape B along this direction and shape A against it.</p>
 </dd>
     <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Penetration depth (modifiable).</p>
+    <dd><p>Signed penetration depth reported by the narrowphase. Changes to this value alone
+do not affect the registered contact; its separation is derived from the contact points and normal.</p>
 </dd>
   </dl>
 

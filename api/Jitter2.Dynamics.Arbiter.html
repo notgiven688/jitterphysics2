@@ -146,7 +146,7 @@ Class Arbiter  <a class="header-action link-secondary" title="View source" href=
 
   <h2 id="Jitter2_Dynamics_Arbiter_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-An arbiter is created when two shapes begin overlapping and is removed when they separate
+An arbiter is created when contacts are registered, including speculative contacts before shapes overlap, and is removed when they separate
 or when one of the involved bodies is removed from the world. Each arbiter can hold up to
 four cached contact points (see <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>).
 </p>

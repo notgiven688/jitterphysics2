@@ -101,7 +101,7 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Island.html">Island</a></dt>
-      <dd><p>Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.</p>
+      <dd><p>Represents a collection of bodies connected directly or indirectly by contacts or constraints.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -124,7 +124,8 @@ Classes
       <dd><p>Filters internal edge collisions for <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> geometry. Adjusts collision
 normals at shared edges to match neighboring triangles, or discards the collision if the normal
 cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
-are left unmodified. Back-face collisions are discarded.</p>
+are left unmodified. Back-face normals within <a class="xref" href="Jitter2.Collision.TriangleEdgeCollisionFilter.html#Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold">AngleThreshold</a> of the opposite
+triangle normal are discarded.</p>
 </dd>
     </dl>
     <h3 id="structs">

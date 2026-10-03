@@ -200,10 +200,11 @@ between simulation steps.
 
   <h3 id="Jitter2_Parallelization_ThreadPool_Instance" data-uid="Jitter2.Parallelization.ThreadPool.Instance">
   Instance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L281"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L282"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the singleton instance of the <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a>.</p>
+  <div class="markdown level1 summary"><p>Gets the shared <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a> instance. First access must be serialized by the caller;
+concurrent initialization can create more than one pool.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -466,7 +467,7 @@ This operation blocks until all previous threads have terminated.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_Execute" data-uid="Jitter2.Parallelization.ThreadPool.Execute">
   Execute()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L380"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L381"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes all queued tasks and blocks until completion.</p>
@@ -502,7 +503,7 @@ This method automatically calls <a class="xref" href="Jitter2.Parallelization.Th
 
   <h3 id="Jitter2_Parallelization_ThreadPool_PauseWorkers" data-uid="Jitter2.Parallelization.ThreadPool.PauseWorkers">
   PauseWorkers()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L309"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L310"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Pauses all worker threads after they finish their current tasks.</p>
@@ -533,7 +534,7 @@ This reduces CPU usage between simulation steps.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ResumeWorkers" data-uid="Jitter2.Parallelization.ThreadPool.ResumeWorkers">
   ResumeWorkers()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L297"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L298"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Resumes all worker threads so they can process queued tasks.</p>
@@ -553,8 +554,8 @@ This reduces CPU usage between simulation steps.</p>
 
 
   <h4 class="section" id="Jitter2_Parallelization_ThreadPool_ResumeWorkers_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Called automatically by <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a>. Manual calls are typically only needed
-when using <a class="xref" href="Jitter2.World.ThreadModelType.html#Jitter2_World_ThreadModelType_Persistent">Persistent</a>.</p>
+  <div class="markdown level1 remarks"><p>Called automatically by <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> and by the world during multithreaded steps.
+Manual calls are useful when managing the pool directly.</p>
 </div>
 
 

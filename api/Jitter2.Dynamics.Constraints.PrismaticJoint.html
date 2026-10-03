@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class PrismaticJoint | Jitter2 ">
       
-      <meta name="description" content="Constructs a prismatic joint utilizing a  constraint in conjunction with , , and  constraints.">
+      <meta name="description" content="Constructs a prismatic joint using a  constraint, either a  or  constraint, and an optional  constraint.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_PrismaticJoint" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint" class="text-break">
-Class PrismaticJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L16"><i class="bi bi-code-slash"></i></a>
+Class PrismaticJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,9 @@ Class PrismaticJoint  <a class="header-action link-secondary" title="View source
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Constructs a prismatic joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint in conjunction with
-<a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a>, and <a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraints.</p>
+  <div class="markdown summary"><p>Constructs a prismatic joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint, either a
+<a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a> constraint, and an optional
+<a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraint.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -186,7 +187,7 @@ Class PrismaticJoint  <a class="header-action link-secondary" title="View source
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_System_Boolean_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,System.Boolean,System.Boolean)">
   PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, bool, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L42"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new prismatic joint.</p>
@@ -200,21 +201,29 @@ Class PrismaticJoint  <a class="header-action link-secondary" title="View source
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>world</code> <a class="xref" href="Jitter2.World.html">World</a></dt>
-    <dd></dd>
+    <dd><p>The world containing both bodies.</p>
+</dd>
     <dt><code>body1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
-    <dd></dd>
+    <dd><p>The first body.</p>
+</dd>
     <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
-    <dd></dd>
+    <dd><p>The second body.</p>
+</dd>
     <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The joint center in world space.</p>
+</dd>
     <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The sliding axis in world space.</p>
+</dd>
     <dt><code>limit</code> <a class="xref" href="Jitter2.Dynamics.Constraints.LinearLimit.html">LinearLimit</a></dt>
-    <dd></dd>
+    <dd><p>Allowed displacement along the sliding axis.</p>
+</dd>
     <dt><code>pinned</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>If true, lock relative rotation with <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a>; otherwise constrain it with <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a>.</p>
+</dd>
     <dt><code>hasMotor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>If true, create a <a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a>.</p>
+</dd>
   </dl>
 
 
@@ -240,7 +249,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean,System.Boolean)">
   PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, bool, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new prismatic joint.</p>
@@ -254,19 +263,26 @@ or contains a non-finite value, when either limit value is NaN, when either body
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>world</code> <a class="xref" href="Jitter2.World.html">World</a></dt>
-    <dd></dd>
+    <dd><p>The world containing both bodies.</p>
+</dd>
     <dt><code>body1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
-    <dd></dd>
+    <dd><p>The first body.</p>
+</dd>
     <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
-    <dd></dd>
+    <dd><p>The second body.</p>
+</dd>
     <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The joint center in world space.</p>
+</dd>
     <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The sliding axis in world space.</p>
+</dd>
     <dt><code>pinned</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>If true, lock relative rotation with <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a>; otherwise constrain it with <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a>.</p>
+</dd>
     <dt><code>hasMotor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
+    <dd><p>If true, create a <a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a>.</p>
+</dd>
   </dl>
 
 
@@ -296,7 +312,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_Body1" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -327,7 +343,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_Body2" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -358,7 +374,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle">
   FixedAngle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -389,7 +405,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle">
   HingeAngle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -420,7 +436,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_Motor" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.Motor">
   Motor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -451,7 +467,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 
   <h3 id="Jitter2_Dynamics_Constraints_PrismaticJoint_Slider" data-uid="Jitter2.Dynamics.Constraints.PrismaticJoint.Slider">
   Slider
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -482,7 +498,7 @@ or contains a non-finite value, when either limit value is NaN, when either body
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L16" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/PrismaticJoint.cs/#L17" class="edit-link">Edit this page</a>
         </div>
 
 

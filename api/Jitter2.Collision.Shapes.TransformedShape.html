@@ -503,7 +503,7 @@ not the center of mass.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L151"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a point deep within the shape, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -514,7 +514,7 @@ not the center of mass.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point that must lie strictly inside the convex hull.</p>
+    <dd><p>A point inside the convex hull.</p>
 </dd>
   </dl>
 

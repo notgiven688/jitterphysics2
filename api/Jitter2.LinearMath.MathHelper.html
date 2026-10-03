@@ -157,7 +157,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_CheckOrthonormalBasis_Jitter2_LinearMath_JMatrix__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.CheckOrthonormalBasis(Jitter2.LinearMath.JMatrix@,System.Single)">
   CheckOrthonormalBasis(in JMatrix, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L260"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L262"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Verifies whether the columns of the given matrix constitute an orthonormal basis.</p>
@@ -199,7 +199,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_CloseToZero_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.CloseToZero(Jitter2.LinearMath.JVector@,System.Single)">
   CloseToZero(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L412"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L414"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the length of the given vector is zero or close to zero.</p>
@@ -241,7 +241,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_CreateOrthonormal_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.MathHelper.CreateOrthonormal(Jitter2.LinearMath.JVector@)">
   CreateOrthonormal(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L203"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates an orthonormal vector to the given vector.</p>
@@ -283,10 +283,10 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_InverseSquareRoot_Jitter2_LinearMath_JMatrix_System_Int32_" data-uid="Jitter2.LinearMath.MathHelper.InverseSquareRoot(Jitter2.LinearMath.JMatrix,System.Int32)">
   InverseSquareRoot(JMatrix, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates <code>(MᵀM)^(-1/2)</code> using Jacobi iterations.</p>
+  <div class="markdown level1 summary"><p>Approximates <code>M^(-1/2)</code> for a symmetric positive-definite matrix using Jacobi iterations.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -297,7 +297,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>m</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
-    <dd><p>The input matrix.</p>
+    <dd><p>The symmetric positive-definite input matrix.</p>
 </dd>
     <dt><code>sweeps</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd><p>The number of Jacobi iterations.</p>
@@ -307,7 +307,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
-    <dd><p>The inverse square root of <code>MᵀM</code>.</p>
+    <dd><p>The approximate inverse square root of <code>M</code>.</p>
 </dd>
   </dl>
 
@@ -367,7 +367,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_IsZero_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.IsZero(Jitter2.LinearMath.JVector@,System.Single)">
   IsZero(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if all entries of a vector are close to zero.</p>
@@ -391,7 +391,8 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if all components are within epsilon of zero; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if no component has an absolute value greater than or equal to epsilon;
+NaN components also satisfy this test.</p>
 </dd>
   </dl>
 
@@ -409,7 +410,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_IsZero_System_Single_System_Single_" data-uid="Jitter2.LinearMath.MathHelper.IsZero(System.Single,System.Single)">
   IsZero(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L118"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if a value is close to zero.</p>
@@ -451,7 +452,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(Jitter2.LinearMath.JMatrix@)">
   PseudoInverseSymmetric(in JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L280"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L282"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes an approximate Moore-Penrose pseudoinverse of a symmetric,
@@ -624,7 +625,7 @@ Never returns <code>0</code>, unlike <a class="xref" href="https://learn.microso
 
   <h3 id="Jitter2_LinearMath_MathHelper_UnsafeIsZero_Jitter2_LinearMath_JMatrix__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.UnsafeIsZero(Jitter2.LinearMath.JMatrix@,System.Single)">
   UnsafeIsZero(ref JMatrix, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if all entries of a matrix are close to zero.</p>
@@ -648,7 +649,8 @@ Never returns <code>0</code>, unlike <a class="xref" href="https://learn.microso
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if all elements are within epsilon of zero; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.</p>
+    <dd><p><a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if all rows satisfy <a class="xref" href="Jitter2.LinearMath.MathHelper.html#Jitter2_LinearMath_MathHelper_IsZero_Jitter2_LinearMath_JVector__System_Single_">IsZero(in JVector, float)</a>,
+including rows with NaN components.</p>
 </dd>
   </dl>
 

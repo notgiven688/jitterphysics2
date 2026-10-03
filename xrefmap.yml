@@ -6085,6 +6085,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.MaximumForce
   nameWithType: AngularMotor.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_MaximumTorque
+  commentId: P:Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
+  nameWithType: AngularMotor.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque*
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_MaximumTorque_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
+  nameWithType: AngularMotor.MaximumTorque
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
   name: PrepareForIterationAngularMotor(ref ConstraintData, float)
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_PrepareForIterationAngularMotor_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_

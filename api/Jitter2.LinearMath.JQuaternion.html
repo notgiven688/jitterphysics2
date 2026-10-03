@@ -1018,7 +1018,7 @@ around an arbitrary orthogonal axis is returned.</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_Equals_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.Equals(Jitter2.LinearMath.JQuaternion)">
   Equals(JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L765"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L766"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -1057,7 +1057,7 @@ around an arbitrary orthogonal axis is returned.</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_Equals_System_Object_" data-uid="Jitter2.LinearMath.JQuaternion.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L770"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L771"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -1122,7 +1122,7 @@ around an arbitrary orthogonal axis is returned.</p>
 
 
   <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisX_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (1,0,0) · q⁻¹</code>.<br>
+  <div class="markdown level1 remarks"><p>For a unit quaternion, mathematically equivalent to <code>q · (1,0,0) · q⁻¹</code>.<br>
 Result: <code>[1 - 2(y² + z²), 2(xy + zw), 2(xz - yw)]</code></p>
 </div>
 
@@ -1159,7 +1159,7 @@ Result: <code>[1 - 2(y² + z²), 2(xy + zw), 2(xz - yw)]</code></p>
 
 
   <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisY_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (0,1,0) · q⁻¹</code>.<br>
+  <div class="markdown level1 remarks"><p>For a unit quaternion, mathematically equivalent to <code>q · (0,1,0) · q⁻¹</code>.<br>
 Result: <code>[2(xy - zw), 1 - 2(x² + z²), 2(yz + xw)]</code></p>
 </div>
 
@@ -1196,7 +1196,7 @@ Result: <code>[2(xy - zw), 1 - 2(x² + z²), 2(yz + xw)]</code></p>
 
 
   <h4 class="section" id="Jitter2_LinearMath_JQuaternion_GetBasisZ_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Mathematically equivalent to <code>q · (0,0,1) · q⁻¹</code>.<br>
+  <div class="markdown level1 remarks"><p>For a unit quaternion, mathematically equivalent to <code>q · (0,0,1) · q⁻¹</code>.<br>
 Result: <code>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</code></p>
 </div>
 
@@ -1207,7 +1207,7 @@ Result: <code>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</code></p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_GetHashCode" data-uid="Jitter2.LinearMath.JQuaternion.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L775"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L776"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -1240,7 +1240,7 @@ Result: <code>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</code></p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_Inverse_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.Inverse(Jitter2.LinearMath.JQuaternion@)">
   Inverse(in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L616"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L617"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the inverse of a quaternion.</p>
@@ -1271,7 +1271,8 @@ Result: <code>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</code></p>
 
   <h4 class="section" id="Jitter2_LinearMath_JQuaternion_Inverse_Jitter2_LinearMath_JQuaternion___remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Unlike <a class="xref" href="Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_Conjugate_Jitter2_LinearMath_JQuaternion__">Conjugate(in JQuaternion)</a>, this handles non-unit quaternions correctly
-by dividing by the squared length.</p>
+by dividing by the squared length. Returns <a class="xref" href="Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_Identity">Identity</a> when the squared length
+is below 1e-12.</p>
 </div>
 
 
@@ -1347,7 +1348,7 @@ by dividing by the squared length.</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_Lerp_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.Lerp(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,System.Single)">
   Lerp(in JQuaternion, in JQuaternion, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L636"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L637"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Linearly interpolates between two quaternions and normalizes the result.</p>
@@ -1772,7 +1773,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_Slerp_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.Slerp(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,System.Single)">
   Slerp(in JQuaternion, in JQuaternion, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L669"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L670"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Interpolates between two quaternions using Spherical Linear Interpolation (SLERP).</p>
@@ -2081,7 +2082,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Addition_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Addition(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
   operator +(in JQuaternion, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L748"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L749"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds two quaternions component-wise.</p>
@@ -2120,7 +2121,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Equality_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.op_Equality(Jitter2.LinearMath.JQuaternion,Jitter2.LinearMath.JQuaternion)">
   operator ==(JQuaternion, JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L777"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L778"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2266,7 +2267,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Inequality_Jitter2_LinearMath_JQuaternion_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.LinearMath.JQuaternion.op_Inequality(Jitter2.LinearMath.JQuaternion,Jitter2.LinearMath.JQuaternion)">
   operator !=(JQuaternion, JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L782"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L783"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2304,7 +2305,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
   operator *(in JQuaternion, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L718"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L719"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies two quaternions (Hamilton Product).</p>
@@ -2343,7 +2344,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_Jitter2_LinearMath_JQuaternion__System_Single_" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(Jitter2.LinearMath.JQuaternion@,System.Single)">
   operator *(in JQuaternion, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L738"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L739"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Scales a quaternion by a factor.</p>
@@ -2382,7 +2383,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Multiply_System_Single_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Multiply(System.Single,Jitter2.LinearMath.JQuaternion@)">
   operator *(float, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L728"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L729"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Scales a quaternion by a factor.</p>
@@ -2421,7 +2422,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_Subtraction_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_Subtraction(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@)">
   operator -(in JQuaternion, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L758"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L759"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Subtracts the second quaternion from the first component-wise.</p>
@@ -2460,7 +2461,7 @@ Expects memory order X, Y, Z, W (W is last).</p>
 
   <h3 id="Jitter2_LinearMath_JQuaternion_op_UnaryNegation_Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JQuaternion.op_UnaryNegation(Jitter2.LinearMath.JQuaternion@)">
   operator -(in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L709"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JQuaternion.cs/#L710"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Flips the sign of each component of the quaternion.</p>

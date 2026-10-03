@@ -124,8 +124,9 @@ removing three translational degrees of freedom.</p>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit.html">DistanceLimit</a></dt>
       <dd><p>Constrains the distance between a fixed point in the reference frame of one body and a fixed
-point in the reference frame of another body. This constraint removes one translational degree
-of freedom. For a distance of zero, use the <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a> constraint.</p>
+point in the reference frame of another body. A fixed limit removes one translational degree
+of freedom; a range limit acts when a boundary is reached. For a distance of zero, use the
+<a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a> constraint.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -171,8 +172,9 @@ freedom if the limit is enforced.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html">PrismaticJoint</a></dt>
-      <dd><p>Constructs a prismatic joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint in conjunction with
-<a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a>, and <a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraints.</p>
+      <dd><p>Constructs a prismatic joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint, either a
+<a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a> constraint, and an optional
+<a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraint.</p>
 </dd>
     </dl>
     <dl class="jumplist">

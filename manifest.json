@@ -589,7 +589,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.Island",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Island.yml\" sourcestartlinenumber=\"1\">Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Island.yml\" sourcestartlinenumber=\"1\">Represents a collection of bodies connected directly or indirectly by contacts or constraints.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -827,7 +827,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.Shapes.TriangleMesh.Triangle",
-      "Summary": null
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.Shapes.TriangleMesh.Triangle.yml\" sourcestartlinenumber=\"1\">Indices, neighbors, and local-space normal of one mesh triangle.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1037,7 +1037,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.TriangleEdgeCollisionFilter",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Filters internal edge collisions for <xref href=\"Jitter2.Collision.Shapes.TriangleShape\" data-throw-if-not-resolved=\"false\"></xref> geometry. Adjusts collision\nnormals at shared edges to match neighboring triangles, or discards the collision if the normal\ncannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)\nare left unmodified. Back-face collisions are discarded.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.TriangleEdgeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Filters internal edge collisions for <xref href=\"Jitter2.Collision.Shapes.TriangleShape\" data-throw-if-not-resolved=\"false\"></xref> geometry. Adjusts collision\nnormals at shared edges to match neighboring triangles, or discards the collision if the normal\ncannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)\nare left unmodified. Back-face normals within <xref href=\"Jitter2.Collision.TriangleEdgeCollisionFilter.AngleThreshold\" data-throw-if-not-resolved=\"false\"></xref> of the opposite\ntriangle normal are discarded.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1373,7 +1373,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.DistanceLimit",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.DistanceLimit.yml\" sourcestartlinenumber=\"1\">Constrains the distance between a fixed point in the reference frame of one body and a fixed\npoint in the reference frame of another body. This constraint removes one translational degree\nof freedom. For a distance of zero, use the <xref href=\"Jitter2.Dynamics.Constraints.BallSocket\" data-throw-if-not-resolved=\"false\"></xref> constraint.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.DistanceLimit.yml\" sourcestartlinenumber=\"1\">Constrains the distance between a fixed point in the reference frame of one body and a fixed\npoint in the reference frame of another body. A fixed limit removes one translational degree\nof freedom; a range limit acts when a boundary is reached. For a distance of zero, use the\n<xref href=\"Jitter2.Dynamics.Constraints.BallSocket\" data-throw-if-not-resolved=\"false\"></xref> constraint.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1569,7 +1569,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.PrismaticJoint",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml\" sourcestartlinenumber=\"1\">Constructs a prismatic joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.PointOnLine\" data-throw-if-not-resolved=\"false\"></xref> constraint in conjunction with\n<xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref>, and <xref href=\"Jitter2.Dynamics.Constraints.LinearMotor\" data-throw-if-not-resolved=\"false\"></xref> constraints.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml\" sourcestartlinenumber=\"1\">Constructs a prismatic joint using a <xref href=\"Jitter2.Dynamics.Constraints.PointOnLine\" data-throw-if-not-resolved=\"false\"></xref> constraint, either a\n<xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref> constraint, and an optional\n<xref href=\"Jitter2.Dynamics.Constraints.LinearMotor\" data-throw-if-not-resolved=\"false\"></xref> constraint.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2171,7 +2171,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.SoftBodies.DynamicTreeCollisionFilter",
-      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.DynamicTreeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Provides a collision filter that prevents self-collisions within soft bodies\nand shapes attached to the same rigid body.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.SoftBodies.DynamicTreeCollisionFilter.yml\" sourcestartlinenumber=\"1\">Provides a collision filter that rejects pairs of soft-body shapes belonging to the same\nsoft body and pairs of rigid-body shapes attached to the same rigid body. Mixed pairs pass.</p>\n"
     },
     {
       "type": "ManagedReference",

@@ -197,7 +197,7 @@ This ID remains stable for the lifetime of the body.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AffectedByGravity" data-uid="Jitter2.Dynamics.RigidBody.AffectedByGravity">
   AffectedByGravity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L823"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L825"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether the body is affected by the world's gravity during integration.</p>
@@ -287,7 +287,7 @@ simulated motion; position and orientation can still be assigned directly. Setti
 
   <h3 id="Jitter2_Dynamics_RigidBody_AngularVelocity" data-uid="Jitter2.Dynamics.RigidBody.AngularVelocity">
   AngularVelocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L793"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L795"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the angular velocity of the rigid body in world space.</p>
@@ -540,7 +540,7 @@ The threshold values are given in rad/s and length units/s, respectively.</p>
 
   <h4 class="section" id="Jitter2_Dynamics_RigidBody_DeactivationThreshold_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Values must be non-negative.
-Default values: angular = 0.1, linear = 0.1.</p>
+Default values: angular and linear are both approximately 0.316.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -596,7 +596,7 @@ Default value: 1 second.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_EnableGyroscopicForces" data-uid="Jitter2.Dynamics.RigidBody.EnableGyroscopicForces">
   EnableGyroscopicForces
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1074"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1076"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enables the implicit gyroscopic–torque solver for this <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a>.</p>
@@ -639,7 +639,7 @@ precession.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_EnableSpeculativeContacts" data-uid="Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts">
   EnableSpeculativeContacts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L838"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L840"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether speculative contacts are enabled for this body.</p>
@@ -676,7 +676,7 @@ solver cost. Default is <a href="https://learn.microsoft.com/dotnet/csharp/langu
 
   <h3 id="Jitter2_Dynamics_RigidBody_Force" data-uid="Jitter2.Dynamics.RigidBody.Force">
   Force
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1157"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accumulated force converted to a velocity change at the end of the next
@@ -823,7 +823,7 @@ For non-dynamic bodies, the solver treats inertia as infinite regardless of this
 
   <h3 id="Jitter2_Dynamics_RigidBody_IsActive" data-uid="Jitter2.Dynamics.RigidBody.IsActive">
   IsActive
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L954"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L956"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the rigid body is active or considered to be in a sleeping state.
@@ -856,7 +856,7 @@ Use <a class="xref" href="Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_Rigid
 
   <h3 id="Jitter2_Dynamics_RigidBody_IsStatic" data-uid="Jitter2.Dynamics.RigidBody.IsStatic">
   IsStatic
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L943"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L945"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -952,7 +952,7 @@ public bool IsStatic { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Mass" data-uid="Jitter2.Dynamics.RigidBody.Mass">
   Mass
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1650"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1656"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the mass of the rigid body. To modify the mass, use
@@ -992,7 +992,7 @@ along individual axes without changing this scalar mass.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_MotionType" data-uid="Jitter2.Dynamics.RigidBody.MotionType">
   MotionType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L886"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L888"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets how the rigid body participates in the simulation.</p>
@@ -1034,7 +1034,7 @@ along individual axes without changing this scalar mass.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Orientation" data-uid="Jitter2.Dynamics.RigidBody.Orientation">
   Orientation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L615"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L617"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the world-space orientation of the rigid body.</p>
@@ -1060,7 +1060,8 @@ along individual axes without changing this scalar mass.</p>
 
   <h4 class="section" id="Jitter2_Dynamics_RigidBody_Orientation_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Setting this property updates the broadphase proxies for all attached shapes
-and schedules the body for activation on the next step. Any currently active
+and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+activates connected bodies. Any currently active
 cached contacts involving this body are invalidated.</p>
 </div>
 
@@ -1071,7 +1072,7 @@ cached contacts involving this body are invalidated.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Position" data-uid="Jitter2.Dynamics.RigidBody.Position">
   Position
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L596"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L597"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the world-space position of the rigid body.</p>
@@ -1097,7 +1098,8 @@ cached contacts involving this body are invalidated.</p>
 
   <h4 class="section" id="Jitter2_Dynamics_RigidBody_Position_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Setting this property updates the broadphase proxies for all attached shapes
-and schedules the body for activation on the next step. Any currently active
+and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+activates connected bodies. Any currently active
 cached contacts involving this body are invalidated.</p>
 </div>
 
@@ -1184,7 +1186,7 @@ Default value: 0.0.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Tag" data-uid="Jitter2.Dynamics.RigidBody.Tag">
   Tag
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L828"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L830"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A managed pointer to custom user data. This is not used by the engine.</p>
@@ -1216,7 +1218,7 @@ Default value: 0.0.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Torque" data-uid="Jitter2.Dynamics.RigidBody.Torque">
   Torque
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1170"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accumulated torque converted to an angular velocity change at the end of the next
@@ -1250,7 +1252,7 @@ and this value is reset to zero after conversion.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_Velocity" data-uid="Jitter2.Dynamics.RigidBody.Velocity">
   Velocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L759"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L761"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the linear velocity of the rigid body in world space.</p>
@@ -1295,7 +1297,7 @@ for activation on the next step. Locked translation components are cleared.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L445"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets the world assigned to this body.</p>
+  <div class="markdown level1 summary"><p>Gets the world assigned to this body.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1328,7 +1330,7 @@ for activation on the next step. Locked translation components are cleared.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddForce_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddForce(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)">
   AddForce(in JVector, in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1216"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1218"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Applies a force to the rigid body at a world-space position. The force and resulting torque are
@@ -1372,7 +1374,7 @@ bodies will remain asleep and ignore the force.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddForce_Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddForce(Jitter2.LinearMath.JVector@,System.Boolean)">
   AddForce(in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1194"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Applies a force to the rigid body, thereby altering its velocity.</p>
@@ -1411,7 +1413,7 @@ bodies will remain asleep and ignore the force.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddImpulse_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)">
   AddImpulse(in JVector, in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1288"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1290"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1447,7 +1449,7 @@ public void AddImpulse(in JVector impulse, in JVector position, bool wakeup = tr
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddImpulse_Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddImpulse(Jitter2.LinearMath.JVector@,System.Boolean)">
   AddImpulse(in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1285"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1287"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1481,7 +1483,7 @@ public void AddImpulse(in JVector impulse, bool wakeup = true)</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_" data-uid="Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape)">
   AddShape(RigidBodyShape)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1094"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1096"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a shape to the body.</p>
@@ -1527,7 +1529,7 @@ mass properties remain unchanged.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)">
   AddShape(RigidBodyShape, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a shape to the body.</p>
@@ -1579,7 +1581,7 @@ mass properties remain unchanged.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)">
   AddShape(RigidBodyShape, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1146"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1613,7 +1615,7 @@ public void AddShape(RigidBodyShape shape, bool setMassInertia = true)</code></p
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShape_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.AddShape(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},System.Boolean)">
   AddShape(IEnumerable&lt;RigidBodyShape&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1142"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1647,7 +1649,7 @@ public void AddShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassInert
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__" data-uid="Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})">
   AddShapes(IEnumerable&lt;RigidBodyShape&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1014"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1016"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds several shapes to the rigid body at once. Mass properties are
@@ -1690,7 +1692,7 @@ recalculated only once, if requested.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_AddShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.AddShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)">
   AddShapes(IEnumerable&lt;RigidBodyShape&gt;, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1036"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1038"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds several shapes to the rigid body at once. Mass properties are
@@ -1743,7 +1745,7 @@ failure remain attached to the body.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_ApplyImpulse_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)">
   ApplyImpulse(in JVector, in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1266"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1268"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Applies an instantaneous impulse at a world-space position, directly changing both
@@ -1786,7 +1788,7 @@ bodies will remain asleep and ignore the impulse.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_ApplyImpulse_Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.ApplyImpulse(Jitter2.LinearMath.JVector@,System.Boolean)">
   ApplyImpulse(in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1244"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1246"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Applies an instantaneous impulse to the rigid body, directly changing its velocity.</p>
@@ -1857,7 +1859,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes">
   ClearShapes()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1461"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1467"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all shapes associated with the rigid body.</p>
@@ -1884,7 +1886,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes_Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes(Jitter2.Dynamics.MassInertiaUpdateMode)">
   ClearShapes(MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1470"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1476"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes all shapes associated with the rigid body.</p>
@@ -1917,7 +1919,7 @@ Do not call this concurrently with <a class="xref" href="Jitter2.World.html#Jitt
 
   <h3 id="Jitter2_Dynamics_RigidBody_ClearShapes_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.ClearShapes(System.Boolean)">
   ClearShapes(bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1475"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1481"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1949,7 +1951,7 @@ public void ClearShapes(bool setMassInertia = true)</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBody_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1629"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1635"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Generates a rough triangle approximation of the shapes of the body.
@@ -1987,7 +1989,7 @@ purposes.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_PredictOrientation_System_Single_" data-uid="Jitter2.Dynamics.RigidBody.PredictOrientation(System.Single)">
   PredictOrientation(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1306"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1308"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Predicts the orientation of the body after a given time step using angular velocity.
@@ -2027,7 +2029,7 @@ This does not simulate forces or collisions — it assumes constant angular velo
 
   <h3 id="Jitter2_Dynamics_RigidBody_PredictPose_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.Dynamics.RigidBody.PredictPose(System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@)">
   PredictPose(float, out JVector, out JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1317"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1319"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Predicts the pose (position and orientation) of the body after a given time step using simple extrapolation.
@@ -2067,7 +2069,7 @@ This method is intended for rendering purposes and does not modify the simulatio
 
   <h3 id="Jitter2_Dynamics_RigidBody_PredictPosition_System_Single_" data-uid="Jitter2.Dynamics.RigidBody.PredictPosition(System.Single)">
   PredictPosition(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1297"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1299"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Predicts the position of the body after a given time step using linear extrapolation.
@@ -2107,7 +2109,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape)">
   RemoveShape(RigidBodyShape)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1334"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1336"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specified shape from the rigid body.</p>
@@ -2149,7 +2151,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.Dynamics.MassInertiaUpdateMode)">
   RemoveShape(RigidBodyShape, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1353"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1355"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specified shape from the rigid body.</p>
@@ -2197,7 +2199,7 @@ This does not simulate forces or collisions — it assumes constant velocity.</p
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_Jitter2_Collision_Shapes_RigidBodyShape_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(Jitter2.Collision.Shapes.RigidBodyShape,System.Boolean)">
   RemoveShape(RigidBodyShape, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1450"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1456"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2231,7 +2233,7 @@ public void RemoveShape(RigidBodyShape shape, bool setMassInertia = true)</code>
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShape_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShape(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},System.Boolean)">
   RemoveShape(IEnumerable&lt;RigidBodyShape&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1454"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1460"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2265,7 +2267,7 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__" data-uid="Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape})">
   RemoveShapes(IEnumerable&lt;RigidBodyShape&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1387"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1391"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes several shapes from the body.</p>
@@ -2307,7 +2309,7 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
   <h3 id="Jitter2_Dynamics_RigidBody_RemoveShapes_System_Collections_Generic_IEnumerable_Jitter2_Collision_Shapes_RigidBodyShape__Jitter2_Dynamics_MassInertiaUpdateMode_" data-uid="Jitter2.Dynamics.RigidBody.RemoveShapes(System.Collections.Generic.IEnumerable{Jitter2.Collision.Shapes.RigidBodyShape},Jitter2.Dynamics.MassInertiaUpdateMode)">
   RemoveShapes(IEnumerable&lt;RigidBodyShape&gt;, MassInertiaUpdateMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1404"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1408"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes several shapes from the body.</p>
@@ -2355,7 +2357,7 @@ public void RemoveShape(IEnumerable&lt;RigidBodyShape&gt; shapes, bool setMassIn
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetActivationState_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.SetActivationState(System.Boolean)">
   SetActivationState(bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L968"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L970"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Instructs the engine to activate or deactivate the body at the beginning of
@@ -2394,7 +2396,7 @@ non-static bodies.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia">
   SetMassInertia()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1491"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1497"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the mass and inertia of this body from all attached shapes, assuming unit density.</p>
@@ -2431,7 +2433,7 @@ is assigned a mass of 1 and an identity inertia tensor.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia_Jitter2_LinearMath_JSymmetricMatrix__System_Single_System_Boolean_" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,System.Single,System.Boolean)">
   SetMassInertia(in JSymmetricMatrix, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1574"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1580"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the new mass properties of this body by specifying both inertia and mass directly.</p>
@@ -2480,7 +2482,7 @@ interpreted as inverse values.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBody_SetMassInertia_System_Single_" data-uid="Jitter2.Dynamics.RigidBody.SetMassInertia(System.Single)">
   SetMassInertia(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1536"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L1542"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the inertia from all attached shapes, then uniformly scales it to match the specified mass.</p>
@@ -2530,7 +2532,7 @@ inertia proportions but a specific total mass (e.g., for gameplay tuning).</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L323"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.</p>
+  <div class="markdown level1 summary"><p>Event triggered when a new arbiter is created, including for a speculative contact before the bodies overlap.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2554,7 +2556,7 @@ public event Action&lt;Arbiter&gt;? BeginCollide</code></pre>
 
   <h4 class="section" id="Jitter2_Dynamics_RigidBody_BeginCollide_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>This event provides an <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> object which contains details about the collision.
-Use this event to handle logic that should occur at the start of a collision between two bodies.</p>
+Use this event to handle logic when contact tracking begins between two bodies.</p>
 </div>
 
 
@@ -2566,7 +2568,7 @@ Use this event to handle logic that should occur at the start of a collision bet
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L334"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Event triggered when an arbiter is destroyed, indicating that two bodies have stopped colliding.
+  <div class="markdown level1 summary"><p>Event triggered when an arbiter expires during a simulation step because contact has ended.
 The reference to this arbiter becomes invalid after this call.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -2591,7 +2593,7 @@ public event Action&lt;Arbiter&gt;? EndCollide</code></pre>
 
   <h4 class="section" id="Jitter2_Dynamics_RigidBody_EndCollide_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>This event provides an <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> object which contains details about the collision that has ended.
-Use this event to handle logic that should occur when the collision between two bodies ends.</p>
+Explicit arbiter, body, or shape removal does not raise this event.</p>
 </div>
 
 
