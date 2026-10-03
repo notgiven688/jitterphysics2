@@ -594,7 +594,7 @@ public class AllowedMotionTests
                 break;
             case "ConeLimit":
                 var cone = world.CreateConstraint<ConeLimit>(world.NullBody, body);
-                cone.Initialize(JVector.UnitX, JVector.UnitZ, AngularLimit.FromDegree(0, 0));
+                cone.Initialize(JVector.UnitX, JVector.UnitZ, AngularLimit.FromDegree(90, 90));
                 cone.Softness = cone.Bias = 0;
                 break;
             case "AngularMotor":

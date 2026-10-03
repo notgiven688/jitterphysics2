@@ -104,6 +104,10 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
     /// of the involved bodies, their translation locks, and the timestep size do not change.
     /// </summary>
+    /// <remarks>
+    /// At coincident anchors, the most responsive translation axis
+    /// determines the effective mass used to configure the spring.
+    /// </remarks>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
     /// <param name="dt">The timestep of the simulation.</param>
@@ -122,9 +126,20 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         ref RigidBodyData body2 = ref data.Body2.Data;
 
         JVector direction = body2.Position + data.LocalAnchor2 - body1.Position - data.LocalAnchor1;
-        if (direction.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref direction);
-        Real inverseEffectiveMass = JVector.Multiply(direction, body1.InverseMassVector) * direction +
-                                    JVector.Multiply(direction, body2.InverseMassVector) * direction;
+        Real distance = direction.Length();
+        Real inverseEffectiveMass;
+        if (distance > 0)
+        {
+            direction *= (Real)1.0 / distance;
+            inverseEffectiveMass = JVector.Multiply(direction, body1.InverseMassVector) * direction +
+                                   JVector.Multiply(direction, body2.InverseMassVector) * direction;
+        }
+        else
+        {
+            // An undefined direction does not imply infinite mass. For unrestricted bodies
+            // this recovers their scalar inverse mass; restricted bodies use a responsive axis.
+            inverseEffectiveMass = JVector.MaxAbs(body1.InverseMassVector + body2.InverseMassVector);
+        }
 
         Real omega = (Real)2.0 * MathR.PI * frequency;
         if (!(inverseEffectiveMass > 0))
@@ -254,10 +269,17 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         JVector.Subtract(p2, p1, out JVector dp);
 
-        Real error = dp.Length() - data.Distance;
+        Real distance = dp.Length();
+        Real error = distance - data.Distance;
 
-        JVector n = dp;
-        if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
+        if (distance == 0)
+        {
+            data.Jacobian = JVector.Zero;
+            data.EffectiveMass = data.AccumulatedImpulse = data.Bias = 0;
+            return;
+        }
+
+        JVector n = dp * ((Real)1.0 / distance);
 
         data.Jacobian = n;
         data.EffectiveMass = JVector.Multiply(n, body1.InverseMassVector) * n +

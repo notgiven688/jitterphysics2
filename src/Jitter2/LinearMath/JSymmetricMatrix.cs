@@ -112,11 +112,49 @@ public struct JSymmetricMatrix(
     /// <param name="matrix">The matrix to invert.</param>
     /// <param name="result">Output: The inverse, or zero if inversion fails.</param>
     /// <returns>
-    /// <c>true</c> if the reciprocal determinant is a normal finite number;
-    /// otherwise, <c>false</c>, matching <see cref="JMatrix.Inverse"/>.
+    /// <c>true</c> if a finite inverse can be computed; otherwise, <c>false</c>,
+    /// matching <see cref="JMatrix.Inverse"/>.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Inverse(in JSymmetricMatrix matrix, out JSymmetricMatrix result)
+    {
+        if (TryInverseUnscaled(matrix, out JSymmetricMatrix inverse))
+        {
+            result = inverse;
+            return true;
+        }
+
+        Real scale = MathR.Max(MathR.Abs(matrix.M11), MathR.Max(MathR.Abs(matrix.M12), MathR.Abs(matrix.M13)));
+        scale = MathR.Max(scale, MathR.Max(MathR.Abs(matrix.M22), MathR.Max(MathR.Abs(matrix.M23), MathR.Abs(matrix.M33))));
+        if (scale > 0 && Real.IsFinite(scale))
+        {
+            JSymmetricMatrix normalized = new(matrix.M11 / scale, matrix.M12 / scale, matrix.M13 / scale,
+                matrix.M22 / scale, matrix.M23 / scale, matrix.M33 / scale);
+            if (TryInverseUnscaled(normalized, out inverse))
+            {
+                inverse = new JSymmetricMatrix(inverse.M11 / scale, inverse.M12 / scale, inverse.M13 / scale,
+                    inverse.M22 / scale, inverse.M23 / scale, inverse.M33 / scale);
+                if (IsFinite(inverse))
+                {
+                    result = inverse;
+                    return true;
+                }
+            }
+        }
+
+        result = Zero;
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsFinite(in JSymmetricMatrix matrix)
+    {
+        return Real.IsFinite(matrix.M11) && Real.IsFinite(matrix.M12) && Real.IsFinite(matrix.M13) &&
+               Real.IsFinite(matrix.M22) && Real.IsFinite(matrix.M23) && Real.IsFinite(matrix.M33);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryInverseUnscaled(in JSymmetricMatrix matrix, out JSymmetricMatrix result)
     {
         Real idet = (Real)1.0 / matrix.Determinant();
 
@@ -136,7 +174,7 @@ public struct JSymmetricMatrix(
 
         result = new JSymmetricMatrix(m11 * idet, m12 * idet, m13 * idet,
             m22 * idet, m23 * idet, m33 * idet);
-        return true;
+        return IsFinite(result);
     }
 
     /// <summary>Adds two matrices component-wise.</summary>

@@ -40,6 +40,9 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         public Real LimitSoftness;
 
         public JMatrix EffectiveMass;
+        public JVector BilateralMass;
+        public Real CouplingX;
+        public Real CouplingY;
         public JVector AccumulatedImpulse;
         public JVector Bias;
 
@@ -203,14 +206,10 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         data.EffectiveMass.M21 = JVector.Transform(jacobian[5], body1.InverseInertiaWorld) * jacobian[1] +
                                  JVector.Transform(jacobian[7], body2.InverseInertiaWorld) * jacobian[3];
 
-        bool hasLinearLocks = body1.HasLinearLocks || body2.HasLinearLocks;
-        if (hasLinearLocks)
-        {
-            Real coupling = JVector.Multiply(jacobian[0], body1.InverseMassVector) * jacobian[4] +
-                            JVector.Multiply(jacobian[2], body2.InverseMassVector) * jacobian[6];
-            data.EffectiveMass.M12 += coupling;
-            data.EffectiveMass.M21 += coupling;
-        }
+        Real coupling12 = JVector.Multiply(jacobian[0], body1.InverseMassVector) * jacobian[4] +
+                          JVector.Multiply(jacobian[2], body2.InverseMassVector) * jacobian[6];
+        data.EffectiveMass.M12 += coupling12;
+        data.EffectiveMass.M21 += coupling12;
 
         if (data.Min >= data.Max)
         {
@@ -251,36 +250,39 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
             data.EffectiveMass.M32 = JVector.Transform(jacobian[9], body1.InverseInertiaWorld) * jacobian[5] +
                                      JVector.Transform(jacobian[11], body2.InverseInertiaWorld) * jacobian[7];
 
-            if (hasLinearLocks)
-            {
-                Real coupling13 = JVector.Multiply(jacobian[0], body1.InverseMassVector) * jacobian[8] +
-                                  JVector.Multiply(jacobian[2], body2.InverseMassVector) * jacobian[10];
-                Real coupling23 = JVector.Multiply(jacobian[4], body1.InverseMassVector) * jacobian[8] +
-                                  JVector.Multiply(jacobian[6], body2.InverseMassVector) * jacobian[10];
-                data.EffectiveMass.M13 += coupling13;
-                data.EffectiveMass.M31 += coupling13;
-                data.EffectiveMass.M23 += coupling23;
-                data.EffectiveMass.M32 += coupling23;
-            }
+            Real coupling13 = JVector.Multiply(jacobian[0], body1.InverseMassVector) * jacobian[8] +
+                              JVector.Multiply(jacobian[2], body2.InverseMassVector) * jacobian[10];
+            Real coupling23 = JVector.Multiply(jacobian[4], body1.InverseMassVector) * jacobian[8] +
+                              JVector.Multiply(jacobian[6], body2.InverseMassVector) * jacobian[10];
+            data.EffectiveMass.M13 += coupling13;
+            data.EffectiveMass.M31 += coupling13;
+            data.EffectiveMass.M23 += coupling23;
+            data.EffectiveMass.M32 += coupling23;
         }
 
         data.EffectiveMass.M11 += data.Softness * idt;
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.LimitSoftness * idt;
 
-        if (body1.HasMotionLocks || body2.HasMotionLocks)
+        if (data.Clamp == 1 || data.Clamp == 2)
         {
-            data.EffectiveMass = MathHelper.PseudoInverseSymmetric(data.EffectiveMass);
+            data.BilateralMass = MathHelper.InverseBilateralBlock(data.EffectiveMass);
+            data.CouplingX = data.EffectiveMass.M13;
+            data.CouplingY = data.EffectiveMass.M23;
         }
-        else
-        {
-            JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
-        }
+
+        // An inactive limit must not set the scale used to identify responsive rows.
+        if (data.Clamp == 0) data.EffectiveMass.M33 = 0;
+        data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
         data.Bias = error * idt;
         data.Bias.X *= data.BiasFactor;
         data.Bias.Y *= data.BiasFactor;
         data.Bias.Z *= data.LimitBias;
+
+        // A changed limit must not warm start with an impulse of the opposite sign.
+        if (data.Clamp == 1) data.AccumulatedImpulse.Z = MathR.Min(0, data.AccumulatedImpulse.Z);
+        else if (data.Clamp == 2) data.AccumulatedImpulse.Z = MathR.Max(0, data.AccumulatedImpulse.Z);
 
         JVector acc = data.AccumulatedImpulse;
 
@@ -414,16 +416,27 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         softnessVector.Y *= data.Softness;
         softnessVector.Z *= data.LimitSoftness;
 
-        JVector lambda = -(Real)1.0 * JVector.Transform(jv + data.Bias + softnessVector, data.EffectiveMass);
+        JVector residual = jv + data.Bias + softnessVector;
+        JVector lambda = -(Real)1.0 * JVector.Transform(residual, data.EffectiveMass);
 
         JVector origAcc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
-        if (data.Clamp == 1)
-            data.AccumulatedImpulse.Z = MathR.Min(data.AccumulatedImpulse.Z, (Real)0.0);
-        else if (data.Clamp == 2)
-            data.AccumulatedImpulse.Z = MathR.Max(data.AccumulatedImpulse.Z, (Real)0.0);
+        if ((data.Clamp == 1 && data.AccumulatedImpulse.Z > 0) ||
+            (data.Clamp == 2 && data.AccumulatedImpulse.Z < 0))
+        {
+            // Fix the limit impulse at its bound and solve the bilateral rows again.
+            // Their full block solution assumed that the discarded limit impulse was applied.
+            lambda.Z = -origAcc.Z;
+            Real x = residual.X + data.CouplingX * lambda.Z;
+            Real y = residual.Y + data.CouplingY * lambda.Z;
+            lambda.X = -(data.BilateralMass.X * x + data.BilateralMass.Y * y);
+            lambda.Y = -(data.BilateralMass.Y * x + data.BilateralMass.Z * y);
+            data.AccumulatedImpulse.X = origAcc.X + lambda.X;
+            data.AccumulatedImpulse.Y = origAcc.Y + lambda.Y;
+            data.AccumulatedImpulse.Z = 0;
+        }
         else if (data.Clamp == 0)
         {
             data.AccumulatedImpulse.Z = (Real)0.0;

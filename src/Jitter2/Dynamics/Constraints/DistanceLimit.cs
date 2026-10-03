@@ -219,7 +219,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 
         JVector.Subtract(p2, p1, out JVector dp);
 
-        Real error = dp.Length() - data.Distance;
+        Real distance = dp.Length();
+        Real error = distance - data.Distance;
 
         data.Clamp = 0;
 
@@ -244,8 +245,16 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
             return;
         }
 
-        JVector n = p2 - p1;
-        if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
+        // A distance constraint has no direction at exactly coincident anchors.
+        // Every nonzero separation needs a unit Jacobian, including tiny distances.
+        if (distance == 0)
+        {
+            data.Clamp = 0;
+            data.AccumulatedImpulse = 0;
+            return;
+        }
+
+        JVector n = dp * ((Real)1.0 / distance);
 
         var jacobian = new Span<JVector>(Unsafe.AsPointer(ref data.J0), 4);
 

@@ -10,10 +10,10 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    // Compact symmetric inertia and tensor products change floating-point rounding.
+    // Symmetric inertia and consistent angular coordinates change the reference trajectory.
     // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x3B64AAF125C957EC;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x69B5A8AC84B0C9F9;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x9699A263F3FB6EE8;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0xC5873C36370AF2F4;
 
     [TestCase]
     public static void BasicReproducibilityTest()

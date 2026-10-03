@@ -163,14 +163,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         data.EffectiveMass.M22 += softness;
         data.EffectiveMass.M33 += softness;
 
-        if (body1.HasMotionLocks || body2.HasMotionLocks)
-        {
-            data.EffectiveMass = MathHelper.PseudoInverseSymmetric(data.EffectiveMass);
-        }
-        else
-        {
-            JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
-        }
+        data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
         data.Bias = (p2 - p1) * data.BiasFactor * idt;
 

@@ -398,10 +398,54 @@ public struct JMatrix(
     /// Calculates the inverse of the matrix.
     /// </summary>
     /// <param name="matrix">The matrix to invert.</param>
-    /// <param name="result">Output: The inverted matrix, or a zero matrix if the determinant is zero.</param>
+    /// <param name="result">Output: The inverted matrix, or zero if a finite inverse cannot be computed.</param>
     /// <returns><c>true</c> if the matrix can be inverted; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Inverse(in JMatrix matrix, out JMatrix result)
+    {
+        if (TryInverseUnscaled(matrix, out JMatrix inverse))
+        {
+            result = inverse;
+            return true;
+        }
+
+        // Uniformly tiny or large matrices can overflow the determinant even when
+        // their inverse is representable. Keep the ordinary path for common scales.
+        Real scale = MathR.Max(MathR.Abs(matrix.M11), MathR.Max(MathR.Abs(matrix.M12), MathR.Abs(matrix.M13)));
+        scale = MathR.Max(scale, MathR.Max(MathR.Abs(matrix.M21), MathR.Max(MathR.Abs(matrix.M22), MathR.Abs(matrix.M23))));
+        scale = MathR.Max(scale, MathR.Max(MathR.Abs(matrix.M31), MathR.Max(MathR.Abs(matrix.M32), MathR.Abs(matrix.M33))));
+        if (scale > 0 && Real.IsFinite(scale))
+        {
+            JMatrix normalized = new(matrix.M11 / scale, matrix.M12 / scale, matrix.M13 / scale,
+                matrix.M21 / scale, matrix.M22 / scale, matrix.M23 / scale,
+                matrix.M31 / scale, matrix.M32 / scale, matrix.M33 / scale);
+            if (TryInverseUnscaled(normalized, out inverse))
+            {
+                inverse.M11 /= scale; inverse.M12 /= scale; inverse.M13 /= scale;
+                inverse.M21 /= scale; inverse.M22 /= scale; inverse.M23 /= scale;
+                inverse.M31 /= scale; inverse.M32 /= scale; inverse.M33 /= scale;
+                if (IsFinite(inverse))
+                {
+                    result = inverse;
+                    return true;
+                }
+            }
+        }
+
+        result = Zero;
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsFinite(in JMatrix matrix)
+    {
+        return Real.IsFinite(matrix.M11) && Real.IsFinite(matrix.M12) && Real.IsFinite(matrix.M13) &&
+               Real.IsFinite(matrix.M21) && Real.IsFinite(matrix.M22) && Real.IsFinite(matrix.M23) &&
+               Real.IsFinite(matrix.M31) && Real.IsFinite(matrix.M32) && Real.IsFinite(matrix.M33);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryInverseUnscaled(in JMatrix matrix, out JMatrix result)
     {
         Real idet = (Real)1.0 / matrix.Determinant();
 
@@ -433,7 +477,7 @@ public struct JMatrix(
         result.M32 = num32 * idet;
         result.M33 = num33 * idet;
 
-        return true;
+        return IsFinite(result);
     }
 
     /// <summary>
