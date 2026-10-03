@@ -28,6 +28,6 @@ public interface ISupportMappable
     /// <summary>
     /// Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.
     /// </summary>
-    /// <param name="point">A point inside or on the convex hull. Degenerate shapes may have no strict interior.</param>
+    /// <param name="point">A point inside the convex hull.</param>
     void GetCenter(out JVector point);
 }
