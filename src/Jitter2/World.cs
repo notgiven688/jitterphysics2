@@ -544,6 +544,9 @@ public sealed partial class World : IDisposable
 
         if (body == NullBody) return;
 
+        if (!body.IsValid)
+            throw new InvalidOperationException("The body has already been removed from this world.");
+
         // No need to copy the hashset content first. Removing while iterating does not invalidate
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
         // This comes in very handy for us.

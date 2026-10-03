@@ -125,6 +125,16 @@ public class AddRemoveTests
         Assert.Throws<ArgumentException>(() => world.Remove(body));
     }
 
+    [Test]
+    public void RemoveBodyTwice_ThrowsWithoutChangingWorld()
+    {
+        RigidBody body = world.CreateRigidBody();
+        world.Remove(body);
+
+        Assert.Throws<InvalidOperationException>(() => world.Remove(body));
+        Assert.DoesNotThrow(() => world.Step((Real)1.0 / 60, multiThread: false));
+    }
+
     [TestCase]
     public void RemoveConstraintFromWrongWorld()
     {
