@@ -87,6 +87,15 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-290-2026-10-03">Jitter 2.9.0 (2026-10-03)</h3>
+<ul>
+<li>Added world-space translation and rotation locks via <code>RigidBody.AllowedMotion</code> and <code>MotionAxes</code>, including planar motion presets.</li>
+<li><strong>Breaking Change:</strong> Inertia APIs now use <code>JSymmetricMatrix</code>; <code>RigidBodyData.InverseMass</code> is replaced by <code>InverseMassVector</code>. Update custom shapes and constraints accordingly.</li>
+<li>Fixed constraint mass solves, angular singularities, and fixed and boundary limits.</li>
+<li>Fixed speculative contact bias and CCD impulse preservation.</li>
+<li>Fixed possible overflow in rotation quaternion calculation.</li>
+<li>Added <code>TriangleEdgeCollisionFilter.FilterDynamicBodies</code> to control edge filtering for dynamic triangle bodies (disabled by default).</li>
+</ul>
 <h3 id="jitter-2813-2026-09-19">Jitter 2.8.13 (2026-09-19)</h3>
 <ul>
 <li>Improved recovery from invalid internal state when user-provided code throws exceptions.</li>
