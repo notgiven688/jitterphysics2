@@ -101,7 +101,7 @@ When `PROFILE` is not defined, all tracing calls are completely stripped by the 
 
 ## Custom Math Types
 
-Jitter2 defines its own math types (`JVector`, `JMatrix`, `JQuaternion`, `JBoundingBox`) rather than using `System.Numerics`. This allows precision to be switched globally between `float` and `double` without code changes, gives explicit control over memory layout using `[StructLayout(LayoutKind.Explicit)]`, and avoids dependencies on external math library behavior.
+Jitter2 defines its own math types (`JVector`, `JMatrix`, `JSymmetricMatrix`, `JQuaternion`, `JBoundingBox`) rather than using `System.Numerics`. This allows precision to be switched globally between `float` and `double` without code changes, gives explicit control over memory layout using `[StructLayout(LayoutKind.Explicit)]`, and avoids dependencies on external math library behavior.
 
 The explicit field offsets guarantee a predictable memory layout, enabling zero-copy conversion to and from other libraries' types:
 
