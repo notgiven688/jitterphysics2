@@ -11,7 +11,7 @@ using Jitter2.Dynamics;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents an island, which is a collection of bodies that are either directly or indirectly in contact with each other.
+/// Represents a collection of bodies connected directly or indirectly by contacts or constraints.
 /// </summary>
 public sealed class Island : IPartitionedSetIndex
 {

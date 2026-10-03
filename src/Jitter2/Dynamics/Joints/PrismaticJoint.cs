@@ -10,8 +10,9 @@ using Jitter2.LinearMath;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constructs a prismatic joint utilizing a <see cref="PointOnLine"/> constraint in conjunction with
-/// <see cref="FixedAngle"/>, <see cref="HingeAngle"/>, and <see cref="LinearMotor"/> constraints.
+/// Constructs a prismatic joint using a <see cref="PointOnLine"/> constraint, either a
+/// <see cref="FixedAngle"/> or <see cref="HingeAngle"/> constraint, and an optional
+/// <see cref="LinearMotor"/> constraint.
 /// </summary>
 public class PrismaticJoint : Joint
 {
@@ -34,6 +35,14 @@ public class PrismaticJoint : Joint
     /// <summary>
     /// Initializes a new prismatic joint.
     /// </summary>
+    /// <param name="world">The world containing both bodies.</param>
+    /// <param name="body1">The first body.</param>
+    /// <param name="body2">The second body.</param>
+    /// <param name="center">The joint center in world space.</param>
+    /// <param name="axis">The sliding axis in world space.</param>
+    /// <param name="limit">Allowed displacement along the sliding axis.</param>
+    /// <param name="pinned">If true, lock relative rotation with <see cref="FixedAngle"/>; otherwise constrain it with <see cref="HingeAngle"/>.</param>
+    /// <param name="hasMotor">If true, create a <see cref="LinearMotor"/>.</param>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="center"/> contains a non-finite value, when <paramref name="axis"/> is zero
     /// or contains a non-finite value, when either limit value is NaN, when either body does not belong to

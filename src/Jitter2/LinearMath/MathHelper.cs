@@ -100,7 +100,8 @@ public static class MathHelper
     /// </summary>
     /// <param name="vector">The vector to check.</param>
     /// <param name="epsilon">The tolerance for each component.</param>
-    /// <returns><see langword="true"/> if all components are within epsilon of zero; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if no component has an absolute value greater than or equal to epsilon;
+    /// NaN components also satisfy this test.</returns>
     public static bool IsZero(in JVector vector, Real epsilon = (Real)1e-6)
     {
         return !(MathR.Abs(vector.X) >= epsilon) &&
@@ -124,7 +125,8 @@ public static class MathHelper
     /// </summary>
     /// <param name="matrix">The matrix to check.</param>
     /// <param name="epsilon">The tolerance for each element.</param>
-    /// <returns><see langword="true"/> if all elements are within epsilon of zero; otherwise, <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if all rows satisfy <see cref="IsZero(in JVector, Real)"/>,
+    /// including rows with NaN components.</returns>
     public static bool UnsafeIsZero(ref JMatrix matrix, Real epsilon = (Real)1e-6)
     {
         if (!IsZero(matrix.UnsafeGet(0), epsilon)) return false;
@@ -134,11 +136,11 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Calculates <c>(MᵀM)^(-1/2)</c> using Jacobi iterations.
+    /// Approximates <c>M^(-1/2)</c> for a symmetric positive-definite matrix using Jacobi iterations.
     /// </summary>
-    /// <param name="m">The input matrix.</param>
+    /// <param name="m">The symmetric positive-definite input matrix.</param>
     /// <param name="sweeps">The number of Jacobi iterations.</param>
-    /// <returns>The inverse square root of <c>MᵀM</c>.</returns>
+    /// <returns>The approximate inverse square root of <c>M</c>.</returns>
     public static JMatrix InverseSquareRoot(JMatrix m, int sweeps = 2)
     {
         Unsafe.SkipInit(out JMatrix r);

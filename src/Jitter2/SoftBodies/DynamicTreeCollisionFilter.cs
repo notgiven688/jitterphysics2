@@ -10,13 +10,13 @@ using Jitter2.Collision.Shapes;
 namespace Jitter2.SoftBodies;
 
 /// <summary>
-/// Provides a collision filter that prevents self-collisions within soft bodies
-/// and shapes attached to the same rigid body.
+/// Provides a collision filter that rejects pairs of soft-body shapes belonging to the same
+/// soft body and pairs of rigid-body shapes attached to the same rigid body. Mixed pairs pass.
 /// </summary>
 public static class DynamicTreeCollisionFilter
 {
     /// <summary>
-    /// Filters collision pairs to exclude self-collisions.
+    /// Filters matching soft-body and rigid-body shape pairs that share an owner.
     /// </summary>
     /// <param name="proxyA">The first proxy.</param>
     /// <param name="proxyB">The second proxy.</param>

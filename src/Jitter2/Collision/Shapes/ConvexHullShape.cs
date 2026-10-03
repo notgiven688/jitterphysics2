@@ -61,7 +61,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     /// <summary>
     /// Initializes a new instance of the ConvexHullShape class, creating a convex hull.
     /// </summary>
-    /// <param name="triangles">All vertices defining the convex hull. The vertices must strictly lie
+    /// <param name="triangles">Triangles describing the convex hull surface. Their vertices must lie
     /// on the surface of the convex hull to avoid incorrect results or indefinite hangs in the collision algorithm.</param>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="triangles"/> is empty, or when the convex hull consists of more than

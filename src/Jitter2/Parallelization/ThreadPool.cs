@@ -276,7 +276,8 @@ public sealed class ThreadPool
     public static bool InstanceInitialized => _instance != null;
 
     /// <summary>
-    /// Gets the singleton instance of the <see cref="ThreadPool"/>.
+    /// Gets the shared <see cref="ThreadPool"/> instance. First access must be serialized by the caller;
+    /// concurrent initialization can create more than one pool.
     /// </summary>
     public static ThreadPool Instance
     {
@@ -291,8 +292,8 @@ public sealed class ThreadPool
     /// Resumes all worker threads so they can process queued tasks.
     /// </summary>
     /// <remarks>
-    /// Called automatically by <see cref="Execute"/>. Manual calls are typically only needed
-    /// when using <see cref="World.ThreadModelType.Persistent"/>.
+    /// Called automatically by <see cref="Execute"/> and by the world during multithreaded steps.
+    /// Manual calls are useful when managing the pool directly.
     /// </remarks>
     public void ResumeWorkers()
     {

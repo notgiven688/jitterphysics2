@@ -49,7 +49,9 @@ public static class ShapeHelper
     }
 
     /// <inheritdoc cref="Tessellate{TSupport}(in TSupport, int)"/>
+    /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="hullCollection">A collection to which the triangles are added.</param>
+    /// <param name="subdivisions">The recursion depth, including the final emission level.</param>
     public static void Tessellate<TSupport, TCollection>(in TSupport support, TCollection hullCollection, int subdivisions = 3)
         where TSupport : ISupportMappable
         where TCollection : class, ICollection<JTriangle>
@@ -65,7 +67,8 @@ public static class ShapeHelper
     /// <typeparam name="TSink">The sink type receiving the generated triangles.</typeparam>
     /// <param name="support">The support map interface implemented by the shape.</param>
     /// <param name="hullSink">The sink receiving the generated triangles.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
+    /// <param name="subdivisions">The recursion depth, including the final emission level.
+    /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
     /// <remarks>
     /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
@@ -127,7 +130,8 @@ public static class ShapeHelper
     /// Creates a tessellation of a shape defined by its support map.
     /// </summary>
     /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
+    /// <param name="subdivisions">The recursion depth, including the final emission level.
+    /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
     /// <remarks>
     /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
     /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.

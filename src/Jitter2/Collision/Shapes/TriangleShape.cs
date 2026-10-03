@@ -72,7 +72,8 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Gets the vertices transformed to world space coordinates, as affected by the rigid body's transformation.
+    /// Gets the vertices transformed by the attached rigid body. If the shape is unattached,
+    /// returns the mesh vertices without a world transform.
     /// </summary>
     /// <param name="a">The transformed coordinate of the first vertex.</param>
     /// <param name="b">The transformed coordinate of the second vertex.</param>
@@ -125,6 +126,7 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
+    /// <remarks>Back-facing triangles are culled.</remarks>
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref readonly var meshTriangle = ref Mesh.Indices[Index];

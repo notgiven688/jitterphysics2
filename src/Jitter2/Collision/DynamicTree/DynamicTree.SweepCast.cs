@@ -56,6 +56,15 @@ public partial class DynamicTree
     /// that sweeps a <see cref="SupportPrimitives.Sphere"/>.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastSphere(Real radius, in JVector position, in JVector direction,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -67,6 +76,16 @@ public partial class DynamicTree
     /// that sweeps a <see cref="SupportPrimitives.Sphere"/>.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="maxLambda">The maximum sweep parameter to consider.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastSphere(Real radius, in JVector position, in JVector direction, Real maxLambda,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -78,6 +97,16 @@ public partial class DynamicTree
     /// that sweeps a <see cref="SupportPrimitives.Box"/>.
     /// </summary>
     /// <param name="halfExtents">The half extents of the box.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastBox(in JVector halfExtents, in JQuaternion orientation, in JVector position, in JVector direction,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -89,6 +118,17 @@ public partial class DynamicTree
     /// that sweeps a <see cref="SupportPrimitives.Box"/>.
     /// </summary>
     /// <param name="halfExtents">The half extents of the box.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="maxLambda">The maximum sweep parameter to consider.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastBox(in JVector halfExtents, in JQuaternion orientation, in JVector position, in JVector direction, Real maxLambda,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -101,6 +141,16 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="radius">The capsule radius.</param>
     /// <param name="halfLength">Half the cylindrical section length of the capsule.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastCapsule(Real radius, Real halfLength, in JQuaternion orientation, in JVector position, in JVector direction,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -113,6 +163,17 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="radius">The capsule radius.</param>
     /// <param name="halfLength">Half the cylindrical section length of the capsule.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="maxLambda">The maximum sweep parameter to consider.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastCapsule(Real radius, Real halfLength, in JQuaternion orientation, in JVector position, in JVector direction, Real maxLambda,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -125,6 +186,16 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="radius">The cylinder radius.</param>
     /// <param name="halfHeight">Half the cylinder height.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastCylinder(Real radius, Real halfHeight, in JQuaternion orientation, in JVector position, in JVector direction,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -137,6 +208,17 @@ public partial class DynamicTree
     /// </summary>
     /// <param name="radius">The cylinder radius.</param>
     /// <param name="halfHeight">Half the cylinder height.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
+    /// <param name="maxLambda">The maximum sweep parameter to consider.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCastCylinder(Real radius, Real halfHeight, in JQuaternion orientation, in JVector position, in JVector direction, Real maxLambda,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda) =>
@@ -202,7 +284,18 @@ public partial class DynamicTree
     /// Bounded variant of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
     /// that limits the sweep to <paramref name="maxLambda"/>.
     /// </summary>
+    /// <param name="support">The query shape.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="direction">The sweep direction in world space.</param>
     /// <param name="maxLambda">Maximum sweep parameter to consider along <paramref name="direction"/>.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The contact point on the query shape in world space.</param>
+    /// <param name="pointB">The contact point on the found proxy in world space.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The sweep parameter at the first accepted hit; zero for initial overlap.</param>
     public bool SweepCast<T>(in T support, in JQuaternion orientation, in JVector position, in JVector direction, Real maxLambda,
         SweepCastFilterPre? pre, SweepCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)

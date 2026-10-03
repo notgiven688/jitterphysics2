@@ -52,10 +52,14 @@ public class TriangleMesh
         public override int GetHashCode() => HashCode.Combine(IndexA, IndexB);
     }
 
+    /// <summary>Indices, neighbors, and local-space normal of one mesh triangle.</summary>
     public struct Triangle(int a, int b, int c)
     {
+        /// <summary>Indices of the triangle's vertices in <see cref="Vertices"/>.</summary>
         public readonly int IndexA = a, IndexB = b, IndexC = c;
+        /// <summary>Neighbor triangle indices opposite the corresponding vertices, or -1 at a boundary.</summary>
         public int NeighborA = -1, NeighborB = -1, NeighborC = -1;
+        /// <summary>The triangle normal in mesh-local coordinates.</summary>
         public JVector Normal = default;
     }
 

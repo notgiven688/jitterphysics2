@@ -121,7 +121,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     public JVector LocalAxis2 => Data.LocalAxis2;
 
     /// <summary>
-    /// Gets or sets the maximum force the motor can apply.
+    /// Gets or sets the maximum torque the motor can apply. The property name is shared with linear motors.
     /// </summary>
     /// <value>Default is 0. Must be non-negative.</value>
     /// <exception cref="ArgumentOutOfRangeException">

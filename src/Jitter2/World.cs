@@ -319,8 +319,8 @@ public sealed partial class World : IDisposable
     public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new(bodies);
 
     /// <summary>
-    /// Access to the <see cref="DynamicTree"/> instance. The instance
-    /// should only be modified by Jitter.
+    /// Access to the <see cref="DynamicTree"/> instance. Callers may manage their own proxies and
+    /// update shapes after changing their geometry. Jitter manages proxies for attached rigid body shapes.
     /// </summary>
     public DynamicTree DynamicTree { get; }
 
@@ -439,8 +439,8 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Default filter function for the DynamicTree. Returns true if both proxies are of type RigidBodyShape
-    /// and belong to different RigidBody instances.
+    /// Default filter function for the DynamicTree. Rejects two <see cref="RigidBodyShape"/> proxies
+    /// attached to the same body; accepts other proxy pairs.
     /// </summary>
     public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
@@ -533,6 +533,7 @@ public sealed partial class World : IDisposable
     /// <param name="body">The rigid body to remove.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="body"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="body"/> does not belong to this world.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="body"/> has already been removed.</exception>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(RigidBody body)
     {

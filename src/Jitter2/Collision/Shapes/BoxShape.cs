@@ -59,7 +59,7 @@ public class BoxShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Creates a box shape with the specified length, height, and width.
+    /// Creates a box shape with the specified width, height, and length.
     /// </summary>
     /// <param name="length">The length of the box.</param>
     /// <param name="height">The height of the box.</param>

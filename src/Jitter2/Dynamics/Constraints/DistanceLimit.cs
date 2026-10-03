@@ -14,8 +14,9 @@ namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
 /// Constrains the distance between a fixed point in the reference frame of one body and a fixed
-/// point in the reference frame of another body. This constraint removes one translational degree
-/// of freedom. For a distance of zero, use the <see cref="BallSocket"/> constraint.
+/// point in the reference frame of another body. A fixed limit removes one translational degree
+/// of freedom; a range limit acts when a boundary is reached. For a distance of zero, use the
+/// <see cref="BallSocket"/> constraint.
 /// </summary>
 public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 {
@@ -79,7 +80,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// </summary>
     /// <param name="anchor1">Anchor point on the first body in world space.</param>
     /// <param name="anchor2">Anchor point on the second body in world space.</param>
-    /// <param name="limit">The allowed distance range between anchor points.</param>
+    /// <param name="limit">Allowed offsets from the initial distance between anchor points.
+    /// For example, a limit of (-1, 1) allows the distance to change by at most one unit in either direction.</param>
     /// <remarks>
     /// Computes local anchor points and the initial distance from current poses.
     /// Equal or reversed limits fix the distance offset at their midpoint.
