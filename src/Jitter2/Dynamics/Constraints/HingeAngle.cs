@@ -160,7 +160,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         data.Jacobian.UnsafeGet(1) = JVector.TransposedTransform(p1, m0);
         data.Jacobian.UnsafeGet(2) = JVector.TransposedTransform(data.Axis, m0);
 
-        data.EffectiveMass = JMatrix.TransposedMultiply(data.Jacobian, JMatrix.Multiply(body1.InverseInertiaWorld + body2.InverseInertiaWorld, data.Jacobian));
+        data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
+            JMatrix.Transpose(data.Jacobian)).ToMatrix();
 
         data.EffectiveMass.M11 += data.Softness * idt;
         data.EffectiveMass.M22 += data.Softness * idt;
@@ -196,7 +197,14 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             data.Jacobian.M13 = data.Jacobian.M23 = data.Jacobian.M33 = 0;
         }
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        if (body1.HasAngularLocks || body2.HasAngularLocks)
+        {
+            data.EffectiveMass = MathHelper.PseudoInverseSymmetric(data.EffectiveMass);
+        }
+        else
+        {
+            JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        }
 
         data.Bias = error * idt;
         data.Bias.X *= data.BiasFactor;

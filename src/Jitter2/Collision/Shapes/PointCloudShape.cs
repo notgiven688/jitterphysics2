@@ -19,7 +19,7 @@ namespace Jitter2.Collision.Shapes;
 public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
 {
     private JBoundingBox cachedBoundingBox;
-    private JMatrix cachedInertia;
+    private JSymmetricMatrix cachedInertia;
     private Real cachedMass;
     private JVector cachedCenter;
 
@@ -127,7 +127,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     }
 
     /// <inheritdoc/>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
         com = cachedCenter;

@@ -47,7 +47,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     private JBoundingBox cachedBoundingBox;
-    private JMatrix cachedInertia;
+    private JSymmetricMatrix cachedInertia;
     private Real cachedMass;
     private JVector cachedCenter;
 
@@ -234,7 +234,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     /// <inheritdoc/>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         inertia = cachedInertia;
         com = cachedCenter;
@@ -250,12 +250,12 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     public void CalculateMassInertia()
     {
         cachedCenter = JVector.Zero;
-        cachedInertia = JMatrix.Zero;
+        cachedInertia = JSymmetricMatrix.Zero;
         cachedMass = 0;
 
         const Real a = (Real)(1.0 / 60.0);
         const Real b = (Real)(1.0 / 120.0);
-        JMatrix canonicalInertia = new(a, b, b, b, a, b, b, b, a);
+        JSymmetricMatrix canonicalInertia = new(a, b, b, a, b, a);
 
         JVector pointWithin = JVector.Zero;
 
@@ -289,7 +289,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
             Real detA = transformation.Determinant();
 
-            JMatrix tetrahedronInertia = JMatrix.Multiply(transformation * canonicalInertia * JMatrix.Transpose(transformation), detA);
+            JSymmetricMatrix tetrahedronInertia = JSymmetricMatrix.Transform(canonicalInertia, transformation) * detA;
 
             JVector tetrahedronCom = (Real)(1.0 / 4.0) * (column0 + column1 + column2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
@@ -306,7 +306,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             throw new InvalidOperationException("Convex hull must define a non-degenerate volume.");
         }
 
-        cachedInertia = JMatrix.Multiply(JMatrix.Identity, cachedInertia.Trace()) - cachedInertia;
+        cachedInertia = JSymmetricMatrix.Identity * cachedInertia.Trace() - cachedInertia;
         cachedCenter *= (Real)1.0 / cachedMass;
     }
 

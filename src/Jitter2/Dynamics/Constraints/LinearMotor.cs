@@ -159,12 +159,14 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector j1);
         JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector j2);
 
-        data.EffectiveMass = body1.InverseMass + body2.InverseMass;
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
+        data.EffectiveMass = JVector.Multiply(j1, body1.InverseMassVector) * j1 +
+                             JVector.Multiply(j2, body2.InverseMassVector) * j2;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
         data.MaxLambda = ((Real)1.0 / idt) * data.MaxForce;
 
-        body1.Velocity -= j1 * data.AccumulatedImpulse * body1.InverseMass;
-        body2.Velocity += j2 * data.AccumulatedImpulse * body2.InverseMass;
+        body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
+        body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
     }
 
     public override void DebugDraw(IDebugDrawer drawer)
@@ -202,7 +204,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.Velocity -= j1 * lambda * body1.InverseMass;
-        body2.Velocity += j2 * lambda * body2.InverseMass;
+        body1.Velocity -= JVector.Multiply(j1 * lambda, body1.InverseMassVector);
+        body2.Velocity += JVector.Multiply(j2 * lambda, body2.InverseMassVector);
     }
 }

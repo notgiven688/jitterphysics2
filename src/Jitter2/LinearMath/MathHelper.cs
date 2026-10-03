@@ -264,6 +264,99 @@ public static class MathHelper
     }
 
     /// <summary>
+    /// Computes an approximate Moore-Penrose pseudoinverse of a symmetric,
+    /// positive-semidefinite 3x3 matrix, such as a joint's inverse effective mass.
+    /// </summary>
+    /// <param name="matrix">A finite, symmetric, positive-semidefinite matrix.</param>
+    /// <returns>The inverse on responsive directions, with zero response on discarded directions.</returns>
+    /// <remarks>
+    /// Uses the ordinary inverse when the normalized determinant is sufficiently large.
+    /// Otherwise, Jacobi diagonalization retains eigenvalues greater than a normalized
+    /// tolerance of 1e-6 in single precision or 1e-12 in double precision. The normalization
+    /// uses the largest absolute diagonal entry. A zero matrix produces a zero pseudoinverse.
+    /// Symmetry and positive semidefiniteness are assumed and are not validated.
+    /// Compute this during constraint preparation and cache the result for solver iterations.
+    /// </remarks>
+    public static JMatrix PseudoInverseSymmetric(in JMatrix matrix)
+    {
+        Real scale = MathR.Max(MathR.Abs(matrix.M11),
+            MathR.Max(MathR.Abs(matrix.M22), MathR.Abs(matrix.M33)));
+        if (!(scale > 0) || !Real.IsFinite(scale)) return JMatrix.Zero;
+
+        JSymmetricMatrix normalized = new(matrix.M11 / scale, matrix.M12 / scale, matrix.M13 / scale,
+            matrix.M22 / scale, matrix.M23 / scale, matrix.M33 / scale);
+        Real tolerance = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        if (MathR.Abs(normalized.Determinant()) > tolerance && JMatrix.Inverse(matrix, out JMatrix inverse))
+        {
+            return inverse;
+        }
+
+        Span<Real> a = stackalloc Real[9]
+        {
+            normalized.M11, normalized.M12, normalized.M13,
+            normalized.M12, normalized.M22, normalized.M23,
+            normalized.M13, normalized.M23, normalized.M33
+        };
+        Span<Real> basis = stackalloc Real[9] { 1, 0, 0, 0, 1, 0, 0, 0, 1 };
+
+        // Jacobi rotations diagonalize the symmetric matrix without trigonometric functions.
+        for (int sweep = 0; sweep < 8; sweep++)
+        {
+            bool changed = JacobiRotate(a, basis, 0, 1, tolerance);
+            changed |= JacobiRotate(a, basis, 0, 2, tolerance);
+            changed |= JacobiRotate(a, basis, 1, 2, tolerance);
+            if (!changed) break;
+        }
+
+        JSymmetricMatrix result = JSymmetricMatrix.Zero;
+        for (int i = 0; i < 3; i++)
+        {
+            Real eigenvalue = a[3 * i + i];
+            if (!(eigenvalue > tolerance)) continue;
+            Real weight = ((Real)1.0 / eigenvalue) / scale;
+            JVector axis = new(basis[i], basis[3 + i], basis[6 + i]);
+            result += weight * new JSymmetricMatrix(axis.X * axis.X, axis.X * axis.Y, axis.X * axis.Z,
+                axis.Y * axis.Y, axis.Y * axis.Z, axis.Z * axis.Z);
+        }
+
+        return result.ToMatrix();
+    }
+
+    private static bool JacobiRotate(Span<Real> a, Span<Real> basis, int p, int q, Real tolerance)
+    {
+        Real offDiagonal = a[3 * p + q];
+        if (MathR.Abs(offDiagonal) <= tolerance) return false;
+
+        Real tau = (a[3 * q + q] - a[3 * p + p]) / ((Real)2.0 * offDiagonal);
+        Real tangent = MathR.CopySign((Real)1.0, tau) /
+                       (MathR.Abs(tau) + MathR.Sqrt((Real)1.0 + tau * tau));
+        Real cosine = (Real)1.0 / MathR.Sqrt((Real)1.0 + tangent * tangent);
+        Real sine = tangent * cosine;
+
+        a[3 * p + p] -= tangent * offDiagonal;
+        a[3 * q + q] += tangent * offDiagonal;
+        a[3 * p + q] = a[3 * q + p] = 0;
+
+        for (int k = 0; k < 3; k++)
+        {
+            if (k != p && k != q)
+            {
+                Real akp = a[3 * k + p];
+                Real akq = a[3 * k + q];
+                a[3 * k + p] = a[3 * p + k] = cosine * akp - sine * akq;
+                a[3 * k + q] = a[3 * q + k] = sine * akp + cosine * akq;
+            }
+
+            Real vkp = basis[3 * k + p];
+            Real vkq = basis[3 * k + q];
+            basis[3 * k + p] = cosine * vkp - sine * vkq;
+            basis[3 * k + q] = sine * vkp + cosine * vkq;
+        }
+
+        return true;
+    }
+
+    /// <summary>
     /// Determines whether the length of the given vector is zero or close to zero.
     /// </summary>
     /// <param name="v">The vector to evaluate.</param>

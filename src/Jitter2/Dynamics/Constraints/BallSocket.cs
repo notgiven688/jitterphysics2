@@ -152,10 +152,10 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         JMatrix cr1 = JMatrix.CreateCrossProduct(data.R1);
         JMatrix cr2 = JMatrix.CreateCrossProduct(data.R2);
 
-        data.EffectiveMass = body1.InverseMass * JMatrix.Identity +
-                             JMatrix.Multiply(cr1, JMatrix.MultiplyTransposed(body1.InverseInertiaWorld, cr1)) +
-                             body2.InverseMass * JMatrix.Identity +
-                             JMatrix.Multiply(cr2, JMatrix.MultiplyTransposed(body2.InverseInertiaWorld, cr2));
+        data.EffectiveMass = (JSymmetricMatrix.CreateScale(body1.InverseMassVector) +
+                              JSymmetricMatrix.Transform(body1.InverseInertiaWorld, cr1) +
+                              JSymmetricMatrix.CreateScale(body2.InverseMassVector) +
+                              JSymmetricMatrix.Transform(body2.InverseInertiaWorld, cr2)).ToMatrix();
 
         Real softness = data.Softness * idt;
 
@@ -163,16 +163,23 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         data.EffectiveMass.M22 += softness;
         data.EffectiveMass.M33 += softness;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        if (body1.HasMotionLocks || body2.HasMotionLocks)
+        {
+            data.EffectiveMass = MathHelper.PseudoInverseSymmetric(data.EffectiveMass);
+        }
+        else
+        {
+            JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        }
 
         data.Bias = (p2 - p1) * data.BiasFactor * idt;
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity -= body1.InverseMass * acc;
+        body1.Velocity -= JVector.Multiply(acc, body1.InverseMassVector);
         body1.AngularVelocity -= JVector.Transform(JVector.Transform(acc, cr1), body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * acc;
+        body2.Velocity += JVector.Multiply(acc, body2.InverseMassVector);
         body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
     }
 
@@ -232,10 +239,10 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         data.AccumulatedImpulse += lambda;
 
-        body1.Velocity -= body1.InverseMass * lambda;
+        body1.Velocity -= JVector.Multiply(lambda, body1.InverseMassVector);
         body1.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, cr1), body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * lambda;
+        body2.Velocity += JVector.Multiply(lambda, body2.InverseMassVector);
         body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
     }
 

@@ -102,13 +102,21 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
             data.Jacobian *= -(Real)1.0;
         }
 
-        data.EffectiveMass = JMatrix.Multiply(data.Jacobian, JMatrix.MultiplyTransposed(body1.InverseInertiaWorld + body2.InverseInertiaWorld, data.Jacobian));
+        data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
+            data.Jacobian).ToMatrix();
 
         data.EffectiveMass.M11 += data.Softness * idt;
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.Softness * idt;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        if (body1.HasAngularLocks || body2.HasAngularLocks)
+        {
+            data.EffectiveMass = MathHelper.PseudoInverseSymmetric(data.EffectiveMass);
+        }
+        else
+        {
+            JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        }
 
         data.Bias = -error * data.BiasFactor * idt;
 

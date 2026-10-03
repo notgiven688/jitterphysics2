@@ -254,21 +254,22 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         jacobian[2] = (Real)1.0 * n;
         jacobian[3] = r2 % n;
 
-        data.EffectiveMass = body1.InverseMass +
-                             body2.InverseMass +
+        data.EffectiveMass = JVector.Multiply(jacobian[0], body1.InverseMassVector) * jacobian[0] +
+                             JVector.Multiply(jacobian[2], body2.InverseMassVector) * jacobian[2] +
                              JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[1] +
                              JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[3];
 
         data.EffectiveMass += data.Softness * idt;
 
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
         data.Bias = error * data.BiasFactor * idt;
 
-        body1.Velocity += body1.InverseMass * data.AccumulatedImpulse * jacobian[0];
+        body1.Velocity += JVector.Multiply(data.AccumulatedImpulse * jacobian[0], body1.InverseMassVector);
         body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * jacobian[1], body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * data.AccumulatedImpulse * jacobian[2];
+        body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * jacobian[2], body2.InverseMassVector);
         body2.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * jacobian[3], body2.InverseInertiaWorld);
     }
 
@@ -344,10 +345,10 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.Velocity += body1.InverseMass * lambda * jacobian[0];
+        body1.Velocity += JVector.Multiply(lambda * jacobian[0], body1.InverseMassVector);
         body1.AngularVelocity += JVector.Transform(lambda * jacobian[1], body1.InverseInertiaWorld);
 
-        body2.Velocity += body2.InverseMass * lambda * jacobian[2];
+        body2.Velocity += JVector.Multiply(lambda * jacobian[2], body2.InverseMassVector);
         body2.AngularVelocity += JVector.Transform(lambda * jacobian[3], body2.InverseInertiaWorld);
     }
 

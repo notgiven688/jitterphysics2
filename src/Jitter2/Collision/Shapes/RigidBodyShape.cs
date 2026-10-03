@@ -53,7 +53,7 @@ public abstract class RigidBodyShape : Shape
     /// not the center of mass.
     /// </remarks>
     [ReferenceFrame(ReferenceFrame.Local)]
-    public virtual void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public virtual void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         ShapeHelper.CalculateMassInertia(this, out inertia, out com, out mass);
     }

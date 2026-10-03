@@ -42,7 +42,7 @@ public class ConstraintCar
         car.AddShape(tfs1);
         car.AddShape(tfs2);
         car.Position = new JVector(0, 2, 0);
-        car.SetMassInertia(new JMatrix(0.4f, 0, 0, 0, 0.4f, 0, 0, 0, 1.0f), 1.0f);
+        car.SetMassInertia(JSymmetricMatrix.CreateScale(0.4f, 0.4f, 1.0f), 1.0f);
 
         for (int i = 0; i < 4; i++)
         {

@@ -64,7 +64,7 @@ sealed class PressurizedSphere : SoftBody
                     vertMap[pts[k]] = idx[k];
                     var body = world.CreateRigidBody();
                     body.Position = center + pts[k] * radius;
-                    body.SetMassInertia(JMatrix.Zero, 15f, true);
+                    body.SetMassInertia(JSymmetricMatrix.Zero, 15f, true);
                     body.Damping = (0.0004f, 0f);
                     Vertices.Add(body);
                 }

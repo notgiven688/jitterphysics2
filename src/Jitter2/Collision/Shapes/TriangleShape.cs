@@ -63,7 +63,7 @@ public class TriangleShape : RigidBodyShape
     /// <exception cref="NotSupportedException">
     /// Always thrown because a triangle has no volume and therefore no mass properties.
     /// </exception>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties. " +
                                         $"If you encounter this while calling RigidBody.AddShape, " +

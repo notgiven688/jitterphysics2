@@ -143,7 +143,7 @@ Performance can be optimized by providing overrides directly in the shape class:
 ```cs
 public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
 
-public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)
+public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out float mass)
 
 public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out float lambda)
 ```

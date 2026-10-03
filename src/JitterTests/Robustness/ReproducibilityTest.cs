@@ -10,8 +10,10 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    private const ulong ExpectedDeterministicSceneHashSingle = 0xB13FD910AF68015C;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x3A4208BD93285093;
+    // Compact symmetric inertia and tensor products change floating-point rounding.
+    // These references still require bit-identical state across single/multithreaded solves.
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x3B64AAF125C957EC;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x69B5A8AC84B0C9F9;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -53,14 +55,31 @@ public class ReproducibilityTest
         worldB.Dispose();
     }
 
-    [Test]
-    public static void SingleContactMatchesWithAndWithoutContactSimd()
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public static void SingleContactMatchesWithAndWithoutContactSimd(bool linearLocks, bool angularLocks)
     {
         using var simdWorld = new World();
         using var scalarWorld = new World();
 
         var (simdBody1, simdBody2, simdContact) = CreateSingleContactCase(simdWorld);
         var (scalarBody1, scalarBody2, scalarContact) = CreateSingleContactCase(scalarWorld);
+
+        if (linearLocks)
+        {
+            simdBody1.AllowedMotion = scalarBody1.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearY;
+            simdBody2.AllowedMotion = scalarBody2.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearX;
+        }
+
+        if (angularLocks)
+        {
+            simdBody1.AllowedMotion &= ~MotionAxes.AngularX;
+            scalarBody1.AllowedMotion &= ~MotionAxes.AngularX;
+            simdBody2.AllowedMotion &= ~MotionAxes.AngularY;
+            scalarBody2.AllowedMotion &= ~MotionAxes.AngularY;
+        }
 
         const Real dt = (Real)(1.0 / 100.0);
         Real idt = (Real)1.0 / dt;

@@ -23,7 +23,7 @@ public class SoftBodySphere : SoftBodyCloth
     {
         foreach (var rb in Vertices)
         {
-            rb.SetMassInertia(JMatrix.Zero, 100.0f, true);
+            rb.SetMassInertia(JSymmetricMatrix.Zero, 100.0f, true);
             rb.Damping = (0.001f, 0);
         }
 

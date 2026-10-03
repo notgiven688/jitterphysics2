@@ -148,7 +148,8 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 
         data.EffectiveMass = JVector.Transform(j1, body1.InverseInertiaWorld) * j1 +
                              JVector.Transform(j2, body2.InverseInertiaWorld) * j2;
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
         data.MaxLambda = (Real)1.0 / idt * data.MaxForce;
 

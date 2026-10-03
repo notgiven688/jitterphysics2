@@ -281,7 +281,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         data.EffectiveMass += data.Softness * idt;
 
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
         data.Bias = -error * data.BiasFactor * idt;
 
