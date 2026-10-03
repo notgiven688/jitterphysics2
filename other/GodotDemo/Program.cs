@@ -89,7 +89,7 @@ public partial class Program : Node3D
 		RigidBody floor = world.CreateRigidBody();
 		floor.AddShape(new BoxShape(40));
 		floor.Position = new JVector(0, -20, 0);
-		floor.IsStatic = true;
+		floor.MotionType = MotionType.Static;
 		
 		for (int i = 0; i < 30; i++)
 		{

@@ -172,7 +172,7 @@ public class CubedSoftBody(World world) : SoftBody(world)
 		foreach (var vertex in vertices)
 		{
 			var rb = world.CreateRigidBody();
-			rb.SetMassInertia(JMatrix.Zero, 8f, true);
+			rb.SetMassInertia(JSymmetricMatrix.Zero, 8f, true);
 			rb.Position = new JVector(vertex.X, vertex.Y, vertex.Z) * scale;
 			rb.Damping = (0.02f, 0.002f);
 			this.Vertices.Add(rb);
@@ -193,7 +193,7 @@ public class CubedSoftBody(World world) : SoftBody(world)
 			var centerCube = world.CreateRigidBody();
 
 			centerCube.Position = new JVector(cubeCenters[i].X, cubeCenters[i].Y, cubeCenters[i].Z) * scale;
-			centerCube.SetMassInertia(JMatrix.Identity * 1f, 1f);
+			centerCube.SetMassInertia(JSymmetricMatrix.Identity * 1f, 1f);
 
 			List<BallSocket> ct = new(8);
 
@@ -430,7 +430,7 @@ public partial class Program : Node3D
 		RigidBody floor = world.CreateRigidBody();
 		floor.AddShape(new BoxShape(40));
 		floor.Position = new JVector(0, -20, 0);
-		floor.IsStatic = true;
+		floor.MotionType = MotionType.Static;
 
 		world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
 		world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
