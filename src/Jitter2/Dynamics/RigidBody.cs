@@ -139,14 +139,14 @@ public struct RigidBodyData
     public JVector AngularVelocity;
 
     /// <summary>
-    /// Accumulated linear velocity change for the current substep (from forces and gravity).
+    /// Linear velocity change applied each substep (from forces and gravity), prepared at the end of the previous step.
     /// Internal use only.
     /// </summary>
     [FieldOffset(8 + 9 * sizeof(Real))]
     public JVector DeltaVelocity;
 
     /// <summary>
-    /// Accumulated angular velocity change for the current substep (from torques).
+    /// Angular velocity change applied each substep (from torques), prepared at the end of the previous step.
     /// Internal use only.
     /// </summary>
     [FieldOffset(8 + 12 * sizeof(Real))]
@@ -1121,8 +1121,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
-    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
-    /// This value is automatically reset to zero after the call.
+    /// Accumulated force converted to a velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
+    /// and this value is reset to zero after conversion.
     /// </summary>
     public JVector Force
     {
@@ -1135,8 +1136,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
-    /// This value is automatically reset to zero after the call.
+    /// Accumulated torque converted to an angular velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
+    /// and this value is reset to zero after conversion.
     /// </summary>
     public JVector Torque
     {
@@ -1152,8 +1154,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Applies a force to the rigid body, thereby altering its velocity.
     /// </summary>
     /// <param name="force">
-    /// The force to be applied. This force is effective for a single frame only and is reset
-    /// to zero during the next call to <see cref="World.Step(Real, bool)"/>.
+    /// The force to accumulate. It is converted to a velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call and applied during the following step.
     /// </param>
     /// <param name="wakeup">
     /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
@@ -1173,8 +1175,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is
-    /// reset to zero with the following call to <see cref="World.Step(Real, bool)"/>.
+    /// Applies a force to the rigid body at a world-space position. The force and resulting torque are
+    /// converted to velocity changes at the end of the next <see cref="World.Step(Real, bool)"/> call
+    /// and applied during the following step.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>

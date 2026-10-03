@@ -42,8 +42,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
     /// <summary>
     /// Gets or sets whether dynamic triangle bodies receive edge filtering. Static and kinematic
-    /// triangle geometry is always filtered. Defaults to <see langword="false"/> because modifying
-    /// a moving triangle mesh's contact normals or penetration can destabilize its solver response.
+    /// triangle geometry is always filtered. Defaults to <see langword="false"/>.
     /// </summary>
     public bool FilterDynamicBodies { get; set; }
 
