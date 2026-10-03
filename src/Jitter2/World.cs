@@ -590,6 +590,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="constraint"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="InvalidOperationException">Thrown if the constraint has already been removed.</exception>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Constraint constraint)
     {
@@ -598,6 +599,9 @@ public sealed partial class World : IDisposable
 
         if (constraint.Body1.World != this)
             throw new ArgumentException("The constraint does not belong to this world.", nameof(constraint));
+
+        if (!constraint.IsValid)
+            throw new InvalidOperationException("The constraint has already been removed from this world.");
 
         ActivateBodyNextStep(constraint.Body1);
         ActivateBodyNextStep(constraint.Body2);
