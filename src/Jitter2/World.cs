@@ -563,6 +563,12 @@ public sealed partial class World : IDisposable
             shape.RigidBody = null!;
         }
 
+        for (int i = deferredArbiters.Count - 1; i >= 0; i--)
+        {
+            Arbiter arbiter = deferredArbiters[i];
+            if (arbiter.Body1 == body || arbiter.Body2 == body) Remove(arbiter);
+        }
+
         foreach (var contact in body.InternalContacts)
         {
             Remove(contact);
@@ -642,13 +648,34 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body1);
         ActivateBodyNextStep(arbiter.Body2);
 
-        IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
+        bool pending = false;
+        for (int i = 0; i < deferredArbiters.Count; i++)
+        {
+            if (deferredArbiters[i] != arbiter) continue;
+            deferredArbiters.RemoveAt(i);
+            pending = true;
+            break;
+        }
+
+        if (!pending) IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
         ReturnArbiter(arbiter);
+    }
+
+    internal void RemoveDeferredArbitersForShape(RigidBody body, ulong shapeId)
+    {
+        for (int i = deferredArbiters.Count - 1; i >= 0; i--)
+        {
+            Arbiter arbiter = deferredArbiters[i];
+            if (arbiter.Body1 != body && arbiter.Body2 != body) continue;
+
+            ArbiterKey key = arbiter.Handle.Data.Key;
+            if (key.Key1 == shapeId || key.Key2 == shapeId) Remove(arbiter);
+        }
     }
 
     /// <summary>

@@ -1362,6 +1362,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             throw new ArgumentException("Shape is not part of this body.", nameof(shape));
         }
 
+        World.RemoveDeferredArbitersForShape(this, shape.ShapeId);
+
         foreach (var arbiter in InternalContacts)
         {
             if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
@@ -1421,6 +1423,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             sids.Add(shape.ShapeId);
         }
+
+        foreach (ulong shapeId in sids) World.RemoveDeferredArbitersForShape(this, shapeId);
 
         foreach (var arbiter in InternalContacts)
         {
