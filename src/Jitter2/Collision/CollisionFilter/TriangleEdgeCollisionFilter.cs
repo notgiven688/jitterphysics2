@@ -17,7 +17,8 @@ namespace Jitter2.Collision;
 /// Filters internal edge collisions for <see cref="TriangleShape"/> geometry. Adjusts collision
 /// normals at shared edges to match neighboring triangles, or discards the collision if the normal
 /// cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
-/// are left unmodified. Back-face collisions are discarded.
+/// are left unmodified. Back-face normals within <see cref="AngleThreshold"/> of the opposite
+/// triangle normal are discarded.
 /// </summary>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
@@ -42,8 +43,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 
     /// <summary>
     /// Gets or sets whether dynamic triangle bodies receive edge filtering. Static and kinematic
-    /// triangle geometry is always filtered. Defaults to <see langword="false"/> because modifying
-    /// a moving triangle mesh's contact normals or penetration can destabilize its solver response.
+    /// triangle geometry is always filtered. Defaults to <see langword="false"/>.
     /// </summary>
     public bool FilterDynamicBodies { get; set; }
 

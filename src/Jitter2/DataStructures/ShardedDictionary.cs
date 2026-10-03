@@ -28,7 +28,9 @@ namespace Jitter2.DataStructures;
 /// </para>
 /// <para>
 /// <b>Threading:</b> Individual operations are not thread-safe. Callers must acquire the shard lock
-/// via <see cref="GetLock"/> before calling <see cref="Add"/>, <see cref="Remove"/>, or the indexer.
+/// via <see cref="GetLock"/> before calling <see cref="Add"/>, <see cref="Remove"/>,
+/// <see cref="TryGetValue"/>, or the indexer during concurrent writes. <see cref="TrimExcess"/>
+/// requires excluding all concurrent operations.
 /// </para>
 /// </remarks>
 internal class ShardedDictionary<TKey, TValue> where TKey : notnull

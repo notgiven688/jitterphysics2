@@ -134,7 +134,7 @@ public struct JMatrix(
     /// <summary>
     /// Creates a rotation matrix from an axis and an angle.
     /// </summary>
-    /// <param name="axis">The axis to rotate around.</param>
+    /// <param name="axis">The unit-length axis to rotate around.</param>
     /// <param name="angle">The angle of rotation in radians.</param>
     /// <returns>The rotation matrix.</returns>
     public static JMatrix CreateRotationMatrix(JVector axis, Real angle)
@@ -516,7 +516,7 @@ public struct JMatrix(
     /// <summary>
     /// Creates a rotation matrix from a quaternion.
     /// </summary>
-    /// <param name="quaternion">The quaternion representing the rotation.</param>
+    /// <param name="quaternion">The unit quaternion representing the rotation.</param>
     /// <returns>The rotation matrix.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JMatrix CreateFromQuaternion(JQuaternion quaternion)
@@ -547,7 +547,7 @@ public struct JMatrix(
     /// <summary>
     /// Creates a rotation matrix from a quaternion.
     /// </summary>
-    /// <param name="quaternion">The quaternion representing the rotation.</param>
+    /// <param name="quaternion">The unit quaternion representing the rotation.</param>
     /// <param name="result">Output: The rotation matrix.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void CreateFromQuaternion(in JQuaternion quaternion, out JMatrix result)

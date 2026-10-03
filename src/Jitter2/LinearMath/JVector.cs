@@ -245,7 +245,7 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     /// Transforms the vector by a quaternion rotation.
     /// </summary>
     /// <param name="vector">The vector to transform.</param>
-    /// <param name="quat">The quaternion representing the rotation.</param>
+    /// <param name="quat">The unit quaternion representing the rotation.</param>
     /// <returns>The rotated vector.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JVector Transform(in JVector vector, in JQuaternion quat)
@@ -320,7 +320,7 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     /// Transforms the vector by a quaternion rotation.
     /// </summary>
     /// <param name="vector">The vector to transform.</param>
-    /// <param name="quaternion">The quaternion representing the rotation.</param>
+    /// <param name="quaternion">The unit quaternion representing the rotation.</param>
     /// <param name="result">Output: The rotated vector.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Transform(in JVector vector, in JQuaternion quaternion, out JVector result)
@@ -339,7 +339,7 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     }
 
     /// <summary>
-    /// Transforms the vector by the conjugate of a quaternion (inverse rotation).
+    /// Transforms the vector by the conjugate of a unit quaternion (inverse rotation).
     /// </summary>
     /// <param name="vector">The vector to transform.</param>
     /// <param name="quaternion">The quaternion (conjugated during operation).</param>

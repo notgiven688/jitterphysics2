@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -67,11 +68,12 @@ public class TriangleShape : RigidBodyShape
     {
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties. " +
                                         $"If you encounter this while calling RigidBody.AddShape, " +
-                                        $"call AddShape with setMassInertia set to false.");
+                                        $"call AddShape with massInertiaMode set to {nameof(MassInertiaUpdateMode.Preserve)}.");
     }
 
     /// <summary>
-    /// Gets the vertices transformed to world space coordinates, as affected by the rigid body's transformation.
+    /// Gets the vertices transformed by the attached rigid body. If the shape is unattached,
+    /// returns the mesh vertices without a world transform.
     /// </summary>
     /// <param name="a">The transformed coordinate of the first vertex.</param>
     /// <param name="b">The transformed coordinate of the second vertex.</param>
@@ -124,6 +126,7 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
+    /// <remarks>Back-facing triangles are culled.</remarks>
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         ref readonly var meshTriangle = ref Mesh.Indices[Index];

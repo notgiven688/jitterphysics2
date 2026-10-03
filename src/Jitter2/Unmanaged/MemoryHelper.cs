@@ -65,7 +65,7 @@ public static unsafe class MemoryHelper
     /// A memory block with a size equivalent to six instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
-    /// The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.
+    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 6 * sizeof(Real))]
     public struct MemBlock6Real { }
@@ -74,7 +74,7 @@ public static unsafe class MemoryHelper
     /// A memory block with a size equivalent to nine instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
-    /// The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.
+    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 9 * sizeof(Real))]
     public struct MemBlock9Real { }
@@ -83,7 +83,7 @@ public static unsafe class MemoryHelper
     /// A memory block with a size equivalent to twelve instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
-    /// The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.
+    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 12 * sizeof(Real))]
     public struct MemBlock12Real { }
@@ -92,7 +92,7 @@ public static unsafe class MemoryHelper
     /// A memory block with a size equivalent to sixteen instances of the <see cref="Real"/> type.
     /// </summary>
     /// <remarks>
-    /// The struct uses sequential layout and a fixed size to ensure consistent memory alignment and layout.
+    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 16 * sizeof(Real))]
     public struct MemBlock16Real { }

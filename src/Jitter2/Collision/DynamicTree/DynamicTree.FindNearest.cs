@@ -76,6 +76,14 @@ public partial class DynamicTree
     /// that queries with a <see cref="SupportPrimitives.Sphere"/>.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The closest point on the query shape in world space.</param>
+    /// <param name="pointB">The closest point on the found proxy in world space.</param>
+    /// <param name="normal">Unit direction toward the found proxy, or zero for overlapping shapes.</param>
+    /// <param name="distance">The separation distance to the found proxy.</param>
     public bool FindNearestSphere(Real radius, in JVector position,
         FindNearestFilterPre? pre, FindNearestFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real distance) =>
@@ -87,6 +95,15 @@ public partial class DynamicTree
     /// that queries with a <see cref="SupportPrimitives.Sphere"/>.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="maxDistance">The maximum separation distance to consider.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The closest point on the query shape in world space.</param>
+    /// <param name="pointB">The closest point on the found proxy in world space.</param>
+    /// <param name="normal">Unit direction toward the found proxy, or zero for overlapping shapes.</param>
+    /// <param name="distance">The separation distance to the found proxy.</param>
     public bool FindNearestSphere(Real radius, in JVector position, Real maxDistance,
         FindNearestFilterPre? pre, FindNearestFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real distance) =>
@@ -155,7 +172,17 @@ public partial class DynamicTree
     /// Bounded variant of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
     /// that limits the search to <paramref name="maxDistance"/>.
     /// </summary>
+    /// <param name="support">The query shape.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
     /// <param name="maxDistance">Maximum separation distance to consider. Proxies farther than this are ignored.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="pointA">The closest point on the query shape in world space.</param>
+    /// <param name="pointB">The closest point on the found proxy in world space.</param>
+    /// <param name="normal">Unit direction toward the found proxy, or zero for overlapping shapes.</param>
+    /// <param name="distance">The separation distance to the found proxy.</param>
     public bool FindNearest<T>(in T support, in JQuaternion orientation, in JVector position, Real maxDistance,
         FindNearestFilterPre? pre, FindNearestFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out Real distance)

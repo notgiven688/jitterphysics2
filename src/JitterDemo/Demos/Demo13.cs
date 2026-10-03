@@ -32,7 +32,7 @@ public class Demo13 : IDemo
             if (hj.Motor != null)
             {
                 hj.Motor.TargetVelocity = 4;
-                hj.Motor.MaximumForce = 1;
+                hj.Motor.MaximumTorque = 1;
             }
 
             if (world.BroadPhaseFilter is not Common.IgnoreCollisionBetweenFilter filter)

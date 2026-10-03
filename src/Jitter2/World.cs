@@ -319,8 +319,8 @@ public sealed partial class World : IDisposable
     public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new(bodies);
 
     /// <summary>
-    /// Access to the <see cref="DynamicTree"/> instance. The instance
-    /// should only be modified by Jitter.
+    /// Access to the <see cref="DynamicTree"/> instance. Callers may manage their own proxies and
+    /// update shapes after changing their geometry. Jitter manages proxies for attached rigid body shapes.
     /// </summary>
     public DynamicTree DynamicTree { get; }
 
@@ -439,8 +439,8 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Default filter function for the DynamicTree. Returns true if both proxies are of type RigidBodyShape
-    /// and belong to different RigidBody instances.
+    /// Default filter function for the DynamicTree. Rejects two <see cref="RigidBodyShape"/> proxies
+    /// attached to the same body; accepts other proxy pairs.
     /// </summary>
     public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
@@ -533,6 +533,7 @@ public sealed partial class World : IDisposable
     /// <param name="body">The rigid body to remove.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="body"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">Thrown if <paramref name="body"/> does not belong to this world.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="body"/> has already been removed.</exception>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(RigidBody body)
     {
@@ -543,6 +544,9 @@ public sealed partial class World : IDisposable
             throw new ArgumentException("The body does not belong to this world.", nameof(body));
 
         if (body == NullBody) return;
+
+        if (!body.IsValid)
+            throw new InvalidOperationException("The body has already been removed from this world.");
 
         // No need to copy the hashset content first. Removing while iterating does not invalidate
         // the enumerator any longer, see https://github.com/dotnet/runtime/pull/37180
@@ -557,6 +561,12 @@ public sealed partial class World : IDisposable
         {
             DynamicTree.RemoveProxy(shape);
             shape.RigidBody = null!;
+        }
+
+        for (int i = deferredArbiters.Count - 1; i >= 0; i--)
+        {
+            Arbiter arbiter = deferredArbiters[i];
+            if (arbiter.Body1 == body || arbiter.Body2 == body) Remove(arbiter);
         }
 
         foreach (var contact in body.InternalContacts)
@@ -587,6 +597,7 @@ public sealed partial class World : IDisposable
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="constraint"/> does not belong to this world.
     /// </exception>
+    /// <exception cref="InvalidOperationException">Thrown if the constraint has already been removed.</exception>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Remove(Constraint constraint)
     {
@@ -595,6 +606,9 @@ public sealed partial class World : IDisposable
 
         if (constraint.Body1.World != this)
             throw new ArgumentException("The constraint does not belong to this world.", nameof(constraint));
+
+        if (!constraint.IsValid)
+            throw new InvalidOperationException("The constraint has already been removed from this world.");
 
         ActivateBodyNextStep(constraint.Body1);
         ActivateBodyNextStep(constraint.Body2);
@@ -634,13 +648,34 @@ public sealed partial class World : IDisposable
         ActivateBodyNextStep(arbiter.Body1);
         ActivateBodyNextStep(arbiter.Body2);
 
-        IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
+        bool pending = false;
+        for (int i = 0; i < deferredArbiters.Count; i++)
+        {
+            if (deferredArbiters[i] != arbiter) continue;
+            deferredArbiters.RemoveAt(i);
+            pending = true;
+            break;
+        }
+
+        if (!pending) IslandHelper.ArbiterRemoved(islands, islandPool, arbiter);
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
         ReturnArbiter(arbiter);
+    }
+
+    internal void RemoveDeferredArbitersForShape(RigidBody body, ulong shapeId)
+    {
+        for (int i = deferredArbiters.Count - 1; i >= 0; i--)
+        {
+            Arbiter arbiter = deferredArbiters[i];
+            if (arbiter.Body1 != body && arbiter.Body2 != body) continue;
+
+            ArbiterKey key = arbiter.Handle.Data.Key;
+            if (key.Key1 == shapeId || key.Key2 == shapeId) Remove(arbiter);
+        }
     }
 
     /// <summary>

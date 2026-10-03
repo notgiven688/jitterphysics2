@@ -125,6 +125,16 @@ public class AddRemoveTests
         Assert.Throws<ArgumentException>(() => world.Remove(body));
     }
 
+    [Test]
+    public void RemoveBodyTwice_ThrowsWithoutChangingWorld()
+    {
+        RigidBody body = world.CreateRigidBody();
+        world.Remove(body);
+
+        Assert.Throws<InvalidOperationException>(() => world.Remove(body));
+        Assert.DoesNotThrow(() => world.Step((Real)1.0 / 60, multiThread: false));
+    }
+
     [TestCase]
     public void RemoveConstraintFromWrongWorld()
     {
@@ -134,6 +144,18 @@ public class AddRemoveTests
         var constraint = other.CreateConstraint<BallSocket>(b1, b2);
 
         Assert.Throws<ArgumentException>(() => world.Remove(constraint));
+    }
+
+    [Test]
+    public void RemoveConstraintTwice_ThrowsWithoutChangingWorld()
+    {
+        RigidBody body1 = world.CreateRigidBody();
+        RigidBody body2 = world.CreateRigidBody();
+        BallSocket constraint = world.CreateConstraint<BallSocket>(body1, body2);
+        world.Remove(constraint);
+
+        Assert.Throws<InvalidOperationException>(() => world.Remove(constraint));
+        Assert.DoesNotThrow(() => world.Step((Real)1.0 / 60, multiThread: false));
     }
 
     [TestCase]

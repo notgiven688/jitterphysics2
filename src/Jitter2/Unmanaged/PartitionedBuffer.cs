@@ -46,7 +46,8 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
     }
 
     /// <summary>
-    /// Gets a value indicating whether this handle is null/invalid.
+    /// Gets a value indicating whether this is the zero handle. A freed handle can remain nonzero;
+    /// this property does not establish that the referenced element is still valid.
     /// </summary>
     public readonly bool IsZero => Pointer == null;
 
@@ -117,8 +118,9 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 /// </code>
 /// </para>
 /// <para>
-/// <b>Threading:</b> Concurrent calls to <see cref="Allocate"/> may trigger a resize. Use
-/// <see cref="ResizeLock"/> to synchronize access when reading data concurrently with allocations.
+/// <b>Threading:</b> Callers must serialize mutations, including calls to <see cref="Allocate"/>.
+/// Use <see cref="ResizeLock"/> to protect readers while an allocation may resize the buffer;
+/// the resize lock alone does not make concurrent allocations safe.
 /// </para>
 /// <para>
 /// <b>Disposal:</b> This class owns unmanaged memory and must be disposed to avoid memory leaks.
@@ -401,8 +403,8 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <param name="clear">If <see langword="true"/>, the element's memory (excluding the internal ID) is zeroed.</param>
     /// <returns>A handle to the newly allocated element.</returns>
     /// <remarks>
-    /// <b>Threading:</b> This method may resize the buffer, which moves all data. Use
-    /// <see cref="ResizeLock"/> when calling concurrently with data access.
+    /// <b>Threading:</b> Callers must serialize allocations with other mutations. This method may
+    /// resize the buffer, which moves all data; use <see cref="ResizeLock"/> to protect concurrent readers.
     /// </remarks>
     /// <exception cref="MaximumSizeException">
     /// Thrown when the internal indirection table limit is reached.

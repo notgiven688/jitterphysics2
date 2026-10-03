@@ -5,6 +5,16 @@ namespace JitterTests.Api;
 /// </summary>
 public class ShapeTests
 {
+    private sealed class SingularInertiaSphere : SphereShape
+    {
+        public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
+        {
+            inertia = JSymmetricMatrix.Zero;
+            com = JVector.Zero;
+            mass = (Real)1.0;
+        }
+    }
+
     // -------------------------------------------------------------------------
     // Adding shapes
     // -------------------------------------------------------------------------
@@ -127,6 +137,72 @@ public class ShapeTests
         world.Dispose();
     }
 
+    [Test]
+    public void AddShape_WithUnsupportedMass_RollsBackAndCanBeRetried()
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        TriangleMesh mesh = new([new JTriangle(JVector.Zero, JVector.UnitX, JVector.UnitY)]);
+        TriangleShape shape = new(mesh, 0);
+        Real originalMass = body.Mass;
+        JSymmetricMatrix originalInertia = body.InverseInertia;
+
+        Assert.Throws<NotSupportedException>(() => body.AddShape(shape));
+        Assert.That(body.Shapes, Is.Empty);
+        Assert.That(world.DynamicTree.Proxies.Count, Is.Zero);
+        Assert.That(shape.RigidBody, Is.Null);
+        Assert.That(body.Mass, Is.EqualTo(originalMass));
+        Assert.That(body.InverseInertia, Is.EqualTo(originalInertia));
+
+        body.AddShape(shape, MassInertiaUpdateMode.Preserve);
+        Assert.That(body.Shapes, Does.Contain(shape));
+        Assert.That(world.DynamicTree.Proxies.Count, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void AddShape_WithSingularInertia_PreservesExistingMassProperties()
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        body.SetMassInertia((Real)5.0);
+        Real originalMass = body.Mass;
+        JSymmetricMatrix originalInertia = body.InverseInertia;
+        SingularInertiaSphere shape = new();
+
+        Assert.Throws<InvalidOperationException>(() => body.AddShape(shape));
+        Assert.That(body.Shapes, Is.Empty);
+        Assert.That(world.DynamicTree.Proxies.Count, Is.Zero);
+        Assert.That(shape.RigidBody, Is.Null);
+        Assert.That(body.Mass, Is.EqualTo(originalMass));
+        Assert.That(body.InverseInertia, Is.EqualTo(originalInertia));
+    }
+
+    [Test]
+    public void AddShape_WithInvalidMassUpdateMode_DoesNotAttachShape()
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        SphereShape shape = new();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => body.AddShape(shape, (MassInertiaUpdateMode)123));
+        Assert.That(body.Shapes, Is.Empty);
+        Assert.That(world.DynamicTree.Proxies.Count, Is.Zero);
+        Assert.That(shape.RigidBody, Is.Null);
+    }
+
+    [Test]
+    public void AddShape_WhenTreeRejectsBoundingBox_DoesNotRetainBodyReference()
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        SphereShape shape = new((Real)1e8);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => body.AddShape(shape, MassInertiaUpdateMode.Preserve));
+        Assert.That(body.Shapes, Is.Empty);
+        Assert.That(world.DynamicTree.Proxies.Count, Is.Zero);
+        Assert.That(shape.RigidBody, Is.Null);
+    }
+
     // -------------------------------------------------------------------------
     // Removing shapes
     // -------------------------------------------------------------------------
@@ -203,6 +279,33 @@ public class ShapeTests
         first.AddShape(shape);
         Assert.Throws<ArgumentException>(() => second.RemoveShape(shape));
         world.Dispose();
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void RemoveShape_WithInvalidMassUpdateMode_DoesNotDetachShape(bool multiple)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        SphereShape shape = new();
+        body.AddShape(shape);
+        Real originalMass = body.Mass;
+
+        if (multiple)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                body.RemoveShapes(new[] { shape }, (MassInertiaUpdateMode)123));
+        }
+        else
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                body.RemoveShape(shape, (MassInertiaUpdateMode)123));
+        }
+
+        Assert.That(body.Shapes, Does.Contain(shape));
+        Assert.That(world.DynamicTree.Proxies.Count, Is.EqualTo(1));
+        Assert.That(shape.RigidBody, Is.SameAs(body));
+        Assert.That(body.Mass, Is.EqualTo(originalMass));
     }
 
     [TestCase]

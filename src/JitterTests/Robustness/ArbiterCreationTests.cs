@@ -83,6 +83,69 @@ public class ArbiterCreationTests
     }
 
     [Test]
+    public void RemovingArbiterBeforeFirstStep_CancelsDeferredCreation()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body1 = world.CreateRigidBody();
+        var body2 = world.CreateRigidBody();
+        int beginCount = 0;
+        body1.BeginCollide += _ => beginCount++;
+
+        world.GetOrCreateArbiter(1, 2, body1, body2, out var arbiter);
+        world.Remove(arbiter);
+
+        Assert.That(GetField<SlimBag<Arbiter>>(world, "deferredArbiters"), Is.Empty);
+        Assert.DoesNotThrow(() => world.Step((Real)(1.0 / 60.0), multiThread: false));
+        Assert.That(beginCount, Is.Zero);
+    }
+
+    [Test]
+    public void RemovingBodyBeforeFirstStep_RemovesItsDeferredArbiters()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body1 = world.CreateRigidBody();
+        var body2 = world.CreateRigidBody();
+        var body3 = world.CreateRigidBody();
+        int survivingBegins = 0;
+        body3.BeginCollide += _ => survivingBegins++;
+        world.GetOrCreateArbiter(1, 2, body1, body2, out _);
+        world.GetOrCreateArbiter(3, 4, body1, body3, out _);
+        world.GetOrCreateArbiter(5, 6, body2, body3, out var surviving);
+
+        world.Remove(body1);
+
+        Assert.That(world.GetArbiter(1, 2, out _), Is.False);
+        Assert.That(world.GetArbiter(3, 4, out _), Is.False);
+        Assert.That(GetField<SlimBag<Arbiter>>(world, "deferredArbiters"), Is.EquivalentTo(new[] { surviving }));
+        Assert.DoesNotThrow(() => world.Step((Real)(1.0 / 60.0), multiThread: false));
+        Assert.That(survivingBegins, Is.EqualTo(1));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void RemovingShapeBeforeFirstStep_RemovesItsDeferredArbiters(bool removeMany)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body1 = world.CreateRigidBody();
+        var body2 = world.CreateRigidBody();
+        var shape1 = new SphereShape(1);
+        var shape2 = new SphereShape(1);
+        body1.AddShape(shape1);
+        body2.AddShape(shape2);
+        body2.Position = new JVector(10, 0, 0);
+        world.GetOrCreateArbiter(shape1.ShapeId, shape2.ShapeId, body1, body2, out _);
+
+        if (removeMany)
+            body1.RemoveShapes([shape1], MassInertiaUpdateMode.Preserve);
+        else
+            body1.RemoveShape(shape1, MassInertiaUpdateMode.Preserve);
+
+        Assert.That(world.GetArbiter(shape1.ShapeId, shape2.ShapeId, out _), Is.False);
+        Assert.That(GetField<SlimBag<Arbiter>>(world, "deferredArbiters"), Is.Empty);
+        Assert.DoesNotThrow(() => world.Step((Real)(1.0 / 60.0), multiThread: false));
+    }
+
+    [Test]
     public void Recycling_IsScopedToTheOwningWorld()
     {
         using var world1 = new World();

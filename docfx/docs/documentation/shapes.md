@@ -11,6 +11,21 @@ When a shape is added to a rigid body this is done automatically (`world.Dynamic
 > A concave shape can be represented by combining multiple convex shapes on a single rigid body.
 > Third-party libraries for 'convex decomposition' can be used to generate convex hulls from arbitrary meshes.
 
+## Changing an attached shape
+
+Changing a shape's dimensions or local transformation after it has been added to a body does not automatically refresh the dynamic tree, the body's mass properties, or existing contact points. Make these changes between calls to `world.Step`, then update the affected state explicitly:
+
+```cs
+box.Size = new JVector(2, 1, 1);
+world.DynamicTree.Update(box); // Refresh this shape's bounding box and broadphase pairs.
+body.ClearContactCache();      // Discard contact points based on the old geometry.
+body.SetMassInertia();          // Only if the body uses mass properties derived from its shapes.
+```
+
+`world.DynamicTree.Update(shape)` updates one registered shape immediately. A regular world step updates active proxies, but does not track changes to inactive proxies. If the change affects a sleeping dynamic body, activate that body explicitly with `body.SetActivationState(true)`. Updating a static shape's proxy does not wake sleeping bodies that newly overlap it; activate the affected dynamic bodies yourself.
+
+A shape change can also leave bodies interpenetrating. The engine cannot decide how they should be separated, so the application must choose whether to move them, wake them, or allow the solver to resolve the new contacts. If mass or inertia was set explicitly, retain or recalculate it according to the application's mass policy instead of calling the parameterless `SetMassInertia()`.
+
 ## Default types
 
 The inheritance hierarchy for the default shapes:

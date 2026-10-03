@@ -26,8 +26,10 @@ public interface INarrowPhaseFilter
     /// <param name="shapeB">The second shape in the collision.</param>
     /// <param name="pointA">Contact point on shape A (modifiable).</param>
     /// <param name="pointB">Contact point on shape B (modifiable).</param>
-    /// <param name="normal">Collision normal from B to A (modifiable).</param>
-    /// <param name="penetration">Penetration depth (modifiable).</param>
+    /// <param name="normal">Collision normal used to solve the contact (modifiable). A positive normal
+    /// impulse pushes shape B along this direction and shape A against it.</param>
+    /// <param name="penetration">Signed penetration depth reported by the narrowphase. Changes to this value alone
+    /// do not affect the registered contact; its separation is derived from the contact points and normal.</param>
     /// <returns><c>true</c> to keep the collision; <c>false</c> to discard it.</returns>
     [CallbackThread(ThreadContext.Any)]
     bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB,

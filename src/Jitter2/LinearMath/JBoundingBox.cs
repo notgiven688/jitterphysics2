@@ -184,11 +184,12 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     }
 
     /// <summary>
-    /// Checks if an infinite ray intersects this bounding box and calculates the entry distance.
+    /// Checks if a ray intersects this bounding box and calculates the entry parameter.
     /// </summary>
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
-    /// <param name="enter">Outputs the distance along the direction vector where the ray enters the box. Returns 0 if the origin is inside.</param>
+    /// <param name="enter">Outputs the parameter in <c>origin + enter * direction</c> where the ray enters
+    /// the box. Returns 0 if the origin is inside; this is a distance only for a unit direction.</param>
     /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
     {

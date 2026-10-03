@@ -71,6 +71,19 @@ public class InertiaTests
     }
 
     [TestCase]
+    public static void NestedTransformedInertia_MatchesAnalyticalBox()
+    {
+        var box = new BoxShape(1);
+        var first = new TransformedShape(box, new JVector(1, 0, 0));
+        var second = new TransformedShape(first, new JVector(1, 0, 0));
+
+        // A unit box centered at x = 2 has Ixx = 1/6 and Iyy = Izz = 1/6 + 4.
+        JSymmetricMatrix expected = new((Real)(1.0 / 6.0), 0, 0,
+            (Real)(25.0 / 6.0), 0, (Real)(25.0 / 6.0));
+        Check(second, expected, new JVector(2, 0, 0), 1);
+    }
+
+    [TestCase]
     public static void TransformedRotationInertia()
     {
         var box = new BoxShape((Real)1.0, (Real)2.0, (Real)3.0);

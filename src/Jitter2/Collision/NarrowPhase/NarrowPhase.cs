@@ -615,12 +615,10 @@ public static class NarrowPhase
     /// closest point on shape B to shape A.
     /// </param>
     /// <param name="normal">
-    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-    /// if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
-    /// (defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
-    /// the separated case.
+    /// The normalized collision normal. Its dot product with pointA - pointB gives the signed penetration:
+    /// positive for overlap and negative for separation. It remains defined when the points coincide.
     /// </param>
-    /// <param name="penetration">The penetration depth.</param>
+    /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.
@@ -657,12 +655,10 @@ public static class NarrowPhase
     /// closest point on shape B to shape A.
     /// </param>
     /// <param name="normal">
-    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-    /// if pointA and pointB coincide. It denotes the direction in which the shapes should be moved by the minimum distance
-    /// (defined by the penetration depth) to either separate them in the overlapping case or bring them into contact in
-    /// the separated case.
+    /// The normalized collision normal. Its dot product with pointA - pointB gives the signed penetration:
+    /// positive for overlap and negative for separation. It remains defined when the points coincide.
     /// </param>
-    /// <param name="penetration">The penetration depth.</param>
+    /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
     /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
     /// failure, collision information reverts to the type's default values.

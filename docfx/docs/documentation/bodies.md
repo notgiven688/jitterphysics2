@@ -73,7 +73,15 @@ The coordinates of the triangles are in world space and can be drawn to debug th
 
 ## Forces and impulses
 
-Forces and torques can be applied using `body.AddForce`. Forces accumulate over the current step and are reset after integration.
+Forces and torques can be applied using `body.AddForce`. They accumulate until the next `world.Step` and are cleared at the end of that call. The resulting velocity change is applied during the **following** step. For a body initially at rest, with no gravity or other influences:
+
+```cs
+body.AddForce(force);
+world.Step(dt); // Stores the velocity change; velocity and position are unchanged.
+world.Step(dt); // Applies the change to velocity and moves the body.
+```
+
+This one-step delay also applies to gravity. Keep the timestep and substep count fixed: the velocity change is calculated using one step's substep duration and applied once per substep in the following step.
 
 For instantaneous velocity changes, use `body.ApplyImpulse`:
 
@@ -92,6 +100,7 @@ When set to `false`, the impulse is silently ignored if the body is sleeping.
 
 The gravity for the world can be set using `world.Gravity`.
 The property `body.AffectedByGravity` can be used to disable gravity for individual bodies.
+Gravity follows the [force integration timing](#forces-and-impulses) described above.
 
 ## Restricting motion and planar simulations
 

@@ -209,7 +209,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Calculates the transformation of the X-axis <c>(1, 0, 0)</c> by this quaternion.
     /// </summary>
     /// <remarks>
-    /// Mathematically equivalent to <c>q · (1,0,0) · q⁻¹</c>.<br/>
+    /// For a unit quaternion, mathematically equivalent to <c>q · (1,0,0) · q⁻¹</c>.<br/>
     /// Result: <c>[1 - 2(y² + z²), 2(xy + zw), 2(xz - yw)]</c>
     /// </remarks>
     /// <returns>The transformed vector.</returns>
@@ -226,7 +226,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Calculates the transformation of the Y-axis <c>(0, 1, 0)</c> by this quaternion.
     /// </summary>
     /// <remarks>
-    /// Mathematically equivalent to <c>q · (0,1,0) · q⁻¹</c>.<br/>
+    /// For a unit quaternion, mathematically equivalent to <c>q · (0,1,0) · q⁻¹</c>.<br/>
     /// Result: <c>[2(xy - zw), 1 - 2(x² + z²), 2(yz + xw)]</c>
     /// </remarks>
     /// <returns>The transformed vector.</returns>
@@ -243,7 +243,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Calculates the transformation of the Z-axis <c>(0, 0, 1)</c> by this quaternion.
     /// </summary>
     /// <remarks>
-    /// Mathematically equivalent to <c>q · (0,0,1) · q⁻¹</c>.<br/>
+    /// For a unit quaternion, mathematically equivalent to <c>q · (0,0,1) · q⁻¹</c>.<br/>
     /// Result: <c>[2(xz + yw), 2(yz - xw), 1 - 2(x² + y²)]</c>
     /// </remarks>
     /// <returns>The transformed vector.</returns>
@@ -611,7 +611,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// </summary>
     /// <remarks>
     /// Unlike <see cref="Conjugate(in JQuaternion)"/>, this handles non-unit quaternions correctly
-    /// by dividing by the squared length.
+    /// by dividing by the squared length. Returns <see cref="Identity"/> when the squared length
+    /// is below 1e-12.
     /// </remarks>
     public static JQuaternion Inverse(in JQuaternion value)
     {

@@ -22,6 +22,7 @@ The tree implementation needs to be updated using `tree.Update`.
 This is done automatically for the dynamic tree owned by the world class (`world.DynamicTree`).
 Internally, `UpdateWorldBoundingBox` is called for active proxies implementing the `IUpdatableBoundingBox` interface, and the internal book-keeping of overlapping pairs is updated.
 Overlaps can be queried using `tree.EnumerateOverlaps`.
+To refresh one shape after changing its geometry, call `world.DynamicTree.Update(shape)`. See [Changing an attached shape](shapes.md#changing-an-attached-shape) for the other state that may need updating.
 
 ## Querying the tree
 

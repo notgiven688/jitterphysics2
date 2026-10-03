@@ -139,14 +139,14 @@ public struct RigidBodyData
     public JVector AngularVelocity;
 
     /// <summary>
-    /// Accumulated linear velocity change for the current substep (from forces and gravity).
+    /// Linear velocity change applied each substep (from forces and gravity), prepared at the end of the previous step.
     /// Internal use only.
     /// </summary>
     [FieldOffset(8 + 9 * sizeof(Real))]
     public JVector DeltaVelocity;
 
     /// <summary>
-    /// Accumulated angular velocity change for the current substep (from torques).
+    /// Angular velocity change applied each substep (from torques), prepared at the end of the previous step.
     /// Internal use only.
     /// </summary>
     [FieldOffset(8 + 12 * sizeof(Real))]
@@ -313,22 +313,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public Island Island => InternalIsland;
 
     /// <summary>
-    /// Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.
+    /// Event triggered when a new arbiter is created, including for a speculative contact before the bodies overlap.
     /// </summary>
     /// <remarks>
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
-    /// Use this event to handle logic that should occur at the start of a collision between two bodies.
+    /// Use this event to handle logic when contact tracking begins between two bodies.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? BeginCollide;
 
     /// <summary>
-    /// Event triggered when an arbiter is destroyed, indicating that two bodies have stopped colliding.
+    /// Event triggered when an arbiter expires during a simulation step because contact has ended.
     /// The reference to this arbiter becomes invalid after this call.
     /// </summary>
     /// <remarks>
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision that has ended.
-    /// Use this event to handle logic that should occur when the collision between two bodies ends.
+    /// Explicit arbiter, body, or shape removal does not raise this event.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? EndCollide;
@@ -440,7 +440,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the world assigned to this body.
+    /// Gets the world assigned to this body.
     /// </summary>
     public World World { get; }
 
@@ -481,7 +481,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Values must be non-negative.
-    /// Default values: angular = 0.1, linear = 0.1.
+    /// Default values: angular and linear are both approximately 0.316.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular threshold is negative.
@@ -590,7 +590,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules the body for activation on the next step. Any currently active
+    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+    /// activates connected bodies. Any currently active
     /// cached contacts involving this body are invalidated.
     /// </remarks>
     public JVector Position
@@ -609,7 +610,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules the body for activation on the next step. Any currently active
+    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+    /// activates connected bodies. Any currently active
     /// cached contacts involving this body are invalidated.
     /// </remarks>
     public JQuaternion Orientation
@@ -979,8 +981,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         shape.RigidBody = this;
-        shape.UpdateWorldBoundingBox();
-        World.DynamicTree.AddProxy(shape, IsActive);
+        try
+        {
+            shape.UpdateWorldBoundingBox();
+            World.DynamicTree.AddProxy(shape, IsActive);
+        }
+        catch
+        {
+            shape.RigidBody = null!;
+            throw;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1028,6 +1038,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void AddShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shapes);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         foreach (RigidBodyShape shape in shapes)
         {
@@ -1042,7 +1053,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             InternalShapes.Add(shape);
         }
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
     }
 
     /// <summary>
@@ -1071,6 +1082,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Adds a shape to the body.
     /// </summary>
+    /// <remarks>
+    /// If registration or mass calculation fails, the shape remains detached and the body's
+    /// mass properties remain unchanged.
+    /// </remarks>
     /// <param name="shape">The shape to be added.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="shape"/> is <see langword="null"/>.
@@ -1084,6 +1099,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Adds a shape to the body.
     /// </summary>
+    /// <remarks>
+    /// If registration or mass calculation fails, the shape remains detached and the body's
+    /// mass properties remain unchanged.
+    /// </remarks>
     /// <param name="shape">The shape to be added.</param>
     /// <param name="massInertiaMode">
     /// Controls whether the body's mass and inertia are recomputed after the shape is added.
@@ -1100,6 +1119,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void AddShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shape);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         if (shape.IsRegistered)
         {
@@ -1107,9 +1127,18 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         AttachToShape(shape);
-        InternalShapes.Add(shape);
-
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        try
+        {
+            InternalShapes.Add(shape);
+            if (updateMassInertia) SetMassInertia();
+        }
+        catch
+        {
+            InternalShapes.Remove(shape);
+            World.DynamicTree.RemoveProxy(shape);
+            shape.RigidBody = null!;
+            throw;
+        }
     }
 
     [Obsolete($"Use {nameof(AddShapes)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
@@ -1121,8 +1150,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
-    /// Represents the force to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
-    /// This value is automatically reset to zero after the call.
+    /// Accumulated force converted to a velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
+    /// and this value is reset to zero after conversion.
     /// </summary>
     public JVector Force
     {
@@ -1135,8 +1165,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Represents the torque to be applied to the body during the next call to <see cref="World.Step(Real, bool)"/>.
-    /// This value is automatically reset to zero after the call.
+    /// Accumulated torque converted to an angular velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
+    /// and this value is reset to zero after conversion.
     /// </summary>
     public JVector Torque
     {
@@ -1152,8 +1183,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Applies a force to the rigid body, thereby altering its velocity.
     /// </summary>
     /// <param name="force">
-    /// The force to be applied. This force is effective for a single frame only and is reset
-    /// to zero during the next call to <see cref="World.Step(Real, bool)"/>.
+    /// The force to accumulate. It is converted to a velocity change at the end of the next
+    /// <see cref="World.Step(Real, bool)"/> call and applied during the following step.
     /// </param>
     /// <param name="wakeup">
     /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
@@ -1173,8 +1204,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Applies a force to the rigid body, altering its velocity. This force is applied for a single frame only and is
-    /// reset to zero with the following call to <see cref="World.Step(Real, bool)"/>.
+    /// Applies a force to the rigid body at a world-space position. The force and resulting torque are
+    /// converted to velocity changes at the end of the next <see cref="World.Step(Real, bool)"/> call
+    /// and applied during the following step.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>
@@ -1323,11 +1355,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void RemoveShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shape);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         if (!InternalShapes.Remove(shape))
         {
             throw new ArgumentException("Shape is not part of this body.", nameof(shape));
         }
+
+        World.RemoveDeferredArbitersForShape(this, shape.ShapeId);
 
         foreach (var arbiter in InternalContacts)
         {
@@ -1342,7 +1377,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         World.DynamicTree.RemoveProxy(shape);
         shape.RigidBody = null!;
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
     }
 
     /// <summary>
@@ -1373,6 +1408,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void RemoveShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shapes);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         HashSet<ulong> sids = new();
 
@@ -1387,6 +1423,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             sids.Add(shape.ShapeId);
         }
+
+        foreach (ulong shapeId in sids) World.RemoveDeferredArbitersForShape(this, shapeId);
 
         foreach (var arbiter in InternalContacts)
         {
@@ -1410,7 +1448,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
         }
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
 
         sids.Clear();
     }
@@ -1477,7 +1515,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             mass += shapeMass;
         }
 
-        if (!JSymmetricMatrix.Inverse(inertia, out inverseInertia))
+        if (!JSymmetricMatrix.Inverse(inertia, out JSymmetricMatrix newInverseInertia))
         {
             throw new InvalidOperationException("Inertia matrix is not invertible. This might happen if a shape has " +
                                                 "invalid mass properties. If you encounter this while calling " +
@@ -1485,6 +1523,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                                                 nameof(MassInertiaUpdateMode.Preserve) + ".");
         }
 
+        inverseInertia = newInverseInertia;
         inverseMass = (Real)1.0 / mass;
 
         UpdateWorldInertia();
@@ -1560,11 +1599,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                 throw new ArgumentException("Mass cannot be zero or negative.", nameof(mass));
             }
 
-            if (!JSymmetricMatrix.Inverse(inertia, out inverseInertia))
+            if (!JSymmetricMatrix.Inverse(inertia, out JSymmetricMatrix newInverseInertia))
             {
                 throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
             }
 
+            inverseInertia = newInverseInertia;
             inverseMass = (Real)1.0 / mass;
         }
 
