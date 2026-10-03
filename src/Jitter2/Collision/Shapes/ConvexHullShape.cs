@@ -20,8 +20,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     private struct CHullVector(in JVector vertex) : IEquatable<CHullVector>
     {
         public readonly JVector Vertex = vertex;
-        public ushort NeighborMinIndex = 0;
-        public ushort NeighborMaxIndex = 0;
+        // The flattened neighbor list may exceed ushort.MaxValue before the vertex list does.
+        public int NeighborMinIndex = 0;
+        public int NeighborMaxIndex = 0;
 
         public readonly override bool Equals(object? obj)
         {
@@ -135,9 +136,9 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         for (int i = 0; i < tmpVerticesSpan.Length; i++)
         {
             ref var element = ref tmpVerticesSpan[i];
-            element.NeighborMinIndex = (ushort)finalNeighbors.Count;
+            element.NeighborMinIndex = finalNeighbors.Count;
             AddDistinct(tmpNeighbors[i], finalNeighbors);
-            element.NeighborMaxIndex = (ushort)finalNeighbors.Count;
+            element.NeighborMaxIndex = finalNeighbors.Count;
 
             // Help GC
             tmpNeighbors[i] = null!;
