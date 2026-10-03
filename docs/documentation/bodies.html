@@ -140,7 +140,12 @@ Every call to <code>body.DebugDraw</code> generates the triangle hulls on the fl
 Since this is a slow operation the method should only be called for debugging purposes.</p>
 </div>
 <h2 id="forces-and-impulses">Forces and impulses</h2>
-<p>Forces and torques can be applied using <code>body.AddForce</code>. Forces accumulate over the current step and are reset after integration.</p>
+<p>Forces and torques can be applied using <code>body.AddForce</code>. They accumulate until the next <code>world.Step</code> and are cleared at the end of that call. The resulting velocity change is applied during the <strong>following</strong> step. For a body initially at rest, with no gravity or other influences:</p>
+<pre><code class="lang-cs">body.AddForce(force);
+world.Step(dt); // Stores the velocity change; velocity and position are unchanged.
+world.Step(dt); // Applies the change to velocity and moves the body.
+</code></pre>
+<p>This one-step delay also applies to gravity. Keep the timestep and substep count fixed: the velocity change is calculated using one step's substep duration and applied once per substep in the following step.</p>
 <p>For instantaneous velocity changes, use <code>body.ApplyImpulse</code>:</p>
 <pre><code class="lang-cs">// Linear impulse — changes velocity immediately.
 body.ApplyImpulse(new JVector(0, 10, 0));
@@ -152,7 +157,8 @@ body.ApplyImpulse(new JVector(0, 10, 0), hitPosition);
 When set to <code>false</code>, the impulse is silently ignored if the body is sleeping.</p>
 <h2 id="gravity">Gravity</h2>
 <p>The gravity for the world can be set using <code>world.Gravity</code>.
-The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.</p>
+The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.
+Gravity follows the <a href="#forces-and-impulses">force integration timing</a> described above.</p>
 <h2 id="restricting-motion-and-planar-simulations">Restricting motion and planar simulations</h2>
 <p><code>body.AllowedMotion</code> specifies the translations and rotations permitted by the simulation.
 The default is <code>MotionAxes.All</code>. Each assignment replaces the previous selection.
