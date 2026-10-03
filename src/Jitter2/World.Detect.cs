@@ -233,7 +233,8 @@ public sealed partial class World
     /// <param name="arbiter">The existing <see cref="Arbiter"/> instance to which the contact will be added.</param>
     /// <param name="point1">The contact point on the first body, in world space.</param>
     /// <param name="point2">The contact point on the second body, in world space.</param>
-    /// <param name="normal">The contact normal, in world space. Must be normalized.</param>
+    /// <param name="normal">The contact normal, in world space. Must be normalized; a positive normal
+    /// impulse pushes the arbiter's second body along this direction and its first body against it.</param>
     /// <param name="removeFlags">A bitmask of <see cref="ContactData.SolveMode"/> flags to be removed from the full
     /// contact solution (see <see cref="ContactData.SolveMode.Full"/>).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

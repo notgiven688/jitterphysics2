@@ -14,7 +14,7 @@ namespace Jitter2.Dynamics;
 /// </summary>
 /// <remarks>
 /// <para>
-/// An arbiter is created when two shapes begin overlapping and is removed when they separate
+/// An arbiter is created when contacts are registered, including speculative contacts before shapes overlap, and is removed when they separate
 /// or when one of the involved bodies is removed from the world. Each arbiter can hold up to
 /// four cached contact points (see <see cref="ContactData"/>).
 /// </para>

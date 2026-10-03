@@ -232,7 +232,8 @@ public struct ContactData
     public static bool IsHardwareAccelerated => Vector.IsHardwareAccelerated;
 
     /// <summary>
-    /// Updates contact positions after integration and removes contacts that have separated beyond the break threshold.
+    /// Updates contact positions after integration and removes contacts whose normal separation exceeds
+    /// one tenth of the break threshold or whose tangential drift exceeds the full threshold.
     /// </summary>
     public unsafe void UpdatePosition()
     {
@@ -323,7 +324,8 @@ public struct ContactData
     /// </summary>
     /// <param name="point1">Contact point on the first body in world space.</param>
     /// <param name="point2">Contact point on the second body in world space.</param>
-    /// <param name="normal">Contact normal pointing from body 2 to body 1.</param>
+    /// <param name="normal">Contact normal in the direction of the solver's positive impulse on body 2.
+    /// For overlapping contact points, it points from <paramref name="point2"/> toward <paramref name="point1"/>.</param>
     public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal)
     {
         if ((UsageMask & MaskContactAll) == MaskContactAll)
@@ -597,7 +599,7 @@ public struct ContactData
         public const Real BiasFactor = (Real)0.2;
         /// <summary>Penetration depth below which no position correction is applied.</summary>
         public const Real AllowedPenetration = (Real)0.01;
-        /// <summary>Separation distance beyond which a contact is considered broken.</summary>
+        /// <summary>Maximum tangential drift before a contact breaks; normal separation is limited to one tenth of this value.</summary>
         public const Real BreakThreshold = (Real)0.02;
 
         /// <summary>
@@ -615,7 +617,7 @@ public struct ContactData
         /// <summary>Current contact state flags.</summary>
         [FieldOffset(0)] public Flags Flag;
 
-        /// <summary>Velocity bias for restitution (bounce).</summary>
+        /// <summary>Velocity bias for restitution or speculative separation.</summary>
         [FieldOffset(4)] public Real Bias;
 
         /// <summary>Position-correction bias computed from penetration depth.</summary>
@@ -654,17 +656,17 @@ public struct ContactData
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         /// <summary>
-        /// Normal direction (normalized) of the contact.
-        /// Pointing from the collision point on the surface of <see cref="ContactData.Body2"/> to the collision point
-        /// on the surface of <see cref="ContactData.Body1"/>.
+        /// Normalized contact direction. A positive normal impulse pushes <see cref="ContactData.Body2"/>
+        /// along this direction and <see cref="ContactData.Body1"/> against it. For overlapping contact points,
+        /// the normal points from the point on body 2 toward the point on body 1.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Normal => new(NormalTangentX.GetElement(0),
             NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
 
         /// <summary>
-        /// Tangent (normalized) to the contact <see cref="Normal"/> in the direction of the relative movement of
-        /// both bodies, at the time when the contact is created.
+        /// Tangent (normalized) to the contact <see cref="Normal"/>. At creation it follows tangential
+        /// relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts retain their basis.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Tangent1 => new(NormalTangentX.GetElement(1),

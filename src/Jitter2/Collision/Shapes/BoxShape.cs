@@ -19,7 +19,7 @@ public class BoxShape : RigidBodyShape
     /// <summary>
     /// Creates a box shape with specified dimensions.
     /// </summary>
-    /// <param name="size">The dimensions of the box.</param>
+    /// <param name="size">The full extents of the box in the local x-, y-, and z-directions.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when any component of <paramref name="size"/> is less than or equal to zero.
     /// </exception>
@@ -30,7 +30,7 @@ public class BoxShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Gets or sets the dimensions of the box.
+    /// Gets or sets the full extents of the box in the local x-, y-, and z-directions.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when any component of <paramref name="value"/> is less than or equal to zero.
@@ -59,21 +59,21 @@ public class BoxShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Creates a box shape with the specified length, height, and width.
+    /// Creates a box shape with the specified extents in the local x-, y-, and z-directions.
     /// </summary>
-    /// <param name="length">The length of the box.</param>
-    /// <param name="height">The height of the box.</param>
-    /// <param name="width">The width of the box.</param>
+    /// <param name="sizeX">The full extent of the box in the local x-direction.</param>
+    /// <param name="sizeY">The full extent of the box in the local y-direction.</param>
+    /// <param name="sizeZ">The full extent of the box in the local z-direction.</param>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when <paramref name="length"/>, <paramref name="height"/>, or <paramref name="width"/> is less than
+    /// Thrown when <paramref name="sizeX"/>, <paramref name="sizeY"/>, or <paramref name="sizeZ"/> is less than
     /// or equal to zero.
     /// </exception>
-    public BoxShape(Real width, Real height, Real length)
+    public BoxShape(Real sizeX, Real sizeY, Real sizeZ)
     {
         halfSize = (Real)0.5 * new JVector(
-            ArgumentCheck.Positive(width, nameof(width)),
-            ArgumentCheck.Positive(height, nameof(height)),
-            ArgumentCheck.Positive(length, nameof(length)));
+            ArgumentCheck.Positive(sizeX, nameof(sizeX)),
+            ArgumentCheck.Positive(sizeY, nameof(sizeY)),
+            ArgumentCheck.Positive(sizeZ, nameof(sizeZ)));
         UpdateWorldBoundingBox();
     }
 

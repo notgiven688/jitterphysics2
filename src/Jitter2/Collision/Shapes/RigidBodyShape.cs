@@ -15,7 +15,8 @@ namespace Jitter2.Collision.Shapes;
 public abstract class RigidBodyShape : Shape
 {
     /// <summary>
-    /// The instance of <see cref="RigidBody"/> to which this shape is attached.
+    /// The <see cref="RigidBody"/> to which this shape is attached. It is null until the shape is attached
+    /// and after it is removed from a body.
     /// </summary>
     public RigidBody RigidBody { get; internal set; } = null!;
 
@@ -71,8 +72,8 @@ public abstract class RigidBodyShape : Shape
     /// The surface normal at the point of intersection, if an intersection occurs.
     /// </param>
     /// <param name="lambda">
-    /// The scalar value representing the distance along the ray's direction vector
-    /// from the <paramref name="origin"/> to the intersection point. The hit point can be calculated as:
+    /// The ray parameter from the <paramref name="origin"/> to the intersection point. Because
+    /// <paramref name="direction"/> need not be normalized, this is not necessarily a distance. The hit point is:
     /// <c>origin + lambda * direction</c>.
     /// </param>
     /// <returns>

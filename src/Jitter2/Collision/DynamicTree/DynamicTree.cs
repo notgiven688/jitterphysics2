@@ -576,10 +576,10 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Queries the tree for proxies intersecting a ray and appends all hits to the specified sink.
+    /// Queries the tree for proxies whose world bounding boxes intersect a ray and appends the candidates to the sink.
     /// </summary>
-    /// <typeparam name="TSink">The sink type receiving all intersected proxies.</typeparam>
-    /// <param name="hits">The sink receiving all intersected proxies.</param>
+    /// <typeparam name="TSink">The sink type receiving candidate proxies.</typeparam>
+    /// <param name="hits">The sink receiving candidate proxies; their shapes may not intersect the ray.</param>
     /// <param name="rayOrigin">The origin of the ray.</param>
     /// <param name="rayDirection">The direction of the ray.</param>
     public void Query<TSink>(ref TSink hits, in JVector rayOrigin, in JVector rayDirection)
@@ -683,10 +683,10 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Queries the tree for proxies intersecting a ray.
+    /// Queries the tree for proxies whose world bounding boxes intersect a ray.
     /// </summary>
     /// <typeparam name="T">The collection type.</typeparam>
-    /// <param name="hits">Collection to store intersected proxies.</param>
+    /// <param name="hits">Collection to store candidate proxies; their shapes may not intersect the ray.</param>
     /// <param name="rayOrigin">The origin of the ray.</param>
     /// <param name="rayDirection">The direction of the ray.</param>
     public void Query<T>(T hits, in JVector rayOrigin, in JVector rayDirection)
@@ -736,6 +736,9 @@ public partial class DynamicTree
 
     /// <inheritdoc cref="Optimize(int, Real, bool)"/>
     /// <param name="getNextRandom">A function returning random values in [0, 1).</param>
+    /// <param name="sweeps">The number of optimization sweeps.</param>
+    /// <param name="chance">Probability of selecting each leaf in a sweep, from 0 to 1.</param>
+    /// <param name="incremental">Whether to update the tree incrementally during optimization.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="getNextRandom"/> is <see langword="null"/>.</exception>
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {

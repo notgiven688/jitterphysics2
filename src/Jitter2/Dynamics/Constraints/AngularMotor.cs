@@ -59,7 +59,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     /// <param name="axis2">The motor axis on the second body in world space.</param>
     /// <remarks>
     /// Stores the axes in local frames. Both axes are normalized internally.
-    /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
+    /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumTorque"/> = 0.
     /// </remarks>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="axis1"/> or <paramref name="axis2"/> is zero or contains a non-finite value.
@@ -121,19 +121,30 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     public JVector LocalAxis2 => Data.LocalAxis2;
 
     /// <summary>
-    /// Gets or sets the maximum force the motor can apply.
+    /// Gets or sets the maximum torque the motor can apply.
     /// </summary>
     /// <value>Default is 0. Must be non-negative.</value>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="value"/> is negative.
     /// </exception>
-    public Real MaximumForce
+    public Real MaximumTorque
     {
         get => Data.MaxForce;
         set
         {
             Data.MaxForce = ArgumentCheck.NonNegative(value, nameof(value));
         }
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum torque the motor can apply.
+    /// </summary>
+    /// <remarks>Use <see cref="MaximumTorque"/> instead.</remarks>
+    [Obsolete("Use MaximumTorque instead.")]
+    public Real MaximumForce
+    {
+        get => MaximumTorque;
+        set => MaximumTorque = value;
     }
 
     public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)

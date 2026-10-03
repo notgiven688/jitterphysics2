@@ -313,22 +313,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public Island Island => InternalIsland;
 
     /// <summary>
-    /// Event triggered when a new arbiter is created, indicating that two bodies have begun colliding.
+    /// Event triggered when a new arbiter is created, including for a speculative contact before the bodies overlap.
     /// </summary>
     /// <remarks>
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
-    /// Use this event to handle logic that should occur at the start of a collision between two bodies.
+    /// Use this event to handle logic when contact tracking begins between two bodies.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? BeginCollide;
 
     /// <summary>
-    /// Event triggered when an arbiter is destroyed, indicating that two bodies have stopped colliding.
+    /// Event triggered when an arbiter expires during a simulation step because contact has ended.
     /// The reference to this arbiter becomes invalid after this call.
     /// </summary>
     /// <remarks>
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision that has ended.
-    /// Use this event to handle logic that should occur when the collision between two bodies ends.
+    /// Explicit arbiter, body, or shape removal does not raise this event.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? EndCollide;
@@ -440,7 +440,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the world assigned to this body.
+    /// Gets the world assigned to this body.
     /// </summary>
     public World World { get; }
 
@@ -481,7 +481,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Values must be non-negative.
-    /// Default values: angular = 0.1, linear = 0.1.
+    /// Default values: angular and linear are both approximately 0.316.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular threshold is negative.
@@ -590,7 +590,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules the body for activation on the next step. Any currently active
+    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+    /// activates connected bodies. Any currently active
     /// cached contacts involving this body are invalidated.
     /// </remarks>
     public JVector Position
@@ -609,7 +610,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules the body for activation on the next step. Any currently active
+    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
+    /// activates connected bodies. Any currently active
     /// cached contacts involving this body are invalidated.
     /// </remarks>
     public JQuaternion Orientation
@@ -1360,6 +1362,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             throw new ArgumentException("Shape is not part of this body.", nameof(shape));
         }
 
+        World.RemoveDeferredArbitersForShape(this, shape.ShapeId);
+
         foreach (var arbiter in InternalContacts)
         {
             if (arbiter.Handle.Data.Key.Key1 == shape.ShapeId || arbiter.Handle.Data.Key.Key2 == shape.ShapeId)
@@ -1419,6 +1423,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
             sids.Add(shape.ShapeId);
         }
+
+        foreach (ulong shapeId in sids) World.RemoveDeferredArbitersForShape(this, shapeId);
 
         foreach (var arbiter in InternalContacts)
         {

@@ -136,16 +136,16 @@ public class ConstraintCar
         float currentAngleL = (float)damperJoints[FrontLeft].HingeAngle.Angle;
         float currentAngleR = (float)damperJoints[FrontRight].HingeAngle.Angle;
 
-        steerMotor[FrontLeft].MaximumForce = 10.0f * Math.Abs(targetAngle - currentAngleL);
+        steerMotor[FrontLeft].MaximumTorque = 10.0f * Math.Abs(targetAngle - currentAngleL);
         steerMotor[FrontLeft].TargetVelocity = 10.0f * (targetAngle - currentAngleL);
 
-        steerMotor[FrontRight].MaximumForce = 10.0f * Math.Abs(targetAngle - currentAngleR);
+        steerMotor[FrontRight].MaximumTorque = 10.0f * Math.Abs(targetAngle - currentAngleR);
         steerMotor[FrontRight].TargetVelocity = 10.0f * (targetAngle - currentAngleR);
 
         for (int i = 0; i < 4; i++)
         {
             wheels[i].Friction = 0.8f;
-            sockets[i].Motor.MaximumForce = 1.0f * MathF.Abs(accelerate);
+            sockets[i].Motor.MaximumTorque = 1.0f * MathF.Abs(accelerate);
             sockets[i].Motor.TargetVelocity = -80.0f * accelerate;
         }
     }

@@ -51,14 +51,17 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
     [FieldOffset(6 * sizeof(Real))] public JVector V2 = v2;
 
     /// <summary>
-    /// Checks if a ray intersects the triangle.
+    /// Checks whether the line through the ray origin intersects the strict interior of the triangle.
+    /// This method can return an intersection behind the origin.
     /// </summary>
     /// <param name="origin">The starting point (origin) of the ray.</param>
     /// <param name="direction">The direction vector of the ray.</param>
     /// <param name="cullMode">Determines whether to ignore triangles based on their winding order (Front/Back facing).</param>
     /// <param name="normal">Output: The normalized surface normal at the point of intersection.</param>
-    /// <param name="lambda">Output: The distance along the <paramref name="direction"/> vector where the intersection occurs (hit point = origin + lambda * direction).</param>
-    /// <returns><c>true</c> if the ray intersects the triangle; otherwise, <c>false</c>.</returns>
+    /// <param name="lambda">Output: The signed ray parameter at the intersection
+    /// (hit point = origin + lambda * direction). It is not a distance if direction is not normalized.</param>
+    /// <returns><c>true</c> if the line intersects the triangle interior and passes the face-culling test;
+    /// otherwise, <c>false</c>. Hits exactly on an edge are excluded.</returns>
     public readonly bool RayIntersect(in JVector origin, in JVector direction, CullMode cullMode,
         out JVector normal, out Real lambda)
     {

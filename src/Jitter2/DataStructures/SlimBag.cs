@@ -253,10 +253,9 @@ internal class SlimBag<T> : IEnumerable<T>
     /// Nulls out one stale array slot per call to allow garbage collection of removed elements.
     /// </summary>
     /// <remarks>
-    /// Tracks the high-water mark of <see cref="Count"/>. When elements are removed and
-    /// <see cref="Count"/> drops below that mark, each call clears one slot from the end
-    /// of the previously used range. Call this method repeatedly (e.g., once per step) to
-    /// amortize cleanup cost.
+    /// Updates the observed high-water mark of <see cref="Count"/> and clears one stale slot
+    /// when the current count is below that mark. Call this method while the bag is populated,
+    /// before it shrinks, so later calls can clear the previously used range one slot at a time.
     /// </remarks>
     public void TrackAndNullOutOne()
     {

@@ -48,7 +48,7 @@ public class Player
         // An angular motor for turning.
         AngularMovement = world.CreateConstraint<AngularMotor>(Body, world.NullBody);
         AngularMovement.Initialize(JVector.UnitY, JVector.UnitY);
-        AngularMovement.MaximumForce = 1000;
+        AngularMovement.MaximumTorque = 1000;
     }
 
     public void SetAngularInput(float rotate)

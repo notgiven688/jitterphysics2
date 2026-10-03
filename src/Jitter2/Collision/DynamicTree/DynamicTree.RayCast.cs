@@ -64,11 +64,11 @@ public partial class DynamicTree
     /// <param name="post">Optional post-filter that can skip candidate results.</param>
     /// <param name="proxy">The shape which was hit.</param>
     /// <param name="normal">
+    /// <param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.</param>
     /// The surface normal at the hit point. <see cref="JVector.Zero"/> if the ray does not hit,
     /// or if the ray origin is inside the hit shape. Use the return value to determine whether
     /// a hit occurred; do not rely on this being non-zero as a hit indicator.
     /// </param>
-    /// <param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
@@ -86,7 +86,14 @@ public partial class DynamicTree
     }
 
     /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out Real)"/>
+    /// <param name="origin">The ray origin in world space.</param>
+    /// <param name="direction">The ray direction; it need not be normalized.</param>
     /// <param name="maxLambda">Maximum lambda of the ray's length to consider for intersections.</param>
+    /// <param name="pre">Optional filter applied before the exact test.</param>
+    /// <param name="post">Optional filter applied after the exact test.</param>
+    /// <param name="proxy">The accepted proxy, or null if none is found.</param>
+    /// <param name="normal">The result normal in world space.</param>
+    /// <param name="lambda">The ray or sweep parameter of the result.</param>
     public bool RayCast(JVector origin, JVector direction, Real maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
     {

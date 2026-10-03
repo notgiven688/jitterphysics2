@@ -102,7 +102,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <summary>
     /// Sets the spring parameters using physical properties. This method calculates and sets
     /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
-    /// of the involved bodies, their translation locks, and the timestep size do not change.
+    /// of the involved bodies, their translation locks, the anchor direction, and the timestep size do not change.
     /// </summary>
     /// <remarks>
     /// At coincident anchors, the most responsive translation axis
