@@ -159,16 +159,22 @@ public class TransformedShape : RigidBodyShape
     {
         OriginalShape.CalculateMassInertia(out JSymmetricMatrix originalInertia, out JVector originalCom, out mass);
 
+        // The source inertia is about its local origin. Move it to the center of mass
+        // before transforming, so an existing offset is not counted a second time.
+        JSymmetricMatrix originalParallelAxis = mass *
+            (JSymmetricMatrix.Identity * originalCom.LengthSquared() - JSymmetricMatrix.Outer(originalCom));
+        JSymmetricMatrix centralInertia = originalInertia - originalParallelAxis;
+
         com = JVector.Transform(originalCom, transformation) + translation;
 
         Real det = MathR.Abs(transformation.Determinant());
         mass *= det;
 
         // The inertia tensor I is related to the second moment matrix C by: I = trace(C)·E - C
-        // Under transformation T, the second moment transforms as: C' = |det(T)| · T · C · Tᵀ
+        // Under transformation T, the central second moment transforms as: C' = |det(T)| · T · C · Tᵀ
         // We recover C from I: C = (trace(I)/2)·E - I
-        Real halfTrace = originalInertia.Trace() * (Real)0.5;
-        JSymmetricMatrix secondMoment = halfTrace * JSymmetricMatrix.Identity - originalInertia;
+        Real halfTrace = centralInertia.Trace() * (Real)0.5;
+        JSymmetricMatrix secondMoment = halfTrace * JSymmetricMatrix.Identity - centralInertia;
 
         // Transform second moment matrix
         JSymmetricMatrix transformedSecondMoment = det * JSymmetricMatrix.Transform(secondMoment, transformation);
@@ -176,7 +182,7 @@ public class TransformedShape : RigidBodyShape
         // Convert back to inertia tensor
         inertia = transformedSecondMoment.Trace() * JSymmetricMatrix.Identity - transformedSecondMoment;
 
-        // Apply parallel axis theorem for translation
+        // Move the transformed inertia from its center of mass to the local origin.
         JSymmetricMatrix pat = mass * (JSymmetricMatrix.Identity * com.LengthSquared() - JSymmetricMatrix.Outer(com));
         inertia += pat;
     }
