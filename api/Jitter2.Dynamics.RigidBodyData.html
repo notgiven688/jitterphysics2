@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_RigidBodyData" data-uid="Jitter2.Dynamics.RigidBodyData" class="text-break">
-Struct RigidBodyData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L72"><i class="bi bi-code-slash"></i></a>
+Struct RigidBodyData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -142,7 +142,7 @@ Struct RigidBodyData  <a class="header-action link-secondary" title="View source
 <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a> properties instead of accessing fields directly.
 All spatial values (position, velocity, orientation, inertia) are in world space.
 The <a class="xref" href="Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_Flags">Flags</a> field is a bitfield: bits 0–1 encode <a class="xref" href="Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_MotionType">MotionType</a>,
-bit 2 indicates active state, and bit 3 enables gyroscopic forces.</p>
+bit 2 indicates active state, bit 3 enables gyroscopic forces, and bits 4–9 encode motion locks.</p>
 </div>
 
 
@@ -153,7 +153,7 @@ bit 2 indicates active state, and bit 3 enables gyroscopic forces.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_AngularVelocity" data-uid="Jitter2.Dynamics.RigidBodyData.AngularVelocity">
   AngularVelocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L139"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Angular velocity in world space, measured in radians per second. The vector direction
@@ -185,7 +185,7 @@ is the rotation axis, and its magnitude is the rotation speed.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_DeltaAngularVelocity" data-uid="Jitter2.Dynamics.RigidBodyData.DeltaAngularVelocity">
   DeltaAngularVelocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accumulated angular velocity change for the current substep (from torques).
@@ -217,7 +217,7 @@ Internal use only.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_DeltaVelocity" data-uid="Jitter2.Dynamics.RigidBodyData.DeltaVelocity">
   DeltaVelocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Accumulated linear velocity change for the current substep (from forces and gravity).
@@ -249,10 +249,11 @@ Internal use only.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_Flags" data-uid="Jitter2.Dynamics.RigidBodyData.Flags">
   Flags
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L189"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Bitfield encoding motion type (bits 0–1), active state (bit 2), and gyroscopic forces (bit 3).
+  <div class="markdown level1 summary"><p>Bitfield encoding motion type (bits 0–1), active state (bit 2), gyroscopic forces (bit 3),
+and locked world-space degrees of freedom (bits 4–9).
 Use the corresponding properties instead of manipulating this directly.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -281,17 +282,18 @@ Use the corresponding properties instead of manipulating this directly.</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_InverseInertiaWorld" data-uid="Jitter2.Dynamics.RigidBodyData.InverseInertiaWorld">
   InverseInertiaWorld
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L168"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Inverse inertia tensor in world space. For dynamic bodies, this is recomputed each step
-from the body-space inverse inertia and current orientation. For static and kinematic
-bodies, this is zero (representing infinite inertia).</p>
+from the body-space inverse inertia and current orientation. Locked angular axes
+are eliminated with Schur complements to preserve the remaining inertia response.
+For static and kinematic bodies, this is zero (representing infinite inertia).</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JMatrix InverseInertiaWorld</code></pre>
+    <pre><code class="lang-csharp hljs">public JSymmetricMatrix InverseInertiaWorld</code></pre>
   </div>
 
 
@@ -299,7 +301,7 @@ bodies, this is zero (representing infinite inertia).</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dt><a class="xref" href="Jitter2.LinearMath.JSymmetricMatrix.html">JSymmetricMatrix</a></dt>
     <dd></dd>
   </dl>
 
@@ -312,18 +314,18 @@ bodies, this is zero (representing infinite inertia).</p>
 
 
 
-  <h3 id="Jitter2_Dynamics_RigidBodyData_InverseMass" data-uid="Jitter2.Dynamics.RigidBodyData.InverseMass">
-  InverseMass
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Dynamics_RigidBodyData_InverseMassVector" data-uid="Jitter2.Dynamics.RigidBodyData.InverseMassVector">
+  InverseMassVector
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Inverse mass of the body. A value of zero represents infinite mass (used for static
-and kinematic bodies in the solver).</p>
+  <div class="markdown level1 summary"><p>World-space diagonal inverse mass, including the body's translation locks.
+Static and kinematic bodies have zero inverse mass on every axis.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float InverseMass</code></pre>
+    <pre><code class="lang-csharp hljs">public JVector InverseMassVector</code></pre>
   </div>
 
 
@@ -331,7 +333,7 @@ and kinematic bodies in the solver).</p>
 
   <h4 class="section">Field Value</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
     <dd></dd>
   </dl>
 
@@ -339,6 +341,12 @@ and kinematic bodies in the solver).</p>
 
 
 
+  <h4 class="section" id="Jitter2_Dynamics_RigidBodyData_InverseMassVector_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Custom constraints should use
+<a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">Multiply(in JVector, in JVector)</a> with <a class="xref" href="Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_InverseMassVector">InverseMassVector</a>
+for impulses. The linear contribution to effective inverse mass along a direction
+is <code>JVector.Multiply(direction, InverseMassVector) * direction</code>.</p>
+</div>
 
 
 
@@ -346,7 +354,7 @@ and kinematic bodies in the solver).</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_Orientation" data-uid="Jitter2.Dynamics.RigidBodyData.Orientation">
   Orientation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>World-space orientation of the rigid body.</p>
@@ -377,7 +385,7 @@ and kinematic bodies in the solver).</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_Position" data-uid="Jitter2.Dynamics.RigidBodyData.Position">
   Position
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>World-space position of the rigid body (center of mass).</p>
@@ -408,7 +416,7 @@ and kinematic bodies in the solver).</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_Velocity" data-uid="Jitter2.Dynamics.RigidBodyData.Velocity">
   Velocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Linear velocity in world space, measured in units per second.</p>
@@ -439,7 +447,7 @@ and kinematic bodies in the solver).</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData__index" data-uid="Jitter2.Dynamics.RigidBodyData._index">
   _index
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Internal index used by the engine for handle management. Not stable across frames.</p>
@@ -470,7 +478,7 @@ and kinematic bodies in the solver).</p>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData__lockFlag" data-uid="Jitter2.Dynamics.RigidBodyData._lockFlag">
   _lockFlag
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Internal synchronization flag used by the engine. Do not modify.</p>
@@ -502,11 +510,43 @@ and kinematic bodies in the solver).</p>
 </h2>
 
 
+  <a id="Jitter2_Dynamics_RigidBodyData_AllowedMotion_" data-uid="Jitter2.Dynamics.RigidBodyData.AllowedMotion*"></a>
+
+  <h3 id="Jitter2_Dynamics_RigidBodyData_AllowedMotion" data-uid="Jitter2.Dynamics.RigidBodyData.AllowedMotion">
+  AllowedMotion
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Permitted world-space motion. Set through <a class="xref" href="Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AllowedMotion">AllowedMotion</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly MotionAxes AllowedMotion { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.MotionAxes.html">MotionAxes</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <a id="Jitter2_Dynamics_RigidBodyData_EnableGyroscopicForces_" data-uid="Jitter2.Dynamics.RigidBodyData.EnableGyroscopicForces*"></a>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_EnableGyroscopicForces" data-uid="Jitter2.Dynamics.RigidBodyData.EnableGyroscopicForces">
   EnableGyroscopicForces
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L222"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether the implicit gyroscopic torque solver is enabled.
@@ -539,7 +579,7 @@ See <a class="xref" href="Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_Rigid
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_IsActive" data-uid="Jitter2.Dynamics.RigidBodyData.IsActive">
   IsActive
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether the body is active (awake) and participating in simulation.
@@ -572,7 +612,7 @@ Inactive bodies are considered sleeping and skip integration until reactivated.<
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_IsStaticOrInactive" data-uid="Jitter2.Dynamics.RigidBodyData.IsStaticOrInactive">
   IsStaticOrInactive
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L236"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns true if the body is not dynamic or currently inactive (sleeping).</p>
@@ -605,7 +645,7 @@ public bool IsStaticOrInactive { get; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_RigidBodyData_MotionType" data-uid="Jitter2.Dynamics.RigidBodyData.MotionType">
   MotionType
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L243"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets how this body participates in the simulation.
@@ -638,7 +678,7 @@ Encoded in bits 0–1 of <a class="xref" href="Jitter2.Dynamics.RigidBodyData.ht
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L72" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/RigidBody.cs/#L107" class="edit-link">Edit this page</a>
         </div>
 
 

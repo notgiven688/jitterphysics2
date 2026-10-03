@@ -118,7 +118,12 @@ Unit density is assumed for the calculations.</p>
 </code></pre>
 <p>will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.</p>
 <p>The mass properties of the body can also be set directly using <code>body.SetMassInertia</code>.
-Passing <code>MassInertiaUpdateMode.Preserve</code> to <code>body.AddShape(...)</code> or <code>body.AddShapes(...)</code> prevents the automatic recalculation of mass properties when shapes are added.</p>
+Inertia tensors use <code>JSymmetricMatrix</code>, which stores the six independent components of a symmetric matrix.
+Both <code>body.InverseInertia</code> and shape mass-property calculations use this type.</p>
+<pre><code class="lang-cs">body.SetMassInertia(JSymmetricMatrix.CreateScale(2, 3, 4), mass: 5);
+</code></pre>
+<p>The tensor is expressed in body space, about the body's center of mass.</p>
+<p>Passing <code>MassInertiaUpdateMode.Preserve</code> to <code>body.AddShape(...)</code> or <code>body.AddShapes(...)</code> prevents the automatic recalculation of mass properties when shapes are added.</p>
 <div class="IMPORTANT">
 <h5>Important</h5>
 <p>The position of a rigid body must align with its center of mass.
@@ -148,6 +153,61 @@ When set to <code>false</code>, the impulse is silently ignored if the body is s
 <h2 id="gravity">Gravity</h2>
 <p>The gravity for the world can be set using <code>world.Gravity</code>.
 The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.</p>
+<h2 id="restricting-motion-and-planar-simulations">Restricting motion and planar simulations</h2>
+<p><code>body.AllowedMotion</code> specifies the translations and rotations permitted by the simulation.
+The default is <code>MotionAxes.All</code>. Each assignment replaces the previous selection.
+All axes are in <strong>world space</strong>, including the angular axes.</p>
+<p>For motion in the XY plane:</p>
+<pre><code class="lang-cs">body.AllowedMotion = MotionAxes.PlaneXY;
+// Equivalent to LinearX | LinearY | AngularZ.
+</code></pre>
+<p><code>PlaneXZ</code> and <code>PlaneYZ</code> provide the corresponding presets for the other coordinate planes.
+You can also combine individual axes:</p>
+<pre><code class="lang-cs">body.AllowedMotion = MotionAxes.LinearX | MotionAxes.AngularZ;
+</code></pre>
+<p>An angular flag names the axis of rotation: <code>AngularZ</code> permits rotation around the world Z axis.
+<code>MotionAxes.Linear</code> permits all translations, and <code>MotionAxes.Angular</code> permits all rotations.</p>
+<p>Restrictions change the <strong>effective inverse mass and inverse inertia used by the solver</strong>.
+Prohibited directions behave as having infinite mass or inertia. <code>body.Mass</code> remains a scalar,
+and <code>body.InverseInertia</code> continues to describe the original inertia in body space.
+For coupled inertia tensors, restricting rotation also changes the effective response around
+the remaining axes. The engine derives this response from the original tensor.</p>
+<p>The original mass properties are preserved. Calls to <code>SetMassInertia</code> and shape changes update
+those properties while retaining the current restrictions. To restore unrestricted response
+from the latest mass properties, assign:</p>
+<pre><code class="lang-cs">body.AllowedMotion = MotionAxes.All;
+</code></pre>
+<p>Changing <code>AllowedMotion</code> immediately clears prohibited velocity components, invalidates cached
+contact and joint impulses, and schedules the affected bodies for activation. Cleared velocities
+are not restored when motion is allowed again. Restrictions apply to forces, gravity, impulses,
+contacts, joints, and kinematic velocities. Position and orientation can still be assigned directly.
+Gyroscopic integration is skipped while any linear or angular axis is restricted.
+Do not change the property concurrently with <code>World.Step</code>.</p>
+<p><code>MotionAxes.None</code> prohibits simulated movement while preserving the body's <code>MotionType</code> and
+collision/island participation. Use <code>MotionType.Static</code> for ordinary static geometry.</p>
+<p>Planar motion uses the existing 3D collision shapes and contact generation. Bodies retain their
+initial coordinate along the prohibited translation axis; set that coordinate consistently when
+building a planar scene. This does not add separate 2D shape types or collision detection.</p>
+<h3 id="custom-constraints">Custom constraints</h3>
+<p>The low-level <code>RigidBodyData.InverseMassVector</code> is a <code>JVector</code>. Use
+<code>JVector.Multiply(data.InverseMassVector, impulse)</code> for the componentwise velocity response and
+<code>JVector.Multiply(direction, data.InverseMassVector) * direction</code> for a solver row's translational inverse effective mass.
+Multiplying two <code>JVector</code> values with <code>*</code> computes a dot product, so it cannot replace
+componentwise multiplication.</p>
+<p><code>RigidBodyData.InverseInertiaWorld</code> is a <code>JSymmetricMatrix</code> stored in six scalars. It supports
+<code>JVector.Transform</code> and can be expanded to <code>JMatrix</code> using <code>ToMatrix()</code>. Custom solvers must handle zero
+response in prohibited directions, including singular effective-mass matrices. The body data
+occupies 128 bytes in single precision and 256 bytes in double precision. Access its fields
+by name rather than relying on field offsets.</p>
+<p>For symmetric, positive-semidefinite effective-mass matrices, use
+<code>MathHelper.PseudoInverseSymmetric</code> to invert the responsive subspace while retaining zero
+response in blocked directions:</p>
+<pre><code class="lang-cs">JMatrix effectiveMass = MathHelper.PseudoInverseSymmetric(inverseEffectiveMass);
+</code></pre>
+<p>Compute this during constraint preparation and reuse the result in solver iterations.
+The method assumes finite, symmetric, positive-semidefinite input. It uses a numerical
+cutoff when diagonalizing singular or nearly singular matrices; see its API documentation
+for the precision-dependent tolerance.</p>
 <h2 id="damping">Damping</h2>
 <p>Jitter2 uses a simple damping system to slow rigid bodies down.
 This improves simulation stability and also resembles mechanical systems losing energy in the real world.

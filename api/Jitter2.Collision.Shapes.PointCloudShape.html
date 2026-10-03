@@ -433,8 +433,8 @@ body that contains one or more shapes.</p>
 
   <a id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia*"></a>
 
-  <h3 id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
-  CalculateMassInertia(out JMatrix, out JVector, out float)
+  <h3 id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
+  CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -445,12 +445,12 @@ constructed using the support map function.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out float mass)</code></pre>
+    <pre><code class="lang-csharp hljs">public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out float mass)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>inertia</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dt><code>inertia</code> <a class="xref" href="Jitter2.LinearMath.JSymmetricMatrix.html">JSymmetricMatrix</a></dt>
     <dd></dd>
     <dt><code>com</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
     <dd></dd>
@@ -465,7 +465,7 @@ constructed using the support map function.</p>
 
 
 
-  <h4 class="section" id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <h4 class="section" id="Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>The inertia tensor is computed relative to the coordinate system origin (0,0,0),
 not the center of mass.</p>
 </div>

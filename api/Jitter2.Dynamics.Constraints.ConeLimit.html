@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_ConeLimit" data-uid="Jitter2.Dynamics.Constraints.ConeLimit" class="text-break">
-Class ConeLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L18"><i class="bi bi-code-slash"></i></a>
+Class ConeLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -218,6 +218,10 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
 
 
+  <h2 id="Jitter2_Dynamics_Constraints_ConeLimit_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Fixed tilts must lie strictly between zero and pi. Use <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html">HingeAngle</a> with
+<a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html#Jitter2_Dynamics_Constraints_AngularLimit_Full">Full</a> to keep axes aligned while allowing rotation about them.</p>
+</div>
 
 
   <h2 class="section" id="properties">Properties
@@ -228,7 +232,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Angle" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Angle">
   Angle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current angle between the two body axes.</p>
@@ -260,7 +264,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_AxisBody1" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.AxisBody1">
   AxisBody1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the reference axis of body 1 in world space.</p>
@@ -298,7 +302,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_AxisBody2" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.AxisBody2">
   AxisBody2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L194"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L197"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the reference axis of body 2 in world space.</p>
@@ -336,7 +340,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Bias" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L317"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L365"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively angular error is corrected.</p>
@@ -369,7 +373,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Impulse" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L378"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
@@ -401,7 +405,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Limit" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Limit">
   Limit
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L225"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L228"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the angular limit of the cone.</p>
@@ -430,7 +434,7 @@ Class ConeLimit  <a class="header-action link-secondary" title="View source" hre
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
     <dd><p>Thrown when the assigned limit is outside the range [0, pi], or when its upper value is smaller
-than its lower value.</p>
+than its lower value, or when the limit fixes the tilt at zero or pi.</p>
 </dd>
   </dl>
 
@@ -440,7 +444,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Softness" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L301"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L349"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the constraint.</p>
@@ -477,7 +481,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Create" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L55"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
@@ -506,7 +510,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L369"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L417"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -545,7 +549,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit)">
   Initialize(JVector, AngularLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the cone limit using a world-space axis and an angular range.</p>
@@ -586,7 +590,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.ConeLimit.htm
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
     <dd><p>Thrown when <code class="paramref">limit</code> is outside the range [0, pi], or when its upper value is smaller
-than its lower value.</p>
+than its lower value, or when the limit fixes the tilt at zero or pi.</p>
 </dd>
   </dl>
 
@@ -596,7 +600,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit)">
   Initialize(JVector, JVector, AngularLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the cone limit using two world-space axes and an angular range.</p>
@@ -640,7 +644,7 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.ConeLimit.htm
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
     <dd><p>Thrown when <code class="paramref">limit</code> is outside the range [0, pi], or when its upper value is smaller
-than its lower value.</p>
+than its lower value, or when the limit fixes the tilt at zero or pi.</p>
 </dd>
   </dl>
 
@@ -650,7 +654,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_IterateConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   IterateConeLimit(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L332"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -683,7 +687,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_PrepareForIterationConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
   PrepareForIterationConeLimit(ref ConstraintData, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L244"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L256"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -716,7 +720,7 @@ than its lower value.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_ConeLimit_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.ConeLimit.ResetWarmStart">
   ResetWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
@@ -748,7 +752,7 @@ warm-starting is undesirable.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/ConeLimit.cs/#L22" class="edit-link">Edit this page</a>
         </div>
 
 

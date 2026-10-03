@@ -199,7 +199,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_CloseToZero_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.CloseToZero(Jitter2.LinearMath.JVector@,System.Single)">
   CloseToZero(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L412"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the length of the given vector is zero or close to zero.</p>
@@ -443,6 +443,54 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
 
 
+
+
+
+
+  <a id="Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_" data-uid="Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric*"></a>
+
+  <h3 id="Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(Jitter2.LinearMath.JMatrix@)">
+  PseudoInverseSymmetric(in JMatrix)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L280"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes an approximate Moore-Penrose pseudoinverse of a symmetric,
+positive-semidefinite 3x3 matrix, such as a joint's inverse effective mass.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static JMatrix PseudoInverseSymmetric(in JMatrix matrix)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>matrix</code> <a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>A finite, symmetric, positive-semidefinite matrix.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a></dt>
+    <dd><p>The inverse on responsive directions, with zero response on discarded directions.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_Jitter2_LinearMath_JMatrix___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Uses the ordinary inverse when the normalized determinant is sufficiently large.
+Otherwise, Jacobi diagonalization retains eigenvalues greater than a normalized
+tolerance of 1e-6 in single precision or 1e-12 in double precision. The normalization
+uses the largest absolute diagonal entry. A zero matrix produces a zero pseudoinverse.
+Symmetry and positive semidefiniteness are assumed and are not validated.
+Compute this during constraint preparation and cache the result for solver iterations.</p>
+</div>
 
 
 

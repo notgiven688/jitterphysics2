@@ -140,7 +140,7 @@ Constraints remove one or more of these degrees of freedom.</p>
 <tr>
 <td><code>ConeLimit</code></td>
 <td>1 rotational (when limit active)</td>
-<td>Limits angular tilt between two axes, only enforced when outside the limit range</td>
+<td>Limits angular tilt between two axes</td>
 </tr>
 <tr>
 <td><code>AngularMotor</code></td>
@@ -220,6 +220,18 @@ ballSocket.Initialize(hingeCenter);
 <p>Alternatively, the <code>HingeJoint</code> can be used for convenience:</p>
 <pre><code class="lang-cs">var hinge = new HingeJoint(world, body1, body2, hingeCenter, hingeAxis);
 </code></pre>
+<h3 id="cone-limits">Cone limits</h3>
+<p><code>ConeLimit</code> restricts the angle between two axes to a range from 0° to 180°.
+Ranges such as <code>[0°, 45°]</code>, <code>[135°, 180°]</code>, and <code>[0°, 180°]</code> are valid.
+Equal limits fix the angle when it lies strictly between 0° and 180°, for example <code>[30°, 30°]</code>.</p>
+<p>The fixed ranges <code>[0°, 0°]</code> and <code>[180°, 180°]</code> are rejected by <code>Initialize</code> and the <code>Limit</code> property.
+To keep axes parallel or antiparallel while allowing free twist, use <code>HingeAngle</code> with <code>AngularLimit.Full</code>:</p>
+<pre><code class="lang-cs">var hingeAngle = world.CreateConstraint&lt;HingeAngle&gt;(body1, body2);
+hingeAngle.Initialize(hingeAxis, AngularLimit.Full);
+</code></pre>
+<p>Position the bodies with the intended axes aligned or antiparallel before initialization.
+<code>HingeAngle</code> stores their current relative orientation as its reference; it does not pull two
+arbitrarily misaligned axes into alignment during initialization.</p>
 <h3 id="fixed-constraints">Fixed constraints</h3>
 <p>To constrain a rigid body relative to world space, use <code>world.NullBody</code> as one of the bodies.
 For example, to keep a capsule upright:</p>

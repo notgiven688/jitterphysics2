@@ -1773,15 +1773,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.BoxShape.CalculateBoundingBox
   nameWithType: BoxShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: BoxShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: BoxShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: BoxShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: BoxShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_CalculateMassInertia_
@@ -1891,15 +1891,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CapsuleShape.CalculateBoundingBox
   nameWithType: CapsuleShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: CapsuleShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: CapsuleShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: CapsuleShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: CapsuleShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_CalculateMassInertia_
@@ -2006,15 +2006,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ConeShape.CalculateBoundingBox
   nameWithType: ConeShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: ConeShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: ConeShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: ConeShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: ConeShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_CalculateMassInertia_
@@ -2136,15 +2136,15 @@ references:
   commentId: M:Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia
   fullName: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia()
   nameWithType: ConvexHullShape.CalculateMassInertia()
-- uid: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: ConvexHullShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: ConvexHullShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: ConvexHullShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: ConvexHullShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.ConvexHullShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_CalculateMassInertia_
@@ -2264,15 +2264,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CylinderShape.CalculateBoundingBox
   nameWithType: CylinderShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: CylinderShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: CylinderShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: CylinderShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: CylinderShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_CalculateMassInertia_
@@ -2429,15 +2429,15 @@ references:
   commentId: M:Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia
   fullName: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia()
   nameWithType: PointCloudShape.CalculateMassInertia()
-- uid: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.PointCloudShape.html#Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: PointCloudShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: PointCloudShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.PointCloudShape.html#Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: PointCloudShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: PointCloudShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.PointCloudShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.PointCloudShape.html#Jitter2_Collision_Shapes_PointCloudShape_CalculateMassInertia_
@@ -2538,15 +2538,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.RigidBodyShape.CalculateBoundingBox
   nameWithType: RigidBodyShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: RigidBodyShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: RigidBodyShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: RigidBodyShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: RigidBodyShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_CalculateMassInertia_
@@ -2839,15 +2839,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia
   nameWithType: ShapeHelper.CalculateMassInertia
-- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
-  name: CalculateMassInertia<TSupport>(in TSupport, out JMatrix, out JVector, out float, int)
-  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_
-  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
-  name.vb: CalculateMassInertia(Of TSupport)(TSupport, JMatrix, JVector, Single, Integer)
-  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float, int)
-  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single, Integer)
-  nameWithType: ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out JMatrix, out JVector, out float, int)
-  nameWithType.vb: ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, JMatrix, JVector, Single, Integer)
+- uid: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
+  name: CalculateMassInertia<TSupport>(in TSupport, out JSymmetricMatrix, out JVector, out float, int)
+  href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_CalculateMassInertia__1___0__Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__System_Int32_
+  commentId: M:Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia``1(``0@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@,System.Int32)
+  name.vb: CalculateMassInertia(Of TSupport)(TSupport, JSymmetricMatrix, JVector, Single, Integer)
+  fullName: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float, int)
+  fullName.vb: Jitter2.Collision.Shapes.ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single, Integer)
+  nameWithType: ShapeHelper.CalculateMassInertia<TSupport>(in TSupport, out JSymmetricMatrix, out JVector, out float, int)
+  nameWithType.vb: ShapeHelper.CalculateMassInertia(Of TSupport)(TSupport, JSymmetricMatrix, JVector, Single, Integer)
 - uid: Jitter2.Collision.Shapes.ShapeHelper.MakeHull(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector},System.Int32)
   name: MakeHull(IEnumerable<JVector>, int)
   href: api/Jitter2.Collision.Shapes.ShapeHelper.html#Jitter2_Collision_Shapes_ShapeHelper_MakeHull_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__System_Int32_
@@ -3018,15 +3018,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.SphereShape.CalculateBoundingBox
   nameWithType: SphereShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: SphereShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: SphereShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: SphereShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: SphereShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_CalculateMassInertia_
@@ -3154,15 +3154,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.TransformedShape.CalculateBoundingBox
   nameWithType: TransformedShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: TransformedShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: TransformedShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: TransformedShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: TransformedShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_
@@ -3535,15 +3535,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.TriangleShape.CalculateBoundingBox
   nameWithType: TriangleShape.CalculateBoundingBox
-- uid: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name: CalculateMassInertia(out JMatrix, out JVector, out float)
-  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_CalculateMassInertia_Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__System_Single__
-  commentId: M:Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
-  name.vb: CalculateMassInertia(JMatrix, JVector, Single)
-  fullName: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(out Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JVector, out float)
-  fullName.vb: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JVector, Single)
-  nameWithType: TriangleShape.CalculateMassInertia(out JMatrix, out JVector, out float)
-  nameWithType.vb: TriangleShape.CalculateMassInertia(JMatrix, JVector, Single)
+- uid: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: CalculateMassInertia(JSymmetricMatrix, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(out Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector, Single)
+  nameWithType: TriangleShape.CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
+  nameWithType.vb: TriangleShape.CalculateMassInertia(JSymmetricMatrix, JVector, Single)
 - uid: Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia*
   name: CalculateMassInertia
   href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_CalculateMassInertia_
@@ -6472,18 +6472,6 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.J0
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.J0
   nameWithType: ConeLimit.ConeLimitData.J0
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitHigh
-  name: LimitHigh
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_LimitHigh
-  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitHigh
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitHigh
-  nameWithType: ConeLimit.ConeLimitData.LimitHigh
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitLow
-  name: LimitLow
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_LimitLow
-  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitLow
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LimitLow
-  nameWithType: ConeLimit.ConeLimitData.LimitLow
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LocalAxis1
   name: LocalAxis1
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_LocalAxis1
@@ -6496,6 +6484,18 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LocalAxis2
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.LocalAxis2
   nameWithType: ConeLimit.ConeLimitData.LocalAxis2
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MaxAngle
+  name: MaxAngle
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_MaxAngle
+  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MaxAngle
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MaxAngle
+  nameWithType: ConeLimit.ConeLimitData.MaxAngle
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MinAngle
+  name: MinAngle
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_MinAngle
+  commentId: F:Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MinAngle
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.MinAngle
+  nameWithType: ConeLimit.ConeLimitData.MinAngle
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.Softness
   name: Softness
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.ConeLimitData.html#Jitter2_Dynamics_Constraints_ConeLimit_ConeLimitData_Softness
@@ -7394,6 +7394,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.EffectiveMass
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.EffectiveMass
   nameWithType: FixedAngle.FixedAngleData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Hemisphere
+  name: Hemisphere
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_Hemisphere
+  commentId: F:Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Hemisphere
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Hemisphere
+  nameWithType: FixedAngle.FixedAngleData.Hemisphere
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.FixedAngleData.html#Jitter2_Dynamics_Constraints_FixedAngle_FixedAngleData_Jacobian
@@ -7596,6 +7602,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.BiasFactor
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.BiasFactor
   nameWithType: HingeAngle.HingeAngleData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.BilateralMass
+  name: BilateralMass
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_BilateralMass
+  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.BilateralMass
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.BilateralMass
+  nameWithType: HingeAngle.HingeAngleData.BilateralMass
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Body1
   name: Body1
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Body1
@@ -7614,6 +7626,18 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Clamp
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Clamp
   nameWithType: HingeAngle.HingeAngleData.Clamp
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingX
+  name: CouplingX
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_CouplingX
+  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingX
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingX
+  nameWithType: HingeAngle.HingeAngleData.CouplingX
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingY
+  name: CouplingY
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_CouplingY
+  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingY
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.CouplingY
+  nameWithType: HingeAngle.HingeAngleData.CouplingY
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.EffectiveMass
   name: EffectiveMass
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_EffectiveMass
@@ -7626,6 +7650,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.FixedAngle
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.FixedAngle
   nameWithType: HingeAngle.HingeAngleData.FixedAngle
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Hemisphere
+  name: Hemisphere
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Hemisphere
+  commentId: F:Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Hemisphere
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Hemisphere
+  nameWithType: HingeAngle.HingeAngleData.Hemisphere
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.HingeAngleData.html#Jitter2_Dynamics_Constraints_HingeAngle_HingeAngleData_Jacobian
@@ -8453,6 +8483,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.BiasFactor
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.BiasFactor
   nameWithType: PointOnLine.PointOnLineData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.BilateralMass
+  name: BilateralMass
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_BilateralMass
+  commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.BilateralMass
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.BilateralMass
+  nameWithType: PointOnLine.PointOnLineData.BilateralMass
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Body1
   name: Body1
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_Body1
@@ -8471,6 +8507,18 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Clamp
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Clamp
   nameWithType: PointOnLine.PointOnLineData.Clamp
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingX
+  name: CouplingX
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_CouplingX
+  commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingX
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingX
+  nameWithType: PointOnLine.PointOnLineData.CouplingX
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingY
+  name: CouplingY
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_CouplingY
+  commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingY
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.CouplingY
+  nameWithType: PointOnLine.PointOnLineData.CouplingY
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.EffectiveMass
   name: EffectiveMass
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.html#Jitter2_Dynamics_Constraints_PointOnLine_PointOnLineData_EffectiveMass
@@ -9212,6 +9260,12 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.FixedAngle
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.FixedAngle
   nameWithType: TwistAngle.TwistLimitData.FixedAngle
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Hemisphere
+  name: Hemisphere
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Hemisphere
+  commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Hemisphere
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Hemisphere
+  nameWithType: TwistAngle.TwistLimitData.Hemisphere
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Jacobian
   name: Jacobian
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html#Jitter2_Dynamics_Constraints_TwistAngle_TwistLimitData_Jacobian
@@ -9964,6 +10018,90 @@ references:
   commentId: F:Jitter2.Dynamics.MassInertiaUpdateMode.Update
   fullName: Jitter2.Dynamics.MassInertiaUpdateMode.Update
   nameWithType: MassInertiaUpdateMode.Update
+- uid: Jitter2.Dynamics.MotionAxes
+  name: MotionAxes
+  href: api/Jitter2.Dynamics.MotionAxes.html
+  commentId: T:Jitter2.Dynamics.MotionAxes
+  fullName: Jitter2.Dynamics.MotionAxes
+  nameWithType: MotionAxes
+- uid: Jitter2.Dynamics.MotionAxes.All
+  name: All
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_All
+  commentId: F:Jitter2.Dynamics.MotionAxes.All
+  fullName: Jitter2.Dynamics.MotionAxes.All
+  nameWithType: MotionAxes.All
+- uid: Jitter2.Dynamics.MotionAxes.Angular
+  name: Angular
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_Angular
+  commentId: F:Jitter2.Dynamics.MotionAxes.Angular
+  fullName: Jitter2.Dynamics.MotionAxes.Angular
+  nameWithType: MotionAxes.Angular
+- uid: Jitter2.Dynamics.MotionAxes.AngularX
+  name: AngularX
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_AngularX
+  commentId: F:Jitter2.Dynamics.MotionAxes.AngularX
+  fullName: Jitter2.Dynamics.MotionAxes.AngularX
+  nameWithType: MotionAxes.AngularX
+- uid: Jitter2.Dynamics.MotionAxes.AngularY
+  name: AngularY
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_AngularY
+  commentId: F:Jitter2.Dynamics.MotionAxes.AngularY
+  fullName: Jitter2.Dynamics.MotionAxes.AngularY
+  nameWithType: MotionAxes.AngularY
+- uid: Jitter2.Dynamics.MotionAxes.AngularZ
+  name: AngularZ
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_AngularZ
+  commentId: F:Jitter2.Dynamics.MotionAxes.AngularZ
+  fullName: Jitter2.Dynamics.MotionAxes.AngularZ
+  nameWithType: MotionAxes.AngularZ
+- uid: Jitter2.Dynamics.MotionAxes.Linear
+  name: Linear
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_Linear
+  commentId: F:Jitter2.Dynamics.MotionAxes.Linear
+  fullName: Jitter2.Dynamics.MotionAxes.Linear
+  nameWithType: MotionAxes.Linear
+- uid: Jitter2.Dynamics.MotionAxes.LinearX
+  name: LinearX
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_LinearX
+  commentId: F:Jitter2.Dynamics.MotionAxes.LinearX
+  fullName: Jitter2.Dynamics.MotionAxes.LinearX
+  nameWithType: MotionAxes.LinearX
+- uid: Jitter2.Dynamics.MotionAxes.LinearY
+  name: LinearY
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_LinearY
+  commentId: F:Jitter2.Dynamics.MotionAxes.LinearY
+  fullName: Jitter2.Dynamics.MotionAxes.LinearY
+  nameWithType: MotionAxes.LinearY
+- uid: Jitter2.Dynamics.MotionAxes.LinearZ
+  name: LinearZ
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_LinearZ
+  commentId: F:Jitter2.Dynamics.MotionAxes.LinearZ
+  fullName: Jitter2.Dynamics.MotionAxes.LinearZ
+  nameWithType: MotionAxes.LinearZ
+- uid: Jitter2.Dynamics.MotionAxes.None
+  name: None
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_None
+  commentId: F:Jitter2.Dynamics.MotionAxes.None
+  fullName: Jitter2.Dynamics.MotionAxes.None
+  nameWithType: MotionAxes.None
+- uid: Jitter2.Dynamics.MotionAxes.PlaneXY
+  name: PlaneXY
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_PlaneXY
+  commentId: F:Jitter2.Dynamics.MotionAxes.PlaneXY
+  fullName: Jitter2.Dynamics.MotionAxes.PlaneXY
+  nameWithType: MotionAxes.PlaneXY
+- uid: Jitter2.Dynamics.MotionAxes.PlaneXZ
+  name: PlaneXZ
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_PlaneXZ
+  commentId: F:Jitter2.Dynamics.MotionAxes.PlaneXZ
+  fullName: Jitter2.Dynamics.MotionAxes.PlaneXZ
+  nameWithType: MotionAxes.PlaneXZ
+- uid: Jitter2.Dynamics.MotionAxes.PlaneYZ
+  name: PlaneYZ
+  href: api/Jitter2.Dynamics.MotionAxes.html#Jitter2_Dynamics_MotionAxes_PlaneYZ
+  commentId: F:Jitter2.Dynamics.MotionAxes.PlaneYZ
+  fullName: Jitter2.Dynamics.MotionAxes.PlaneYZ
+  nameWithType: MotionAxes.PlaneYZ
 - uid: Jitter2.Dynamics.MotionType
   name: MotionType
   href: api/Jitter2.Dynamics.MotionType.html
@@ -10119,6 +10257,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.AffectedByGravity
   nameWithType: RigidBody.AffectedByGravity
+- uid: Jitter2.Dynamics.RigidBody.AllowedMotion
+  name: AllowedMotion
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AllowedMotion
+  commentId: P:Jitter2.Dynamics.RigidBody.AllowedMotion
+  fullName: Jitter2.Dynamics.RigidBody.AllowedMotion
+  nameWithType: RigidBody.AllowedMotion
+- uid: Jitter2.Dynamics.RigidBody.AllowedMotion*
+  name: AllowedMotion
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AllowedMotion_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.AllowedMotion
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.AllowedMotion
+  nameWithType: RigidBody.AllowedMotion
 - uid: Jitter2.Dynamics.RigidBody.AngularVelocity
   name: AngularVelocity
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_AngularVelocity
@@ -10647,15 +10798,15 @@ references:
   commentId: M:Jitter2.Dynamics.RigidBody.SetMassInertia
   fullName: Jitter2.Dynamics.RigidBody.SetMassInertia()
   nameWithType: RigidBody.SetMassInertia()
-- uid: Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JMatrix@,System.Single,System.Boolean)
-  name: SetMassInertia(in JMatrix, float, bool)
-  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_SetMassInertia_Jitter2_LinearMath_JMatrix__System_Single_System_Boolean_
-  commentId: M:Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JMatrix@,System.Single,System.Boolean)
-  name.vb: SetMassInertia(JMatrix, Single, Boolean)
-  fullName: Jitter2.Dynamics.RigidBody.SetMassInertia(in Jitter2.LinearMath.JMatrix, float, bool)
-  fullName.vb: Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JMatrix, Single, Boolean)
-  nameWithType: RigidBody.SetMassInertia(in JMatrix, float, bool)
-  nameWithType.vb: RigidBody.SetMassInertia(JMatrix, Single, Boolean)
+- uid: Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,System.Single,System.Boolean)
+  name: SetMassInertia(in JSymmetricMatrix, float, bool)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_SetMassInertia_Jitter2_LinearMath_JSymmetricMatrix__System_Single_System_Boolean_
+  commentId: M:Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,System.Single,System.Boolean)
+  name.vb: SetMassInertia(JSymmetricMatrix, Single, Boolean)
+  fullName: Jitter2.Dynamics.RigidBody.SetMassInertia(in Jitter2.LinearMath.JSymmetricMatrix, float, bool)
+  fullName.vb: Jitter2.Dynamics.RigidBody.SetMassInertia(Jitter2.LinearMath.JSymmetricMatrix, Single, Boolean)
+  nameWithType: RigidBody.SetMassInertia(in JSymmetricMatrix, float, bool)
+  nameWithType.vb: RigidBody.SetMassInertia(JSymmetricMatrix, Single, Boolean)
 - uid: Jitter2.Dynamics.RigidBody.SetMassInertia(System.Single)
   name: SetMassInertia(float)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_SetMassInertia_System_Single_
@@ -10743,6 +10894,19 @@ references:
   commentId: T:Jitter2.Dynamics.RigidBodyData
   fullName: Jitter2.Dynamics.RigidBodyData
   nameWithType: RigidBodyData
+- uid: Jitter2.Dynamics.RigidBodyData.AllowedMotion
+  name: AllowedMotion
+  href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_AllowedMotion
+  commentId: P:Jitter2.Dynamics.RigidBodyData.AllowedMotion
+  fullName: Jitter2.Dynamics.RigidBodyData.AllowedMotion
+  nameWithType: RigidBodyData.AllowedMotion
+- uid: Jitter2.Dynamics.RigidBodyData.AllowedMotion*
+  name: AllowedMotion
+  href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_AllowedMotion_
+  commentId: Overload:Jitter2.Dynamics.RigidBodyData.AllowedMotion
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBodyData.AllowedMotion
+  nameWithType: RigidBodyData.AllowedMotion
 - uid: Jitter2.Dynamics.RigidBodyData.AngularVelocity
   name: AngularVelocity
   href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_AngularVelocity
@@ -10786,12 +10950,12 @@ references:
   commentId: F:Jitter2.Dynamics.RigidBodyData.InverseInertiaWorld
   fullName: Jitter2.Dynamics.RigidBodyData.InverseInertiaWorld
   nameWithType: RigidBodyData.InverseInertiaWorld
-- uid: Jitter2.Dynamics.RigidBodyData.InverseMass
-  name: InverseMass
-  href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_InverseMass
-  commentId: F:Jitter2.Dynamics.RigidBodyData.InverseMass
-  fullName: Jitter2.Dynamics.RigidBodyData.InverseMass
-  nameWithType: RigidBodyData.InverseMass
+- uid: Jitter2.Dynamics.RigidBodyData.InverseMassVector
+  name: InverseMassVector
+  href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_InverseMassVector
+  commentId: F:Jitter2.Dynamics.RigidBodyData.InverseMassVector
+  fullName: Jitter2.Dynamics.RigidBodyData.InverseMassVector
+  nameWithType: RigidBodyData.InverseMassVector
 - uid: Jitter2.Dynamics.RigidBodyData.IsActive
   name: IsActive
   href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData_IsActive
@@ -13136,6 +13300,485 @@ references:
   fullName.vb: Jitter2.LinearMath.JQuaternion.-
   nameWithType: JQuaternion.operator -
   nameWithType.vb: JQuaternion.-
+- uid: Jitter2.LinearMath.JSymmetricMatrix
+  name: JSymmetricMatrix
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html
+  commentId: T:Jitter2.LinearMath.JSymmetricMatrix
+  fullName: Jitter2.LinearMath.JSymmetricMatrix
+  nameWithType: JSymmetricMatrix
+- uid: Jitter2.LinearMath.JSymmetricMatrix.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  name: JSymmetricMatrix(float, float, float, float, float, float)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix__ctor_System_Single_System_Single_System_Single_System_Single_System_Single_System_Single_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)
+  name.vb: New(Single, Single, Single, Single, Single, Single)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.JSymmetricMatrix(float, float, float, float, float, float)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.New(Single, Single, Single, Single, Single, Single)
+  nameWithType: JSymmetricMatrix.JSymmetricMatrix(float, float, float, float, float, float)
+  nameWithType.vb: JSymmetricMatrix.New(Single, Single, Single, Single, Single, Single)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.#ctor*
+  name: JSymmetricMatrix
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix__ctor_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.JSymmetricMatrix
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.New
+  nameWithType: JSymmetricMatrix.JSymmetricMatrix
+  nameWithType.vb: JSymmetricMatrix.New
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Add(in JSymmetricMatrix, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Add_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Add(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Add(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Add(in JSymmetricMatrix, in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Add(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Add(in JSymmetricMatrix, in JSymmetricMatrix, out JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Add_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Add(JSymmetricMatrix, JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Add(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Add(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Add(in JSymmetricMatrix, in JSymmetricMatrix, out JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Add(JSymmetricMatrix, JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Add*
+  name: Add
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Add_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Add
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Add
+  nameWithType: JSymmetricMatrix.Add
+- uid: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(Jitter2.LinearMath.JVector@)
+  name: CreateScale(in JVector)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_CreateScale_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.CreateScale(Jitter2.LinearMath.JVector@)
+  name.vb: CreateScale(JVector)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(Jitter2.LinearMath.JVector)
+  nameWithType: JSymmetricMatrix.CreateScale(in JVector)
+  nameWithType.vb: JSymmetricMatrix.CreateScale(JVector)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(System.Single,System.Single,System.Single)
+  name: CreateScale(float, float, float)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_CreateScale_System_Single_System_Single_System_Single_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.CreateScale(System.Single,System.Single,System.Single)
+  name.vb: CreateScale(Single, Single, Single)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(float, float, float)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.CreateScale(Single, Single, Single)
+  nameWithType: JSymmetricMatrix.CreateScale(float, float, float)
+  nameWithType.vb: JSymmetricMatrix.CreateScale(Single, Single, Single)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.CreateScale*
+  name: CreateScale
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_CreateScale_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.CreateScale
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.CreateScale
+  nameWithType: JSymmetricMatrix.CreateScale
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Determinant
+  name: Determinant()
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Determinant
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Determinant
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Determinant()
+  nameWithType: JSymmetricMatrix.Determinant()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Determinant*
+  name: Determinant
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Determinant_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Determinant
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Determinant
+  nameWithType: JSymmetricMatrix.Determinant
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Equals(Jitter2.LinearMath.JSymmetricMatrix)
+  name: Equals(JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Equals_Jitter2_LinearMath_JSymmetricMatrix_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Equals(Jitter2.LinearMath.JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Equals(Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Equals(JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Equals(System.Object)
+  name: Equals(object?)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Equals_System_Object_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Equals(System.Object)
+  name.vb: Equals(Object)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Equals(object?)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Equals(Object)
+  nameWithType: JSymmetricMatrix.Equals(object?)
+  nameWithType.vb: JSymmetricMatrix.Equals(Object)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Equals*
+  name: Equals
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Equals_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Equals
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Equals
+  nameWithType: JSymmetricMatrix.Equals
+- uid: Jitter2.LinearMath.JSymmetricMatrix.GetHashCode
+  name: GetHashCode()
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_GetHashCode
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.GetHashCode
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.GetHashCode()
+  nameWithType: JSymmetricMatrix.GetHashCode()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.GetHashCode*
+  name: GetHashCode
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_GetHashCode_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.GetHashCode
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.GetHashCode
+  nameWithType: JSymmetricMatrix.GetHashCode
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Identity
+  name: Identity
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Identity
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.Identity
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Identity
+  nameWithType: JSymmetricMatrix.Identity
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Inverse(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Inverse(in JSymmetricMatrix, out JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Inverse_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Inverse(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Inverse(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Inverse(in Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Inverse(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Inverse(in JSymmetricMatrix, out JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Inverse(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Inverse*
+  name: Inverse
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Inverse_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Inverse
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Inverse
+  nameWithType: JSymmetricMatrix.Inverse
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M11
+  name: M11
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M11
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M11
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M11
+  nameWithType: JSymmetricMatrix.M11
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M12
+  name: M12
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M12
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M12
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M12
+  nameWithType: JSymmetricMatrix.M12
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M13
+  name: M13
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M13
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M13
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M13
+  nameWithType: JSymmetricMatrix.M13
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M21
+  name: M21
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M21
+  commentId: P:Jitter2.LinearMath.JSymmetricMatrix.M21
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M21
+  nameWithType: JSymmetricMatrix.M21
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M21*
+  name: M21
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M21_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.M21
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M21
+  nameWithType: JSymmetricMatrix.M21
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M22
+  name: M22
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M22
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M22
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M22
+  nameWithType: JSymmetricMatrix.M22
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M23
+  name: M23
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M23
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M23
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M23
+  nameWithType: JSymmetricMatrix.M23
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M31
+  name: M31
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M31
+  commentId: P:Jitter2.LinearMath.JSymmetricMatrix.M31
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M31
+  nameWithType: JSymmetricMatrix.M31
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M31*
+  name: M31
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M31_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.M31
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M31
+  nameWithType: JSymmetricMatrix.M31
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M32
+  name: M32
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M32
+  commentId: P:Jitter2.LinearMath.JSymmetricMatrix.M32
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M32
+  nameWithType: JSymmetricMatrix.M32
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M32*
+  name: M32
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M32_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.M32
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M32
+  nameWithType: JSymmetricMatrix.M32
+- uid: Jitter2.LinearMath.JSymmetricMatrix.M33
+  name: M33
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_M33
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.M33
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.M33
+  nameWithType: JSymmetricMatrix.M33
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single)
+  name: Multiply(in JSymmetricMatrix, float)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Multiply_Jitter2_LinearMath_JSymmetricMatrix__System_Single_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single)
+  name.vb: Multiply(JSymmetricMatrix, Single)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Multiply(in Jitter2.LinearMath.JSymmetricMatrix, float)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix, Single)
+  nameWithType: JSymmetricMatrix.Multiply(in JSymmetricMatrix, float)
+  nameWithType.vb: JSymmetricMatrix.Multiply(JSymmetricMatrix, Single)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Multiply(in JSymmetricMatrix, float, out JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Multiply_Jitter2_LinearMath_JSymmetricMatrix__System_Single_Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Multiply(JSymmetricMatrix, Single, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Multiply(in Jitter2.LinearMath.JSymmetricMatrix, float, out Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Multiply(Jitter2.LinearMath.JSymmetricMatrix, Single, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Multiply(in JSymmetricMatrix, float, out JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Multiply(JSymmetricMatrix, Single, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Multiply*
+  name: Multiply
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Multiply_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Multiply
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Multiply
+  nameWithType: JSymmetricMatrix.Multiply
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Outer(Jitter2.LinearMath.JVector@)
+  name: Outer(in JVector)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Outer_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Outer(Jitter2.LinearMath.JVector@)
+  name.vb: Outer(JVector)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Outer(in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Outer(Jitter2.LinearMath.JVector)
+  nameWithType: JSymmetricMatrix.Outer(in JVector)
+  nameWithType.vb: JSymmetricMatrix.Outer(JVector)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Outer*
+  name: Outer
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Outer_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Outer
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Outer
+  nameWithType: JSymmetricMatrix.Outer
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Subtract(in JSymmetricMatrix, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Subtract_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Subtract(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Subtract(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Subtract(in JSymmetricMatrix, in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Subtract(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Subtract(in JSymmetricMatrix, in JSymmetricMatrix, out JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Subtract_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Subtract(JSymmetricMatrix, JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Subtract(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Subtract(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Subtract(in JSymmetricMatrix, in JSymmetricMatrix, out JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Subtract(JSymmetricMatrix, JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Subtract*
+  name: Subtract
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Subtract_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Subtract
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Subtract
+  nameWithType: JSymmetricMatrix.Subtract
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToMatrix
+  name: ToMatrix()
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToMatrix
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.ToMatrix
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToMatrix()
+  nameWithType: JSymmetricMatrix.ToMatrix()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToMatrix*
+  name: ToMatrix
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToMatrix_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.ToMatrix
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToMatrix
+  nameWithType: JSymmetricMatrix.ToMatrix
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToString
+  name: ToString()
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToString
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.ToString
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToString()
+  nameWithType: JSymmetricMatrix.ToString()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToString*
+  name: ToString
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToString_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.ToString
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToString
+  nameWithType: JSymmetricMatrix.ToString
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Trace
+  name: Trace()
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Trace
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Trace
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Trace()
+  nameWithType: JSymmetricMatrix.Trace()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Trace*
+  name: Trace
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Trace_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Trace
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Trace
+  nameWithType: JSymmetricMatrix.Trace
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JMatrix@)
+  name: Transform(in JSymmetricMatrix, in JMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Transform_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JMatrix@)
+  name.vb: Transform(JSymmetricMatrix, JMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Transform(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JMatrix)
+  nameWithType: JSymmetricMatrix.Transform(in JSymmetricMatrix, in JMatrix)
+  nameWithType.vb: JSymmetricMatrix.Transform(JSymmetricMatrix, JMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Transform(in JSymmetricMatrix, in JMatrix, out JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Transform_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Transform(JSymmetricMatrix, JMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Transform(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JMatrix, out Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.Transform(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.Transform(in JSymmetricMatrix, in JMatrix, out JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.Transform(JSymmetricMatrix, JMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Transform*
+  name: Transform
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Transform_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.Transform
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Transform
+  nameWithType: JSymmetricMatrix.Transform
+- uid: Jitter2.LinearMath.JSymmetricMatrix.Zero
+  name: Zero
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_Zero
+  commentId: F:Jitter2.LinearMath.JSymmetricMatrix.Zero
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.Zero
+  nameWithType: JSymmetricMatrix.Zero
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Addition(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: operator +(in JSymmetricMatrix, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Addition_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Addition(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: +(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator +(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.+(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.operator +(in JSymmetricMatrix, in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.+(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Addition*
+  name: operator +
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Addition_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Addition
+  isSpec: "True"
+  name.vb: +
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator +
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.+
+  nameWithType: JSymmetricMatrix.operator +
+  nameWithType.vb: JSymmetricMatrix.+
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Equality(Jitter2.LinearMath.JSymmetricMatrix,Jitter2.LinearMath.JSymmetricMatrix)
+  name: operator ==(JSymmetricMatrix, JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Equality_Jitter2_LinearMath_JSymmetricMatrix_Jitter2_LinearMath_JSymmetricMatrix_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Equality(Jitter2.LinearMath.JSymmetricMatrix,Jitter2.LinearMath.JSymmetricMatrix)
+  name.vb: =(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator ==(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.=(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.operator ==(JSymmetricMatrix, JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.=(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Equality*
+  name: operator ==
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Equality_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Equality
+  isSpec: "True"
+  name.vb: =
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator ==
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.=
+  nameWithType: JSymmetricMatrix.operator ==
+  nameWithType.vb: JSymmetricMatrix.=
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Explicit(Jitter2.LinearMath.JSymmetricMatrix@)~Jitter2.LinearMath.JMatrix
+  name: explicit operator JMatrix(in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Explicit_Jitter2_LinearMath_JSymmetricMatrix___Jitter2_LinearMath_JMatrix
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Explicit(Jitter2.LinearMath.JSymmetricMatrix@)~Jitter2.LinearMath.JMatrix
+  name.vb: CType(JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.explicit operator Jitter2.LinearMath.JMatrix(in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.CType(Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.explicit operator JMatrix(in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.CType(JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Explicit*
+  name: explicit operator
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Explicit_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Explicit
+  isSpec: "True"
+  name.vb: CType
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.explicit operator
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.CType
+  nameWithType: JSymmetricMatrix.explicit operator
+  nameWithType.vb: JSymmetricMatrix.CType
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Inequality(Jitter2.LinearMath.JSymmetricMatrix,Jitter2.LinearMath.JSymmetricMatrix)
+  name: operator !=(JSymmetricMatrix, JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Inequality_Jitter2_LinearMath_JSymmetricMatrix_Jitter2_LinearMath_JSymmetricMatrix_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Inequality(Jitter2.LinearMath.JSymmetricMatrix,Jitter2.LinearMath.JSymmetricMatrix)
+  name.vb: <>(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator !=(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.<>(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.operator !=(JSymmetricMatrix, JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.<>(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Inequality*
+  name: operator !=
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Inequality_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Inequality
+  isSpec: "True"
+  name.vb: <>
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator !=
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.<>
+  nameWithType: JSymmetricMatrix.operator !=
+  nameWithType.vb: JSymmetricMatrix.<>
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single)
+  name: operator *(in JSymmetricMatrix, float)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Multiply_Jitter2_LinearMath_JSymmetricMatrix__System_Single_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Multiply(Jitter2.LinearMath.JSymmetricMatrix@,System.Single)
+  name.vb: '*(JSymmetricMatrix, Single)'
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator *(in Jitter2.LinearMath.JSymmetricMatrix, float)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.*(Jitter2.LinearMath.JSymmetricMatrix, Single)
+  nameWithType: JSymmetricMatrix.operator *(in JSymmetricMatrix, float)
+  nameWithType.vb: JSymmetricMatrix.*(JSymmetricMatrix, Single)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Multiply(System.Single,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: operator *(float, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Multiply_System_Single_Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Multiply(System.Single,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: '*(Single, JSymmetricMatrix)'
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator *(float, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.*(Single, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.operator *(float, in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.*(Single, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Multiply*
+  name: operator *
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Multiply_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Multiply
+  isSpec: "True"
+  name.vb: '*'
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator *
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.*
+  nameWithType: JSymmetricMatrix.operator *
+  nameWithType.vb: JSymmetricMatrix.*
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Subtraction(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: operator -(in JSymmetricMatrix, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Subtraction_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.op_Subtraction(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: -(JSymmetricMatrix, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator -(in Jitter2.LinearMath.JSymmetricMatrix, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.-(Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JSymmetricMatrix.operator -(in JSymmetricMatrix, in JSymmetricMatrix)
+  nameWithType.vb: JSymmetricMatrix.-(JSymmetricMatrix, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.op_Subtraction*
+  name: operator -
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_op_Subtraction_
+  commentId: Overload:Jitter2.LinearMath.JSymmetricMatrix.op_Subtraction
+  isSpec: "True"
+  name.vb: '-'
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.operator -
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.-
+  nameWithType: JSymmetricMatrix.operator -
+  nameWithType.vb: JSymmetricMatrix.-
 - uid: Jitter2.LinearMath.JTriangle
   name: JTriangle
   href: api/Jitter2.LinearMath.JTriangle.html
@@ -13669,6 +14312,15 @@ references:
   commentId: F:Jitter2.LinearMath.JVector.MinValue
   fullName: Jitter2.LinearMath.JVector.MinValue
   nameWithType: JVector.MinValue
+- uid: Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: Multiply(in JVector, in JVector)
+  href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name.vb: Multiply(JVector, JVector)
+  fullName: Jitter2.LinearMath.JVector.Multiply(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: JVector.Multiply(in JVector, in JVector)
+  nameWithType.vb: JVector.Multiply(JVector, JVector)
 - uid: Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,System.Single)
   name: Multiply(in JVector, float)
   href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__System_Single_
@@ -13929,6 +14581,24 @@ references:
   fullName.vb: Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector)
   nameWithType: JVector.Transform(in JVector, in JQuaternion, out JVector)
   nameWithType.vb: JVector.Transform(JVector, JQuaternion, JVector)
+- uid: Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name: Transform(in JVector, in JSymmetricMatrix)
+  href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JSymmetricMatrix__
+  commentId: M:Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@)
+  name.vb: Transform(JVector, JSymmetricMatrix)
+  fullName: Jitter2.LinearMath.JVector.Transform(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JSymmetricMatrix)
+  fullName.vb: Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JSymmetricMatrix)
+  nameWithType: JVector.Transform(in JVector, in JSymmetricMatrix)
+  nameWithType.vb: JVector.Transform(JVector, JSymmetricMatrix)
+- uid: Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@)
+  name: Transform(in JVector, in JSymmetricMatrix, out JVector)
+  href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@)
+  name.vb: Transform(JVector, JSymmetricMatrix, JVector)
+  fullName: Jitter2.LinearMath.JVector.Transform(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JSymmetricMatrix, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JSymmetricMatrix, Jitter2.LinearMath.JVector)
+  nameWithType: JVector.Transform(in JVector, in JSymmetricMatrix, out JVector)
+  nameWithType.vb: JVector.Transform(JVector, JSymmetricMatrix, JVector)
 - uid: Jitter2.LinearMath.JVector.Transform*
   name: Transform
   href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Transform_
@@ -14369,6 +15039,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.LinearMath.MathHelper.IsZero
   nameWithType: MathHelper.IsZero
+- uid: Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(Jitter2.LinearMath.JMatrix@)
+  name: PseudoInverseSymmetric(in JMatrix)
+  href: api/Jitter2.LinearMath.MathHelper.html#Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_Jitter2_LinearMath_JMatrix__
+  commentId: M:Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(Jitter2.LinearMath.JMatrix@)
+  name.vb: PseudoInverseSymmetric(JMatrix)
+  fullName: Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(in Jitter2.LinearMath.JMatrix)
+  fullName.vb: Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric(Jitter2.LinearMath.JMatrix)
+  nameWithType: MathHelper.PseudoInverseSymmetric(in JMatrix)
+  nameWithType.vb: MathHelper.PseudoInverseSymmetric(JMatrix)
+- uid: Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric*
+  name: PseudoInverseSymmetric
+  href: api/Jitter2.LinearMath.MathHelper.html#Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_
+  commentId: Overload:Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric
+  isSpec: "True"
+  fullName: Jitter2.LinearMath.MathHelper.PseudoInverseSymmetric
+  nameWithType: MathHelper.PseudoInverseSymmetric
 - uid: Jitter2.LinearMath.MathHelper.RotationQuaternion(Jitter2.LinearMath.JVector@,System.Single)
   name: RotationQuaternion(in JVector, float)
   href: api/Jitter2.LinearMath.MathHelper.html#Jitter2_LinearMath_MathHelper_RotationQuaternion_Jitter2_LinearMath_JVector__System_Single_

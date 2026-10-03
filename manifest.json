@@ -1727,6 +1727,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.MotionAxes.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.MotionAxes.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.MotionAxes",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.MotionAxes.yml\" sourcestartlinenumber=\"1\">Permitted translations and rotations about world-space axes.\nUsed by <xref href=\"Jitter2.Dynamics.RigidBody.AllowedMotion\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Dynamics.MotionType.yml",
       "output": {
         ".html": {
@@ -1878,6 +1892,20 @@
       "IsMRef": true,
       "Title": "Jitter2.LinearMath.JQuaternion",
       "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JQuaternion.yml\" sourcestartlinenumber=\"1\">A structure representing a Quaternion: <code>Q = x<em sourcefile=\"api/Jitter2.LinearMath.JQuaternion.yml\" sourcestartlinenumber=\"1\">i + y</em>j + z*k + w</code>.\n<br>\nUses the Hamilton convention where <code>i² = j² = k² = ijk = -1</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.LinearMath.JSymmetricMatrix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.LinearMath.JSymmetricMatrix.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.LinearMath.JSymmetricMatrix",
+      "Summary": "<p sourcefile=\"api/Jitter2.LinearMath.JSymmetricMatrix.yml\" sourcestartlinenumber=\"1\">Represents a symmetric 3x3 matrix using six components of type <xref href=\"System.Single\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
