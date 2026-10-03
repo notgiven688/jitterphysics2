@@ -4,6 +4,66 @@ namespace JitterTests.Api;
 
 public class MathTests
 {
+#if USE_DOUBLE_PRECISION
+    private const Real PseudoInverseTolerance = 1e-12;
+#else
+    private const Real PseudoInverseTolerance = 1e-5f;
+#endif
+
+    [TestCase(0, 1)]
+    [TestCase(1, 1)]
+    [TestCase(2, 1)]
+    [TestCase(3, 1)]
+    [TestCase(1, 0.001)]
+    [TestCase(2, 0.001)]
+    [TestCase(3, 0.001)]
+    [TestCase(1, 1000)]
+    [TestCase(2, 1000)]
+    [TestCase(3, 1000)]
+    public static void PseudoInverseSymmetric_InvertsResponsiveSubspace(int rank, double scaleValue)
+    {
+        Real scale = (Real)scaleValue;
+        JMatrix rotation = JMatrix.CreateFromQuaternion(
+            JQuaternion.Normalize(new JQuaternion(1, 2, 3, 4)));
+        JSymmetricMatrix diagonal = JSymmetricMatrix.CreateScale(
+            rank >= 1 ? 2 : 0, rank >= 2 ? 3 : 0, rank == 3 ? 4 : 0);
+        JMatrix matrix = JSymmetricMatrix.Transform(diagonal, rotation).ToMatrix() * scale;
+        JMatrix inverse = MathHelper.PseudoInverseSymmetric(matrix);
+        JMatrix expected = JSymmetricMatrix.Transform(JSymmetricMatrix.CreateScale(
+            rank >= 1 ? (Real)0.5 : 0, rank >= 2 ? (Real)(1.0 / 3.0) : 0,
+            rank == 3 ? (Real)0.25 : 0), rotation).ToMatrix() * ((Real)1 / scale);
+
+        JMatrix matrixProjection = matrix * inverse;
+        JMatrix inverseProjection = inverse * matrix;
+        for (int i = 0; i < 3; i++)
+        {
+            Assert.That(JVector.MaxAbs(inverse.GetColumn(i) - expected.GetColumn(i)) * scale,
+                Is.LessThan(PseudoInverseTolerance));
+            Assert.That(JVector.MaxAbs((matrix * inverse * matrix).GetColumn(i) - matrix.GetColumn(i)) / scale,
+                Is.LessThan(PseudoInverseTolerance));
+            Assert.That(JVector.MaxAbs((inverse * matrix * inverse).GetColumn(i) - inverse.GetColumn(i)) * scale,
+                Is.LessThan(PseudoInverseTolerance));
+            Assert.That(JVector.MaxAbs(matrixProjection.GetColumn(i) - JMatrix.Transpose(matrixProjection).GetColumn(i)),
+                Is.LessThan(PseudoInverseTolerance));
+            Assert.That(JVector.MaxAbs(inverseProjection.GetColumn(i) - JMatrix.Transpose(inverseProjection).GetColumn(i)),
+                Is.LessThan(PseudoInverseTolerance));
+        }
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public static void PseudoInverseSymmetric_FallbackAppliesEigenvalueCutoff(bool retained)
+    {
+        Real cutoff = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        Real eigenvalue = cutoff * (retained ? (Real)10 : (Real)0.1);
+        JMatrix matrix = JMatrix.CreateScale(1, eigenvalue, 0);
+        JMatrix inverse = MathHelper.PseudoInverseSymmetric(matrix);
+        Assert.That(inverse.M11, Is.EqualTo((Real)1));
+        Assert.That(inverse.M33, Is.Zero);
+        Assert.That((matrix * inverse).M22, Is.EqualTo(retained ? (Real)1 : 0).Within(PseudoInverseTolerance));
+        if (!retained) Assert.That(inverse.M22, Is.Zero);
+    }
+
     [TestCase]
     public static void RotationQuaternion_LongSweepWithTinyAngularVelocityRemainsFinite()
     {

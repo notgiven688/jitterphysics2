@@ -47,7 +47,11 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         public JMatrix EffectiveMass;
         public JMatrix Jacobian;
 
+        public JVector BilateralMass;
+        public Real CouplingX, CouplingY;
+
         public ushort Clamp;
+        public short Hemisphere;
     }
 
     private static readonly uint RegisteredDispatchId =
@@ -93,9 +97,9 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         data.BiasFactor = Constraint.DefaultAngularBias;
         data.LimitBias = Constraint.DefaultAngularLimitBias;
 
-        data.MinAngle = StableMath.Sin((Real)limit.From / (Real)2.0);
-        data.MaxAngle = StableMath.Sin((Real)limit.To / (Real)2.0);
-        data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)limit.From + (Real)0.25 * (Real)limit.To);
+        data.MinAngle = (Real)limit.From / (Real)2.0;
+        data.MaxAngle = (Real)limit.To / (Real)2.0;
+        data.FixedAngle = (Real)0.25 * (Real)limit.From + (Real)0.25 * (Real)limit.To;
 
         JVector.NormalizeInPlace(ref axis);
         data.Axis = JVector.ConjugatedTransform(axis, body2.Orientation);
@@ -120,9 +124,9 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
             ArgumentCheck.Finite(value.To, nameof(value.To));
 
             ref HingeAngleData data = ref Data;
-            data.MinAngle = StableMath.Sin((Real)value.From / (Real)2.0);
-            data.MaxAngle = StableMath.Sin((Real)value.To / (Real)2.0);
-            data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)value.From + (Real)0.25 * (Real)value.To);
+            data.MinAngle = (Real)value.From / (Real)2.0;
+            data.MaxAngle = (Real)value.To / (Real)2.0;
+            data.FixedAngle = (Real)0.25 * (Real)value.From + (Real)0.25 * (Real)value.To;
         }
     }
 
@@ -139,28 +143,22 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         JVector p0 = MathHelper.CreateOrthonormal(data.Axis);
         JVector p1 = data.Axis % p0;
 
-        JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
-
-        JVector error;
-        error.X = JVector.Dot(p0, new JVector(quat0.X, quat0.Y, quat0.Z));
-        error.Y = JVector.Dot(p1, new JVector(quat0.X, quat0.Y, quat0.Z));
-        error.Z = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
+        JMatrix m0 = AngularConstraintMath.CalculateJacobian(
+            data.Q0 * q1.Conjugate(), q2, out JVector rotation, out short hemisphere);
+        if (data.Hemisphere != 0 && data.Hemisphere != hemisphere)
+            data.AccumulatedImpulse = JVector.Zero;
+        data.Hemisphere = hemisphere;
+        JVector error = new(JVector.Dot(p0, rotation), JVector.Dot(p1, rotation),
+            JVector.Dot(data.Axis, rotation));
 
         data.Clamp = 0;
-
-        JMatrix m0 = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
-
-        if (quat0.W < (Real)0.0)
-        {
-            error *= -(Real)1.0;
-            m0 *= -(Real)1.0;
-        }
 
         data.Jacobian.UnsafeGet(0) = JVector.TransposedTransform(p0, m0);
         data.Jacobian.UnsafeGet(1) = JVector.TransposedTransform(p1, m0);
         data.Jacobian.UnsafeGet(2) = JVector.TransposedTransform(data.Axis, m0);
 
-        data.EffectiveMass = JMatrix.TransposedMultiply(data.Jacobian, JMatrix.Multiply(body1.InverseInertiaWorld + body2.InverseInertiaWorld, data.Jacobian));
+        data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
+            JMatrix.Transpose(data.Jacobian)).ToMatrix();
 
         data.EffectiveMass.M11 += data.Softness * idt;
         data.EffectiveMass.M22 += data.Softness * idt;
@@ -168,18 +166,19 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
         Real maxA = data.MaxAngle;
         Real minA = data.MinAngle;
+        bool fullRange = minA <= -MathR.PI / 2 && maxA >= MathR.PI / 2;
 
         if (minA >= maxA)
         {
             data.Clamp = 3;
-            error.Z -= data.FixedAngle;
+            error.Z = AngularConstraintMath.ShortestAngle(error.Z - data.FixedAngle, MathR.PI / 2);
         }
-        else if (error.Z >= maxA)
+        else if (!fullRange && error.Z >= maxA)
         {
             data.Clamp = 1;
             error.Z -= maxA;
         }
-        else if (error.Z <= minA)
+        else if (!fullRange && error.Z <= minA)
         {
             data.Clamp = 2;
             error.Z -= minA;
@@ -187,16 +186,23 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         else
         {
             data.AccumulatedImpulse.Z = 0;
-            data.EffectiveMass.M33 = 1;
+            data.EffectiveMass.M33 = 0;
             data.EffectiveMass.M31 = data.EffectiveMass.M13 = 0;
             data.EffectiveMass.M32 = data.EffectiveMass.M23 = 0;
 
-            // TODO: Check whether these rows must be cleared explicitly here
-            //       and whether PointOnLine needs the same treatment.
             data.Jacobian.M13 = data.Jacobian.M23 = data.Jacobian.M33 = 0;
         }
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        if (data.Clamp == 1 || data.Clamp == 2)
+        {
+            data.AccumulatedImpulse.Z = data.Clamp == 1 ?
+                MathR.Min(data.AccumulatedImpulse.Z, 0) : MathR.Max(data.AccumulatedImpulse.Z, 0);
+            data.BilateralMass = MathHelper.InverseBilateralBlock(data.EffectiveMass);
+            data.CouplingX = data.EffectiveMass.M13;
+            data.CouplingY = data.EffectiveMass.M23;
+        }
+
+        data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
         data.Bias = error * idt;
         data.Bias.X *= data.BiasFactor;
@@ -210,6 +216,10 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     /// <summary>
     /// Gets the current angle of rotation around the hinge axis relative to the initial pose.
     /// </summary>
+    /// <remarks>
+    /// When the hinge axes are misaligned, this is the projection of the shortest
+    /// relative rotation vector onto the hinge axis, matching the limit coordinate.
+    /// </remarks>
     public JAngle Angle
     {
         get
@@ -220,13 +230,8 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
             JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
 
-            if (quat0.W < (Real)0.0)
-            {
-                quat0 *= -(Real)1.0;
-            }
-
-            Real error = JVector.Dot(data.Axis, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)((Real)2.0 * StableMath.Asin(error));
+            return (JAngle)((Real)2.0 * JVector.Dot(data.Axis,
+                AngularConstraintMath.RotationLog(quat0)));
         }
     }
 
@@ -312,19 +317,27 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         softness.Y *= data.Softness;
         softness.Z *= data.LimitSoftness;
 
-        JVector lambda = -(Real)1.0 * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
+        JVector residual = jv + data.Bias + softness;
+        JVector lambda = -(Real)1.0 * JVector.Transform(residual, data.EffectiveMass);
 
         JVector origAcc = data.AccumulatedImpulse;
 
         data.AccumulatedImpulse += lambda;
 
-        if (data.Clamp == 1)
+        if ((data.Clamp == 1 && data.AccumulatedImpulse.Z > 0) ||
+            (data.Clamp == 2 && data.AccumulatedImpulse.Z < 0))
         {
-            data.AccumulatedImpulse.Z = MathR.Min(0, data.AccumulatedImpulse.Z);
-        }
-        else if (data.Clamp == 2)
-        {
-            data.AccumulatedImpulse.Z = MathR.Max(0, data.AccumulatedImpulse.Z);
+            // The coupled block assumed its limit impulse would be applied.
+            // At the unilateral bound, solve the bilateral rows again with that
+            // impulse fixed, including any removal of the cached limit impulse.
+            lambda.Z = -origAcc.Z;
+            Real x = residual.X + data.CouplingX * lambda.Z;
+            Real y = residual.Y + data.CouplingY * lambda.Z;
+            lambda.X = -(data.BilateralMass.X * x + data.BilateralMass.Y * y);
+            lambda.Y = -(data.BilateralMass.Y * x + data.BilateralMass.Z * y);
+            data.AccumulatedImpulse.X = origAcc.X + lambda.X;
+            data.AccumulatedImpulse.Y = origAcc.Y + lambda.Y;
+            data.AccumulatedImpulse.Z = 0;
         }
         else if (data.Clamp == 0)
         {

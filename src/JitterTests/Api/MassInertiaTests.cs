@@ -47,7 +47,7 @@ public class MassInertiaTests
     }
 
     // -------------------------------------------------------------------------
-    // SetMassInertia(JMatrix, Real, bool) — fully manual
+    // SetMassInertia(JSymmetricMatrix, Real, bool) — fully manual
     // -------------------------------------------------------------------------
 
     [TestCase]
@@ -55,7 +55,7 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        var inertia = JMatrix.Identity * 2f;
+        var inertia = JSymmetricMatrix.Identity * 2f;
         body.SetMassInertia(inertia, 10f);
         Assert.That(body.Mass, Is.EqualTo((Real)10.0).Within((Real)1e-5));
         // InverseInertia should be inverse of 2*I = 0.5*I
@@ -70,12 +70,73 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        var inverseInertia = JMatrix.Identity * 4f;
+        var inverseInertia = JSymmetricMatrix.Identity * 4f;
         // inverseMass = 0.1 → mass = 10
         body.SetMassInertia(inverseInertia, 0.1f, setAsInverse: true);
         Assert.That(body.Mass, Is.EqualTo((Real)10.0).Within((Real)1e-4));
         Assert.That(body.InverseInertia.M11, Is.EqualTo((Real)4.0).Within((Real)1e-5));
         world.Dispose();
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void SetMassInertia_CoupledTensor_MatchesFullMatrixResponse(bool setAsInverse)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        JSymmetricMatrix inertia = new(4, 1, 2, 5, 1, 6);
+        JMatrix expected = inertia.ToMatrix();
+        if (!setAsInverse)
+        {
+            Assert.That(JMatrix.Inverse(expected, out expected), Is.True);
+        }
+
+        body.SetMassInertia(inertia, 1, setAsInverse);
+        JMatrix actual = body.InverseInertia.ToMatrix();
+        for (int i = 0; i < 3; i++)
+        {
+            Assert.That(JVector.MaxAbs(actual.GetColumn(i) - expected.GetColumn(i)), Is.LessThan((Real)1e-6));
+        }
+
+        body.Orientation = JQuaternion.CreateRotationY((Real)0.3) *
+                           JQuaternion.CreateRotationX((Real)0.5) *
+                           JQuaternion.CreateRotationZ((Real)(-0.2));
+        JMatrix rotation = JMatrix.CreateFromQuaternion(body.Orientation);
+        JMatrix expectedWorld = rotation * expected * JMatrix.Transpose(rotation);
+        JVector impulse = new(2, -1, 1);
+        JVector position = new(1, 2, 3);
+        body.ApplyImpulse(impulse, position);
+        JVector expectedVelocity = JVector.Transform(position % impulse, expectedWorld);
+        Assert.That(JVector.MaxAbs(body.AngularVelocity - expectedVelocity), Is.LessThan((Real)1e-6));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void SetMassInertia_NonFiniteTensor_ThrowsWithoutChangingMassProperties(bool setAsInverse)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        JSymmetricMatrix original = body.InverseInertia;
+        foreach (Real nonFinite in new[] { Real.NaN, Real.PositiveInfinity, Real.NegativeInfinity })
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                JSymmetricMatrix inertia = JSymmetricMatrix.Identity;
+                switch (i)
+                {
+                    case 0: inertia.M11 = nonFinite; break;
+                    case 1: inertia.M12 = nonFinite; break;
+                    case 2: inertia.M13 = nonFinite; break;
+                    case 3: inertia.M22 = nonFinite; break;
+                    case 4: inertia.M23 = nonFinite; break;
+                    case 5: inertia.M33 = nonFinite; break;
+                }
+
+                Assert.Throws<ArgumentException>(() => body.SetMassInertia(inertia, 2, setAsInverse));
+                Assert.That(body.InverseInertia, Is.EqualTo(original));
+                Assert.That(body.Mass, Is.EqualTo((Real)1));
+            }
+        }
     }
 
     [TestCase]
@@ -125,7 +186,7 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JMatrix.Zero, (Real)1.0));
+        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JSymmetricMatrix.Zero, (Real)1.0));
         world.Dispose();
     }
 
@@ -134,7 +195,7 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JMatrix.Identity, (Real)(-1.0), true));
+        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JSymmetricMatrix.Identity, (Real)(-1.0), true));
         world.Dispose();
     }
 
@@ -143,7 +204,7 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JMatrix.Identity, Real.PositiveInfinity, true));
+        Assert.Throws<ArgumentException>(() => body.SetMassInertia(JSymmetricMatrix.Identity, Real.PositiveInfinity, true));
         world.Dispose();
     }
 }

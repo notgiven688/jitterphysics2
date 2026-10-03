@@ -155,9 +155,9 @@ public class TransformedShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
-        OriginalShape.CalculateMassInertia(out JMatrix originalInertia, out JVector originalCom, out mass);
+        OriginalShape.CalculateMassInertia(out JSymmetricMatrix originalInertia, out JVector originalCom, out mass);
 
         com = JVector.Transform(originalCom, transformation) + translation;
 
@@ -168,16 +168,16 @@ public class TransformedShape : RigidBodyShape
         // Under transformation T, the second moment transforms as: C' = |det(T)| · T · C · Tᵀ
         // We recover C from I: C = (trace(I)/2)·E - I
         Real halfTrace = originalInertia.Trace() * (Real)0.5;
-        JMatrix secondMoment = halfTrace * JMatrix.Identity - originalInertia;
+        JSymmetricMatrix secondMoment = halfTrace * JSymmetricMatrix.Identity - originalInertia;
 
         // Transform second moment matrix
-        JMatrix transformedSecondMoment = det * transformation * secondMoment * JMatrix.Transpose(transformation);
+        JSymmetricMatrix transformedSecondMoment = det * JSymmetricMatrix.Transform(secondMoment, transformation);
 
         // Convert back to inertia tensor
-        inertia = transformedSecondMoment.Trace() * JMatrix.Identity - transformedSecondMoment;
+        inertia = transformedSecondMoment.Trace() * JSymmetricMatrix.Identity - transformedSecondMoment;
 
         // Apply parallel axis theorem for translation
-        JMatrix pat = mass * (JMatrix.Identity * com.LengthSquared() - JVector.Outer(com, com));
+        JSymmetricMatrix pat = mass * (JSymmetricMatrix.Identity * com.LengthSquared() - JSymmetricMatrix.Outer(com));
         inertia += pat;
     }
 }

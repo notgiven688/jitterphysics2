@@ -17,10 +17,10 @@ namespace Jitter2.Collision.Shapes;
 public static class ShapeHelper
 {
     private const Real GoldenRatio = (Real)1.6180339887498948482045;
-    private static readonly JMatrix canonicalTetrahedronInertia = new(
+    private static readonly JSymmetricMatrix canonicalTetrahedronInertia = new(
         (Real)(1.0 / 60.0), (Real)(1.0 / 120.0), (Real)(1.0 / 120.0),
-        (Real)(1.0 / 120.0), (Real)(1.0 / 60.0), (Real)(1.0 / 120.0),
-        (Real)(1.0 / 120.0), (Real)(1.0 / 120.0), (Real)(1.0 / 60.0));
+        (Real)(1.0 / 60.0), (Real)(1.0 / 120.0),
+        (Real)(1.0 / 60.0));
 
     private static readonly JVector[] icosahedronVertices =
     [
@@ -324,7 +324,7 @@ public static class ShapeHelper
 
     private struct MassInertiaSink : ISink<JTriangle>
     {
-        public JMatrix Inertia;
+        public JSymmetricMatrix Inertia;
         public JVector CenterOfMass;
         public Real Mass;
 
@@ -333,8 +333,8 @@ public static class ShapeHelper
             JMatrix transformation = JMatrix.FromColumns(triangle.V0, triangle.V1, triangle.V2);
             Real detA = transformation.Determinant();
 
-            JMatrix tetrahedronInertia =
-                JMatrix.Multiply(transformation * canonicalTetrahedronInertia * JMatrix.Transpose(transformation), detA);
+            JSymmetricMatrix tetrahedronInertia =
+                JSymmetricMatrix.Transform(canonicalTetrahedronInertia, transformation) * detA;
 
             JVector tetrahedronCom = (Real)(1.0 / 4.0) * (triangle.V0 + triangle.V1 + triangle.V2);
             Real tetrahedronMass = (Real)(1.0 / 6.0) * detA;
@@ -365,14 +365,14 @@ public static class ShapeHelper
     /// <param name="centerOfMass">Output parameter for the calculated center of mass vector (relative to the Origin).</param>
     /// <param name="mass">Output parameter for the calculated mass (Volume * density 1.0).</param>
     /// <param name="subdivisions">The recursion depth for the surface tessellation (default 4).</param>
-    public static void CalculateMassInertia<TSupport>(in TSupport support, out JMatrix inertia, out JVector centerOfMass,
+    public static void CalculateMassInertia<TSupport>(in TSupport support, out JSymmetricMatrix inertia, out JVector centerOfMass,
         out Real mass, int subdivisions = 4)
         where TSupport : ISupportMappable
     {
         MassInertiaSink sink = default;
         Tessellate(in support, ref sink, subdivisions);
 
-        inertia = JMatrix.Multiply(JMatrix.Identity, sink.Inertia.Trace()) - sink.Inertia;
+        inertia = JSymmetricMatrix.Identity * sink.Inertia.Trace() - sink.Inertia;
         centerOfMass = sink.CenterOfMass * ((Real)1.0 / sink.Mass);
         mass = sink.Mass;
     }

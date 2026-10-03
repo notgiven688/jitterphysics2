@@ -84,6 +84,16 @@ internal static class ArgumentCheck
         return value;
     }
 
+    public static JSymmetricMatrix Finite(in JSymmetricMatrix value, string paramName)
+    {
+        if (!IsFiniteCore(value))
+        {
+            throw new ArgumentException("Matrix components must be finite.", paramName);
+        }
+
+        return value;
+    }
+
     public static Real NonNegative(Real value, string paramName)
     {
         if (!IsFiniteCore(value) || value < (Real)0.0)
@@ -168,6 +178,14 @@ internal static class ArgumentCheck
         IsFiniteCore(value.Y) &&
         IsFiniteCore(value.Z) &&
         IsFiniteCore(value.W);
+
+    private static bool IsFiniteCore(in JSymmetricMatrix value) =>
+        IsFiniteCore(value.M11) &&
+        IsFiniteCore(value.M12) &&
+        IsFiniteCore(value.M13) &&
+        IsFiniteCore(value.M22) &&
+        IsFiniteCore(value.M23) &&
+        IsFiniteCore(value.M33);
 
     private static bool IsFiniteCore(in JMatrix value) =>
         IsFiniteCore(value.M11) &&

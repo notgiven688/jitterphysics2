@@ -18,7 +18,7 @@ Constraints remove one or more of these degrees of freedom.
 | `PointOnPlane` | 1 translational (when limit active) | Constrains a point to a plane, only enforced when the limit is violated |
 | `DistanceLimit` | 1 translational (when limit active) | Constrains the distance between anchor points, only enforced when outside the limit range |
 | `TwistAngle` | 1 rotational (when limit active) | Limits relative twist around an axis, only enforced when outside the limit range |
-| `ConeLimit` | 1 rotational (when limit active) | Limits angular tilt between two axes, only enforced when outside the limit range |
+| `ConeLimit` | 1 rotational (when limit active) | Limits angular tilt between two axes |
 | `AngularMotor` | — | Drives angular velocity (does not remove DOF) |
 | `LinearMotor` | — | Drives linear velocity (does not remove DOF) |
 | `SpringConstraint` | 1 translational | Spring-like force along the anchor connection |
@@ -74,6 +74,24 @@ Alternatively, the `HingeJoint` can be used for convenience:
 ```cs
 var hinge = new HingeJoint(world, body1, body2, hingeCenter, hingeAxis);
 ```
+
+### Cone limits
+
+`ConeLimit` restricts the angle between two axes to a range from 0° to 180°.
+Ranges such as `[0°, 45°]`, `[135°, 180°]`, and `[0°, 180°]` are valid.
+Equal limits fix the angle when it lies strictly between 0° and 180°, for example `[30°, 30°]`.
+
+The fixed ranges `[0°, 0°]` and `[180°, 180°]` are rejected by `Initialize` and the `Limit` property.
+To keep axes parallel or antiparallel while allowing free twist, use `HingeAngle` with `AngularLimit.Full`:
+
+```cs
+var hingeAngle = world.CreateConstraint<HingeAngle>(body1, body2);
+hingeAngle.Initialize(hingeAxis, AngularLimit.Full);
+```
+
+Position the bodies with the intended axes aligned or antiparallel before initialization.
+`HingeAngle` stores their current relative orientation as its reference; it does not pull two
+arbitrarily misaligned axes into alignment during initialization.
 
 ### Fixed constraints
 

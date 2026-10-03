@@ -179,12 +179,12 @@ public class BoxShape : RigidBodyShape
         box.Max = position + ths;
     }
 
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         JVector size = halfSize * (Real)2.0;
         mass = size.X * size.Y * size.Z;
 
-        inertia = JMatrix.Identity;
+        inertia = JSymmetricMatrix.Identity;
         inertia.M11 = (Real)(1.0 / 12.0) * mass * (size.Y * size.Y + size.Z * size.Z);
         inertia.M22 = (Real)(1.0 / 12.0) * mass * (size.X * size.X + size.Z * size.Z);
         inertia.M33 = (Real)(1.0 / 12.0) * mass * (size.X * size.X + size.Y * size.Y);

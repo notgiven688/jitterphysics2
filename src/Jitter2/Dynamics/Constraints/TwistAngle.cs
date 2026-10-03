@@ -34,6 +34,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         public Real Angle1, Angle2, FixedAngle;
         public ushort Clamp;
+        public short Hemisphere;
 
         public Real BiasFactor;
         public Real Softness;
@@ -90,9 +91,9 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         JVector.NormalizeInPlace(ref axis1);
         JVector.NormalizeInPlace(ref axis2);
 
-        data.Angle1 = StableMath.Sin((Real)limit.From / (Real)2.0);
-        data.Angle2 = StableMath.Sin((Real)limit.To / (Real)2.0);
-        data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)limit.From + (Real)0.25 * (Real)limit.To);
+        data.Angle1 = (Real)limit.From;
+        data.Angle2 = (Real)limit.To;
+        data.FixedAngle = (Real)0.5 * (Real)limit.From + (Real)0.5 * (Real)limit.To;
 
         // Calculate local axes
         JVector u1 = JVector.ConjugatedTransform(axis1, body1.Orientation);
@@ -129,9 +130,9 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
             ArgumentCheck.Finite(value.To, nameof(value.To));
 
             ref TwistLimitData data = ref Data;
-            data.Angle1 = StableMath.Sin((Real)value.From / (Real)2.0);
-            data.Angle2 = StableMath.Sin((Real)value.To / (Real)2.0);
-            data.FixedAngle = StableMath.Sin((Real)0.25 * (Real)value.From + (Real)0.25 * (Real)value.To);
+            data.Angle1 = (Real)value.From;
+            data.Angle2 = (Real)value.To;
+            data.FixedAngle = (Real)0.5 * (Real)value.From + (Real)0.5 * (Real)value.To;
         }
     }
 
@@ -164,42 +165,69 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.Jacobian = JVector.TransposedTransform(data.B, m);
 
-        data.EffectiveMass = JVector.Transform(data.Jacobian, body1.InverseInertiaWorld + body2.InverseInertiaWorld) * data.Jacobian;
-
-        data.EffectiveMass += (data.Softness * idt);
-
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
-
         Real error = JVector.Dot(data.B, new JVector(q.X, q.Y, q.Z));
+        Real lower = data.Angle1, upper = data.Angle2, target = data.FixedAngle;
+
+        short hemisphere = q.W < 0 ? (short)-1 : (short)1;
+        if (data.Hemisphere != 0 && data.Hemisphere != hemisphere) data.AccumulatedImpulse = 0;
+        data.Hemisphere = hemisphere;
 
         if (q.W < (Real)0.0)
         {
+            q *= -1;
             error *= -(Real)1.0;
             data.Jacobian *= -1;
         }
 
-        data.Clamp = 0;
+        // Use the projection angle throughout: its angular derivative has unit length.
+        // Mixing this coordinate with sin(angle / 2) changes both softness and impulse units.
+        Real derivativeSquared = data.Jacobian.LengthSquared();
+        if (derivativeSquared > 0)
+        {
+            data.Jacobian *= (Real)1.0 / MathR.Sqrt(derivativeSquared);
+        }
+        else
+        {
+            // The projection angle has a cusp at exactly a half turn. Choose its
+            // twist direction, which is a valid one-sided derivative at this pose.
+            data.Jacobian = -JVector.Transform(data.B, q2);
+        }
 
-        if (data.Angle1 >= data.Angle2)
+        JVector perpendicular = q.Vector - data.B * error;
+        Real cosine = MathR.Sqrt(q.W * q.W + perpendicular.LengthSquared());
+        error = (Real)2.0 * StableMath.Atan2(error, cosine);
+
+        data.Clamp = 0;
+        bool fullRange = lower <= -MathR.PI && upper >= MathR.PI;
+
+        if (lower >= upper)
         {
             data.Clamp = 3;
-            error -= data.FixedAngle;
+            error = AngularConstraintMath.ShortestAngle(error - target, MathR.PI);
         }
-        else if (error >= data.Angle2)
+        else if (!fullRange && error >= upper)
         {
             data.Clamp = 1;
-            error -= data.Angle2;
+            error -= upper;
         }
-        else if (error <= data.Angle1)
+        else if (!fullRange && error <= lower)
         {
             data.Clamp = 2;
-            error -= data.Angle1;
+            error -= lower;
         }
         else
         {
             data.AccumulatedImpulse = (Real)0.0;
             return;
         }
+
+        if (data.Clamp == 1) data.AccumulatedImpulse = MathR.Min(data.AccumulatedImpulse, 0);
+        else if (data.Clamp == 2) data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, 0);
+
+        data.EffectiveMass = JVector.Transform(data.Jacobian, body1.InverseInertiaWorld + body2.InverseInertiaWorld) * data.Jacobian;
+        data.EffectiveMass += data.Softness * idt;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
         data.Bias = error * data.BiasFactor * idt;
 
@@ -225,8 +253,10 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
                 quat0 *= -(Real)1.0;
             }
 
-            Real error = JVector.Dot(data.B, new JVector(quat0.X, quat0.Y, quat0.Z));
-            return (JAngle)((Real)2.0 * StableMath.Asin(error));
+            Real projection = JVector.Dot(data.B, quat0.Vector);
+            JVector perpendicular = quat0.Vector - data.B * projection;
+            return (JAngle)((Real)2.0 * StableMath.Atan2(projection,
+                MathR.Sqrt(quat0.W * quat0.W + perpendicular.LengthSquared())));
         }
     }
 

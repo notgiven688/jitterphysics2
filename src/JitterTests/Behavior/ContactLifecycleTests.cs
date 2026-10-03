@@ -2,6 +2,91 @@ namespace JitterTests.Behavior;
 
 public class ContactLifecycleTests
 {
+#if USE_DOUBLE_PRECISION
+    private const Real Tolerance = 1e-12;
+#else
+    private const Real Tolerance = 1e-5f;
+#endif
+
+    [TestCase(false, 0.1, -0.9)]
+    [TestCase(true, 0.1, -0.9)]
+    [TestCase(false, 0.005, 10.0)]
+    [TestCase(true, 0.005, 10.0)]
+    public void SeparatedContact_UsesOriginalSpeculativeThreshold(
+        bool accelerated, double gap, double target)
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(0.25f));
+        body.SetMassInertia(1);
+        body.Position = new JVector((Real)gap, 0, 0);
+        body.Velocity = new JVector(-10, 0, 0);
+
+        ContactData contact = default;
+        contact.Init(world.NullBody, body);
+        contact.Friction = 0;
+        contact.Restitution = 1;
+        contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
+        contact.ResetMode();
+
+        Assert.That(contact.Contact0.Bias, Is.EqualTo(10));
+
+        if (accelerated) contact.PrepareForIterationAccelerated(10);
+        else contact.PrepareForIterationScalar(10);
+
+        Assert.That(contact.Contact0.Bias, Is.EqualTo((Real)target).Within(Tolerance));
+        Assert.That(contact.Contact0.PenaltyBias, Is.Zero);
+
+        if (accelerated) contact.IterateAccelerated(true);
+        else contact.IterateScalar(true);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
+
+        if (accelerated) contact.IterateAccelerated(false);
+        else contact.IterateScalar(false);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
+    }
+
+    [TestCase(false, 0.11, 0.5, 1.0)]
+    [TestCase(true, 0.11, 0.5, 1.0)]
+    [TestCase(false, 0.61, 0.5, 1.2)]
+    [TestCase(true, 0.61, 0.5, 1.2)]
+    [TestCase(false, 0.11, 0.0, 0.2)]
+    [TestCase(true, 0.11, 0.0, 0.2)]
+    public void ContactTargets_PreserveRestitutionAndRemoveOnlyPositionBias(
+        bool accelerated, double penetration, double restitution, double solveTarget)
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(0.25f));
+        body.SetMassInertia(1);
+        body.Position = new JVector(-(Real)penetration, 0, 0);
+        body.Velocity = new JVector(-2, 0, 0);
+
+        ContactData contact = default;
+        contact.Init(world.NullBody, body);
+        contact.Friction = 0;
+        contact.Restitution = (Real)restitution;
+        contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
+        contact.ResetMode();
+
+        if (accelerated) contact.PrepareForIterationAccelerated(10);
+        else contact.PrepareForIterationScalar(10);
+
+        Assert.That(contact.Contact0.PenaltyBias, Is.GreaterThan(0));
+
+        if (accelerated) contact.IterateAccelerated(true);
+        else contact.IterateScalar(true);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)solveTarget).Within(Tolerance));
+
+        if (accelerated) contact.IterateAccelerated(false);
+        else contact.IterateScalar(false);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)(2 * restitution)).Within(Tolerance));
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public void SkipWarmStart_AffectsOnlyTheNextPreparation(bool accelerated)

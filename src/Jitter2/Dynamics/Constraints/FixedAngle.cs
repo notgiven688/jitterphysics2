@@ -41,6 +41,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         public JMatrix Jacobian;
 
         public ushort Clamp;
+        public short Hemisphere;
     }
 
     private static readonly uint RegisteredDispatchId =
@@ -88,27 +89,24 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JQuaternion quat0 = data.Q0 * q1.Conjugate() * q2;
-
-        JVector error = new(quat0.X, quat0.Y, quat0.Z);
-
         data.Clamp = 1024;
 
-        data.Jacobian = QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
+        // Retain the original small-angle scaling, using a nonsingular rotation
+        // coordinate instead of the quaternion vector part at large rotations.
+        data.Jacobian = -(Real)2 * AngularConstraintMath.CalculateJacobian(
+            data.Q0 * q1.Conjugate(), q2, out JVector error, out short hemisphere);
+        if (data.Hemisphere != 0 && data.Hemisphere != hemisphere)
+            data.AccumulatedImpulse = JVector.Zero;
+        data.Hemisphere = hemisphere;
 
-        if (quat0.W < (Real)0.0)
-        {
-            error *= -(Real)1.0;
-            data.Jacobian *= -(Real)1.0;
-        }
-
-        data.EffectiveMass = JMatrix.Multiply(data.Jacobian, JMatrix.MultiplyTransposed(body1.InverseInertiaWorld + body2.InverseInertiaWorld, data.Jacobian));
+        data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
+            data.Jacobian).ToMatrix();
 
         data.EffectiveMass.M11 += data.Softness * idt;
         data.EffectiveMass.M22 += data.Softness * idt;
         data.EffectiveMass.M33 += data.Softness * idt;
 
-        JMatrix.Inverse(data.EffectiveMass, out data.EffectiveMass);
+        data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
         data.Bias = -error * data.BiasFactor * idt;
 

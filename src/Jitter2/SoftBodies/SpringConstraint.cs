@@ -102,8 +102,12 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <summary>
     /// Sets the spring parameters using physical properties. This method calculates and sets
     /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
-    /// of the involved bodies and the timestep size do not change.
+    /// of the involved bodies, their translation locks, and the timestep size do not change.
     /// </summary>
+    /// <remarks>
+    /// At coincident anchors, the most responsive translation axis
+    /// determines the effective mass used to configure the spring.
+    /// </remarks>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
     /// <param name="dt">The timestep of the simulation.</param>
@@ -121,9 +125,31 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
-        Real effectiveMass = (Real)1.0 / (body1.InverseMass + body2.InverseMass);
+        JVector direction = body2.Position + data.LocalAnchor2 - body1.Position - data.LocalAnchor1;
+        Real distance = direction.Length();
+        Real inverseEffectiveMass;
+        if (distance > 0)
+        {
+            direction *= (Real)1.0 / distance;
+            inverseEffectiveMass = JVector.Multiply(direction, body1.InverseMassVector) * direction +
+                                   JVector.Multiply(direction, body2.InverseMassVector) * direction;
+        }
+        else
+        {
+            // An undefined direction does not imply infinite mass. For unrestricted bodies
+            // this recovers their scalar inverse mass; restricted bodies use a responsive axis.
+            inverseEffectiveMass = JVector.MaxAbs(body1.InverseMassVector + body2.InverseMassVector);
+        }
 
         Real omega = (Real)2.0 * MathR.PI * frequency;
+        if (!(inverseEffectiveMass > 0))
+        {
+            data.Softness = 0;
+            data.BiasFactor = dt * omega / ((Real)2.0 * damping + dt * omega);
+            return;
+        }
+
+        Real effectiveMass = (Real)1.0 / inverseEffectiveMass;
         Real dampingCoefficient = (Real)2.0 * effectiveMass * damping * omega;
         Real springStiffness = effectiveMass * omega * omega;
 
@@ -243,20 +269,29 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         JVector.Subtract(p2, p1, out JVector dp);
 
-        Real error = dp.Length() - data.Distance;
+        Real distance = dp.Length();
+        Real error = distance - data.Distance;
 
-        JVector n = dp;
-        if (n.LengthSquared() > (Real)1e-12) JVector.NormalizeInPlace(ref n);
+        if (distance == 0)
+        {
+            data.Jacobian = JVector.Zero;
+            data.EffectiveMass = data.AccumulatedImpulse = data.Bias = 0;
+            return;
+        }
+
+        JVector n = dp * ((Real)1.0 / distance);
 
         data.Jacobian = n;
-        data.EffectiveMass = body1.InverseMass + body2.InverseMass;
+        data.EffectiveMass = JVector.Multiply(n, body1.InverseMassVector) * n +
+                             JVector.Multiply(n, body2.InverseMassVector) * n;
         data.EffectiveMass += data.Softness * idt;
-        data.EffectiveMass = (Real)1.0 / data.EffectiveMass;
+        data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
+        if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
         data.Bias = error * data.BiasFactor * idt;
 
-        body1.Velocity -= body1.InverseMass * data.AccumulatedImpulse * data.Jacobian;
-        body2.Velocity += body2.InverseMass * data.AccumulatedImpulse * data.Jacobian;
+        body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
+        body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
     }
 
     /// <summary>
@@ -313,8 +348,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         data.AccumulatedImpulse += lambda;
         lambda = data.AccumulatedImpulse - oldAccumulatedImpulse;
 
-        body1.Velocity -= body1.InverseMass * lambda * data.Jacobian;
-        body2.Velocity += body2.InverseMass * lambda * data.Jacobian;
+        body1.Velocity -= JVector.Multiply(lambda * data.Jacobian, body1.InverseMassVector);
+        body2.Velocity += JVector.Multiply(lambda * data.Jacobian, body2.InverseMassVector);
     }
 
     /// <inheritdoc/>

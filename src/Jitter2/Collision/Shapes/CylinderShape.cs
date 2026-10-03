@@ -113,11 +113,11 @@ public class CylinderShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         mass = MathR.PI * radius * radius * height;
 
-        inertia = JMatrix.Identity;
+        inertia = JSymmetricMatrix.Identity;
 
         inertia.M11 = (Real)(1.0 / 4.0) * mass * radius * radius + (Real)(1.0 / 12.0) * mass * height * height;
         inertia.M22 = (Real)(1.0 / 2.0) * mass * radius * radius;

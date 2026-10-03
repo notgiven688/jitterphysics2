@@ -65,7 +65,7 @@ public class ForceImpulseTests
         body.AddShape(new SphereShape(1));
         body.MotionType = MotionType.Static;
         body.ApplyImpulse(new JVector(1, 0, 0));
-        // Static bodies have InverseMass == 0; velocity stays zero
+        // Static bodies have zero InverseMassVector; velocity stays zero
         Assert.That(body.Velocity, Is.EqualTo(JVector.Zero));
         world.Dispose();
     }

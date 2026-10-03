@@ -782,8 +782,8 @@ public sealed partial class World
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
         Debug.Assert(rigidBody.MotionType == MotionType.Static);
-        Debug.Assert(rigidBody.InverseMass < Real.Epsilon);
-        Debug.Assert(MathHelper.UnsafeIsZero(ref rigidBody.InverseInertiaWorld));
+        Debug.Assert(rigidBody.InverseInertiaWorld == JSymmetricMatrix.Zero);
+        Debug.Assert(rigidBody.InverseMassVector == JVector.Zero);
     }
 
     private void ForeachActiveBody(bool multiThread)
@@ -793,8 +793,8 @@ public sealed partial class World
         {
             if (body.Data.MotionType != MotionType.Dynamic)
             {
-                Debug.Assert(MathHelper.UnsafeIsZero(ref body.Data.InverseInertiaWorld));
-                Debug.Assert(body.Data.InverseMass < Real.Epsilon);
+                Debug.Assert(body.Data.InverseInertiaWorld == JSymmetricMatrix.Zero);
+                Debug.Assert(body.Data.InverseMassVector == JVector.Zero);
             }
         }
 #endif
@@ -1026,7 +1026,7 @@ public sealed partial class World
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static JVector SolveGyroscopic(in JMatrix inertiaWorld, in JVector omega, Real dt)
+    private static JVector SolveGyroscopic(in JSymmetricMatrix inertiaWorld, in JVector omega, Real dt)
     {
         // The equation which we solve for ω_{n+1} in this method with a single Newton iteration:
         // I_{n+1}(ω_{n+1} - ω_{n}) + h ω_{n+1} x (I_{n+1}ω_{n+1})=0
@@ -1048,7 +1048,8 @@ public sealed partial class World
 
         JVector f = dt * (omega % JVector.Transform(omega, inertiaWorld));
 
-        JMatrix jacobian = inertiaWorld + dt * (JMatrix.CreateCrossProduct(omega) * inertiaWorld -
+        JMatrix inertiaMatrix = inertiaWorld.ToMatrix();
+        JMatrix jacobian = inertiaMatrix + dt * (JMatrix.CreateCrossProduct(omega) * inertiaMatrix -
                                                JMatrix.CreateCrossProduct(JVector.Transform(omega, inertiaWorld)));
 
         if (!JMatrix.Inverse(jacobian, out var invJacobian)) return omega;
@@ -1075,12 +1076,12 @@ public sealed partial class World
             JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
 
-            if (!rigidBody.EnableGyroscopicForces) continue;
+            if (!rigidBody.EnableGyroscopicForces || rigidBody.HasMotionLocks) continue;
 
             // Note: We do not perform a symplectic Euler update here (i.e., we calculate the new orientation
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
-            JMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
+            JSymmetricMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
             rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, substepDt);
         }
     }

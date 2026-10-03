@@ -103,14 +103,14 @@ public class CapsuleShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
-    public override void CalculateMassInertia(out JMatrix inertia, out JVector com, out Real mass)
+    public override void CalculateMassInertia(out JSymmetricMatrix inertia, out JVector com, out Real mass)
     {
         Real length = (Real)2.0 * halfLength;
 
         Real massSphere = (Real)(4.0 / 3.0) * MathR.PI * radius * radius * radius;
         Real massCylinder = MathR.PI * radius * radius * length;
 
-        inertia = JMatrix.Identity;
+        inertia = JSymmetricMatrix.Identity;
 
         inertia.M11 = massCylinder * ((Real)(1.0 / 12.0) * length * length + (Real)(1.0 / 4.0) * radius * radius) + massSphere *
             ((Real)(2.0 / 5.0) * radius * radius + (Real)(1.0 / 4.0) * length * length + (Real)(3.0 / 8.0) * length * radius);
