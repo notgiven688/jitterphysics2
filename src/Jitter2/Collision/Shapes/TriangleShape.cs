@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Collision.Shapes;
@@ -67,7 +68,7 @@ public class TriangleShape : RigidBodyShape
     {
         throw new NotSupportedException($"{nameof(TriangleShape)} has no mass properties. " +
                                         $"If you encounter this while calling RigidBody.AddShape, " +
-                                        $"call AddShape with setMassInertia set to false.");
+                                        $"call AddShape with massInertiaMode set to {nameof(MassInertiaUpdateMode.Preserve)}.");
     }
 
     /// <summary>

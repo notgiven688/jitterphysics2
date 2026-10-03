@@ -979,8 +979,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         shape.RigidBody = this;
-        shape.UpdateWorldBoundingBox();
-        World.DynamicTree.AddProxy(shape, IsActive);
+        try
+        {
+            shape.UpdateWorldBoundingBox();
+            World.DynamicTree.AddProxy(shape, IsActive);
+        }
+        catch
+        {
+            shape.RigidBody = null!;
+            throw;
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1028,6 +1036,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void AddShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shapes);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         foreach (RigidBodyShape shape in shapes)
         {
@@ -1042,7 +1051,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             InternalShapes.Add(shape);
         }
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
     }
 
     /// <summary>
@@ -1071,6 +1080,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Adds a shape to the body.
     /// </summary>
+    /// <remarks>
+    /// If registration or mass calculation fails, the shape remains detached and the body's
+    /// mass properties remain unchanged.
+    /// </remarks>
     /// <param name="shape">The shape to be added.</param>
     /// <exception cref="ArgumentNullException">
     /// Thrown if <paramref name="shape"/> is <see langword="null"/>.
@@ -1084,6 +1097,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <summary>
     /// Adds a shape to the body.
     /// </summary>
+    /// <remarks>
+    /// If registration or mass calculation fails, the shape remains detached and the body's
+    /// mass properties remain unchanged.
+    /// </remarks>
     /// <param name="shape">The shape to be added.</param>
     /// <param name="massInertiaMode">
     /// Controls whether the body's mass and inertia are recomputed after the shape is added.
@@ -1100,6 +1117,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void AddShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shape);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         if (shape.IsRegistered)
         {
@@ -1107,9 +1125,18 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         }
 
         AttachToShape(shape);
-        InternalShapes.Add(shape);
-
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        try
+        {
+            InternalShapes.Add(shape);
+            if (updateMassInertia) SetMassInertia();
+        }
+        catch
+        {
+            InternalShapes.Remove(shape);
+            World.DynamicTree.RemoveProxy(shape);
+            shape.RigidBody = null!;
+            throw;
+        }
     }
 
     [Obsolete($"Use {nameof(AddShapes)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
@@ -1480,7 +1507,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             mass += shapeMass;
         }
 
-        if (!JSymmetricMatrix.Inverse(inertia, out inverseInertia))
+        if (!JSymmetricMatrix.Inverse(inertia, out JSymmetricMatrix newInverseInertia))
         {
             throw new InvalidOperationException("Inertia matrix is not invertible. This might happen if a shape has " +
                                                 "invalid mass properties. If you encounter this while calling " +
@@ -1488,6 +1515,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                                                 nameof(MassInertiaUpdateMode.Preserve) + ".");
         }
 
+        inverseInertia = newInverseInertia;
         inverseMass = (Real)1.0 / mass;
 
         UpdateWorldInertia();
@@ -1563,11 +1591,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                 throw new ArgumentException("Mass cannot be zero or negative.", nameof(mass));
             }
 
-            if (!JSymmetricMatrix.Inverse(inertia, out inverseInertia))
+            if (!JSymmetricMatrix.Inverse(inertia, out JSymmetricMatrix newInverseInertia))
             {
                 throw new ArgumentException("Inertia matrix is not invertible.", nameof(inertia));
             }
 
+            inverseInertia = newInverseInertia;
             inverseMass = (Real)1.0 / mass;
         }
 

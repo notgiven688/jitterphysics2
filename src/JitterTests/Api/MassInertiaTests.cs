@@ -186,7 +186,11 @@ public class MassInertiaTests
     {
         var world = new World();
         var body = world.CreateRigidBody();
+        Real originalMass = body.Mass;
+        JSymmetricMatrix originalInertia = body.InverseInertia;
         Assert.Throws<ArgumentException>(() => body.SetMassInertia(JSymmetricMatrix.Zero, (Real)1.0));
+        Assert.That(body.Mass, Is.EqualTo(originalMass));
+        Assert.That(body.InverseInertia, Is.EqualTo(originalInertia));
         world.Dispose();
     }
 
