@@ -4,12 +4,9 @@
 [![Nuget](https://img.shields.io/nuget/v/Jitter2?color=yellow)](https://www.nuget.org/packages/Jitter2/)
 [![Discord](https://img.shields.io/discord/1213790465225138197?logo=discord&logoColor=lightgray&label=discord&color=blue)](https://discord.gg/7jr3f4edmV)
 
-Jitter Physics 2, the evolution of [Jitter Physics](https://github.com/notgiven688/jitterphysics), is an impulse-based dynamics engine with a semi-implicit Euler integrator. It is a fast, simple, and dependency-free engine written in C# with a clear and user-friendly API.
+Jitter Physics 2 is a fast, dependency-free physics engine written in C#, with rigid-body and soft-body dynamics. It runs across platforms supported by .NET and is the successor to [Jitter Physics](https://github.com/notgiven688/jitterphysics).
 
-📦 The official **NuGet** package ([changelog](https://jitterphysics.com/docs/changelog)) can be found [here](https://www.nuget.org/packages/Jitter2), the *double precision* version [here](https://www.nuget.org/packages/Jitter2.Double).
-
-🧪 There is also an experimental C++ port available at [jitterphysics2cpp](https://github.com/notgiven688/jitterphysics2cpp).
-It is an automatic AI port of Jitter Physics 2 intended for performance comparison experiments.
+📦 Install [Jitter2](https://www.nuget.org/packages/Jitter2) from NuGet, or [Jitter2.Double](https://www.nuget.org/packages/Jitter2.Double) for double precision. See the [changelog](https://jitterphysics.com/docs/changelog).
 
 ▶️ Try the interactive demo and explore the docs at **[jitterphysics.com](https://jitterphysics.com/docs/introduction.html)**.
 
@@ -21,41 +18,76 @@ It is an automatic AI port of Jitter Physics 2 intended for performance comparis
 
 ## Getting Started
 
-Jitter is cross-platform. The `src` directory contains four projects:
+Add Jitter to your .NET project:
+
+```sh
+dotnet add package Jitter2
+```
+
+Create a world, add a box, and simulate one second with a fixed time step:
+
+```csharp
+using System;
+using Jitter2;
+using Jitter2.Collision.Shapes;
+using Jitter2.LinearMath;
+
+using var world = new World();
+world.Gravity = new JVector(0, -9.81f, 0);
+
+var box = world.CreateRigidBody();
+box.AddShape(new BoxShape(1, 1, 1));
+box.Position = new JVector(0, 5, 0);
+
+for (int i = 0; i < 60; i++)
+{
+    world.Step(1.0f / 60.0f);
+}
+
+Console.WriteLine(box.Position);
+```
+
+For a complete example with rendering, follow the [falling boxes tutorial](https://jitterphysics.com/docs/tutorials/boxes/project-setup.html).
+
+## Running the Demos
+
+The `src` directory contains four projects:
 
 | Project          | Description                                                |
 |------------------|------------------------------------------------------------|
-| Jitter2          | The main library housing Jitter2's functionalities.         |
-| JitterDemo       | Features demo scenes rendered with OpenGL, tested on Linux and Windows. |
-| JitterBenchmark  | The setup for conducting benchmarks using BenchmarkDotNet.  |
-| JitterTests      | Unit tests utilizing NUnit.                                |
+| Jitter2          | Physics library.                                           |
+| JitterDemo       | Interactive OpenGL demos.                                  |
+| JitterBenchmark  | BenchmarkDotNet benchmarks.                                |
+| JitterTests      | NUnit tests.                                               |
 
 To run the demo scenes:
 
-- Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
-- `git clone https://github.com/notgiven688/jitterphysics2.git`
-- `cd ./jitterphysics2/src/JitterDemo && dotnet run -c Release`
+Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0), then run:
+
+```sh
+git clone https://github.com/notgiven688/jitterphysics2.git
+cd jitterphysics2/src/JitterDemo
+dotnet run -c Release
+```
 
 JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing windows, and [VellumUI](https://www.nuget.org/packages/VellumUI/) for the demo UI overlay. The project contains the GLFW native binaries in precompiled form.
 
 ## Features
 
-- [x] Compile time option for double precision.
-- [x] Optional cross-platform deterministic solver mode for reproducible simulation.
-- [x] Speculative contacts (avoiding the bullet-through-paper problem).
-- [x] A variety of constraints and motors (AngularMotor, BallSocket, ConeLimit, DistanceLimit, FixedAngle, HingeAngle, LinearMotor, PointOnLine, PointOnPlane, TwistAngle) with support for softness.
-- [x] A sophisticated deactivation scheme with minimal cost for inactive rigid bodies (scenes with 100k inactive bodies are easily achievable).
-- [x] Edge collision filter for internal edges of triangle meshes.
-- [x] Substepping for improved constraint and contact stability.
-- [x] Generic convex-convex collision detection using EPA-aided MPR.
-- [x] "One-shot" contact manifolds using auxiliary contacts for flat surface collisions.
-- [x] Efficient compound shapes.
-- [x] Easy integration of custom shapes. Integrated: Box, Capsule, Cone, Convex Hull, Point Cloud, Sphere, Triangle, Transformed.
-- [x] Soft-body dynamics!
+- Rigid-body and soft-body dynamics.
+- Single or double precision, selected at compile time.
+- Optional cross-platform deterministic solver for reproducible simulations.
+- Impulse-based solver with a semi-implicit Euler integrator and substepping.
+- Speculative contacts to reduce tunneling.
+- Constraints and motors with configurable softness.
+- Deactivation to reduce the cost of inactive rigid bodies.
+- Triangle meshes with filtering of internal edges.
+- Convex collision detection using EPA-aided MPR and one-shot contact manifolds.
+- Compound shapes and custom support mappings, alongside built-in boxes, spheres, capsules, cylinders, cones, convex hulls, point clouds, and triangles.
 
 ## Documentation
 
-Find the [documentation here](https://notgiven688.github.io/jitterphysics2).
+Explore the [documentation and interactive demo](https://jitterphysics.com/docs/introduction.html) for tutorials, API details, and examples.
 
 ## Credits
 
