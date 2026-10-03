@@ -1353,6 +1353,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void RemoveShape(RigidBodyShape shape, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shape);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         if (!InternalShapes.Remove(shape))
         {
@@ -1372,7 +1373,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         World.DynamicTree.RemoveProxy(shape);
         shape.RigidBody = null!;
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
     }
 
     /// <summary>
@@ -1403,6 +1404,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public void RemoveShapes(IEnumerable<RigidBodyShape> shapes, MassInertiaUpdateMode massInertiaMode)
     {
         ArgumentNullException.ThrowIfNull(shapes);
+        bool updateMassInertia = ShouldUpdateMassInertia(massInertiaMode);
 
         HashSet<ulong> sids = new();
 
@@ -1440,7 +1442,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
         }
 
-        if (ShouldUpdateMassInertia(massInertiaMode)) SetMassInertia();
+        if (updateMassInertia) SetMassInertia();
 
         sids.Clear();
     }

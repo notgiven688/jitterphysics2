@@ -281,6 +281,33 @@ public class ShapeTests
         world.Dispose();
     }
 
+    [TestCase(false)]
+    [TestCase(true)]
+    public void RemoveShape_WithInvalidMassUpdateMode_DoesNotDetachShape(bool multiple)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        SphereShape shape = new();
+        body.AddShape(shape);
+        Real originalMass = body.Mass;
+
+        if (multiple)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                body.RemoveShapes(new[] { shape }, (MassInertiaUpdateMode)123));
+        }
+        else
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                body.RemoveShape(shape, (MassInertiaUpdateMode)123));
+        }
+
+        Assert.That(body.Shapes, Does.Contain(shape));
+        Assert.That(world.DynamicTree.Proxies.Count, Is.EqualTo(1));
+        Assert.That(shape.RigidBody, Is.SameAs(body));
+        Assert.That(body.Mass, Is.EqualTo(originalMass));
+    }
+
     [TestCase]
     public void RemoveShapes_WithForeignShape_Throws()
     {
