@@ -160,6 +160,11 @@ The filter can exclude collisions and also modify collision information.</p>
 <p>The default narrow phase collision filter is assigned to an instance of <code>TriangleEdgeCollisionFilter</code>, which filters out so-called 'internal edges' for <code>TriangleShape</code>s.
 These internal edges typically cause collision artifacts when rigid bodies slide over the edges of connected triangles forming static geometry.
 This problem is also known as 'ghost collisions'.</p>
+<p>Static and kinematic triangle bodies receive edge filtering. For dynamic triangle bodies,
+edge filtering is disabled by default to avoid destabilizing moving meshes. Enable it explicitly
+with <code>FilterDynamicBodies</code>:</p>
+<pre><code class="lang-cs">world.NarrowPhaseFilter = new TriangleEdgeCollisionFilter { FilterDynamicBodies = true };
+</code></pre>
 
 </article>
 
