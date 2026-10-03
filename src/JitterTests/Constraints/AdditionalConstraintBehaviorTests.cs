@@ -44,7 +44,7 @@ public class AdditionalConstraintBehaviorTests
         var motor = world.CreateConstraint<AngularMotor>(world.NullBody, body);
         motor.Initialize(JVector.UnitY, JVector.UnitY);
         motor.TargetVelocity = (Real)3.0;
-        motor.MaximumForce = (Real)100.0;
+        motor.MaximumTorque = (Real)100.0;
 
         Helper.AdvanceWorld(world, 1, 1f / 100f, false);
 
