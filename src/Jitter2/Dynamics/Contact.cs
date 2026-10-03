@@ -931,7 +931,11 @@ public struct ContactData
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            Real bias = (applyBias) ? MathR.Max(PenaltyBias, Bias) : Bias;
+            Real bias = Bias;
+            if (applyBias && PenaltyBias > 0)
+            {
+                bias = MathR.Max(PenaltyBias, Bias);
+            }
 
             Real vn = JVector.Dot(normal, dv);
             Real vt1 = JVector.Dot(tangent1, dv);
@@ -1174,7 +1178,11 @@ public struct ContactData
             JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
             dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
 
-            Real bias = applyBias ? MathR.Max(PenaltyBias, Bias) : Bias;
+            Real bias = Bias;
+            if (applyBias && PenaltyBias > 0)
+            {
+                bias = MathR.Max(PenaltyBias, Bias);
+            }
 
             var vdots = Vector.Add(Vector.Add(Vector.Multiply(NormalTangentX, Vector.Create(dv.X)),
                 Vector.Multiply(NormalTangentY, Vector.Create(dv.Y))), Vector.Multiply(NormalTangentZ, Vector.Create(dv.Z)));

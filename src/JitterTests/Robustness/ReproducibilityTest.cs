@@ -10,10 +10,10 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    // Symmetric inertia and consistent angular coordinates change the reference trajectory.
+    // Preserving speculative approach velocities changes the reference trajectory.
     // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x9699A263F3FB6EE8;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0xC5873C36370AF2F4;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x97C71CD9198DF3B9;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x7FF715683EED10D6;
 
     [TestCase]
     public static void BasicReproducibilityTest()
