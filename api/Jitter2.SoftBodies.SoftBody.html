@@ -199,7 +199,7 @@ springs (constraints), and shapes.</p>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a value indicating whether the soft body is active. A soft body is considered active
-if its first vertex is active.</p>
+if its first vertex is still valid and active.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -426,10 +426,11 @@ if its first vertex is active.</p>
 
   <h3 id="Jitter2_SoftBodies_SoftBody_Destroy" data-uid="Jitter2.SoftBodies.SoftBody.Destroy">
   Destroy()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBody.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBody.cs/#L78"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Destroys the soft body, removing all its components from the simulation world.</p>
+  <div class="markdown level1 summary"><p>Destroys the soft body, removing all its components from the simulation world.
+Safe to call more than once, including after the world has been cleared or disposed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -453,7 +454,7 @@ if its first vertex is active.</p>
 
   <h3 id="Jitter2_SoftBodies_SoftBody_WorldOnPostStep_System_Single_" data-uid="Jitter2.SoftBodies.SoftBody.WorldOnPostStep(System.Single)">
   WorldOnPostStep(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBody.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBody.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called after each world step to update the activation state of the soft body's shapes.</p>
