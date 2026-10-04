@@ -600,7 +600,7 @@ public class AllowedMotionTests
             case "AngularMotor":
                 var motor = world.CreateConstraint<AngularMotor>(world.NullBody, body);
                 motor.Initialize(axis);
-                motor.MaximumForce = 10000;
+                motor.MaximumTorque = 10000;
                 break;
         }
         world.Step((Real)0.01, false);
