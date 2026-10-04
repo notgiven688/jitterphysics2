@@ -58,4 +58,19 @@ public class NullBodyTests
         Assert.That(world.NullBody.Shapes, Is.Empty);
         world.Dispose();
     }
+
+    [Test]
+    public void Clear_DetachesNullBodyShapes()
+    {
+        using var world = new World();
+        var shape = new SphereShape((Real)1.0);
+        world.NullBody.AddShape(shape);
+
+        world.Clear();
+
+        Assert.That(world.NullBody.Shapes, Is.Empty);
+        Assert.That(shape.IsRegistered, Is.False);
+        Assert.That(world.DynamicTree.Proxies, Has.Count.EqualTo(0));
+        Assert.DoesNotThrow(() => world.NullBody.AddShape(shape));
+    }
 }

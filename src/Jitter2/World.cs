@@ -464,6 +464,11 @@ public sealed partial class World : IDisposable
         Stack<RigidBody> bodyStack = new(bodies);
         while (bodyStack.Count > 0) Remove(bodyStack.Pop());
 
+        if (NullBody.Shapes.Count > 0)
+        {
+            NullBody.RemoveShapes(NullBody.Shapes, MassInertiaUpdateMode.Preserve);
+        }
+
         // Left-over shapes not associated with a rigid body.
         Stack<IDynamicTreeProxy> proxies = new(DynamicTree.Proxies);
         while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
