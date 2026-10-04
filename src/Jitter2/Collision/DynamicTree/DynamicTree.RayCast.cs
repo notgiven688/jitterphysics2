@@ -88,7 +88,7 @@ public partial class DynamicTree
     /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out Real)"/>
     /// <param name="origin">The ray origin in world space.</param>
     /// <param name="direction">The ray direction; it need not be normalized.</param>
-    /// <param name="maxLambda">Maximum lambda of the ray's length to consider for intersections.</param>
+    /// <param name="maxLambda">Exclusive upper bound for hit lambda; hits at this value are excluded.</param>
     /// <param name="pre">Optional filter applied before the exact test.</param>
     /// <param name="post">Optional filter applied after the exact test.</param>
     /// <param name="proxy">The accepted proxy, or null if none is found.</param>
@@ -146,6 +146,7 @@ public partial class DynamicTree
                     bool hit = rayCastable.RayCast(ray.Origin, ray.Direction, out res.Normal, out res.Lambda);
                     res.Entity = proxy;
 
+                    // Keep the closest hit already accepted on ties; maxLambda is an exclusive bound.
                     if (hit && res.Lambda < result.Lambda)
                     {
                         if (ray.FilterPost != null && !ray.FilterPost(res)) continue;
