@@ -38,10 +38,15 @@ public sealed class SoftBodyTriangle : SoftBodyShape
     /// <summary>
     /// Gets or sets the thickness of the triangle.
     /// </summary>
+    /// <exception cref="System.ArgumentOutOfRangeException">Thrown if the thickness is negative or not finite.</exception>
     public Real Thickness
     {
         get => halfThickness * (Real)2.0;
-        set => halfThickness = value * (Real)0.5;
+        set
+        {
+            halfThickness = ArgumentCheck.NonNegative(value, nameof(Thickness)) * (Real)0.5;
+            UpdateWorldBoundingBox();
+        }
     }
 
     /// <summary>
