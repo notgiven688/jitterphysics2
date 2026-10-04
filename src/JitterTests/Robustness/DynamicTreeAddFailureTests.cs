@@ -12,9 +12,13 @@ public class DynamicTreeAddFailureTests
         int originalPairCount = tree.HashSetInfo.Count;
         var third = new SphereShape((Real)1.0);
         int filterCalls = 0;
-        tree.Filter = (_, _) => ++filterCalls == 1
-            ? true
-            : throw new InvalidOperationException("filter failed");
+        tree.Filter = (a, b) =>
+        {
+            if (!ReferenceEquals(a, third) && !ReferenceEquals(b, third)) return true;
+            return ++filterCalls == 1
+                ? true
+                : throw new InvalidOperationException("filter failed");
+        };
 
         Assert.Throws<InvalidOperationException>(() => tree.AddProxy(third));
 

@@ -46,7 +46,7 @@ public partial class DynamicTree
         freeNodes.TrimExcess();
     }
 
-    private readonly PairHashSet potentialPairs = [];
+    private PairHashSet potentialPairs = [];
 
     /// <summary>
     /// Sentinel value indicating a null/invalid node index.
@@ -148,12 +148,43 @@ public partial class DynamicTree
     /// <remarks>
     /// The filter is called during overlap enumeration. Return <c>false</c> to exclude a pair.
     /// In Jitter, this is typically used to exclude shapes belonging to the same rigid body.
+    /// Changing the filter rebuilds potential pairs for registered proxies.
     /// </remarks>
     /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
     public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter
     {
         get => filter;
-        set => filter = value ?? throw new ArgumentNullException(nameof(value));
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (proxies.Count == 0)
+            {
+                filter = value;
+                return;
+            }
+
+            PairHashSet previousPairs = potentialPairs;
+            var previousFilter = filter;
+            var rebuiltPairs = new PairHashSet();
+
+            filter = value;
+            potentialPairs = rebuiltPairs;
+
+            try
+            {
+                foreach (var proxy in proxies)
+                {
+                    OverlapCheckAdd(root, proxy.NodePtr);
+                }
+            }
+            catch
+            {
+                filter = previousFilter;
+                potentialPairs = previousPairs;
+                throw;
+            }
+        }
     }
 
     private readonly Action<OverlapEnumerationParam> enumerateOverlaps;
