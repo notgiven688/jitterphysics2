@@ -58,8 +58,8 @@ public class SoftBody
     /// <param name="shape">The shape to add.</param>
     public void AddShape(SoftBodyShape shape)
     {
-        Shapes.Add(shape);
         World.DynamicTree.AddProxy(shape);
+        Shapes.Add(shape);
     }
 
     /// <summary>

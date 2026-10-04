@@ -85,4 +85,18 @@ public class SoftBodyLifecycleTests
 
         softBody.Destroy();
     }
+
+    [Test]
+    public void AddShape_DuplicateRegistrationDoesNotChangeShapeList()
+    {
+        using var world = new World();
+        SoftBody softBody = CreateSoftBody(world);
+        SoftBodyShape shape = softBody.Shapes[0];
+
+        Assert.Throws<ArgumentException>(() => softBody.AddShape(shape));
+        Assert.That(softBody.Shapes, Has.Count.EqualTo(1));
+        Assert.That(softBody.Shapes[0], Is.SameAs(shape));
+
+        softBody.Destroy();
+    }
 }
