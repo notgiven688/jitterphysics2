@@ -445,7 +445,14 @@ public partial class DynamicTree
     public void Update<T>(T proxy) where T : class, IDynamicTreeProxy
         => Update(proxy, (Real)0.0);
 
-    internal void Update<T>(T proxy, Real dt) where T : class, IDynamicTreeProxy
+    /// <summary>
+    /// Forces an immediate update of a single proxy in the tree using the specified timestep.
+    /// </summary>
+    /// <typeparam name="T">The proxy type.</typeparam>
+    /// <param name="proxy">The proxy to update.</param>
+    /// <param name="dt">The timestep passed to an <see cref="IUpdatableBoundingBox"/> proxy when updating its bounding box.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is not registered with this tree.</exception>
+    public void Update<T>(T proxy, Real dt) where T : class, IDynamicTreeProxy
     {
         ThrowIfUnregistered(proxy);
         if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox(dt);
