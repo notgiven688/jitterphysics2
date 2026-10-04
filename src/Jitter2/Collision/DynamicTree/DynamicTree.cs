@@ -447,8 +447,30 @@ public partial class DynamicTree
         }
 
         InternalAddProxy(proxy, balance: true);
-        OverlapCheckAdd(root, proxy.NodePtr);
-        proxies.Add(proxy, active);
+        int node = proxy.NodePtr;
+
+        try
+        {
+            OverlapCheckAdd(root, node);
+            proxies.Add(proxy, active);
+        }
+        catch
+        {
+            // The filter may throw after some pairs have already been added.
+            for (int i = 0; i < potentialPairs.Slots.Length; i++)
+            {
+                var pair = potentialPairs.Slots[i];
+                if (pair.ID == 0 || (pair.ID1 != node && pair.ID2 != node)) continue;
+
+                potentialPairs.Remove(i);
+                i = -1; // Removal can move entries or resize the table.
+            }
+
+            if (proxies.Contains(proxy)) proxies.Remove(proxy);
+            InternalRemoveProxy(proxy, balance: true);
+            proxy.NodePtr = NullNode;
+            throw;
+        }
     }
 
     /// <summary>
