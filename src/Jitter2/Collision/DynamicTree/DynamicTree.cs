@@ -398,13 +398,22 @@ public partial class DynamicTree
         }
     }
 
+    private void ThrowIfUnregistered(IDynamicTreeProxy proxy)
+    {
+        ArgumentNullException.ThrowIfNull(proxy);
+        if (!proxies.Contains(proxy))
+            throw new InvalidOperationException("The proxy is not registered with this tree instance.");
+    }
+
     /// <summary>
     /// Forces an immediate update of a single proxy in the tree.
     /// </summary>
     /// <typeparam name="T">The proxy type.</typeparam>
     /// <param name="proxy">The proxy to update.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is not registered with this tree.</exception>
     public void Update<T>(T proxy) where T : class, IDynamicTreeProxy
     {
+        ThrowIfUnregistered(proxy);
         if (proxy is IUpdatableBoundingBox sh) sh.UpdateWorldBoundingBox();
         OverlapCheckRemove(root, proxy.NodePtr);
         InternalRemoveProxy(proxy);
@@ -418,6 +427,7 @@ public partial class DynamicTree
     /// <typeparam name="T">The proxy type.</typeparam>
     /// <param name="proxy">The proxy to add.</param>
     /// <param name="active">If <c>true</c>, the proxy is tracked for movement each update.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="proxy"/> is null.</exception>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="proxy"/> is already registered with this tree instance.
     /// </exception>
@@ -426,6 +436,7 @@ public partial class DynamicTree
     /// </exception>
     public void AddProxy<T>(T proxy, bool active = true) where T : class, IDynamicTreeProxy
     {
+        ArgumentNullException.ThrowIfNull(proxy);
         if (proxies.Contains(proxy))
         {
             throw new ArgumentException(
@@ -478,10 +489,11 @@ public partial class DynamicTree
     /// </summary>
     /// <typeparam name="T">The proxy type.</typeparam>
     /// <param name="proxy">The proxy to check.</param>
-    /// <returns><c>true</c> if the proxy is active; otherwise, <c>false</c>.</returns>
+    /// <returns><c>true</c> if the proxy is active; otherwise, <c>false</c>. Unregistered proxies return false.</returns>
     public bool IsActive<T>(T proxy) where T : class, IDynamicTreeProxy
     {
-        return proxies.IsActive(proxy);
+        ArgumentNullException.ThrowIfNull(proxy);
+        return proxies.Contains(proxy) && proxies.IsActive(proxy);
     }
 
     /// <summary>
@@ -489,8 +501,10 @@ public partial class DynamicTree
     /// </summary>
     /// <typeparam name="T">The proxy type.</typeparam>
     /// <param name="proxy">The proxy to activate.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is not registered with this tree.</exception>
     public void ActivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
+        ThrowIfUnregistered(proxy);
         if (proxies.MoveToActive(proxy))
         {
             nodes[proxy.NodePtr].ForceUpdate = true;
@@ -502,8 +516,10 @@ public partial class DynamicTree
     /// </summary>
     /// <typeparam name="T">The proxy type.</typeparam>
     /// <param name="proxy">The proxy to deactivate.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the proxy is not registered with this tree.</exception>
     public void DeactivateProxy<T>(T proxy) where T : class, IDynamicTreeProxy
     {
+        ThrowIfUnregistered(proxy);
         proxies.MoveToInactive(proxy);
     }
 
@@ -514,11 +530,7 @@ public partial class DynamicTree
     /// <exception cref="InvalidOperationException">Thrown if the proxy is not in this tree.</exception>
     public void RemoveProxy(IDynamicTreeProxy proxy)
     {
-        if (!proxies.Contains(proxy))
-        {
-            throw new InvalidOperationException(
-                $"The proxy '{proxy}' is not registered with this tree instance.");
-        }
+        ThrowIfUnregistered(proxy);
 
         OverlapCheckRemove(root, proxy.NodePtr);
         InternalRemoveProxy(proxy, balance: true);
@@ -578,7 +590,7 @@ public partial class DynamicTree
 
             if (proxyA != null && proxyB != null &&
                 !TreeBox.Disjoint(nodes[proxyA.NodePtr].ExpandedBox, nodes[proxyB.NodePtr].ExpandedBox) &&
-                (IsActive(proxyA) || IsActive(proxyB)))
+                (proxies.IsActive(proxyA) || proxies.IsActive(proxyB)))
             {
                 continue;
             }
