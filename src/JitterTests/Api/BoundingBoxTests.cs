@@ -1,9 +1,47 @@
+using Jitter2.Collision;
 using Jitter2.SoftBodies;
 
 namespace JitterTests.Api;
 
 public class BoundingBoxTests
 {
+    [Test]
+    public void DetachedHullShapesAndClonesCanBeFoundAtTheirGeometry()
+    {
+        JVector a = new(10, 10, 10);
+        JVector b = new(11, 10, 10);
+        JVector c = new(10, 11, 10);
+        JVector d = new(10, 10, 11);
+
+        PointCloudShape cloud = new([a, b, c, d]);
+        ConvexHullShape hull = new([
+            new JTriangle(a, b, c), new JTriangle(a, b, d),
+            new JTriangle(a, c, d), new JTriangle(b, c, d)
+        ]);
+
+        Assert.That(cloud.WorldBoundingBox.Min, Is.EqualTo(a));
+        Assert.That(hull.WorldBoundingBox.Min, Is.EqualTo(a));
+        Assert.That(cloud.WorldBoundingBox.Max, Is.EqualTo(new JVector(11, 11, 11)));
+        Assert.That(hull.WorldBoundingBox.Max, Is.EqualTo(new JVector(11, 11, 11)));
+
+        cloud.Shift = new JVector(3, 0, 0);
+        hull.Shift = new JVector(3, 0, 0);
+        Assert.That(cloud.WorldBoundingBox.Min.X, Is.EqualTo((Real)13));
+        Assert.That(hull.WorldBoundingBox.Min.X, Is.EqualTo((Real)13));
+
+        var tree = new DynamicTree((_, _) => true);
+        tree.AddProxy(cloud.Clone());
+        tree.AddProxy(hull.Clone());
+
+        List<IDynamicTreeProxy> hits = [];
+        tree.Query(hits, new JBoundingBox(new JVector(12, 9, 9), new JVector(14, 12, 12)));
+        Assert.That(hits, Has.Count.EqualTo(2));
+
+        hits.Clear();
+        tree.Query(hits, new JBoundingBox(new JVector(-1), new JVector(1)));
+        Assert.That(hits, Is.Empty);
+    }
+
     private static void CheckBoundingBox(RigidBodyShape shape)
     {
         JQuaternion ori = new JQuaternion(1, 2, 3, 4);

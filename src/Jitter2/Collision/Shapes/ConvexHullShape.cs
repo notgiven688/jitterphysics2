@@ -206,6 +206,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             cachedMass = cachedMass,
             shifted = shifted
         };
+        result.UpdateWorldBoundingBox();
         return result;
     }
 
@@ -232,6 +233,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     {
         CalculateMassInertia();
         CalcInitBox();
+        UpdateWorldBoundingBox();
     }
 
     /// <inheritdoc/>

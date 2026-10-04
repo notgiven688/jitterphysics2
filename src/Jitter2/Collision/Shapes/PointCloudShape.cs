@@ -79,6 +79,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
             cachedMass = cachedMass,
             shifted = shifted
         };
+        result.UpdateWorldBoundingBox();
         return result;
     }
 
@@ -106,6 +107,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     {
         CalculateMassInertia();
         CalcInitBox();
+        UpdateWorldBoundingBox();
     }
 
     /// <summary>
