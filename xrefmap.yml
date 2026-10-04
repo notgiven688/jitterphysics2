@@ -1174,6 +1174,15 @@ references:
   fullName.vb: Jitter2.Collision.DynamicTree.Update(Of T)(T)
   nameWithType: DynamicTree.Update<T>(T)
   nameWithType.vb: DynamicTree.Update(Of T)(T)
+- uid: Jitter2.Collision.DynamicTree.Update``1(``0,System.Single)
+  name: Update<T>(T, float)
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update__1___0_System_Single_
+  commentId: M:Jitter2.Collision.DynamicTree.Update``1(``0,System.Single)
+  name.vb: Update(Of T)(T, Single)
+  fullName: Jitter2.Collision.DynamicTree.Update<T>(T, float)
+  fullName.vb: Jitter2.Collision.DynamicTree.Update(Of T)(T, Single)
+  nameWithType: DynamicTree.Update<T>(T, float)
+  nameWithType.vb: DynamicTree.Update(Of T)(T, Single)
 - uid: Jitter2.Collision.DynamicTree.UpdatedProxyCount
   name: UpdatedProxyCount
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_UpdatedProxyCount
