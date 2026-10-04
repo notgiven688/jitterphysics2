@@ -65,7 +65,7 @@ public class BroadPhaseUpdateTests
     }
 
     [TestCase]
-    public void MovingSpeculativeBodyKeepsSweptBoundingBox()
+    public void MovingSpeculativeBodyKeepsInitialSweptBoundingBox()
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -76,7 +76,7 @@ public class BroadPhaseUpdateTests
 
         body.Position = new JVector(0, 0, 1);
 
-        Assert.That(shape.WorldBoundingBox.Min.Z, Is.EqualTo((Real)0.8).Within((Real)1e-4));
+        Assert.That(shape.WorldBoundingBox.Min.Z, Is.EqualTo((Real)(-0.1)).Within((Real)1e-4));
     }
 
     [TestCase]

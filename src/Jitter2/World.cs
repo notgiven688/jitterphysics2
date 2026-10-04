@@ -415,8 +415,8 @@ public sealed partial class World : IDisposable
     private int substeps = 1;
 
     private Real stepDt = (Real)0.01;
-    // The dt used by the last broadphase update; use the initial step dt before the first Step.
-    private Real broadphaseStepDt = (Real)0.01;
+    // The dt used by the last broadphase update; before the first Step, allow a conservative sweep.
+    private Real broadphaseStepDt = (Real)0.1;
     private Real substepDt = (Real)0.01;
     private Real invStepDt = (Real)100.0;
 
