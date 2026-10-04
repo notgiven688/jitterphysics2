@@ -4,6 +4,81 @@ namespace JitterTests.Behavior;
 
 public class BroadPhaseUpdateTests
 {
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public void SpeculativeVelocityChangeUpdatesBroadphaseBeforeFirstStep(bool enableFirst, bool launchInPreStep)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+
+        var wall = world.CreateRigidBody();
+        wall.AddShape(new BoxShape(10, 10, (Real)0.02));
+        wall.Position = new JVector(0, 0, (Real)(-0.8));
+        wall.MotionType = MotionType.Static;
+
+        var bullet = world.CreateRigidBody();
+        var shape = new SphereShape((Real)0.1);
+        bullet.AddShape(shape);
+
+        void Launch(Real _)
+        {
+            if (enableFirst) bullet.EnableSpeculativeContacts = true;
+            bullet.Velocity = new JVector(0, 0, -100);
+            if (!enableFirst) bullet.EnableSpeculativeContacts = true;
+
+            Assert.That(shape.WorldBoundingBox.Min.Z, Is.LessThan((Real)(-0.8)));
+        }
+
+        if (launchInPreStep) world.PreStep += Launch;
+        else Launch(0);
+
+        world.Step((Real)0.01, false);
+
+        Assert.That(bullet.Position.Z, Is.GreaterThan((Real)(-0.8)));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void SpeculativeVelocityChangeAfterImpulseOrShapeAttachmentUpdatesBroadphase(bool useImpulse)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        world.Step((Real)0.005, false);
+        world.Stabilize((Real)0.02, 1, 0, false);
+
+        var bullet = world.CreateRigidBody();
+        bullet.EnableSpeculativeContacts = true;
+        var shape = new SphereShape((Real)0.1);
+        if (useImpulse)
+        {
+            bullet.AddShape(shape);
+            bullet.SetMassInertia(1);
+            bullet.ApplyImpulse(new JVector(0, 0, -100));
+        }
+        else
+        {
+            bullet.Velocity = new JVector(0, 0, -100);
+            bullet.AddShape(shape);
+        }
+
+        Assert.That(shape.WorldBoundingBox.Min.Z, Is.EqualTo((Real)(-0.6)).Within((Real)1e-4));
+    }
+
+    [TestCase]
+    public void MovingSpeculativeBodyKeepsSweptBoundingBox()
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        var shape = new SphereShape((Real)0.1);
+        body.AddShape(shape);
+        body.EnableSpeculativeContacts = true;
+        body.Velocity = new JVector(0, 0, -10);
+
+        body.Position = new JVector(0, 0, 1);
+
+        Assert.That(shape.WorldBoundingBox.Min.Z, Is.EqualTo((Real)0.8).Within((Real)1e-4));
+    }
+
     [TestCase]
     public void MovingBody_UpdatesDynamicTreeQueryImmediately()
     {

@@ -272,6 +272,7 @@ public sealed partial class World
 
             Tracer.ProfileBegin(TraceName.BroadPhase);
             DynamicTree.Update(multiThread, stepDt);
+            broadphaseStepDt = stepDt;
             Tracer.ProfileEnd(TraceName.BroadPhase);
             SetTime(Timings.BroadPhase);
 

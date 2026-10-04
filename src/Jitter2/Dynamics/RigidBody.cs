@@ -632,7 +632,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 
         foreach (var shape in InternalShapes)
         {
-            World.DynamicTree.Update(shape);
+            World.DynamicTree.Update(shape, EnableSpeculativeContacts ? World.BroadphaseStepDt : (Real)0.0);
         }
 
         World.ActivateBodyNextStep(this, true);
@@ -772,7 +772,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
 
             RestrictLinearMotion(ref value, handle.Data.AllowedMotion);
+            JVector previousVelocity = handle.Data.Velocity;
             handle.Data.Velocity = value;
+
+            if (EnableSpeculativeContacts && previousVelocity != value)
+            {
+                UpdateSpeculativeBroadphase();
+            }
 
             if (!MathHelper.CloseToZero(value))
             {
@@ -829,6 +835,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     public object? Tag { get; set; }
 
+    private bool enableSpeculativeContacts;
+
     /// <summary>
     /// Gets or sets whether speculative contacts are enabled for this body.
     /// </summary>
@@ -837,7 +845,30 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// contacts before actual penetration occurs. This may increase contact count and
     /// solver cost. Default is <see langword="false"/>.
     /// </remarks>
-    public bool EnableSpeculativeContacts { get; set; } = false;
+    public bool EnableSpeculativeContacts
+    {
+        get => enableSpeculativeContacts;
+        set
+        {
+            if (enableSpeculativeContacts == value) return;
+            enableSpeculativeContacts = value;
+            if (IsValid && Data.Velocity.LengthSquared() > (Real)0.0)
+            {
+                foreach (var shape in InternalShapes)
+                {
+                    World.DynamicTree.Update(shape, value ? World.BroadphaseStepDt : (Real)0.0);
+                }
+            }
+        }
+    }
+
+    private void UpdateSpeculativeBroadphase()
+    {
+        foreach (var shape in InternalShapes)
+        {
+            World.DynamicTree.Update(shape, World.BroadphaseStepDt);
+        }
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void UpdateWorldInertia()
@@ -983,7 +1014,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         shape.RigidBody = this;
         try
         {
-            shape.UpdateWorldBoundingBox();
+            shape.UpdateWorldBoundingBox(EnableSpeculativeContacts ? World.BroadphaseStepDt : (Real)0.0);
             World.DynamicTree.AddProxy(shape, IsActive);
         }
         catch
@@ -1251,7 +1282,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         if (!wakeup && !IsActive) return;
 
         World.ActivateBodyNextStep(this);
+        JVector previousVelocity = handle.Data.Velocity;
         handle.Data.Velocity += JVector.Multiply(impulse, handle.Data.InverseMassVector);
+        if (EnableSpeculativeContacts && previousVelocity != handle.Data.Velocity)
+        {
+            UpdateSpeculativeBroadphase();
+        }
     }
 
     /// <summary>
@@ -1280,8 +1316,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         JVector.Subtract(position, data.Position, out JVector angularImpulse);
         JVector.Cross(angularImpulse, impulse, out angularImpulse);
 
+        JVector previousVelocity = data.Velocity;
         data.Velocity += JVector.Multiply(impulse, data.InverseMassVector);
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
+        if (EnableSpeculativeContacts && previousVelocity != data.Velocity)
+        {
+            UpdateSpeculativeBroadphase();
+        }
     }
 
     [Obsolete("Use ApplyImpulse instead.", true)]
