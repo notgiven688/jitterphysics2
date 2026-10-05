@@ -244,8 +244,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// The event is raised for explicit removal as well as automatic removal caused by removing a
-    /// body, clearing the world, or changing a body's motion type so that neither constrained body
-    /// is dynamic. It is not raised when a constraint is disabled or when the world is disposed.
+    /// body or clearing the world. It is not raised when a constraint is disabled, when a motion type
+    /// change leaves neither constrained body dynamic, or when the world is disposed.
     /// The constraint is invalid when the callback runs, but its <see cref="Constraint.Body1"/> and
     /// <see cref="Constraint.Body2"/> references remain available.
     /// </remarks>
@@ -720,20 +720,11 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Removes constraints and contacts that connect two non-dynamic bodies.
+    /// Removes contacts that connect two non-dynamic bodies. Constraints are kept and skipped by the solver.
     /// </summary>
-    /// <param name="body">The body whose non-dynamic connections should be removed.</param>
-    internal void RemoveStaticStaticConstraints(RigidBody body)
+    /// <param name="body">The body whose non-dynamic contacts should be removed.</param>
+    internal void RemoveStaticStaticContacts(RigidBody body)
     {
-        foreach (var constraint in body.InternalConstraints)
-        {
-            if (constraint.Body1.Data.MotionType != MotionType.Dynamic &&
-                constraint.Body2.Data.MotionType != MotionType.Dynamic)
-            {
-                Remove(constraint);
-            }
-        }
-
         foreach (var arbiter in body.InternalContacts)
         {
             if (arbiter.Body1.Data.MotionType != MotionType.Dynamic &&

@@ -493,7 +493,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!constraint.IsEnabled) continue;
+            if (!constraint.IsSolvable) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -533,7 +533,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!constraint.IsEnabled) continue;
+            if (!constraint.IsSolvable) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -574,10 +574,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!constraint.IsEnabled) continue;
-
-            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
-                "Invalid constraint: both bodies are non-dynamic.");
+            if (!constraint.IsSolvable) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {
@@ -617,7 +614,7 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!constraint.IsEnabled) continue;
+            if (!constraint.IsSolvable) continue;
 
             if (!TryLockTwoBody(ref b1, ref b2))
             {

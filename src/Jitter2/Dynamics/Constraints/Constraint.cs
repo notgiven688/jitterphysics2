@@ -42,6 +42,10 @@ public unsafe struct SmallConstraintData
     /// <summary>Gets whether this constraint is enabled.</summary>
     public readonly bool IsEnabled => DispatchId != 0;
 
+    /// <summary>Gets whether the solver should run this constraint: enabled, with at least one dynamic body.</summary>
+    internal readonly bool IsSolvable => IsEnabled &&
+        (Body1.Data.MotionType == MotionType.Dynamic || Body2.Data.MotionType == MotionType.Dynamic);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void PrepareForIteration(ref SmallConstraintData constraint, Real idt)
     {
@@ -86,6 +90,10 @@ public unsafe struct ConstraintData
 
     /// <summary>Gets whether this constraint is enabled.</summary>
     public readonly bool IsEnabled => DispatchId != 0;
+
+    /// <summary>Gets whether the solver should run this constraint: enabled, with at least one dynamic body.</summary>
+    internal readonly bool IsSolvable => IsEnabled &&
+        (Body1.Data.MotionType == MotionType.Dynamic || Body2.Data.MotionType == MotionType.Dynamic);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void PrepareForIteration(ref ConstraintData constraint, Real idt)
