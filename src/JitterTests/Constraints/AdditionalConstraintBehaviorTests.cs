@@ -52,6 +52,62 @@ public class AdditionalConstraintBehaviorTests
         world.Dispose();
     }
 
+    [TestCase(1)]
+    [TestCase(4)]
+    [TestCase(8)]
+    public void LinearMotor_SaturatedForceIsIndependentOfSubstepCount(int substeps)
+    {
+        var world = new World
+        {
+            Gravity = JVector.Zero,
+            AllowDeactivation = false,
+            SubstepCount = substeps
+        };
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+        body.SetMassInertia(JSymmetricMatrix.Identity, (Real)1.0);
+        body.Damping = (0, 0);
+
+        var motor = world.CreateConstraint<LinearMotor>(world.NullBody, body);
+        motor.Initialize(JVector.UnitX, JVector.UnitX);
+        motor.TargetVelocity = (Real)1000.0;
+        motor.MaximumForce = (Real)1.0;
+
+        Helper.AdvanceWorld(world, 1, 1f / 100f, false);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)1.0).Within((Real)0.02));
+        world.Dispose();
+    }
+
+    [TestCase(1)]
+    [TestCase(4)]
+    [TestCase(8)]
+    public void AngularMotor_SaturatedTorqueIsIndependentOfSubstepCount(int substeps)
+    {
+        var world = new World
+        {
+            Gravity = JVector.Zero,
+            AllowDeactivation = false,
+            SubstepCount = substeps
+        };
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+        body.SetMassInertia(JSymmetricMatrix.Identity, (Real)1.0);
+        body.Damping = (0, 0);
+
+        var motor = world.CreateConstraint<AngularMotor>(world.NullBody, body);
+        motor.Initialize(JVector.UnitY, JVector.UnitY);
+        motor.TargetVelocity = (Real)1000.0;
+        motor.MaximumTorque = (Real)1.0;
+
+        Helper.AdvanceWorld(world, 1, 1f / 100f, false);
+
+        Assert.That(body.AngularVelocity.Y, Is.EqualTo((Real)1.0).Within((Real)0.02));
+        world.Dispose();
+    }
+
     [TestCase]
     public void PointOnLine_ReducesPerpendicularDistanceToLine()
     {
