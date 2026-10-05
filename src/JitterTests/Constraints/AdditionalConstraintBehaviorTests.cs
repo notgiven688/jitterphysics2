@@ -77,6 +77,34 @@ public class AdditionalConstraintBehaviorTests
         Helper.AdvanceWorld(world, 1, 1f / 100f, false);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)1.0).Within((Real)0.02));
+        Assert.That(motor.Impulse, Is.EqualTo((Real)0.01).Within((Real)1e-5));
+        world.Dispose();
+    }
+
+    [TestCase(1)]
+    [TestCase(4)]
+    [TestCase(8)]
+    public void BallSocket_ImpulseIsTheWholeStepRegardlessOfSubstepCount(int substeps)
+    {
+        var world = new World
+        {
+            Gravity = new JVector(0, -10, 0),
+            AllowDeactivation = false,
+            SubstepCount = substeps
+        };
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+        body.SetMassInertia(JSymmetricMatrix.Identity, (Real)2.0);
+        body.Position = new JVector(0, -2, 0);
+
+        var socket = world.CreateConstraint<BallSocket>(world.NullBody, body);
+        socket.Initialize(JVector.Zero);
+
+        const Real dt = (Real)0.01;
+        for (int i = 0; i < 200; i++) world.Step(dt, false);
+
+        Assert.That(socket.Impulse.Y, Is.EqualTo((Real)2.0 * (Real)10.0 * dt).Within((Real)1e-3));
         world.Dispose();
     }
 
