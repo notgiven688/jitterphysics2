@@ -911,6 +911,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <list type="bullet">
     /// <item><description>Switching to <see cref="MotionType.Static"/> zeroes velocities, removes connections, and deactivates the body.</description></item>
     /// <item><description>Switching from <see cref="MotionType.Static"/> rebuilds connections from existing contacts.</description></item>
+    /// <item><description>Constraints are kept. While neither of its bodies is dynamic a constraint is skipped by the solver.</description></item>
     /// <item><description>Any queued forces, torques, and force-derived velocity changes are discarded.</description></item>
     /// <item><description>Dynamic bodies use their mass and inertia; static and kinematic bodies are treated as having infinite mass by the solver.</description></item>
     /// </list>
@@ -930,7 +931,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                     // Switch to static
                     World.RemoveConnections(this);
                     Data.MotionType = MotionType.Static;
-                    World.RemoveStaticStaticConstraints(this);
+                    World.RemoveStaticStaticContacts(this);
                     World.DeactivateBodyNextStep(this);
                     Data.Velocity = JVector.Zero;
                     Data.AngularVelocity = JVector.Zero;
@@ -947,7 +948,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                         }
 
                         Data.MotionType = MotionType.Kinematic;
-                        World.RemoveStaticStaticConstraints(this);
+                        World.RemoveStaticStaticContacts(this);
                         World.ActivateBodyNextStep(this, true);
                         UpdateWorldInertia();
                         break;
