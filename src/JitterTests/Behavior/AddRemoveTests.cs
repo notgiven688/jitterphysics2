@@ -18,6 +18,20 @@ public class AddRemoveTests
         world.Dispose();
     }
 
+    [TestCase]
+    public void RemovingBodiesWhileEnumeratingRigidBodies_ThrowsInsteadOfSkipping()
+    {
+        for (int i = 0; i < 10; i++) world.CreateRigidBody();
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            foreach (RigidBody body in world.RigidBodies)
+            {
+                if (body != world.NullBody) world.Remove(body);
+            }
+        });
+    }
+
     private class FilterOut(IDynamicTreeProxy shape) : IBroadPhaseFilter
     {
         public bool Filter(IDynamicTreeProxy shapeA, IDynamicTreeProxy shapeB)

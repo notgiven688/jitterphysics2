@@ -86,6 +86,19 @@ public class SequentialTests
         Assert.That(elements, Does.Contain(num1));
         Assert.That(elements, Does.Contain(num2));
     }
+
+    [TestCase]
+    public static void EnumerationWithoutChanges_VisitsEveryElementOnce()
+    {
+        PartitionedSet<Number> set = new();
+        var numbers = new[] { new Number(1), new Number(2), new Number(3), new Number(4) };
+        foreach (Number number in numbers) set.Add(number, number.Value % 2 == 0);
+
+        var visited = new List<Number>();
+        foreach (Number number in set) visited.Add(number);
+
+        Assert.That(visited, Is.EquivalentTo(numbers));
+    }
 }
 
 public class TrimTests
