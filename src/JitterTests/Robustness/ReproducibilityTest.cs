@@ -12,8 +12,8 @@ public class ReproducibilityTest
 {
     // Preserving speculative approach velocities changes the reference trajectory.
     // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x97C71CD9198DF3B9;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x7FF715683EED10D6;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x85CFE2F5EDBD8310;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x258EE7AC204D9393;
 
     [TestCase]
     public static void BasicReproducibilityTest()
