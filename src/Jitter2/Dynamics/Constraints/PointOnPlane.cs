@@ -39,6 +39,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         public Real EffectiveMass;
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
         public Real Bias;
 
         public Real Min;
@@ -51,7 +52,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationPointOnPlane, &IteratePointOnPlane);
+        RegisterFullConstraint(&PrepareForIterationPointOnPlane, &IteratePointOnPlane, &StepStartPointOnPlane);
 
     protected override void Create()
     {
@@ -60,7 +61,11 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
@@ -115,9 +120,16 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         (data.Min, data.Max) = limit;
     }
 
+    public static void StepStartPointOnPlane(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationPointOnPlane(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -218,9 +230,9 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public Real Impulse => Data.AccumulatedImpulse;
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IteratePointOnPlane(ref ConstraintData constraint, Real idt)
     {

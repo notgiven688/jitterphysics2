@@ -42,6 +42,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 
         public Real EffectiveMass;
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
         public Real Bias;
 
         public MemoryHelper.MemBlock12Real J0;
@@ -50,7 +51,7 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationDistanceLimit, &IterateDistanceLimit);
+        RegisterFullConstraint(&PrepareForIterationDistanceLimit, &IterateDistanceLimit, &StepStartDistanceLimit);
 
 
     protected override void Create()
@@ -60,7 +61,11 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <summary>
     /// Initializes the constraint with a fixed distance between anchor points.
@@ -207,9 +212,16 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         }
     }
 
+    public static void StepStartDistanceLimit(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationDistanceLimit(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, DistanceLimitData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -317,9 +329,9 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public Real Impulse => Data.AccumulatedImpulse;
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IterateDistanceLimit(ref ConstraintData constraint, Real idt)
     {

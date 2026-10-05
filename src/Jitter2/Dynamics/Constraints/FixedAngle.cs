@@ -35,6 +35,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         public JQuaternion Q0;
 
         public JVector AccumulatedImpulse;
+        public JVector StepImpulse;
         public JVector Bias;
 
         public JMatrix EffectiveMass;
@@ -45,7 +46,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationFixedAngle, &IterateFixedAngle);
+        RegisterFullConstraint(&PrepareForIterationFixedAngle, &IterateFixedAngle, &StepStartFixedAngle);
 
     protected override void Create()
     {
@@ -54,7 +55,11 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = JVector.Zero;
+        Data.StepImpulse = JVector.Zero;
+    }
 
     /// <summary>
     /// Initializes the constraint using the current relative orientation of the bodies.
@@ -79,9 +84,16 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         data.Q0 = q2.Conjugate() * q1;
     }
 
+    public static void StepStartFixedAngle(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -147,9 +159,9 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public JVector Impulse => Data.AccumulatedImpulse;
+    public JVector Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
     {

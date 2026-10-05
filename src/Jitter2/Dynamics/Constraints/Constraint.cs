@@ -55,6 +55,13 @@ public unsafe struct SmallConstraintData
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
         ((delegate*<ref SmallConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void StepStart(ref SmallConstraintData constraint)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        if (dispatch.StepStart != 0) ((delegate*<ref SmallConstraintData, void>)dispatch.StepStart)(ref constraint);
+    }
 }
 
 /// <summary>
@@ -100,14 +107,22 @@ public unsafe struct ConstraintData
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
         ((delegate*<ref ConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
     }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void StepStart(ref ConstraintData constraint)
+    {
+        ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
+        if (dispatch.StepStart != 0) ((delegate*<ref ConstraintData, void>)dispatch.StepStart)(ref constraint);
+    }
 }
 
 internal static unsafe class ConstraintDispatchTable
 {
-    internal readonly struct Entry(nint prepare, nint iterate)
+    internal readonly struct Entry(nint prepare, nint iterate, nint stepStart)
     {
         public readonly nint Prepare = prepare;
         public readonly nint Iterate = iterate;
+        public readonly nint StepStart = stepStart;
     }
 
     private static readonly object Sync = new();
@@ -115,31 +130,33 @@ internal static unsafe class ConstraintDispatchTable
 
     public static uint Register(
         delegate*<ref ConstraintData, Real, void> prepare,
-        delegate*<ref ConstraintData, Real, void> iterate)
+        delegate*<ref ConstraintData, Real, void> iterate,
+        delegate*<ref ConstraintData, void> stepStart = null)
     {
         if (prepare == null) throw new ArgumentNullException(nameof(prepare));
         if (iterate == null) throw new ArgumentNullException(nameof(iterate));
 
         lock (Sync)
         {
-            return Register((nint)prepare, (nint)iterate);
+            return Register((nint)prepare, (nint)iterate, (nint)stepStart);
         }
     }
 
     public static uint Register(
         delegate*<ref SmallConstraintData, Real, void> prepare,
-        delegate*<ref SmallConstraintData, Real, void> iterate)
+        delegate*<ref SmallConstraintData, Real, void> iterate,
+        delegate*<ref SmallConstraintData, void> stepStart = null)
     {
         if (prepare == null) throw new ArgumentNullException(nameof(prepare));
         if (iterate == null) throw new ArgumentNullException(nameof(iterate));
 
         lock (Sync)
         {
-            return Register((nint)prepare, (nint)iterate);
+            return Register((nint)prepare, (nint)iterate, (nint)stepStart);
         }
     }
 
-    private static uint Register(nint prepare, nint iterate)
+    private static uint Register(nint prepare, nint iterate, nint stepStart)
     {
         Entry[] current = entries;
         if (current.Length == int.MaxValue)
@@ -149,7 +166,7 @@ internal static unsafe class ConstraintDispatchTable
 
         Entry[] next = new Entry[current.Length + 1];
         Array.Copy(current, next, current.Length);
-        next[current.Length] = new Entry(prepare, iterate);
+        next[current.Length] = new Entry(prepare, iterate, stepStart);
 
         Volatile.Write(ref entries, next);
         return (uint)current.Length;
@@ -302,11 +319,29 @@ public abstract class Constraint : IDebugDrawable
         return ConstraintDispatchTable.Register(prepare, iterate);
     }
 
+    /// <summary>Registers a constraint whose <paramref name="stepStart"/> runs once per step before the first substep.</summary>
+    protected static unsafe uint RegisterFullConstraint(
+        delegate*<ref ConstraintData, Real, void> prepare,
+        delegate*<ref ConstraintData, Real, void> iterate,
+        delegate*<ref ConstraintData, void> stepStart)
+    {
+        return ConstraintDispatchTable.Register(prepare, iterate, stepStart);
+    }
+
     protected static unsafe uint RegisterSmallConstraint(
         delegate*<ref SmallConstraintData, Real, void> prepare,
         delegate*<ref SmallConstraintData, Real, void> iterate)
     {
         return ConstraintDispatchTable.Register(prepare, iterate);
+    }
+
+    /// <summary>Registers a constraint whose <paramref name="stepStart"/> runs once per step before the first substep.</summary>
+    protected static unsafe uint RegisterSmallConstraint(
+        delegate*<ref SmallConstraintData, Real, void> prepare,
+        delegate*<ref SmallConstraintData, Real, void> iterate,
+        delegate*<ref SmallConstraintData, void> stepStart)
+    {
+        return ConstraintDispatchTable.Register(prepare, iterate, stepStart);
     }
 
     /// <summary>

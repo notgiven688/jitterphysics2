@@ -42,6 +42,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         public JQuaternion Q0;
 
         public JVector AccumulatedImpulse;
+        public JVector StepImpulse;
         public JVector Bias;
 
         public JMatrix EffectiveMass;
@@ -55,7 +56,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationHingeAngle, &IterateHingeAngle);
+        RegisterFullConstraint(&PrepareForIterationHingeAngle, &IterateHingeAngle, &StepStartHingeAngle);
 
     protected override void Create()
     {
@@ -64,7 +65,11 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = JVector.Zero;
+        Data.StepImpulse = JVector.Zero;
+    }
 
     /// <summary>
     /// Initializes the constraint with a rotation axis and angular limits.
@@ -130,9 +135,16 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         }
     }
 
+    public static void StepStartHingeAngle(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -300,9 +312,9 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public JVector Impulse => Data.AccumulatedImpulse;
+    public JVector Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
     {

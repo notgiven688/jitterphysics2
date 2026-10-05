@@ -38,6 +38,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         public Real EffectiveMass;
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
         public Real Bias;
 
         public Real MinAngle;
@@ -49,7 +50,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationConeLimit, &IterateConeLimit);
+        RegisterFullConstraint(&PrepareForIterationConeLimit, &IterateConeLimit, &StepStartConeLimit);
 
 
     protected override void Create()
@@ -59,7 +60,11 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = 0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = 0;
+        Data.StepImpulse = 0;
+    }
 
     /// <summary>
     /// Initializes the cone limit using two world-space axes and an angular range.
@@ -253,9 +258,16 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         }
     }
 
+    public static void StepStartConeLimit(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -373,9 +385,9 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public Real Impulse => Data.AccumulatedImpulse;
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IterateConeLimit(ref ConstraintData constraint, Real idt)
     {

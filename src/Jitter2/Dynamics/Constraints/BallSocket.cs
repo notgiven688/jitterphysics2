@@ -40,11 +40,12 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         public JMatrix EffectiveMass;
         public JVector AccumulatedImpulse;
+        public JVector StepImpulse;
         public JVector Bias;
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationBallSocket, &IterateBallSocket);
+        RegisterFullConstraint(&PrepareForIterationBallSocket, &IterateBallSocket, &StepStartBallSocket);
 
     protected override void Create()
     {
@@ -53,7 +54,11 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = JVector.Zero;
+        Data.StepImpulse = JVector.Zero;
+    }
 
     /// <summary>
     /// Initializes the constraint from a world-space anchor point.
@@ -137,9 +142,16 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         }
     }
 
+    public static void StepStartBallSocket(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationBallSocket(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -210,9 +222,9 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public JVector Impulse => Data.AccumulatedImpulse;
+    public JVector Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public static void IterateBallSocket(ref ConstraintData constraint, Real idt)
     {

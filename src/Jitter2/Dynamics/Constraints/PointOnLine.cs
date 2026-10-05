@@ -44,6 +44,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         public Real CouplingX;
         public Real CouplingY;
         public JVector AccumulatedImpulse;
+        public JVector StepImpulse;
         public JVector Bias;
 
         public Real Min;
@@ -54,7 +55,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationPointOnLine, &IteratePointOnLine);
+        RegisterFullConstraint(&PrepareForIterationPointOnLine, &IteratePointOnLine, &StepStartPointOnLine);
 
     protected override void Create()
     {
@@ -63,7 +64,11 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = JVector.Zero;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = JVector.Zero;
+        Data.StepImpulse = JVector.Zero;
+    }
 
     /// <inheritdoc cref="Initialize(JVector, JVector, JVector, LinearLimit)"/>
     public void Initialize(JVector axis, JVector anchor1, JVector anchor2)
@@ -145,10 +150,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         }
     }
 
+    public static void StepStartPointOnLine(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     [SkipLocalsInit]
     public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
@@ -326,9 +338,9 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public JVector Impulse => Data.AccumulatedImpulse;
+    public JVector Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     /// <summary>
     /// Gets or sets the softness (compliance) applied when distance limits are active.

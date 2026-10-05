@@ -38,10 +38,11 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         public Real EffectiveMass;
 
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationLinearMotor, &IterateLinearMotor);
+        RegisterFullConstraint(&PrepareForIterationLinearMotor, &IterateLinearMotor, &StepStartLinearMotor);
 
     protected override void Create()
     {
@@ -50,7 +51,11 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <summary>
     /// Gets or sets the motor axis on the first body in local space.
@@ -145,13 +150,20 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this motor during the last step.
+    /// Gets the accumulated impulse applied by this motor during the last step, summed over its substeps.
     /// </summary>
-    public Real Impulse => Data.AccumulatedImpulse;
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
+
+    public static void StepStartLinearMotor(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
 
     public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;

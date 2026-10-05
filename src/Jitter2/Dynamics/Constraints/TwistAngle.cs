@@ -41,13 +41,14 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         public Real EffectiveMass;
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
         public Real Bias;
 
         public JVector Jacobian;
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationTwistAngle, &IterateTwistAngle);
+        RegisterFullConstraint(&PrepareForIterationTwistAngle, &IterateTwistAngle, &StepStartTwistAngle);
 
     protected override void Create()
     {
@@ -56,7 +57,11 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <summary>
     /// Initializes the constraint from world-space axes and angular limits.
@@ -149,9 +154,16 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         Initialize(axis1, axis2, AngularLimit.Fixed);
     }
 
+    public static void StepStartTwistAngle(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationTwistAngle(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
@@ -293,9 +305,9 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated impulse applied by this constraint during the last step, summed over its substeps.
     /// </summary>
-    public Real Impulse => Data.AccumulatedImpulse;
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
 
     public override void DebugDraw(IDebugDrawer drawer)
     {

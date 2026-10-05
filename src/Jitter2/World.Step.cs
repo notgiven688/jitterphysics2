@@ -230,6 +230,8 @@ public sealed partial class World
 
             Tracer.ProfileBegin(TraceName.Solve);
 
+            StartConstraintStep();
+
             // Sub-stepping
             for (int i = 0; i < substeps; i++)
             {
@@ -364,6 +366,8 @@ public sealed partial class World
 
             CheckDeactivation();
 
+            StartConstraintStep();
+
             if (SolveMode == Jitter2.SolveMode.Deterministic)
             {
                 PrepareIslandSolveOrder();
@@ -395,6 +399,23 @@ public sealed partial class World
     }
 
     #region Prepare and Solve Contacts and Constraints
+
+    private void StartConstraintStep()
+    {
+        var constraints = memConstraints.Active;
+        for (int i = 0; i < constraints.Length; i++)
+        {
+            ref ConstraintData c = ref constraints[i];
+            if (c.IsEnabled) c.StepStart(ref c);
+        }
+
+        var smallConstraints = memSmallConstraints.Active;
+        for (int i = 0; i < smallConstraints.Length; i++)
+        {
+            ref SmallConstraintData c = ref smallConstraints[i];
+            if (c.IsEnabled) c.StepStart(ref c);
+        }
+    }
 
     private readonly ThreadLocal<Queue<int>> deferredContacts = new(() => new Queue<int>());
     private readonly ThreadLocal<Queue<int>> deferredConstraints = new(() => new Queue<int>());
