@@ -90,6 +90,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 {
     public struct Enumerator(PartitionedSet<T> partitionedSet) : IEnumerator<T>
     {
+        private readonly int version = partitionedSet.version;
         private int index = -1;
 
         public readonly T Current => (index >= 0 ? partitionedSet[index] : null)!;
@@ -102,6 +103,8 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
         public bool MoveNext()
         {
+            ThrowIfModified();
+
             if (index < partitionedSet.Count - 1)
             {
                 index++;
@@ -113,12 +116,20 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
         public void Reset()
         {
+            ThrowIfModified();
             index = -1;
+        }
+
+        private readonly void ThrowIfModified()
+        {
+            if (version != partitionedSet.version)
+                throw new InvalidOperationException("The set was modified during enumeration. Enumerate a copy to change it while looping.");
         }
     }
 
     private readonly int initialSize;
     private T[] elements;
+    private int version;
 
     /// <summary>Gets the number of active elements in the set.</summary>
     public int ActiveCount { get; private set; }
@@ -161,6 +172,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
         Count = 0;
         ActiveCount = 0;
+        version++;
     }
 
     /// <summary>Gets the total number of elements in the set.</summary>
@@ -204,6 +216,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
 
         element.SetIndex = Count;
         elements[Count++] = element;
+        version++;
 
         if (active) MoveToActive(element);
     }
@@ -245,6 +258,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         if (index < ActiveCount) return false;
         if (index != ActiveCount) Swap(ActiveCount, index);
         ActiveCount += 1;
+        version++;
         return true;
     }
 
@@ -262,6 +276,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         if (index >= ActiveCount) return false;
         ActiveCount -= 1;
         if (index != ActiveCount) Swap(ActiveCount, index);
+        version++;
         return true;
     }
 
@@ -302,6 +317,7 @@ public class PartitionedSet<T> : IEnumerable<T> where T : class, IPartitionedSet
         elements[lastIndex] = null!;
 
         element.SetIndex = -1;
+        version++;
     }
 
     public Enumerator GetEnumerator()
