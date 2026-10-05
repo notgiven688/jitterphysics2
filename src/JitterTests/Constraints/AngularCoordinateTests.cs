@@ -212,7 +212,7 @@ public unsafe class AngularCoordinateTests
             hinge.Data.AccumulatedImpulse = JVector.UnitZ;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
             HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
-            Assert.That(hinge.Impulse, Is.EqualTo(JVector.Zero));
+            Assert.That(hinge.Data.AccumulatedImpulse, Is.EqualTo(JVector.Zero));
         }
         else if (kind == 1)
         {
@@ -223,7 +223,7 @@ public unsafe class AngularCoordinateTests
             fixedAngle.Data.AccumulatedImpulse = JVector.UnitZ;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
             FixedAngle.PrepareForIterationFixedAngle(ref fixedAngle.Handle.Data, 100);
-            Assert.That(fixedAngle.Impulse, Is.EqualTo(JVector.Zero));
+            Assert.That(fixedAngle.Data.AccumulatedImpulse, Is.EqualTo(JVector.Zero));
         }
         else
         {
@@ -234,7 +234,7 @@ public unsafe class AngularCoordinateTests
             twist.Data.AccumulatedImpulse = 1;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
             TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
-            Assert.That(twist.Impulse, Is.Zero);
+            Assert.That(twist.Data.AccumulatedImpulse, Is.Zero);
         }
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));
     }
@@ -288,7 +288,7 @@ public unsafe class AngularCoordinateTests
             constraint.Data.AccumulatedImpulse = (Real)0.25;
             body.Orientation = JQuaternion.CreateRotationZ((Real)120.01 * MathR.PI / 180);
             TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
-            Assert.That(constraint.Impulse, Is.EqualTo((Real)0.25));
+            Assert.That(constraint.Data.AccumulatedImpulse, Is.EqualTo((Real)0.25));
             Assert.That(body.AngularVelocity.Z, Is.EqualTo((Real)0.25).Within((Real)1e-5));
         }
         else
@@ -300,7 +300,7 @@ public unsafe class AngularCoordinateTests
             constraint.Data.AccumulatedImpulse = (Real)0.25;
             body.Orientation = JQuaternion.CreateRotationX((Real)30.01 * MathR.PI / 180);
             ConeLimit.PrepareForIterationConeLimit(ref constraint.Handle.Data, 100);
-            Assert.That(constraint.Impulse, Is.EqualTo((Real)0.25));
+            Assert.That(constraint.Data.AccumulatedImpulse, Is.EqualTo((Real)0.25));
             Assert.That(body.AngularVelocity.X, Is.EqualTo((Real)0.25).Within((Real)1e-5));
         }
     }

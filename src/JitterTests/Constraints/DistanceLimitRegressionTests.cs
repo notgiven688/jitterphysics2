@@ -57,7 +57,7 @@ public class DistanceLimitRegressionTests
         body.Velocity = JVector.UnitY;
         DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
         DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
-        Assert.That(limit.Impulse, Is.Zero);
+        Assert.That(limit.Data.AccumulatedImpulse, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(JVector.UnitY));
 
         limit.Anchor2 = JVector.UnitY;

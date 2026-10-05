@@ -28,7 +28,7 @@ public class CoupledLimitTests
         PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
         PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
 
-        Assert.That(line.Impulse.Z, Is.Zero);
+        Assert.That(line.Data.AccumulatedImpulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.Velocity - originalVelocity), Is.LessThan(Tolerance));
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
     }
@@ -56,16 +56,16 @@ public class CoupledLimitTests
         PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
 
         JVector pointVelocity = body.Velocity + body.AngularVelocity % anchor;
-        Real residualX = pointVelocity.Y + 100 * (Real)softness * line.Impulse.X;
-        Real residualY = -pointVelocity.X + 100 * (Real)softness * line.Impulse.Y;
+        Real residualX = pointVelocity.Y + 100 * (Real)softness * line.Data.AccumulatedImpulse.X;
+        Real residualY = -pointVelocity.X + 100 * (Real)softness * line.Data.AccumulatedImpulse.Y;
         if (inward)
         {
-            Assert.That(line.Impulse.Z, Is.Zero);
+            Assert.That(line.Data.AccumulatedImpulse.Z, Is.Zero);
         }
         else
         {
-            Assert.That(line.Impulse.Z * (upper ? -1 : 1), Is.GreaterThan(0));
-            Assert.That(MathR.Abs(pointVelocity.Z + 100 * (Real)softness * line.Impulse.Z), Is.LessThan(Tolerance));
+            Assert.That(line.Data.AccumulatedImpulse.Z * (upper ? -1 : 1), Is.GreaterThan(0));
+            Assert.That(MathR.Abs(pointVelocity.Z + 100 * (Real)softness * line.Data.AccumulatedImpulse.Z), Is.LessThan(Tolerance));
         }
         Assert.That(MathR.Abs(residualX), Is.LessThan(Tolerance));
         Assert.That(MathR.Abs(residualY), Is.LessThan(Tolerance));
@@ -90,7 +90,7 @@ public class CoupledLimitTests
         PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
         PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
 
-        Assert.That(line.Impulse.Z, Is.Zero);
+        Assert.That(line.Data.AccumulatedImpulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
         Assert.That(body.Velocity, Is.EqualTo(velocity));
     }
@@ -112,7 +112,7 @@ public class CoupledLimitTests
 
         PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
 
-        Assert.That(line.Impulse.Z, Is.Zero);
+        Assert.That(line.Data.AccumulatedImpulse.Z, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(velocity));
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));
         PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
@@ -170,7 +170,7 @@ public class CoupledLimitTests
         HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
         HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
 
-        Assert.That(hinge.Impulse.Z, Is.Zero);
+        Assert.That(hinge.Data.AccumulatedImpulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.AngularVelocity - angularVelocity), Is.LessThan(Tolerance));
     }
 
@@ -190,7 +190,7 @@ public class CoupledLimitTests
 
         HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
 
-        Assert.That(hinge.Impulse.Z, Is.Zero);
+        Assert.That(hinge.Data.AccumulatedImpulse.Z, Is.Zero);
         Assert.That(body.AngularVelocity, Is.EqualTo(velocity));
         HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
         Assert.That(JVector.MaxAbs(body.AngularVelocity - velocity), Is.LessThan(Tolerance));
@@ -216,14 +216,14 @@ public class CoupledLimitTests
         HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
 
         JVector residual = JVector.TransposedTransform(-body.AngularVelocity, hinge.Data.Jacobian) +
-            hinge.Impulse * (100 * (Real)softness);
+            hinge.Data.AccumulatedImpulse * (100 * (Real)softness);
         if (inward)
         {
-            Assert.That(hinge.Impulse.Z, Is.Zero);
+            Assert.That(hinge.Data.AccumulatedImpulse.Z, Is.Zero);
         }
         else
         {
-            Assert.That(hinge.Impulse.Z * (upper ? -1 : 1), Is.GreaterThan(0));
+            Assert.That(hinge.Data.AccumulatedImpulse.Z * (upper ? -1 : 1), Is.GreaterThan(0));
             Assert.That(MathR.Abs(residual.Z), Is.LessThan(Tolerance));
         }
         Assert.That(MathR.Abs(residual.X), Is.LessThan(Tolerance));
