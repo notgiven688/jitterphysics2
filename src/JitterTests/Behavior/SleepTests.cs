@@ -287,6 +287,58 @@ public class SleepTests
         Assert.That(body2.Velocity, Is.EqualTo(JVector.Zero));
     }
 
+    [Test]
+    public void SlowKinematicBody_KeepsMovingAndStaysAwake([Values] bool angular)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.MotionType = MotionType.Kinematic;
+        body.DeactivationTime = TimeSpan.FromSeconds(0.5);
+
+        if (angular) body.AngularVelocity = new JVector(0, (Real)0.2, 0);
+        else body.Velocity = new JVector((Real)0.2, 0, 0);
+
+        Helper.AdvanceWorld(world, 3, (Real)(1.0 / 100.0), false);
+
+        Assert.That(body.IsActive, Is.True);
+        if (angular)
+        {
+            JVector forward = JVector.Transform(JVector.UnitX, body.Orientation);
+            Assert.That(MathR.Atan2(-forward.Z, forward.X), Is.EqualTo((Real)0.6).Within((Real)0.02));
+        }
+        else
+        {
+            Assert.That(body.Position.X, Is.EqualTo((Real)0.6).Within((Real)0.02));
+        }
+    }
+
+    [TestCase]
+    public void SlowKinematicPlatform_CarriesItsRider()
+    {
+        using var world = new World();
+
+        var platform = world.CreateRigidBody();
+        platform.AddShape(new BoxShape(4, 1, 4));
+        platform.MotionType = MotionType.Kinematic;
+        platform.DeactivationTime = TimeSpan.FromSeconds(0.5);
+
+        var rider = world.CreateRigidBody();
+        rider.AddShape(new BoxShape(1));
+        rider.Position = new JVector(0, 1, 0);
+        rider.DeactivationTime = TimeSpan.FromSeconds(0.5);
+
+        Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false);
+        Real gap = rider.Position.Y - platform.Position.Y;
+
+        platform.Velocity = new JVector(0, (Real)0.1, 0);
+        Helper.AdvanceWorld(world, 4, (Real)(1.0 / 100.0), false);
+
+        Assert.That(platform.Position.Y, Is.EqualTo((Real)0.4).Within((Real)0.02));
+        Assert.That(rider.Position.Y - platform.Position.Y, Is.EqualTo(gap).Within((Real)0.02));
+    }
+
     [TestCase]
     public void ForceSleepIsland_ZeroesKinematicVelocityImmediately()
     {
