@@ -50,7 +50,7 @@ public class ConstraintSingularityTests
         body.Velocity = JVector.UnitY;
         SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
         SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, 100);
-        Assert.That(spring.Impulse, Is.Zero);
+        Assert.That(spring.Data.AccumulatedImpulse, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(JVector.UnitY));
 
         spring.Anchor2 = JVector.UnitY;
