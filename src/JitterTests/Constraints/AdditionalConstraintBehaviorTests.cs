@@ -132,7 +132,7 @@ public class AdditionalConstraintBehaviorTests
 
         Helper.AdvanceWorld(world, 1, 1f / 100f, false);
 
-        Assert.That(body.AngularVelocity.Y, Is.EqualTo((Real)1.0).Within((Real)0.02));
+        Assert.That(motor.Impulse, Is.EqualTo((Real)0.01).Within((Real)1e-5));
         world.Dispose();
     }
 
