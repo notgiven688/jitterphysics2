@@ -2,6 +2,87 @@ namespace JitterTests.Behavior;
 
 public class MotionTypeTests
 {
+    [TestCase(MotionType.Kinematic)]
+    [TestCase(MotionType.Static)]
+    public void JointToTheWorld_SurvivesASwitchAwayFromDynamicAndBack(MotionType temporary)
+    {
+        using var world = new World();
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape((Real)0.5));
+        body.Position = new JVector(0, -2, 0);
+
+        var socket = world.CreateConstraint<BallSocket>(world.NullBody, body);
+        socket.Initialize(JVector.Zero);
+
+        Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false);
+
+        body.MotionType = temporary;
+        Assert.That(socket.IsValid, Is.True);
+        Assert.That(body.Constraints, Does.Contain(socket));
+        Assert.DoesNotThrow(() => Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false));
+
+        body.MotionType = MotionType.Dynamic;
+        Assert.That(socket.IsValid, Is.True);
+        Assert.That(body.Constraints, Does.Contain(socket));
+        Assert.DoesNotThrow(() => socket.Softness = (Real)0.001);
+
+        Helper.AdvanceWorld(world, 2, (Real)(1.0 / 100.0), false);
+        Assert.That((body.Position - new JVector(0, -2, 0)).Length(), Is.LessThan((Real)0.05));
+    }
+
+    [TestCase]
+    public void JointBetweenTwoBodies_SurvivesBothBecomingKinematicAndBack()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+
+        var bodyA = world.CreateRigidBody();
+        bodyA.AddShape(new SphereShape((Real)0.5));
+
+        var bodyB = world.CreateRigidBody();
+        bodyB.AddShape(new SphereShape((Real)0.5));
+        bodyB.Position = new JVector(2, 0, 0);
+
+        var distance = world.CreateConstraint<DistanceLimit>(bodyA, bodyB);
+        distance.Initialize(bodyA.Position, bodyB.Position);
+
+        bodyA.MotionType = MotionType.Kinematic;
+        bodyB.MotionType = MotionType.Kinematic;
+        Assert.That(distance.IsValid, Is.True);
+        Assert.DoesNotThrow(() => world.Step((Real)(1.0 / 100.0), false));
+
+        bodyA.MotionType = MotionType.Dynamic;
+        bodyB.MotionType = MotionType.Dynamic;
+        Assert.That(distance.IsValid, Is.True);
+        Assert.That(bodyA.Connections, Does.Contain(bodyB));
+
+        bodyB.Velocity = new JVector(1, 0, 0);
+        Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false);
+        Assert.That((bodyB.Position - bodyA.Position).Length(), Is.EqualTo((Real)2).Within((Real)0.05));
+    }
+
+    [TestCase]
+    public void MovingKinematicBodyJointedToTheWorld_IsNotDisturbedByTheJoint()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape((Real)0.5));
+        body.Position = new JVector(0, -2, 0);
+
+        var socket = world.CreateConstraint<BallSocket>(world.NullBody, body);
+        socket.Initialize(JVector.Zero);
+
+        body.MotionType = MotionType.Kinematic;
+        body.Velocity = new JVector(1, 0, 0);
+
+        Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false);
+
+        Assert.That(body.Velocity, Is.EqualTo(new JVector(1, 0, 0)));
+        Assert.That(body.Position.X, Is.EqualTo((Real)1).Within((Real)0.02));
+        Assert.That(socket.IsValid, Is.True);
+    }
+
     [TestCase]
     public void CheckInternalMass()
     {
