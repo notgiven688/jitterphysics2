@@ -41,7 +41,7 @@ public class BoxShape : RigidBodyShape
         set
         {
             halfSize = ArgumentCheck.PositiveComponents(value, nameof(Size)) * (Real)0.5;
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 

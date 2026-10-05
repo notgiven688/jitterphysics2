@@ -39,6 +39,22 @@ public abstract class RigidBodyShape : Shape
         if (RigidBody.EnableSpeculativeContacts) SweptExpandBoundingBox(dt);
     }
 
+    /// <summary>
+    /// Refreshes the bounding box after the shape's geometry changed. When attached, also updates the
+    /// broadphase and wakes the body, so the change applies even to static or sleeping bodies.
+    /// </summary>
+    protected void ShapeChanged()
+    {
+        if (RigidBody is not { IsValid: true } body)
+        {
+            UpdateWorldBoundingBox();
+            return;
+        }
+
+        body.World.DynamicTree.Update(this);
+        body.SetActivationState(true);
+    }
+
     public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         ShapeHelper.CalculateBoundingBox(this, orientation, position, out box);
