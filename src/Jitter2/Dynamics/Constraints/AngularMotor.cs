@@ -38,10 +38,11 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         public Real EffectiveMass;
 
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationAngularMotor, &IterateAngularMotor);
+        RegisterFullConstraint(&PrepareForIterationAngularMotor, &IterateAngularMotor, &StepStartAngularMotor);
 
     protected override void Create()
     {
@@ -50,7 +51,11 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <summary>
     /// Initializes the motor with separate axes for each body.
@@ -147,9 +152,21 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         set => MaximumTorque = value;
     }
 
+    /// <summary>
+    /// Gets the accumulated angular impulse applied by this motor during the last step, summed over its substeps.
+    /// </summary>
+    public Real Impulse => Data.StepImpulse + Data.AccumulatedImpulse;
+
+    public static void StepStartAngularMotor(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
 
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
