@@ -108,6 +108,26 @@ public sealed partial class World
     public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
 
     /// <summary>
+    /// How deep a contact may sink before the solver pushes the bodies apart. Some overlap keeps a
+    /// resting contact touching from step to step, but everything resting settles up to this deep,
+    /// so it should be small next to the smallest bodies. Contacts created after a change use the new value.
+    /// Default value: <see cref="ContactData.Contact.AllowedPenetration"/>.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is negative or not finite.</exception>
+    public Real AllowedPenetration
+    {
+        get => allowedPenetration;
+        set
+        {
+            if (!Real.IsFinite(value) || value < (Real)0.0)
+                throw new ArgumentOutOfRangeException(nameof(value), value, "Allowed penetration must be finite and not negative.");
+            allowedPenetration = value;
+        }
+    }
+
+    private Real allowedPenetration = ContactData.Contact.AllowedPenetration;
+
+    /// <summary>
     /// Speculative contacts are generated when the relative velocity between two bodies exceeds
     /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a

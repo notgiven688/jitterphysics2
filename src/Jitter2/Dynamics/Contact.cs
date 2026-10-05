@@ -102,6 +102,8 @@ public struct ContactData
     public Real Friction;
     /// <summary>Relaxation factor for speculative contacts.</summary>
     public Real SpeculativeRelaxationFactor;
+    /// <summary>Penetration depth below which no position correction is applied, see <see cref="World.AllowedPenetration"/>.</summary>
+    public Real AllowedPenetration;
 
     /// <summary>Determines which velocity components are updated by the solver.</summary>
     public SolveMode Mode;
@@ -276,6 +278,7 @@ public struct ContactData
         Friction = MathR.Max(body1.Friction, body2.Friction);
         Restitution = MathR.Max(body1.Restitution, body2.Restitution);
         SpeculativeRelaxationFactor = body1.World.SpeculativeRelaxationFactor;
+        AllowedPenetration = body1.World.AllowedPenetration;
 
         Debug.Assert(body1.World == body2.World);
 
@@ -597,7 +600,7 @@ public struct ContactData
         public const Real MaximumBias = (Real)100.0;
         /// <summary>Fraction of penetration corrected per step (Baumgarte stabilization).</summary>
         public const Real BiasFactor = (Real)0.2;
-        /// <summary>Penetration depth below which no position correction is applied.</summary>
+        /// <summary>Default penetration depth below which no position correction is applied, see <see cref="World.AllowedPenetration"/>.</summary>
         public const Real AllowedPenetration = (Real)0.01;
         /// <summary>Maximum tangential drift before a contact breaks; normal separation is limited to one tenth of this value.</summary>
         public const Real BreakThreshold = (Real)0.02;
@@ -905,7 +908,7 @@ public struct ContactData
             JVector mass = new(massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
+            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - cd->AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
         }
 
@@ -1167,7 +1170,7 @@ public struct ContactData
                 Vector.Divide(Vector.Create((Real)1.0), kNormalTangent), Vector.Create((Real)0.0));
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
+            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - cd->AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
         }
 
