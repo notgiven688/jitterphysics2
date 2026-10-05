@@ -179,6 +179,7 @@ public sealed partial class World
             stepDt = dt;
             invStepDt = (Real)1.0 / dt;
             substepDt = dt / substeps;
+            invSubstepDt = (Real)1.0 / substepDt;
 
 
             if (multiThread)
@@ -354,6 +355,7 @@ public sealed partial class World
             stepDt = dt;
             invStepDt = (Real)1.0 / dt;
             substepDt = dt / substeps;
+            invSubstepDt = (Real)1.0 / substepDt;
 
             if (multiThread)
             {
@@ -501,7 +503,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -517,7 +519,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -541,7 +543,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -557,7 +559,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -585,7 +587,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -601,7 +603,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -625,7 +627,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -641,7 +643,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, invSubstepDt);
             UnlockTwoBody(ref b1, ref b2);
         }
     }

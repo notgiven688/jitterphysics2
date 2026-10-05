@@ -419,6 +419,7 @@ public sealed partial class World : IDisposable
     private Real broadphaseStepDt = (Real)0.1;
     private Real substepDt = (Real)0.01;
     private Real invStepDt = (Real)100.0;
+    private Real invSubstepDt = (Real)100.0;
 
     internal Real BroadphaseStepDt => broadphaseStepDt;
 

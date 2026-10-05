@@ -274,14 +274,14 @@ public sealed partial class World
             {
                 ref ConstraintData c = ref constraints[i].Handle.Data;
                 if (c.IsEnabled)
-                    c.PrepareForIteration(ref c, invStepDt);
+                    c.PrepareForIteration(ref c, invSubstepDt);
             }
 
             for (int i = 0; i < small.Length; i++)
             {
                 ref SmallConstraintData c = ref small[i].Handle.Data;
                 if (c.IsEnabled)
-                    c.PrepareForIteration(ref c, invStepDt);
+                    c.PrepareForIteration(ref c, invSubstepDt);
             }
 
             // --- Iterate ---
@@ -298,14 +298,14 @@ public sealed partial class World
                 {
                     ref ConstraintData c = ref constraints[i].Handle.Data;
                     if (c.IsEnabled)
-                        c.Iterate(ref c, invStepDt);
+                        c.Iterate(ref c, invSubstepDt);
                 }
 
                 for (int i = 0; i < small.Length; i++)
                 {
                     ref SmallConstraintData c = ref small[i].Handle.Data;
                     if (c.IsEnabled)
-                        c.Iterate(ref c, invStepDt);
+                        c.Iterate(ref c, invSubstepDt);
                 }
             }
 
