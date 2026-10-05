@@ -24,6 +24,79 @@ public class SoftBodyLifecycleTests
         return softBody;
     }
 
+    private static bool StepsWithin(World world, int steps, int timeoutMs)
+    {
+        var thread = new Thread(() =>
+        {
+            for (int i = 0; i < steps; i++) world.Step((Real)(1.0 / 60.0), false);
+        }) { IsBackground = true };
+        thread.Start();
+        return thread.Join(timeoutMs);
+    }
+
+    [Test]
+    public void RegisterContact_SameBody_Throws()
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+
+        Assert.Throws<SameBodyException>(() => world.RegisterContact(body.RigidBodyId, body.RigidBodyId,
+            body, body, JVector.Zero, JVector.Zero, JVector.UnitY));
+        Assert.That(body.Contacts, Is.Empty);
+        Assert.That(StepsWithin(world, 1, 5000), Is.True);
+    }
+
+    [Test]
+    public void VerticesCarryingShapes_DoNotHangTheStep()
+    {
+        var world = new World();
+        world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
+        world.DynamicTree.Filter = DynamicTreeCollisionFilter.Filter;
+
+        var softBody = new SoftBody(world);
+        var vertices = new RigidBody[3];
+        for (int i = 0; i < 3; i++)
+        {
+            vertices[i] = world.CreateRigidBody();
+            vertices[i].AddShape(new SphereShape((Real)0.1));
+            softBody.Vertices.Add(vertices[i]);
+        }
+
+        vertices[1].Position = JVector.UnitX;
+        vertices[2].Position = JVector.UnitZ;
+        softBody.AddShape(new SoftBodyTriangle(softBody, vertices[0], vertices[1], vertices[2]));
+
+        bool finished = StepsWithin(world, 10, 5000);
+        if (finished) world.Dispose();
+        Assert.That(finished, Is.True);
+    }
+
+    [Test]
+    public void AdjacentShapesSharingVertices_DoNotHangTheStep()
+    {
+        var world = new World();
+        world.BroadPhaseFilter = new BroadPhaseCollisionFilter(world);
+
+        var softBody = new SoftBody(world);
+        var vertices = new RigidBody[4];
+        for (int i = 0; i < 4; i++)
+        {
+            vertices[i] = world.CreateRigidBody();
+            vertices[i].AffectedByGravity = false;
+            softBody.Vertices.Add(vertices[i]);
+        }
+
+        vertices[1].Position = JVector.UnitX;
+        vertices[2].Position = JVector.UnitZ;
+        vertices[3].Position = JVector.UnitX + JVector.UnitZ;
+        softBody.AddShape(new SoftBodyTriangle(softBody, vertices[0], vertices[1], vertices[2]));
+        softBody.AddShape(new SoftBodyTriangle(softBody, vertices[1], vertices[3], vertices[2]));
+
+        bool finished = StepsWithin(world, 60, 5000);
+        if (finished) world.Dispose();
+        Assert.That(finished, Is.True);
+    }
+
     [Test]
     public void DestroyAfterWorldClear_IsSafeAndIdempotent()
     {

@@ -52,6 +52,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
 
             var closestA = softShapeA.GetClosest(pA);
             var closestB = softShapeB.GetClosest(pB);
+            if (closestA == closestB) return false;
 
             world.RegisterContact(closestA.RigidBodyId, closestB.RigidBodyId, closestA, closestB,
                 pA, pB, normal);
@@ -72,6 +73,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             if (!colliding) return false;
 
             var closest = softShapeA.GetClosest(pA);
+            if (closest == rigidBodyB) return false;
 
             world.RegisterContact(closest.RigidBodyId, rigidBodyB.RigidBodyId, closest, rigidBodyB,
                 pA, pB, normal, ContactData.SolveMode.AngularBody1);
@@ -92,6 +94,7 @@ public class BroadPhaseCollisionFilter : IBroadPhaseFilter
             if (!colliding) return false;
 
             var closest = softShapeB.GetClosest(pA);
+            if (closest == rigidBodyA) return false;
 
             world.RegisterContact(closest.RigidBodyId, rigidBodyA.RigidBodyId, closest, rigidBodyA,
                 pA, pB, normal, ContactData.SolveMode.AngularBody1);
