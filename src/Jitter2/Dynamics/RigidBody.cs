@@ -392,6 +392,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     private Real inactiveThresholdAngularSq = (Real)0.1;
     private Real deactivationTimeThreshold = (Real)1.0;
 
+    private const Real KinematicRestThresholdSq = (Real)1e-12;
+
     private Real linearDampingMultiplier = (Real)0.998;
     private Real angularDampingMultiplier = (Real)0.995;
 
@@ -712,8 +714,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         RestrictLinearMotion(ref rigidBody.Velocity, axes);
         RestrictAngularMotion(ref rigidBody.AngularVelocity, axes);
 
-        if (rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
-            rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq)
+        // Kinematic bodies are driven by the user, so any real velocity keeps them awake.
+        bool resting = rigidBody.MotionType == MotionType.Kinematic
+            ? rigidBody.AngularVelocity.LengthSquared() < KinematicRestThresholdSq &&
+              rigidBody.Velocity.LengthSquared() < KinematicRestThresholdSq
+            : rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
+              rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq;
+
+        if (resting)
         {
             InternalSleepTime += stepDt;
         }
