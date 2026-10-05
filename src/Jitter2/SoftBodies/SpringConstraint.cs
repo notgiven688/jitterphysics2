@@ -50,13 +50,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         public Real EffectiveMass;
         public Real AccumulatedImpulse;
+        public Real StepImpulse;
         public Real Bias;
 
         public JVector Jacobian;
     }
 
     private static readonly uint RegisteredDispatchId =
-        RegisterFullConstraint(&PrepareForIterationSpringConstraint, &IterateSpringConstraint);
+        RegisterFullConstraint(&PrepareForIterationSpringConstraint, &IterateSpringConstraint, &StepStartSpringConstraint);
 
     /// <inheritdoc/>
     protected override void Create()
@@ -66,7 +67,11 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     }
 
     /// <inheritdoc />
-    public override void ResetWarmStart() => Data.AccumulatedImpulse = (Real)0.0;
+    public override void ResetWarmStart()
+    {
+        Data.AccumulatedImpulse = (Real)0.0;
+        Data.StepImpulse = (Real)0.0;
+    }
 
     /// <summary>
     /// Initializes the constraint from world-space anchor points.
@@ -159,14 +164,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by the spring.
+    /// Gets the accumulated impulse applied by the spring during the last step, summed over its substeps.
     /// </summary>
     public Real Impulse
     {
         get
         {
             ref SpringData data = ref Data;
-            return data.AccumulatedImpulse;
+            return data.StepImpulse + data.AccumulatedImpulse;
         }
     }
 
@@ -250,6 +255,12 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         }
     }
 
+    public static void StepStartSpringConstraint(ref ConstraintData constraint)
+    {
+        ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
+        data.StepImpulse = -data.AccumulatedImpulse;
+    }
+
     /// <summary>
     /// Prepares the spring constraint for iteration.
     /// </summary>
@@ -258,6 +269,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, Real idt)
     {
         ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
+        data.StepImpulse += data.AccumulatedImpulse;
         ref RigidBodyData body1 = ref data.Body1.Data;
         ref RigidBodyData body2 = ref data.Body2.Data;
 
