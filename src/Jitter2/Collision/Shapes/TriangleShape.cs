@@ -134,7 +134,13 @@ public class TriangleShape : RigidBodyShape
         var triangle = new JTriangle(Mesh.Vertices[meshTriangle.IndexA],
             Mesh.Vertices[meshTriangle.IndexB], Mesh.Vertices[meshTriangle.IndexC]);
 
-        return triangle.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out normal, out lambda);
+        if (triangle.RayIntersect(origin, direction, JTriangle.CullMode.BackFacing, out normal, out lambda) &&
+            lambda >= (Real)0.0) return true;
+
+        // RayIntersect tests the whole line, so a hit behind the origin is a miss for a ray.
+        normal = JVector.Zero;
+        lambda = Real.MaxValue;
+        return false;
     }
 
     /// <inheritdoc/>
