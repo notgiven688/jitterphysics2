@@ -72,6 +72,7 @@ public unsafe struct SimplexSolver
             lambda1 = 0;
         }
 
+        if (mask == (1u << i0 | 1u << i1)) return JVector.Cross(v, JVector.Cross(a, v)) * ((Real)1.0 / vsq);
         return lambda0 * a + lambda1 * b;
     }
 
@@ -142,7 +143,7 @@ public unsafe struct SimplexSolver
         if (mask != 0) return closestPt;
 
         mask = (1u << i0) | (1u << i1) | (1u << i2);
-        return lambda0 * a + lambda1 * b + lambda2 * c;
+        return normal * (JVector.Dot(normal, a) * it);
     }
 
     private JVector ClosestTetrahedron(out uint mask)

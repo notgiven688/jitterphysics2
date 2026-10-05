@@ -92,6 +92,7 @@ public unsafe struct SimplexSolverAB
         bc[i0] = lambda0;
         bc[i1] = lambda1;
 
+        if (mask == (1u << i0 | 1u << i1)) return JVector.Cross(v, JVector.Cross(a, v)) * ((Real)1.0 / vsq);
         return lambda0 * a + lambda1 * b;
     }
 
@@ -170,7 +171,7 @@ public unsafe struct SimplexSolverAB
         bc[i2] = lambda2;
 
         mask = (1u << i0) | (1u << i1) | (1u << i2);
-        return lambda0 * a + lambda1 * b + lambda2 * c;
+        return normal * (JVector.Dot(normal, a) * it);
     }
 
     private JVector ClosestTetrahedron(ref Barycentric bc, out uint mask)
