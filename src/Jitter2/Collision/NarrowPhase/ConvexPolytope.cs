@@ -383,11 +383,9 @@ public unsafe struct ConvexPolytope
 
         if (ePointer == 0) return false;
 
+        // A new vertex in line with a horizon edge makes a triangle of no area, which is left out.
         for (int i = 0; i < ePointer; i++)
-        {
-            if (!CreateTriangle(edges[i].A, edges[i].B, vPointer))
-                return false;
-        }
+            CreateTriangle(edges[i].A, edges[i].B, vPointer);
 
         vPointer++;
         return true;
