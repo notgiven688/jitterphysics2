@@ -156,6 +156,98 @@ public class ContactLifecycleTests
         world.Dispose();
     }
 
+    private static (World world, RigidBody floor) CreateFloorWorld()
+    {
+        var world = new World { Gravity = JVector.Zero };
+        var floor = world.CreateRigidBody();
+        floor.AddShape(new BoxShape(20, 1, 20));
+        floor.Position = new JVector(0, -0.5f, 0);
+        floor.MotionType = MotionType.Static;
+        return (world, floor);
+    }
+
+    private static RigidBody AddSphereOnFloor(World world, Real x)
+    {
+        var sphere = world.CreateRigidBody();
+        sphere.AddShape(new SphereShape(0.5f));
+        sphere.Position = new JVector(x, 0.45f, 0);
+        return sphere;
+    }
+
+    [TestCase]
+    public void BeginCollide_RemovingTheBodyInTheHandler_LeavesTheWorldConsistent()
+    {
+        var (world, floor) = CreateFloorWorld();
+        var sphere = AddSphereOnFloor(world, 0);
+        sphere.BeginCollide += _ => world.Remove(sphere);
+
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        Assert.That(sphere.IsValid, Is.False);
+        Assert.That(floor.Contacts, Is.Empty);
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        world.Dispose();
+    }
+
+    [Test]
+    public void BeginCollide_RemovingTheArbiterInEitherHandler_LeavesTheWorldConsistent([Values] bool inFirstHandler)
+    {
+        var (world, floor) = CreateFloorWorld();
+        var sphere = AddSphereOnFloor(world, 0);
+
+        int begins = 0;
+        void Handler(RigidBody self, Arbiter arbiter)
+        {
+            begins++;
+            if ((inFirstHandler ? arbiter.Body1 : arbiter.Body2) == self) world.Remove(arbiter);
+        }
+
+        floor.BeginCollide += arbiter => Handler(floor, arbiter);
+        sphere.BeginCollide += arbiter => Handler(sphere, arbiter);
+
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        Assert.That(floor.Contacts, Is.Empty);
+        Assert.That(sphere.Contacts, Is.Empty);
+        Assert.That(begins, Is.EqualTo(inFirstHandler ? 1 : 2));
+
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        Assert.DoesNotThrow(() => world.Remove(sphere));
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void BeginCollide_RemovingOneArbiter_StillLinksAndReportsTheOthers()
+    {
+        var (world, floor) = CreateFloorWorld();
+        var first = AddSphereOnFloor(world, -3);
+        var second = AddSphereOnFloor(world, 3);
+
+        bool removed = false;
+        int secondBegins = 0;
+        floor.BeginCollide += arbiter =>
+        {
+            if (removed) return;
+            removed = true;
+            world.Remove(arbiter);
+        };
+        first.BeginCollide += _ => { };
+        second.BeginCollide += _ => secondBegins++;
+
+        world.Step(1f / 60f, false);
+
+        RigidBody survivor = first.Contacts.Count == 1 ? first : second;
+        RigidBody other = survivor == first ? second : first;
+        Assert.That(survivor.Contacts, Has.Count.EqualTo(1));
+        Assert.That(other.Contacts, Is.Empty);
+        Assert.That(floor.Contacts, Has.Count.EqualTo(1));
+        if (survivor == second) Assert.That(secondBegins, Is.EqualTo(1));
+
+        Assert.DoesNotThrow(() => world.Remove(survivor));
+        Assert.That(floor.Contacts, Is.Empty);
+        Assert.DoesNotThrow(() => world.Step(1f / 60f, false));
+        world.Dispose();
+    }
+
     [TestCase]
     public void EndCollide_FiresOnce_WhenBodiesSeparate()
     {
