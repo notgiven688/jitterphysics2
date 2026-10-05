@@ -34,6 +34,7 @@ public sealed partial class World
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
+    private readonly List<(Arbiter Arbiter, uint Generation)> dispatchArbiters = [];
 
     /// <summary>
     /// Profiling buckets for <see cref="DebugTimings"/>, representing stages of <see cref="Step(Real, bool)"/>.
@@ -854,18 +855,34 @@ public sealed partial class World
 
     private void HandleDeferredArbiters()
     {
-        foreach (var arb in deferredArbiters)
+        while (deferredArbiters.Count > 0)
         {
-            IslandHelper.ArbiterCreated(islands, islandPool, arb);
+            foreach (var arb in deferredArbiters)
+            {
+                IslandHelper.ArbiterCreated(islands, islandPool, arb);
 
-            AddToActiveList(arb.Body1.InternalIsland);
-            AddToActiveList(arb.Body2.InternalIsland);
+                AddToActiveList(arb.Body1.InternalIsland);
+                AddToActiveList(arb.Body2.InternalIsland);
 
-            arb.Body1.RaiseBeginCollide(arb);
-            arb.Body2.RaiseBeginCollide(arb);
+                dispatchArbiters.Add((arb, arb.Generation));
+            }
+
+            deferredArbiters.Clear();
+
+            try
+            {
+                for (int i = 0; i < dispatchArbiters.Count; i++)
+                {
+                    var (arb, generation) = dispatchArbiters[i];
+                    if (arb.Generation == generation) arb.Body1.RaiseBeginCollide(arb);
+                    if (arb.Generation == generation) arb.Body2.RaiseBeginCollide(arb);
+                }
+            }
+            finally
+            {
+                dispatchArbiters.Clear();
+            }
         }
-
-        deferredArbiters.Clear();
     }
 
     /// <summary>
