@@ -408,9 +408,15 @@ public sealed partial class World
     /// <param name="body1">The first rigid body. Used only if a new arbiter is created.</param>
     /// <param name="body2">The second rigid body. Used only if a new arbiter is created.</param>
     /// <param name="arbiter">The resulting <see cref="Arbiter"/> instance associated with the ID pair.</param>
+    /// <exception cref="SameBodyException">
+    /// Thrown if <paramref name="body1"/> and <paramref name="body2"/> are the same.
+    /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetOrCreateArbiter(ulong id0, ulong id1, RigidBody body1, RigidBody body2, out Arbiter arbiter)
     {
+        if (ReferenceEquals(body1, body2))
+            throw new SameBodyException();
+
         ArbiterKey arbiterKey = new(id0, id1);
 
         lock (arbiters.GetLock(arbiterKey))
