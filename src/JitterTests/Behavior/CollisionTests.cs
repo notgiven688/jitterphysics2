@@ -443,6 +443,69 @@ public class GjkPrecisionTests
         AssertNoneWrong(wrong, total);
     }
 
+    // The whole scene turned three ways, so the floor's face and edge run in no particular direction.
+    private static readonly JQuaternion[] Turns =
+    [
+        JQuaternion.Identity,
+        JQuaternion.CreateFromAxisAngle(JVector.Normalize(new JVector(1, 2, 3)), (Real)0.4),
+        JQuaternion.CreateFromAxisAngle(JVector.Normalize(new JVector(-2, 1, 1)), (Real)0.8),
+    ];
+
+    [TestCase(4000f)]
+    public void Distance_NeverCallsAnOverlapSeparated(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (JQuaternion scene in Turns)
+        foreach (var (name, shape, turn, touching, depth) in Placements(halfExtent))
+        {
+            JVector floorCenter = JVector.Transform(FloorCenter, scene);
+            JVector intoFace = JVector.Transform(touching - JVector.UnitY * depth, scene);
+            JVector overEdge = JVector.Transform(new JVector((Real)halfExtent + touching.X * (Real)0.02, touching.Y - depth, touching.Z), scene);
+
+            foreach (var (place, at) in new[] { ("into the face", intoFace), ("over the edge", overEdge) })
+            {
+                if (!NarrowPhase.Overlap(shape, floor, scene * turn, scene, at, floorCenter)) continue;
+                total++;
+                if (NarrowPhase.Distance(shape, floor, scene * turn, scene, at, floorCenter, out _, out _, out _, out Real distance))
+                    wrong.Add($"{name} {depth} {place} was called separated by {distance}");
+            }
+        }
+
+        Assert.That(total, Is.GreaterThan(1000));
+        AssertNoneWrong(wrong, total);
+    }
+
+    [TestCase(4f)]
+    [TestCase(400f)]
+    [TestCase(4000f)]
+    public void Distance_MeasuresTheGapWhicheverWayTheFloorTurns(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (JQuaternion scene in Turns)
+        foreach (var (name, shape, turn, touching, gap) in Placements(halfExtent))
+        {
+            JVector floorCenter = JVector.Transform(FloorCenter, scene);
+
+            // A small gap measured exactly, and a wide one still seen as apart.
+            foreach (Real expected in new[] { gap, (Real)0.05 + gap * 20 })
+            {
+                total++;
+                bool separated = NarrowPhase.Distance(shape, floor, scene * turn, scene, JVector.Transform(touching + JVector.UnitY * expected, scene), floorCenter,
+                    out _, out _, out _, out Real distance);
+                if (!separated || MathR.Abs(distance - expected) > (Real)1e-4)
+                    wrong.Add($"{name} {expected} above the face gave separated {separated}, distance {distance}");
+            }
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+
     [TestCase(4f)]
     [TestCase(40f)]
     [TestCase(400f)]
