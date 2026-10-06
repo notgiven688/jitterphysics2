@@ -1,4 +1,5 @@
 using Jitter2.Collision;
+using Jitter2.SoftBodies;
 
 namespace JitterTests.Behavior;
 
@@ -233,6 +234,133 @@ public class BroadPhaseUpdateTests
         Assert.That(hits, Has.Count.EqualTo(1));
         Assert.That(hits[0].Entity, Is.EqualTo(nearShape));
         Assert.That(hits[0].Lambda, Is.EqualTo((Real)0.3).Within((Real)1e-6));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeOverlap_ReturnsEveryOverlappingProxy()
+    {
+        var world = new World();
+
+        var rightBody = world.CreateRigidBody();
+        var rightShape = new SphereShape(1);
+        rightBody.AddShape(rightShape);
+        rightBody.Position = new JVector((Real)1.5, 0, 0);
+
+        var leftBody = world.CreateRigidBody();
+        var leftShape = new SphereShape(1);
+        leftBody.AddShape(leftShape);
+        leftBody.Position = new JVector((Real)(-1.8), 0, 0);
+
+        var farBody = world.CreateRigidBody();
+        farBody.AddShape(new SphereShape(1));
+        farBody.Position = new JVector(9, 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+
+        int count = world.DynamicTree.Overlap(query, JQuaternion.Identity, JVector.Zero, null, null, results);
+
+        Assert.That(count, Is.EqualTo(2));
+        var right = results.Single(r => r.Entity == rightShape);
+        var left = results.Single(r => r.Entity == leftShape);
+        Assert.That(right.Penetration, Is.EqualTo((Real)0.5).Within((Real)1e-4));
+        Assert.That(left.Penetration, Is.EqualTo((Real)0.2).Within((Real)1e-4));
+        Assert.That(right.Normal.X, Is.EqualTo((Real)1.0).Within((Real)1e-4));
+        Assert.That(left.Normal.X, Is.EqualTo((Real)(-1.0)).Within((Real)1e-4));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeOverlap_MovingAgainstTheNormalByTheDepthSeparates()
+    {
+        var world = new World();
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(2));
+        body.Orientation = JQuaternion.CreateFromAxisAngle(JVector.Normalize(new JVector(1, 2, 3)), (Real)0.7);
+
+        var query = SupportPrimitives.CreateBox(new JVector((Real)0.5, (Real)0.3, (Real)0.8));
+        var orientation = JQuaternion.CreateRotationY((Real)0.4);
+        var position = new JVector((Real)1.4, (Real)0.3, (Real)(-0.2));
+        List<DynamicTree.OverlapResult> results = [];
+
+        Assert.That(world.DynamicTree.Overlap(query, orientation, position, null, null, results), Is.EqualTo(1));
+        var hit = results[0];
+        Assert.That(hit.Penetration, Is.GreaterThan((Real)0.0));
+        Assert.That(hit.Normal.Length(), Is.EqualTo((Real)1.0).Within((Real)1e-4));
+
+        var separated = position - hit.Normal * (hit.Penetration + (Real)1e-3);
+        Assert.That(world.DynamicTree.Overlap(query, orientation, separated, null, null, results), Is.EqualTo(0));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeOverlap_SkipsProxiesThatOnlyTouch()
+    {
+        var world = new World();
+
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+        body.Position = new JVector(2, 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+
+        Assert.That(world.DynamicTree.Overlap(query, JQuaternion.Identity, JVector.Zero, null, null, results), Is.EqualTo(0));
+        Assert.That(results, Is.Empty);
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeOverlap_PreAndPostFiltersSkipProxies()
+    {
+        var world = new World();
+
+        var rightBody = world.CreateRigidBody();
+        var rightShape = new SphereShape(1);
+        rightBody.AddShape(rightShape);
+        rightBody.Position = new JVector((Real)1.5, 0, 0);
+
+        var leftBody = world.CreateRigidBody();
+        var leftShape = new SphereShape(1);
+        leftBody.AddShape(leftShape);
+        leftBody.Position = new JVector((Real)(-1.5), 0, 0);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+
+        world.DynamicTree.Overlap(query, JQuaternion.Identity, JVector.Zero, proxy => proxy != rightShape, null, results);
+        Assert.That(results.Select(r => r.Entity), Is.EquivalentTo(new IDynamicTreeProxy[] { leftShape }));
+
+        world.DynamicTree.Overlap(query, JQuaternion.Identity, JVector.Zero, null, result => result.Entity != leftShape, results);
+        Assert.That(results.Select(r => r.Entity), Is.EquivalentTo(new IDynamicTreeProxy[] { rightShape }));
+        world.Dispose();
+    }
+
+    [TestCase]
+    public void DynamicTreeOverlap_FindsSoftBodyShapes()
+    {
+        var world = new World();
+
+        var softBody = new SoftBody(world);
+        var v1 = world.CreateRigidBody();
+        var v2 = world.CreateRigidBody();
+        var v3 = world.CreateRigidBody();
+        v1.Position = new JVector(-2, 0, -2);
+        v2.Position = new JVector(2, 0, -2);
+        v3.Position = new JVector(0, 0, 2);
+        softBody.Vertices.AddRange([v1, v2, v3]);
+        var triangle = new SoftBodyTriangle(softBody, v1, v2, v3);
+        softBody.AddShape(triangle);
+        world.Step((Real)(1.0 / 60.0), false);
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+
+        Assert.That(world.DynamicTree.Overlap(query, JQuaternion.Identity, new JVector(0, (Real)0.6, 0), null, null, results), Is.EqualTo(1));
+        Assert.That(results[0].Entity, Is.EqualTo(triangle));
+        Assert.That(results[0].Normal.Y, Is.EqualTo((Real)(-1.0)).Within((Real)1e-4));
         world.Dispose();
     }
 }

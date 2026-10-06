@@ -55,4 +55,14 @@ public abstract class SoftBodyShape : Shape
             position, JVector.Zero,
             out pointA, out pointB, out normal, out distance);
     }
+
+    /// <inheritdoc/>
+    public override bool Overlap<T>(in T support, in JQuaternion orientation, in JVector position,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
+    {
+        return NarrowPhase.MprEpa(support, this,
+            orientation, JQuaternion.Identity,
+            position, JVector.Zero,
+            out pointA, out pointB, out normal, out penetration);
+    }
 }

@@ -125,3 +125,28 @@ public interface ISweepTestable
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
         where T : ISupportMappable;
 }
+
+/// <summary>
+/// Represents an entity that can be tested for overlap against a support-mapped query shape.
+/// </summary>
+public interface IOverlapTestable
+{
+    /// <summary>
+    /// Tests whether the query shape overlaps this object and, if so, how deeply.
+    /// </summary>
+    /// <typeparam name="T">The query support-map type.</typeparam>
+    /// <param name="support">The query shape.</param>
+    /// <param name="orientation">The query shape orientation in world space.</param>
+    /// <param name="position">The query shape position in world space.</param>
+    /// <param name="pointA">The deepest point on the query shape inside this object, in world space.</param>
+    /// <param name="pointB">The deepest point on this object inside the query shape, in world space.</param>
+    /// <param name="normal">
+    /// Unit direction from the query shape toward this object. Moving the query shape by
+    /// <paramref name="penetration"/> against it separates the two.
+    /// </param>
+    /// <param name="penetration">The penetration depth.</param>
+    /// <returns><c>true</c> if the shapes overlap; otherwise, <c>false</c>.</returns>
+    public bool Overlap<T>(in T support, in JQuaternion orientation, in JVector position,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
+        where T : ISupportMappable;
+}

@@ -149,4 +149,24 @@ public abstract class RigidBodyShape : Shape
             position, data.Position,
             out pointA, out pointB, out normal, out distance);
     }
+
+    [ReferenceFrame(ReferenceFrame.World)]
+    public sealed override bool Overlap<T>(in T support, in JQuaternion orientation, in JVector position,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
+    {
+        if (RigidBody == null)
+        {
+            return NarrowPhase.MprEpa(support, this,
+                orientation, JQuaternion.Identity,
+                position, JVector.Zero,
+                out pointA, out pointB, out normal, out penetration);
+        }
+
+        ref var data = ref RigidBody.Data;
+
+        return NarrowPhase.MprEpa(support, this,
+            orientation, data.Orientation,
+            position, data.Position,
+            out pointA, out pointB, out normal, out penetration);
+    }
 }

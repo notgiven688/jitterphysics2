@@ -201,6 +201,38 @@ public class CollisionTests
     }
 
     [TestCase]
+    public void OverlapTestableMatchesNarrowPhaseMprEpa()
+    {
+        var world = new World();
+        SupportPrimitives.Sphere query = new((Real)0.5);
+        BoxShape target = new BoxShape(1);
+        var body = world.CreateRigidBody();
+        body.AddShape(target);
+
+        var orientation = JQuaternion.CreateRotationZ(MathR.PI / (Real)4.0);
+        var position = new JVector((Real)10.4, (Real)10.6, 3);
+        body.Orientation = JQuaternion.CreateRotationZ(MathR.PI / (Real)4.0);
+        body.Position = new JVector(11, 11, 3);
+
+        bool narrowHit = NarrowPhase.MprEpa(query, target,
+            orientation, body.Orientation,
+            position, body.Position,
+            out JVector narrowA, out JVector narrowB, out JVector narrowNormal, out Real narrowPenetration);
+
+        bool overlapHit = target.Overlap(query,
+            orientation, position,
+            out JVector overlapA, out JVector overlapB, out JVector overlapNormal, out Real overlapPenetration);
+
+        Assert.That(narrowHit, Is.True);
+        Assert.That(overlapHit, Is.EqualTo(narrowHit));
+        Assert.That((overlapA - narrowA).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That((overlapB - narrowB).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That((overlapNormal - narrowNormal).LengthSquared(), Is.LessThan((Real)1e-6));
+        Assert.That(MathR.Abs(overlapPenetration - narrowPenetration), Is.LessThan((Real)1e-6));
+        world.Dispose();
+    }
+
+    [TestCase]
     public void TransformedShapeOverlapDistance()
     {
         var box = new BoxShape(1);

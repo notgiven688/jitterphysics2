@@ -123,6 +123,43 @@ public class DynamicTreeReentrancyTests
         Assert.That(lambda, Is.EqualTo((Real)0.7).Within((Real)1e-6));
     }
 
+    [Test]
+    public void Overlap_PostFilterCanRunNestedOverlap()
+    {
+        using var world = new World();
+
+        var near = CreateStaticSphere(world, new JVector((Real)1.5, (Real)0.0, (Real)0.0));
+        var far = CreateStaticSphere(world, new JVector((Real)(-1.5), (Real)0.0, (Real)0.0));
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+        bool nested = false;
+
+        int count = world.DynamicTree.Overlap(
+            query, JQuaternion.Identity, JVector.Zero,
+            null,
+            result =>
+            {
+                RunNestedOverlapOnce(world, ref nested);
+                return !ReferenceEquals(result.Entity, near);
+            },
+            results);
+
+        Assert.That(count, Is.EqualTo(1));
+        Assert.That(results[0].Entity, Is.SameAs(far));
+    }
+
+    private static void RunNestedOverlapOnce(World world, ref bool nested)
+    {
+        if (nested) return;
+        nested = true;
+
+        var query = SupportPrimitives.CreateSphere((Real)1.0);
+        List<DynamicTree.OverlapResult> results = [];
+        int count = world.DynamicTree.Overlap(query, JQuaternion.Identity, JVector.Zero, null, null, results);
+
+        Assert.That(count, Is.EqualTo(2));
+    }
+
     private static void RunNestedRayCastOnce(World world, ref bool nested)
     {
         if (nested) return;
