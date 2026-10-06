@@ -313,3 +313,155 @@ public class CollisionTests
         Assert.That(penetration, Is.LessThan(0));
     }
 }
+
+// Queries just off the top face and one long edge of a big flat box, on a fixed grid, where the answer is known.
+// The box's corners sit far from the origin, which is what used to swamp GJK's closest point with rounding.
+public class GjkPrecisionTests
+{
+    private static readonly Real[] Gaps = [(Real)0.0005, (Real)0.002, (Real)0.005, (Real)0.01, (Real)0.02];
+    private static readonly JVector FloorCenter = new(0, (Real)(-0.5), 0);
+
+    private static readonly (string Name, ISupportMappable Shape, Real Bottom)[] Shapes =
+    [
+        ("sphere", SupportPrimitives.CreateSphere((Real)0.4), (Real)0.4),
+        ("capsule", SupportPrimitives.CreateCapsule((Real)0.3, (Real)0.5), (Real)0.8),
+        ("box", SupportPrimitives.CreateBox(new JVector((Real)0.3, (Real)0.3, (Real)0.3)), (Real)0.3),
+    ];
+
+    private static SupportPrimitives.Box Floor(float halfExtent) => SupportPrimitives.CreateBox(new JVector((Real)halfExtent, (Real)0.5, (Real)halfExtent));
+
+    // Places over the floor's top face, each with a gap to test at.
+    private static IEnumerable<(Real X, Real Z, Real Gap)> Grid(float halfExtent)
+    {
+        Real reach = MathR.Min(3, (Real)halfExtent - 1);
+        for (int x = -2; x <= 2; x++)
+        for (int z = -2; z <= 2; z++)
+        foreach (Real gap in Gaps)
+            yield return (x * reach / 2, z * reach / 2, gap);
+    }
+
+    // Every shape over every place, upright and turned.
+    private static IEnumerable<(string Name, ISupportMappable Shape, JQuaternion Turn, JVector Touching, Real Gap)> Placements(float halfExtent)
+    {
+        foreach (var (x, z, gap) in Grid(halfExtent))
+        foreach (var (name, shape, bottom) in Shapes)
+        foreach (int yaw in new[] { 0, 25 })
+            yield return (name, shape, JQuaternion.CreateRotationY(yaw * MathR.PI / 180), new JVector(x, bottom, z), gap);
+    }
+
+    private static void AssertNoneWrong(List<string> wrong, int total)
+        => Assert.That(wrong, Is.Empty, $"{wrong.Count} of {total} wrong, first: {wrong.FirstOrDefault()}");
+
+    [TestCase(40f)]
+    [TestCase(400f)]
+    public void RayCast_HitsTheFaceAndEdgeExactly(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        JVector[] downs = [new(0, -1, 0), JVector.Normalize(new JVector((Real)0.3, -1, 0)), JVector.Normalize(new JVector(0, -1, (Real)0.3)), JVector.Normalize(new JVector((Real)0.2, -1, (Real)(-0.2)))];
+        JVector toEdge = JVector.Normalize(new JVector(-1, -1, 0));
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (var (x, z, gap) in Grid(halfExtent))
+        {
+            foreach (JVector down in downs)
+            {
+                total++;
+                bool hit = NarrowPhase.RayCast(floor, new JVector(x, gap, z) - FloorCenter, down, out Real lambda, out JVector normal);
+                if (!hit || MathR.Abs(lambda - gap / -down.Y) > (Real)1e-4 || normal.Y < (Real)0.999)
+                    wrong.Add($"ray from {gap} above the face along {down} hit {hit} at {lambda}, normal {normal}");
+            }
+
+            total++;
+            bool edgeHit = NarrowPhase.RayCast(floor, new JVector((Real)halfExtent + gap, gap, z) - FloorCenter, toEdge, out Real edgeLambda, out _);
+            if (!edgeHit || MathR.Abs(edgeLambda - gap * MathR.Sqrt(2)) > (Real)1e-4)
+                wrong.Add($"ray from {gap} off the edge hit {edgeHit} at {edgeLambda}");
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+
+    [TestCase(40f)]
+    [TestCase(400f)]
+    public void PointTest_TellsInsideFromOutside(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (var (x, z, gap) in Grid(halfExtent))
+        {
+            total += 4;
+            if (!NarrowPhase.PointTest(floor, new JVector(x, -gap, z) - FloorCenter)) wrong.Add($"{gap} below the face was outside");
+            if (NarrowPhase.PointTest(floor, new JVector(x, gap, z) - FloorCenter)) wrong.Add($"{gap} above the face was inside");
+            if (!NarrowPhase.PointTest(floor, new JVector((Real)halfExtent - gap, -gap, z) - FloorCenter)) wrong.Add($"{gap} inside the edge was outside");
+            if (NarrowPhase.PointTest(floor, new JVector((Real)halfExtent + gap, gap, z) - FloorCenter)) wrong.Add($"{gap} outside the edge was inside");
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+
+    [TestCase(4f)]
+    [TestCase(40f)]
+    [TestCase(400f)]
+    public void Overlap_SeesTheGapAboveTheFace(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (var (name, shape, turn, touching, gap) in Placements(halfExtent))
+        {
+            total += 2;
+            if (NarrowPhase.Overlap(shape, floor, turn, JQuaternion.Identity, touching + JVector.UnitY * gap, FloorCenter))
+                wrong.Add($"{name} {gap} above the face overlapped");
+            if (!NarrowPhase.Overlap(shape, floor, turn, JQuaternion.Identity, touching - JVector.UnitY * gap, FloorCenter))
+                wrong.Add($"{name} {gap} into the face did not overlap");
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+
+    [TestCase(4f)]
+    [TestCase(40f)]
+    [TestCase(400f)]
+    public void Distance_MeasuresTheGapAboveTheFace(float halfExtent)
+    {
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (var (name, shape, turn, touching, gap) in Placements(halfExtent))
+        {
+            total++;
+            bool separated = NarrowPhase.Distance(shape, floor, turn, JQuaternion.Identity, touching + JVector.UnitY * gap, FloorCenter,
+                out _, out _, out _, out Real distance);
+            if (!separated || MathR.Abs(distance - gap) > (Real)1e-4)
+                wrong.Add($"{name} {gap} above the face gave separated {separated}, distance {distance}");
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+
+    [TestCase(4f)]
+    [TestCase(40f)]
+    [TestCase(400f)]
+    public void Sweep_StopsExactlyOnTheFace(float halfExtent)
+    {
+        const float Drop = 0.5f;
+        var floor = Floor(halfExtent);
+        var wrong = new List<string>();
+        int total = 0;
+
+        foreach (var (name, shape, turn, touching, gap) in Placements(halfExtent))
+        {
+            total++;
+            bool hit = NarrowPhase.Sweep(shape, floor, turn, JQuaternion.Identity, touching + JVector.UnitY * ((Real)Drop + gap), FloorCenter,
+                -JVector.UnitY, JVector.Zero, out _, out _, out _, out Real lambda);
+            if (!hit || MathR.Abs(lambda - ((Real)Drop + gap)) > (Real)1e-4)
+                wrong.Add($"{name} swept down from {(Real)Drop + gap} above the face hit {hit} after {lambda}");
+        }
+
+        AssertNoneWrong(wrong, total);
+    }
+}
