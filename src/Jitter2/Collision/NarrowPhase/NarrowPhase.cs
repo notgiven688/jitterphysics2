@@ -724,11 +724,16 @@ public static class NarrowPhase
         JVector v = center.V;
         Real distSq = v.LengthSquared();
 
+        // Only a support point beyond the origin proves the shapes apart, without that proof they count as touching.
+        bool separated = false;
+
         while (iter-- != 0)
         {
             if (distSq < collideEpsilon * collideEpsilon) goto ret_false;
 
             MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, -v, out var w);
+
+            if (JVector.Dot(v, w.V) > (Real)0.0) separated = true;
 
             Real deltaDist = JVector.Dot(v - w.V, v);
             if (deltaDist * deltaDist < collideEpsilon * collideEpsilon * distSq)
@@ -740,6 +745,8 @@ public static class NarrowPhase
 
             distSq = v.LengthSquared();
         }
+
+        if (!separated) goto ret_false;
 
         distance = MathR.Sqrt(distSq);
         normal = v * (-(Real)1.0 / distance);
