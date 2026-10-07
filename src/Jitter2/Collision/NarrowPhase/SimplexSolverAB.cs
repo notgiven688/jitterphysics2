@@ -68,31 +68,39 @@ public unsafe struct SimplexSolverAB
         JVector v = b - a;
         Real vsq = v.LengthSquared();
 
-        bool degenerate = vsq < Epsilon;
-
-        Real t = -JVector.Dot(a, v) / vsq;
-        Real lambda0 = 1 - t;
-        Real lambda1 = t;
-
-        mask = (1u << i0 | 1u << i1);
-
-        if (lambda0 < 0 || degenerate)
+        if (vsq < Epsilon)
         {
             mask = 1u << i1;
-            lambda0 = 0;
-            lambda1 = 1;
+            bc[i0] = (Real)0.0;
+            bc[i1] = (Real)1.0;
+            return b;
         }
-        else if (lambda1 < 0)
+
+        Real t = -JVector.Dot(a, v) / vsq;
+
+        if (t > (Real)1.0)
+        {
+            mask = 1u << i1;
+            bc[i0] = (Real)0.0;
+            bc[i1] = (Real)1.0;
+            return b;
+        }
+
+        if (t < (Real)0.0)
         {
             mask = 1u << i0;
-            lambda0 = 1;
-            lambda1 = 0;
+            bc[i0] = (Real)1.0;
+            bc[i1] = (Real)0.0;
+            return a;
         }
 
-        bc[i0] = lambda0;
-        bc[i1] = lambda1;
+        bc[i0] = (Real)1.0 - t;
+        bc[i1] = t;
+        mask = (1u << i0) | (1u << i1);
 
-        return lambda0 * a + lambda1 * b;
+        // Keep barycentrics for the witnesses, but calculate the search vector directly.
+        // return lambda0 * a + lambda1 * b;
+        return JVector.Cross(v, JVector.Cross(a, v)) * ((Real)1.0 / vsq);
     }
 
     private JVector ClosestTriangle(int i0, int i1, int i2, ref Barycentric bc, out uint mask)
@@ -170,7 +178,10 @@ public unsafe struct SimplexSolverAB
         bc[i2] = lambda2;
 
         mask = (1u << i0) | (1u << i1) | (1u << i2);
-        return lambda0 * a + lambda1 * b + lambda2 * c;
+
+        // Keep barycentrics for the witnesses, but calculate the search vector directly.
+        // return lambda0 * a + lambda1 * b + lambda2 * c;
+        return normal * (JVector.Dot(normal, a) * it);
     }
 
     private JVector ClosestTetrahedron(ref Barycentric bc, out uint mask)

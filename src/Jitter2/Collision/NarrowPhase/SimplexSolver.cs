@@ -51,28 +51,31 @@ public unsafe struct SimplexSolver
         JVector v = b - a;
         Real vsq = v.LengthSquared();
 
-        bool degenerate = vsq < Epsilon;
-
-        Real t = -JVector.Dot(a, v) / vsq;
-        Real lambda0 = 1 - t;
-        Real lambda1 = t;
-
-        mask = (1u << i0 | 1u << i1);
-
-        if (lambda0 < 0 || degenerate)
+        if (vsq < Epsilon)
         {
             mask = 1u << i1;
-            lambda0 = 0;
-            lambda1 = 1;
-        }
-        else if (lambda1 < 0)
-        {
-            mask = 1u << i0;
-            lambda0 = 1;
-            lambda1 = 0;
+            return b;
         }
 
-        return lambda0 * a + lambda1 * b;
+        Real t = -JVector.Dot(a, v) / vsq;
+
+        if (t > (Real)1.0)
+        {
+            mask = 1u << i1;
+            return b;
+        }
+
+        if (t < (Real)0.0)
+        {
+            mask = 1u << i0;
+            return a;
+        }
+
+        mask = (1u << i0) | (1u << i1);
+
+        // Project directly onto the line to avoid cancellation between weighted vertices.
+        // return lambda0 * a + lambda1 * b;
+        return JVector.Cross(v, JVector.Cross(a, v)) * ((Real)1.0 / vsq);
     }
 
     private JVector ClosestTriangle(int i0, int i1, int i2, out uint mask)
@@ -142,7 +145,10 @@ public unsafe struct SimplexSolver
         if (mask != 0) return closestPt;
 
         mask = (1u << i0) | (1u << i1) | (1u << i2);
-        return lambda0 * a + lambda1 * b + lambda2 * c;
+
+        // Project directly onto the plane to preserve small distances on large triangles.
+        // return lambda0 * a + lambda1 * b + lambda2 * c;
+        return normal * (JVector.Dot(normal, a) * it);
     }
 
     private JVector ClosestTetrahedron(out uint mask)
