@@ -34,7 +34,7 @@ public unsafe class AngularCoordinateTests
             localAxis = constraint.Data.Axis;
             body2.Orientation = JQuaternion.CreateFromAxisAngle(JVector.Normalize(new JVector(2, 1, -3)),
                 (Real)angle) * body2.Orientation;
-            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             jacobian = JMatrix.Transpose(constraint.Data.Jacobian);
         }
         else
@@ -44,7 +44,7 @@ public unsafe class AngularCoordinateTests
             reference = constraint.Data.Q0;
             body2.Orientation = JQuaternion.CreateFromAxisAngle(JVector.Normalize(new JVector(2, 1, -3)),
                 (Real)angle) * body2.Orientation;
-            FixedAngle.PrepareForIterationFixedAngle(ref constraint.Handle.Data, 100);
+            FixedAngle.PrepareForIterationFixedAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             jacobian = constraint.Data.Jacobian;
         }
 
@@ -83,7 +83,7 @@ public unsafe class AngularCoordinateTests
         twist.Initialize(axis, axis, AngularLimit.Fixed);
         body2.Orientation = JQuaternion.CreateFromAxisAngle(axis, (Real)angle) * body2.Orientation;
         body2.Orientation = JQuaternion.CreateFromAxisAngle(MathHelper.CreateOrthonormal(axis), (Real)0.3) * body2.Orientation;
-        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
+        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
         RigidBody perturbed = perturbBody2 ? body2 : body1;
         JQuaternion original = perturbed.Orientation;
         foreach (JVector direction in new[] { JVector.UnitX, JVector.UnitY, JVector.UnitZ })
@@ -110,7 +110,7 @@ public unsafe class AngularCoordinateTests
         var cone = world.CreateConstraint<ConeLimit>(body1, body2);
         cone.Initialize(axis, axis, AngularLimit.FromDegree(30, 30));
         body2.Orientation = JQuaternion.CreateFromAxisAngle(MathHelper.CreateOrthonormal(axis), (Real)angle) * body2.Orientation;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         JVector jacobian = Unsafe.As<MemoryHelper.MemBlock6Real, JVector>(ref cone.Data.J0);
         RigidBody perturbed = perturbBody2 ? body2 : body1;
         JQuaternion original = perturbed.Orientation;
@@ -138,8 +138,8 @@ public unsafe class AngularCoordinateTests
         twist.Bias = 0;
         body.Orientation = JQuaternion.CreateRotationZ((Real)degrees * MathR.PI / 180);
         body.AngularVelocity = JVector.UnitZ;
-        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
-        TwistAngle.IterateTwistAngle(ref twist.Handle.Data, 100);
+        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
+        TwistAngle.IterateTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
         Real gamma = twist.Softness * 100;
         Assert.That(body.AngularVelocity.Z, Is.EqualTo(gamma / (1 + gamma)).Within((Real)1e-5));
     }
@@ -157,8 +157,8 @@ public unsafe class AngularCoordinateTests
         cone.Bias = 0;
         body.Orientation = JQuaternion.CreateRotationX((Real)degrees * MathR.PI / 180);
         body.AngularVelocity = JVector.UnitX;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Real gamma = cone.Softness * 100;
         Assert.That(body.AngularVelocity.X, Is.EqualTo(gamma / (1 + gamma)).Within((Real)1e-5));
     }
@@ -208,10 +208,10 @@ public unsafe class AngularCoordinateTests
             var hinge = world.CreateConstraint<HingeAngle>(world.NullBody, body);
             hinge.Initialize(JVector.UnitZ, AngularLimit.Fixed);
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI - (Real)0.01);
-            HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
             hinge.Data.AccumulatedImpulse = JVector.UnitZ;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
-            HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(hinge.Impulse, Is.EqualTo(JVector.Zero));
         }
         else if (kind == 1)
@@ -219,10 +219,10 @@ public unsafe class AngularCoordinateTests
             var fixedAngle = world.CreateConstraint<FixedAngle>(world.NullBody, body);
             fixedAngle.Initialize();
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI - (Real)0.01);
-            FixedAngle.PrepareForIterationFixedAngle(ref fixedAngle.Handle.Data, 100);
+            FixedAngle.PrepareForIterationFixedAngle(ref fixedAngle.Handle.Data, new TimeStep((Real)1.0 / 100));
             fixedAngle.Data.AccumulatedImpulse = JVector.UnitZ;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
-            FixedAngle.PrepareForIterationFixedAngle(ref fixedAngle.Handle.Data, 100);
+            FixedAngle.PrepareForIterationFixedAngle(ref fixedAngle.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(fixedAngle.Impulse, Is.EqualTo(JVector.Zero));
         }
         else
@@ -230,10 +230,10 @@ public unsafe class AngularCoordinateTests
             var twist = world.CreateConstraint<TwistAngle>(world.NullBody, body);
             twist.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.Fixed);
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI - (Real)0.01);
-            TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
             twist.Data.AccumulatedImpulse = 1;
             body.Orientation = JQuaternion.CreateRotationZ(MathR.PI + (Real)0.01);
-            TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(twist.Impulse, Is.Zero);
         }
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));
@@ -251,7 +251,7 @@ public unsafe class AngularCoordinateTests
         Assert.That((Real)cone.Limit.From, Is.EqualTo((Real)lower));
         Assert.That((Real)cone.Limit.To, Is.EqualTo((Real)(2 * lower)));
         body.Orientation = JQuaternion.CreateRotationX((Real)(3 * lower));
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(cone.Data.Clamp, Is.EqualTo(1));
     }
 
@@ -267,8 +267,8 @@ public unsafe class AngularCoordinateTests
         cone.Softness = (Real)softness;
         body.Orientation = JQuaternion.CreateRotationX(MathR.PI / 6);
         body.AngularVelocity = JVector.UnitX * direction;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Real gamma = (Real)softness * 100;
         Assert.That(cone.Data.Clamp, Is.EqualTo(3));
         Assert.That(body.AngularVelocity.X, Is.EqualTo(direction * gamma / (1 + gamma)).Within((Real)1e-5));
@@ -284,10 +284,10 @@ public unsafe class AngularCoordinateTests
             var constraint = world.CreateConstraint<TwistAngle>(world.NullBody, body);
             constraint.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.Fixed);
             body.Orientation = JQuaternion.CreateRotationZ((Real)119.99 * MathR.PI / 180);
-            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             constraint.Data.AccumulatedImpulse = (Real)0.25;
             body.Orientation = JQuaternion.CreateRotationZ((Real)120.01 * MathR.PI / 180);
-            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Impulse, Is.EqualTo((Real)0.25));
             Assert.That(body.AngularVelocity.Z, Is.EqualTo((Real)0.25).Within((Real)1e-5));
         }
@@ -296,10 +296,10 @@ public unsafe class AngularCoordinateTests
             var constraint = world.CreateConstraint<ConeLimit>(world.NullBody, body);
             constraint.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.FromDegree(30, 30));
             body.Orientation = JQuaternion.CreateRotationX((Real)29.99 * MathR.PI / 180);
-            ConeLimit.PrepareForIterationConeLimit(ref constraint.Handle.Data, 100);
+            ConeLimit.PrepareForIterationConeLimit(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             constraint.Data.AccumulatedImpulse = (Real)0.25;
             body.Orientation = JQuaternion.CreateRotationX((Real)30.01 * MathR.PI / 180);
-            ConeLimit.PrepareForIterationConeLimit(ref constraint.Handle.Data, 100);
+            ConeLimit.PrepareForIterationConeLimit(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Impulse, Is.EqualTo((Real)0.25));
             Assert.That(body.AngularVelocity.X, Is.EqualTo((Real)0.25).Within((Real)1e-5));
         }
@@ -321,8 +321,8 @@ public unsafe class AngularCoordinateTests
         cone.Softness = (Real)softness;
         int direction = upper == outgoing ? 1 : -1;
         body.AngularVelocity = JVector.UnitX * direction;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Real gamma = (Real)softness * 100;
         Real expected = direction * (outgoing ? gamma / (1 + gamma) : 1);
         Assert.That(body.AngularVelocity.X, Is.EqualTo(expected).Within((Real)1e-5));
@@ -337,8 +337,8 @@ public unsafe class AngularCoordinateTests
         cone.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.FromDegree(0, 180));
         body.Orientation = antiparallel ? new JQuaternion(1, 0, 0, 0) : JQuaternion.Identity;
         body.AngularVelocity = new JVector(1, 2, 3);
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(cone.Data.Clamp, Is.Zero);
         Assert.That(body.AngularVelocity, Is.EqualTo(new JVector(1, 2, 3)));
     }
@@ -356,8 +356,8 @@ public unsafe class AngularCoordinateTests
             constraint.Bias = constraint.LimitBias = 0;
             body.Orientation = new JQuaternion(0, 0, poseSign, 0);
             body.AngularVelocity = JVector.UnitZ * velocitySign;
-            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, 100);
-            HingeAngle.IterateHingeAngle(ref constraint.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            HingeAngle.IterateHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Data.Clamp, Is.Zero);
         }
         else
@@ -367,8 +367,8 @@ public unsafe class AngularCoordinateTests
             constraint.Bias = 0;
             body.Orientation = new JQuaternion(0, 0, poseSign, 0);
             body.AngularVelocity = JVector.UnitZ * velocitySign;
-            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
-            TwistAngle.IterateTwistAngle(ref constraint.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            TwistAngle.IterateTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Data.Clamp, Is.Zero);
         }
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.UnitZ * velocitySign));
@@ -388,8 +388,8 @@ public unsafe class AngularCoordinateTests
             constraint.Bias = constraint.LimitBias = constraint.Softness = constraint.LimitSoftness = 0;
             body.Orientation = new JQuaternion(0, 0, sign, 0);
             body.AngularVelocity = JVector.UnitZ * sign;
-            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, 100);
-            HingeAngle.IterateHingeAngle(ref constraint.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            HingeAngle.IterateHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Data.Clamp, Is.EqualTo(sign == 1 ? 1 : 2));
         }
         else
@@ -399,8 +399,8 @@ public unsafe class AngularCoordinateTests
             constraint.Bias = constraint.Softness = 0;
             body.Orientation = new JQuaternion(0, 0, sign, 0);
             body.AngularVelocity = JVector.UnitZ * sign;
-            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
-            TwistAngle.IterateTwistAngle(ref constraint.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            TwistAngle.IterateTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(constraint.Data.Clamp, Is.EqualTo(sign == 1 ? 1 : 2));
         }
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan((Real)1e-5));
@@ -427,7 +427,7 @@ public unsafe class AngularCoordinateTests
             var constraint = world.CreateConstraint<HingeAngle>(body1, body2);
             constraint.Initialize(axis, limit);
             body2.Orientation = reference2 * new JQuaternion(0, constraint.Data.Axis * quaternionSign);
-            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, 100);
+            HingeAngle.PrepareForIterationHingeAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             bias = constraint.Data.Bias.Z;
         }
         else
@@ -435,7 +435,7 @@ public unsafe class AngularCoordinateTests
             var constraint = world.CreateConstraint<TwistAngle>(body1, body2);
             constraint.Initialize(axis, axis, limit);
             body2.Orientation = reference2 * new JQuaternion(0, constraint.Data.B * quaternionSign);
-            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, 100);
+            TwistAngle.PrepareForIterationTwistAngle(ref constraint.Handle.Data, new TimeStep((Real)1.0 / 100));
             bias = constraint.Data.Bias;
         }
         Real tolerance = Precision.IsDoublePrecision ? (Real)1e-10 : (Real)1e-4;

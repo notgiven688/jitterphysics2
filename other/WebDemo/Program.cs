@@ -93,9 +93,9 @@ sealed class PressurizedSphere : SoftBody
         }
     }
 
-    protected override void WorldOnPostStep(float dt)
+    protected override void WorldOnPostStep(TimeStep timeStep)
     {
-        base.WorldOnPostStep(dt);
+        base.WorldOnPostStep(timeStep);
         if (!IsActive) return;
 
         float volume = 0f;

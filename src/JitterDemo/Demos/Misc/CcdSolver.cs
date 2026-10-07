@@ -34,7 +34,7 @@ public class CcdSolver
 
     public bool Enabled { get; set; } = true;
 
-    private void PreStep(float dt)
+    private void PreStep(TimeStep timeStep)
     {
         if (!Enabled) return;
 
@@ -62,7 +62,7 @@ public class CcdSolver
                     {
                         // Find the first future collision among the candidates returned
                         // by the broad phase and register its contact.
-                        CreateContact(shape, dt);
+                        CreateContact(shape, timeStep.StepDt);
                     }
                 }
 
@@ -73,7 +73,7 @@ public class CcdSolver
                 {
                     ref var contact = ref discoveredArbiters[i].Handle.Data;
                     contact.SkipWarmStart();
-                    contact.PrepareForIteration((float)1.0 / dt);
+                    contact.PrepareForIteration(timeStep);
                 }
 
                 for (int i = 0; i < discoveredArbiters.Count; i++)

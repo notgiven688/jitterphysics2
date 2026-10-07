@@ -31,8 +31,8 @@ public class ContactLifecycleTests
 
         Assert.That(contact.Contact0.Bias, Is.EqualTo(10));
 
-        if (accelerated) contact.PrepareForIterationAccelerated(10);
-        else contact.PrepareForIterationScalar(10);
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
 
         Assert.That(contact.Contact0.Bias, Is.EqualTo((Real)target).Within(Tolerance));
         Assert.That(contact.Contact0.PenaltyBias, Is.Zero);
@@ -71,8 +71,8 @@ public class ContactLifecycleTests
         contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
         contact.ResetMode();
 
-        if (accelerated) contact.PrepareForIterationAccelerated(10);
-        else contact.PrepareForIterationScalar(10);
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
 
         Assert.That(contact.Contact0.PenaltyBias, Is.GreaterThan(0));
 
@@ -106,8 +106,8 @@ public class ContactLifecycleTests
 
         void Prepare()
         {
-            if (accelerated) contact.PrepareForIterationAccelerated(100);
-            else contact.PrepareForIterationScalar(100);
+            if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
+            else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
         }
 
         Prepare();

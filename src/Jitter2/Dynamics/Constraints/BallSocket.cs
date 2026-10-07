@@ -137,7 +137,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         }
     }
 
-    public static void PrepareForIterationBallSocket(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationBallSocket(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -157,7 +157,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
                               JSymmetricMatrix.CreateScale(body2.InverseMassVector) +
                               JSymmetricMatrix.Transform(body2.InverseInertiaWorld, cr2)).ToMatrix();
 
-        Real softness = data.Softness * idt;
+        Real softness = data.Softness * timeStep.InverseSubstepDt;
 
         data.EffectiveMass.M11 += softness;
         data.EffectiveMass.M22 += softness;
@@ -165,7 +165,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
-        data.Bias = (p2 - p1) * data.BiasFactor * idt;
+        data.Bias = (p2 - p1) * data.BiasFactor * timeStep.InverseStepDt;
 
         JVector acc = data.AccumulatedImpulse;
 
@@ -210,11 +210,11 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public JVector Impulse => Data.AccumulatedImpulse;
 
-    public static void IterateBallSocket(ref ConstraintData constraint, Real idt)
+    public static void IterateBallSocket(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, BallSocketData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -223,7 +223,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         JMatrix cr1 = JMatrix.CreateCrossProduct(data.R1);
         JMatrix cr2 = JMatrix.CreateCrossProduct(data.R2);
 
-        JVector softnessVector = data.AccumulatedImpulse * data.Softness * idt;
+        JVector softnessVector = data.AccumulatedImpulse * data.Softness * timeStep.InverseSubstepDt;
 
         JVector jv = -body1.Velocity + JVector.Transform(body1.AngularVelocity, cr1) + body2.Velocity -
                      JVector.Transform(body2.AngularVelocity, cr2);

@@ -436,11 +436,11 @@ public sealed class Demo31 : IDemo, IDrawUpdate, ICleanDemo
         pendingBreaks.Add(breakable);
     }
 
-    private void OnPostStep(float dt)
+    private void OnPostStep(TimeStep timeStep)
     {
         foreach (Breakable breakable in breakables.Values)
         {
-            breakable.TimeSinceCreated += dt;
+            breakable.TimeSinceCreated += timeStep.StepDt;
         }
 
         if (pendingBreaks.Count == 0) return;

@@ -176,9 +176,7 @@ public sealed partial class World
                 time = ctime;
             }
 
-            stepDt = dt;
-            invStepDt = (Real)1.0 / dt;
-            substepDt = dt / substeps;
+            timeStep = new TimeStep(dt, substeps);
 
 
             if (multiThread)
@@ -191,7 +189,7 @@ public sealed partial class World
             time = Stopwatch.GetTimestamp();
 
             Tracer.ProfileScopeBegin();
-            PreStep?.Invoke(dt);
+            PreStep?.Invoke(timeStep);
             Tracer.ProfileScopeEnd(TraceName.PreStep);
             SetTime(Timings.PreStep);
 
@@ -230,9 +228,9 @@ public sealed partial class World
             Tracer.ProfileBegin(TraceName.Solve);
 
             // Sub-stepping
-            for (int i = 0; i < substeps; i++)
+            for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                PreSubStep?.Invoke(substepDt);
+                PreSubStep?.Invoke(timeStep);
                 IntegrateForces(multiThread); // FAST SWEEP
 
                 if (SolveMode == Jitter2.SolveMode.Deterministic)
@@ -248,7 +246,7 @@ public sealed partial class World
                     RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
                 }
 
-                PostSubStep?.Invoke(substepDt);
+                PostSubStep?.Invoke(timeStep);
             }
 
             Tracer.ProfileEnd(TraceName.Solve);
@@ -271,13 +269,13 @@ public sealed partial class World
             SetTime(Timings.UpdateBodies);
 
             Tracer.ProfileBegin(TraceName.BroadPhase);
-            DynamicTree.Update(multiThread, stepDt);
-            broadphaseStepDt = stepDt;
+            DynamicTree.Update(multiThread, timeStep.StepDt);
+            broadphaseStepDt = timeStep.StepDt;
             Tracer.ProfileEnd(TraceName.BroadPhase);
             SetTime(Timings.BroadPhase);
 
             Tracer.ProfileScopeBegin();
-            PostStep?.Invoke(dt);
+            PostStep?.Invoke(timeStep);
             Tracer.ProfileScopeEnd(TraceName.PostStep);
             SetTime(Timings.PostStep);
         }
@@ -351,9 +349,7 @@ public sealed partial class World
 
         try
         {
-            stepDt = dt;
-            invStepDt = (Real)1.0 / dt;
-            substepDt = dt / substeps;
+            timeStep = new TimeStep(dt, substeps);
 
             if (multiThread)
             {
@@ -366,7 +362,7 @@ public sealed partial class World
             {
                 PrepareIslandSolveOrder();
 
-                for (int i = 0; i < substeps; i++)
+                for (int i = 0; i < timeStep.SubstepCount; i++)
                 {
                     SolveIslands(multiThread, solverIterations);
                     RelaxIslands(multiThread, relaxationIterations);
@@ -374,7 +370,7 @@ public sealed partial class World
             }
             else
             {
-                for (int i = 0; i < substeps; i++)
+                for (int i = 0; i < timeStep.SubstepCount; i++)
                 {
                     SolveVelocities(multiThread, solverIterations);
                     RelaxVelocities(multiThread, relaxationIterations);
@@ -415,7 +411,7 @@ public sealed partial class World
                 continue;
             }
 
-            contact.PrepareForIteration(invStepDt);
+            contact.PrepareForIteration(timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -433,7 +429,7 @@ public sealed partial class World
                 continue;
             }
 
-            contact.PrepareForIteration(invStepDt);
+            contact.PrepareForIteration(timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -501,7 +497,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -517,7 +513,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -541,7 +537,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -557,7 +553,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -585,7 +581,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -601,7 +597,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.PrepareForIteration(ref constraint, invStepDt);
+            constraint.PrepareForIteration(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -625,7 +621,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -641,7 +637,7 @@ public sealed partial class World
                 continue;
             }
 
-            constraint.Iterate(ref constraint, invStepDt);
+            constraint.Iterate(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
     }
@@ -694,7 +690,7 @@ public sealed partial class World
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
-            bodies[i].Update(stepDt, substepDt);
+            bodies[i].Update(timeStep);
         }
     }
 
@@ -1072,9 +1068,9 @@ public sealed partial class World
             JVector linearVelocity = rigidBody.Velocity;
             JVector angularVelocity = rigidBody.AngularVelocity;
 
-            rigidBody.Position += linearVelocity * substepDt;
+            rigidBody.Position += linearVelocity * timeStep.SubstepDt;
 
-            JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, substepDt);
+            JQuaternion quat = MathHelper.RotationQuaternion(angularVelocity, timeStep.SubstepDt);
             rigidBody.Orientation = JQuaternion.Normalize(quat * rigidBody.Orientation);
 
             if (!rigidBody.EnableGyroscopicForces || rigidBody.HasMotionLocks) continue;
@@ -1083,7 +1079,7 @@ public sealed partial class World
             // from the *old* angular velocity), since the gyroscopic term does introduce instabilities.
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
             JSymmetricMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
-            rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, substepDt);
+            rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, timeStep.SubstepDt);
         }
     }
 

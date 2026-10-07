@@ -145,11 +145,11 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this motor during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationLinearMotor(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
 
@@ -163,7 +163,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
                              JVector.Multiply(j2, body2.InverseMassVector) * j2;
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
-        data.MaxLambda = ((Real)1.0 / idt) * data.MaxForce;
+        data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
         body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
         body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
@@ -183,7 +183,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
     }
 
-    public static void IterateLinearMotor(ref ConstraintData constraint, Real idt)
+    public static void IterateLinearMotor(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, LinearMotorData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;

@@ -25,8 +25,8 @@ public class CoupledLimitTests
         body.Velocity = originalVelocity;
         if (warmStart) line.Data.AccumulatedImpulse = new JVector((Real)0.2, (Real)(-0.3), direction * (Real)0.4);
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(line.Impulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.Velocity - originalVelocity), Is.LessThan(Tolerance));
@@ -52,8 +52,8 @@ public class CoupledLimitTests
         Real initialEnergy = body.Velocity.LengthSquared() +
             body.AngularVelocity * JVector.Transform(body.AngularVelocity, inertia);
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         JVector pointVelocity = body.Velocity + body.AngularVelocity % anchor;
         Real residualX = pointVelocity.Y + 100 * (Real)softness * line.Impulse.X;
@@ -87,8 +87,8 @@ public class CoupledLimitTests
         JVector velocity = JVector.UnitZ * (upper ? -1 : 1);
         body.Velocity = velocity;
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(line.Impulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
@@ -110,12 +110,12 @@ public class CoupledLimitTests
         JVector velocity = JVector.UnitZ * (upper ? -1 : 1);
         body.Velocity = velocity;
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(line.Impulse.Z, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(velocity));
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(JVector.MaxAbs(body.Velocity - velocity), Is.LessThan(Tolerance));
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
     }
@@ -141,8 +141,8 @@ public class CoupledLimitTests
         body1.Velocity = velocity1;
         body2.Velocity = velocity2;
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(line.Data.Clamp, Is.EqualTo(upper ? 1 : 2));
         Assert.That(JVector.MaxAbs(body1.Velocity - velocity1), Is.LessThan(Tolerance));
@@ -167,8 +167,8 @@ public class CoupledLimitTests
         body.AngularVelocity = angularVelocity;
         if (warmStart) hinge.Data.AccumulatedImpulse = new JVector((Real)0.2, (Real)(-0.3), direction * (Real)0.4);
 
-        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
-        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
+        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
+        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(hinge.Impulse.Z, Is.Zero);
         Assert.That(JVector.MaxAbs(body.AngularVelocity - angularVelocity), Is.LessThan(Tolerance));
@@ -188,11 +188,11 @@ public class CoupledLimitTests
         JVector velocity = JVector.UnitZ * (upper ? -1 : 1);
         body.AngularVelocity = velocity;
 
-        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
+        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(hinge.Impulse.Z, Is.Zero);
         Assert.That(body.AngularVelocity, Is.EqualTo(velocity));
-        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
+        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(JVector.MaxAbs(body.AngularVelocity - velocity), Is.LessThan(Tolerance));
     }
 
@@ -212,8 +212,8 @@ public class CoupledLimitTests
         body.AngularVelocity = new JVector((Real)0.2, (Real)(-0.3), (upper ? -5 : 5) * (inward ? 1 : -1));
         Real initialEnergy = body.AngularVelocity * JVector.Transform(body.AngularVelocity, inertia);
 
-        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
-        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
+        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
+        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         JVector residual = JVector.TransposedTransform(-body.AngularVelocity, hinge.Data.Jacobian) +
             hinge.Impulse * (100 * (Real)softness);

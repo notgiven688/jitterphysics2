@@ -164,7 +164,7 @@ public class GearCoupling
         return totRot2 + GearRatio * totRot1; // Note: Usually '+' if gears rotate opposite directions!
     }
 
-    private void OnPreStep(float dt)
+    private void OnPreStep(TimeStep timeStep)
     {
         // 1. Calculate the Error
         float error = TrackDeltaAngle();

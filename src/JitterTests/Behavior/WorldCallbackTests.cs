@@ -3,6 +3,29 @@ namespace JitterTests.Behavior;
 public class WorldCallbackTests
 {
     [TestCase]
+    public void AllCallbacks_ReceiveFullStepAndSubstepTiming()
+    {
+        using var world = new World { SubstepCount = 4 };
+        List<TimeStep> timings = [];
+        world.PreStep += timings.Add;
+        world.PostStep += timings.Add;
+        world.PreSubStep += timings.Add;
+        world.PostSubStep += timings.Add;
+
+        world.Step((Real)0.02, false);
+
+        Assert.That(timings, Has.Count.EqualTo(10));
+        foreach (var timeStep in timings)
+        {
+            Assert.That(timeStep.StepDt, Is.EqualTo((Real)0.02));
+            Assert.That(timeStep.SubstepDt, Is.EqualTo((Real)0.005));
+            Assert.That(timeStep.InverseStepDt, Is.EqualTo((Real)50).Within((Real)1e-4));
+            Assert.That(timeStep.InverseSubstepDt, Is.EqualTo((Real)200).Within((Real)1e-4));
+            Assert.That(timeStep.SubstepCount, Is.EqualTo(4));
+        }
+    }
+
+    [TestCase]
     public void PreAndPostSubStep_FireOncePerSubstep_WithSubstepDt()
     {
         var world = new World
@@ -16,13 +39,13 @@ public class WorldCallbackTests
         world.PreSubStep += dt =>
         {
             preCount++;
-            preDt = dt;
+            preDt = dt.SubstepDt;
         };
 
         world.PostSubStep += dt =>
         {
             postCount++;
-            postDt = dt;
+            postDt = dt.SubstepDt;
         };
 
         const Real dt = 1f / 60f;

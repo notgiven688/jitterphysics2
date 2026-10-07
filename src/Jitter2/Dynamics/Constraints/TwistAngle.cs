@@ -149,7 +149,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         Initialize(axis1, axis2, AngularLimit.Fixed);
     }
 
-    public static void PrepareForIterationTwistAngle(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationTwistAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
 
@@ -225,11 +225,11 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         else if (data.Clamp == 2) data.AccumulatedImpulse = MathR.Max(data.AccumulatedImpulse, 0);
 
         data.EffectiveMass = JVector.Transform(data.Jacobian, body1.InverseInertiaWorld + body2.InverseInertiaWorld) * data.Jacobian;
-        data.EffectiveMass += data.Softness * idt;
+        data.EffectiveMass += data.Softness * timeStep.InverseSubstepDt;
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
-        data.Bias = error * data.BiasFactor * idt;
+        data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
         body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body1.InverseInertiaWorld);
         body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
@@ -293,7 +293,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
@@ -310,7 +310,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
     }
 
-    public static void IterateTwistAngle(ref ConstraintData constraint, Real idt)
+    public static void IterateTwistAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, TwistLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -320,7 +320,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         Real jv = (body1.AngularVelocity - body2.AngularVelocity) * data.Jacobian;
 
-        Real softnessScalar = data.AccumulatedImpulse * (data.Softness * idt);
+        Real softnessScalar = data.AccumulatedImpulse * (data.Softness * timeStep.InverseSubstepDt);
 
         Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 

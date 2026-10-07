@@ -146,7 +146,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     [SkipLocalsInit]
-    public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -260,9 +260,9 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
             data.EffectiveMass.M32 += coupling23;
         }
 
-        data.EffectiveMass.M11 += data.Softness * idt;
-        data.EffectiveMass.M22 += data.Softness * idt;
-        data.EffectiveMass.M33 += data.LimitSoftness * idt;
+        data.EffectiveMass.M11 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M22 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M33 += data.LimitSoftness * timeStep.InverseSubstepDt;
 
         if (data.Clamp == 1 || data.Clamp == 2)
         {
@@ -275,7 +275,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         if (data.Clamp == 0) data.EffectiveMass.M33 = 0;
         data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
-        data.Bias = error * idt;
+        data.Bias = error * timeStep.InverseStepDt;
         data.Bias.X *= data.BiasFactor;
         data.Bias.Y *= data.BiasFactor;
         data.Bias.Z *= data.LimitBias;
@@ -326,7 +326,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public JVector Impulse => Data.AccumulatedImpulse;
 
@@ -363,7 +363,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     }
 
     [SkipLocalsInit]
-    public static void IteratePointOnLine(ref ConstraintData constraint, Real idt)
+    public static void IteratePointOnLine(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, PointOnLineData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -411,7 +411,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         jv.Z = jacobian[8] * body1.Velocity + jacobian[9] * body1.AngularVelocity + jacobian[10] * body2.Velocity +
                jacobian[11] * body2.AngularVelocity;
 
-        JVector softnessVector = data.AccumulatedImpulse * idt;
+        JVector softnessVector = data.AccumulatedImpulse * timeStep.InverseSubstepDt;
         softnessVector.X *= data.Softness;
         softnessVector.Y *= data.Softness;
         softnessVector.Z *= data.LimitSoftness;
