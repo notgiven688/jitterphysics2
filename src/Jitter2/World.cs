@@ -857,6 +857,9 @@ public sealed partial class World : IDisposable
     /// <exception cref="ArgumentException">
     /// Thrown if either body does not belong to this world.
     /// </exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if either body has been removed from this world.
+    /// </exception>
     /// <exception cref="SameBodyException">
     /// Thrown if <paramref name="body1"/> and <paramref name="body2"/> are the same.
     /// </exception>
@@ -869,6 +872,8 @@ public sealed partial class World : IDisposable
             throw new ArgumentException("The body does not belong to this world.", nameof(body1));
         if (body2.World != this)
             throw new ArgumentException("The body does not belong to this world.", nameof(body2));
+        if (!body1.IsValid || !body2.IsValid)
+            throw new InvalidOperationException("The body has been removed from this world.");
         if (ReferenceEquals(body1, body2))
             throw new SameBodyException();
 

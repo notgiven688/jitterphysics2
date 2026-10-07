@@ -408,6 +408,9 @@ public sealed partial class World
     /// <param name="body1">The first rigid body. Used only if a new arbiter is created.</param>
     /// <param name="body2">The second rigid body. Used only if a new arbiter is created.</param>
     /// <param name="arbiter">The resulting <see cref="Arbiter"/> instance associated with the ID pair.</param>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if a new arbiter is needed and either body has been removed from this world.
+    /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetOrCreateArbiter(ulong id0, ulong id1, RigidBody body1, RigidBody body2, out Arbiter arbiter)
     {
@@ -451,6 +454,10 @@ public sealed partial class World
 
                 var handle = memContacts.Allocate(true);
                 arbiter.Handle = handle;
+
+                if (!body1.IsValid || !body2.IsValid)
+                    throw new InvalidOperationException("The body has been removed from this world.");
+
                 handle.Data.Init(body1, body2);
                 handle.Data.Key = arbiterKey;
                 arbiter.Body1 = body1;
