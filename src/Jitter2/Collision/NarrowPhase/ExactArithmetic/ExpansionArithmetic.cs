@@ -72,14 +72,14 @@ internal static class ExpansionArithmetic
         ReadOnlySpan<double> a, ReadOnlySpan<double> b, bool negate)
     {
         foreach (double x in a)
-        foreach (double y in b)
-        {
-            double product = x * y;
-            double residual = Math.FusedMultiplyAdd(x, y, -product);
-            if (negate) { product = -product; residual = -residual; }
-            if (residual != 0) length = Grow(result, length, residual);
-            if (product != 0) length = Grow(result, length, product);
-        }
+            foreach (double y in b)
+            {
+                double product = x * y;
+                double residual = Math.FusedMultiplyAdd(x, y, -product);
+                if (negate) { product = -product; residual = -residual; }
+                if (residual != 0) length = Grow(result, length, residual);
+                if (product != 0) length = Grow(result, length, product);
+            }
 
         return length;
     }

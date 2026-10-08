@@ -246,17 +246,17 @@ public class ConvexPolytopeTests
         int wrong = 0;
         string first = "";
         foreach (Real depth in new Real[] { (Real)0.001, (Real)0.005, (Real)0.01, (Real)0.025, (Real)0.05, (Real)0.1 })
-        for (int yaw = 0; yaw < 90; yaw += 3)
-        for (int x = -2; x <= 2; x++)
-        for (int z = -2; z <= 2; z++)
-        {
-            var rotation = JQuaternion.CreateRotationY(yaw * MathR.PI / 180);
-            var position = new JVector(x * (Real)0.37, top.Y - depth, z * (Real)0.53);
-            bool hit = NarrowPhase.MprEpa(shape, floor, rotation, JQuaternion.Identity, position, new JVector(0, (Real)(-0.5), 0),
-                out _, out _, out var normal, out var actual, (Real)threshold);
-            if (hit && Real.IsFinite(actual) && MathR.Abs(actual - depth) <= (Real)1e-4 && MathR.Abs(normal.Y) >= (Real)0.9999) continue;
-            if (wrong++ == 0) first = $"depth={depth}, yaw={yaw}, position={position}, result={actual}, normal={normal}";
-        }
+            for (int yaw = 0; yaw < 90; yaw += 3)
+                for (int x = -2; x <= 2; x++)
+                    for (int z = -2; z <= 2; z++)
+                    {
+                        var rotation = JQuaternion.CreateRotationY(yaw * MathR.PI / 180);
+                        var position = new JVector(x * (Real)0.37, top.Y - depth, z * (Real)0.53);
+                        bool hit = NarrowPhase.MprEpa(shape, floor, rotation, JQuaternion.Identity, position, new JVector(0, (Real)(-0.5), 0),
+                            out _, out _, out var normal, out var actual, (Real)threshold);
+                        if (hit && Real.IsFinite(actual) && MathR.Abs(actual - depth) <= (Real)1e-4 && MathR.Abs(normal.Y) >= (Real)0.9999) continue;
+                        if (wrong++ == 0) first = $"depth={depth}, yaw={yaw}, position={position}, result={actual}, normal={normal}";
+                    }
 
         Assert.That(wrong, Is.Zero, first);
     }
