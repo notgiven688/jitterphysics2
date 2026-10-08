@@ -228,6 +228,25 @@ public abstract class Constraint : IDebugDrawable
     public virtual bool IsSmallConstraint { get; } = false;
 
     /// <summary>
+    /// Gets or sets whether the two bodies this constraint connects collide with each other. When any
+    /// constraint between two bodies sets this to <see langword="false"/>, no contacts are created between
+    /// them, and turning it off removes the contacts they already have.
+    /// Default value: <see langword="true"/>.
+    /// </summary>
+    public bool CollideConnected
+    {
+        get => collideConnected;
+        set
+        {
+            if (collideConnected == value) return;
+            collideConnected = value;
+            if (!value && IsValid) Body1.World.RemoveContactsBetween(Body1, Body2);
+        }
+    }
+
+    private bool collideConnected = true;
+
+    /// <summary>
     /// A handle for accessing the raw constraint data.
     /// </summary>
     public JHandle<ConstraintData> Handle { internal set; get; }

@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
+using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
 
@@ -116,6 +117,31 @@ public sealed partial class World
     /// </summary>
     public Real SpeculativeVelocityThreshold { get; set; } = (Real)10.0;
 
+    // Whether a constraint joining the two bodies keeps them from colliding, see Constraint.CollideConnected.
+    private static bool KeptApart(RigidBody bodyA, RigidBody bodyB)
+    {
+        if (bodyA.InternalConstraints.Count == 0 || bodyB.InternalConstraints.Count == 0) return false;
+        if (bodyB.InternalConstraints.Count < bodyA.InternalConstraints.Count) (bodyA, bodyB) = (bodyB, bodyA);
+
+        foreach (Constraint constraint in bodyA.InternalConstraints)
+        {
+            if (!constraint.CollideConnected && (constraint.Body1 == bodyB || constraint.Body2 == bodyB)) return true;
+        }
+
+        return false;
+    }
+
+    // Removes every contact between two bodies, for when a constraint stops them colliding.
+    internal void RemoveContactsBetween(RigidBody bodyA, RigidBody bodyB)
+    {
+        foreach (Arbiter arbiter in bodyA.InternalContacts)
+        {
+            // Removes the current element we are iterating over from Contacts, i.e. the HashSet
+            // we are iterating over is altered. This is allowed.
+            if (arbiter.Body1 == bodyB || arbiter.Body2 == bodyB) Remove(arbiter);
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
@@ -146,6 +172,8 @@ public sealed partial class World
         Debug.Assert(bodyA != bodyB);
         Debug.Assert(bodyA.World == this);
         Debug.Assert(bodyB.World == this);
+
+        if (KeptApart(bodyA, bodyB)) return;
 
         ref RigidBodyData b1 = ref bodyA.Data;
         ref RigidBodyData b2 = ref bodyB.Data;
