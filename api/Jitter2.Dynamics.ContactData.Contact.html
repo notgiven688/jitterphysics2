@@ -444,7 +444,7 @@ public JVector RelativePosition2</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L685"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The impulse applied in the normal direction which has been used to solve the contact.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated normal solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -578,7 +578,7 @@ public readonly JVector Tangent2 { get; }</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L690"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The impulse applied in the first tangent direction which has been used to solve the contact.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse in the first tangent direction from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -610,7 +610,7 @@ public readonly JVector Tangent2 { get; }</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L695"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>The impulse applied in the second tangent direction which has been used to solve the contact.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse in the second tangent direction from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -750,8 +750,8 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
   <a id="Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIteration*"></a>
 
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_Jitter2_Dynamics_ContactData__System_Single_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,System.Single)">
-  PrepareForIteration(ContactData*, float)
+  <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)">
+  PrepareForIteration(ContactData*, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L788"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -759,14 +759,14 @@ public readonly JVector Tangent2 { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void PrepareForIteration(ContactData* cd, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public void PrepareForIteration(ContactData* cd, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>cd</code> <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>*</dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -783,8 +783,8 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
   <a id="Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated*"></a>
 
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__System_Single_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,System.Single)">
-  PrepareForIterationAccelerated(ContactData*, float)
+  <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)">
+  PrepareForIterationAccelerated(ContactData*, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L1030"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -792,14 +792,14 @@ public readonly JVector Tangent2 { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void PrepareForIterationAccelerated(ContactData* cd, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public void PrepareForIterationAccelerated(ContactData* cd, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>cd</code> <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>*</dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

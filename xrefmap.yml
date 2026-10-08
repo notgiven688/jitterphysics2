@@ -6039,15 +6039,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.Initialize
   nameWithType: AngularMotor.Initialize
-- uid: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateAngularMotor(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_IterateAngularMotor_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateAngularMotor(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: AngularMotor.IterateAngularMotor(ref ConstraintData, float)
-  nameWithType.vb: AngularMotor.IterateAngularMotor(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateAngularMotor(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_IterateAngularMotor_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateAngularMotor(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: AngularMotor.IterateAngularMotor(ref ConstraintData, in TimeStep)
+  nameWithType.vb: AngularMotor.IterateAngularMotor(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.IterateAngularMotor*
   name: IterateAngularMotor
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_IterateAngularMotor_
@@ -6107,15 +6107,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.MaximumTorque
   nameWithType: AngularMotor.MaximumTorque
-- uid: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationAngularMotor(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_PrepareForIterationAngularMotor_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationAngularMotor(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: AngularMotor.PrepareForIterationAngularMotor(ref ConstraintData, float)
-  nameWithType.vb: AngularMotor.PrepareForIterationAngularMotor(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationAngularMotor(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_PrepareForIterationAngularMotor_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationAngularMotor(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: AngularMotor.PrepareForIterationAngularMotor(ref ConstraintData, in TimeStep)
+  nameWithType.vb: AngularMotor.PrepareForIterationAngularMotor(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.PrepareForIterationAngularMotor*
   name: PrepareForIterationAngularMotor
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_PrepareForIterationAngularMotor_
@@ -6324,15 +6324,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.BallSocket.Initialize
   nameWithType: BallSocket.Initialize
-- uid: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateBallSocket(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateBallSocket(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: BallSocket.IterateBallSocket(ref ConstraintData, float)
-  nameWithType.vb: BallSocket.IterateBallSocket(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateBallSocket(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateBallSocket(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: BallSocket.IterateBallSocket(ref ConstraintData, in TimeStep)
+  nameWithType.vb: BallSocket.IterateBallSocket(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket*
   name: IterateBallSocket
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_
@@ -6340,15 +6340,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket
   nameWithType: BallSocket.IterateBallSocket
-- uid: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationBallSocket(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationBallSocket(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: BallSocket.PrepareForIterationBallSocket(ref ConstraintData, float)
-  nameWithType.vb: BallSocket.PrepareForIterationBallSocket(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationBallSocket(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationBallSocket(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: BallSocket.PrepareForIterationBallSocket(ref ConstraintData, in TimeStep)
+  nameWithType.vb: BallSocket.PrepareForIterationBallSocket(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket*
   name: PrepareForIterationBallSocket
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_
@@ -6582,15 +6582,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.Initialize
   nameWithType: ConeLimit.Initialize
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateConeLimit(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_IterateConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateConeLimit(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: ConeLimit.IterateConeLimit(ref ConstraintData, float)
-  nameWithType.vb: ConeLimit.IterateConeLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateConeLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_IterateConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateConeLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: ConeLimit.IterateConeLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: ConeLimit.IterateConeLimit(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.IterateConeLimit*
   name: IterateConeLimit
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_IterateConeLimit_
@@ -6611,15 +6611,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.Limit
   nameWithType: ConeLimit.Limit
-- uid: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationConeLimit(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_PrepareForIterationConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationConeLimit(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: ConeLimit.PrepareForIterationConeLimit(ref ConstraintData, float)
-  nameWithType.vb: ConeLimit.PrepareForIterationConeLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationConeLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_PrepareForIterationConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationConeLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: ConeLimit.PrepareForIterationConeLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: ConeLimit.PrepareForIterationConeLimit(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.PrepareForIterationConeLimit*
   name: PrepareForIterationConeLimit
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_PrepareForIterationConeLimit_
@@ -6841,13 +6841,13 @@ references:
   fullName: Jitter2.Dynamics.Constraints.Constraint.IsValid
   nameWithType: Constraint.IsValid
 - uid: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)
-  name: RegisterFullConstraint(delegate*<ref ConstraintData, float, void>, delegate*<ref ConstraintData, float, void>)
+  name: RegisterFullConstraint(delegate*<ref ConstraintData, in TimeStep, void>, delegate*<ref ConstraintData, in TimeStep, void>)
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___
   commentId: M:Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)
   name.vb: RegisterFullConstraint(, )
-  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, float, void>, delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, float, void>)
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep, void>, delegate*<ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep, void>)
   fullName.vb: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(, )
-  nameWithType: Constraint.RegisterFullConstraint(delegate*<ref ConstraintData, float, void>, delegate*<ref ConstraintData, float, void>)
+  nameWithType: Constraint.RegisterFullConstraint(delegate*<ref ConstraintData, in TimeStep, void>, delegate*<ref ConstraintData, in TimeStep, void>)
   nameWithType.vb: Constraint.RegisterFullConstraint(, )
 - uid: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint*
   name: RegisterFullConstraint
@@ -6857,13 +6857,13 @@ references:
   fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint
   nameWithType: Constraint.RegisterFullConstraint
 - uid: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)
-  name: RegisterSmallConstraint(delegate*<ref SmallConstraintData, float, void>, delegate*<ref SmallConstraintData, float, void>)
+  name: RegisterSmallConstraint(delegate*<ref SmallConstraintData, in TimeStep, void>, delegate*<ref SmallConstraintData, in TimeStep, void>)
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___
   commentId: M:Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)
   name.vb: RegisterSmallConstraint(, )
-  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, float, void>, delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, float, void>)
+  fullName: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, in Jitter2.TimeStep, void>, delegate*<ref Jitter2.Dynamics.Constraints.SmallConstraintData, in Jitter2.TimeStep, void>)
   fullName.vb: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(, )
-  nameWithType: Constraint.RegisterSmallConstraint(delegate*<ref SmallConstraintData, float, void>, delegate*<ref SmallConstraintData, float, void>)
+  nameWithType: Constraint.RegisterSmallConstraint(delegate*<ref SmallConstraintData, in TimeStep, void>, delegate*<ref SmallConstraintData, in TimeStep, void>)
   nameWithType.vb: Constraint.RegisterSmallConstraint(, )
 - uid: Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint*
   name: RegisterSmallConstraint
@@ -6954,15 +6954,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConstraintData.IsEnabled
   nameWithType: ConstraintData.IsEnabled
-- uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: Iterate(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: Iterate(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: ConstraintData.Iterate(ref ConstraintData, float)
-  nameWithType.vb: ConstraintData.Iterate(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: Iterate(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: Iterate(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: ConstraintData.Iterate(ref ConstraintData, in TimeStep)
+  nameWithType.vb: ConstraintData.Iterate(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.ConstraintData.Iterate*
   name: Iterate
   href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_Iterate_
@@ -6970,15 +6970,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConstraintData.Iterate
   nameWithType: ConstraintData.Iterate
-- uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIteration(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIteration(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: ConstraintData.PrepareForIteration(ref ConstraintData, float)
-  nameWithType.vb: ConstraintData.PrepareForIteration(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIteration(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIteration(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: ConstraintData.PrepareForIteration(ref ConstraintData, in TimeStep)
+  nameWithType.vb: ConstraintData.PrepareForIteration(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration*
   name: PrepareForIteration
   href: api/Jitter2.Dynamics.Constraints.ConstraintData.html#Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_
@@ -7252,15 +7252,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.Initialize
   nameWithType: DistanceLimit.Initialize
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateDistanceLimit(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateDistanceLimit(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: DistanceLimit.IterateDistanceLimit(ref ConstraintData, float)
-  nameWithType.vb: DistanceLimit.IterateDistanceLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateDistanceLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateDistanceLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: DistanceLimit.IterateDistanceLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: DistanceLimit.IterateDistanceLimit(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit*
   name: IterateDistanceLimit
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_
@@ -7268,15 +7268,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit
   nameWithType: DistanceLimit.IterateDistanceLimit
-- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationDistanceLimit(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationDistanceLimit(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: DistanceLimit.PrepareForIterationDistanceLimit(ref ConstraintData, float)
-  nameWithType.vb: DistanceLimit.PrepareForIterationDistanceLimit(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationDistanceLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationDistanceLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: DistanceLimit.PrepareForIterationDistanceLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: DistanceLimit.PrepareForIterationDistanceLimit(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit*
   name: PrepareForIterationDistanceLimit
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_
@@ -7478,15 +7478,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.Initialize
   nameWithType: FixedAngle.Initialize
-- uid: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateFixedAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateFixedAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: FixedAngle.IterateFixedAngle(ref ConstraintData, float)
-  nameWithType.vb: FixedAngle.IterateFixedAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateFixedAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateFixedAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: FixedAngle.IterateFixedAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: FixedAngle.IterateFixedAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle*
   name: IterateFixedAngle
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_
@@ -7494,15 +7494,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle
   nameWithType: FixedAngle.IterateFixedAngle
-- uid: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationFixedAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationFixedAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: FixedAngle.PrepareForIterationFixedAngle(ref ConstraintData, float)
-  nameWithType.vb: FixedAngle.PrepareForIterationFixedAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationFixedAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationFixedAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: FixedAngle.PrepareForIterationFixedAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: FixedAngle.PrepareForIterationFixedAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle*
   name: PrepareForIterationFixedAngle
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_
@@ -7746,15 +7746,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.Initialize
   nameWithType: HingeAngle.Initialize
-- uid: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateHingeAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateHingeAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: HingeAngle.IterateHingeAngle(ref ConstraintData, float)
-  nameWithType.vb: HingeAngle.IterateHingeAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateHingeAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateHingeAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: HingeAngle.IterateHingeAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: HingeAngle.IterateHingeAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle*
   name: IterateHingeAngle
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_
@@ -7801,15 +7801,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.LimitSoftness
   nameWithType: HingeAngle.LimitSoftness
-- uid: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationHingeAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationHingeAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: HingeAngle.PrepareForIterationHingeAngle(ref ConstraintData, float)
-  nameWithType.vb: HingeAngle.PrepareForIterationHingeAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationHingeAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationHingeAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: HingeAngle.PrepareForIterationHingeAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: HingeAngle.PrepareForIterationHingeAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle*
   name: PrepareForIterationHingeAngle
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_
@@ -8192,15 +8192,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.Initialize
   nameWithType: LinearMotor.Initialize
-- uid: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateLinearMotor(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_IterateLinearMotor_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateLinearMotor(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: LinearMotor.IterateLinearMotor(ref ConstraintData, float)
-  nameWithType.vb: LinearMotor.IterateLinearMotor(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateLinearMotor(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_IterateLinearMotor_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateLinearMotor(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearMotor.IterateLinearMotor(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearMotor.IterateLinearMotor(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.IterateLinearMotor*
   name: IterateLinearMotor
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_IterateLinearMotor_
@@ -8307,15 +8307,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.MaximumForce
   nameWithType: LinearMotor.MaximumForce
-- uid: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationLinearMotor(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_PrepareForIterationLinearMotor_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationLinearMotor(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: LinearMotor.PrepareForIterationLinearMotor(ref ConstraintData, float)
-  nameWithType.vb: LinearMotor.PrepareForIterationLinearMotor(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationLinearMotor(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_PrepareForIterationLinearMotor_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationLinearMotor(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearMotor.PrepareForIterationLinearMotor(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearMotor.PrepareForIterationLinearMotor(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.PrepareForIterationLinearMotor*
   name: PrepareForIterationLinearMotor
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_PrepareForIterationLinearMotor_
@@ -8439,15 +8439,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.Initialize
   nameWithType: PointOnLine.Initialize
-- uid: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IteratePointOnLine(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IteratePointOnLine(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: PointOnLine.IteratePointOnLine(ref ConstraintData, float)
-  nameWithType.vb: PointOnLine.IteratePointOnLine(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IteratePointOnLine(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IteratePointOnLine(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: PointOnLine.IteratePointOnLine(ref ConstraintData, in TimeStep)
+  nameWithType.vb: PointOnLine.IteratePointOnLine(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine*
   name: IteratePointOnLine
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_
@@ -8595,15 +8595,15 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Softness
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.PointOnLineData.Softness
   nameWithType: PointOnLine.PointOnLineData.Softness
-- uid: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationPointOnLine(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationPointOnLine(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: PointOnLine.PrepareForIterationPointOnLine(ref ConstraintData, float)
-  nameWithType.vb: PointOnLine.PrepareForIterationPointOnLine(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationPointOnLine(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationPointOnLine(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: PointOnLine.PrepareForIterationPointOnLine(ref ConstraintData, in TimeStep)
+  nameWithType.vb: PointOnLine.PrepareForIterationPointOnLine(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine*
   name: PrepareForIterationPointOnLine
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_
@@ -8714,15 +8714,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.Initialize
   nameWithType: PointOnPlane.Initialize
-- uid: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IteratePointOnPlane(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_IteratePointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IteratePointOnPlane(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: PointOnPlane.IteratePointOnPlane(ref ConstraintData, float)
-  nameWithType.vb: PointOnPlane.IteratePointOnPlane(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IteratePointOnPlane(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_IteratePointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IteratePointOnPlane(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: PointOnPlane.IteratePointOnPlane(ref ConstraintData, in TimeStep)
+  nameWithType.vb: PointOnPlane.IteratePointOnPlane(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane*
   name: IteratePointOnPlane
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_IteratePointOnPlane_
@@ -8730,15 +8730,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.IteratePointOnPlane
   nameWithType: PointOnPlane.IteratePointOnPlane
-- uid: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationPointOnPlane(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_PrepareForIterationPointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationPointOnPlane(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: PointOnPlane.PrepareForIterationPointOnPlane(ref ConstraintData, float)
-  nameWithType.vb: PointOnPlane.PrepareForIterationPointOnPlane(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationPointOnPlane(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_PrepareForIterationPointOnPlane_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationPointOnPlane(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: PointOnPlane.PrepareForIterationPointOnPlane(ref ConstraintData, in TimeStep)
+  nameWithType.vb: PointOnPlane.PrepareForIterationPointOnPlane(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.PrepareForIterationPointOnPlane*
   name: PrepareForIterationPointOnPlane
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_PrepareForIterationPointOnPlane_
@@ -9017,15 +9017,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.IsEnabled
   nameWithType: SmallConstraintData.IsEnabled
-- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
-  name: Iterate(ref SmallConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate_Jitter2_Dynamics_Constraints_SmallConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
-  name.vb: Iterate(SmallConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.SmallConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData, Single)
-  nameWithType: SmallConstraintData.Iterate(ref SmallConstraintData, float)
-  nameWithType.vb: SmallConstraintData.Iterate(SmallConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,Jitter2.TimeStep@)
+  name: Iterate(ref SmallConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate_Jitter2_Dynamics_Constraints_SmallConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData@,Jitter2.TimeStep@)
+  name.vb: Iterate(SmallConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(ref Jitter2.Dynamics.Constraints.SmallConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate(Jitter2.Dynamics.Constraints.SmallConstraintData, Jitter2.TimeStep)
+  nameWithType: SmallConstraintData.Iterate(ref SmallConstraintData, in TimeStep)
+  nameWithType.vb: SmallConstraintData.Iterate(SmallConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate*
   name: Iterate
   href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_Iterate_
@@ -9033,15 +9033,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.Iterate
   nameWithType: SmallConstraintData.Iterate
-- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
-  name: PrepareForIteration(ref SmallConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_SmallConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,System.Single)
-  name.vb: PrepareForIteration(SmallConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.SmallConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData, Single)
-  nameWithType: SmallConstraintData.PrepareForIteration(ref SmallConstraintData, float)
-  nameWithType.vb: SmallConstraintData.PrepareForIteration(SmallConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIteration(ref SmallConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_SmallConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIteration(SmallConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(ref Jitter2.Dynamics.Constraints.SmallConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.SmallConstraintData, Jitter2.TimeStep)
+  nameWithType: SmallConstraintData.PrepareForIteration(ref SmallConstraintData, in TimeStep)
+  nameWithType.vb: SmallConstraintData.PrepareForIteration(SmallConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.SmallConstraintData.PrepareForIteration*
   name: PrepareForIteration
   href: api/Jitter2.Dynamics.Constraints.SmallConstraintData.html#Jitter2_Dynamics_Constraints_SmallConstraintData_PrepareForIteration_
@@ -9139,15 +9139,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.Initialize
   nameWithType: TwistAngle.Initialize
-- uid: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateTwistAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_IterateTwistAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateTwistAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: TwistAngle.IterateTwistAngle(ref ConstraintData, float)
-  nameWithType.vb: TwistAngle.IterateTwistAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateTwistAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_IterateTwistAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateTwistAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: TwistAngle.IterateTwistAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: TwistAngle.IterateTwistAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.IterateTwistAngle*
   name: IterateTwistAngle
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_IterateTwistAngle_
@@ -9168,15 +9168,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.Limit
   nameWithType: TwistAngle.Limit
-- uid: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationTwistAngle(ref ConstraintData, float)
-  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_PrepareForIterationTwistAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationTwistAngle(ConstraintData, Single)
-  fullName: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: TwistAngle.PrepareForIterationTwistAngle(ref ConstraintData, float)
-  nameWithType.vb: TwistAngle.PrepareForIterationTwistAngle(ConstraintData, Single)
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationTwistAngle(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_PrepareForIterationTwistAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationTwistAngle(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: TwistAngle.PrepareForIterationTwistAngle(ref ConstraintData, in TimeStep)
+  nameWithType.vb: TwistAngle.PrepareForIterationTwistAngle(ConstraintData, TimeStep)
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.PrepareForIterationTwistAngle*
   name: PrepareForIterationTwistAngle
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_PrepareForIterationTwistAngle_
@@ -9647,15 +9647,15 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Contact.PenaltyBias
   fullName: Jitter2.Dynamics.ContactData.Contact.PenaltyBias
   nameWithType: ContactData.Contact.PenaltyBias
-- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,System.Single)
-  name: PrepareForIteration(ContactData*, float)
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_Jitter2_Dynamics_ContactData__System_Single_
-  commentId: M:Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,System.Single)
-  name.vb: PrepareForIteration(ContactData*, Single)
-  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*, float)
-  fullName.vb: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*, Single)
-  nameWithType: ContactData.Contact.PrepareForIteration(ContactData*, float)
-  nameWithType.vb: ContactData.Contact.PrepareForIteration(ContactData*, Single)
+- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
+  name: PrepareForIteration(ContactData*, in TimeStep)
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
+  name.vb: PrepareForIteration(ContactData*, TimeStep)
+  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*, Jitter2.TimeStep)
+  nameWithType: ContactData.Contact.PrepareForIteration(ContactData*, in TimeStep)
+  nameWithType.vb: ContactData.Contact.PrepareForIteration(ContactData*, TimeStep)
 - uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration*
   name: PrepareForIteration
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_
@@ -9663,15 +9663,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration
   nameWithType: ContactData.Contact.PrepareForIteration
-- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,System.Single)
-  name: PrepareForIterationAccelerated(ContactData*, float)
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__System_Single_
-  commentId: M:Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,System.Single)
-  name.vb: PrepareForIterationAccelerated(ContactData*, Single)
-  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, float)
-  fullName.vb: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, Single)
-  nameWithType: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, float)
-  nameWithType.vb: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, Single)
+- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
+  name: PrepareForIterationAccelerated(ContactData*, in TimeStep)
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationAccelerated(ContactData*, TimeStep)
+  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, Jitter2.TimeStep)
+  nameWithType: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, in TimeStep)
+  nameWithType.vb: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, TimeStep)
 - uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated*
   name: PrepareForIterationAccelerated
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_
@@ -9870,15 +9870,15 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Mode
   fullName: Jitter2.Dynamics.ContactData.Mode
   nameWithType: ContactData.Mode
-- uid: Jitter2.Dynamics.ContactData.PrepareForIteration(System.Single)
-  name: PrepareForIteration(float)
-  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_PrepareForIteration_System_Single_
-  commentId: M:Jitter2.Dynamics.ContactData.PrepareForIteration(System.Single)
-  name.vb: PrepareForIteration(Single)
-  fullName: Jitter2.Dynamics.ContactData.PrepareForIteration(float)
-  fullName.vb: Jitter2.Dynamics.ContactData.PrepareForIteration(Single)
-  nameWithType: ContactData.PrepareForIteration(float)
-  nameWithType.vb: ContactData.PrepareForIteration(Single)
+- uid: Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep@)
+  name: PrepareForIteration(in TimeStep)
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_PrepareForIteration_Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep@)
+  name.vb: PrepareForIteration(TimeStep)
+  fullName: Jitter2.Dynamics.ContactData.PrepareForIteration(in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep)
+  nameWithType: ContactData.PrepareForIteration(in TimeStep)
+  nameWithType.vb: ContactData.PrepareForIteration(TimeStep)
 - uid: Jitter2.Dynamics.ContactData.PrepareForIteration*
   name: PrepareForIteration
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_PrepareForIteration_
@@ -15992,15 +15992,12 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SoftBody.World
   nameWithType: SoftBody.World
-- uid: Jitter2.SoftBodies.SoftBody.WorldOnPostStep(System.Single)
-  name: WorldOnPostStep(float)
-  href: api/Jitter2.SoftBodies.SoftBody.html#Jitter2_SoftBodies_SoftBody_WorldOnPostStep_System_Single_
-  commentId: M:Jitter2.SoftBodies.SoftBody.WorldOnPostStep(System.Single)
-  name.vb: WorldOnPostStep(Single)
-  fullName: Jitter2.SoftBodies.SoftBody.WorldOnPostStep(float)
-  fullName.vb: Jitter2.SoftBodies.SoftBody.WorldOnPostStep(Single)
-  nameWithType: SoftBody.WorldOnPostStep(float)
-  nameWithType.vb: SoftBody.WorldOnPostStep(Single)
+- uid: Jitter2.SoftBodies.SoftBody.WorldOnPostStep(Jitter2.TimeStep)
+  name: WorldOnPostStep(TimeStep)
+  href: api/Jitter2.SoftBodies.SoftBody.html#Jitter2_SoftBodies_SoftBody_WorldOnPostStep_Jitter2_TimeStep_
+  commentId: M:Jitter2.SoftBodies.SoftBody.WorldOnPostStep(Jitter2.TimeStep)
+  fullName: Jitter2.SoftBodies.SoftBody.WorldOnPostStep(Jitter2.TimeStep)
+  nameWithType: SoftBody.WorldOnPostStep(TimeStep)
 - uid: Jitter2.SoftBodies.SoftBody.WorldOnPostStep*
   name: WorldOnPostStep
   href: api/Jitter2.SoftBodies.SoftBody.html#Jitter2_SoftBodies_SoftBody_WorldOnPostStep_
@@ -16470,15 +16467,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.Initialize
   nameWithType: SpringConstraint.Initialize
-- uid: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: IterateSpringConstraint(ref ConstraintData, float)
-  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: IterateSpringConstraint(ConstraintData, Single)
-  fullName: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: SpringConstraint.IterateSpringConstraint(ref ConstraintData, float)
-  nameWithType.vb: SpringConstraint.IterateSpringConstraint(ConstraintData, Single)
+- uid: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateSpringConstraint(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateSpringConstraint(ConstraintData, TimeStep)
+  fullName: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: SpringConstraint.IterateSpringConstraint(ref ConstraintData, in TimeStep)
+  nameWithType.vb: SpringConstraint.IterateSpringConstraint(ConstraintData, TimeStep)
 - uid: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint*
   name: IterateSpringConstraint
   href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_
@@ -16486,15 +16483,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint
   nameWithType: SpringConstraint.IterateSpringConstraint
-- uid: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name: PrepareForIterationSpringConstraint(ref ConstraintData, float)
-  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_
-  commentId: M:Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)
-  name.vb: PrepareForIterationSpringConstraint(ConstraintData, Single)
-  fullName: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(ref Jitter2.Dynamics.Constraints.ConstraintData, float)
-  fullName.vb: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData, Single)
-  nameWithType: SpringConstraint.PrepareForIterationSpringConstraint(ref ConstraintData, float)
-  nameWithType.vb: SpringConstraint.PrepareForIterationSpringConstraint(ConstraintData, Single)
+- uid: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationSpringConstraint(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationSpringConstraint(ConstraintData, TimeStep)
+  fullName: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: SpringConstraint.PrepareForIterationSpringConstraint(ref ConstraintData, in TimeStep)
+  nameWithType.vb: SpringConstraint.PrepareForIterationSpringConstraint(ConstraintData, TimeStep)
 - uid: Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint*
   name: PrepareForIterationSpringConstraint
   href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_
@@ -16671,6 +16668,96 @@ references:
   commentId: F:Jitter2.ThreadContext.ParallelWorker
   fullName: Jitter2.ThreadContext.ParallelWorker
   nameWithType: ThreadContext.ParallelWorker
+- uid: Jitter2.TimeStep
+  name: TimeStep
+  href: api/Jitter2.TimeStep.html
+  commentId: T:Jitter2.TimeStep
+  fullName: Jitter2.TimeStep
+  nameWithType: TimeStep
+- uid: Jitter2.TimeStep.#ctor(System.Single,System.Int32)
+  name: TimeStep(float, int)
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep__ctor_System_Single_System_Int32_
+  commentId: M:Jitter2.TimeStep.#ctor(System.Single,System.Int32)
+  name.vb: New(Single, Integer)
+  fullName: Jitter2.TimeStep.TimeStep(float, int)
+  fullName.vb: Jitter2.TimeStep.New(Single, Integer)
+  nameWithType: TimeStep.TimeStep(float, int)
+  nameWithType.vb: TimeStep.New(Single, Integer)
+- uid: Jitter2.TimeStep.#ctor*
+  name: TimeStep
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep__ctor_
+  commentId: Overload:Jitter2.TimeStep.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.TimeStep.TimeStep
+  fullName.vb: Jitter2.TimeStep.New
+  nameWithType: TimeStep.TimeStep
+  nameWithType.vb: TimeStep.New
+- uid: Jitter2.TimeStep.InverseStepDt
+  name: InverseStepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_InverseStepDt
+  commentId: P:Jitter2.TimeStep.InverseStepDt
+  fullName: Jitter2.TimeStep.InverseStepDt
+  nameWithType: TimeStep.InverseStepDt
+- uid: Jitter2.TimeStep.InverseStepDt*
+  name: InverseStepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_InverseStepDt_
+  commentId: Overload:Jitter2.TimeStep.InverseStepDt
+  isSpec: "True"
+  fullName: Jitter2.TimeStep.InverseStepDt
+  nameWithType: TimeStep.InverseStepDt
+- uid: Jitter2.TimeStep.InverseSubstepDt
+  name: InverseSubstepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_InverseSubstepDt
+  commentId: P:Jitter2.TimeStep.InverseSubstepDt
+  fullName: Jitter2.TimeStep.InverseSubstepDt
+  nameWithType: TimeStep.InverseSubstepDt
+- uid: Jitter2.TimeStep.InverseSubstepDt*
+  name: InverseSubstepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_InverseSubstepDt_
+  commentId: Overload:Jitter2.TimeStep.InverseSubstepDt
+  isSpec: "True"
+  fullName: Jitter2.TimeStep.InverseSubstepDt
+  nameWithType: TimeStep.InverseSubstepDt
+- uid: Jitter2.TimeStep.StepDt
+  name: StepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_StepDt
+  commentId: P:Jitter2.TimeStep.StepDt
+  fullName: Jitter2.TimeStep.StepDt
+  nameWithType: TimeStep.StepDt
+- uid: Jitter2.TimeStep.StepDt*
+  name: StepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_StepDt_
+  commentId: Overload:Jitter2.TimeStep.StepDt
+  isSpec: "True"
+  fullName: Jitter2.TimeStep.StepDt
+  nameWithType: TimeStep.StepDt
+- uid: Jitter2.TimeStep.SubstepCount
+  name: SubstepCount
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_SubstepCount
+  commentId: P:Jitter2.TimeStep.SubstepCount
+  fullName: Jitter2.TimeStep.SubstepCount
+  nameWithType: TimeStep.SubstepCount
+- uid: Jitter2.TimeStep.SubstepCount*
+  name: SubstepCount
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_SubstepCount_
+  commentId: Overload:Jitter2.TimeStep.SubstepCount
+  isSpec: "True"
+  fullName: Jitter2.TimeStep.SubstepCount
+  nameWithType: TimeStep.SubstepCount
+- uid: Jitter2.TimeStep.SubstepDt
+  name: SubstepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_SubstepDt
+  commentId: P:Jitter2.TimeStep.SubstepDt
+  fullName: Jitter2.TimeStep.SubstepDt
+  nameWithType: TimeStep.SubstepDt
+- uid: Jitter2.TimeStep.SubstepDt*
+  name: SubstepDt
+  href: api/Jitter2.TimeStep.html#Jitter2_TimeStep_SubstepDt_
+  commentId: Overload:Jitter2.TimeStep.SubstepDt
+  isSpec: "True"
+  fullName: Jitter2.TimeStep.SubstepDt
+  nameWithType: TimeStep.SubstepDt
 - uid: Jitter2.Unmanaged
   name: Jitter2.Unmanaged
   href: api/Jitter2.Unmanaged.html

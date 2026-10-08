@@ -185,10 +185,10 @@ removing three translational degrees of freedom.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -333,7 +333,7 @@ public JVector Anchor2 { get; set; }</code></pre>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L215"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -509,8 +509,8 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
 
   <a id="Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IterateBallSocket(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_BallSocket_IterateBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.BallSocket.IterateBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IterateBallSocket(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L217"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -518,14 +518,14 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IterateBallSocket(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IterateBallSocket(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -542,8 +542,8 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
 
   <a id="Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationBallSocket(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_BallSocket_PrepareForIterationBallSocket_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.BallSocket.PrepareForIterationBallSocket(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationBallSocket(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/BallSocket.cs/#L140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -551,14 +551,14 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.ht
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationBallSocket(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationBallSocket(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

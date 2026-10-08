@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_World_WorldStep" data-uid="Jitter2.World.WorldStep" class="text-break">
-Delegate World.WorldStep  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L155"><i class="bi bi-code-slash"></i></a>
+Delegate World.WorldStep  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -102,14 +102,13 @@ Delegate World.WorldStep  <a class="header-action link-secondary" title="View so
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate void World.WorldStep(float dt)</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate void World.WorldStep(TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>dt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The duration in seconds: the full step duration for <a class="xref" href="Jitter2.World.html#Jitter2_World_PreStep">PreStep</a>/<a class="xref" href="Jitter2.World.html#Jitter2_World_PostStep">PostStep</a>,
-or the substep duration for <a class="xref" href="Jitter2.World.html#Jitter2_World_PreSubStep">PreSubStep</a>/<a class="xref" href="Jitter2.World.html#Jitter2_World_PostSubStep">PostSubStep</a>.</p>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd><p>The full step and substep timing information.</p>
 </dd>
   </dl>
 
@@ -128,7 +127,7 @@ or the substep duration for <a class="xref" href="Jitter2.World.html#Jitter2_Wor
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L155" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L152" class="edit-link">Edit this page</a>
         </div>
 
 

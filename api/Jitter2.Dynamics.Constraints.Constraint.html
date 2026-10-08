@@ -789,7 +789,7 @@ unmanaged header when the constraint is enabled.</p>
   <a id="Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint_" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint*"></a>
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)">
-  RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)
+  RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L298"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -797,14 +797,14 @@ unmanaged header when the constraint is enabled.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected static uint RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt; prepare, delegate*&lt;ref ConstraintData, float, void&gt; iterate)</code></pre>
+    <pre><code class="lang-csharp hljs">protected static uint RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt; prepare, delegate*&lt;ref ConstraintData, in TimeStep, void&gt; iterate)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>prepare</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><code>prepare</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, in <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
     <dd></dd>
-    <dt><code>iterate</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><code>iterate</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a>, in <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
     <dd></dd>
   </dl>
 
@@ -827,7 +827,7 @@ unmanaged header when the constraint is enabled.</p>
   <a id="Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint_" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint*"></a>
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)">
-  RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)
+  RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L305"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -835,14 +835,14 @@ unmanaged header when the constraint is enabled.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected static uint RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt; prepare, delegate*&lt;ref SmallConstraintData, float, void&gt; iterate)</code></pre>
+    <pre><code class="lang-csharp hljs">protected static uint RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt; prepare, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt; iterate)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>prepare</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.SmallConstraintData.html">SmallConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><code>prepare</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.SmallConstraintData.html">SmallConstraintData</a>, in <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
     <dd></dd>
-    <dt><code>iterate</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.SmallConstraintData.html">SmallConstraintData</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
+    <dt><code>iterate</code> delegate*&lt;ref <a class="xref" href="Jitter2.Dynamics.Constraints.SmallConstraintData.html">SmallConstraintData</a>, in <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a>, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.void">void</a>&gt;</dt>
     <dd></dd>
   </dl>
 

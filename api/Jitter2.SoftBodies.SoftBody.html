@@ -452,8 +452,8 @@ Safe to call more than once, including after the world has been cleared or dispo
 
   <a id="Jitter2_SoftBodies_SoftBody_WorldOnPostStep_" data-uid="Jitter2.SoftBodies.SoftBody.WorldOnPostStep*"></a>
 
-  <h3 id="Jitter2_SoftBodies_SoftBody_WorldOnPostStep_System_Single_" data-uid="Jitter2.SoftBodies.SoftBody.WorldOnPostStep(System.Single)">
-  WorldOnPostStep(float)
+  <h3 id="Jitter2_SoftBodies_SoftBody_WorldOnPostStep_Jitter2_TimeStep_" data-uid="Jitter2.SoftBodies.SoftBody.WorldOnPostStep(Jitter2.TimeStep)">
+  WorldOnPostStep(TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBody.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -462,13 +462,13 @@ Safe to call more than once, including after the world has been cleared or dispo
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual void WorldOnPostStep(float dt)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual void WorldOnPostStep(TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>dt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The time step.</p>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd><p>The full step and substep timing information.</p>
 </dd>
   </dl>
 

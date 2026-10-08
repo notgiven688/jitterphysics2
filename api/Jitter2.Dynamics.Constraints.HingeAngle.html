@@ -185,10 +185,10 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -301,7 +301,7 @@ relative rotation vector onto the hinge axis, matching the limit coordinate.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L305"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -586,8 +586,8 @@ either value in <code class="paramref">limit</code> is not finite.</p>
 
   <a id="Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IterateHingeAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_IterateHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.IterateHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IterateHingeAngle(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L307"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -595,14 +595,14 @@ either value in <code class="paramref">limit</code> is not finite.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IterateHingeAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IterateHingeAngle(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -619,8 +619,8 @@ either value in <code class="paramref">limit</code> is not finite.</p>
 
   <a id="Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationHingeAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_HingeAngle_PrepareForIterationHingeAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.HingeAngle.PrepareForIterationHingeAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationHingeAngle(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -628,14 +628,14 @@ either value in <code class="paramref">limit</code> is not finite.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

@@ -184,10 +184,10 @@ Class FixedAngle  <a class="header-action link-secondary" title="View source" hr
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -264,7 +264,7 @@ Class FixedAngle  <a class="header-action link-secondary" title="View source" hr
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/FixedAngle.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -427,8 +427,8 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.ht
 
   <a id="Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IterateFixedAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_FixedAngle_IterateFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.IterateFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IterateFixedAngle(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/FixedAngle.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -436,14 +436,14 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.ht
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IterateFixedAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IterateFixedAngle(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -460,8 +460,8 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.ht
 
   <a id="Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationFixedAngle(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_FixedAngle_PrepareForIterationFixedAngle_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.FixedAngle.PrepareForIterationFixedAngle(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationFixedAngle(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/FixedAngle.cs/#L82"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -469,14 +469,14 @@ Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.ht
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

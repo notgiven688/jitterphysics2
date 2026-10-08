@@ -186,10 +186,10 @@ freedom; three if the limit is enforced.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -298,7 +298,7 @@ freedom; three if the limit is enforced.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnLine.cs/#L331"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by this constraint during the last step.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -605,8 +605,8 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
   <a id="Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IteratePointOnLine(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_PointOnLine_IteratePointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.IteratePointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IteratePointOnLine(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnLine.cs/#L365"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -614,14 +614,14 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IteratePointOnLine(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IteratePointOnLine(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -638,8 +638,8 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
   <a id="Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationPointOnLine(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_PointOnLine_PrepareForIterationPointOnLine_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.PointOnLine.PrepareForIterationPointOnLine(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationPointOnLine(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/PointOnLine.cs/#L148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -647,14 +647,14 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationPointOnLine(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

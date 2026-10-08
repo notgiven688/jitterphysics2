@@ -319,8 +319,8 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <a id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  Iterate(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_Iterate_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.Iterate(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  Iterate(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -328,14 +328,14 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void Iterate(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly void Iterate(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 
@@ -352,8 +352,8 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
 
   <a id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIteration(ref ConstraintData, float)
+  <h3 id="Jitter2_Dynamics_Constraints_ConstraintData_PrepareForIteration_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.ConstraintData.PrepareForIteration(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIteration(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -361,14 +361,14 @@ across simulation steps. Not safe to access concurrently with <a class="xref" hr
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly void PrepareForIteration(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly void PrepareForIteration(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd></dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
     <dd></dd>
   </dl>
 

@@ -840,8 +840,8 @@ For overlapping contact points, it points from <code class="paramref">point2</co
 
   <a id="Jitter2_Dynamics_ContactData_PrepareForIteration_" data-uid="Jitter2.Dynamics.ContactData.PrepareForIteration*"></a>
 
-  <h3 id="Jitter2_Dynamics_ContactData_PrepareForIteration_System_Single_" data-uid="Jitter2.Dynamics.ContactData.PrepareForIteration(System.Single)">
-  PrepareForIteration(float)
+  <h3 id="Jitter2_Dynamics_ContactData_PrepareForIteration_Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep@)">
+  PrepareForIteration(in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -850,13 +850,13 @@ For overlapping contact points, it points from <code class="paramref">point2</co
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void PrepareForIteration(float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public void PrepareForIteration(in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Inverse of the timestep (1/dt).</p>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd><p>The full step and substep timing information.</p>
 </dd>
   </dl>
 

@@ -186,10 +186,10 @@ the line connecting the anchors.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, float, void&gt;, delegate*&lt;ref ConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
-      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, float, void&gt;, delegate*&lt;ref SmallConstraintData, float, void&gt;)</a>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
@@ -369,7 +369,7 @@ which can be set directly or computed from physical parameters using
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the accumulated impulse applied by the spring.</p>
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -582,8 +582,8 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
   <a id="Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_" data-uid="Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint*"></a>
 
-  <h3 id="Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  IterateSpringConstraint(ref ConstraintData, float)
+  <h3 id="Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IterateSpringConstraint(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L335"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -592,7 +592,7 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void IterateSpringConstraint(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void IterateSpringConstraint(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -600,8 +600,8 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd><p>The constraint data reference.</p>
 </dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The inverse substep duration (1/dt).</p>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd><p>The full step and substep timing information.</p>
 </dd>
   </dl>
 
@@ -618,8 +618,8 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
   <a id="Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_" data-uid="Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint*"></a>
 
-  <h3 id="Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__System_Single_" data-uid="Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,System.Single)">
-  PrepareForIterationSpringConstraint(ref ConstraintData, float)
+  <h3 id="Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationSpringConstraint(ref ConstraintData, in TimeStep)
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L258"><i class="bi bi-code-slash"></i></a>
   </h3>
 
@@ -628,7 +628,7 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, float idt)</code></pre>
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -636,8 +636,8 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
     <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
     <dd><p>The constraint data reference.</p>
 </dd>
-    <dt><code>idt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The inverse substep duration (1/dt).</p>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd><p>The full step and substep timing information.</p>
 </dd>
   </dl>
 
