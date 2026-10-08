@@ -260,4 +260,59 @@ public class ConvexPolytopeTests
 
         Assert.That(wrong, Is.Zero, first);
     }
+
+    [Test]
+    public void MprEpa_DepthAlwaysMatchesItsNormal()
+    {
+        ISupportMappable[] shapes =
+        [
+            SupportPrimitives.CreateBox(new JVector((Real)0.5, (Real)0.5, (Real)0.5)),
+            SupportPrimitives.CreateBox(new JVector(2, (Real)0.25, 1)),
+            SupportPrimitives.CreateCylinder((Real)0.5, (Real)0.5),
+            SupportPrimitives.CreateCapsule((Real)0.3, (Real)0.5),
+            SupportPrimitives.CreateSphere((Real)0.5),
+        ];
+        var random = new Random(11);
+        int overlapping = 0;
+        int wrong = 0;
+        string first = "";
+
+        JVector RandomDirection() => JVector.Normalize(new JVector((Real)random.NextDouble() - (Real)0.5, (Real)random.NextDouble() - (Real)0.5, (Real)random.NextDouble() - (Real)0.5));
+
+        for (int i = 0; i < 4000; i++)
+        {
+            var a = shapes[random.Next(shapes.Length)];
+            var b = shapes[random.Next(shapes.Length)];
+            JQuaternion orientation = i % 3 == 0
+                ? JQuaternion.CreateRotationY((Real)(random.NextDouble() * 6))
+                : JQuaternion.CreateFromAxisAngle(RandomDirection(), (Real)(random.NextDouble() * 6));
+            JVector direction = i % 3 == 0 ? JVector.UnitY : RandomDirection();
+            JVector position = direction * (Real)(0.4 + random.NextDouble() * 1.4);
+
+            if (i % 2 == 1)
+            {
+                // Just touching along the direction, then pushed in a little: the shallow contacts resting bodies make.
+                Real outside = 6, inside = 0;
+                for (int k = 0; k < 40; k++)
+                {
+                    Real middle = (outside + inside) * (Real)0.5;
+                    if (NarrowPhase.Overlap(a, b, orientation, direction * middle)) inside = middle;
+                    else outside = middle;
+                }
+                position = direction * (inside - (Real)(random.NextDouble() * 0.03));
+            }
+
+            if (!NarrowPhase.MprEpa(a, b, orientation, position, out _, out _, out JVector normal, out Real penetration)) continue;
+            overlapping++;
+
+            // A depth found along a normal is how far the shapes reach past each other along it.
+            MinkowskiDifference.Support(a, b, orientation, position, normal, out var support);
+            Real along = JVector.Dot(support.V, normal);
+            if (MathR.Abs(along - penetration) <= (Real)1e-3) continue;
+            if (wrong++ == 0) first = $"{a.GetType().Name} into {b.GetType().Name} gave depth {penetration} but the shapes reach {along} past each other along its normal {normal}";
+        }
+
+        Assert.That(overlapping, Is.GreaterThan(1000));
+        Assert.That(wrong, Is.Zero, $"{wrong} of {overlapping} wrong, first: {first}");
+    }
 }
