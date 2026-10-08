@@ -53,6 +53,9 @@ public sealed class Arbiter
     /// or access the handle after the arbiter's collision lifetime ends.
     /// </remarks>
     public JHandle<ContactData> Handle { get; internal set; }
+
+    /// <summary>Incremented each time the arbiter is returned to the pool.</summary>
+    internal uint Generation;
 }
 
 /// <summary>

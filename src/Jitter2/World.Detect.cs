@@ -435,6 +435,7 @@ public sealed partial class World
         arbiter.Handle = JHandle<ContactData>.Zero;
         arbiter.Body1 = null!;
         arbiter.Body2 = null!;
+        arbiter.Generation++;
         arbiterPool.Push(arbiter);
     }
 
