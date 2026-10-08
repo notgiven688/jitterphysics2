@@ -25,17 +25,17 @@ public class DistanceLimitRegressionTests
         limit.Bias = limit.Softness = 0;
         body.Velocity = JVector.UnitY;
 
-        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
-        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
+        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(limit.Impulse, Is.EqualTo((Real)(-1)).Within(Tolerance));
         Assert.That(body.Velocity.Length(), Is.LessThan(Tolerance));
 
         // Updated anchors must not amplify the cached impulse when their separation grows.
         limit.Anchor2 = JVector.UnitY * (10 * distance);
-        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.Velocity.Y, Is.EqualTo((Real)(-1)).Within(Tolerance));
-        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.Velocity.Length(), Is.LessThan(Tolerance));
     }
 
@@ -49,20 +49,20 @@ public class DistanceLimitRegressionTests
         limit.Initialize(JVector.Zero, JVector.UnitY, LinearLimit.Fixed);
         limit.Bias = limit.Softness = 0;
         body.Velocity = JVector.UnitY;
-        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
-        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
+        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(limit.Impulse, Is.EqualTo((Real)(-1)).Within(Tolerance));
 
         limit.Anchor2 = JVector.Zero;
         body.Velocity = JVector.UnitY;
-        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
-        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
+        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(limit.Impulse, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(JVector.UnitY));
 
         limit.Anchor2 = JVector.UnitY;
-        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, 100);
-        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, 100);
+        DistanceLimit.PrepareForIterationDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
+        DistanceLimit.IterateDistanceLimit(ref limit.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.Velocity.Length(), Is.LessThan(Tolerance));
     }
 }

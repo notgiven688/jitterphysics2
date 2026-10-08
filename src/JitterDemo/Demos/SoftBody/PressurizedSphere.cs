@@ -33,9 +33,9 @@ public class SoftBodySphere : SoftBodyCloth
         }
     }
 
-    protected override void WorldOnPostStep(float dt)
+    protected override void WorldOnPostStep(TimeStep timeStep)
     {
-        base.WorldOnPostStep(dt);
+        base.WorldOnPostStep(timeStep);
 
         if (!IsActive) return;
 

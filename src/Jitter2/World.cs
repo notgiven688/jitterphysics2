@@ -148,11 +148,8 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Delegate for per-step and per-substep callbacks.
     /// </summary>
-    /// <param name="dt">
-    /// The duration in seconds: the full step duration for <see cref="PreStep"/>/<see cref="PostStep"/>,
-    /// or the substep duration for <see cref="PreSubStep"/>/<see cref="PostSubStep"/>.
-    /// </param>
-    public delegate void WorldStep(Real dt);
+    /// <param name="timeStep">The full step and substep timing information.</param>
+    public delegate void WorldStep(TimeStep timeStep);
 
     // Step callbacks.
 
@@ -162,7 +159,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// This event is invoked once per call to <see cref="Step"/> and receives the full
-    /// step time <c>dt</c>. It can be used to apply external forces, modify bodies,
+    /// step and substep timing information. It can be used to apply external forces, modify bodies,
     /// or gather per-step diagnostics before the simulation advances.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
@@ -174,7 +171,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// This event is invoked once per call to <see cref="Step"/> and receives the full
-    /// step time <c>dt</c>. At this point, all body states represent the final results
+    /// step and substep timing information. At this point, all body states represent the final results
     /// of the step.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
@@ -185,8 +182,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// A simulation step may be divided into multiple substeps for stability.
-    /// This event is invoked once per substep and receives the substep duration
-    /// (<c>dt / substepCount</c>). It is called immediately before force integration
+    /// This event is invoked once per substep and receives the full step and substep
+    /// timing information. It is called immediately before force integration
     /// and constraint solving for the substep.
     /// Do not perform topology-changing world modifications here (for example
     /// adding or removing bodies, constraints, or contacts, or changing body
@@ -199,7 +196,7 @@ public sealed partial class World : IDisposable
     /// Raised at the end of each substep during a simulation step.
     /// </summary>
     /// <remarks>
-    /// This event is invoked once per substep and receives the substep duration.
+    /// This event is invoked once per substep and receives the full step and substep timing information.
     /// It is called after integration and constraint solving for the substep
     /// have completed.
     /// Do not perform topology-changing world modifications here (for example
@@ -414,11 +411,9 @@ public sealed partial class World : IDisposable
     private int velocityRelaxations = 4;
     private int substeps = 1;
 
-    private Real stepDt = (Real)0.01;
+    private TimeStep timeStep = new((Real)0.01);
     // The dt used by the last broadphase update; before the first Step, allow a conservative sweep.
     private Real broadphaseStepDt = (Real)0.1;
-    private Real substepDt = (Real)0.01;
-    private Real invStepDt = (Real)100.0;
 
     internal Real BroadphaseStepDt => broadphaseStepDt;
 

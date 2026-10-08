@@ -108,8 +108,8 @@ public class SoftBody
     /// <summary>
     /// Called after each world step to update the activation state of the soft body's shapes.
     /// </summary>
-    /// <param name="dt">The time step.</param>
-    protected virtual void WorldOnPostStep(Real dt)
+    /// <param name="timeStep">The full step and substep timing information.</param>
+    protected virtual void WorldOnPostStep(TimeStep timeStep)
     {
         // World.Clear removes the vertices without going through SoftBody.Destroy.
         if (Vertices.Count > 0 && !Vertices[0].IsValid)

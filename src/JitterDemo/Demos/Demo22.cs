@@ -133,9 +133,9 @@ public class Demo22 : IDemo, ICleanDemo, IDrawUpdate
     }
 
     // Called automatically by Jitter before every physics sub-step
-    private void OnPreStep(float dt)
+    private void OnPreStep(TimeStep timeStep)
     {
-        physicsTime += dt;
+        physicsTime += timeStep.SubstepDt;
         float globalDist = (float)physicsTime * Curve.Speed;
 
         foreach (var plank in planks)

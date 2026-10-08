@@ -147,7 +147,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         set => MaximumTorque = value;
     }
 
-    public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationAngularMotor(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
 
@@ -162,13 +162,13 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
-        data.MaxLambda = (Real)1.0 / idt * data.MaxForce;
+        data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
         body1.AngularVelocity -= JVector.Transform(j1 * data.AccumulatedImpulse, body1.InverseInertiaWorld);
         body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
     }
 
-    public static void IterateAngularMotor(ref ConstraintData constraint, Real idt)
+    public static void IterateAngularMotor(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, AngularMotorData>(ref constraint);
 

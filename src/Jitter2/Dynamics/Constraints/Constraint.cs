@@ -43,17 +43,17 @@ public unsafe struct SmallConstraintData
     public readonly bool IsEnabled => DispatchId != 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void PrepareForIteration(ref SmallConstraintData constraint, Real idt)
+    public readonly void PrepareForIteration(ref SmallConstraintData constraint, in TimeStep timeStep)
     {
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
-        ((delegate*<ref SmallConstraintData, Real, void>)dispatch.Prepare)(ref constraint, idt);
+        ((delegate*<ref SmallConstraintData, in TimeStep, void>)dispatch.Prepare)(ref constraint, timeStep);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Iterate(ref SmallConstraintData constraint, Real idt)
+    public readonly void Iterate(ref SmallConstraintData constraint, in TimeStep timeStep)
     {
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
-        ((delegate*<ref SmallConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
+        ((delegate*<ref SmallConstraintData, in TimeStep, void>)dispatch.Iterate)(ref constraint, timeStep);
     }
 }
 
@@ -88,17 +88,17 @@ public unsafe struct ConstraintData
     public readonly bool IsEnabled => DispatchId != 0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void PrepareForIteration(ref ConstraintData constraint, Real idt)
+    public readonly void PrepareForIteration(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
-        ((delegate*<ref ConstraintData, Real, void>)dispatch.Prepare)(ref constraint, idt);
+        ((delegate*<ref ConstraintData, in TimeStep, void>)dispatch.Prepare)(ref constraint, timeStep);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Iterate(ref ConstraintData constraint, Real idt)
+    public readonly void Iterate(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref readonly var dispatch = ref ConstraintDispatchTable.Get(DispatchId);
-        ((delegate*<ref ConstraintData, Real, void>)dispatch.Iterate)(ref constraint, idt);
+        ((delegate*<ref ConstraintData, in TimeStep, void>)dispatch.Iterate)(ref constraint, timeStep);
     }
 }
 
@@ -114,8 +114,8 @@ internal static unsafe class ConstraintDispatchTable
     private static Entry[] entries = [default];
 
     public static uint Register(
-        delegate*<ref ConstraintData, Real, void> prepare,
-        delegate*<ref ConstraintData, Real, void> iterate)
+        delegate*<ref ConstraintData, in TimeStep, void> prepare,
+        delegate*<ref ConstraintData, in TimeStep, void> iterate)
     {
         if (prepare == null) throw new ArgumentNullException(nameof(prepare));
         if (iterate == null) throw new ArgumentNullException(nameof(iterate));
@@ -127,8 +127,8 @@ internal static unsafe class ConstraintDispatchTable
     }
 
     public static uint Register(
-        delegate*<ref SmallConstraintData, Real, void> prepare,
-        delegate*<ref SmallConstraintData, Real, void> iterate)
+        delegate*<ref SmallConstraintData, in TimeStep, void> prepare,
+        delegate*<ref SmallConstraintData, in TimeStep, void> iterate)
     {
         if (prepare == null) throw new ArgumentNullException(nameof(prepare));
         if (iterate == null) throw new ArgumentNullException(nameof(iterate));
@@ -296,15 +296,15 @@ public abstract class Constraint : IDebugDrawable
     protected uint DispatchId { get; set; }
 
     protected static unsafe uint RegisterFullConstraint(
-        delegate*<ref ConstraintData, Real, void> prepare,
-        delegate*<ref ConstraintData, Real, void> iterate)
+        delegate*<ref ConstraintData, in TimeStep, void> prepare,
+        delegate*<ref ConstraintData, in TimeStep, void> iterate)
     {
         return ConstraintDispatchTable.Register(prepare, iterate);
     }
 
     protected static unsafe uint RegisterSmallConstraint(
-        delegate*<ref SmallConstraintData, Real, void> prepare,
-        delegate*<ref SmallConstraintData, Real, void> iterate)
+        delegate*<ref SmallConstraintData, in TimeStep, void> prepare,
+        delegate*<ref SmallConstraintData, in TimeStep, void> iterate)
     {
         return ConstraintDispatchTable.Register(prepare, iterate);
     }

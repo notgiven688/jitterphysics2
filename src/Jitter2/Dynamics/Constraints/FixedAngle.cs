@@ -79,7 +79,7 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         data.Q0 = q2.Conjugate() * q1;
     }
 
-    public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationFixedAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
 
@@ -102,13 +102,13 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
             data.Jacobian).ToMatrix();
 
-        data.EffectiveMass.M11 += data.Softness * idt;
-        data.EffectiveMass.M22 += data.Softness * idt;
-        data.EffectiveMass.M33 += data.Softness * idt;
+        data.EffectiveMass.M11 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M22 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M33 += data.Softness * timeStep.InverseSubstepDt;
 
         data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
-        data.Bias = -error * data.BiasFactor * idt;
+        data.Bias = -error * data.BiasFactor * timeStep.InverseStepDt;
 
         body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body1.InverseInertiaWorld);
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
@@ -147,18 +147,18 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public JVector Impulse => Data.AccumulatedImpulse;
 
-    public static void IterateFixedAngle(ref ConstraintData constraint, Real idt)
+    public static void IterateFixedAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, FixedAngleData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
         ref RigidBodyData body2 = ref constraint.Body2.Data;
 
         JVector jv = JVector.Transform(body1.AngularVelocity - body2.AngularVelocity, data.Jacobian);
-        JVector softness = data.AccumulatedImpulse * (data.Softness * idt);
+        JVector softness = data.AccumulatedImpulse * (data.Softness * timeStep.InverseSubstepDt);
         JVector lambda = -(Real)1.0 * JVector.Transform(jv + data.Bias + softness, data.EffectiveMass);
 
         data.AccumulatedImpulse += lambda;

@@ -223,12 +223,12 @@ public class AllowedMotionTests
         ContactData contact = CreateContact(world, body, JVector.Normalize(new JVector(1, 1, 0)));
         if (accelerated)
         {
-            contact.PrepareForIterationAccelerated(100);
+            contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
             contact.IterateAccelerated(false);
         }
         else
         {
-            contact.PrepareForIterationScalar(100);
+            contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
             contact.IterateScalar(false);
         }
 
@@ -246,8 +246,8 @@ public class AllowedMotionTests
         body.AllowedMotion = MotionAxes.None;
         ContactData contact = CreateContact(world, body, JVector.UnitY);
         contact.Contact0.PenaltyBias = 1;
-        if (accelerated) contact.PrepareForIterationAccelerated(100);
-        else contact.PrepareForIterationScalar(100);
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
         for (int i = 0; i < 3; i++)
         {
             if (accelerated) contact.IterateAccelerated(true);
@@ -290,12 +290,12 @@ public class AllowedMotionTests
             contact.UsageMask = ContactData.MaskContact0;
             if (accelerated)
             {
-                contact.PrepareForIterationAccelerated(100);
+                contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
                 contact.IterateAccelerated(false);
             }
             else
             {
-                contact.PrepareForIterationScalar(100);
+                contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
                 contact.IterateScalar(false);
             }
 
@@ -620,12 +620,12 @@ public class AllowedMotionTests
         ContactData contact = CreateContact(world, body, JVector.UnitZ, JVector.UnitX);
         if (accelerated)
         {
-            contact.PrepareForIterationAccelerated(100);
+            contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
             contact.IterateAccelerated(false);
         }
         else
         {
-            contact.PrepareForIterationScalar(100);
+            contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
             contact.IterateScalar(false);
         }
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));

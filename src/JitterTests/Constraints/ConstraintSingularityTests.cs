@@ -19,14 +19,14 @@ public class ConstraintSingularityTests
         spring.Bias = 0;
         body.Velocity = JVector.UnitY;
 
-        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
-        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, 100);
+        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
+        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
         Real expectedImpulse = -(Real)1 / (1 + 100 * (Real)softness);
         Assert.That(spring.Impulse, Is.EqualTo(expectedImpulse).Within((Real)1e-5));
         Assert.That(body.Velocity.Y, Is.EqualTo(1 + expectedImpulse).Within((Real)1e-5));
 
         spring.Anchor2 = JVector.UnitY * (Real)1e-5;
-        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
+        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.Velocity.Y, Is.EqualTo(1 + 2 * expectedImpulse).Within((Real)1e-5));
     }
 
@@ -41,21 +41,21 @@ public class ConstraintSingularityTests
         spring.Softness = (Real)softness;
         spring.Bias = 0;
         body.Velocity = JVector.UnitY;
-        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
-        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, 100);
+        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
+        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(spring.Impulse, Is.Not.Zero);
 
         spring.Anchor2 = JVector.Zero;
         spring.Bias = (Real)0.2;
         body.Velocity = JVector.UnitY;
-        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
-        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, 100);
+        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
+        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(spring.Impulse, Is.Zero);
         Assert.That(body.Velocity, Is.EqualTo(JVector.UnitY));
 
         spring.Anchor2 = JVector.UnitY;
-        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, 100);
-        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, 100);
+        SpringConstraint.PrepareForIterationSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
+        SpringConstraint.IterateSpringConstraint(ref spring.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.Velocity.Y, Is.LessThan((Real)0.01));
     }
 
@@ -148,7 +148,7 @@ public class ConstraintSingularityTests
         twist.Initialize(axis, axis, AngularLimit.Fixed);
         body2.Orientation = JQuaternion.CreateFromAxisAngle(axis, MathR.PI - (Real)0.01) * body2.Orientation;
         body2.Orientation = JQuaternion.CreateFromAxisAngle(MathHelper.CreateOrthonormal(axis), (Real)swing) * body2.Orientation;
-        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, 100);
+        TwistAngle.PrepareForIterationTwistAngle(ref twist.Handle.Data, new TimeStep((Real)1.0 / 100));
         JVector jacobian = twist.Data.Jacobian;
         JQuaternion initial = body1.Orientation;
         Real delta = (Real)0.0001;
@@ -194,8 +194,8 @@ public class ConstraintSingularityTests
             new AngularLimit((JAngle)0, (JAngle)(Real)5e-6));
         cone.Softness = 0;
         body.Orientation = JQuaternion.CreateRotationX((Real)1e-5);
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(body.AngularVelocity.X, Is.EqualTo((Real)(-0.0001)).Within((Real)1e-6));
     }
 }

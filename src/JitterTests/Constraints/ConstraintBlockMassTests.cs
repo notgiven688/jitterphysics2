@@ -25,8 +25,8 @@ public class ConstraintBlockMassTests
         JVector initial = new(3, 2, 1);
         body.AngularVelocity = initial;
 
-        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, 100);
-        BallSocket.IterateBallSocket(ref joint.Handle.Data, 100);
+        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        BallSocket.IterateBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         // With no translation response, only rotation about the anchor direction is free.
         JVector expected = anchor * (anchor * initial);
@@ -50,8 +50,8 @@ public class ConstraintBlockMassTests
         body.Orientation = new JQuaternion(1, 0, 0, 0);
         body.AngularVelocity = JVector.UnitY;
 
-        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, 100);
-        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, 100);
+        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         // Y rotation is responsive even where a quaternion-vector row for X is singular.
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
@@ -71,8 +71,8 @@ public class ConstraintBlockMassTests
         joint.Softness = joint.Bias = 0;
         body.AngularVelocity = new JVector(0, 2, 3);
 
-        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, 100);
-        BallSocket.IterateBallSocket(ref joint.Handle.Data, 100);
+        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        BallSocket.IterateBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         // Both transverse rows are independently solvable, despite their different response scales.
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
@@ -91,8 +91,8 @@ public class ConstraintBlockMassTests
         joint.Softness = joint.Bias = 0;
         body.AngularVelocity = new JVector(3, 2, 1);
 
-        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, 100);
-        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, 100);
+        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         // Infinite inertia about X cannot respond, but must not disable the Y/Z rows.
         Assert.That(JVector.MaxAbs(body.AngularVelocity - new JVector(3, 0, 0)), Is.LessThan(Tolerance));
@@ -113,8 +113,8 @@ public class ConstraintBlockMassTests
         joint.Softness = joint.Bias = 0;
         body.Velocity = new JVector(1, -2, 3);
 
-        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, 100);
-        BallSocket.IterateBallSocket(ref joint.Handle.Data, 100);
+        BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        BallSocket.IterateBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(JVector.MaxAbs(body.Velocity), Is.LessThan(Tolerance));
         // Multiplying back by inverse mass avoids overflow when checking the tiny-mass impulse.
@@ -137,8 +137,8 @@ public class ConstraintBlockMassTests
         joint.Softness = joint.Bias = 0;
         body.AngularVelocity = new JVector(0, -2, 3);
 
-        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, 100);
-        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, 100);
+        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
         Assert.That(Real.IsFinite(JVector.MaxAbs(joint.Impulse)), Is.True);
@@ -157,8 +157,8 @@ public class ConstraintBlockMassTests
         joint.Softness = joint.Bias = 0;
         body.AngularVelocity = new JVector(1, -2, 3);
 
-        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, 100);
-        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, 100);
+        FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+        FixedAngle.IterateFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         // The determinant is finite even when an unscaled inverse's cofactors overflow.
         Assert.That(Real.IsFinite(JVector.MaxAbs(body.AngularVelocity)), Is.True);
@@ -179,8 +179,8 @@ public class ConstraintBlockMassTests
             joint.Initialize();
             joint.Softness = joint.Bias = 0;
             body.AngularVelocity = initial;
-            FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, 100);
-            FixedAngle.IterateFixedAngle(ref joint.Handle.Data, 100);
+            FixedAngle.PrepareForIterationFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            FixedAngle.IterateFixedAngle(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(body.AngularVelocity, Is.EqualTo(initial));
             Assert.That(joint.Impulse, Is.EqualTo(JVector.Zero));
         }
@@ -191,8 +191,8 @@ public class ConstraintBlockMassTests
             joint.Initialize(JVector.Zero);
             joint.Softness = joint.Bias = 0;
             body.Velocity = initial;
-            BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, 100);
-            BallSocket.IterateBallSocket(ref joint.Handle.Data, 100);
+            BallSocket.PrepareForIterationBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
+            BallSocket.IterateBallSocket(ref joint.Handle.Data, new TimeStep((Real)1.0 / 100));
             Assert.That(body.Velocity, Is.EqualTo(initial));
             Assert.That(joint.Impulse, Is.EqualTo(JVector.Zero));
         }

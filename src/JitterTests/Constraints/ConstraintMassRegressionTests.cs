@@ -26,8 +26,8 @@ public class ConstraintMassRegressionTests
         line.Softness = line.LimitSoftness = line.Bias = line.LimitBias = 0;
         body.Velocity = new JVector(1, 0, 2);
 
-        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, 100);
-        PointOnLine.IteratePointOnLine(ref line.Handle.Data, 100);
+        PointOnLine.PrepareForIterationPointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
+        PointOnLine.IteratePointOnLine(ref line.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(JVector.MaxAbs(body.Velocity - new JVector(0, 0, 2)), Is.LessThan(Tolerance));
     }
 
@@ -46,8 +46,8 @@ public class ConstraintMassRegressionTests
         hinge.Softness = hinge.LimitSoftness = hinge.Bias = hinge.LimitBias = 0;
         body.AngularVelocity = new JVector(1, 0, 2);
 
-        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, 100);
-        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, 100);
+        HingeAngle.PrepareForIterationHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
+        HingeAngle.IterateHingeAngle(ref hinge.Handle.Data, new TimeStep((Real)1.0 / 100));
         JVector expected = locked ? JVector.Zero : new JVector(0, 0, 2);
         Assert.That(JVector.MaxAbs(body.AngularVelocity - expected), Is.LessThan(Tolerance));
     }

@@ -10,10 +10,10 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    // Preserving speculative approach velocities changes the reference trajectory.
+    // Substep-scaled constraint softness changes the reference trajectory.
     // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x97C71CD9198DF3B9;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x7FF715683EED10D6;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x9AAE59A2FEDF9BA9;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x2D5082DD7FAEDA43;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -82,10 +82,10 @@ public class ReproducibilityTest
         }
 
         const Real dt = (Real)(1.0 / 100.0);
-        Real idt = (Real)1.0 / dt;
+        TimeStep timeStep = new(dt);
 
-        simdContact.PrepareForIterationAccelerated(idt);
-        scalarContact.PrepareForIterationScalar(idt);
+        simdContact.PrepareForIterationAccelerated(timeStep);
+        scalarContact.PrepareForIterationScalar(timeStep);
 
         AssertSolverStateEqual(simdContact, scalarContact, simdBody1, scalarBody1, simdBody2, scalarBody2, "prepare");
 

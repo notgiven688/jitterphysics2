@@ -704,7 +704,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal void Update(Real stepDt, Real substepDt)
+    internal void Update(in TimeStep timeStep)
     {
         ref RigidBodyData rigidBody = ref Data;
         MotionAxes axes = rigidBody.AllowedMotion;
@@ -715,7 +715,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         if (rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
             rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq)
         {
-            InternalSleepTime += stepDt;
+            InternalSleepTime += timeStep.StepDt;
         }
         else
         {
@@ -733,14 +733,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             rigidBody.AngularVelocity *= angularDampingMultiplier;
             rigidBody.Velocity *= linearDampingMultiplier;
 
-            rigidBody.DeltaVelocity = JVector.Multiply(Force, rigidBody.InverseMassVector) * substepDt;
-            rigidBody.DeltaAngularVelocity = JVector.Transform(Torque, rigidBody.InverseInertiaWorld) * substepDt;
+            rigidBody.DeltaVelocity = JVector.Multiply(Force, rigidBody.InverseMassVector) * timeStep.SubstepDt;
+            rigidBody.DeltaAngularVelocity = JVector.Transform(Torque, rigidBody.InverseInertiaWorld) * timeStep.SubstepDt;
 
             if (AffectedByGravity)
             {
                 JVector gravity = World.Gravity;
                 RestrictLinearMotion(ref gravity, axes);
-                rigidBody.DeltaVelocity += gravity * substepDt;
+                rigidBody.DeltaVelocity += gravity * timeStep.SubstepDt;
             }
 
             Force = JVector.Zero;

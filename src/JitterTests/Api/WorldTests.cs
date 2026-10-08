@@ -329,7 +329,7 @@ public class WorldTests
     {
         var world = new World();
         Real receivedDt = 0;
-        world.PreStep += dt => receivedDt = dt;
+        world.PreStep += dt => receivedDt = dt.StepDt;
         const Real expectedDt = 1f / 60f;
         world.Step(expectedDt, false);
         Assert.That(receivedDt, Is.EqualTo(expectedDt).Within(1e-6f));

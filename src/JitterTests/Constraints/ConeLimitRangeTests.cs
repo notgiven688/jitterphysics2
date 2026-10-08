@@ -91,13 +91,13 @@ public class ConeLimitRangeTests
         cone.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.FromDegree(0, 30));
         body.Orientation = JQuaternion.CreateRotationX(MathR.PI / 3);
         cone.Softness = 0;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
-        ConeLimit.IterateConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
+        ConeLimit.IterateConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
         Assert.That(cone.Impulse, Is.Not.Zero);
 
         cone.ResetWarmStart();
         body.AngularVelocity = JVector.Zero;
-        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, 100);
+        ConeLimit.PrepareForIterationConeLimit(ref cone.Handle.Data, new TimeStep((Real)1.0 / 100));
 
         Assert.That(cone.Impulse, Is.Zero);
         Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));

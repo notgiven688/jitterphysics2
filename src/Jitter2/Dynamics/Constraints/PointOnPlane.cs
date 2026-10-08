@@ -115,7 +115,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         (data.Min, data.Max) = limit;
     }
 
-    public static void PrepareForIterationPointOnPlane(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationPointOnPlane(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -170,11 +170,11 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
                              JVector.Transform(jacobian[1], body1.InverseInertiaWorld) * jacobian[1] +
                              JVector.Transform(jacobian[3], body2.InverseInertiaWorld) * jacobian[3];
 
-        data.EffectiveMass += (data.Softness * idt);
+        data.EffectiveMass += (data.Softness * timeStep.InverseSubstepDt);
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
-        data.Bias = error * data.BiasFactor * idt;
+        data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
         Real acc = data.AccumulatedImpulse;
 
@@ -218,11 +218,11 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public static void IteratePointOnPlane(ref ConstraintData constraint, Real idt)
+    public static void IteratePointOnPlane(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, SliderData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -235,7 +235,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         Real jv = jacobian[0] * body1.Velocity + jacobian[1] * body1.AngularVelocity + jacobian[2] * body2.Velocity +
                    jacobian[3] * body2.AngularVelocity;
 
-        Real softness = data.AccumulatedImpulse * data.Softness * idt;
+        Real softness = data.AccumulatedImpulse * data.Softness * timeStep.InverseSubstepDt;
 
         Real lambda = -(Real)1.0 * (jv + data.Bias + softness) * data.EffectiveMass;
 

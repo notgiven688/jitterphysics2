@@ -267,21 +267,21 @@ public sealed partial class World
             for (int i = 0; i < contacts.Length; i++)
             {
                 ref ContactData c = ref allContacts[contacts[i].Index];
-                c.PrepareForIteration(invStepDt);
+                c.PrepareForIteration(timeStep);
             }
 
             for (int i = 0; i < constraints.Length; i++)
             {
                 ref ConstraintData c = ref constraints[i].Handle.Data;
                 if (c.IsEnabled)
-                    c.PrepareForIteration(ref c, invStepDt);
+                    c.PrepareForIteration(ref c, timeStep);
             }
 
             for (int i = 0; i < small.Length; i++)
             {
                 ref SmallConstraintData c = ref small[i].Handle.Data;
                 if (c.IsEnabled)
-                    c.PrepareForIteration(ref c, invStepDt);
+                    c.PrepareForIteration(ref c, timeStep);
             }
 
             // --- Iterate ---
@@ -298,14 +298,14 @@ public sealed partial class World
                 {
                     ref ConstraintData c = ref constraints[i].Handle.Data;
                     if (c.IsEnabled)
-                        c.Iterate(ref c, invStepDt);
+                        c.Iterate(ref c, timeStep);
                 }
 
                 for (int i = 0; i < small.Length; i++)
                 {
                     ref SmallConstraintData c = ref small[i].Handle.Data;
                     if (c.IsEnabled)
-                        c.Iterate(ref c, invStepDt);
+                        c.Iterate(ref c, timeStep);
                 }
             }
 

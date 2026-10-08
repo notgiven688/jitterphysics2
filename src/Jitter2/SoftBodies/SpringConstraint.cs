@@ -159,7 +159,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by the spring.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public Real Impulse
     {
@@ -254,8 +254,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// Prepares the spring constraint for iteration.
     /// </summary>
     /// <param name="constraint">The constraint data reference.</param>
-    /// <param name="idt">The inverse substep duration (1/dt).</param>
-    public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, Real idt)
+    /// <param name="timeStep">The full step and substep timing information.</param>
+    public static void PrepareForIterationSpringConstraint(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref data.Body1.Data;
@@ -284,11 +284,11 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         data.Jacobian = n;
         data.EffectiveMass = JVector.Multiply(n, body1.InverseMassVector) * n +
                              JVector.Multiply(n, body2.InverseMassVector) * n;
-        data.EffectiveMass += data.Softness * idt;
+        data.EffectiveMass += data.Softness * timeStep.InverseSubstepDt;
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
-        data.Bias = error * data.BiasFactor * idt;
+        data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
         body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
         body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
@@ -331,8 +331,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// Performs one iteration of the spring constraint solver.
     /// </summary>
     /// <param name="constraint">The constraint data reference.</param>
-    /// <param name="idt">The inverse substep duration (1/dt).</param>
-    public static void IterateSpringConstraint(ref ConstraintData constraint, Real idt)
+    /// <param name="timeStep">The full step and substep timing information.</param>
+    public static void IterateSpringConstraint(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, SpringData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -340,7 +340,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         Real jv = (body2.Velocity - body1.Velocity) * data.Jacobian;
 
-        Real softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        Real softnessScalar = data.AccumulatedImpulse * data.Softness * timeStep.InverseSubstepDt;
 
         Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 

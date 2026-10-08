@@ -391,13 +391,13 @@ public class DeterministicConstraintSolverTests
             DispatchId = RegisteredDispatchId;
         }
 
-        public static void PrepareForIterationCountingConstraint(ref ConstraintData constraint, Real idt)
+        public static void PrepareForIterationCountingConstraint(ref ConstraintData constraint, in TimeStep timeStep)
         {
             RecordCallbackThread();
             System.Threading.Interlocked.Increment(ref prepareCount);
         }
 
-        public static void IterateCountingConstraint(ref ConstraintData constraint, Real idt)
+        public static void IterateCountingConstraint(ref ConstraintData constraint, in TimeStep timeStep)
         {
             RecordCallbackThread();
             System.Threading.Interlocked.Increment(ref iterateCount);

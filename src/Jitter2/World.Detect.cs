@@ -173,7 +173,7 @@ public sealed partial class World
                 out pA, out pB, out normal, out Real toi);
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (!success || toi > stepDt || toi == (Real)0.0) return;
+            if (!success || toi > timeStep.StepDt || toi == (Real)0.0) return;
 
             penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
 

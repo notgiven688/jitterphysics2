@@ -130,7 +130,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         }
     }
 
-    public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationHingeAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
 
@@ -160,9 +160,9 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         data.EffectiveMass = JSymmetricMatrix.Transform(body1.InverseInertiaWorld + body2.InverseInertiaWorld,
             JMatrix.Transpose(data.Jacobian)).ToMatrix();
 
-        data.EffectiveMass.M11 += data.Softness * idt;
-        data.EffectiveMass.M22 += data.Softness * idt;
-        data.EffectiveMass.M33 += data.LimitSoftness * idt;
+        data.EffectiveMass.M11 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M22 += data.Softness * timeStep.InverseSubstepDt;
+        data.EffectiveMass.M33 += data.LimitSoftness * timeStep.InverseSubstepDt;
 
         Real maxA = data.MaxAngle;
         Real minA = data.MinAngle;
@@ -204,7 +204,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
         data.EffectiveMass = MathHelper.InverseSymmetric(data.EffectiveMass);
 
-        data.Bias = error * idt;
+        data.Bias = error * timeStep.InverseStepDt;
         data.Bias.X *= data.BiasFactor;
         data.Bias.Y *= data.BiasFactor;
         data.Bias.Z *= data.LimitBias;
@@ -300,11 +300,11 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public JVector Impulse => Data.AccumulatedImpulse;
 
-    public static void IterateHingeAngle(ref ConstraintData constraint, Real idt)
+    public static void IterateHingeAngle(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, HingeAngleData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -312,7 +312,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 
         JVector jv = JVector.TransposedTransform(body1.AngularVelocity - body2.AngularVelocity, data.Jacobian);
 
-        JVector softness = data.AccumulatedImpulse * idt;
+        JVector softness = data.AccumulatedImpulse * timeStep.InverseSubstepDt;
         softness.X *= data.Softness;
         softness.Y *= data.Softness;
         softness.Z *= data.LimitSoftness;

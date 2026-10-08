@@ -21,7 +21,7 @@ public class BroadPhaseUpdateTests
         var shape = new SphereShape((Real)0.1);
         bullet.AddShape(shape);
 
-        void Launch(Real _)
+        void Launch(TimeStep _)
         {
             if (enableFirst) bullet.EnableSpeculativeContacts = true;
             bullet.Velocity = new JVector(0, 0, -100);
@@ -31,7 +31,7 @@ public class BroadPhaseUpdateTests
         }
 
         if (launchInPreStep) world.PreStep += Launch;
-        else Launch(0);
+        else Launch(default);
 
         world.Step((Real)0.01, false);
 

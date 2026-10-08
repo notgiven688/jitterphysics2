@@ -118,24 +118,24 @@ public struct ContactData
     /// <summary>
     /// Prepares all active contacts for solver iterations by computing effective masses and warm-starting impulses.
     /// </summary>
-    /// <param name="idt">Inverse of the timestep (1/dt).</param>
-    public unsafe void PrepareForIteration(Real idt)
+    /// <param name="timeStep">The full step and substep timing information.</param>
+    public unsafe void PrepareForIteration(in TimeStep timeStep)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
         if (Vector.IsHardwareAccelerated)
         {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, idt);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, idt);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, idt);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, idt);
+            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, timeStep);
+            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, timeStep);
+            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, timeStep);
+            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, timeStep);
         }
         else
         {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, idt);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, idt);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, idt);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, idt);
+            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, timeStep);
+            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, timeStep);
+            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, timeStep);
+            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, timeStep);
         }
     }
 
@@ -185,24 +185,24 @@ public struct ContactData
         }
     }
 
-    internal unsafe void PrepareForIterationAccelerated(Real idt)
+    internal unsafe void PrepareForIterationAccelerated(in TimeStep timeStep)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
-        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, idt);
-        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, idt);
-        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, idt);
-        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, idt);
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, timeStep);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, timeStep);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, timeStep);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, timeStep);
     }
 
-    internal unsafe void PrepareForIterationScalar(Real idt)
+    internal unsafe void PrepareForIterationScalar(in TimeStep timeStep)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
 
-        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, idt);
-        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, idt);
-        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, idt);
-        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, idt);
+        if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, timeStep);
+        if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, timeStep);
+        if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, timeStep);
+        if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, timeStep);
     }
 
     internal unsafe void IterateAccelerated(bool applyBias)
@@ -680,17 +680,17 @@ public struct ContactData
             NormalTangentY.GetElement(2), NormalTangentZ.GetElement(2));
 
         /// <summary>
-        /// The impulse applied in the normal direction which has been used to solve the contact.
+        /// Gets the accumulated normal solver impulse from the last solved substep.
         /// </summary>
         public readonly Real Impulse => Accumulated.GetElement(0);
 
         /// <summary>
-        /// The impulse applied in the first tangent direction which has been used to solve the contact.
+        /// Gets the accumulated solver impulse in the first tangent direction from the last solved substep.
         /// </summary>
         public readonly Real TangentImpulse1 => Accumulated.GetElement(1);
 
         /// <summary>
-        /// The impulse applied in the second tangent direction which has been used to solve the contact.
+        /// Gets the accumulated solver impulse in the second tangent direction from the last solved substep.
         /// </summary>
         public readonly Real TangentImpulse2 => Accumulated.GetElement(2);
 
@@ -783,9 +783,9 @@ public struct ContactData
         }
 
         // Fallback for missing hardware acceleration
-        #region public unsafe void PrepareForIteration(ContactData* cd, Real idt)
+        #region public unsafe void PrepareForIteration(ContactData* cd, in TimeStep timeStep)
 
-        public unsafe void PrepareForIteration(ContactData* cd, Real idt)
+        public unsafe void PrepareForIteration(ContactData* cd, in TimeStep timeStep)
         {
             // Begin read from VectorReal
             Real accumulatedNormalImpulse = Accumulated.GetElement(0);
@@ -829,7 +829,7 @@ public struct ContactData
             if (penetration < -BreakThreshold)
             {
                 // Speculative contact
-                Bias = penetration * idt * cd->SpeculativeRelaxationFactor;
+                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -905,7 +905,7 @@ public struct ContactData
             JVector mass = new(massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
+            PenaltyBias = BiasFactor * timeStep.InverseStepDt * Math.Max((Real)0.0, penetration - AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
         }
 
@@ -1028,7 +1028,7 @@ public struct ContactData
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public unsafe void PrepareForIterationAccelerated(ContactData* cd, Real idt)
+        public unsafe void PrepareForIterationAccelerated(ContactData* cd, in TimeStep timeStep)
         {
             bool skipWarmStart = (Flag & Flags.SkipWarmStart) != 0;
             Flag &= ~Flags.SkipWarmStart;
@@ -1067,7 +1067,7 @@ public struct ContactData
             if (penetration < -BreakThreshold)
             {
                 // Speculative contact
-                Bias = penetration * idt * cd->SpeculativeRelaxationFactor;
+                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -1167,7 +1167,7 @@ public struct ContactData
                 Vector.Divide(Vector.Create((Real)1.0), kNormalTangent), Vector.Create((Real)0.0));
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * idt * Math.Max((Real)0.0, penetration - AllowedPenetration);
+            PenaltyBias = BiasFactor * timeStep.InverseStepDt * Math.Max((Real)0.0, penetration - AllowedPenetration);
             PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
         }
 

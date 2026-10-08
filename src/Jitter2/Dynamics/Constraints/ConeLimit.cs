@@ -253,7 +253,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         }
     }
 
-    public static void PrepareForIterationConeLimit(ref ConstraintData constraint, Real idt)
+    public static void PrepareForIterationConeLimit(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
 
@@ -326,12 +326,12 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         data.EffectiveMass = JVector.Transform(jacobian[0], body1.InverseInertiaWorld) * jacobian[0] +
                              JVector.Transform(jacobian[1], body2.InverseInertiaWorld) * jacobian[1];
 
-        data.EffectiveMass += data.Softness * idt;
+        data.EffectiveMass += data.Softness * timeStep.InverseSubstepDt;
 
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
 
-        data.Bias = -error * data.BiasFactor * idt;
+        data.Bias = -error * data.BiasFactor * timeStep.InverseStepDt;
 
         body1.AngularVelocity +=
             JVector.Transform(data.AccumulatedImpulse * jacobian[0], body1.InverseInertiaWorld);
@@ -373,11 +373,11 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     }
 
     /// <summary>
-    /// Gets the accumulated impulse applied by this constraint during the last step.
+    /// Gets the accumulated solver impulse from the last solved substep.
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public static void IterateConeLimit(ref ConstraintData constraint, Real idt)
+    public static void IterateConeLimit(ref ConstraintData constraint, in TimeStep timeStep)
     {
         ref var data = ref Unsafe.As<ConstraintData, ConeLimitData>(ref constraint);
         ref RigidBodyData body1 = ref constraint.Body1.Data;
@@ -391,7 +391,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
             body1.AngularVelocity * jacobian[0] +
             body2.AngularVelocity * jacobian[1];
 
-        Real softnessScalar = data.AccumulatedImpulse * data.Softness * idt;
+        Real softnessScalar = data.AccumulatedImpulse * data.Softness * timeStep.InverseSubstepDt;
 
         Real lambda = -data.EffectiveMass * (jv + data.Bias + softnessScalar);
 
