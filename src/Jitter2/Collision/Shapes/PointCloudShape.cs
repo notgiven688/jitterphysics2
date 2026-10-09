@@ -107,7 +107,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     {
         CalculateMassInertia();
         CalcInitBox();
-        UpdateWorldBoundingBox();
+        ShapeChanged();
     }
 
     /// <summary>

@@ -29,7 +29,7 @@ public class CapsuleShape : RigidBodyShape
         set
         {
             radius = ArgumentCheck.Positive(value, nameof(Radius));
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 
@@ -45,7 +45,7 @@ public class CapsuleShape : RigidBodyShape
         set
         {
             halfLength = ArgumentCheck.NonNegative(value, nameof(Length)) / (Real)2.0;
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 

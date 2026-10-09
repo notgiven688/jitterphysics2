@@ -82,7 +82,7 @@ public class TransformedShape : RigidBodyShape
         {
             DebugCheck.IsFinite(value, nameof(value));
             translation = value;
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 
@@ -110,7 +110,7 @@ public class TransformedShape : RigidBodyShape
             DebugCheck.IsFinite(value, nameof(value));
             transformation = value;
             AnalyzeTransformation();
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 

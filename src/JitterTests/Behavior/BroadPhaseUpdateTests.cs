@@ -4,6 +4,55 @@ namespace JitterTests.Behavior;
 
 public class BroadPhaseUpdateTests
 {
+    [TestCase]
+    public void ResizingAStaticShape_TakesEffectInTheBroadphase()
+    {
+        using var world = new World();
+
+        var block = world.CreateRigidBody();
+        var box = new BoxShape(1);
+        block.AddShape(box);
+        block.MotionType = MotionType.Static;
+        world.Step((Real)(1.0 / 100.0), false);
+
+        box.Size = new JVector(10);
+
+        var ball = world.CreateRigidBody();
+        ball.AddShape(new SphereShape((Real)0.5));
+        ball.Position = new JVector(4, 7, 0);
+
+        Helper.AdvanceWorld(world, 3, (Real)(1.0 / 100.0), false);
+
+        Assert.That(ball.Position.Y, Is.EqualTo((Real)5.5).Within((Real)0.05));
+    }
+
+    [TestCase]
+    public void ResizingAShapeOnASleepingBody_WakesItIntoContact()
+    {
+        using var world = new World();
+
+        var floor = world.CreateRigidBody();
+        floor.AddShape(new BoxShape(20, 1, 20));
+        floor.Position = new JVector(0, (Real)(-0.5), 0);
+        floor.MotionType = MotionType.Static;
+
+        var body = world.CreateRigidBody();
+        var sphere = new SphereShape((Real)0.5);
+        body.AddShape(sphere);
+        body.Position = new JVector(0, 3, 0);
+        body.AffectedByGravity = false;
+        body.DeactivationTime = TimeSpan.FromSeconds((Real)0.1);
+        Helper.AdvanceWorld(world, 1, (Real)(1.0 / 100.0), false);
+        Assert.That(body.IsActive, Is.False);
+
+        sphere.Radius = 4;
+        world.Step((Real)(1.0 / 100.0), false);
+        world.Step((Real)(1.0 / 100.0), false);
+
+        Assert.That(body.IsActive, Is.True);
+        Assert.That(body.Contacts, Has.Count.EqualTo(1));
+    }
+
     [TestCase(false, false)]
     [TestCase(false, true)]
     [TestCase(true, false)]

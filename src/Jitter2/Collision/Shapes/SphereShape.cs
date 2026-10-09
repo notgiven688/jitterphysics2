@@ -28,7 +28,7 @@ public class SphereShape : RigidBodyShape
         set
         {
             radius = ArgumentCheck.Positive(value, nameof(Radius));
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 

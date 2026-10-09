@@ -233,7 +233,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     {
         CalculateMassInertia();
         CalcInitBox();
-        UpdateWorldBoundingBox();
+        ShapeChanged();
     }
 
     /// <inheritdoc/>

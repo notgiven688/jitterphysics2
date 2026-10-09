@@ -29,7 +29,7 @@ public class CylinderShape : RigidBodyShape
         set
         {
             radius = ArgumentCheck.Positive(value, nameof(Radius));
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 
@@ -45,7 +45,7 @@ public class CylinderShape : RigidBodyShape
         set
         {
             height = ArgumentCheck.Positive(value, nameof(Height));
-            UpdateWorldBoundingBox();
+            ShapeChanged();
         }
     }
 
