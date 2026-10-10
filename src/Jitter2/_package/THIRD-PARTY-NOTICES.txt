@@ -92,3 +92,19 @@ required.
 2. Altered source versions must be plainly marked as such, and must not be
 misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
+
+
+4. Shewchuk's robust predicates
+------------------------------
+
+Repository source:
+src/Jitter2/Collision/NarrowPhase/ExactArithmetic/ExpansionArithmetic.cs
+
+Provenance:
+The error-free sum/difference transforms and expansion accumulation are adapted
+from Jonathan Richard Shewchuk's predicates.c. Product residuals are recovered
+using fused multiply-add.
+https://www.cs.cmu.edu/~quake/robust.html
+
+predicates.c was placed in the public domain by Jonathan Richard Shewchuk,
+Carnegie Mellon University, May 18, 1996.

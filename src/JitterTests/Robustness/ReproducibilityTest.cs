@@ -10,10 +10,10 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    // Substep-scaled constraint softness changes the reference trajectory.
+    // Filtered exact EPA changes the reference trajectory.
     // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x9AAE59A2FEDF9BA9;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x2D5082DD7FAEDA43;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x52354ACBCA9E76C0;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x011058E85BFA3C21;
 
     [TestCase]
     public static void BasicReproducibilityTest()
