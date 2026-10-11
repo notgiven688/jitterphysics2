@@ -392,6 +392,8 @@ public sealed partial class World
     /// If an arbiter already exists, it is returned via the <paramref name="arbiter"/> out parameter.
     /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
     /// and registered internally. The body arguments are used only when a new arbiter is created.
+    /// When creating a new arbiter, both bodies must be valid and belong to this world.
+    /// These preconditions are checked in Debug builds.
     ///
     /// <para>
     /// Calls that create or register contacts may run concurrently with each other. They must not run
@@ -444,6 +446,9 @@ public sealed partial class World
     // The caller holds the shard lock until initialization and publication complete.
     private Arbiter CreateArbiter(ArbiterKey arbiterKey, RigidBody body1, RigidBody body2)
     {
+        DebugCheck.BelongsToWorld(this, body1);
+        DebugCheck.BelongsToWorld(this, body2);
+
         Arbiter? arbiter = null;
 
         try
