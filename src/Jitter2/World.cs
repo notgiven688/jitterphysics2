@@ -501,6 +501,8 @@ public sealed partial class World : IDisposable
 
         deferredArbiters.Trim();
         brokenArbiters.Trim();
+        dispatchArbiters.TrimExcess();
+        retiredArbiters.TrimExcess();
 
         arbiters.TrimExcess();
 

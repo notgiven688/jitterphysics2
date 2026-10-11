@@ -34,6 +34,8 @@ public sealed partial class World
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
+    private readonly List<Arbiter> dispatchArbiters = [];
+    private readonly List<Arbiter> retiredArbiters = [];
 
     /// <summary>
     /// Profiling buckets for <see cref="DebugTimings"/>, representing stages of <see cref="Step(Real, bool)"/>.
@@ -850,18 +852,38 @@ public sealed partial class World
 
     private void HandleDeferredArbiters()
     {
-        foreach (var arb in deferredArbiters)
+        while (deferredArbiters.Count > 0)
         {
-            IslandHelper.ArbiterCreated(islands, islandPool, arb);
+            try
+            {
+                foreach (var arb in deferredArbiters)
+                {
+                    IslandHelper.ArbiterCreated(islands, islandPool, arb);
 
-            AddToActiveList(arb.Body1.InternalIsland);
-            AddToActiveList(arb.Body2.InternalIsland);
+                    AddToActiveList(arb.Body1.InternalIsland);
+                    AddToActiveList(arb.Body2.InternalIsland);
 
-            arb.Body1.RaiseBeginCollide(arb);
-            arb.Body2.RaiseBeginCollide(arb);
+                    dispatchArbiters.Add(arb);
+                }
+
+                // All contacts must be linked and no longer pending before handlers can remove them.
+                deferredArbiters.Clear();
+
+                foreach (var arb in dispatchArbiters)
+                {
+                    // Removed arbiters cannot be reused until this batch finishes, so a zero handle
+                    // also invalidates queued notifications, even if a handler creates new contacts.
+                    if (!arb.Handle.IsZero) arb.Body1.RaiseBeginCollide(arb);
+                    if (!arb.Handle.IsZero) arb.Body2.RaiseBeginCollide(arb);
+                }
+            }
+            finally
+            {
+                dispatchArbiters.Clear();
+                foreach (var arb in retiredArbiters) arbiterPool.Push(arb);
+                retiredArbiters.Clear();
+            }
         }
-
-        deferredArbiters.Clear();
     }
 
     /// <summary>
