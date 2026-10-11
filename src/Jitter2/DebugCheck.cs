@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using Jitter2.Dynamics;
+using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 
 namespace Jitter2;
@@ -26,6 +27,13 @@ internal static class DebugCheck
     {
         if (!body.IsValid)
             throw new InvalidOperationException("The rigid body has been removed or its world has been disposed.");
+    }
+
+    [Conditional("DEBUG")]
+    public static void IsValid(Constraint constraint)
+    {
+        if (!constraint.IsValid)
+            throw new InvalidOperationException("The constraint has not been created, has been removed, or its world has been disposed.");
     }
 
     [Conditional("DEBUG")]
