@@ -1317,14 +1317,7 @@ public sealed partial class World
 
                     foreach (var c in body.InternalConstraints)
                     {
-                        if (c.IsSmallConstraint)
-                        {
-                            memSmallConstraints.MoveToActive(c.SmallHandle);
-                        }
-                        else
-                        {
-                            memConstraints.MoveToActive(c.Handle);
-                        }
+                        UpdateConstraintActivation(c);
                     }
 
                     foreach (var s in body.InternalShapes)
