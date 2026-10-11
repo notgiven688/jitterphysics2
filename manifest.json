@@ -271,6 +271,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.ConvexPolytope.AddVertexResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.ConvexPolytope.AddVertexResult",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Collision.ConvexPolytope.Triangle.yml",
       "output": {
         ".html": {
@@ -295,7 +309,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.ConvexPolytope",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ConvexPolytope.yml\" sourcestartlinenumber=\"1\">Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA)\nfor computing penetration depth and contact information.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ConvexPolytope.yml\" sourcestartlinenumber=\"1\">EPA polytope with filtered exact visibility, orientation and\ndegeneracy predicates on the supplied floating-point coordinates.</p>\n"
     },
     {
       "type": "ManagedReference",

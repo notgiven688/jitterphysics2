@@ -143,6 +143,58 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.ConvexPolytope.AddVertex
   nameWithType: ConvexPolytope.AddVertex
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexDetailed(Jitter2.Collision.MinkowskiDifference.Vertex@)
+  name: AddVertexDetailed(in Vertex)
+  href: api/Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_AddVertexDetailed_Jitter2_Collision_MinkowskiDifference_Vertex__
+  commentId: M:Jitter2.Collision.ConvexPolytope.AddVertexDetailed(Jitter2.Collision.MinkowskiDifference.Vertex@)
+  name.vb: AddVertexDetailed(Vertex)
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexDetailed(in Jitter2.Collision.MinkowskiDifference.Vertex)
+  fullName.vb: Jitter2.Collision.ConvexPolytope.AddVertexDetailed(Jitter2.Collision.MinkowskiDifference.Vertex)
+  nameWithType: ConvexPolytope.AddVertexDetailed(in MinkowskiDifference.Vertex)
+  nameWithType.vb: ConvexPolytope.AddVertexDetailed(MinkowskiDifference.Vertex)
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexDetailed*
+  name: AddVertexDetailed
+  href: api/Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_AddVertexDetailed_
+  commentId: Overload:Jitter2.Collision.ConvexPolytope.AddVertexDetailed
+  isSpec: "True"
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexDetailed
+  nameWithType: ConvexPolytope.AddVertexDetailed
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult
+  name: ConvexPolytope.AddVertexResult
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html
+  commentId: T:Jitter2.Collision.ConvexPolytope.AddVertexResult
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult
+  nameWithType: ConvexPolytope.AddVertexResult
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult.Added
+  name: Added
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html#Jitter2_Collision_ConvexPolytope_AddVertexResult_Added
+  commentId: F:Jitter2.Collision.ConvexPolytope.AddVertexResult.Added
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult.Added
+  nameWithType: ConvexPolytope.AddVertexResult.Added
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult.CapacityExceeded
+  name: CapacityExceeded
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html#Jitter2_Collision_ConvexPolytope_AddVertexResult_CapacityExceeded
+  commentId: F:Jitter2.Collision.ConvexPolytope.AddVertexResult.CapacityExceeded
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult.CapacityExceeded
+  nameWithType: ConvexPolytope.AddVertexResult.CapacityExceeded
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult.Degenerate
+  name: Degenerate
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html#Jitter2_Collision_ConvexPolytope_AddVertexResult_Degenerate
+  commentId: F:Jitter2.Collision.ConvexPolytope.AddVertexResult.Degenerate
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult.Degenerate
+  nameWithType: ConvexPolytope.AddVertexResult.Degenerate
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult.NoHorizon
+  name: NoHorizon
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html#Jitter2_Collision_ConvexPolytope_AddVertexResult_NoHorizon
+  commentId: F:Jitter2.Collision.ConvexPolytope.AddVertexResult.NoHorizon
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult.NoHorizon
+  nameWithType: ConvexPolytope.AddVertexResult.NoHorizon
+- uid: Jitter2.Collision.ConvexPolytope.AddVertexResult.NumericalFailure
+  name: NumericalFailure
+  href: api/Jitter2.Collision.ConvexPolytope.AddVertexResult.html#Jitter2_Collision_ConvexPolytope_AddVertexResult_NumericalFailure
+  commentId: F:Jitter2.Collision.ConvexPolytope.AddVertexResult.NumericalFailure
+  fullName: Jitter2.Collision.ConvexPolytope.AddVertexResult.NumericalFailure
+  nameWithType: ConvexPolytope.AddVertexResult.NumericalFailure
 - uid: Jitter2.Collision.ConvexPolytope.CalculatePoints(Jitter2.Collision.ConvexPolytope.Triangle@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: CalculatePoints(in Triangle, out JVector, out JVector)
   href: api/Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_CalculatePoints_Jitter2_Collision_ConvexPolytope_Triangle__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__

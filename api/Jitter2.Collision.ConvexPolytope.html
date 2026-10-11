@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct ConvexPolytope | Jitter2 ">
       
-      <meta name="description" content="Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA) for computing penetration depth and contact information.">
+      <meta name="description" content="EPA polytope with filtered exact visibility, orientation and degeneracy predicates on the supplied floating-point coordinates.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_ConvexPolytope" data-uid="Jitter2.Collision.ConvexPolytope" class="text-break">
-Struct ConvexPolytope  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L31"><i class="bi bi-code-slash"></i></a>
+Struct ConvexPolytope  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,8 @@ Struct ConvexPolytope  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA)
-for computing penetration depth and contact information.</p>
+  <div class="markdown summary"><p>EPA polytope with filtered exact visibility, orientation and
+degeneracy predicates on the supplied floating-point coordinates.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -139,14 +139,11 @@ for computing penetration depth and contact information.</p>
 
 
   <h2 id="Jitter2_Collision_ConvexPolytope_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>
-The polytope is iteratively expanded by adding vertices from the Minkowski difference
-until convergence. Call <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_InitHeap">InitHeap()</a> at least once before use to allocate
-memory for vertices and triangles.
-</p>
-<p>
-Memory is allocated from the unmanaged heap and reused across EPA iterations.
-</p>
+  <div class="markdown level0 remarks"><p>Distances, barycentric coordinates and contact outputs remain approximate and
+are evaluated in double precision. Managed storage is allocated by
+<a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_InitHeap">InitHeap()</a> and reused. Instances must not be shared between threads.
+Each nonzero Minkowski vertex coordinate must have magnitude between 2^-200
+and 2^200, inclusive. Seeds and expansions outside this range are rejected.</p>
 </div>
 
 
@@ -158,7 +155,7 @@ Memory is allocated from the unmanaged heap and reused across EPA iterations.
 
   <h3 id="Jitter2_Collision_ConvexPolytope_HullTriangles" data-uid="Jitter2.Collision.ConvexPolytope.HullTriangles">
   HullTriangles
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -189,11 +186,10 @@ Memory is allocated from the unmanaged heap and reused across EPA iterations.
 
   <h3 id="Jitter2_Collision_ConvexPolytope_OriginEnclosed" data-uid="Jitter2.Collision.ConvexPolytope.OriginEnclosed">
   OriginEnclosed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Indicates whether the origin is enclosed within the polyhedron.
-Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_GetClosestTriangle">GetClosestTriangle()</a> has been called, which updates this flag.</p>
+  <div class="markdown level1 summary"><p>Indicates whether the origin is enclosed. Updated by <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_GetClosestTriangle">GetClosestTriangle()</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -226,10 +222,10 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex__" data-uid="Jitter2.Collision.ConvexPolytope.AddVertex(Jitter2.Collision.MinkowskiDifference.Vertex@)">
   AddVertex(in Vertex)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L349"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L193"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Adds a vertex to the polytope and rebuilds the convex hull.</p>
+  <div class="markdown level1 summary"><p>Adds a vertex. Use <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_AddVertexDetailed_Jitter2_Collision_MinkowskiDifference_Vertex__">AddVertexDetailed(in Vertex)</a> to distinguish a clean stop from a failure.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -240,15 +236,13 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>vertex</code> <a class="xref" href="Jitter2.Collision.MinkowskiDifference.html">MinkowskiDifference</a>.<a class="xref" href="Jitter2.Collision.MinkowskiDifference.Vertex.html">Vertex</a></dt>
-    <dd><p>The Minkowski difference vertex to add.</p>
-</dd>
+    <dd></dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p><code>true</code> if the vertex was incorporated; <code>false</code> if the polytope could not expand.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -258,8 +252,47 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
 
   <h4 class="section" id="Jitter2_Collision_ConvexPolytope_AddVertex_Jitter2_Collision_MinkowskiDifference_Vertex___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This operation invalidates references from previous <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_GetClosestTriangle">GetClosestTriangle()</a> calls.</p>
+  <div class="markdown level1 remarks"><p>Successful expansion invalidates previous triangle references. NoHorizon preserves the hull;
+any other failure requires reinitialization before the hull can be used again.</p>
 </div>
+
+
+
+
+  <a id="Jitter2_Collision_ConvexPolytope_AddVertexDetailed_" data-uid="Jitter2.Collision.ConvexPolytope.AddVertexDetailed*"></a>
+
+  <h3 id="Jitter2_Collision_ConvexPolytope_AddVertexDetailed_Jitter2_Collision_MinkowskiDifference_Vertex__" data-uid="Jitter2.Collision.ConvexPolytope.AddVertexDetailed(Jitter2.Collision.MinkowskiDifference.Vertex@)">
+  AddVertexDetailed(in Vertex)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Expands the hull in place. NoHorizon is a clean lack of expansion and leaves
+the active hull unchanged. Any other failure requires reinitialization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ConvexPolytope.AddVertexResult AddVertexDetailed(in MinkowskiDifference.Vertex vertex)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>vertex</code> <a class="xref" href="Jitter2.Collision.MinkowskiDifference.html">MinkowskiDifference</a>.<a class="xref" href="Jitter2.Collision.MinkowskiDifference.Vertex.html">Vertex</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Collision.ConvexPolytope.html">ConvexPolytope</a>.<a class="xref" href="Jitter2.Collision.ConvexPolytope.AddVertexResult.html">AddVertexResult</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
 
 
 
@@ -268,28 +301,25 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_CalculatePoints_Jitter2_Collision_ConvexPolytope_Triangle__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.ConvexPolytope.CalculatePoints(Jitter2.Collision.ConvexPolytope.Triangle@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   CalculatePoints(in Triangle, out JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes the closest points on shapes A and B from a triangle on the polytope.</p>
+  <div class="markdown level1 summary"><p>Calculates shape contact points from a triangle still belonging to the current hull.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void CalculatePoints(in ConvexPolytope.Triangle ctri, out JVector pA, out JVector pB)</code></pre>
+    <pre><code class="lang-csharp hljs">public void CalculatePoints(in ConvexPolytope.Triangle triangle, out JVector pointA, out JVector pointB)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
-    <dt><code>ctri</code> <a class="xref" href="Jitter2.Collision.ConvexPolytope.html">ConvexPolytope</a>.<a class="xref" href="Jitter2.Collision.ConvexPolytope.Triangle.html">Triangle</a></dt>
-    <dd><p>The triangle from <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_GetClosestTriangle">GetClosestTriangle()</a>.</p>
-</dd>
-    <dt><code>pA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The closest point on shape A.</p>
-</dd>
-    <dt><code>pB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The closest point on shape B.</p>
-</dd>
+    <dt><code>triangle</code> <a class="xref" href="Jitter2.Collision.ConvexPolytope.html">ConvexPolytope</a>.<a class="xref" href="Jitter2.Collision.ConvexPolytope.Triangle.html">Triangle</a></dt>
+    <dd></dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
   </dl>
 
 
@@ -307,10 +337,10 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_GetClosestTriangle" data-uid="Jitter2.Collision.ConvexPolytope.GetClosestTriangle">
   GetClosestTriangle()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L260"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Finds the triangle on the polytope closest to the origin.</p>
+  <div class="markdown level1 summary"><p>Finds the closest triangle using double-precision distances and updates origin enclosure.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -322,8 +352,7 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="Jitter2.Collision.ConvexPolytope.html">ConvexPolytope</a>.<a class="xref" href="Jitter2.Collision.ConvexPolytope.Triangle.html">Triangle</a></dt>
-    <dd><p>A reference to the closest triangle. Also updates <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jitter2_Collision_ConvexPolytope_OriginEnclosed">OriginEnclosed</a>.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -340,7 +369,7 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_GetVertex_System_Int32_" data-uid="Jitter2.Collision.ConvexPolytope.GetVertex(System.Int32)">
   GetVertex(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -376,10 +405,10 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_InitHeap" data-uid="Jitter2.Collision.ConvexPolytope.InitHeap">
   InitHeap()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L334"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Allocates unmanaged memory for vertices and triangles.</p>
+  <div class="markdown level1 summary"><p>Allocates reusable managed buffers once. Call before setting vertices or initializing the hull.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -395,9 +424,6 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
 
 
-  <h4 class="section" id="Jitter2_Collision_ConvexPolytope_InitHeap_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Must be called before any other method. Safe to call multiple times; allocation occurs only once.</p>
-</div>
 
 
 
@@ -406,18 +432,23 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_InitTetrahedron" data-uid="Jitter2.Collision.ConvexPolytope.InitTetrahedron">
   InitTetrahedron()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L291"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes the polytope with a tetrahedron formed from the first four vertices.</p>
+  <div class="markdown level1 summary"><p>Initializes from the first four vertices. False indicates an invalid or unsupported seed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void InitTetrahedron()</code></pre>
+    <pre><code class="lang-csharp hljs">public bool InitTetrahedron()</code></pre>
   </div>
 
 
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
 
 
 
@@ -425,9 +456,6 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
 
 
-  <h4 class="section" id="Jitter2_Collision_ConvexPolytope_InitTetrahedron_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The first four vertices must be set before calling this method.</p>
-</div>
 
 
 
@@ -436,24 +464,29 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 
   <h3 id="Jitter2_Collision_ConvexPolytope_InitTetrahedron_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.ConvexPolytope.InitTetrahedron(Jitter2.LinearMath.JVector@)">
   InitTetrahedron(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L309"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes the polytope with a small tetrahedron centered at the specified point.</p>
+  <div class="markdown level1 summary"><p>Initializes a small tetrahedron centered at the specified point.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void InitTetrahedron(in JVector point)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool InitTetrahedron(in JVector point)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The center point of the initial tetrahedron.</p>
-</dd>
+    <dd></dd>
   </dl>
 
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>False if the seed is degenerate, unsupported, or cannot be evaluated.</p>
+</dd>
+  </dl>
 
 
 
@@ -469,7 +502,7 @@ Only valid after <a class="xref" href="Jitter2.Collision.ConvexPolytope.html#Jit
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L31" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ConvexPolytope.cs/#L28" class="edit-link">Edit this page</a>
         </div>
 
 
