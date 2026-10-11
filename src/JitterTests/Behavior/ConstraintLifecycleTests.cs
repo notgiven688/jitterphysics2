@@ -98,8 +98,9 @@ public class ConstraintLifecycleTests
         Assert.That(received, Is.SameAs(constraint));
     }
 
-    [TestCase]
-    public void ConstraintRemoved_IsRaisedForMotionTypeChange()
+    [TestCase(MotionType.Static)]
+    [TestCase(MotionType.Kinematic)]
+    public void ConstraintRemoved_IsNotRaisedForMotionTypeChange(MotionType motionType)
     {
         using var world = new World();
         var bodyA = world.CreateRigidBody();
@@ -108,14 +109,15 @@ public class ConstraintLifecycleTests
         Constraint? received = null;
         world.ConstraintRemoved += removedConstraint => received = removedConstraint;
 
-        bodyA.MotionType = MotionType.Static;
+        bodyA.MotionType = motionType;
 
         Assert.That(received, Is.Null);
         Assert.That(constraint.IsValid, Is.True);
 
-        bodyB.MotionType = MotionType.Static;
+        bodyB.MotionType = motionType;
 
-        Assert.That(received, Is.SameAs(constraint));
+        Assert.That(received, Is.Null);
+        Assert.That(constraint.IsValid, Is.True);
     }
 
     [TestCase]

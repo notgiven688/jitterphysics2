@@ -241,8 +241,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// The event is raised for explicit removal as well as automatic removal caused by removing a
-    /// body, clearing the world, or changing a body's motion type so that neither constrained body
-    /// is dynamic. It is not raised when a constraint is disabled or when the world is disposed.
+    /// body or clearing the world. It is not raised when a constraint is disabled, when a body's
+    /// motion type changes, or when the world is disposed.
     /// The constraint is invalid when the callback runs, but its <see cref="Constraint.Body1"/> and
     /// <see cref="Constraint.Body2"/> references remain available.
     /// </remarks>
@@ -717,20 +717,11 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Removes constraints and contacts that connect two non-dynamic bodies.
+    /// Removes contacts that connect two non-dynamic bodies.
     /// </summary>
-    /// <param name="body">The body whose non-dynamic connections should be removed.</param>
-    internal void RemoveStaticStaticConstraints(RigidBody body)
+    /// <param name="body">The body whose non-dynamic contacts should be removed.</param>
+    internal void RemoveStaticStaticContacts(RigidBody body)
     {
-        foreach (var constraint in body.InternalConstraints)
-        {
-            if (constraint.Body1.Data.MotionType != MotionType.Dynamic &&
-                constraint.Body2.Data.MotionType != MotionType.Dynamic)
-            {
-                Remove(constraint);
-            }
-        }
-
         foreach (var arbiter in body.InternalContacts)
         {
             if (arbiter.Body1.Data.MotionType != MotionType.Dynamic &&
@@ -738,6 +729,29 @@ public sealed partial class World : IDisposable
             {
                 Remove(arbiter);
             }
+        }
+    }
+
+    /// <summary>
+    /// Keeps a constraint in the solver's active partition only while a dynamic endpoint is awake.
+    /// This does not change the constraint's enabled state or its island connections.
+    /// </summary>
+    internal void UpdateConstraintActivation(Constraint constraint)
+    {
+        RigidBody body1 = constraint.Body1;
+        RigidBody body2 = constraint.Body2;
+        bool active = (body1.MotionType == MotionType.Dynamic && body1.IsActive) ||
+                      (body2.MotionType == MotionType.Dynamic && body2.IsActive);
+
+        if (constraint.IsSmallConstraint)
+        {
+            if (active) memSmallConstraints.MoveToActive(constraint.SmallHandle);
+            else memSmallConstraints.MoveToInactive(constraint.SmallHandle);
+        }
+        else
+        {
+            if (active) memConstraints.MoveToActive(constraint.Handle);
+            else memConstraints.MoveToInactive(constraint.Handle);
         }
     }
 
@@ -874,12 +888,12 @@ public sealed partial class World : IDisposable
 
         if (constraint.IsSmallConstraint)
         {
-            constraint.Create(memSmallConstraints.Allocate(true, true), body1, body2);
+            constraint.Create(memSmallConstraints.Allocate(false, true), body1, body2);
             constraint.SmallHandle.Data.ConstraintId = constraintId;
         }
         else
         {
-            constraint.Create(memConstraints.Allocate(true, true), body1, body2);
+            constraint.Create(memConstraints.Allocate(false, true), body1, body2);
             constraint.Handle.Data.ConstraintId = constraintId;
         }
 
@@ -887,6 +901,8 @@ public sealed partial class World : IDisposable
 
         AddToActiveList(body1.InternalIsland);
         AddToActiveList(body2.InternalIsland);
+
+        UpdateConstraintActivation(constraint);
 
         return constraint;
     }

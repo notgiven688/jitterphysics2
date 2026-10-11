@@ -314,6 +314,8 @@ public abstract class Constraint : IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Use <see cref="World.Remove(Constraint)"/> for permanent removal.
+    /// An enabled constraint is solved only while at least one connected body is dynamic and awake.
+    /// Changing body motion types or activation states does not change this property.
     /// </remarks>
     public unsafe bool IsEnabled
     {
