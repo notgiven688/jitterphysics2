@@ -110,7 +110,7 @@ public class MotionTypeTests
     {
         // Create a static body
         platform = world.CreateRigidBody();
-        platform.AddShape(new BoxShape(10,2, 10));
+        platform.AddShape(new BoxShape(10, 2, 10));
         platform.Position = (0, -1, 0);
         platform.MotionType = MotionType.Static;
 
@@ -220,6 +220,10 @@ public class MotionTypeTests
         PrepareTwoStack(world, out var platform, out var boxes);
 
         boxes[0].MotionType = MotionType.Kinematic;
+
+        // Stop motion inherited from the dynamic state so this island can sleep.
+        boxes[0].Velocity = JVector.Zero;
+        boxes[0].AngularVelocity = JVector.Zero;
 
         // Jitter should now remove the contacts connecting a static and a kinematic body.
         // Only dynamic <-> kinematic contacts should remain.

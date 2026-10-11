@@ -458,8 +458,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the deactivation time. If the magnitudes of both the angular and linear velocity of the rigid body
-    /// remain below the <see cref="DeactivationThreshold"/> for the specified time, its island can be deactivated.
+    /// Gets or sets the deactivation time. Dynamic bodies must remain below the
+    /// <see cref="DeactivationThreshold"/> for this time before their island can be deactivated.
+    /// Kinematic bodies must have zero linear and angular velocity for this time.
     /// Default value: 1 second.
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">
@@ -475,13 +476,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the deactivation threshold. If the magnitudes of both the angular and linear velocity
+    /// Gets or sets the deactivation threshold for dynamic bodies. If the magnitudes of both the angular and linear velocity
     /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, its island can be deactivated.
     /// The threshold values are given in rad/s and length units/s, respectively.
     /// </summary>
     /// <remarks>
     /// Values must be non-negative.
     /// Default values: angular and linear are both approximately 0.316.
+    /// Kinematic bodies ignore these thresholds and only rest when both velocities are exactly zero.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular threshold is negative.
@@ -712,8 +714,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         RestrictLinearMotion(ref rigidBody.Velocity, axes);
         RestrictAngularMotion(ref rigidBody.AngularVelocity, axes);
 
-        if (rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
-            rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq)
+        // Kinematic velocity is prescribed by the caller, so any motion prevents sleeping.
+        bool isKinematic = rigidBody.MotionType == MotionType.Kinematic;
+        bool resting = isKinematic
+            ? rigidBody.AngularVelocity == JVector.Zero && rigidBody.Velocity == JVector.Zero
+            : rigidBody.AngularVelocity.LengthSquared() < inactiveThresholdAngularSq &&
+              rigidBody.Velocity.LengthSquared() < inactiveThresholdLinearSq;
+
+        if (resting)
         {
             InternalSleepTime += timeStep.StepDt;
         }
@@ -722,7 +730,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             InternalSleepTime = 0;
         }
 
-        if (InternalSleepTime < deactivationTimeThreshold)
+        if ((isKinematic && !resting) || InternalSleepTime < deactivationTimeThreshold)
         {
             InternalIsland.MarkedAsActive = true;
         }
@@ -752,8 +760,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets the linear velocity of the rigid body in world space.
     /// </summary>
     /// <remarks>
-    /// Measured in units per second. Setting a non-zero velocity schedules the body
-    /// for activation on the next step. Locked translation components are cleared.
+    /// Measured in units per second. Setting a non-zero kinematic velocity schedules the body
+    /// for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
+    /// Locked translation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -780,7 +789,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
                 UpdateSpeculativeBroadphase();
             }
 
-            if (!MathHelper.CloseToZero(value))
+            if (handle.Data.MotionType == MotionType.Kinematic
+                ? value != JVector.Zero
+                : !MathHelper.CloseToZero(value))
             {
                 World.ActivateBodyNextStep(this);
             }
@@ -792,8 +803,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Measured in radians per second. The vector direction is the rotation axis,
-    /// and its magnitude is the rotation speed. Setting a non-zero velocity schedules
-    /// the body for activation on the next step. Locked rotation components are cleared.
+    /// and its magnitude is the rotation speed. Setting a non-zero kinematic velocity schedules
+    /// the body for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
+    /// Locked rotation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -814,7 +826,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             RestrictAngularMotion(ref value, handle.Data.AllowedMotion);
             handle.Data.AngularVelocity = value;
 
-            if (!MathHelper.CloseToZero(value))
+            if (handle.Data.MotionType == MotionType.Kinematic
+                ? value != JVector.Zero
+                : !MathHelper.CloseToZero(value))
             {
                 World.ActivateBodyNextStep(this);
             }
@@ -911,6 +925,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <list type="bullet">
     /// <item><description>Switching to <see cref="MotionType.Static"/> zeroes velocities, removes connections, and deactivates the body.</description></item>
     /// <item><description>Switching from <see cref="MotionType.Static"/> rebuilds connections from existing contacts.</description></item>
+    /// <item><description>Switching to <see cref="MotionType.Kinematic"/> preserves velocities. Set both velocities to zero if the body should become stationary.</description></item>
     /// <item><description>Constraints remain registered and are suspended while neither connected body is dynamic.</description></item>
     /// <item><description>Any queued forces, torques, and force-derived velocity changes are discarded.</description></item>
     /// <item><description>Dynamic bodies use their mass and inertia; static and kinematic bodies are treated as having infinite mass by the solver.</description></item>
