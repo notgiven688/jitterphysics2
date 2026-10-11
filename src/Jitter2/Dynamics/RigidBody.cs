@@ -280,9 +280,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </list>
     /// </para>
     /// </remarks>
-    /// <exception cref="InvalidOperationException">
-    /// In Debug builds, thrown if this body has been removed or its world has been disposed.
-    /// </exception>
     public ref RigidBodyData Data
     {
         get

@@ -12,11 +12,11 @@ using Jitter2.LinearMath;
 namespace Jitter2;
 
 /// <summary>
-/// Runs additional input and lifetime sanity checks in Debug builds.
+/// Runs additional input sanity checks in Debug builds.
 /// </summary>
 /// <remarks>
 /// Calls to this helper are compiled only when the <c>DEBUG</c> symbol is defined. It is used for
-/// runtime data access and mutation paths where invalid inputs or state should be caught during development without
+/// runtime state mutation paths where invalid values should be caught during development without
 /// adding Release-build overhead.
 /// </remarks>
 internal static class DebugCheck
