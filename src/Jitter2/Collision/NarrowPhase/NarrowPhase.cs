@@ -43,7 +43,7 @@ public static class NarrowPhase
             const Real collideEpsilon = (Real)1e-5;
             const int maxIter = 85;
 
-            convexPolytope.InitTetrahedron();
+            if (!convexPolytope.InitTetrahedron()) return false;
 
             int iter = 0;
 
@@ -56,6 +56,7 @@ public static class NarrowPhase
                 JVector searchDir = ctri.ClosestToOrigin;
                 Real searchDirSq = ctri.ClosestToOriginSq;
 
+                if (!convexPolytope.OriginEnclosed) JVector.NegateInPlace(ref searchDir);
                 if (ctri.ClosestToOriginSq < NumericEpsilon)
                 {
                     searchDir = ctri.Normal;
@@ -73,10 +74,9 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!convexPolytope.AddVertex(vertex))
-                {
-                    goto converged;
-                }
+                var expansion = convexPolytope.AddVertexDetailed(vertex);
+                if (expansion == ConvexPolytope.AddVertexResult.NoHorizon) goto converged;
+                if (expansion != ConvexPolytope.AddVertexResult.Added) return false;
             }
 
             Logger.Warning("{0}: EPA, Could not converge within {1} iterations.", nameof(NarrowPhase), maxIter);
@@ -85,6 +85,7 @@ public static class NarrowPhase
 
         converged:
 
+            if (!convexPolytope.OriginEnclosed) return false;
             convexPolytope.CalculatePoints(ctri, out point1, out point2);
 
             normal = ctri.Normal * ((Real)1.0 / MathR.Sqrt(ctri.NormalSq));
@@ -357,7 +358,12 @@ public static class NarrowPhase
             JVector center = centerVertex.V;
 
             convexPolytope.InitHeap();
-            convexPolytope.InitTetrahedron(center);
+            if (!convexPolytope.InitTetrahedron(center))
+            {
+                point1 = point2 = normal = JVector.Zero;
+                penetration = 0;
+                return false;
+            }
 
             int iter = 0;
 
@@ -394,9 +400,13 @@ public static class NarrowPhase
                     goto converged;
                 }
 
-                if (!convexPolytope.AddVertex(vertex))
+                var expansion = convexPolytope.AddVertexDetailed(vertex);
+                if (expansion == ConvexPolytope.AddVertexResult.NoHorizon) goto converged;
+                if (expansion != ConvexPolytope.AddVertexResult.Added)
                 {
-                    goto converged;
+                    point1 = point2 = normal = JVector.Zero;
+                    penetration = 0;
+                    return false;
                 }
             }
 

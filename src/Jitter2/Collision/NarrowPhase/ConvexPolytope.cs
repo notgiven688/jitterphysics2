@@ -8,25 +8,22 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Jitter2.Collision.ExactArithmetic;
 using Jitter2.LinearMath;
-using Jitter2.Unmanaged;
 using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a convex polytope builder used in the Expanding Polytope Algorithm (EPA)
-/// for computing penetration depth and contact information.
+/// EPA polytope with filtered exact visibility, orientation and
+/// degeneracy predicates on the supplied floating-point coordinates.
 /// </summary>
 /// <remarks>
-/// <para>
-/// The polytope is iteratively expanded by adding vertices from the Minkowski difference
-/// until convergence. Call <see cref="InitHeap"/> at least once before use to allocate
-/// memory for vertices and triangles.
-/// </para>
-/// <para>
-/// Memory is allocated from the unmanaged heap and reused across EPA iterations.
-/// </para>
+/// Distances, barycentric coordinates and contact outputs remain approximate and
+/// are evaluated in double precision. Managed storage is allocated by
+/// <see cref="InitHeap"/> and reused. Instances must not be shared between threads.
+/// Each nonzero Minkowski vertex coordinate must have magnitude between 2^-200
+/// and 2^200, inclusive. Seeds and expansions outside this range are rejected.
 /// </remarks>
 public unsafe struct ConvexPolytope
 {
@@ -45,351 +42,358 @@ public unsafe struct ConvexPolytope
         public Real ClosestToOriginSq;
     }
 
-    private readonly struct Edge(short a, short b)
+    public enum AddVertexResult
     {
-        public readonly short A = a;
-        public readonly short B = b;
-
-        public static bool Equals(in Edge a, in Edge b)
-        {
-            return (a.A == b.A && a.B == b.B) || (a.A == b.B && a.B == b.A);
-        }
+        Added,
+        NoHorizon,
+        Degenerate,
+        CapacityExceeded,
+        NumericalFailure
     }
 
-    private const Real NumericEpsilon = (Real)1e-16;
-
-    // (*) Euler-characteristic: V (vertices) - E (edges) + F (faces) = 2
-    // We have triangles T instead of faces: F = T
-    // and every edge shares two triangles -> T = 2*V - 4
     private const int MaxVertices = 128;
     private const int MaxTriangles = 2 * MaxVertices;
 
-    private Triangle* triangles;
-    private Vertex* vertices;
+    private readonly struct Edge(short a, short b)
+    {
+        public readonly short A = a, B = b;
+        public bool Matches(in Edge other) =>
+            (A == other.A && B == other.B) || (A == other.B && B == other.A);
+    }
 
-    private short tPointer;
-    private short vPointer;
+    private readonly struct Double3(double x, double y, double z)
+    {
+        public readonly double X = x, Y = y, Z = z;
+        public bool IsFinite => double.IsFinite(X) && double.IsFinite(Y) && double.IsFinite(Z);
+        public JVector ToVector() => new((Real)X, (Real)Y, (Real)Z);
+        public static Double3 FromVector(in JVector v) => new(v.X, v.Y, v.Z);
+        public static double Dot(in Double3 a, in Double3 b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+        public static Double3 Cross(in Double3 a, in Double3 b) =>
+            new(a.Y * b.Z - a.Z * b.Y, a.Z * b.X - a.X * b.Z, a.X * b.Y - a.Y * b.X);
+        public static Double3 operator +(Double3 a, Double3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
+        public static Double3 operator -(Double3 a, Double3 b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+        public static Double3 operator *(Double3 a, double b) => new(a.X * b, a.Y * b, a.Z * b);
+    }
 
+    private struct FaceData
+    {
+        public PlaneFilter Filter;
+        public Double3 Barycentric;
+        public double DistanceSquared;
+    }
+
+    private Vertex[] vertices;
+    private Triangle[] triangles;
+    private FaceData[] faceData;
+    private short vertexCount, triangleCount;
     private bool originEnclosed;
 
-    private JVector center;
+    public readonly Span<Triangle> HullTriangles => triangles.AsSpan(0, triangleCount);
 
-    public readonly Span<Triangle> HullTriangles => new(triangles, tPointer);
+    /// <summary>
+    /// Indicates whether the origin is enclosed. Updated by <see cref="GetClosestTriangle"/>.
+    /// </summary>
+    public readonly bool OriginEnclosed => originEnclosed;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref Vertex GetVertex(int index)
     {
         Debug.Assert(index < MaxVertices, "Out of bounds.");
         return ref vertices[index];
     }
 
-    /// <summary>
-    /// Indicates whether the origin is enclosed within the polyhedron.
-    /// Only valid after <see cref="GetClosestTriangle"/> has been called, which updates this flag.
-    /// </summary>
-    public readonly bool OriginEnclosed => originEnclosed;
-
-    /// <summary>
-    /// Computes the closest points on shapes A and B from a triangle on the polytope.
-    /// </summary>
-    /// <param name="ctri">The triangle from <see cref="GetClosestTriangle"/>.</param>
-    /// <param name="pA">The closest point on shape A.</param>
-    /// <param name="pB">The closest point on shape B.</param>
-    public void CalculatePoints(in Triangle ctri, out JVector pA, out JVector pB)
+    /// <summary>Allocates reusable managed buffers once. Call before setting vertices or initializing the hull.</summary>
+    public void InitHeap()
     {
-        CalcBarycentric(ctri, out JVector bc);
-        pA = bc.X * vertices[ctri.A].A + bc.Y * vertices[ctri.B].A + bc.Z * vertices[ctri.C].A;
-        pB = bc.X * vertices[ctri.A].B + bc.Y * vertices[ctri.B].B + bc.Z * vertices[ctri.C].B;
+        if (vertices != null) return;
+        vertices = new Vertex[MaxVertices];
+        triangles = new Triangle[MaxTriangles];
+        faceData = new FaceData[MaxTriangles];
     }
 
-    private bool CalcBarycentric(in Triangle tri, out JVector result)
+    /// <summary>Initializes from the first four vertices. False indicates an invalid or unsupported seed.</summary>
+    public bool InitTetrahedron()
     {
-        bool clamped = false;
-
-        JVector a = vertices[tri.A].V;
-        JVector b = vertices[tri.B].V;
-        JVector c = vertices[tri.C].V;
-
-        // Calculate the barycentric coordinates of the origin (0,0,0) projected
-        // onto the plane of the triangle.
-        //
-        // [W. Heidrich, Journal of Graphics, GPU, and Game Tools,Volume 10, Issue 3, 2005.]
-#pragma warning disable IDE0018
-        JVector u, v, w, tmp;
-#pragma warning restore IDE0018
-
-        JVector.Subtract(a, b, out u);
-        JVector.Subtract(a, c, out v);
-
-        Real t = (Real)1.0 / tri.NormalSq;
-
-        JVector.Cross(u, a, out tmp);
-        Real gamma = JVector.Dot(tmp, tri.Normal) * t;
-        JVector.Cross(a, v, out tmp);
-        Real beta = JVector.Dot(tmp, tri.Normal) * t;
-        Real alpha = (Real)1.0 - gamma - beta;
-
-        // Clamp the projected barycentric coordinates to lie within the triangle,
-        // such that the clamped coordinates are closest (Euclidean) to the original point.
-        //
-        // [https://math.stackexchange.com/questions/1092912/find-closest-point-in-triangle-given-barycentric-coordinates-outside]
-        if (alpha >= (Real)0.0 && beta < (Real)0.0)
+        vertexCount = 4;
+        triangleCount = 0;
+        originEnclosed = false;
+        for (int i = 0; i < 4; i++)
         {
-            t = JVector.Dot(a, u);
-            if (gamma < (Real)0.0 && t > (Real)0.0)
-            {
-                beta = MathR.Min((Real)1.0, t / u.LengthSquared());
-                alpha = (Real)1.0 - beta;
-                gamma = (Real)0.0;
-            }
-            else
-            {
-                gamma = MathR.Min((Real)1.0, MathR.Max((Real)0.0, JVector.Dot(a, v) / v.LengthSquared()));
-                alpha = (Real)1.0 - gamma;
-                beta = (Real)0.0;
-            }
-
-            clamped = true;
-        }
-        else if (beta >= (Real)0.0 && gamma < (Real)0.0)
-        {
-            JVector.Subtract(b, c, out w);
-            t = JVector.Dot(b, w);
-            if (alpha < (Real)0.0 && t > (Real)0.0)
-            {
-                gamma = MathR.Min((Real)1.0, t / w.LengthSquared());
-                beta = (Real)1.0 - gamma;
-                alpha = (Real)0.0;
-            }
-            else
-            {
-                alpha = MathR.Min((Real)1.0, MathR.Max((Real)0.0, -JVector.Dot(b, u) / u.LengthSquared()));
-                beta = (Real)1.0 - alpha;
-                gamma = (Real)0.0;
-            }
-
-            clamped = true;
-        }
-        else if (gamma >= (Real)0.0 && alpha < (Real)0.0)
-        {
-            JVector.Subtract(b, c, out w);
-            t = -JVector.Dot(c, v);
-            if (beta < (Real)0.0 && t > (Real)0.0)
-            {
-                alpha = MathR.Min((Real)1.0, t / v.LengthSquared());
-                gamma = (Real)1.0 - alpha;
-                beta = (Real)0.0;
-            }
-            else
-            {
-                beta = MathR.Min((Real)1.0, MathR.Max((Real)0.0, -JVector.Dot(c, w) / w.LengthSquared()));
-                gamma = (Real)1.0 - beta;
-                alpha = (Real)0.0;
-            }
-
-            clamped = true;
+            if (!PlaneFilter.IsSafe(vertices[i].V)) return false;
         }
 
-        result.X = alpha;
-        result.Y = beta;
-        result.Z = gamma;
-        return clamped;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly bool IsLit(int candidate, int w)
-    {
-        // Checks if the triangle normal points to the same side as
-        // the vertex w.
-        ref Triangle tr = ref triangles[candidate];
-        JVector deltaA = vertices[w].V - vertices[tr.A].V;
-        return JVector.Dot(deltaA, tr.Normal) > 0;
-    }
-
-    private bool CreateTriangle(short a, short b, short c)
-    {
-        ref Triangle triangle = ref triangles[tPointer];
-        triangle.A = a;
-        triangle.B = b;
-        triangle.C = c;
-
-        JVector.Subtract(vertices[a].V, vertices[b].V, out JVector u);
-        JVector.Subtract(vertices[a].V, vertices[c].V, out JVector v);
-        JVector.Cross(u, v, out triangle.Normal);
-        triangle.NormalSq = triangle.Normal.LengthSquared();
-
-        // return on degenerate triangles
-        if (triangle.NormalSq < NumericEpsilon)
+        ReadOnlySpan<short> indices = [0, 2, 1, 0, 1, 3, 0, 3, 2, 1, 2, 3];
+        for (int i = 0; i < 4; i++)
         {
-            return false;
+            if (CreateTriangle(indices[3 * i], indices[3 * i + 1], indices[3 * i + 2],
+                    out triangles[i], out faceData[i]) != AddVertexResult.Added) return false;
         }
 
-        // do we need to flip the triangle? (the origin of the md has to be enclosed)
-        Real delta = JVector.Dot(triangle.Normal, vertices[a].V - center);
-
-        if (delta < 0)
-        {
-            (triangle.A, triangle.B) = (triangle.B, triangle.A);
-            JVector.NegateInPlace(ref triangle.Normal);
-        }
-
-        delta = JVector.Dot(triangle.Normal, vertices[a].V);
-        triangle.FacingOrigin = delta >= (Real)0.0;
-
-        if (CalcBarycentric(triangle, out JVector bc))
-        {
-            triangle.ClosestToOrigin = bc.X * vertices[triangle.A].V + bc.Y * vertices[triangle.B].V +
-                                       bc.Z * vertices[triangle.C].V;
-            triangle.ClosestToOriginSq = triangle.ClosestToOrigin.LengthSquared();
-        }
-        else
-        {
-            // prefer direct point-plane distance calculations if possible
-            JVector.Multiply(triangle.Normal, delta / triangle.NormalSq, out triangle.ClosestToOrigin);
-            triangle.ClosestToOriginSq = triangle.ClosestToOrigin.LengthSquared();
-        }
-
-        tPointer++;
+        triangleCount = 4;
         return true;
     }
 
-    /// <summary>
-    /// Finds the triangle on the polytope closest to the origin.
-    /// </summary>
-    /// <returns>A reference to the closest triangle. Also updates <see cref="OriginEnclosed"/>.</returns>
+    /// <summary>Initializes a small tetrahedron centered at the specified point.</summary>
+    /// <returns>False if the seed is degenerate, unsupported, or cannot be evaluated.</returns>
+    public bool InitTetrahedron(in JVector point)
+    {
+        const Real scale = (Real)1e-2;
+        vertices[0] = new Vertex(point + scale * new JVector(MathR.Sqrt((Real)(8.0 / 9.0)), 0, -(Real)(1.0 / 3.0)));
+        vertices[1] = new Vertex(point + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
+        vertices[2] = new Vertex(point + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), -MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
+        vertices[3] = new Vertex(point + scale * new JVector(0, 0, 1));
+        return InitTetrahedron();
+    }
+
+    /// <summary>Finds the closest triangle using double-precision distances and updates origin enclosure.</summary>
     public ref Triangle GetClosestTriangle()
     {
-        int closestIndex = -1;
-        Real currentMin = Real.MaxValue;
-
-        // We can skip the test for enclosed origin if the origin was
-        // already enclosed once.
+        if (triangleCount == 0) throw new InvalidOperationException("The polytope is not initialized.");
+        int closest = 0;
+        double minimum = double.PositiveInfinity;
         bool skipTest = originEnclosed;
-
         originEnclosed = true;
-
-        for (int i = 0; i < tPointer; i++)
+        for (int i = 0; i < triangleCount; i++)
         {
-            if (triangles[i].ClosestToOriginSq < currentMin)
+            if (faceData[i].DistanceSquared < minimum)
             {
-                currentMin = triangles[i].ClosestToOriginSq;
-                closestIndex = i;
+                minimum = faceData[i].DistanceSquared;
+                closest = i;
             }
 
             if (!triangles[i].FacingOrigin) originEnclosed = skipTest;
         }
 
-        return ref triangles[closestIndex];
+        return ref triangles[closest];
     }
 
-    /// <summary>
-    /// Initializes the polytope with a tetrahedron formed from the first four vertices.
-    /// </summary>
-    /// <remarks>
-    /// The first four vertices must be set before calling this method.
-    /// </remarks>
-    public void InitTetrahedron()
+    /// <summary>Calculates shape contact points from a triangle still belonging to the current hull.</summary>
+    public void CalculatePoints(in Triangle triangle, out JVector pointA, out JVector pointB)
     {
-        originEnclosed = false;
-        vPointer = 4;
-        tPointer = 0;
-
-        center = (Real)0.25 * (vertices[0].V + vertices[1].V + vertices[2].V + vertices[3].V);
-
-        CreateTriangle(0, 2, 1);
-        CreateTriangle(0, 1, 3);
-        CreateTriangle(0, 3, 2);
-        CreateTriangle(1, 2, 3);
-    }
-
-    /// <summary>
-    /// Initializes the polytope with a small tetrahedron centered at the specified point.
-    /// </summary>
-    /// <param name="point">The center point of the initial tetrahedron.</param>
-    public void InitTetrahedron(in JVector point)
-    {
-        originEnclosed = false;
-        vPointer = 4;
-        tPointer = 0;
-        center = point;
-
-        const Real scale = (Real)1e-2; // minkowski sums not allowed to be thinner
-        vertices[0] = new Vertex(center + scale * new JVector(MathR.Sqrt((Real)(8.0 / 9.0)), (Real)0.0, -(Real)(1.0 / 3.0)));
-        vertices[1] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
-        vertices[2] = new Vertex(center + scale * new JVector(-MathR.Sqrt((Real)(2.0 / 9.0)), -MathR.Sqrt((Real)(2.0 / 3.0)), -(Real)(1.0 / 3.0)));
-        vertices[3] = new Vertex(center + scale * new JVector((Real)0.0, (Real)0.0, (Real)1.0));
-
-        CreateTriangle(2, 0, 1);
-        CreateTriangle(1, 0, 3);
-        CreateTriangle(3, 0, 2);
-        CreateTriangle(2, 1, 3);
-    }
-
-    /// <summary>
-    /// Allocates unmanaged memory for vertices and triangles.
-    /// </summary>
-    /// <remarks>
-    /// Must be called before any other method. Safe to call multiple times; allocation occurs only once.
-    /// </remarks>
-    public void InitHeap()
-    {
-        if (vertices != (void*)0) return;
-        vertices = MemoryHelper.AllocateHeap<Vertex>(MaxVertices);
-        triangles = MemoryHelper.AllocateHeap<Triangle>(MaxTriangles);
-    }
-
-    /// <summary>
-    /// Adds a vertex to the polytope and rebuilds the convex hull.
-    /// </summary>
-    /// <param name="vertex">The Minkowski difference vertex to add.</param>
-    /// <returns><c>true</c> if the vertex was incorporated; <c>false</c> if the polytope could not expand.</returns>
-    /// <remarks>
-    /// This operation invalidates references from previous <see cref="GetClosestTriangle"/> calls.
-    /// </remarks>
-    [SkipLocalsInit]
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    public bool AddVertex(in Vertex vertex)
-    {
-        Debug.Assert(vPointer < MaxVertices, "Maximum number of vertices exceeded.");
-
-        // see (*) above
-        Edge* edges = stackalloc Edge[MaxVertices * 3 / 2];
-
-        vertices[vPointer] = vertex;
-
-        int ePointer = 0;
-        for (int index = tPointer; index-- > 0;)
+        for (int i = 0; i < triangleCount; i++)
         {
-            if (!IsLit(index, vPointer)) continue;
+            if (triangles[i].A != triangle.A || triangles[i].B != triangle.B || triangles[i].C != triangle.C) continue;
+            Double3 bc = faceData[i].Barycentric;
+            pointA = (Double3.FromVector(vertices[triangle.A].A) * bc.X +
+                      Double3.FromVector(vertices[triangle.B].A) * bc.Y +
+                      Double3.FromVector(vertices[triangle.C].A) * bc.Z).ToVector();
+            pointB = (Double3.FromVector(vertices[triangle.A].B) * bc.X +
+                      Double3.FromVector(vertices[triangle.B].B) * bc.Y +
+                      Double3.FromVector(vertices[triangle.C].B) * bc.Z).ToVector();
+            return;
+        }
 
+        throw new ArgumentException("Triangle no longer belongs to this hull.", nameof(triangle));
+    }
+
+    /// <summary>Adds a vertex. Use <see cref="AddVertexDetailed"/> to distinguish a clean stop from a failure.</summary>
+    /// <remarks>
+    /// Successful expansion invalidates previous triangle references. NoHorizon preserves the hull;
+    /// any other failure requires reinitialization before the hull can be used again.
+    /// </remarks>
+    public bool AddVertex(in Vertex vertex) => AddVertexDetailed(vertex) == AddVertexResult.Added;
+
+    /// <summary>
+    /// Expands the hull in place. NoHorizon is a clean lack of expansion and leaves
+    /// the active hull unchanged. Any other failure requires reinitialization.
+    /// </summary>
+    [SkipLocalsInit]
+    public AddVertexResult AddVertexDetailed(in Vertex vertex)
+    {
+        if (triangleCount == 0 || !PlaneFilter.IsSafe(vertex.V)) return AddVertexResult.NumericalFailure;
+        if (vertexCount == MaxVertices) return AddVertexResult.CapacityExceeded;
+        vertices[vertexCount] = vertex;
+
+        Span<bool> lit = stackalloc bool[MaxTriangles];
+        Span<Edge> edges = stackalloc Edge[3 * MaxTriangles];
+        int edgeCount = 0, litCount = 0;
+        for (int index = triangleCount; index-- > 0;)
+        {
+            ref readonly Triangle face = ref triangles[index];
+            lit[index] = Side(faceData[index], face.A, face.B, face.C, vertexCount) > 0;
+            if (!lit[index]) continue;
+            litCount++;
+            Triangle tr = triangles[index];
+            ReadOnlySpan<short> corners = [tr.A, tr.B, tr.C];
             for (int k = 0; k < 3; k++)
             {
-                Edge edge = new Edge(triangles[index][(k + 0) % 3], triangles[index][(k + 1) % 3]);
+                Edge edge = new(corners[k], corners[(k + 1) % 3]);
                 bool added = true;
-                for (int e = ePointer; e-- > 0;)
+                for (int e = edgeCount; e-- > 0;)
                 {
-                    if (Edge.Equals(edges[e], edge))
-                    {
-                        edges[e] = edges[--ePointer];
-                        added = false;
-                    }
+                    if (!edges[e].Matches(edge)) continue;
+                    edges[e] = edges[--edgeCount];
+                    added = false;
+                    break;
                 }
 
-                if (added) edges[ePointer++] = edge;
+                if (added) edges[edgeCount++] = edge;
+            }
+        }
+
+        if (edgeCount == 0) return AddVertexResult.NoHorizon;
+        if (triangleCount - litCount + edgeCount > MaxTriangles) return AddVertexResult.CapacityExceeded;
+
+        int survivorCount = 0;
+        for (int i = 0; i < triangleCount; i++)
+        {
+            if (lit[i]) continue;
+            if (survivorCount != i)
+            {
+                triangles[survivorCount] = triangles[i];
+                faceData[survivorCount] = faceData[i];
+            }
+            survivorCount++;
+        }
+
+        // Build the replacement fan directly in its final slots. A failed face
+        // invalidates the hull; EPA callers abandon the solve and reinitialize it.
+        for (int i = 0; i < edgeCount; i++)
+        {
+            int index = survivorCount + i;
+            AddVertexResult result = CreateTriangle(edges[i].A, edges[i].B, vertexCount,
+                out triangles[index], out faceData[index]);
+            if (result != AddVertexResult.Added)
+            {
+                triangleCount = 0;
+                originEnclosed = false;
+                return result;
+            }
+        }
+
+        triangleCount = (short)(survivorCount + edgeCount);
+        vertexCount++;
+        return AddVertexResult.Added;
+    }
+
+    private AddVertexResult CreateTriangle(short a, short b, short c, out Triangle triangle, out FaceData data)
+    {
+        triangle = default;
+        data = default;
+        data.Filter = new PlaneFilter(vertices[a].V, vertices[b].V, vertices[c].V);
+        // The four seed vertices remain inside the growing hull. A nonzero
+        // side for any of them proves both nonzero area and face orientation;
+        // this avoids constructing an exact centroid for every query.
+        int orientation = 0;
+        for (short i = 0; i < 4 && orientation == 0; i++)
+        {
+            if (i == a || i == b || i == c) continue;
+            orientation = -Side(data, a, b, c, i);
+        }
+        if (orientation == 0) return AddVertexResult.Degenerate;
+        if (orientation < 0)
+        {
+            (a, b) = (b, a);
+            data.Filter.Negate();
+        }
+
+        bool facingOrigin = Side(data, a, b, c, -1) <= 0;
+        Double3 rawNormal = new(data.Filter.NormalX, data.Filter.NormalY, data.Filter.NormalZ);
+        if (!data.Filter.ReliableNormal)
+        {
+            ExpansionArithmetic.Normal(vertices[a].V, vertices[b].V, vertices[c].V, out double x, out double y, out double z);
+            rawNormal = new(x, y, z);
+        }
+        double normalScale = Math.Max(Math.Abs(rawNormal.X), Math.Max(Math.Abs(rawNormal.Y), Math.Abs(rawNormal.Z)));
+        if (!(normalScale > 0) || !double.IsFinite(normalScale)) return AddVertexResult.NumericalFailure;
+        Double3 scaledNormal = new(rawNormal.X / normalScale, rawNormal.Y / normalScale, rawNormal.Z / normalScale);
+        double normalSquared = Double3.Dot(scaledNormal, scaledNormal);
+
+        Double3 va = Double3.FromVector(vertices[a].V), vb = Double3.FromVector(vertices[b].V), vc = Double3.FromVector(vertices[c].V);
+        bool clamped = CalcBarycentric(va, vb, vc, scaledNormal, normalScale, normalSquared, out data.Barycentric);
+        Double3 closest = clamped
+            ? va * data.Barycentric.X + vb * data.Barycentric.Y + vc * data.Barycentric.Z
+            : scaledNormal * (Double3.Dot(scaledNormal, va) / normalSquared);
+        data.DistanceSquared = Double3.Dot(closest, closest);
+        if (!closest.IsFinite || !data.Barycentric.IsFinite || !double.IsFinite(data.DistanceSquared)) return AddVertexResult.NumericalFailure;
+
+        triangle.A = a;
+        triangle.B = b;
+        triangle.C = c;
+        triangle.FacingOrigin = facingOrigin;
+        triangle.Normal = scaledNormal.ToVector();
+        triangle.NormalSq = triangle.Normal.LengthSquared();
+        triangle.ClosestToOrigin = closest.ToVector();
+        triangle.ClosestToOriginSq = (Real)data.DistanceSquared;
+        return IsFinite(triangle.ClosestToOrigin) && Real.IsFinite(triangle.ClosestToOriginSq)
+            ? AddVertexResult.Added : AddVertexResult.NumericalFailure;
+    }
+
+    private int Side(in FaceData data, short a, short b, short c, short pointIndex)
+    {
+        JVector point = pointIndex < 0 ? JVector.Zero : vertices[pointIndex].V;
+        if (point == vertices[a].V || point == vertices[b].V || point == vertices[c].V) return 0;
+        if (data.Filter.TrySide(vertices[a].V, point, out int sign)) return sign;
+        return ExpansionArithmetic.Side(vertices[a].V, vertices[b].V, vertices[c].V, point);
+    }
+
+    private static bool CalcBarycentric(in Double3 a, in Double3 b, in Double3 c,
+        in Double3 normal, double normalScale, double normalSquared, out Double3 result)
+    {
+        Double3 u = a - b, v = a - c;
+        double gamma = (Double3.Dot(Double3.Cross(u, a), normal) / normalSquared) / normalScale;
+        double beta = (Double3.Dot(Double3.Cross(a, v), normal) / normalSquared) / normalScale;
+        double alpha = 1 - gamma - beta;
+        bool clamped = false;
+        if (alpha >= 0 && beta < 0)
+        {
+            double t = Double3.Dot(a, u);
+            if (gamma < 0 && t > 0)
+            {
+                beta = Math.Min(1, t / Double3.Dot(u, u));
+                alpha = 1 - beta;
+                gamma = 0;
+            }
+            else
+            {
+                gamma = Math.Clamp(Double3.Dot(a, v) / Double3.Dot(v, v), 0, 1);
+                alpha = 1 - gamma;
+                beta = 0;
             }
 
-            triangles[index] = triangles[--tPointer];
+            clamped = true;
         }
-
-        if (ePointer == 0) return false;
-
-        for (int i = 0; i < ePointer; i++)
+        else if (beta >= 0 && gamma < 0)
         {
-            if (!CreateTriangle(edges[i].A, edges[i].B, vPointer))
-                return false;
+            Double3 w = b - c;
+            double t = Double3.Dot(b, w);
+            if (alpha < 0 && t > 0)
+            {
+                gamma = Math.Min(1, t / Double3.Dot(w, w));
+                beta = 1 - gamma;
+                alpha = 0;
+            }
+            else
+            {
+                alpha = Math.Clamp(-Double3.Dot(b, u) / Double3.Dot(u, u), 0, 1);
+                beta = 1 - alpha;
+                gamma = 0;
+            }
+
+            clamped = true;
+        }
+        else if (gamma >= 0 && alpha < 0)
+        {
+            Double3 w = b - c;
+            double t = -Double3.Dot(c, v);
+            if (beta < 0 && t > 0)
+            {
+                alpha = Math.Min(1, t / Double3.Dot(v, v));
+                gamma = 1 - alpha;
+                beta = 0;
+            }
+            else
+            {
+                beta = Math.Clamp(-Double3.Dot(c, w) / Double3.Dot(w, w), 0, 1);
+                gamma = 1 - beta;
+                alpha = 0;
+            }
+
+            clamped = true;
         }
 
-        vPointer++;
-        return true;
+        result = new Double3(alpha, beta, gamma);
+        return clamped;
     }
+
+    private static bool IsFinite(in JVector v) => Real.IsFinite(v.X) && Real.IsFinite(v.Y) && Real.IsFinite(v.Z);
 }
