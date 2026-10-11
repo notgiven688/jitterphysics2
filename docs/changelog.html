@@ -87,6 +87,29 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-2100-2026-10-11">Jitter 2.10.0 (2026-10-11)</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Added <code>TimeStep</code> with full-step and substep timing information. World step and substep callbacks and <code>SoftBody.WorldOnPostStep</code> now receive <code>TimeStep</code>; custom constraint solver callbacks and contact preparation now take <code>in TimeStep</code> instead of an inverse timestep.</li>
+<li><strong>Breaking Change:</strong> Renamed the three <code>BoxShape</code> constructor parameters to <code>sizeX</code>, <code>sizeY</code>, and <code>sizeZ</code>. Update calls using named arguments.</li>
+<li><strong>Breaking Change:</strong> <code>ConvexPolytope</code> now contains reusable managed storage, and its <code>InitTetrahedron</code> methods return a success flag. Added <code>AddVertexDetailed</code> for reporting expansion outcomes.</li>
+<li>Fixed substep scaling of motor force and torque limits and constraint softness, including soft-body springs. This changes simulation behavior when <code>SubstepCount &gt; 1</code>.</li>
+<li>Added <code>AngularMotor.MaximumTorque</code> and deprecated its <code>MaximumForce</code> alias.</li>
+<li>Improved EPA robustness with filtered exact predicates and double-precision contact calculations, and improved GJK closest-point precision for small separations.</li>
+<li>Fixed <code>TriangleShape</code> ray casts reporting intersections behind the ray origin.</li>
+<li><strong>Breaking Change:</strong> Body motion type changes no longer remove constraints or raise <code>World.ConstraintRemoved</code>. Constraints retain their enabled state, are suspended while neither connected body is dynamic, and resume when a dynamic body wakes. Use <code>World.Remove(constraint)</code> for permanent removal.</li>
+<li>Fixed moving kinematic bodies incorrectly falling asleep, including at very low speeds and with a zero deactivation time.</li>
+<li>Added <code>DynamicTree.Update(proxy, dt)</code> and fixed speculative broadphase bounds after velocity, impulse, and speculative contact setting changes, including before the first simulation step.</li>
+<li>Rebuilt dynamic tree collision pairs immediately when its filter changes, preserving the previous filter and pairs if the new filter throws.</li>
+<li>Fixed contact and island state when <code>BeginCollide</code> handlers remove bodies, shapes, or arbiters, including cancellation of pending contacts.</li>
+<li>Made <code>RigidBody.AddShape</code> roll back on registration or mass calculation failures, and tree proxy registration roll back when filtering throws.</li>
+<li>Fixed <code>World.Clear</code> leaving shapes attached to <code>World.NullBody</code>.</li>
+<li>Made <code>SoftBody.Destroy</code> safe after repeated calls, world clearing, or disposal. Added validation and bounding box updates for <code>SoftBodyTriangle.Thickness</code>.</li>
+<li>Fixed neighbor index overflow in large convex hulls and bounding box initialization for detached convex hull and point cloud shapes.</li>
+<li>Fixed inertia calculation for nested <code>TransformedShape</code> instances.</li>
+<li>Improved validation for removed bodies and constraints, invalid bodies passed to <code>World.CreateConstraint</code>, and unregistered dynamic tree proxies.</li>
+<li>Added debug assertions for invalid rigid body and constraint data access and invalid arbiter creation arguments.</li>
+<li><code>PartitionedSet</code> enumeration now throws when the set is modified instead of silently skipping elements.</li>
+</ul>
 <h3 id="jitter-290-2026-10-03">Jitter 2.9.0 (2026-10-03)</h3>
 <ul>
 <li>Added world-space translation and rotation locks via <code>RigidBody.AllowedMotion</code> and <code>MotionAxes</code>, including planar motion presets.</li>
