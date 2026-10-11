@@ -179,7 +179,14 @@ public abstract class Constraint<T> : Constraint where T : unmanaged
     /// <summary>
     /// Gets a reference to the constraint's typed data stored in unmanaged memory.
     /// </summary>
-    public ref T Data => ref JHandle<ConstraintData>.AsHandle<T>(Handle).Data;
+    public ref T Data
+    {
+        get
+        {
+            DebugCheck.IsValid(this);
+            return ref JHandle<ConstraintData>.AsHandle<T>(Handle).Data;
+        }
+    }
 
     /// <inheritdoc />
     public override unsafe bool IsSmallConstraint => sizeof(T) <= sizeof(SmallConstraintData);
@@ -319,9 +326,15 @@ public abstract class Constraint : IDebugDrawable
     /// </remarks>
     public unsafe bool IsEnabled
     {
-        get => Handle.Data.DispatchId != 0;
+        get
+        {
+            DebugCheck.IsValid(this);
+            return Handle.Data.DispatchId != 0;
+        }
         set
         {
+            DebugCheck.IsValid(this);
+
             if (value && DispatchId == 0)
             {
                 throw new InvalidOperationException(
