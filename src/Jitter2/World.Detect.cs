@@ -435,7 +435,10 @@ public sealed partial class World
         arbiter.Handle = JHandle<ContactData>.Zero;
         arbiter.Body1 = null!;
         arbiter.Body2 = null!;
-        arbiterPool.Push(arbiter);
+
+        // Queued BeginCollide notifications may still refer to this instance.
+        if (dispatchArbiters.Count > 0) retiredArbiters.Add(arbiter);
+        else arbiterPool.Push(arbiter);
     }
 
     // The caller holds the shard lock until initialization and publication complete.
