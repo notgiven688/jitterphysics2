@@ -445,8 +445,10 @@ public sealed partial class World
     private Arbiter CreateArbiter(ArbiterKey arbiterKey, RigidBody body1, RigidBody body2)
     {
         Debug.Assert(body1 != body2);
-        DebugCheck.BelongsToWorld(this, body1);
-        DebugCheck.BelongsToWorld(this, body2);
+        Debug.Assert(body1.IsValid);
+        Debug.Assert(body1.World == this);
+        Debug.Assert(body2.IsValid);
+        Debug.Assert(body2.World == this);
 
         Arbiter? arbiter = null;
 

@@ -2,6 +2,7 @@
 
 namespace JitterTests.Robustness;
 
+[NonParallelizable]
 public class DebugValidationTests
 {
     [Test]
@@ -23,7 +24,7 @@ public class DebugValidationTests
     }
 
     [Test]
-    public void InvalidRigidBody_DataAccessThrowsButIdentityRemainsInspectable([Values] bool disposeWorld)
+    public void InvalidRigidBody_DataAccessAssertsButIdentityRemainsInspectable([Values] bool disposeWorld)
     {
         using World world = new();
         RigidBody body = world.CreateRigidBody();
@@ -50,19 +51,19 @@ public class DebugValidationTests
 
         foreach (var (name, access) in accesses)
         {
-            Assert.Throws<InvalidOperationException>(access, name);
+            DebugAssert.ExpectFailure(access, name);
         }
     }
 
     [Test]
-    public void CreateArbiter_WithRemovedBody_ThrowsWithoutChangingWorld([Values] bool removedFirst)
+    public void CreateArbiter_WithRemovedBody_AssertsBeforeChangingWorld([Values] bool removedFirst)
     {
         using World world = new();
         RigidBody removed = world.CreateRigidBody();
         RigidBody other = world.CreateRigidBody();
         world.Remove(removed);
 
-        Assert.Throws<InvalidOperationException>(() =>
+        DebugAssert.ExpectFailure(() =>
         {
             if (removedFirst) world.GetOrCreateArbiter(1, 2, removed, other, out _);
             else world.GetOrCreateArbiter(1, 2, other, removed, out _);
@@ -74,14 +75,14 @@ public class DebugValidationTests
     [TestCase(true, false)]
     [TestCase(false, true)]
     [TestCase(true, true)]
-    public void CreateArbiter_WithForeignBody_ThrowsWithoutChangingWorld(bool foreignFirst, bool foreignSecond)
+    public void CreateArbiter_WithForeignBody_AssertsBeforeChangingWorld(bool foreignFirst, bool foreignSecond)
     {
         using World world = new();
         using World foreignWorld = new();
         RigidBody body1 = (foreignFirst ? foreignWorld : world).CreateRigidBody();
         RigidBody body2 = (foreignSecond ? foreignWorld : world).CreateRigidBody();
 
-        Assert.Throws<ArgumentException>(() => world.GetOrCreateArbiter(1, 2, body1, body2, out _));
+        DebugAssert.ExpectFailure(() => world.GetOrCreateArbiter(1, 2, body1, body2, out _));
 
         AssertNoContactCreated(world, body1, body2);
         Assert.That(foreignWorld.RawData.Contacts.Length, Is.Zero);

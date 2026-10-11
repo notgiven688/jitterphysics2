@@ -2,10 +2,11 @@
 
 namespace JitterTests.Robustness;
 
+[NonParallelizable]
 public class DebugConstraintValidationTests
 {
     [Test]
-    public void InvalidConstraint_DataAccessThrowsButIdentityRemainsInspectable(
+    public void InvalidConstraint_DataAccessAssertsButIdentityRemainsInspectable(
         [Values] bool small,
         [Values("removed", "body_removed", "cleared", "disposed", "uncreated")] string invalidation)
     {
@@ -82,7 +83,7 @@ public class DebugConstraintValidationTests
 
         foreach (var (name, access) in accesses)
         {
-            Assert.Throws<InvalidOperationException>(access, name);
+            DebugAssert.ExpectFailure(access, name);
         }
 
         if (!world.IsDisposed)

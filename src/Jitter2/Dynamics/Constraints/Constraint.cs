@@ -5,6 +5,7 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -183,7 +184,7 @@ public abstract class Constraint<T> : Constraint where T : unmanaged
     {
         get
         {
-            DebugCheck.IsValid(this);
+            Debug.Assert(IsValid);
             return ref JHandle<ConstraintData>.AsHandle<T>(Handle).Data;
         }
     }
@@ -328,12 +329,12 @@ public abstract class Constraint : IDebugDrawable
     {
         get
         {
-            DebugCheck.IsValid(this);
+            Debug.Assert(IsValid);
             return Handle.Data.DispatchId != 0;
         }
         set
         {
-            DebugCheck.IsValid(this);
+            Debug.Assert(IsValid);
 
             if (value && DispatchId == 0)
             {

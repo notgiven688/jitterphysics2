@@ -284,7 +284,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         get
         {
-            DebugCheck.IsValid(this);
+            Debug.Assert(IsValid);
             return ref handle.Data;
         }
     }
