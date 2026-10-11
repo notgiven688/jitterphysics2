@@ -287,6 +287,149 @@ public class SleepTests
         Assert.That(body2.Velocity, Is.EqualTo(JVector.Zero));
     }
 
+    [Test]
+    public void MovingKinematicBodyStaysAwake(
+        [Values] bool angular,
+        [Values(0.2, 1e-7, 1e-25)] double speed,
+        [Values(0.0, 0.5)] double deactivationSeconds)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.MotionType = MotionType.Kinematic;
+        body.DeactivationTime = TimeSpan.FromSeconds(deactivationSeconds);
+
+        var velocity = angular ? new JVector(0, (Real)speed, 0) : new JVector((Real)speed, 0, 0);
+        if (angular) body.AngularVelocity = velocity;
+        else body.Velocity = velocity;
+
+        Helper.AdvanceWorld(world, 3, (Real)0.01, false);
+
+        Assert.That(body.IsActive, Is.True);
+        Assert.That(angular ? body.AngularVelocity : body.Velocity, Is.EqualTo(velocity));
+        Real displacement;
+        if (angular)
+        {
+            JVector forward = JVector.Transform(JVector.UnitX, body.Orientation);
+            displacement = MathR.Atan2(-forward.Z, forward.X);
+        }
+        else
+        {
+            displacement = body.Position.X;
+        }
+
+        Assert.That(displacement, Is.EqualTo((Real)(3 * speed)).Within((Real)(0.05 * speed)));
+    }
+
+    [Test]
+    public void NonzeroVelocityWakesSleepingKinematicBody(
+        [Values] bool angular,
+        [Values(1e-7, 1e-9, 1e-25)] double speed)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.MotionType = MotionType.Kinematic;
+        body.DeactivationTime = TimeSpan.FromSeconds(0.1);
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Assert.That(body.IsActive, Is.False);
+
+        var velocity = new JVector((Real)speed, 0, 0);
+        if (angular) body.AngularVelocity = velocity;
+        else body.Velocity = velocity;
+
+        world.Step((Real)0.01, false);
+        Assert.That(body.IsActive, Is.True);
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Assert.That(body.IsActive, Is.True);
+        Assert.That(angular ? body.AngularVelocity : body.Velocity, Is.EqualTo(velocity));
+    }
+
+    [Test]
+    public void KinematicBodySleepsAfterMotionStops([Values] bool angular)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.MotionType = MotionType.Kinematic;
+        body.DeactivationTime = TimeSpan.FromSeconds(0.1);
+
+        if (angular) body.AngularVelocity = new JVector(0, (Real)0.2, 0);
+        else body.Velocity = new JVector((Real)0.2, 0, 0);
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Assert.That(body.IsActive, Is.True);
+
+        if (angular) body.AngularVelocity = JVector.Zero;
+        else body.Velocity = JVector.Zero;
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Assert.That(body.IsActive, Is.False);
+    }
+
+    [Test]
+    public void SwitchingToKinematicPreservesMotionAndStaysAwake()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.DeactivationTime = TimeSpan.FromSeconds(0.1);
+        body.Velocity = new JVector((Real)0.2, 0, 0);
+        body.AngularVelocity = new JVector(0, (Real)0.2, 0);
+        world.Step((Real)0.01, false);
+        JVector velocity = body.Velocity;
+        JVector angularVelocity = body.AngularVelocity;
+
+        body.MotionType = MotionType.Kinematic;
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+
+        Assert.That(body.IsActive, Is.True);
+        Assert.That(body.Velocity, Is.EqualTo(velocity));
+        Assert.That(body.AngularVelocity, Is.EqualTo(angularVelocity));
+    }
+
+    [Test]
+    public void LockedKinematicMotionDoesNotWakeBody()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.MotionType = MotionType.Kinematic;
+        body.AllowedMotion = MotionAxes.None;
+        body.DeactivationTime = TimeSpan.FromSeconds(0.1);
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Assert.That(body.IsActive, Is.False);
+
+        body.Velocity = new JVector((Real)0.2, 0, 0);
+        body.AngularVelocity = new JVector(0, (Real)0.2, 0);
+        world.Step((Real)0.01, false);
+
+        Assert.That(body.Velocity, Is.EqualTo(JVector.Zero));
+        Assert.That(body.AngularVelocity, Is.EqualTo(JVector.Zero));
+        Assert.That(body.IsActive, Is.False);
+    }
+
+    [Test]
+    public void SlowKinematicPlatformCarriesItsRider()
+    {
+        using var world = new World();
+        var platform = world.CreateRigidBody();
+        platform.AddShape(new BoxShape(4, 1, 4));
+        platform.MotionType = MotionType.Kinematic;
+        platform.DeactivationTime = TimeSpan.FromSeconds(0.5);
+
+        var rider = world.CreateRigidBody();
+        rider.AddShape(new BoxShape(1));
+        rider.Position = new JVector(0, 1, 0);
+        rider.DeactivationTime = TimeSpan.FromSeconds(0.5);
+        Helper.AdvanceWorld(world, 1, (Real)0.01, false);
+        Real gap = rider.Position.Y - platform.Position.Y;
+
+        platform.Velocity = new JVector(0, (Real)0.1, 0);
+        Helper.AdvanceWorld(world, 4, (Real)0.01, false);
+
+        Assert.That(platform.Position.Y, Is.EqualTo((Real)0.4).Within((Real)0.02));
+        Assert.That(rider.Position.Y - platform.Position.Y, Is.EqualTo(gap).Within((Real)0.02));
+    }
+
     [TestCase]
     public void ForceSleepIsland_ZeroesKinematicVelocityImmediately()
     {
