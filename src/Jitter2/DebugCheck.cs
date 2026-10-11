@@ -4,7 +4,9 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using System.Diagnostics;
+using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
 namespace Jitter2;
@@ -19,6 +21,21 @@ namespace Jitter2;
 /// </remarks>
 internal static class DebugCheck
 {
+    [Conditional("DEBUG")]
+    public static void IsValid(RigidBody body)
+    {
+        if (!body.IsValid)
+            throw new InvalidOperationException("The rigid body has been removed or its world has been disposed.");
+    }
+
+    [Conditional("DEBUG")]
+    public static void BelongsToWorld(World world, RigidBody body)
+    {
+        IsValid(body);
+        if (body.World != world)
+            throw new ArgumentException("The body does not belong to this world.", nameof(body));
+    }
+
     [Conditional("DEBUG")]
     public static void IsFinite(Real value, string paramName) => ArgumentCheck.Finite(value, paramName);
 

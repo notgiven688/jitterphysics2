@@ -280,7 +280,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </list>
     /// </para>
     /// </remarks>
-    public ref RigidBodyData Data => ref handle.Data;
+    public ref RigidBodyData Data
+    {
+        get
+        {
+            DebugCheck.IsValid(this);
+            return ref handle.Data;
+        }
+    }
 
     /// <summary>
     /// Gets the handle to the rigid body data, see <see cref="Data"/>.
@@ -598,11 +605,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </remarks>
     public JVector Position
     {
-        get => handle.Data.Position;
+        get => Data.Position;
         set
         {
             DebugCheck.IsFinite(value, nameof(value));
-            handle.Data.Position = value;
+            Data.Position = value;
             Move();
         }
     }
@@ -769,27 +776,30 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </exception>
     public JVector Velocity
     {
-        get => handle.Data.Velocity;
+        get => Data.Velocity;
         set
         {
             DebugCheck.IsFinite(value, nameof(value));
 
-            if (handle.Data.MotionType == MotionType.Static)
+            ref RigidBodyData data = ref Data;
+            if (data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
                     $"Cannot set velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            RestrictLinearMotion(ref value, handle.Data.AllowedMotion);
-            JVector previousVelocity = handle.Data.Velocity;
-            handle.Data.Velocity = value;
+            RestrictLinearMotion(ref value, data.AllowedMotion);
+            JVector previousVelocity = data.Velocity;
+            data.Velocity = value;
 
             if (EnableSpeculativeContacts && previousVelocity != value)
             {
                 UpdateSpeculativeBroadphase();
+                // Custom shape bounds updates can relocate the body buffer.
+                data = ref Data;
             }
 
-            if (handle.Data.MotionType == MotionType.Kinematic
+            if (data.MotionType == MotionType.Kinematic
                 ? value != JVector.Zero
                 : !MathHelper.CloseToZero(value))
             {
@@ -812,21 +822,22 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </exception>
     public JVector AngularVelocity
     {
-        get => handle.Data.AngularVelocity;
+        get => Data.AngularVelocity;
         set
         {
             DebugCheck.IsFinite(value, nameof(value));
 
-            if (handle.Data.MotionType == MotionType.Static)
+            ref RigidBodyData data = ref Data;
+            if (data.MotionType == MotionType.Static)
             {
                 throw new InvalidOperationException(
                     $"Cannot set angular velocity for static objects, objects must be kinematic or dynamic. See {nameof(MotionType)}.");
             }
 
-            RestrictAngularMotion(ref value, handle.Data.AllowedMotion);
-            handle.Data.AngularVelocity = value;
+            RestrictAngularMotion(ref value, data.AllowedMotion);
+            data.AngularVelocity = value;
 
-            if (handle.Data.MotionType == MotionType.Kinematic
+            if (data.MotionType == MotionType.Kinematic
                 ? value != JVector.Zero
                 : !MathHelper.CloseToZero(value))
             {
@@ -1299,13 +1310,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     {
         DebugCheck.IsFinite(impulse, nameof(impulse));
 
-        if ((Data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
-        if (!wakeup && !IsActive) return;
+        ref RigidBodyData data = ref Data;
+        if ((data.MotionType != MotionType.Dynamic) || MathHelper.CloseToZero(impulse)) return;
+        if (!wakeup && !data.IsActive) return;
 
         World.ActivateBodyNextStep(this);
-        JVector previousVelocity = handle.Data.Velocity;
-        handle.Data.Velocity += JVector.Multiply(impulse, handle.Data.InverseMassVector);
-        if (EnableSpeculativeContacts && previousVelocity != handle.Data.Velocity)
+        JVector previousVelocity = data.Velocity;
+        data.Velocity += JVector.Multiply(impulse, data.InverseMassVector);
+        if (EnableSpeculativeContacts && previousVelocity != data.Velocity)
         {
             UpdateSpeculativeBroadphase();
         }

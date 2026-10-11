@@ -20,6 +20,27 @@ public class ConstraintLifecycleTests
         world.Dispose();
     }
 
+    [Test]
+    public void CreateConstraint_WithRemovedBody_ThrowsAndLeavesTheWorldIntact([Values] bool removedFirst)
+    {
+        using var world = new World();
+        var removed = world.CreateRigidBody();
+        var other = world.CreateRigidBody();
+        world.Remove(removed);
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            if (removedFirst) world.CreateConstraint<BallSocket>(removed, other);
+            else world.CreateConstraint<BallSocket>(other, removed);
+        });
+
+        Assert.That(other.Constraints, Is.Empty);
+        Assert.That(other.Connections, Is.Empty);
+        Assert.That(world.RawData.Constraints.Length, Is.Zero);
+        Assert.That(world.RawData.SmallConstraints.Length, Is.Zero);
+        Assert.DoesNotThrow(() => world.Step((Real)(1.0 / 60.0), false));
+    }
+
     [TestCase]
     public void RemoveConstraint_UnregistersFromBothBodies_AndRemovesConnection()
     {

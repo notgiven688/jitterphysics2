@@ -196,6 +196,8 @@ public class ArbiterCreationTests
         AssertRolledBackAndRetry(world, body1, body2);
     }
 
+#if !DEBUG
+    // Debug precondition checks reject this fault stimulus before allocation.
     [Test]
     public void InitializationFailure_FreesAllocatedContactAndAllowsRetry()
     {
@@ -210,6 +212,7 @@ public class ArbiterCreationTests
 
         AssertRolledBackAndRetry(world, body1, body2);
     }
+#endif
 
     [Test]
     public void PublicationFailure_RemovesDeferredArbiterAndAllowsRetry()
