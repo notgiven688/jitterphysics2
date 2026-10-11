@@ -1,5 +1,28 @@
 # Changelog
 
+### Jitter 2.10.0 (2026-10-11)
+
+- **Breaking Change:** Added `TimeStep` with full-step and substep timing information. World step and substep callbacks and `SoftBody.WorldOnPostStep` now receive `TimeStep`; custom constraint solver callbacks and contact preparation now take `in TimeStep` instead of an inverse timestep.
+- **Breaking Change:** Renamed the three `BoxShape` constructor parameters to `sizeX`, `sizeY`, and `sizeZ`. Update calls using named arguments.
+- **Breaking Change:** `ConvexPolytope` now contains reusable managed storage, and its `InitTetrahedron` methods return a success flag. Added `AddVertexDetailed` for reporting expansion outcomes.
+- Fixed substep scaling of motor force and torque limits and constraint softness, including soft-body springs. This changes simulation behavior when `SubstepCount > 1`.
+- Added `AngularMotor.MaximumTorque` and deprecated its `MaximumForce` alias.
+- Improved EPA robustness with filtered exact predicates and double-precision contact calculations, and improved GJK closest-point precision for small separations.
+- Fixed `TriangleShape` ray casts reporting intersections behind the ray origin.
+- **Breaking Change:** Body motion type changes no longer remove constraints or raise `World.ConstraintRemoved`. Constraints retain their enabled state, are suspended while neither connected body is dynamic, and resume when a dynamic body wakes. Use `World.Remove(constraint)` for permanent removal.
+- Fixed moving kinematic bodies incorrectly falling asleep, including at very low speeds and with a zero deactivation time.
+- Added `DynamicTree.Update(proxy, dt)` and fixed speculative broadphase bounds after velocity, impulse, and speculative contact setting changes, including before the first simulation step.
+- Rebuilt dynamic tree collision pairs immediately when its filter changes, preserving the previous filter and pairs if the new filter throws.
+- Fixed contact and island state when `BeginCollide` handlers remove bodies, shapes, or arbiters, including cancellation of pending contacts.
+- Made `RigidBody.AddShape` roll back on registration or mass calculation failures, and tree proxy registration roll back when filtering throws.
+- Fixed `World.Clear` leaving shapes attached to `World.NullBody`.
+- Made `SoftBody.Destroy` safe after repeated calls, world clearing, or disposal. Added validation and bounding box updates for `SoftBodyTriangle.Thickness`.
+- Fixed neighbor index overflow in large convex hulls and bounding box initialization for detached convex hull and point cloud shapes.
+- Fixed inertia calculation for nested `TransformedShape` instances.
+- Improved validation for removed bodies and constraints, invalid bodies passed to `World.CreateConstraint`, and unregistered dynamic tree proxies.
+- Added debug assertions for invalid rigid body and constraint data access and invalid arbiter creation arguments.
+- `PartitionedSet` enumeration now throws when the set is modified instead of silently skipping elements.
+
 ### Jitter 2.9.0 (2026-10-03)
 
 - Added world-space translation and rotation locks via `RigidBody.AllowedMotion` and `MotionAxes`, including planar motion presets.
