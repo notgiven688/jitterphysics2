@@ -110,6 +110,9 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
+        prepareContactColor = PrepareContactColor;
+        iterateContactColor = IterateContactColor;
+        finishContactColor = FinishContactColor;
     }
 
     private readonly double[] debugTimings = new double[(int)Timings.Last];
@@ -241,6 +244,12 @@ public sealed partial class World
                     IntegrateVelocities(multiThread); // FAST SWEEP
                     RelaxIslands(multiThread, velocityRelaxations); // FAST SWEEP
                 }
+                else if (SolveMode == Jitter2.SolveMode.GraphColored)
+                {
+                    SolveColoredContacts(multiThread, solverIterations);
+                    IntegrateVelocities(multiThread);
+                    RelaxColoredContacts(multiThread, velocityRelaxations);
+                }
                 else
                 {
                     SolveVelocities(multiThread, solverIterations); // FAST SWEEP
@@ -368,6 +377,14 @@ public sealed partial class World
                 {
                     SolveIslands(multiThread, solverIterations);
                     RelaxIslands(multiThread, relaxationIterations);
+                }
+            }
+            else if (SolveMode == Jitter2.SolveMode.GraphColored)
+            {
+                for (int i = 0; i < timeStep.SubstepCount; i++)
+                {
+                    SolveColoredContacts(multiThread, solverIterations);
+                    RelaxColoredContacts(multiThread, relaxationIterations);
                 }
             }
             else

@@ -471,6 +471,8 @@ public sealed partial class World : IDisposable
         Stack<IDynamicTreeProxy> proxies = new(DynamicTree.Proxies);
         while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
 
+        ClearContactColors();
+
     }
 
     /// <summary>
@@ -478,7 +480,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// This method trims world-level sets, broadphase scratch storage, island pools, deterministic
-    /// solver scratch containers, and per-body/per-island collection backing storage.
+    /// solver scratch containers, graph-colored solver scratch storage, and per-body/per-island collection backing storage.
     ///
     /// <para>
     /// Existing bodies, constraints, contacts, and arbiters remain valid. Unmanaged simulation
@@ -519,6 +521,7 @@ public sealed partial class World : IDisposable
         sortedContacts.TrimExcess();
         sortedSmallConstraints.TrimExcess();
         sortedConstraints.TrimExcess();
+        TrimContactColors();
 
         foreach (RigidBody body in bodies)
         {
@@ -974,6 +977,8 @@ public sealed partial class World : IDisposable
     {
         if (disposed) return;
         disposed = true;
+
+        ClearContactColors();
 
         memContacts.Dispose();
         memRigidBodies.Dispose();
