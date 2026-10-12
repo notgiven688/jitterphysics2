@@ -107,22 +107,26 @@ manifolds within a color run without body locks and can be distributed across wo
 
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
-Preparation and warm starting use the existing contact code; coefficients are packed
-once per substep and reused throughout solving and relaxation. Joints use the regular
-solver in separate passes, with a synchronization barrier before the next contact pass.
+Full bundles prepare contacts and apply warm starts directly across SIMD lanes. Anchors,
+inverse inertia, and effective masses are captured once per substep. Each iteration
+computes angular velocity changes from the combined normal and friction impulse instead
+of storing separate angular responses for each direction. Solving and relaxation share
+the same prepared geometry; relaxation removes penetration correction while retaining
+restitution and speculative-contact bias. Joints use the regular solver in separate
+passes, with a synchronization barrier before the next contact pass.
 
 This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
 values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current
 runtime. Partial bundles and systems without hardware SIMD use the existing contact
-iteration. Coloring is rebuilt after `PreSubStep` for each substep, using reusable
-storage. At most 64 colors are used; excess conflicts are solved sequentially after
-each sweep. `World.Trim()` releases the cached coloring and SIMD storage.
+preparation and iteration. Coloring is rebuilt after `PreSubStep` for each substep,
+using reusable storage. At most 64 colors are used; excess conflicts are solved
+sequentially after each sweep. `World.Trim()` releases the cached coloring and SIMD storage.
 
 Graph coloring changes constraint order and does not guarantee deterministic results.
 Its benefit depends on contact density, SIMD occupancy, iteration count, and worker
 synchronization costs. Benchmark representative scenes before selecting it. The
 `other/GraphColoredSolverBenchmark` program compares independent floor contacts and
-a connected box pile. Coloring and packing costs are included in `World.Timings.Solve`.
+a connected box pile. Coloring and preparation costs are included in `World.Timings.Solve`.
 
 ## Solver Iterations
 

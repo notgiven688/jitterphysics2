@@ -126,8 +126,8 @@ public sealed partial class World
         for (int i = batch.Start; i < batch.End; i++)
         {
             var lanes = contacts.Slice(i * width, Math.Min(width, contacts.Length - i * width));
-            foreach (var handle in lanes) handle.Data.PrepareForIteration(timeStep);
-            if (i < color.BundleCount) color.Bundles[i].Prepare(lanes);
+            if (i < color.BundleCount) color.Bundles[i].Prepare(lanes, timeStep);
+            else foreach (var handle in lanes) handle.Data.PrepareForIteration(timeStep);
         }
     }
 
@@ -209,7 +209,8 @@ public sealed partial class World
     private void RelaxColoredContacts(bool multiThread, int iterations)
     {
         // Integration changes velocities and transforms, but world inertia is refreshed
-        // by UpdateBodies at the end of Step. Prepared angular responses remain valid.
+        // by UpdateBodies at the end of Step. Keep the prepared anchors and inertia
+        // fixed so velocity relaxation operates on the same constraints.
         for (int iter = 0; iter < iterations; iter++) IterateColoredContacts(multiThread, applyBias: false);
 
         // Persist warm-start state even when there are no relaxation iterations.

@@ -23,11 +23,11 @@ namespace Jitter2.Dynamics;
 /// represents one manifold; its contact points retain their sequential Gauss-Seidel order.
 /// </summary>
 /// <remarks>
-/// The caller must exclude body read/write conflicts between lanes, prepare the contacts
-/// before packing, and write impulses back before discarding or preparing the bundle again.
+/// The caller must exclude body read/write conflicts between lanes and write impulses
+/// back before discarding or preparing the bundle again.
 /// Handles, rather than pointers into the movable body/contact buffers, are retained.
 /// </remarks>
-internal sealed class ContactSolverWide
+internal sealed partial class ContactSolverWide
 {
     internal static int Width => Wide.Count;
 
@@ -40,6 +40,7 @@ internal sealed class ContactSolverWide
     private readonly uint[] usageMasks = new uint[Width];
     private readonly ContactWide[] points = new ContactWide[4];
     private Vector3Wide inverseMass1, inverseMass2;
+    private SymmetricMatrixWide inverseInertia1, inverseInertia2;
     private Wide friction;
     private uint occupiedSlots;
 
@@ -88,12 +89,34 @@ internal sealed class ContactSolverWide
             };
     }
 
+    private struct SymmetricMatrixWide
+    {
+        internal Wide M11, M21, M31, M22, M23, M33;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void SetLane(int lane, in JSymmetricMatrix matrix)
+        {
+            ContactSolverWide.SetLane(ref M11, lane, matrix.M11);
+            ContactSolverWide.SetLane(ref M21, lane, matrix.M21);
+            ContactSolverWide.SetLane(ref M31, lane, matrix.M31);
+            ContactSolverWide.SetLane(ref M22, lane, matrix.M22);
+            ContactSolverWide.SetLane(ref M23, lane, matrix.M23);
+            ContactSolverWide.SetLane(ref M33, lane, matrix.M33);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal readonly Vector3Wide Transform(in Vector3Wide value) => new()
+        {
+            X = (M11 * value.X + M21 * value.Y) + M31 * value.Z,
+            Y = (M21 * value.X + M22 * value.Y) + M23 * value.Z,
+            Z = (M31 * value.X + M23 * value.Y) + M33 * value.Z
+        };
+    }
+
     private struct ContactWide
     {
         internal Vector3Wide Normal, Tangent1, Tangent2;
         internal Vector3Wide RelativePosition1, RelativePosition2;
-        internal Vector3Wide AngularNormal1, AngularTangent11, AngularTangent21;
-        internal Vector3Wide AngularNormal2, AngularTangent12, AngularTangent22;
         internal Wide MassNormal, MassTangent1, MassTangent2;
         internal Wide AccumulatedNormal, AccumulatedTangent1, AccumulatedTangent2;
         internal Wide Bias, BiasedTarget;
@@ -117,8 +140,7 @@ internal sealed class ContactSolverWide
         }
     }
 
-    /// <summary>Packs coefficients after the regular preparation and warm-start pass.</summary>
-    internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
+    private void InitializeBundle(ReadOnlySpan<JHandle<ContactData>> source)
     {
         if (source.Length > Width) throw new ArgumentOutOfRangeException(nameof(source));
         Count = source.Length;
@@ -141,7 +163,18 @@ internal sealed class ContactSolverWide
                 inverseMass1.SetLane(lane, data.Body1.Data.InverseMassVector);
             if ((data.Mode & ContactData.SolveMode.LinearBody2) != 0)
                 inverseMass2.SetLane(lane, data.Body2.Data.InverseMassVector);
+        }
 
+        RefreshInertia();
+    }
+
+    /// <summary>Packs coefficients after the regular preparation and warm-start pass.</summary>
+    internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
+    {
+        InitializeBundle(source);
+        for (int lane = 0; lane < Count; lane++)
+        {
+            ref ContactData data = ref source[lane].Data;
             for (int slot = 0; slot < 4; slot++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
@@ -163,50 +196,23 @@ internal sealed class ContactSolverWide
                     ? MathR.Max(contact.PenaltyBias, contact.Bias) : contact.Bias);
             }
         }
-
-        RefreshInertia();
     }
 
     /// <summary>
-    /// Refreshes the angular response from the current world inertia.
+    /// Captures the current world inertia, including angular motion restrictions.
     /// Effective masses, anchors and accumulated impulses retain their prepared values.
     /// </summary>
     internal void RefreshInertia()
     {
+        inverseInertia1 = inverseInertia2 = default;
         for (int lane = 0; lane < Count; lane++)
         {
-            ref RigidBodyData body1 = ref bodies1[lane].Data;
-            ref RigidBodyData body2 = ref bodies2[lane].Data;
-            for (int slot = 0; slot < 4; slot++)
-            {
-                if ((usageMasks[lane] & (1u << slot)) == 0) continue;
-                ref ContactWide point = ref points[slot];
-                JVector normal = point.Normal.GetLane(lane);
-                JVector tangent1 = point.Tangent1.GetLane(lane);
-                JVector tangent2 = point.Tangent2.GetLane(lane);
-                if ((modes[lane] & ContactData.SolveMode.AngularBody1) != 0)
-                {
-                    JVector position = point.RelativePosition1.GetLane(lane);
-                    point.AngularNormal1.SetLane(lane, TransformInertia(position % normal, body1.InverseInertiaWorld));
-                    point.AngularTangent11.SetLane(lane, TransformInertia(position % tangent1, body1.InverseInertiaWorld));
-                    point.AngularTangent21.SetLane(lane, TransformInertia(position % tangent2, body1.InverseInertiaWorld));
-                }
-                if ((modes[lane] & ContactData.SolveMode.AngularBody2) != 0)
-                {
-                    JVector position = point.RelativePosition2.GetLane(lane);
-                    point.AngularNormal2.SetLane(lane, TransformInertia(position % normal, body2.InverseInertiaWorld));
-                    point.AngularTangent12.SetLane(lane, TransformInertia(position % tangent1, body2.InverseInertiaWorld));
-                    point.AngularTangent22.SetLane(lane, TransformInertia(position % tangent2, body2.InverseInertiaWorld));
-                }
-            }
+            if ((modes[lane] & ContactData.SolveMode.AngularBody1) != 0)
+                inverseInertia1.SetLane(lane, bodies1[lane].Data.InverseInertiaWorld);
+            if ((modes[lane] & ContactData.SolveMode.AngularBody2) != 0)
+                inverseInertia2.SetLane(lane, bodies2[lane].Data.InverseInertiaWorld);
         }
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static JVector TransformInertia(in JVector vector, in JSymmetricMatrix matrix) => new(
-        (matrix.M11 * vector.X + matrix.M21 * vector.Y) + matrix.M31 * vector.Z,
-        (matrix.M21 * vector.X + matrix.M22 * vector.Y) + matrix.M23 * vector.Z,
-        (matrix.M31 * vector.X + matrix.M23 * vector.Y) + matrix.M33 * vector.Z);
 
     /// <summary>Runs an iteration with live velocities, without allocating or repacking coefficients.</summary>
     internal void Iterate(bool applyBias)
@@ -253,10 +259,11 @@ internal sealed class ContactSolverWide
             Vector3Wide impulse = (point.Normal * normal + point.Tangent1 * tangent1) + point.Tangent2 * tangent2;
             velocity1 -= Vector3Wide.Multiply(impulse, inverseMass1);
             velocity2 += Vector3Wide.Multiply(impulse, inverseMass2);
-            angular1 -= (point.AngularNormal1 * normal + point.AngularTangent11 * tangent1) +
-                        point.AngularTangent21 * tangent2;
-            angular2 += (point.AngularNormal2 * normal + point.AngularTangent12 * tangent1) +
-                        point.AngularTangent22 * tangent2;
+            // Recompute the angular response to the combined impulse rather than loading
+            // six cached response vectors per point. Frozen anchors and inertia preserve
+            // the same constraint through biased solving and velocity relaxation.
+            angular1 -= inverseInertia1.Transform(Vector3Wide.Cross(point.RelativePosition1, impulse));
+            angular2 += inverseInertia2.Transform(Vector3Wide.Cross(point.RelativePosition2, impulse));
         }
 
         for (int lane = 0; lane < Count; lane++)
