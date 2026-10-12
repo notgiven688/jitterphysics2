@@ -3,6 +3,48 @@ namespace JitterTests.Behavior;
 public class MotionTypeTests
 {
     [Test]
+    public void BecomingStatic_RemovesDuplicateConnectionsAndSplitsIslands(
+        [Values] SolveMode mode, [Values] bool multiThread)
+    {
+        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        var center = world.CreateRigidBody();
+        var left = world.CreateRigidBody();
+        var right = world.CreateRigidBody();
+        var tail = world.CreateRigidBody();
+
+        world.CreateConstraint<BallSocket>(center, left).Initialize(JVector.Zero);
+        world.CreateConstraint<BallSocket>(center, left).Initialize(JVector.Zero);
+        world.CreateConstraint<BallSocket>(center, right).Initialize(JVector.Zero);
+        world.CreateConstraint<BallSocket>(left, tail).Initialize(JVector.Zero);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Assert.That(center.Connections, Has.Count.EqualTo(3));
+            Assert.That(left.Connections, Has.Count.EqualTo(3));
+            Assert.That(right.Island, Is.SameAs(left.Island));
+
+            center.MotionType = MotionType.Static;
+
+            Assert.That(center.Connections, Is.Empty);
+            Assert.That(right.Connections, Is.Empty);
+            Assert.That(left.Connections, Is.EqualTo(new[] { tail }));
+            Assert.That(tail.Connections, Is.EqualTo(new[] { left }));
+            Assert.That(center.Island.Bodies, Has.Count.EqualTo(1));
+            Assert.That(right.Island.Bodies, Has.Count.EqualTo(1));
+            Assert.That(left.Island, Is.SameAs(tail.Island));
+            Assert.That(left.Island.Bodies, Has.Count.EqualTo(2));
+            Assert.That(center.Constraints, Has.Count.EqualTo(3));
+            world.Step((Real)0.01, multiThread);
+
+            center.MotionType = MotionType.Dynamic;
+            Assert.That(center.Island, Is.SameAs(left.Island));
+            Assert.That(center.Island, Is.SameAs(right.Island));
+            Assert.That(center.Island.Bodies, Has.Count.EqualTo(4));
+            world.Step((Real)0.01, multiThread);
+        }
+    }
+
+    [Test]
     public void JointToTheWorld_SurvivesASwitchAwayFromDynamicAndBack(
         [Values] SolveMode mode, [Values] bool multiThread,
         [Values(MotionType.Kinematic, MotionType.Static)] MotionType temporary)

@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -778,24 +777,9 @@ public sealed partial class World : IDisposable
     /// <param name="body">The body whose connections should be removed.</param>
     internal void RemoveConnections(RigidBody body)
     {
-        if (body.InternalConnections.Count > 0)
+        while (body.InternalConnections.Count > 0)
         {
-            int count = body.InternalConnections.Count;
-            var connections = ArrayPool<RigidBody>.Shared.Rent(count);
-
-            try
-            {
-                body.InternalConnections.CopyTo(connections);
-
-                for (int i = 0; i < count; i++)
-                {
-                    IslandHelper.RemoveConnection(islands, islandPool, body, connections[i]);
-                }
-            }
-            finally
-            {
-                ArrayPool<RigidBody>.Shared.Return(connections, clearArray: true);
-            }
+            IslandHelper.RemoveConnection(islands, islandPool, body, body.InternalConnections[^1]);
         }
 
         Debug.Assert(body.InternalConnections.Count == 0);
