@@ -141,6 +141,7 @@ public partial class Playground : RenderWindow
         world.SubstepCount = 1;
         world.SolverIterations = (8, 4);
         world.CcdRelaxationFactor = 0.9f;
+        world.SolveMode = SolveMode.GraphColored;
     }
 
     public void AddFloor()

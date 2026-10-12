@@ -30,7 +30,15 @@ public enum SolveMode
     /// Solves contacts and constraints in a repeatable order. Groups of connected bodies can
     /// still be solved in parallel. Can be significantly slower than <see cref="Regular"/>.
     /// </summary>
-    Deterministic
+    Deterministic,
+
+    /// <summary>
+    /// Colors contact manifolds into batches without conflicting body accesses and solves
+    /// independent manifolds together using SIMD. Colors run sequentially; work within a
+    /// color can run in parallel without body locks. Joints use the regular solver in
+    /// separate passes. This mode does not guarantee deterministic simulations.
+    /// </summary>
+    GraphColored
 }
 
 public sealed partial class World

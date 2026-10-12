@@ -84,11 +84,12 @@ Any callbacks shared by worlds running concurrently must be thread-safe. This in
 
 ## Solver Mode
 
-Jitter2 offers two solver strategies through <xref:Jitter2.SolveMode>:
+Jitter2 offers three solver strategies through <xref:Jitter2.SolveMode>:
 
 ```cs
 world.SolveMode = SolveMode.Regular;       // default
 world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+world.SolveMode = SolveMode.GraphColored;  // SIMD across independent contact manifolds
 ```
 
 `SolveMode.Regular` favors speed. With multithreading, the order in which contacts and constraints are solved can vary between runs.
@@ -96,6 +97,32 @@ world.SolveMode = SolveMode.Deterministic; // reproducible, slower
 `SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
 
 Use deterministic mode for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
+
+### Graph-colored contacts
+
+`SolveMode.GraphColored` groups contact manifolds into colors so that no body written by
+one manifold is accessed by another manifold in the same color. Static and kinematic
+bodies can be shared when their velocities are read-only. Colors run sequentially;
+manifolds within a color run without body locks and can be distributed across workers.
+
+Each SIMD lane solves an independent manifold. The manifold's contact points retain
+their sequential order, including friction, penetration bias, and accumulated impulses.
+Preparation and warm starting use the existing contact code; coefficients are packed
+once per substep and reused throughout solving and relaxation. Joints use the regular
+solver in separate passes, with a synchronization barrier before the next contact pass.
+
+This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
+values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current
+runtime. Partial bundles and systems without hardware SIMD use the existing contact
+iteration. Coloring is rebuilt after `PreSubStep` for each substep, using reusable
+storage. At most 64 colors are used; excess conflicts are solved sequentially after
+each sweep. `World.Trim()` releases the cached coloring and SIMD storage.
+
+Graph coloring changes constraint order and does not guarantee deterministic results.
+Its benefit depends on contact density, SIMD occupancy, iteration count, and worker
+synchronization costs. Benchmark representative scenes before selecting it. The
+`other/GraphColoredSolverBenchmark` program compares independent floor contacts and
+a connected box pile. Coloring and packing costs are included in `World.Timings.Solve`.
 
 ## Solver Iterations
 

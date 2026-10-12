@@ -462,6 +462,8 @@ public sealed partial class World : IDisposable
         Stack<IDynamicTreeProxy> proxies = new(DynamicTree.Proxies);
         while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
 
+        ClearContactColors();
+
     }
 
     /// <summary>
@@ -507,6 +509,7 @@ public sealed partial class World : IDisposable
         sortedContacts.TrimExcess();
         sortedSmallConstraints.TrimExcess();
         sortedConstraints.TrimExcess();
+        TrimContactColors();
 
         foreach (RigidBody body in bodies)
         {
@@ -966,6 +969,7 @@ public sealed partial class World : IDisposable
         ccdBodies.Clear();
         ccdBodySet.Clear();
         ccdQueries.Clear();
+        ClearContactColors();
 
         memContacts.Dispose();
         memRigidBodies.Dispose();
