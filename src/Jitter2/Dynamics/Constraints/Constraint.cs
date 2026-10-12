@@ -232,6 +232,11 @@ public abstract class Constraint : IDebugDrawable
     /// <summary>Gets the second rigid body connected by this constraint.</summary>
     public RigidBody Body2 { private set; get; } = null!;
 
+    /// <summary>
+    /// A managed pointer to custom user data. This is not used by the engine.
+    /// </summary>
+    public object? Tag { get; set; }
+
     /// <summary>Gets whether this constraint uses the smaller data layout.</summary>
     public virtual bool IsSmallConstraint { get; } = false;
 
