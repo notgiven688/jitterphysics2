@@ -830,7 +830,7 @@ public sealed partial class World : IDisposable
 
         foreach (RigidBody body in island.InternalBodies)
         {
-            deactivatedBody |= DeactivateBodyForSleep(body, clearMotion: false);
+            deactivatedBody |= DeactivateBodyForSleep(body);
         }
 
         islands.MoveToInactive(island);
