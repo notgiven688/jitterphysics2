@@ -351,14 +351,7 @@ public sealed partial class World
         int numIslands = islandRanges.Count;
         if (numIslands == 0) return;
 
-        if (!multiThread)
-        {
-            RelaxIslandBatch(new Parallel.Batch(0, numIslands));
-            return;
-        }
-
-        int numThreads = ThreadPool.Instance.ThreadCount;
-        int numTasks = Math.Min(numIslands, numThreads);
+        int numTasks = multiThread ? Math.Min(numIslands, ThreadPool.Instance.ThreadCount) : 1;
 
         if (numTasks <= 1)
         {
@@ -376,14 +369,7 @@ public sealed partial class World
         int numIslands = islandRanges.Count;
         if (numIslands == 0) return;
 
-        if (!multiThread)
-        {
-            SolveIslandBatch(new Parallel.Batch(0, numIslands));
-            return;
-        }
-
-        int numThreads = ThreadPool.Instance.ThreadCount;
-        int numTasks = Math.Min(numIslands, numThreads);
+        int numTasks = multiThread ? Math.Min(numIslands, ThreadPool.Instance.ThreadCount) : 1;
 
         if (numTasks <= 1)
         {
