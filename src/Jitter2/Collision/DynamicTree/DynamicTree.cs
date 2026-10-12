@@ -348,69 +348,38 @@ public partial class DynamicTree
         Tracer.ProfileEnd(TraceName.PruneInvalidPairs);
         SetTime(Timings.PruneInvalidPairs);
 
-        if (multiThread)
+        Tracer.ProfileBegin(TraceName.UpdateBoundingBoxes);
+        var batch = new Parallel.Batch(0, proxies.ActiveCount);
+        if (multiThread) proxies.ParallelForBatch(256, updateBoundingBoxes);
+        else UpdateBoundingBoxesCallback(batch);
+        Tracer.ProfileEnd(TraceName.UpdateBoundingBoxes);
+        SetTime(Timings.UpdateBoundingBoxes);
+
+        Tracer.ProfileBegin(TraceName.ScanMoved);
+        movedProxies.Clear();
+        if (multiThread) proxies.ParallelForBatch(24, scanForMovedProxies);
+        else ScanForMovedProxies(batch);
+        Tracer.ProfileEnd(TraceName.ScanMoved);
+        SetTime(Timings.ScanMoved);
+
+        Tracer.ProfileBegin(TraceName.UpdateProxies);
+        for (int i = 0; i < movedProxies.Count; i++)
         {
-            Tracer.ProfileBegin(TraceName.UpdateBoundingBoxes);
-            proxies.ParallelForBatch(256, updateBoundingBoxes);
-            Tracer.ProfileEnd(TraceName.UpdateBoundingBoxes);
-            SetTime(Timings.UpdateBoundingBoxes);
-
-            Tracer.ProfileBegin(TraceName.ScanMoved);
-            movedProxies.Clear();
-            proxies.ParallelForBatch(24, scanForMovedProxies);
-            Tracer.ProfileEnd(TraceName.ScanMoved);
-            SetTime(Timings.ScanMoved);
-
-            Tracer.ProfileBegin(TraceName.UpdateProxies);
-            for (int i = 0; i < movedProxies.Count; i++)
-            {
-                InternalAddRemoveProxy(movedProxies[i]);
-            }
-            Tracer.ProfileEnd(TraceName.UpdateProxies);
-            SetTime(Timings.UpdateProxies);
-
-            Tracer.ProfileBegin(TraceName.OptimizeBroadPhase);
-            if (EnableAutomaticOptimization) OptimizeIncrementally(AutomaticOptimizationBudget);
-            Tracer.ProfileEnd(TraceName.OptimizeBroadPhase);
-            SetTime(Timings.Optimize);
-
-            Tracer.ProfileBegin(TraceName.ScanOverlaps);
-            movedProxies.ParallelForBatch(24, scanForOverlaps);
-            Tracer.ProfileEnd(TraceName.ScanOverlaps);
-            SetTime(Timings.ScanOverlaps);
+            InternalAddRemoveProxy(movedProxies[i]);
         }
-        else
-        {
-            Tracer.ProfileBegin(TraceName.UpdateBoundingBoxes);
-            var batch = new Parallel.Batch(0, proxies.ActiveCount);
-            UpdateBoundingBoxesCallback(batch);
-            Tracer.ProfileEnd(TraceName.UpdateBoundingBoxes);
-            SetTime(Timings.UpdateBoundingBoxes);
+        Tracer.ProfileEnd(TraceName.UpdateProxies);
+        SetTime(Timings.UpdateProxies);
 
-            Tracer.ProfileBegin(TraceName.ScanMoved);
-            movedProxies.Clear();
-            ScanForMovedProxies(batch);
-            Tracer.ProfileEnd(TraceName.ScanMoved);
-            SetTime(Timings.ScanMoved);
+        Tracer.ProfileBegin(TraceName.OptimizeBroadPhase);
+        if (EnableAutomaticOptimization) OptimizeIncrementally(AutomaticOptimizationBudget);
+        Tracer.ProfileEnd(TraceName.OptimizeBroadPhase);
+        SetTime(Timings.Optimize);
 
-            Tracer.ProfileBegin(TraceName.UpdateProxies);
-            for (int i = 0; i < movedProxies.Count; i++)
-            {
-                InternalAddRemoveProxy(movedProxies[i]);
-            }
-            Tracer.ProfileEnd(TraceName.UpdateProxies);
-            SetTime(Timings.UpdateProxies);
-
-            Tracer.ProfileBegin(TraceName.OptimizeBroadPhase);
-            if (EnableAutomaticOptimization) OptimizeIncrementally(AutomaticOptimizationBudget);
-            Tracer.ProfileEnd(TraceName.OptimizeBroadPhase);
-            SetTime(Timings.Optimize);
-
-            Tracer.ProfileBegin(TraceName.ScanOverlaps);
-            ScanForOverlapsCallback(new Parallel.Batch(0, movedProxies.Count));
-            Tracer.ProfileEnd(TraceName.ScanOverlaps);
-            SetTime(Timings.ScanOverlaps);
-        }
+        Tracer.ProfileBegin(TraceName.ScanOverlaps);
+        if (multiThread) movedProxies.ParallelForBatch(24, scanForOverlaps);
+        else ScanForOverlapsCallback(new Parallel.Batch(0, movedProxies.Count));
+        Tracer.ProfileEnd(TraceName.ScanOverlaps);
+        SetTime(Timings.ScanOverlaps);
 
         // Make sure we do not hold too many dangling references
         // in the internal array of the SlimBag<T> data structure which might
