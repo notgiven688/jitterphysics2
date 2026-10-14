@@ -220,6 +220,7 @@ public sealed partial class World
             switch (SolveMode)
             {
                 case SolveMode.Regular:
+                case SolveMode.GraphColored:
                     ReorderContacts();
                     break;
                 case SolveMode.Deterministic:

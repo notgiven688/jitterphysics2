@@ -123,6 +123,15 @@ one manifold is accessed by another manifold in the same color. Static and kinem
 bodies can be shared when their velocities are read-only. Colors run sequentially;
 manifolds within a color run without body locks and can be distributed across workers.
 
+Like regular mode, this mode incrementally reorders the active contact records once
+per world step to improve memory locality. Coloring then uses the current contact
+order when it rebuilds the graph for each substep.
+
+Before SIMD packing, each color's manifolds are grouped into coarse buckets by the
+physical memory locations of their writable bodies. Read-only endpoints, such as a
+shared static floor, do not determine the bucket. Grouping preserves the input order
+within each bucket and reuses scratch storage on subsequent substeps.
+
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
 Full bundles prepare contacts and apply warm starts directly across SIMD lanes. Anchors,
