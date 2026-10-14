@@ -230,6 +230,51 @@ internal sealed partial class ContactSolverWide
             angular2.SetLane(lane, body2.AngularVelocity);
         }
 
+        // Extra AVX-512 registers let the isolated arithmetic keep velocities live.
+        // Other targets inline the core into packing to retain baseline register pressure.
+        if (System.Runtime.Intrinsics.X86.Avx512F.VL.IsSupported)
+            IterateVelocities(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
+        else
+            IterateVelocitiesCore(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
+
+        for (int lane = 0; lane < Count; lane++)
+        {
+            // Read-only bodies may appear in many simultaneous bundles. Never write them,
+            // including stores of their unchanged value, because those stores race readers.
+            ContactData.SolveMode mode = modes[lane];
+            ref RigidBodyData body1 = ref bodies1[lane].Data;
+            ref RigidBodyData body2 = ref bodies2[lane].Data;
+            if ((mode & ContactData.SolveMode.LinearBody1) != 0) body1.Velocity = velocity1.GetLane(lane);
+            if ((mode & ContactData.SolveMode.AngularBody1) != 0) body1.AngularVelocity = angular1.GetLane(lane);
+            if ((mode & ContactData.SolveMode.LinearBody2) != 0) body2.Velocity = velocity2.GetLane(lane);
+            if ((mode & ContactData.SolveMode.AngularBody2) != 0) body2.AngularVelocity = angular2.GetLane(lane);
+        }
+    }
+
+    // Keep lane-indexed packing outside this method. Exposing the working vectors to
+    // SetLane/GetLane in the same JIT compilation keeps them on the stack throughout
+    // the point loop. Copy in and out once so the arithmetic can use promoted locals.
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void IterateVelocities(bool applyBias, ref Vector3Wide bodyVelocity1, ref Vector3Wide bodyAngular1,
+        ref Vector3Wide bodyVelocity2, ref Vector3Wide bodyAngular2)
+    {
+        Vector3Wide velocity1 = bodyVelocity1, angular1 = bodyAngular1;
+        Vector3Wide velocity2 = bodyVelocity2, angular2 = bodyAngular2;
+
+        IterateVelocitiesCore(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
+
+        bodyVelocity1 = velocity1;
+        bodyAngular1 = angular1;
+        bodyVelocity2 = velocity2;
+        bodyAngular2 = angular2;
+    }
+
+    // Share the arithmetic while allowing each call site to choose whether the
+    // working vectors are the lane-addressed caller locals or fresh wrapper locals.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void IterateVelocitiesCore(bool applyBias, ref Vector3Wide velocity1, ref Vector3Wide angular1,
+        ref Vector3Wide velocity2, ref Vector3Wide angular2)
+    {
         for (int slot = 0; slot < 4; slot++)
         {
             if ((occupiedSlots & (1u << slot)) == 0) continue;
@@ -264,19 +309,6 @@ internal sealed partial class ContactSolverWide
             // the same constraint through biased solving and velocity relaxation.
             angular1 -= inverseInertia1.Transform(Vector3Wide.Cross(point.RelativePosition1, impulse));
             angular2 += inverseInertia2.Transform(Vector3Wide.Cross(point.RelativePosition2, impulse));
-        }
-
-        for (int lane = 0; lane < Count; lane++)
-        {
-            // Read-only bodies may appear in many simultaneous bundles. Never write them,
-            // including stores of their unchanged value, because those stores race readers.
-            ContactData.SolveMode mode = modes[lane];
-            ref RigidBodyData body1 = ref bodies1[lane].Data;
-            ref RigidBodyData body2 = ref bodies2[lane].Data;
-            if ((mode & ContactData.SolveMode.LinearBody1) != 0) body1.Velocity = velocity1.GetLane(lane);
-            if ((mode & ContactData.SolveMode.AngularBody1) != 0) body1.AngularVelocity = angular1.GetLane(lane);
-            if ((mode & ContactData.SolveMode.LinearBody2) != 0) body2.Velocity = velocity2.GetLane(lane);
-            if ((mode & ContactData.SolveMode.AngularBody2) != 0) body2.AngularVelocity = angular2.GetLane(lane);
         }
     }
 
