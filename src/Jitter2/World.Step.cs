@@ -805,6 +805,7 @@ public sealed partial class World
             arb.Body1.RaiseEndCollide(arb);
             arb.Body2.RaiseEndCollide(arb);
 
+            RemoveColoredContact(handle);
             memContacts.Free(handle);
             ReturnArbiter(arb);
         }
@@ -1215,6 +1216,7 @@ public sealed partial class World
         {
             foreach (var c in body.InternalContacts)
             {
+                RemoveColoredContact(c.Handle);
                 memContacts.MoveToInactive(c.Handle);
             }
 

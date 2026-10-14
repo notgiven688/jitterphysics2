@@ -106,6 +106,33 @@ public class GraphColoredLocalityTests
         Assert.That(ActiveHandles(world), Is.EqualTo(input), "Grouping must not move the persistent contact records.");
     }
 
+    // Retained colors need not equal a new greedy coloring after physical moves.
+    // The periodic refresh still sorts each retained color stably by current slots.
+    private static void AssertRetainedOrderAfterRefresh(World world)
+    {
+        var input = ActiveHandles(world);
+        AdaptiveContactGraphTests.Build(world);
+        AdaptiveContactGraphTests.Inspect(world);
+        var writable = WritableBodies(input);
+        var bodies = Read<PartitionedBuffer<RigidBodyData>>(world, "memRigidBodies");
+        int Bucket(ContactHandle h)
+        {
+            int first = writable.Contains(h.Data.Body1) ? bodies.GetIndex(h.Data.Body1) : int.MaxValue;
+            int second = writable.Contains(h.Data.Body2) ? bodies.GetIndex(h.Data.Body2) : int.MaxValue;
+            return Math.Min(first, second) >> BucketShift;
+        }
+        int count = Read<int>(world, "contactColorCount");
+        var colors = Read<IList>(world, "contactColors");
+        var expected = Enumerable.Range(0, count)
+            .Select(c => Read<List<ContactHandle>>(colors[c]!, "Contacts").OrderBy(Bucket).ToArray()).ToArray();
+        for (int i = 0; i < 64; i++) AdaptiveContactGraphTests.Build(world);
+        AdaptiveContactGraphTests.Inspect(world);
+        for (int c = 0; c < count; c++)
+            Assert.That(Read<List<ContactHandle>>(colors[c]!, "Contacts"), Is.EqualTo(expected[c]),
+                "Periodic locality refresh must stably sort retained membership by physical body slots.");
+        Assert.That(ActiveHandles(world), Is.EqualTo(input));
+    }
+
     [Test]
     public void SharedReadOnlyFloor_GroupsByDynamicBodyAndKeepsBucketOrder()
     {
@@ -168,8 +195,7 @@ public class GraphColoredLocalityTests
         Assert.That(bodies.Any(body => (body.Handle.Data._index >> BucketShift) !=
                                       (storage.GetIndex(body.Handle) >> BucketShift)), Is.True,
             "The test must distinguish stable handle IDs from physical slots.");
-        AssertColoredOrder(world);
-        AssertColoredOrder(world);
+        AssertRetainedOrderAfterRefresh(world);
     }
 
     [Test]
@@ -252,7 +278,8 @@ public class GraphColoredLocalityTests
                     Is.Not.Empty, "Actual contact records must move; ordering the color lists alone is insufficient.");
             }
 
-            AssertColoredOrder(world);
+            AdaptiveContactGraphTests.Build(world);
+            AdaptiveContactGraphTests.Inspect(world);
             for (int star = 0; star < starCount; star++)
             {
                 Real momentum = hubs[star].Velocity.Y;

@@ -669,6 +669,7 @@ public sealed partial class World : IDisposable
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
+        RemoveColoredContact(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
         ReturnArbiter(arbiter);

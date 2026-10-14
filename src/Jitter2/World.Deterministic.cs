@@ -68,6 +68,7 @@ public sealed partial class World
                     "The solve mode must be a defined enum value.");
             }
 
+            if (solveMode != value) ClearContactColors();
             solveMode = value;
         }
     }
