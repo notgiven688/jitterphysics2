@@ -6950,6 +6950,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.SmallHandle
   nameWithType: Constraint.SmallHandle
+- uid: Jitter2.Dynamics.Constraints.Constraint.Tag
+  name: Tag
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Tag
+  commentId: P:Jitter2.Dynamics.Constraints.Constraint.Tag
+  fullName: Jitter2.Dynamics.Constraints.Constraint.Tag
+  nameWithType: Constraint.Tag
+- uid: Jitter2.Dynamics.Constraints.Constraint.Tag*
+  name: Tag
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Tag_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.Tag
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.Tag
+  nameWithType: Constraint.Tag
 - uid: Jitter2.Dynamics.Constraints.Constraint.VerifyNotZero
   name: VerifyNotZero()
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero
