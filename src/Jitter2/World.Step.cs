@@ -438,7 +438,11 @@ public sealed partial class World
         Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
-    private void IterateContacts(Parallel.Batch batch)
+    private void IterateContacts(Parallel.Batch batch) => IterateContacts(batch, applyBias: true);
+
+    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts(batch, applyBias: false);
+
+    private void IterateContacts(Parallel.Batch batch, bool applyBias)
     {
         var span = memContacts.Active[batch.Start..batch.End];
         var localQueue = deferredContacts.Value!;
@@ -455,7 +459,7 @@ public sealed partial class World
                 continue;
             }
 
-            c.Iterate(true);
+            c.Iterate(applyBias);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -473,7 +477,7 @@ public sealed partial class World
                 continue;
             }
 
-            c.Iterate(true);
+            c.Iterate(applyBias);
             UnlockTwoBody(ref b1, ref b2);
         }
 
@@ -642,48 +646,6 @@ public sealed partial class World
             constraint.Iterate(ref constraint, timeStep);
             UnlockTwoBody(ref b1, ref b2);
         }
-    }
-
-    private void RelaxVelocities(Parallel.Batch batch)
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-        var localQueue = deferredContacts.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(false);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeBegin();
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(false);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
     #endregion
@@ -1216,10 +1178,8 @@ public sealed partial class World
         body.InternalSleepTime = Real.PositiveInfinity;
     }
 
-    private bool DeactivateBodyForSleep(RigidBody body, bool clearMotion)
+    private bool DeactivateBodyForSleep(RigidBody body)
     {
-        if (clearMotion) ClearMotionForSleep(body);
-
         ref RigidBodyData rigidBody = ref body.Data;
         bool wasActive = rigidBody.IsActive;
 
@@ -1295,7 +1255,7 @@ public sealed partial class World
 
                 if (deactivateIsland)
                 {
-                    deactivatedBody |= DeactivateBodyForSleep(body, clearMotion: false);
+                    deactivatedBody |= DeactivateBodyForSleep(body);
                 }
                 else
                 {

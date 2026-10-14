@@ -142,16 +142,13 @@ internal static class IslandHelper
 
     private static void SplitIslands(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
-        Debug.Assert(body1.InternalIsland == body2.InternalIsland, "Islands not the same or null.");
+        Island sourceIsland = body1.InternalIsland;
+        Debug.Assert(sourceIsland == body2.InternalIsland, "Islands not the same or null.");
 
         Queue<RigidBody> leftSearchQueue = LeftSearchQueue;
         Queue<RigidBody> rightSearchQueue = RightSearchQueue;
         List<RigidBody> visitedBodiesLeft = VisitedBodiesLeft;
         List<RigidBody> visitedBodiesRight = VisitedBodiesRight;
-
-        bool sourceIslandActive = islands.IsActive(body1.InternalIsland);
-        bool sourceNeedsUpdate = body1.InternalIsland.NeedsUpdate;
-        bool sourceMarkedAsActive = body1.InternalIsland.MarkedAsActive;
 
         leftSearchQueue.Enqueue(body1);
         rightSearchQueue.Enqueue(body2);
@@ -208,29 +205,17 @@ internal static class IslandHelper
             }
 
             Island island = GetFromPool(islandPool);
-            island.NeedsUpdate = sourceNeedsUpdate;
-            island.MarkedAsActive = sourceMarkedAsActive;
-            islands.Add(island, sourceIslandActive);
+            island.NeedsUpdate = sourceIsland.NeedsUpdate;
+            island.MarkedAsActive = sourceIsland.MarkedAsActive;
+            islands.Add(island, islands.IsActive(sourceIsland));
 
-            if (leftSearchQueue.Count == 0)
+            List<RigidBody> splitBodies = leftSearchQueue.Count == 0 ? visitedBodiesLeft : visitedBodiesRight;
+            for (int i = 0; i < splitBodies.Count; i++)
             {
-                for (int i = 0; i < visitedBodiesLeft.Count; i++)
-                {
-                    RigidBody body = visitedBodiesLeft[i];
-                    body2.InternalIsland.InternalBodies.Remove(body);
-                    island.InternalBodies.Add(body);
-                    body.InternalIsland = island;
-                }
-            }
-            else if (rightSearchQueue.Count == 0)
-            {
-                for (int i = 0; i < visitedBodiesRight.Count; i++)
-                {
-                    RigidBody body = visitedBodiesRight[i];
-                    body1.InternalIsland.InternalBodies.Remove(body);
-                    island.InternalBodies.Add(body);
-                    body.InternalIsland = island;
-                }
+                RigidBody body = splitBodies[i];
+                sourceIsland.InternalBodies.Remove(body);
+                island.InternalBodies.Add(body);
+                body.InternalIsland = island;
             }
         }
         finally

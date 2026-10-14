@@ -7,6 +7,37 @@ public class IslandPoolingTests
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(10);
 
     [Test]
+    public void RemovingBridge_SplitsUnequalIslandsAndPreservesPendingWake(
+        [Values] bool reverseOrder, [Values] bool sleeping)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        RigidBody[] left = [world.CreateRigidBody(), world.CreateRigidBody(), world.CreateRigidBody()];
+        RigidBody[] right = [world.CreateRigidBody(), world.CreateRigidBody()];
+
+        world.CreateConstraint<BallSocket>(left[0], left[1]).Initialize(JVector.Zero);
+        world.CreateConstraint<BallSocket>(left[1], left[2]).Initialize(JVector.Zero);
+        world.CreateConstraint<BallSocket>(right[0], right[1]).Initialize(JVector.Zero);
+        var bridge = reverseOrder
+            ? world.CreateConstraint<BallSocket>(right[0], left[0])
+            : world.CreateConstraint<BallSocket>(left[0], right[0]);
+        bridge.Initialize(JVector.Zero);
+
+        Assert.That(left[0].Island.Bodies, Is.EquivalentTo(left.Concat(right)));
+        if (sleeping) world.ForceSleepIsland(left[0].Island);
+
+        world.Remove(bridge);
+
+        Assert.That(left[0].Island.Bodies, Is.EquivalentTo(left));
+        Assert.That(right[0].Island.Bodies, Is.EquivalentTo(right));
+        Assert.That(world.Islands.IsActive(left[0].Island), Is.True);
+        Assert.That(world.Islands.IsActive(right[0].Island), Is.True);
+
+        world.Step((Real)0.01, multiThread: false);
+
+        Assert.That(left.Concat(right).All(body => body.IsActive), Is.True);
+    }
+
+    [Test]
     public void RemovedBodyIsland_IsReusedAcrossThreadsInOwningWorld()
     {
         using var world = new World();
