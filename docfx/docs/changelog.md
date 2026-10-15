@@ -1,5 +1,9 @@
 # Changelog
 
+### Jitter 2.10.1 (2026-10-15)
+
+- Added `Constraint.Tag` for attaching custom user data to constraints, matching `RigidBody.Tag`.
+
 ### Jitter 2.10.0 (2026-10-11)
 
 - **Breaking Change:** Added `TimeStep` with full-step and substep timing information. World step and substep callbacks and `SoftBody.WorldOnPostStep` now receive `TimeStep`; custom constraint solver callbacks and contact preparation now take `in TimeStep` instead of an inverse timestep.
