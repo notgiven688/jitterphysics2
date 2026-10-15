@@ -46,10 +46,10 @@ public enum SolveMode
 
 public sealed partial class World
 {
-    private SolveMode solveMode = Jitter2.SolveMode.Regular;
+    private SolveMode solveMode = Jitter2.SolveMode.GraphColored;
 
     /// <summary>
-    /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.Regular"/>.
+    /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.GraphColored"/>.
     /// </summary>
     /// <remarks>
     /// <see cref="Jitter2.SolveMode.Deterministic"/> can be significantly slower than

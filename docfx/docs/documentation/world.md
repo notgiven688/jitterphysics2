@@ -101,12 +101,12 @@ This includes `Logger.Listener`, broad-phase and narrow-phase filters, collision
 Jitter2 offers three solver strategies through <xref:Jitter2.SolveMode>:
 
 ```cs
-world.SolveMode = SolveMode.Regular;       // default
+world.SolveMode = SolveMode.Regular;       // standard solver
 world.SolveMode = SolveMode.Deterministic; // reproducible, slower
-world.SolveMode = SolveMode.GraphColored;  // SIMD across independent contact manifolds
+world.SolveMode = SolveMode.GraphColored;  // default: SIMD across independent contact manifolds
 ```
 
-`SolveMode.Regular` is the default and optimized for throughput. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
+`SolveMode.GraphColored` is the default. `SolveMode.Regular` remains available as the standard solver. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
 
 `SolveMode.Deterministic` is the best-effort cross-platform deterministic path. It processes each simulation island in a stable order and uses deterministic tie-breakers for contacts and constraints. Islands can still be distributed across threads, so `world.Step(dt, multiThread: true)` remains valid in deterministic mode.
 
