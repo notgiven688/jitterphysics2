@@ -50,7 +50,7 @@ public class Demo01 : IDemo, IDrawUpdate
                     var hinge = new HingeJoint(world, body, nbody,
                         startPos + new JVector(i * 0.8f - 0.1f, 0, 0), JVector.UnitZ);
 
-                    hinge.BallSocket.Softness = 0.1f;
+                    hinge.BallSocket.Softness = 0.02f;
                     hinges.Add(hinge);
                 }
 
@@ -86,7 +86,7 @@ public class Demo01 : IDemo, IDrawUpdate
         for (int i = hinges.Count; i-- > 0;)
         {
             var h = hinges[i];
-            if (h.BallSocket.Impulse.Length() > 0.5f)
+            if (h.BallSocket.Impulse.Length() > 1f)
             {
                 h.Remove();
                 hinges.RemoveAt(i);
