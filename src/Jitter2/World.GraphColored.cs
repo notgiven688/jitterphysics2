@@ -21,18 +21,10 @@ public sealed partial class World
     // assigned one of these colors are solved sequentially after every colored sweep.
     private const int MaximumContactColors = 64;
 
-    // Group independent manifolds by coarse ranges of physical body slots. The
-    // active/inactive body partition and the greedy color assignment stay intact.
-    private const int ContactBodyBucketShift = 7;
-
     private sealed class ContactColor
     {
         internal readonly List<JHandle<ContactData>> Contacts = new();
         internal readonly List<ContactSolverWide> Bundles = new();
-        // Keys in insertion order, consumed before the SIMD bundles are prepared.
-        internal readonly List<int> BodyBuckets = new();
-        internal bool NeedsLocalitySort;
-        internal bool Dirty;
         internal int BundleCount;
     }
 
@@ -40,8 +32,6 @@ public sealed partial class World
     private readonly List<JHandle<ContactData>> contactColorOverflow = new();
     private ulong[] bodyContactColors = Array.Empty<ulong>();
     private bool[] contactBodyWritable = Array.Empty<bool>();
-    private int[] contactBucketOffsets = Array.Empty<int>();
-    private JHandle<ContactData>[] contactBucketScratch = Array.Empty<JHandle<ContactData>>();
     private int contactColorCount;
     private ContactColor currentContactColor = null!;
     private bool coloredApplyBias;
@@ -64,8 +54,7 @@ public sealed partial class World
     private int[] contactBodyReferences = Array.Empty<int>();
     private readonly List<JHandle<ContactData>> pendingColoredContacts = new();
     private bool contactGraphValid;
-    private int contactGraphChanges;
-    private uint contactGraphTick;
+    private bool contactGraphChanged;
     // Diagnostic counts used by the focused benchmark and lifecycle checks.
     private int contactGraphRebuildCount, contactGraphReuseCount, contactGraphIncrementalCount;
 
@@ -79,10 +68,9 @@ public sealed partial class World
 
         pendingColoredContacts.Clear();
         bool rebuild = false;
-        int changesBefore = contactGraphChanges;
         // Public contact fields can be edited directly, including in PreSubStep.
         // Validate once in physical contact order. An unchanged edge does not touch
-        // body masks, color lists, bucket keys, or SIMD bundle allocation.
+        // body masks, color lists, or SIMD bundle allocation.
         foreach (ref ContactData contact in memContacts.Active)
         {
             EnsureContactGraphCapacity(contact._internal);
@@ -95,22 +83,19 @@ public sealed partial class World
             var handle = memContacts.GetHandle(ref contact);
             InitializeContactGraphEntry(handle, ref rebuild);
             pendingColoredContacts.Add(handle);
-            contactGraphChanges++;
+            contactGraphChanged = true;
         }
 
-        // Heavy topology turnover also gives the greedy coloring a fresh start,
-        // releasing conservative reservations and obsolete high colors.
-        if (rebuild || contactGraphChanges >= Math.Max(128, memContacts.Active.Length / 4))
+        // Only a reader-to-writer promotion invalidates colors already assigned to
+        // other contacts. Ordinary contact churn can stay incremental.
+        if (rebuild)
         {
             RebuildContactColors();
             return;
         }
 
         foreach (var handle in pendingColoredContacts) AddColoredContact(handle);
-        bool changed = changesBefore != contactGraphChanges || pendingColoredContacts.Count != 0;
-        // A removal may have happened before this validation pass.
-        foreach (ContactColor color in contactColors) changed |= color.Dirty;
-        if (changed)
+        if (contactGraphChanged)
         {
             // Retry serial overflow only when the graph has changed.
             for (int i = contactColorOverflow.Count - 1; i >= 0; i--)
@@ -120,15 +105,11 @@ public sealed partial class World
                 RemoveContactColorSlot(ref entry);
                 AddColoredContact(handle);
             }
+            RefreshContactColorBundles();
             contactGraphIncrementalCount++;
         }
         else contactGraphReuseCount++;
-
-        // Physical body slots can move independently of stable graph IDs. Refresh
-        // locality occasionally; it has no bearing on conflict correctness.
-        if ((++contactGraphTick & 63) == 0)
-            foreach (ContactColor color in contactColors) color.Dirty = true;
-        FinishContactColorChanges();
+        contactGraphChanged = false;
     }
 
     private void EnsureContactGraphCapacity(int id)
@@ -182,13 +163,7 @@ public sealed partial class World
         contactColorOverflow.Clear();
         pendingColoredContacts.Clear();
         contactColorCount = 0;
-        foreach (ContactColor color in contactColors)
-        {
-            color.Contacts.Clear();
-            color.BodyBuckets.Clear();
-            color.NeedsLocalitySort = false;
-            color.Dirty = true;
-        }
+        foreach (ContactColor color in contactColors) color.Contacts.Clear();
         bool ignored = false;
         // Classify global writers before assigning any edges, including custom modes.
         foreach (ref ContactData contact in memContacts.Active)
@@ -197,9 +172,9 @@ public sealed partial class World
         foreach (ref ContactData contact in memContacts.Active)
             if ((contact.UsageMask & ContactData.MaskContactAll) != 0)
                 AddColoredContact(memContacts.GetHandle(ref contact));
-        FinishContactColorChanges();
+        RefreshContactColorBundles();
         contactGraphValid = true;
-        contactGraphChanges = 0;
+        contactGraphChanged = false;
         contactGraphRebuildCount++;
     }
 
@@ -221,7 +196,6 @@ public sealed partial class World
         ContactColor color = contactColors[index];
         entry.Slot = color.Contacts.Count;
         color.Contacts.Add(handle);
-        color.Dirty = true;
         contactColorCount = Math.Max(contactColorCount, index + 1);
         ulong bit = 1UL << index;
         if (writable1) bodyContactColors[entry.BodyId1] |= bit;
@@ -235,9 +209,7 @@ public sealed partial class World
         if (entry.Color == MaximumContactColors) contacts = contactColorOverflow;
         else
         {
-            ContactColor color = contactColors[entry.Color];
-            color.Dirty = true;
-            contacts = color.Contacts;
+            contacts = contactColors[entry.Color].Contacts;
             ulong bit = ~(1UL << entry.Color);
             if (contactBodyWritable[entry.BodyId1]) bodyContactColors[entry.BodyId1] &= bit;
             if (contactBodyWritable[entry.BodyId2]) bodyContactColors[entry.BodyId2] &= bit;
@@ -271,67 +243,19 @@ public sealed partial class World
         RemoveContactBodyReference(entry.BodyId1);
         RemoveContactBodyReference(entry.BodyId2);
         entry = default;
-        contactGraphChanges++;
+        contactGraphChanged = true;
     }
 
-    private void FinishContactColorChanges()
+    private void RefreshContactColorBundles()
     {
-        int readOnlyBucket = (memRigidBodies.Count + (1 << ContactBodyBucketShift) - 1) >> ContactBodyBucketShift;
-        for (int c = 0; c < contactColors.Count; c++)
+        while (contactColorCount > 0 && contactColors[contactColorCount - 1].Contacts.Count == 0) contactColorCount--;
+        for (int c = 0; c < contactColorCount; c++)
         {
             ContactColor color = contactColors[c];
-            if (!color.Dirty) continue;
-            color.BodyBuckets.Clear();
-            color.NeedsLocalitySort = false;
-            foreach (var handle in color.Contacts)
-            {
-                ref ContactGraphEntry entry = ref contactGraph[handle.Data._internal];
-                bool first = contactBodyWritable[entry.BodyId1], second = contactBodyWritable[entry.BodyId2];
-                int key1 = first ? memRigidBodies.GetIndex(entry.Body1) : int.MaxValue;
-                int key2 = second ? memRigidBodies.GetIndex(entry.Body2) : int.MaxValue;
-                int bucket = first || second ? Math.Min(key1, key2) >> ContactBodyBucketShift : readOnlyBucket;
-                if (color.BodyBuckets.Count != 0 && bucket < color.BodyBuckets[^1]) color.NeedsLocalitySort = true;
-                color.BodyBuckets.Add(bucket);
-            }
-            OrderContactColor(color, readOnlyBucket + 1);
-            for (int i = 0; i < color.Contacts.Count; i++) contactGraph[color.Contacts[i].Data._internal].Slot = i;
             color.BundleCount = System.Numerics.Vector.IsHardwareAccelerated
                 ? color.Contacts.Count / ContactSolverWide.Width : 0;
             while (color.Bundles.Count < color.BundleCount) color.Bundles.Add(new ContactSolverWide());
-            color.Dirty = false;
         }
-        while (contactColorCount > 0 && contactColors[contactColorCount - 1].Contacts.Count == 0) contactColorCount--;
-    }
-
-    private void OrderContactColor(ContactColor color, int bucketCount)
-    {
-        if (color.NeedsLocalitySort)
-        {
-            var contacts = CollectionsMarshal.AsSpan(color.Contacts);
-            var keys = CollectionsMarshal.AsSpan(color.BodyBuckets);
-            if (contactBucketOffsets.Length < bucketCount) contactBucketOffsets = new int[bucketCount];
-            else Array.Clear(contactBucketOffsets, 0, bucketCount);
-            if (contactBucketScratch.Length < contacts.Length)
-                contactBucketScratch = new JHandle<ContactData>[Math.Max(contacts.Length, contactBucketScratch.Length * 2)];
-
-            foreach (int bucket in keys) contactBucketOffsets[bucket]++;
-            int offset = 0;
-            for (int bucket = 0; bucket < bucketCount; bucket++)
-            {
-                int count = contactBucketOffsets[bucket];
-                contactBucketOffsets[bucket] = offset;
-                offset += count;
-            }
-
-            // Stable counting scatter: preserve the original order inside each bucket.
-            // Only independent contacts within one completed color can move here.
-            for (int i = 0; i < contacts.Length; i++)
-                contactBucketScratch[contactBucketOffsets[keys[i]]++] = contacts[i];
-            contactBucketScratch.AsSpan(0, contacts.Length).CopyTo(contacts);
-        }
-
-        color.BodyBuckets.Clear();
-        color.NeedsLocalitySort = false;
     }
 
     private void DispatchContactColors(bool multiThread, Action<Parallel.Batch> action)
@@ -399,7 +323,7 @@ public sealed partial class World
 
     private void SolveColoredContacts(bool multiThread, int iterations)
     {
-        // Validate after PreSubStep; retain occupancy masks and ordered color lists
+        // Validate after PreSubStep; retain occupancy masks and color lists
         // when endpoints, participation and write modes are unchanged.
         BuildContactColors();
         DispatchContactColors(multiThread, prepareContactColor);
@@ -454,15 +378,12 @@ public sealed partial class World
         contactColorCount = 0;
         currentContactColor = null!;
         contactGraphValid = false;
-        contactGraphChanges = 0;
-        contactGraphTick = 0;
+        contactGraphChanged = false;
         contactGraph = Array.Empty<ContactGraphEntry>();
         contactBodyReferences = Array.Empty<int>();
         pendingColoredContacts.Clear();
         bodyContactColors = Array.Empty<ulong>();
         contactBodyWritable = Array.Empty<bool>();
-        contactBucketOffsets = Array.Empty<int>();
-        contactBucketScratch = Array.Empty<JHandle<ContactData>>();
     }
 
     private void TrimContactColors()
