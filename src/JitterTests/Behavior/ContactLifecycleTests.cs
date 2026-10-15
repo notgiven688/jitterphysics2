@@ -8,6 +8,56 @@ public class ContactLifecycleTests
     private const Real Tolerance = 1e-5f;
 #endif
 
+    [Test]
+    public void ContactPointStorage_IsCompact()
+    {
+        Assert.That(System.Runtime.CompilerServices.Unsafe.SizeOf<ContactData.Contact>(),
+            Is.EqualTo(24 * System.Runtime.CompilerServices.Unsafe.SizeOf<Real>()));
+    }
+
+    [Test]
+    public void ResetImpulses_PreservesPendingContactFlags()
+    {
+        ContactData contact = default;
+        contact.UsageMask = ContactData.MaskContact0;
+        contact.Contact0.Flag = ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart;
+
+        contact.ResetImpulses();
+
+        Assert.That(contact.Contact0.Flag,
+            Is.EqualTo(ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Relaxation_UsesPreparedContactOffsetAfterPoseIntegration(bool accelerated)
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(1));
+        body.SetMassInertia(1);
+        body.Velocity = -JVector.UnitY;
+
+        ContactData contact = default;
+        contact.Init(world.NullBody, body);
+        contact.Friction = 0;
+        contact.AddContact(JVector.UnitX, JVector.UnitX, JVector.UnitY);
+        contact.ResetMode();
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
+
+        // The world's integration phase changes the pose before relaxation. The
+        // prepared offset is still (1, 0, 0), even though the local point now
+        // transforms to (0, 1, 0).
+        body.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitZ, (Real)(Math.PI / 2));
+
+        if (accelerated) contact.IterateAccelerated(false);
+        else contact.IterateScalar(false);
+
+        Assert.That(body.AngularVelocity.Z, Is.GreaterThan(0));
+    }
+
     [TestCase(false, 0.1, -0.9)]
     [TestCase(true, 0.1, -0.9)]
     [TestCase(false, 0.005, 10.0)]
@@ -117,6 +167,9 @@ public class ContactLifecycleTests
         Real impulse = contact.Contact0.Impulse;
 
         contact.SkipWarmStart();
+        contact.Iterate(false);
+        Assert.That(contact.Contact0.Flag & ContactData.Contact.Flags.SkipWarmStart,
+            Is.EqualTo(ContactData.Contact.Flags.SkipWarmStart));
         Prepare();
 
         Assert.That(body.Velocity, Is.EqualTo(velocity));

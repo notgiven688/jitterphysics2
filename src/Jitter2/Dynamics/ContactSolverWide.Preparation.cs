@@ -207,9 +207,6 @@ internal sealed partial class ContactSolverWide
                 contact.RelativePosition2 = point.RelativePosition2.GetLane(lane);
                 contact.Bias = point.Bias[lane];
                 contact.PenaltyBias = penaltyBias[lane];
-                // MassNormalTangent.W aliases Accumulated.X: publish only the three masses.
-                Unsafe.As<VectorReal, JVector>(ref contact.MassNormalTangent) =
-                    new JVector(point.MassNormal[lane], point.MassTangent1[lane], point.MassTangent2[lane]);
             }
         }
 

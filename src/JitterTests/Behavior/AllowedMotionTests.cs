@@ -214,7 +214,7 @@ public class AllowedMotionTests
 
     [TestCase(false)]
     [TestCase(true)]
-    public void ObliqueContact_UsesDirectionalMassInOneIteration(bool accelerated)
+    public unsafe void ObliqueContact_UsesDirectionalMassInOneIteration(bool accelerated)
     {
         using World world = CreateWorld();
         RigidBody body = CreateBody(world);
@@ -233,8 +233,9 @@ public class AllowedMotionTests
         }
 
         Assert.That(JVector.MaxAbs(body.Velocity), Is.LessThan(Tolerance));
-        Assert.That(contact.Contact0.MassNormalTangent.GetElement(0), Is.EqualTo((Real)4).Within(Tolerance));
-        Assert.That(contact.Contact0.MassNormalTangent.GetElement(2), Is.Zero);
+        var effectiveMass = contact.Contact0.CalculateEffectiveMass(&contact);
+        Assert.That(effectiveMass.GetElement(0), Is.EqualTo((Real)4).Within(Tolerance));
+        Assert.That(effectiveMass.GetElement(2), Is.Zero);
     }
 
     [TestCase(false)]

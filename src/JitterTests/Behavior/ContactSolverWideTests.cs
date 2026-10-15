@@ -77,6 +77,7 @@ public class ContactSolverWideTests
             JVector normal = JVector.Normalize(new JVector((Real)(0.03 * seed), 1, (Real)(0.04 * slot)));
             contact.Initialize(ref body1, ref body2, point, point - normal * (Real)0.02, normal, true, 0);
             contact.Accumulated = Vector.Create((Real)(0.1 + 0.1 * slot), (Real)0.12, -(Real)0.06, 0);
+            contact.Flag = ContactData.Contact.Flags.NewContact;
         }
         data.PrepareForIterationScalar(new TimeStep((Real)0.01));
         for (int slot = 0; slot < 4; slot++)
@@ -147,8 +148,7 @@ public class ContactSolverWideTests
                 // A recycled manifold may contain unusable data outside its active slots.
                 contact.Bias = contact.PenaltyBias = Real.NaN;
                 contact.RelativePosition1 = contact.RelativePosition2 = new JVector(Real.NaN);
-                contact.NormalTangentX = contact.NormalTangentY = contact.NormalTangentZ = Vector.Create(Real.NaN);
-                contact.MassNormalTangent = contact.Accumulated = Vector.Create(Real.NaN);
+                contact.Accumulated = Vector.Create(Real.NaN);
                 contact.Flag = ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart;
                 continue;
             }
@@ -212,11 +212,6 @@ public class ContactSolverWideTests
             AssertVector(actualContact.Normal, expectedContact.Normal);
             AssertVector(actualContact.Tangent1, expectedContact.Tangent1);
             AssertVector(actualContact.Tangent2, expectedContact.Tangent2);
-            for (int axis = 0; axis < 3; axis++)
-            {
-                Assert.That(actualContact.MassNormalTangent.GetElement(axis),
-                    Is.EqualTo(expectedContact.MassNormalTangent.GetElement(axis)).Within(Tolerance));
-            }
         }
         AssertEquivalent(actual, expected);
     }
@@ -391,8 +386,8 @@ public class ContactSolverWideTests
                 for (int lane = 0; lane < count; lane++) AssertEquivalent(wide[lane], scalar[lane]);
             }
 
-            // A caller changing world inertia must refresh the frozen inverse inertia
-            // while prepared mass and accumulated impulses remain unchanged.
+            // A caller changing world inertia must refresh the bundle's copy so
+            // both paths derive the next effective mass from the same tensor.
             for (int lane = 0; lane < count; lane++)
             {
                 var newInertia = new JSymmetricMatrix((Real)0.3, -(Real)0.08, (Real)0.12,
