@@ -128,6 +128,31 @@ public class AdaptiveContactGraphTests
     }
 
     [Test]
+    public void HighContactChurn_UpdatesColorsWithoutRebuildingTheGraph()
+    {
+        using var world = NewWorld();
+        var bodies = Enumerable.Range(0, 300).Select(_ => world.CreateRigidBody()).ToArray();
+        ulong id = 40000;
+        foreach (var body in bodies) Add(world, id += 2, world.NullBody, body);
+        Build(world);
+        Inspect(world);
+        int rebuilds = Count(world, "contactGraphRebuildCount");
+        int increments = Count(world, "contactGraphIncrementalCount");
+
+        for (int i = 0; i < 150; i++)
+        {
+            world.Remove(bodies[i]);
+            bodies[i] = world.CreateRigidBody();
+            Add(world, id += 2, world.NullBody, bodies[i]);
+        }
+
+        Build(world);
+        Assert.That(Inspect(world).Count, Is.EqualTo(300));
+        Assert.That(Count(world, "contactGraphRebuildCount"), Is.EqualTo(rebuilds));
+        Assert.That(Count(world, "contactGraphIncrementalCount"), Is.EqualTo(increments + 1));
+    }
+
+    [Test]
     public void EqualCountChurn_SleepWakeAndSolverSwitch_DoNotRetainGhostEdges()
     {
         using var world = NewWorld();
