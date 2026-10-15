@@ -27,6 +27,9 @@ public class CcdDiscoveryTests
     [TestCase(1, SolveMode.Deterministic, false)]
     [TestCase(4, SolveMode.Deterministic, false)]
     [TestCase(4, SolveMode.Deterministic, true)]
+    [TestCase(1, SolveMode.GraphColored, false)]
+    [TestCase(4, SolveMode.GraphColored, false)]
+    [TestCase(4, SolveMode.GraphColored, true)]
     public void FollowsMotionCreatedByContact(int passes, SolveMode mode, bool multiThread)
     {
         using var world = new World
@@ -356,6 +359,72 @@ public class CcdDiscoveryTests
 
         Assert.That(body.Position.X, Is.GreaterThanOrEqualTo((Real)0.5));
         Assert.That(body.Velocity.X, Is.LessThanOrEqualTo(0));
+    }
+
+    [TestCase(1, false)]
+    [TestCase(1, true)]
+    [TestCase(4, false)]
+    [TestCase(4, true)]
+    public void ColoredBundles_DoNotReplayDiscoveryImpulses(int substeps, bool multiThread)
+    {
+        using var world = new World
+        {
+            SolveMode = SolveMode.GraphColored,
+            Gravity = JVector.Zero,
+            SubstepCount = substeps,
+            AllowDeactivation = false
+        };
+        // Independent pairs share one color. This count exercises full SIMD bundles,
+        // a scalar tail, and more than one parallel contact batch.
+        int pairCount = 128 + ContactSolverWide.Width + 1;
+        var pairs = new List<(RigidBody Wall, RigidBody Body)>(pairCount);
+        for (int row = 0; row < pairCount; row++)
+        {
+            RigidBody wall = Sphere(world, 0);
+            wall.MotionType = MotionType.Static;
+            wall.Position = new JVector(0, 0, row * 4);
+            RigidBody body = Sphere(world, 1, -100);
+            body.Position = new JVector(1, 0, row * 4);
+            body.EnableCcd = true;
+            pairs.Add((wall, body));
+        }
+
+        int substep = 0;
+        world.PreSubStep += _ =>
+        {
+            if (substep != 0) return;
+            Assert.That(world.RawData.ActiveContacts.Length, Is.EqualTo(pairCount));
+            foreach (var (wall, body) in pairs)
+            {
+                Assert.That(body.Velocity.X, Is.EqualTo(-45).Within((Real)1e-4));
+                Assert.That(world.GetArbiter(wall.Shapes[0].ShapeId, body.Shapes[0].ShapeId,
+                    out var arbiter), Is.True);
+                Assert.That((arbiter!.Handle.Data.Contact0.Flag & ContactData.Contact.Flags.SkipWarmStart) != 0,
+                    Is.True, "Discovery impulses must be marked as already applied.");
+            }
+        };
+        world.PostSubStep += _ =>
+        {
+            if (substep++ != 0) return;
+            foreach (var (wall, body) in pairs)
+            {
+                Assert.That(body.Velocity.X, Is.EqualTo(-45).Within((Real)1e-4));
+                Assert.That(world.GetArbiter(wall.Shapes[0].ShapeId, body.Shapes[0].ShapeId,
+                    out var arbiter), Is.True);
+                Assert.That(arbiter!.Handle.Data.Contact0.Impulse, Is.EqualTo(55).Within((Real)1e-4));
+                Assert.That((arbiter.Handle.Data.Contact0.Flag & ContactData.Contact.Flags.SkipWarmStart) != 0,
+                    Is.False, "Colored preparation must consume the one-shot skip flag.");
+            }
+        };
+
+        world.Step((Real)0.01, multiThread);
+
+        Assert.That(substep, Is.EqualTo(substeps));
+        foreach (var (_, body) in pairs)
+        {
+            Assert.That(body.Position.X, Is.GreaterThanOrEqualTo((Real)0.5));
+            Assert.That(body.Velocity.X, Is.LessThanOrEqualTo(0));
+        }
     }
 
     private sealed class RejectContact : INarrowPhaseFilter

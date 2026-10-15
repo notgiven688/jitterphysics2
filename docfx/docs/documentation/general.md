@@ -45,13 +45,14 @@ The creation order matters within each **island**, a group of bodies connected t
 | `SolveMode.Deterministic` | Designed to give the same results across platforms and thread counts when the setup and inputs above match. |
 | `SolveMode.Regular` with `multiThread: false` | Repeating the exact same setup within one .NET process may give the same results. This is not a cross-platform guarantee. |
 | `SolveMode.Regular` with `multiThread: true` | Results may vary between runs because the processing order can change. |
+| `SolveMode.GraphColored` | Graph coloring changes contact order and does not guarantee deterministic results. |
 
 Float and double builds do not produce identical results, and results may change between Jitter2 versions.
 
 > [!NOTE]
 > Cross-platform determinism is tested in CI on Linux x64, Windows x64, and macOS arm64. These tests support the claim for the configurations they cover; they cannot establish it for every possible scene or platform.
 
-Deterministic mode can be significantly slower. `SolveMode.Regular` remains the default for applications that do not need repeatable results.
+Deterministic mode can be significantly slower. `SolveMode.GraphColored` is the default; `SolveMode.Regular` is also available for applications that do not need repeatable results.
 
 ## Coordinate System
 

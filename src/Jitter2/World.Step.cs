@@ -112,10 +112,10 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
-        findCcdHits = FindCcdHits;
         prepareContactColor = PrepareContactColor;
         iterateContactColor = IterateContactColor;
         finishContactColor = FinishContactColor;
+        findCcdHits = FindCcdHits;
     }
 
     private readonly double[] debugTimings = new double[(int)Timings.Last];

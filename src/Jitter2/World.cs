@@ -463,7 +463,6 @@ public sealed partial class World : IDisposable
         while (proxies.Count > 0) DynamicTree.RemoveProxy(proxies.Pop());
 
         ClearContactColors();
-
     }
 
     /// <summary>
@@ -471,6 +470,7 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// Use this after removing many objects to release unused collection capacity.
+    /// Cached graph-colored solver storage is also released.
     /// Existing bodies, constraints, contacts, and arbiters remain valid.
     /// Unmanaged simulation buffers are not compacted.
     /// <para>Do not use or modify this world from other threads while trimming, including queries
@@ -967,10 +967,10 @@ public sealed partial class World : IDisposable
         if (disposed) return;
         disposed = true;
 
+        ClearContactColors();
         ccdBodies.Clear();
         ccdBodySet.Clear();
         ccdQueries.Clear();
-        ClearContactColors();
 
         memContacts.Dispose();
         memRigidBodies.Dispose();

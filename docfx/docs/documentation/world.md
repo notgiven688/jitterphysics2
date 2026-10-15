@@ -92,7 +92,7 @@ world.SolveMode = SolveMode.Deterministic; // reproducible, slower
 world.SolveMode = SolveMode.GraphColored;  // default: SIMD across independent contact manifolds
 ```
 
-`SolveMode.GraphColored` is the default. `SolveMode.Regular` remains available as the standard solver. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
+`SolveMode.GraphColored` is the default. `SolveMode.Regular` remains available as the standard solver. With multithreading, the order in which regular contacts and constraints are solved can vary between runs.
 
 `SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
 
@@ -106,18 +106,17 @@ bodies can be shared when their velocities are read-only. Colors run sequentiall
 manifolds within a color run without body locks and can be distributed across workers.
 
 Like regular mode, this mode incrementally reorders the active contact records once
-per world step to improve memory locality. Coloring then uses the current contact
-order when it rebuilds the graph for each substep.
-
-Before SIMD packing, each color's manifolds are grouped into coarse buckets by the
-physical memory locations of their writable bodies. Read-only endpoints, such as a
-shared static floor, do not determine the bucket. Grouping preserves the input order
-within each bucket and reuses scratch storage on subsequent substeps.
+per world step to improve memory locality. The color graph is retained across steps
+and updated incrementally as contacts change. A full rebuild uses the current contact
+order. An unchanged graph preserves the color ordering; incremental removal can move
+another contact within its color to fill the vacant slot.
 
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
-Full bundles prepare contacts and apply warm starts directly across SIMD lanes. Anchors,
-inverse inertia, and effective masses are captured once per substep. Each iteration
+Full bundles prepare contacts and apply warm starts directly across SIMD lanes. Contact
+impulse offsets remain fixed throughout the world step; current transformed anchors
+are used to recompute separation bias for each substep. Preparation captures inverse
+inertia and effective masses for that substep. Each iteration
 computes angular velocity changes from the combined normal and friction impulse instead
 of storing separate angular responses for each direction. Solving and relaxation share
 the same prepared geometry; relaxation removes penetration correction while retaining
@@ -127,8 +126,9 @@ passes, with a synchronization barrier before the next contact pass.
 This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
 values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current
 runtime. Partial bundles and systems without hardware SIMD use the existing contact
-preparation and iteration. Coloring is rebuilt after `PreSubStep` for each substep,
-using reusable storage. At most 64 colors are used; excess conflicts are solved
+preparation and iteration. The cached graph is validated after `PreSubStep` for each
+substep, including direct edits to contact endpoints or solve modes. At most 64 colors
+are used; excess conflicts are solved
 sequentially after each sweep. `World.Trim()` releases the cached coloring and SIMD storage.
 
 Graph coloring changes constraint order and does not guarantee deterministic results.

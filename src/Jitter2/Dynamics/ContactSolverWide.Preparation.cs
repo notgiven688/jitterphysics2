@@ -72,7 +72,7 @@ internal sealed partial class ContactSolverWide
         Vector3Wide position1 = default, position2 = default;
         Vector3Wide velocity1 = default, angular1 = default, velocity2 = default, angular2 = default;
         QuaternionWide orientation1 = default, orientation2 = default;
-        Wide linearLocks = default, speculativeRelaxation = default;
+        Wide linearLocks = default, ccdRelaxation = default;
         ContactData.SolveMode combinedMode = ContactData.SolveMode.None;
         bool anyLinearLocks = false;
 
@@ -92,7 +92,7 @@ internal sealed partial class ContactSolverWide
             SetLane(ref linearLocks, lane, hasLinearLocks ? 1 : 0);
             anyLinearLocks |= hasLinearLocks;
             combinedMode |= modes[lane];
-            SetLane(ref speculativeRelaxation, lane, contacts[lane].Data.SpeculativeRelaxationFactor);
+            SetLane(ref ccdRelaxation, lane, contacts[lane].Data.CcdRelaxationFactor);
         }
 
         Vector3Wide inverseMassSum = inverseMass1 + inverseMass2;
@@ -114,6 +114,8 @@ internal sealed partial class ContactSolverWide
                 point.Normal.SetLane(lane, contact.Normal);
                 point.Tangent1.SetLane(lane, contact.Tangent1);
                 point.Tangent2.SetLane(lane, contact.Tangent2);
+                point.RelativePosition1.SetLane(lane, contact.RelativePosition1);
+                point.RelativePosition2.SetLane(lane, contact.RelativePosition2);
                 localPosition1.SetLane(lane, contact.Position1);
                 localPosition2.SetLane(lane, contact.Position2);
                 Real normal = contact.Accumulated.GetElement(0);
@@ -134,13 +136,15 @@ internal sealed partial class ContactSolverWide
                 contact.Flag &= ~(ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart);
             }
 
-            point.RelativePosition1 = orientation1.Transform(localPosition1);
-            point.RelativePosition2 = orientation2.Transform(localPosition2);
-            Vector3Wide separation = (point.RelativePosition1 + position1) - (point.RelativePosition2 + position2);
+            // Impulse offsets stay fixed for the whole step. Only separation follows
+            // the current poses during substeps, matching Contact.PrepareForIteration.
+            Vector3Wide currentRelativePosition1 = orientation1.Transform(localPosition1);
+            Vector3Wide currentRelativePosition2 = orientation2.Transform(localPosition2);
+            Vector3Wide separation = (currentRelativePosition1 + position1) - (currentRelativePosition2 + position2);
             Wide penetration = Vector3Wide.Dot(separation, point.Normal);
             point.Bias = WideMath.ConditionalSelect(
                 WideMath.LessThan(penetration, new Wide(-ContactData.Contact.BreakThreshold)),
-                (penetration * inverseStepDt) * speculativeRelaxation, point.Bias);
+                (penetration * inverseStepDt) * ccdRelaxation, point.Bias);
             Wide penaltyBias = WideMath.Min(
                 biasFactor * WideMath.Max(Wide.Zero, penetration - new Wide(ContactData.Contact.AllowedPenetration)),
                 new Wide(ContactData.Contact.MaximumBias));
@@ -203,13 +207,8 @@ internal sealed partial class ContactSolverWide
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
                 ref ContactData.Contact contact = ref GetContact(ref contacts[lane].Data, slot);
-                contact.RelativePosition1 = point.RelativePosition1.GetLane(lane);
-                contact.RelativePosition2 = point.RelativePosition2.GetLane(lane);
                 contact.Bias = point.Bias[lane];
                 contact.PenaltyBias = penaltyBias[lane];
-                // MassNormalTangent.W aliases Accumulated.X: publish only the three masses.
-                Unsafe.As<VectorReal, JVector>(ref contact.MassNormalTangent) =
-                    new JVector(point.MassNormal[lane], point.MassTangent1[lane], point.MassTangent2[lane]);
             }
         }
 

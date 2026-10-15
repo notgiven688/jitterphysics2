@@ -22,7 +22,7 @@ namespace Jitter2;
 public enum SolveMode
 {
     /// <summary>
-    /// The default solver, optimized for speed. Multithreaded results may vary between runs.
+    /// The standard solver, optimized for speed. Multithreaded results may vary between runs.
     /// </summary>
     Regular,
 

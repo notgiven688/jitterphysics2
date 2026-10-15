@@ -168,13 +168,14 @@ internal sealed partial class ContactSolverWide
         RefreshInertia();
     }
 
-    /// <summary>Packs coefficients after the regular preparation and warm-start pass.</summary>
-    internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
+    /// <summary>Packs coefficients and derives transient masses after the regular preparation and warm-start pass.</summary>
+    internal unsafe void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
     {
         InitializeBundle(source);
         for (int lane = 0; lane < Count; lane++)
         {
             ref ContactData data = ref source[lane].Data;
+            ContactData* dataPtr = (ContactData*)Unsafe.AsPointer(ref data);
             for (int slot = 0; slot < 4; slot++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
@@ -185,9 +186,10 @@ internal sealed partial class ContactSolverWide
                 point.Tangent2.SetLane(lane, contact.Tangent2);
                 point.RelativePosition1.SetLane(lane, contact.RelativePosition1);
                 point.RelativePosition2.SetLane(lane, contact.RelativePosition2);
-                SetLane(ref point.MassNormal, lane, contact.MassNormalTangent.GetElement(0));
-                SetLane(ref point.MassTangent1, lane, contact.MassNormalTangent.GetElement(1));
-                SetLane(ref point.MassTangent2, lane, contact.MassNormalTangent.GetElement(2));
+                VectorReal mass = contact.CalculateEffectiveMass(dataPtr);
+                SetLane(ref point.MassNormal, lane, mass.GetElement(0));
+                SetLane(ref point.MassTangent1, lane, mass.GetElement(1));
+                SetLane(ref point.MassTangent2, lane, mass.GetElement(2));
                 SetLane(ref point.AccumulatedNormal, lane, contact.Accumulated.GetElement(0));
                 SetLane(ref point.AccumulatedTangent1, lane, contact.Accumulated.GetElement(1));
                 SetLane(ref point.AccumulatedTangent2, lane, contact.Accumulated.GetElement(2));
@@ -222,12 +224,15 @@ internal sealed partial class ContactSolverWide
         {
             ref RigidBodyData body1 = ref bodies1[lane].Data;
             ref RigidBodyData body2 = ref bodies2[lane].Data;
-            // Read both bodies even when their response is disabled: kinematic motion and
-            // other read-only velocity components still contribute to relative velocity.
+            // Both bodies contribute even when one is read-only. Explicit linear-only
+            // contacts omit rotation entirely, matching the scalar solver.
             velocity1.SetLane(lane, body1.Velocity);
-            angular1.SetLane(lane, body1.AngularVelocity);
             velocity2.SetLane(lane, body2.Velocity);
-            angular2.SetLane(lane, body2.AngularVelocity);
+            if ((modes[lane] & ContactData.SolveMode.Angular) != 0)
+            {
+                angular1.SetLane(lane, body1.AngularVelocity);
+                angular2.SetLane(lane, body2.AngularVelocity);
+            }
         }
 
         // Extra AVX-512 registers let the isolated arithmetic keep velocities live.
@@ -322,8 +327,11 @@ internal sealed partial class ContactSolverWide
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
                 ref ContactWide point = ref points[slot];
-                GetContact(ref data, slot).Accumulated = Vector.Create(point.AccumulatedNormal[lane],
+                ref ContactData.Contact contact = ref GetContact(ref data, slot);
+                ContactData.Contact.Flags pendingFlags = contact.Flag;
+                contact.Accumulated = Vector.Create(point.AccumulatedNormal[lane],
                     point.AccumulatedTangent1[lane], point.AccumulatedTangent2[lane], 0);
+                if (pendingFlags != 0) contact.Flag = pendingFlags;
             }
         }
     }
