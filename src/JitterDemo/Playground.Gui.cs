@@ -24,6 +24,7 @@ public partial class Playground : RenderWindow
         "M - Toggle multi-threading";
 
     private int selectedDemoIndex = -1;
+    private static readonly string[] SolverModeOptions = Enum.GetNames<SolveMode>();
     private bool demoMenuHintDismissed;
     private readonly double[] debugTimes = new double[(int)World.Timings.Last];
     private readonly StringBuilder gcText = new();
@@ -335,6 +336,12 @@ public partial class Playground : RenderWindow
                         World.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
                     options.Checkbox("Multithreading", ref multiThread);
+
+                    options.Label("Solver mode");
+                    int selectedSolver = (int)World.SolveMode;
+                    if (options.ComboBox("Solver mode", SolverModeOptions, ref selectedSolver,
+                        options.AvailableWidth, id: "solver-mode").Changed)
+                        World.SolveMode = (SolveMode)selectedSolver;
                 });
             }
 

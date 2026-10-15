@@ -87,12 +87,12 @@ Any callbacks shared by worlds running concurrently must be thread-safe. This in
 Jitter2 offers three solver strategies through <xref:Jitter2.SolveMode>:
 
 ```cs
-world.SolveMode = SolveMode.Regular;       // default
+world.SolveMode = SolveMode.Regular;       // standard solver
 world.SolveMode = SolveMode.Deterministic; // reproducible, slower
-world.SolveMode = SolveMode.GraphColored;  // SIMD across independent contact manifolds
+world.SolveMode = SolveMode.GraphColored;  // default: SIMD across independent contact manifolds
 ```
 
-`SolveMode.Regular` favors speed. With multithreading, the order in which contacts and constraints are solved can vary between runs.
+`SolveMode.GraphColored` is the default. `SolveMode.Regular` remains available as the standard solver. It keeps the solver fast, but the exact order in which contacts and constraints are processed may vary.
 
 `SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
 
