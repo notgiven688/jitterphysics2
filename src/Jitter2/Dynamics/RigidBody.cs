@@ -1689,34 +1689,47 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         UpdateWorldInertia();
     }
 
-    private readonly struct DebugDrawSink(IDebugDrawer drawer, JQuaternion orientation, JVector position)
+    private readonly struct DebugDrawSink(IDebugDrawer drawer, JQuaternion orientation, JVector position, uint color)
         : ISink<JTriangle>
     {
         public void Add(in JTriangle triangle)
         {
-            drawer.DrawTriangle(
-                JVector.Transform(triangle.V0, orientation) + position,
-                JVector.Transform(triangle.V1, orientation) + position,
-                JVector.Transform(triangle.V2, orientation) + position);
+            JVector a = JVector.Transform(triangle.V0, orientation) + position;
+            JVector b = JVector.Transform(triangle.V1, orientation) + position;
+            JVector c = JVector.Transform(triangle.V2, orientation) + position;
+            drawer.DrawSegment(a, b, color); drawer.DrawSegment(b, c, color); drawer.DrawSegment(c, a, color);
         }
     }
 
     /// <summary>
-    /// Generates a rough triangle approximation of the shapes of the body.
+    /// Draws a rough wireframe approximation of the shapes of the body.
     /// Since the generation is slow this should only be used for debugging
     /// purposes.
     /// </summary>
     /// <remarks>
-    /// This method tessellates all attached shapes and is not suitable for real-time use.
+    /// This method tessellates all attached shapes on every call and emits their edges as world-space
+    /// segments. Triangle winding does not affect the visualization. It is not suitable for real-time use.
     /// </remarks>
-    /// <param name="drawer">The debug drawer to receive the generated triangles.</param>
-    public void DebugDraw(IDebugDrawer drawer)
+    /// <param name="drawer">The debug drawer to receive the generated line segments.</param>
+    public void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <summary>
+    /// Draws a rough wireframe approximation of the shapes of the body using the supplied settings.
+    /// </summary>
+    /// <remarks>
+    /// Uses <see cref="DebugDrawSettings.ShapeSubdivisions"/> for tessellation detail and
+    /// <see cref="DebugDrawSettings.CurrentColor"/> for the segments. The tessellation is regenerated on every call.
+    /// </remarks>
+    /// <param name="drawer">The debug drawer to receive the generated world-space line segments.</param>
+    /// <param name="settings">The visualization settings.</param>
+    public void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        var sink = new DebugDrawSink(drawer, Data.Orientation, Data.Position);
+        ArgumentNullException.ThrowIfNull(drawer);
+        var sink = new DebugDrawSink(drawer, Data.Orientation, Data.Position, settings.CurrentColor);
 
         foreach (var shape in InternalShapes)
         {
-            ShapeHelper.Tessellate(shape, ref sink);
+            ShapeHelper.Tessellate(shape, ref sink, settings.ShapeSubdivisions);
         }
     }
 

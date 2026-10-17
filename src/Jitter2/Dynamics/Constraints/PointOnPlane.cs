@@ -261,23 +261,38 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref SliderData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-        JVector.Transform(data.LocalAxis, body1.Orientation, out JVector axis);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        Real normalLength = (Real)0.5;
-        drawer.DrawSegment(p1, p1 + axis * normalLength);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        JVector first = Body1.Position + JVector.Transform(data.LocalAnchor1, Body1.Orientation);
+        JVector second = Body2.Position + JVector.Transform(data.LocalAnchor2, Body2.Orientation);
+        JVector normal = JVector.Transform(data.LocalAxis, Body1.Orientation);
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.LocalAxis), Body1.Orientation);
+        Real minimum = data.Min, maximum = data.Max;
+        if (minimum >= maximum)
+        {
+            Real offset = minimum * (Real)0.5 + maximum * (Real)0.5;
+            if (Real.IsFinite(offset))
+                drawer.DrawPlane(first + normal * offset, normal, reference, settings.Scale, settings.UpperLimitColor);
+        }
+        else
+        {
+            if (Real.IsFinite(minimum))
+                drawer.DrawPlane(first + normal * minimum, normal, reference, settings.Scale, settings.LowerLimitColor);
+            if (Real.IsFinite(maximum))
+                drawer.DrawPlane(first + normal * maximum, normal, reference, settings.Scale, settings.UpperLimitColor);
+            if (!Real.IsFinite(minimum) && !Real.IsFinite(maximum))
+                drawer.DrawPlane(first, normal, reference, settings.Scale, settings.ReferenceColor);
+        }
+        drawer.DrawArrow(first, normal * (settings.Scale * (Real)0.4), settings.ReferenceColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
     }
 }

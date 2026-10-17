@@ -239,21 +239,19 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref BallSocketData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        drawer.DrawSegment(body1.Position, p1);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JVector first = Anchor1, second = Anchor2;
+        if (Body1 != Body1.World.NullBody) drawer.DrawSegment(Body1.Position, first, settings.ReferenceColor);
+        if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        drawer.DrawSegment(first, second, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        drawer.DrawSphere(first, settings.Scale * (Real)0.12, settings.ReferenceColor, settings.Segments);
     }
 }

@@ -351,16 +351,21 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         body2.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, data.Jacobian), body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref HingeAngleData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.Axis, body2.Orientation, out JVector axis);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
+        JQuaternion referenceOrientation = Body1.Orientation * data.Q0.Conjugate();
+        JVector axis = JVector.Transform(data.Axis, referenceOrientation);
+        JVector reference = JVector.Transform(-MathHelper.CreateOrthonormal(data.Axis), referenceOrientation);
+        JVector origin = GetDebugDrawOrigin(settings);
+        DebugDrawGeometry.AngularRange(drawer, origin, axis, reference, 2 * data.MinAngle,
+            2 * data.MaxAngle, Angle.Radian, settings);
+        drawer.DrawArrow(origin, JVector.Transform(data.Axis, Body2.Orientation) * (settings.Scale * (Real)0.4),
+            settings.CurrentColor, settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
     }
 }

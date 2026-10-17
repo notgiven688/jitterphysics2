@@ -414,17 +414,29 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref ConeLimitData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JVector origin = GetDebugDrawOrigin(settings);
+        JVector axis = AxisBody1;
+        // Choose the reference in body 1's local frame so the wire geometry rotates with it.
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(Data.LocalAxis1), Body1.Orientation);
+        AngularLimit limit = Limit;
+        drawer.DrawArrow(origin, axis * settings.Scale, settings.ReferenceColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        drawer.DrawArrow(origin, AxisBody2 * settings.Scale, settings.CurrentColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        if (limit.From.Radian == 0 && limit.To.Radian == MathR.PI)
+            drawer.DrawSphere(origin, settings.Scale, settings.ReferenceColor, settings.Segments);
+        else
+            drawer.DrawCone(origin, axis, reference, limit.To, limit.To, settings.Scale,
+                settings.UpperLimitColor, settings.Segments);
+        if (limit.From.Radian > 0 && limit.From != limit.To)
+            drawer.DrawCone(origin, axis, reference, limit.From, limit.From, settings.Scale,
+                settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
     }
 }

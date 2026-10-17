@@ -417,31 +417,29 @@ public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.Ellipti
     }
 
     /// <inheritdoc />
-    public override void DebugDraw(IDebugDrawer drawer)
-    {
-        JVector origin = Body1.Position;
-        JVector axis = AxisBody1, reference = ReferenceDirectionBody1, other = axis % reference;
-        drawer.DrawSegment(origin, origin + axis);
-        drawer.DrawSegment(origin, origin + AxisBody2);
-        DrawBoundary(drawer, origin, axis, reference, other, Data.MaxAngle1, Data.MaxAngle2);
-        if (Data.MinAngle1 > 0 && (Data.MinAngle1 != Data.MaxAngle1 || Data.MinAngle2 != Data.MaxAngle2))
-            DrawBoundary(drawer, origin, axis, reference, other, Data.MinAngle1, Data.MinAngle2);
-    }
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
 
-    private static void DrawBoundary(IDebugDrawer drawer, JVector origin, JVector axis,
-        JVector reference, JVector other, Real a, Real b)
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        const int segments = 64;
-        JVector previous = default;
-        for (int i = 0; i <= segments; i++)
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+
+        JVector origin = GetDebugDrawOrigin(settings);
+        JVector axis = AxisBody1, reference = ReferenceDirectionBody1;
+
+        drawer.DrawArrow(origin, axis * settings.Scale, settings.ReferenceColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        drawer.DrawArrow(origin, AxisBody2 * settings.Scale, settings.CurrentColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+
+        drawer.DrawCone(origin, axis, reference, (JAngle)Data.MaxAngle1, (JAngle)Data.MaxAngle2,
+            settings.Scale, settings.UpperLimitColor, settings.Segments);
+
+        if (Data.MinAngle1 > 0 && (Data.MinAngle1 != Data.MaxAngle1 || Data.MinAngle2 != Data.MaxAngle2))
         {
-            Real phase = 2 * MathR.PI * i / segments;
-            Real x = a * MathR.Cos(phase), y = b * MathR.Sin(phase);
-            Real angle = MathR.Sqrt(x * x + y * y);
-            JVector point = origin + MathR.Cos(angle) * axis + MathR.Sin(angle) / angle * (x * reference + y * other);
-            if (i > 0) drawer.DrawSegment(previous, point);
-            if (i % 8 == 0 && i < segments) drawer.DrawSegment(origin, point);
-            previous = point;
+            drawer.DrawCone(origin, axis, reference, (JAngle)Data.MinAngle1, (JAngle)Data.MinAngle2,
+                settings.Scale, settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
         }
     }
 }

@@ -297,17 +297,28 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref TwistLimitData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.B, body2.Orientation, out JVector axis);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
+        JQuaternion referenceOrientation = Body1.Orientation * data.Q0.Conjugate();
+        JVector axis = JVector.Transform(data.B, referenceOrientation);
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.B), referenceOrientation);
+        JVector origin = GetDebugDrawOrigin(settings);
+        DebugDrawGeometry.AngularRange(drawer, origin, axis, reference, data.Angle1,
+            data.Angle2, Angle.Radian, settings);
+        drawer.DrawArrow(origin, JVector.Transform(data.B, Body2.Orientation) * (settings.Scale * (Real)0.6),
+            settings.CurrentColor, settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        if (data.Angle1 >= data.Angle2)
+        {
+            // Locking twist leaves two swing directions perpendicular to the reference axis.
+            drawer.DrawCircle(origin, reference, axis, settings.Scale, settings.ReferenceColor, settings.Segments);
+            drawer.DrawCircle(origin, axis % reference, axis, settings.Scale, settings.ReferenceColor, settings.Segments);
+        }
     }
 
     public static void IterateTwistAngle(ref ConstraintData constraint, in TimeStep timeStep)

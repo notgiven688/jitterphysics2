@@ -63,8 +63,23 @@ Passing `MassInertiaUpdateMode.Preserve` to `body.AddShape(...)` or `body.AddSha
 
 ### Debugging shapes
 
-The `RigidBody` class offers the `body.DebugDraw(IDebugDrawer drawer)` method which creates a triangle hull for each shape added to the body and calls the `drawer.DrawTriangle` method in the provided `IDebugDrawer` implementation.
-The coordinates of the triangles are in world space and can be drawn to debug the collision shape of the rigid body.
+The `body.DebugDraw(IDebugDrawer drawer)` method draws a wireframe approximation of each attached collision shape.
+It uses the existing shape tessellation and emits its triangle edges through `drawer.DrawSegment`, in world space.
+This visualization works independently of triangle winding, including for flat triangle shapes.
+
+Pass `DebugDrawSettings` to control the tessellation depth and wireframe color:
+
+```cs
+body.DebugDraw(drawer, new DebugDrawSettings
+{
+    ShapeSubdivisions = 3,
+    CurrentColor = DebugDrawColors.White
+});
+```
+
+`ShapeSubdivisions` is the same recursion depth used by `ShapeHelper.Tessellate`: 1 uses the initial
+icosahedron faces, and the default of 3 splits each face twice. Each additional level multiplies the
+number of candidate triangles by four. The original overload uses the default settings.
 
 > [!WARNING]
 > **body.DebugDraw performance**

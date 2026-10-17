@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
@@ -381,4 +382,14 @@ public abstract class Constraint : IDebugDrawable
     {
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Draws this constraint using the supplied visualization settings.
+    /// Custom constraints that only override the original overload keep their existing drawing.
+    /// </summary>
+    public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings) => DebugDraw(drawer);
+
+    /// <summary>Gets the display origin for an angular constraint, keeping world-relative guides near body 2.</summary>
+    protected JVector GetDebugDrawOrigin(in DebugDrawSettings settings) =>
+        settings.Origin ?? (Body1 == Body1.World.NullBody ? Body2.Position : Body1.Position);
 }

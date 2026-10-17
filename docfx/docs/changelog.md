@@ -1,5 +1,10 @@
 # Changelog
 
+### Unreleased
+
+- **Breaking Change:** `IDebugDrawer` now requires only `DrawSegment(in JVector pA, in JVector pB, uint color)`, with colors packed as `0xRRGGBBAA`. Implement this method in existing drawers. Point markers are generated as crosses by `DebugDrawGeometry.DrawPoint`; rigid-body debug drawing emits triangle edges as segments.
+- Added `DebugDrawSettings.ArrowHeadSegments` and `ArrowHeadSpokes` for arrowhead detail, and `ShapeSubdivisions` for rigid-body wireframe tessellation. The new `RigidBody.DebugDraw(drawer, settings)` overload uses the requested tessellation depth and `CurrentColor`.
+
 ### Jitter 2.10.1 (2026-10-15)
 
 - Added `Constraint.Tag` for attaching custom user data to constraints, matching `RigidBody.Tag`.

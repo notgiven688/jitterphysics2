@@ -18,31 +18,25 @@ public interface IDebugDrawable
     /// </summary>
     /// <param name="drawer">The debug drawer used for rendering debug information.</param>
     public void DebugDraw(IDebugDrawer drawer);
+
+    /// <summary>
+    /// Draws the object using the supplied visualization settings.
+    /// Implementations that only provide the original overload use their default visualization.
+    /// </summary>
+    public void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings) => DebugDraw(drawer);
 }
 
 /// <summary>
-/// Defines an interface for drawing debug visualization elements.
+/// Receives colored line segments for debug visualization, in world space.
 /// </summary>
+/// <remarks>Use <see cref="DebugDrawGeometry"/> to draw markers and other wire geometry.</remarks>
 public interface IDebugDrawer
 {
     /// <summary>
-    /// Draws a line segment between two points.
+    /// Draws a line segment between two points with a color packed as <c>0xRRGGBBAA</c>.
     /// </summary>
-    /// <param name="pA">The start point of the segment.</param>
-    /// <param name="pB">The end point of the segment.</param>
-    public void DrawSegment(in JVector pA, in JVector pB);
-
-    /// <summary>
-    /// Draws a triangle defined by three vertices.
-    /// </summary>
-    /// <param name="pA">The first vertex of the triangle.</param>
-    /// <param name="pB">The second vertex of the triangle.</param>
-    /// <param name="pC">The third vertex of the triangle.</param>
-    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC);
-
-    /// <summary>
-    /// Draws a point at the specified position.
-    /// </summary>
-    /// <param name="p">The position of the point.</param>
-    public void DrawPoint(in JVector p);
+    /// <param name="pA">The start point of the segment in world space.</param>
+    /// <param name="pB">The end point of the segment in world space.</param>
+    /// <param name="color">The color packed as <c>0xRRGGBBAA</c>.</param>
+    public void DrawSegment(in JVector pA, in JVector pB, uint color);
 }

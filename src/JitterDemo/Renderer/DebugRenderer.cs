@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Jitter2;
+using Jitter2.LinearMath;
 using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo.Renderer;
@@ -6,7 +9,7 @@ namespace JitterDemo.Renderer;
 /// Immediate-mode line renderer for debug overlays (contact points, AABBs, rays, ...).
 /// One array per color; callers push primitives each frame, the renderer streams them
 /// to the GPU and flushes before drawing the scene.
-public sealed class DebugRenderer
+public sealed class DebugRenderer : IDebugDrawer
 {
     public enum Color
     {
@@ -16,11 +19,11 @@ public sealed class DebugRenderer
         Count = 3
     }
 
-    private static readonly Vector4[] ColorValues =
+    private static readonly uint[] ColorValues =
     {
-        new(1, 1, 1, 1),
-        new(1, 0, 0, 1),
-        new(0, 1, 0, 1)
+        DebugDrawColors.White,
+        DebugDrawColors.Red,
+        DebugDrawColors.Green
     };
 
     private sealed class Bucket
@@ -46,13 +49,12 @@ public sealed class DebugRenderer
         public void Clear() { VertexCount = 0; IndexCount = 0; }
     }
 
-    private readonly Bucket[] buckets = CreateBuckets();
+    private readonly Dictionary<uint, Bucket> buckets = new();
 
-    private static Bucket[] CreateBuckets()
+    private Bucket GetBucket(uint color)
     {
-        var result = new Bucket[(int)Color.Count];
-        for (int i = 0; i < result.Length; i++) result[i] = new Bucket();
-        return result;
+        if (!buckets.TryGetValue(color, out Bucket? bucket)) buckets.Add(color, bucket = new Bucket());
+        return bucket;
     }
 
     private Vao vao = null!;
@@ -80,15 +82,15 @@ public sealed class DebugRenderer
 
         vao.Bind();
 
-        for (int c = 0; c < (int)Color.Count; c++)
+        foreach (var (color, bucket) in buckets)
         {
-            var bucket = buckets[c];
             if (bucket.IndexCount == 0) continue;
 
             vbo.Stream<Vector3>(bucket.Vertices, bucket.VertexCount);
             ebo.Stream<LineVertexIndex>(bucket.Indices, bucket.IndexCount);
 
-            shader.Set("uColor", ColorValues[c]);
+            shader.Set("uColor", new Vector4((color >> 24) / 255.0f, ((color >> 16) & 255) / 255.0f,
+                ((color >> 8) & 255) / 255.0f, (color & 255) / 255.0f));
             GLDevice.DrawElements(DrawMode.Lines, bucket.IndexCount * 2, IndexType.UnsignedInt, 0);
 
             bucket.Clear();
@@ -96,8 +98,11 @@ public sealed class DebugRenderer
     }
 
     public void PushLine(Color color, in Vector3 a, in Vector3 b)
+        => PushLine(ColorValues[(int)color], a, b);
+
+    public void PushLine(uint color, in Vector3 a, in Vector3 b)
     {
-        var bucket = buckets[(int)color];
+        var bucket = GetBucket(color);
         uint i0 = bucket.PushVertex(a.X, a.Y, a.Z);
         uint i1 = bucket.PushVertex(b.X, b.Y, b.Z);
         bucket.PushIndex(i0, i1);
@@ -105,7 +110,7 @@ public sealed class DebugRenderer
 
     public void PushBox(Color color, in Vector3 min, in Vector3 max)
     {
-        var bucket = buckets[(int)color];
+        var bucket = GetBucket(ColorValues[(int)color]);
 
         uint o0 = bucket.PushVertex(min.X, min.Y, min.Z);
         uint o1 = bucket.PushVertex(max.X, min.Y, min.Z);
@@ -124,8 +129,11 @@ public sealed class DebugRenderer
     }
 
     public void PushPoint(Color color, in Vector3 pos, float halfSize = 1.0f)
+        => PushPoint(ColorValues[(int)color], pos, halfSize);
+
+    public void PushPoint(uint color, in Vector3 pos, float halfSize = 1.0f)
     {
-        var bucket = buckets[(int)color];
+        var bucket = GetBucket(color);
         uint i0 = bucket.PushVertex(pos.X - halfSize, pos.Y, pos.Z);
         uint i1 = bucket.PushVertex(pos.X + halfSize, pos.Y, pos.Z);
         uint i2 = bucket.PushVertex(pos.X, pos.Y - halfSize, pos.Z);
@@ -137,6 +145,9 @@ public sealed class DebugRenderer
         bucket.PushIndex(i2, i3);
         bucket.PushIndex(i4, i5);
     }
+
+    public void DrawSegment(in JVector a, in JVector b, uint color) =>
+        PushLine(color, Conversion.FromJitter(a), Conversion.FromJitter(b));
 
     private const string Vs = @"
 #version 330 core

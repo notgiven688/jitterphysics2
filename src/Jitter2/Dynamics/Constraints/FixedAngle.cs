@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.LinearMath;
@@ -167,28 +168,20 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
         body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref FixedAngleData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        const Real axisLength = (Real)0.5;
-
-        JVector x1 = body1.Orientation.GetBasisX() * axisLength;
-        JVector y1 = body1.Orientation.GetBasisY() * axisLength;
-        JVector z1 = body1.Orientation.GetBasisZ() * axisLength;
-
-        JVector x2 = body2.Orientation.GetBasisX() * axisLength;
-        JVector y2 = body2.Orientation.GetBasisY() * axisLength;
-        JVector z2 = body2.Orientation.GetBasisZ() * axisLength;
-
-        drawer.DrawSegment(body1.Position, body1.Position + x1);
-        drawer.DrawSegment(body1.Position, body1.Position + y1);
-        drawer.DrawSegment(body1.Position, body1.Position + z1);
-
-        drawer.DrawSegment(body2.Position, body2.Position + x2);
-        drawer.DrawSegment(body2.Position, body2.Position + y2);
-        drawer.DrawSegment(body2.Position, body2.Position + z2);
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JQuaternion target = Body1.Orientation * Data.Q0.Conjugate();
+        // Keep both frames near body 2 even when body 1 is the world's null body.
+        JVector referenceOrigin = settings.Origin ?? Body2.Position - target.GetBasisX() * (settings.Scale * (Real)1.5);
+        drawer.DrawFrame(referenceOrigin, target, settings.Scale, settings.ReferenceColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        drawer.DrawFrame(Body2.Position, Body2.Orientation, settings.Scale, settings.CurrentColor,
+            settings.ArrowHeadSegments, settings.ArrowHeadSpokes);
+        drawer.DrawSegment(referenceOrigin, Body2.Position, settings.ReferenceColor);
     }
 }

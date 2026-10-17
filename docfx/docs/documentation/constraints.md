@@ -151,6 +151,81 @@ Better constraint behavior can also be achieved by sub-stepping, see [World](wor
 
 Constraints can be temporarily enabled or disabled using `constraint.IsEnabled`.
 
+## Debug drawing
+
+Every built-in constraint and joint implements `IDebugDrawable`. Supply an `IDebugDrawer`
+to render anchors, reference frames, current directions, and limits:
+
+```cs
+constraint.DebugDraw(drawer);
+
+var settings = new DebugDrawSettings
+{
+    Scale = 2,
+    Segments = 64,
+    ArrowHeadSegments = 12,
+    ArrowHeadSpokes = 8,
+    Origin = hingeCenter
+};
+hinge.DebugDraw(drawer, settings);
+```
+
+`Scale` sets the radius of angular guides, the half extent of plane patches, and the size of
+markers. Linear stops and distance shells always use their physical distances. Infinite lines
+and planes are represented by finite guides; unbounded line ends have arrows instead of stops.
+`Origin` optionally places angular guides at a world-space point. By default, angular constraints
+use body 1's position (body 2's position when body 1 is `World.NullBody`), and joints with a ball
+socket use its anchor. `FixedAngle` places its
+reference frame near body 2 by default. Positional constraints always draw at their actual anchors.
+`Segments` controls guide curve detail from 8 to 256; its default is 48.
+`ArrowHeadSegments` independently controls arrowhead bases from 3 to 256, with a default of 12.
+Use 4 for square bases or higher values for rounder bases. `ArrowHeadSpokes` sets the number of
+segments joining the base to the tip, from 1 to 256, with a default of 8. The spoke count is
+clamped to the number of base vertices. A default-initialized settings value has the same behavior
+as `DebugDrawSettings.Default`.
+`ShapeSubdivisions` controls rigid-body shape tessellation when drawing bodies with these settings;
+see [Debugging shapes](bodies.md#debugging-shapes).
+
+Green identifies reference geometry and upper or fixed limits, red identifies lower limits,
+and white identifies the current pose. Override `ReferenceColor`, `LowerLimitColor`,
+`UpperLimitColor`, and `CurrentColor` in the settings to change these colors. Colors are unsigned
+32-bit values packed as **`0xRRGGBBAA`**; `DebugDrawColors` provides the default constants.
+
+An `IDebugDrawer` implementation supplies one method, receiving world-space endpoints and a color:
+
+```cs
+void DrawSegment(in JVector pA, in JVector pB, uint color);
+```
+
+This replaces the previous interface containing uncolored segments, triangles, and points.
+Existing drawers must implement the colored segment method. The uncolored `DrawSegment` extension
+supplies white. `DrawPoint(point, radius, color)` is a geometry helper that draws three crossing segments
+along the world X, Y, and Z axes. Each segment extends by `radius` on either side of the point.
+Constraint anchor markers use `0.06 * Scale`, independently of `Segments`.
+
+The settings overload on `IDebugDrawable` falls back to the original drawing method for existing
+implementations. `Constraint` provides the same fallback for custom constraints. Default interface
+methods are called through the interface when the concrete class does not declare the corresponding overload.
+
+`DebugDrawGeometry` provides reusable point markers, wire circles, arcs, spheres, cones, planes, arrows,
+frames, stops, and springs. These helpers only emit colored segments and have no rendering dependency.
+Arrows have a shaft and a wire cone head with a polygonal base and spokes joining the base to the tip.
+The `DrawArrow` and `DrawFrame` helpers also accept optional `segments` and `spokes` arguments for arrowhead detail.
+They use the library's selected precision. Drawing does not modify bodies or solver data and
+must be called while the world is not being stepped or modified by another thread.
+
+The spring's default drawing uses a reference frame derived from body 1. For a coil that stays
+continuous through arbitrary motion, retain a separate reference direction in visualization
+state and use the spring-specific overload:
+
+```cs
+// Retain this variable between frames, independently for each spring.
+JVector coilReference = JVector.UnitX;
+
+// Each drawing frame:
+spring.DebugDraw(drawer, ref coilReference, DebugDrawSettings.Default);
+```
+
 ## Constraint lifetime
 
 Constraints are attached to their two rigid bodies. They can become invalid without an explicit
