@@ -328,6 +328,8 @@ public struct ContactData
     /// For overlapping contact points, it points from <paramref name="point2"/> toward <paramref name="point1"/>.</param>
     public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal)
     {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
         if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
             // All four contacts are in use. Find one candidate to be replaced by the new one.
@@ -385,7 +387,7 @@ public struct ContactData
 
         if (distanceSq < Contact.BreakThreshold * Contact.BreakThreshold)
         {
-            closest->Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, false, Restitution);
+            closest->Initialize(ptr, point1, point2, normal, false);
             return;
         }
 
@@ -393,22 +395,22 @@ public struct ContactData
 
         if ((UsageMask & MaskContact0) == 0)
         {
-            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
+            Contact0.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact0;
         }
         else if ((UsageMask & MaskContact1) == 0)
         {
-            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
+            Contact1.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact1;
         }
         else if ((UsageMask & MaskContact2) == 0)
         {
-            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
+            Contact2.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact2;
         }
         else if ((UsageMask & MaskContact3) == 0)
         {
-            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
+            Contact3.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact3;
         }
     }
@@ -550,7 +552,7 @@ public struct ContactData
         return SelectCachedPointReplacementMaskVectorized(newPoint, contact0, contact1, contact2, contact3);
     }
 
-    private void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal)
+    private unsafe void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal)
     {
         JVector.Subtract(point1, Body1.Data.Position, out JVector rp1);
 
@@ -572,7 +574,8 @@ public struct ContactData
             cref = ref Contact3;
         }
 
-        cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, false, Restitution);
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+        cref.Initialize(ptr, point1, point2, normal, false);
         UsageMask |= mask;
     }
 
@@ -695,10 +698,13 @@ public struct ContactData
         public readonly Real TangentImpulse2 => Accumulated.GetElement(2);
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2,
-            in JVector n, bool newContact, Real restitution, SolveMode mode = SolveMode.Full)
+        public unsafe void Initialize(ContactData* cd, in JVector point1, in JVector point2,
+            in JVector n, bool newContact)
         {
             Debug.Assert(Math.Abs(n.LengthSquared() - (Real)1.0) < 1e-3);
+
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
 
             JVector.Subtract(point1, b1.Position, out RelativePosition1);
             JVector.Subtract(point2, b2.Position, out RelativePosition2);
@@ -713,7 +719,7 @@ public struct ContactData
 
             // Linear-only contacts also omit rotation from restitution and the friction basis.
             JVector dv = b2.Velocity - b1.Velocity;
-            if (mode == SolveMode.None || (mode & SolveMode.Angular) != 0)
+            if (cd->Mode == SolveMode.None || (cd->Mode & SolveMode.Angular) != 0)
             {
                 dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
                 dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
@@ -726,7 +732,7 @@ public struct ContactData
             // Fake restitution
             if (relNormalVel < (Real)(-1.0))
             {
-                Bias = -restitution * relNormalVel;
+                Bias = -cd->Restitution * relNormalVel;
             }
 
             var tangent1 = dv - n * relNormalVel;

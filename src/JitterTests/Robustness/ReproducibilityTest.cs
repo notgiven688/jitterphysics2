@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 
 #if USE_DOUBLE_PRECISION
@@ -177,7 +178,7 @@ public class ReproducibilityTest
         Assert.That(HashPositions(rebuiltBodies), Is.EqualTo(HashPositions(freshBodies)));
     }
 
-    private static (RigidBody body1, RigidBody body2, ContactData contact) CreateSingleContactCase(World world)
+    private static unsafe (RigidBody body1, RigidBody body2, ContactData contact) CreateSingleContactCase(World world)
     {
         RigidBody body1 = world.CreateRigidBody();
         body1.AddShape(new BoxShape((Real)1.1, (Real)0.9, (Real)1.3));
@@ -207,7 +208,7 @@ public class ReproducibilityTest
         ContactData contact = default;
         contact.Init(body1, body2);
         contact.ResetMode();
-        contact.Contact0.Initialize(ref body1.Data, ref body2.Data, point1, point2, normal, true, contact.Restitution);
+        contact.Contact0.Initialize((ContactData*)Unsafe.AsPointer(ref contact), point1, point2, normal, true);
         contact.UsageMask = ContactData.MaskContact0;
 
         return (body1, body2, contact);
