@@ -1,5 +1,3 @@
-using Jitter2.Collision.ExactArithmetic;
-
 namespace JitterTests.Behavior;
 
 public class ExactPredicateTests
