@@ -8,7 +8,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
-namespace Jitter2.Collision.ExactArithmetic;
+namespace Jitter2.Collision;
 
 // A cached floating-point filter for dot(cross(a-b, a-c), p-a).
 // This accepts only proven nonzero signs. Uncertain signs, including exact zero,

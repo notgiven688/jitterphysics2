@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Jitter2.Collision.ExactArithmetic;
 using Jitter2.LinearMath;
 using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 
