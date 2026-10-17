@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using Jitter2.Collision;
 using Jitter2.DataStructures;
@@ -396,6 +397,34 @@ public sealed partial class World
     private readonly ThreadLocal<Queue<int>> deferredConstraints = new(() => new Queue<int>());
     private readonly ThreadLocal<Queue<int>> deferredSmallConstraints = new(() => new Queue<int>());
 
+    private const int SolverPrefetchDistance = 4;
+    private const int SolverPrefetchCacheLineSize = 64;
+
+    // Ask the CPU to fetch the bodies for an upcoming contact or constraint while it solves
+    // the current one. Their addresses come through handles and are harder for the CPU to predict
+    // than the sequential contact and constraint data. These hints give the fetches a head start;
+    // they do not lock the bodies or read their values into the solver.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static unsafe void PrefetchBodies(JHandle<RigidBodyData> handle1, JHandle<RigidBodyData> handle2)
+    {
+        byte* body1 = (byte*)*handle1.Pointer;
+        byte* body2 = (byte*)*handle2.Pointer;
+
+        // Cover each body's 64-byte cache lines, including velocities, inertia and motion flags.
+        Sse.Prefetch0(body1);
+        Sse.Prefetch0(body2);
+        Sse.Prefetch0(body1 + SolverPrefetchCacheLineSize);
+        Sse.Prefetch0(body2 + SolverPrefetchCacheLineSize);
+
+        if (Precision.IsDoublePrecision)
+        {
+            Sse.Prefetch0(body1 + 2 * SolverPrefetchCacheLineSize);
+            Sse.Prefetch0(body2 + 2 * SolverPrefetchCacheLineSize);
+            Sse.Prefetch0(body1 + 3 * SolverPrefetchCacheLineSize);
+            Sse.Prefetch0(body2 + 3 * SolverPrefetchCacheLineSize);
+        }
+    }
+
     private void PrepareContacts(Parallel.Batch batch)
     {
         var span = memContacts.Active[batch.Start..batch.End];
@@ -403,6 +432,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref ContactData next = ref span[i + SolverPrefetchDistance];
+                PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref ContactData contact = ref span[i];
             ref RigidBodyData b1 = ref contact.Body1.Data;
             ref RigidBodyData b2 = ref contact.Body2.Data;
@@ -449,6 +484,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref ContactData next = ref span[i + SolverPrefetchDistance];
+                PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref ContactData c = ref span[i];
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
@@ -491,6 +532,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref SmallConstraintData next = ref span[i + SolverPrefetchDistance];
+                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref SmallConstraintData constraint = ref span[i];
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
@@ -531,6 +578,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref SmallConstraintData next = ref span[i + SolverPrefetchDistance];
+                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref SmallConstraintData constraint = ref span[i];
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
@@ -572,6 +625,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref ConstraintData next = ref span[i + SolverPrefetchDistance];
+                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref ConstraintData constraint = ref span[i];
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
@@ -615,6 +674,12 @@ public sealed partial class World
 
         for (int i = 0; i < span.Length; i++)
         {
+            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
+            {
+                ref ConstraintData next = ref span[i + SolverPrefetchDistance];
+                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
+            }
+
             ref ConstraintData constraint = ref span[i];
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;

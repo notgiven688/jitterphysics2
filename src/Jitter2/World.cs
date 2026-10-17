@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
@@ -421,6 +422,9 @@ public sealed partial class World : IDisposable
     /// </summary>
     public World()
     {
+        Debug.Assert(Unsafe.SizeOf<RigidBodyData>() == SolverPrefetchCacheLineSize * (Precision.IsDoublePrecision ? 4 : 2),
+            "RigidBodyData size should match the cache lines prefetched by the solver.");
+
         Logger.Information($"Creating new world.");
 
         memRigidBodies = new PartitionedBuffer<RigidBodyData>(aligned64: true);
