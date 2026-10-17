@@ -128,6 +128,28 @@ starts at zero tilt, which violates a positive inner boundary and will be correc
 
 Translation and twist of body 2 about its constrained axis remain free. Combine this constraint
 with `BallSocket` for a joint, and optionally `TwistAngle` to limit twist.
+JitterDemo's **Degrees of Freedom** gallery includes an elliptical swing example with both
+inner and outer limits: green outer boundaries, red inner boundaries, and white current axes.
+Its 13 exhibits demonstrate every built-in constraint and three composite joints in a centered
+4×4 grid filled left to right, top to bottom in the initial view, with the final three cells at
+the lower right empty. Individual constraint exhibits are ordered alphabetically, followed by
+hinge, universal, and weld. Fixed columns and equal square floor outlines keep the layout regular,
+with room for each exhibit's motion.
+The initial camera shows the full layout from above, with motion guides and world-anchored
+labels drawn in the Vellum overlay.
+`HingeJoint` demonstrates `HingeAngle`, and `UniversalJoint` demonstrates the fixed-twist case
+of `TwistAngle`. Each joint's label names its component constraints. The labels keep a readable
+screen size, share the main panel's background and border colors, and appear within 20 world
+units of an exhibit. Use **WASD** and the right mouse
+button to move around the gallery; drag the bodies to explore their allowed motion.
+The `PointOnPlane` exhibit also uses a `DistanceLimit` to keep its anchor inside the red circle.
+The `FixedAngle` exhibit similarly bounds translation to the red sphere with a `DistanceLimit`.
+The `AngularMotor` exhibit uses `BallSocket` and an unrestricted `HingeAngle` to keep the rotor
+in the displayed plane while allowing continuous rotation about its axis.
+The joints use the same simple bodies and debug guides as the individual constraints: a bounded
+angular arc for the hinge, crossed swing guides for the universal joint, and matching frames for
+the weld. The sliding motion of a prismatic joint is already covered by `PointOnLine` and the
+guided `LinearMotor` example, so it has no separate exhibit.
 
 ### Fixed constraints
 
@@ -216,7 +238,7 @@ must be called while the world is not being stepped or modified by another threa
 
 The spring's default drawing uses a reference frame derived from body 1. For a coil that stays
 continuous through arbitrary motion, retain a separate reference direction in visualization
-state and use the spring-specific overload:
+state and use the spring-specific overload, as the gallery does:
 
 ```cs
 // Retain this variable between frames, independently for each spring.
@@ -225,6 +247,9 @@ JVector coilReference = JVector.UnitX;
 // Each drawing frame:
 spring.DebugDraw(drawer, ref coilReference, DebugDrawSettings.Default);
 ```
+
+JitterDemo's gallery uses these built-in drawings; its extra guides illustrate supporting
+constraints such as the distance limit around the plane example.
 
 ## Constraint lifetime
 

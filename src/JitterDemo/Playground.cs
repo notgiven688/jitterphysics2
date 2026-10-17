@@ -106,6 +106,7 @@ public partial class Playground : RenderWindow
         new Demo30(),
         new Demo31(),
         new Demo32(),
+        new Demo33(),
     };
 
     private IDemo? currentDemo;
@@ -128,6 +129,7 @@ public partial class Playground : RenderWindow
 
     private void ResetScene()
     {
+        worldLabels.Clear();
         floorShape = null;
         world.Clear();
         world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
@@ -223,6 +225,7 @@ public partial class Playground : RenderWindow
         if (!overlayFramePrepared)
             PrepareCustomOverlayFrame(logicalWidth, logicalHeight, framebufferWidth, framebufferHeight);
 
+        DrawWorldLabels(logicalWidth, logicalHeight);
         Gui.EndFrame();
         overlayFramePrepared = false;
         WantsCaptureKeyboard = Gui.WantsCaptureKeyboard;
