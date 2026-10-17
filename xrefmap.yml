@@ -9639,15 +9639,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.Contact.Impulse
   nameWithType: ContactData.Contact.Impulse
-- uid: Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean,System.Single)
-  name: Initialize(ref RigidBodyData, ref RigidBodyData, in JVector, in JVector, in JVector, bool, float)
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Initialize_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_System_Single_
-  commentId: M:Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean,System.Single)
-  name.vb: Initialize(RigidBodyData, RigidBodyData, JVector, JVector, JVector, Boolean, Single)
-  fullName: Jitter2.Dynamics.ContactData.Contact.Initialize(ref Jitter2.Dynamics.RigidBodyData, ref Jitter2.Dynamics.RigidBodyData, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, bool, float)
-  fullName.vb: Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.RigidBodyData, Jitter2.Dynamics.RigidBodyData, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Boolean, Single)
-  nameWithType: ContactData.Contact.Initialize(ref RigidBodyData, ref RigidBodyData, in JVector, in JVector, in JVector, bool, float)
-  nameWithType.vb: ContactData.Contact.Initialize(RigidBodyData, RigidBodyData, JVector, JVector, JVector, Boolean, Single)
+- uid: Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.ContactData*,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name: Initialize(ContactData*, in JVector, in JVector, in JVector, bool)
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Initialize_Jitter2_Dynamics_ContactData__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_
+  commentId: M:Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.ContactData*,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)
+  name.vb: Initialize(ContactData*, JVector, JVector, JVector, Boolean)
+  fullName: Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.ContactData*, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.ContactData*, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: ContactData.Contact.Initialize(ContactData*, in JVector, in JVector, in JVector, bool)
+  nameWithType.vb: ContactData.Contact.Initialize(ContactData*, JVector, JVector, JVector, Boolean)
 - uid: Jitter2.Dynamics.ContactData.Contact.Initialize*
   name: Initialize
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Initialize_

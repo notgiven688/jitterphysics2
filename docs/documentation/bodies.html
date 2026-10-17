@@ -222,12 +222,18 @@ With each <code>world.Step</code>, the angular and linear velocity of each dynam
 For performance reasons there is no time dependency for the damping system.
 As a result, bodies in a simulation with smaller time steps experience greater damping.</p>
 <h2 id="speculative-contacts">Speculative contacts</h2>
-<p>Speculative contacts can be utilized to prevent fast and small objects from tunneling through thin objects.
-An object moving quickly enough might 'miss' a collision since the distance traveled between two frames exceeds the thickness of another object.
-Speculative contacts can be enabled on a per-body basis using <code>body.EnableSpeculativeContacts</code>.
-The <code>world.SpeculativeRelaxationFactor</code> and <code>world.SpeculativeVelocityThreshold</code> can be adjusted to fine-tune speculative contacts for specific use cases.
-However, it should be noted that an accurate simulation of fast-moving objects is only possible using smaller time steps.
-Speculative contacts may involve a trade-off of less accurate collision detection and response.</p>
+<p>Jitter's built-in speculative contacts are <strong>linear-only</strong>. They help prevent fast, small objects
+from tunneling through thin obstacles when their translation between frames would skip a collision.
+Enable them on a per-body basis using <code>body.EnableSpeculativeContacts</code>.</p>
+<p>Speculative bounding box expansion uses only linear velocity. Sweeps predict translation while
+holding the shapes at their current orientations. The speculative constraints also ignore angular
+surface velocity (<code>ω × r</code>) and apply impulses only to linear velocity. They do not prevent
+tunneling caused by rotation, including rotation introduced by other contacts or constraints during
+the timestep. Bodies still rotate normally, and ordinary overlap contacts retain their angular response.</p>
+<p><code>world.SpeculativeVelocityThreshold</code> sets the minimum relative linear speed for speculative
+contact generation. <code>world.SpeculativeRelaxationFactor</code> controls how much the bodies may close
+the predicted gap. This approximation trades collision-response accuracy for reduced tunneling;
+smaller timesteps may still be needed for fast translation or rotation.</p>
 <h2 id="friction-and-restitution">Friction and Restitution</h2>
 <p>Friction and restitution coefficients may be set through <code>body.Friction</code> and <code>body.Restitution</code>.
 For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>
