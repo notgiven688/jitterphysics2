@@ -98,7 +98,9 @@ def make_schedule(scenes, threads, repetitions):
         # Rotate scene order, reverse thread order, and alternate A/B within each pair.
         scene_order = list(scenes[repeat % len(scenes):]) + list(scenes[:repeat % len(scenes)])
         for thread in (threads if repeat % 2 == 0 else threads[::-1]):
-            for index, scene in enumerate(scene_order):
+            for scene in scene_order:
+                # Use the original scene index: rotation must not cancel the A/B alternation.
+                index = scenes.index(scene)
                 for label in (("baseline", "candidate") if (repeat + index) % 2 == 0
                               else ("candidate", "baseline")):
                     name = f"r{repeat + 1:02d}-t{thread:02d}-{scene}-{label}"
