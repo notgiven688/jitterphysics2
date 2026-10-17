@@ -19,6 +19,7 @@ Constraints remove one or more of these degrees of freedom.
 | `DistanceLimit` | 1 translational (when limit active) | Constrains the distance between anchor points, only enforced when outside the limit range |
 | `TwistAngle` | 1 rotational (when limit active) | Limits relative twist around an axis, only enforced when outside the limit range |
 | `ConeLimit` | 1 rotational (when limit active) | Limits angular tilt between two axes |
+| `EllipticalConeLimit` | 1 rotational (when limit active) | Limits swing between inner and outer elliptical cones; leaves twist free |
 | `AngularMotor` | — | Drives angular velocity (does not remove DOF) |
 | `LinearMotor` | — | Drives linear velocity (does not remove DOF) |
 | `SpringConstraint` | 1 translational | Spring-like force along the anchor connection |
@@ -92,6 +93,41 @@ hingeAngle.Initialize(hingeAxis, AngularLimit.Full);
 Position the bodies with the intended axes aligned or antiparallel before initialization.
 `HingeAngle` stores their current relative orientation as its reference; it does not pull two
 arbitrarily misaligned axes into alignment during initialization.
+
+### Elliptical cone limits
+
+`EllipticalConeLimit` allows different swing limits in two perpendicular directions. Body 1 owns
+the cone frame; body 2 owns the axis being constrained. All initialization directions are supplied
+in world space and stored relative to their respective bodies.
+
+```cs
+var cone = world.CreateConstraint<EllipticalConeLimit>(body1, body2);
+cone.Initialize(
+    axis: JVector.UnitY,
+    referenceDirection: JVector.UnitX,
+    limitAlongReference: AngularLimit.FromDegree(15, 60),
+    limitAlongPerpendicular: AngularLimit.FromDegree(5, 25));
+```
+
+The lower bounds define the inner ellipse (15° and 5°); the upper bounds define the outer ellipse
+(60° and 25°). Swing is allowed between these boundaries. Setting both lower bounds to zero
+removes the inner boundary. Setting each lower bound equal to its upper bound constrains swing
+to one elliptical cone surface. Identical ranges in both directions give a circular cone.
+
+The ellipses are defined in **swing-angle coordinates**: the shortest tilt angle resolved along
+the reference direction and `axis cross referenceDirection`. Each boundary satisfies
+`(swing1 / angle1)^2 + (swing2 / angle2)^2 = 1`. These are coupled boundaries, not independent
+clamps on two angles. The reference direction is projected perpendicular to the cone axis;
+parallel directions are rejected. Rotation of body 1 rotates the entire ellipse frame.
+
+Each range must satisfy `0 <= From <= To < 180°`, with a positive upper bound. The lower bounds
+must either both be zero or both be positive. Fixed zero and 180° tilt are unsupported. Change
+the ranges together using `SetLimits`; inspect the current coordinates using `GetSwing`.
+The two-axis `Initialize` overload supports an initially tilted body 2. The single-axis overload
+starts at zero tilt, which violates a positive inner boundary and will be corrected by the solver.
+
+Translation and twist of body 2 about its constrained axis remain free. Combine this constraint
+with `BallSocket` for a joint, and optionally `TwistAngle` to limit twist.
 
 ### Fixed constraints
 
