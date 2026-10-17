@@ -8,6 +8,56 @@ public class BroadPhaseUpdateTests
     [TestCase(false, true)]
     [TestCase(true, false)]
     [TestCase(true, true)]
+    public void SpeculativeBoundsUseOnlyLinearVelocity(bool enableFirst, bool hasLinearVelocity)
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        var shape = new BoxShape(4, (Real)0.2, (Real)0.2);
+        body.AddShape(shape);
+        var tightBox = shape.WorldBoundingBox;
+
+        if (enableFirst) body.EnableSpeculativeContacts = true;
+        body.Velocity = hasLinearVelocity ? new JVector(3, 4, 0) : JVector.Zero;
+        body.AngularVelocity = new JVector(0, 0, 1000);
+        if (!enableFirst) body.EnableSpeculativeContacts = true;
+
+        shape.UpdateWorldBoundingBox((Real)0.02);
+
+        JVector padding = hasLinearVelocity ? new JVector((Real)0.1) : JVector.Zero;
+        Assert.That((shape.WorldBoundingBox.Min - (tightBox.Min - padding)).Length(),
+            Is.LessThan((Real)1e-5));
+        Assert.That((shape.WorldBoundingBox.Max - (tightBox.Max + padding)).Length(),
+            Is.LessThan((Real)1e-5));
+
+        body.EnableSpeculativeContacts = false;
+        Assert.That(shape.WorldBoundingBox.Min, Is.EqualTo(tightBox.Min));
+        Assert.That(shape.WorldBoundingBox.Max, Is.EqualTo(tightBox.Max));
+    }
+
+    [Test]
+    public void AngularOnlyImpulseDoesNotExpandSpeculativeBounds()
+    {
+        using var world = new World { Gravity = JVector.Zero };
+        var body = world.CreateRigidBody();
+        var shape = new BoxShape(4, (Real)0.2, (Real)0.2);
+        body.AddShape(shape);
+        body.AllowedMotion = MotionAxes.AngularZ;
+        body.EnableSpeculativeContacts = true;
+
+        var tightBox = shape.WorldBoundingBox;
+        body.ApplyImpulse(new JVector(0, 1, 0), new JVector(1, 0, 0));
+
+        Assert.That(body.Velocity, Is.EqualTo(JVector.Zero));
+        Assert.That(body.AngularVelocity.Z, Is.GreaterThan((Real)0.0));
+        shape.UpdateWorldBoundingBox((Real)0.01);
+        Assert.That(shape.WorldBoundingBox.Min, Is.EqualTo(tightBox.Min));
+        Assert.That(shape.WorldBoundingBox.Max, Is.EqualTo(tightBox.Max));
+    }
+
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
     public void SpeculativeVelocityChangeUpdatesBroadphaseBeforeFirstStep(bool enableFirst, bool launchInPreStep)
     {
         using var world = new World { Gravity = JVector.Zero };

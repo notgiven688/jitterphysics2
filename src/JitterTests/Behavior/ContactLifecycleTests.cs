@@ -8,6 +8,44 @@ public class ContactLifecycleTests
     private const Real Tolerance = 1e-5f;
 #endif
 
+    [TestCase(false, 0.005, 2.0)]
+    [TestCase(true, 0.005, 2.0)]
+    [TestCase(false, 0.1, -0.9)]
+    [TestCase(true, 0.1, -0.9)]
+    public void LinearOnlyContact_IgnoresAngularSurfaceVelocity(bool accelerated, double gap, double target)
+    {
+        using var world = new World();
+        var wall = world.CreateRigidBody();
+        var wallShape = new SphereShape(1);
+        wall.AddShape(wallShape);
+        wall.MotionType = MotionType.Static;
+        var body = world.CreateRigidBody();
+        var shape = new SphereShape(1);
+        body.AddShape(shape);
+        body.SetMassInertia(1);
+        body.Velocity = new JVector(-2, 0, 0);
+        body.AngularVelocity = new JVector(0, 0, 10);
+
+        body.Restitution = 1;
+        world.RegisterContact(wallShape.ShapeId, shape.ShapeId, wall, body,
+            new JVector(-(Real)gap, 1, 0), new JVector(0, 1, 0), JVector.UnitX,
+            ContactData.SolveMode.Angular);
+        Assert.That(world.GetArbiter(wallShape.ShapeId, shape.ShapeId, out var arbiter), Is.True);
+        ref ContactData contact = ref arbiter!.Handle.Data;
+        contact.Friction = 0;
+
+        Assert.That(contact.Contact0.Bias, Is.EqualTo(2).Within(Tolerance));
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.1));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)0.1));
+
+        if (accelerated) contact.IterateAccelerated(true);
+        else contact.IterateScalar(true);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
+        Assert.That(body.AngularVelocity, Is.EqualTo(new JVector(0, 0, 10)));
+    }
+
     [TestCase(false, 0.1, -0.9)]
     [TestCase(true, 0.1, -0.9)]
     [TestCase(false, 0.005, 10.0)]

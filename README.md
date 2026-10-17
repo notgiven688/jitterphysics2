@@ -78,7 +78,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 - Single or double precision, selected at compile time.
 - Optional cross-platform deterministic solver for reproducible simulations.
 - Impulse-based solver with a semi-implicit Euler integrator and substepping.
-- Speculative contacts to reduce tunneling.
+- Linear-only speculative contacts to reduce tunneling from fast translation.
 - Constraints and motors with configurable softness.
 - Deactivation to reduce the cost of inactive rigid bodies.
 - Triangle meshes with filtering of internal edges.

@@ -98,9 +98,10 @@ public sealed partial class World
     public bool PersistentContactManifold { get; set; } = true;
 
     /// <summary>
-    /// A speculative contact slows a body down such that it does not penetrate or tunnel through
-    /// an obstacle within one frame. The <see cref="SpeculativeRelaxationFactor"/> scales the
-    /// slowdown, ranging from 0 (where the body stops immediately during this frame) to 1 (where the body and the
+    /// A speculative contact limits relative linear closing velocity to help prevent tunneling through
+    /// an obstacle within one frame. It does not account for rotational motion.
+    /// The <see cref="SpeculativeRelaxationFactor"/> scales the slowdown, ranging from 0
+    /// (where the body stops immediately during this frame) to 1 (where the body and the
     /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
     /// might be enough to trigger another speculative contact in the next frame.
     /// Default value: 0.9.
@@ -108,12 +109,16 @@ public sealed partial class World
     public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
 
     /// <summary>
-    /// Speculative contacts are generated when the relative velocity between two bodies exceeds
+    /// Speculative contacts are generated when the relative linear speed between two bodies exceeds
     /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
     /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
     /// timestep of 0.01.
     /// Default value: 10.0.
     /// </summary>
+    /// <remarks>
+    /// Angular velocity does not contribute to this threshold. Built-in speculative contacts
+    /// predict translation at fixed orientations and do not prevent tunneling caused by rotation.
+    /// </remarks>
     public Real SpeculativeVelocityThreshold { get; set; } = (Real)10.0;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -247,8 +252,8 @@ public sealed partial class World
             try
             {
                 if (!PersistentContactManifold) arbiter.Handle.Data.UsageMask = 0;
-                arbiter.Handle.Data.AddContact(point1, point2, normal);
                 arbiter.Handle.Data.ResetMode(removeFlags);
+                arbiter.Handle.Data.AddContact(point1, point2, normal);
             }
             finally
             {

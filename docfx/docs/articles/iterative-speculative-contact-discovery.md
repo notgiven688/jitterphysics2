@@ -6,6 +6,8 @@ The method explored here repeats collision detection after such an impulse. This
 
 The discussion assumes a standard impulse-based rigid-body solver. JitterDemo includes an experimental implementation in [CcdSolver.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/JitterDemo/Demos/Misc/CcdSolver.cs), and an interactive example appears below.
 
+The examples and interactive demo in this article use speculative contacts with angular response. Jitter's built-in `EnableSpeculativeContacts` mode is [linear-only](../documentation/bodies.md#speculative-contacts): it predicts translation and applies only linear impulses. The ISCD experiment explores an alternative that retains angular response.
+
 ## A contact before contact
 
 Consider a ball whose surface is 10 units away from a thin wall. During the next timestep, its velocity would carry it 20 units. The ball starts on one side of the wall and ends on the other, so discrete overlap tests at the start and end of the step find nothing. The ball tunnels through the wall.
@@ -46,7 +48,7 @@ The new motion is shown below. A now reaches the wall as intended, but B rotates
 
 More solver iterations at A cannot fix this. The solver only knows about the contact at A; it cannot create the missing contact at B. Collision detection has to run again.
 
-A simple workaround is to freeze the angular response of speculative contacts and change only linear velocity. That avoids the new collision in this example, but it also removes the physically expected rotation from an off-center impact.
+A simple workaround is to omit angular response from speculative contacts and change only linear velocity. Jitter's built-in speculative contacts use this approach and also ignore angular surface velocity in the speculative constraint. That avoids the new collision in this example, but it also removes the physically expected rotation from an off-center speculative impact. It does not freeze the body's rotation or protect against tunneling caused by rotation from other sources.
 
 ## Respond, then detect again
 

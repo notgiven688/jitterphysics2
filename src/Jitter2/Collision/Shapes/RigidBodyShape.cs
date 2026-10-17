@@ -35,8 +35,16 @@ public abstract class RigidBodyShape : Shape
 
         ref var data = ref RigidBody.Data;
         CalculateBoundingBox(data.Orientation, data.Position, out box);
+
+        if (RigidBody.EnableSpeculativeContacts)
+        {
+            // Speculative sweeps predict translation using the body's physical velocity.
+            Real swept = dt * data.Velocity.Length();
+            box.Min -= new JVector(swept);
+            box.Max += new JVector(swept);
+        }
+
         WorldBoundingBox = box;
-        if (RigidBody.EnableSpeculativeContacts) SweptExpandBoundingBox(dt);
     }
 
     public virtual void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)

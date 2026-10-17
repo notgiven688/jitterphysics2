@@ -863,12 +863,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     private bool enableSpeculativeContacts;
 
     /// <summary>
-    /// Gets or sets whether speculative contacts are enabled for this body.
+    /// Gets or sets whether linear-only speculative contacts are enabled for this body.
     /// </summary>
     /// <remarks>
-    /// Speculative contacts help prevent tunneling for fast-moving bodies by generating
-    /// contacts before actual penetration occurs. This may increase contact count and
-    /// solver cost. Default is <see langword="false"/>.
+    /// Speculative contacts help prevent tunneling from fast linear motion by generating
+    /// contacts before actual penetration occurs. Prediction and speculative bounding box
+    /// expansion use only linear velocity, with shape orientations held fixed during sweeps.
+    /// Speculative constraints ignore angular surface velocity and update only linear velocity.
+    /// They do not prevent tunneling caused by rotation. Bodies still rotate normally, and
+    /// ordinary overlap contacts retain their angular response. Enabling speculative contacts
+    /// may increase contact count and solver cost. Default is <see langword="false"/>.
     /// </remarks>
     public bool EnableSpeculativeContacts
     {

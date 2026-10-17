@@ -41,7 +41,7 @@ _disableContribution: true
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#127919;</div>
     <div class="jp-feature-title">Speculative Contacts</div>
-    <div class="jp-feature-body">Prevents tunneling at high velocities without the overhead of continuous collision detection.</div>
+    <div class="jp-feature-body">Linear-only speculative contacts reduce tunneling from fast translation. Tunneling caused by rotation is not covered.</div>
   </div>
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128260;</div>

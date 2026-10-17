@@ -393,22 +393,22 @@ public struct ContactData
 
         if ((UsageMask & MaskContact0) == 0)
         {
-            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
             UsageMask |= MaskContact0;
         }
         else if ((UsageMask & MaskContact1) == 0)
         {
-            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
             UsageMask |= MaskContact1;
         }
         else if ((UsageMask & MaskContact2) == 0)
         {
-            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
             UsageMask |= MaskContact2;
         }
         else if ((UsageMask & MaskContact3) == 0)
         {
-            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution, Mode);
             UsageMask |= MaskContact3;
         }
     }
@@ -696,7 +696,7 @@ public struct ContactData
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2,
-            in JVector n, bool newContact, Real restitution)
+            in JVector n, bool newContact, Real restitution, SolveMode mode = SolveMode.Full)
         {
             Debug.Assert(Math.Abs(n.LengthSquared() - (Real)1.0) < 1e-3);
 
@@ -711,8 +711,13 @@ public struct ContactData
             Flag = Flags.NewContact;
             Accumulated = Vector.Create((Real)0.0);
 
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            // Linear-only contacts also omit rotation from restitution and the friction basis.
+            JVector dv = b2.Velocity - b1.Velocity;
+            if (mode == SolveMode.None || (mode & SolveMode.Angular) != 0)
+            {
+                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            }
 
             Real relNormalVel = JVector.Dot(dv, n);
 
@@ -930,8 +935,12 @@ public struct ContactData
             JVector tangent1 = Tangent1;
             JVector tangent2 = Tangent2;
 
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            JVector dv = b2.Velocity - b1.Velocity;
+            if ((cd->Mode & SolveMode.Angular) != 0)
+            {
+                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            }
 
             Real bias = Bias;
             if (applyBias && PenaltyBias > 0)
@@ -1177,8 +1186,12 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            JVector dv = b2.Velocity - b1.Velocity;
+            if ((cd->Mode & SolveMode.Angular) != 0)
+            {
+                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            }
 
             Real bias = Bias;
             if (applyBias && PenaltyBias > 0)

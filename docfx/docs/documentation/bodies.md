@@ -191,12 +191,20 @@ As a result, bodies in a simulation with smaller time steps experience greater d
 
 ## Speculative contacts
 
-Speculative contacts can be utilized to prevent fast and small objects from tunneling through thin objects.
-An object moving quickly enough might 'miss' a collision since the distance traveled between two frames exceeds the thickness of another object.
-Speculative contacts can be enabled on a per-body basis using `body.EnableSpeculativeContacts`.
-The `world.SpeculativeRelaxationFactor` and `world.SpeculativeVelocityThreshold` can be adjusted to fine-tune speculative contacts for specific use cases.
-However, it should be noted that an accurate simulation of fast-moving objects is only possible using smaller time steps.
-Speculative contacts may involve a trade-off of less accurate collision detection and response.
+Jitter's built-in speculative contacts are **linear-only**. They help prevent fast, small objects
+from tunneling through thin obstacles when their translation between frames would skip a collision.
+Enable them on a per-body basis using `body.EnableSpeculativeContacts`.
+
+Speculative bounding box expansion uses only linear velocity. Sweeps predict translation while
+holding the shapes at their current orientations. The speculative constraints also ignore angular
+surface velocity (`ω × r`) and apply impulses only to linear velocity. They do not prevent
+tunneling caused by rotation, including rotation introduced by other contacts or constraints during
+the timestep. Bodies still rotate normally, and ordinary overlap contacts retain their angular response.
+
+`world.SpeculativeVelocityThreshold` sets the minimum relative linear speed for speculative
+contact generation. `world.SpeculativeRelaxationFactor` controls how much the bodies may close
+the predicted gap. This approximation trades collision-response accuracy for reduced tunneling;
+smaller timesteps may still be needed for fast translation or rotation.
 
 ## Friction and Restitution
 
