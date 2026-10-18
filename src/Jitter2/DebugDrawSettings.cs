@@ -61,7 +61,7 @@ public readonly struct DebugDrawSettings
 
     /// <summary>
     /// Length of each coordinate-frame axis, in world units, independently of <see cref="GuideSize"/>.
-    /// Also controls the automatic spacing of FixedAngle's frames. Arrowhead size and shaft radius are independent.
+    /// Arrowhead size and shaft radius are independent.
     /// Must be finite and greater than zero. Default is 1.
     /// </summary>
     public Real FrameSize
@@ -156,7 +156,7 @@ public readonly struct DebugDrawSettings
     /// <summary>
     /// Optional world-space origin for angular guides. By default they use body 1's position,
     /// or body 2's position when body 1 is World.NullBody. Joints with a ball socket use its anchor.
-    /// FixedAngle places its reference near body 2 by default.
+    /// FixedAngle's frames always use the bodies' positions.
     /// Positional constraints always use their real anchors.
     /// </summary>
     public JVector? Origin

@@ -310,11 +310,10 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         fixedDistance.Initialize(center, center, new LinearLimit(0, fixedRadius));
         fixedDistance.Softness = 0;
         fixedBody.Velocity = new JVector(0.2f, 0.1f, 0);
-        JVector referenceCenter = center;
-        AddExhibit(3, 2, "FixedAngle", "Locks relative orientation.\nA distance limit keeps movement inside the red sphere.\nThe two frames stay parallel.", () =>
+        AddExhibit(3, 2, "FixedAngle", "Locks relative orientation.\nA distance limit keeps the box's center inside the green sphere.\nThe RGB frame follows the box.", () =>
         {
-            fixedDistance.DebugDraw(Draw, new DebugDrawSettings { UpperLimitColor = DebugDrawColors.Red });
-            fixedAngle.DebugDraw(Draw, new DebugDrawSettings { Origin = referenceCenter - JVector.UnitX * 1.6f });
+            fixedDistance.DebugDraw(Draw);
+            fixedAngle.DebugDraw(Draw);
         });
     }
 

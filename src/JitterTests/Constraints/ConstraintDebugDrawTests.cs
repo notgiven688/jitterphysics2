@@ -965,26 +965,34 @@ public class ConstraintDebugDrawTests
         Assert.That(hinge.Angle.Radian, Is.EqualTo(angle).Within((Real)1e-5));
     }
 
-    [Test]
-    public void FixedAngleReferenceUsesTheStoredRelativeOrientation()
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FixedAngleFramesUseBodyPositionsAndStoredRelativeOrientation(bool explicitOrigin)
     {
         using World world = new();
         RigidBody first = world.CreateRigidBody(), second = world.CreateRigidBody();
+        first.Position = new JVector(-4, 1, 2);
+        second.Position = new JVector(3, 4, 5);
         first.Orientation = JQuaternion.CreateRotationY((Real)0.4);
         second.Orientation = JQuaternion.CreateRotationZ((Real)0.7);
-        JQuaternion initialSecond = second.Orientation;
+        JQuaternion initialFirst = first.Orientation;
+        JQuaternion relative = second.Orientation.Conjugate() * initialFirst;
         var constraint = world.CreateConstraint<FixedAngle>(first, second);
         constraint.Initialize();
         JQuaternion rotation = JQuaternion.CreateRotationX((Real)0.5);
         first.Orientation = rotation * first.Orientation;
         var drawer = new RecordingDrawer();
-        JVector origin = new(4, 5, 6);
-        constraint.DebugDraw(drawer, Settings with { Origin = origin });
-        AssertVector(drawer.Segments[0].To, origin + (rotation * initialSecond).GetBasisX() * Settings.FrameSize);
+        JVector origin = explicitOrigin ? new JVector(4, 5, 6) : first.Position;
+        constraint.DebugDraw(drawer, Settings with { Origin = explicitOrigin ? origin : null });
+        AssertVector(drawer.Segments[0].From, first.Position);
+        AssertVector(drawer.Segments[0].To - drawer.Segments[0].From,
+            first.Orientation.GetBasisX() * Settings.FrameSize);
+        var currentX = drawer.Segments.First(s => s.Color == Settings.AxisXColor && s.From == second.Position);
+        AssertVector(currentX.To - currentX.From, (second.Orientation * relative).GetBasisX() * Settings.FrameSize);
     }
 
     [Test]
-    public void FixedAngleFrameSizeAndAutomaticSpacingIgnoreGuideScale()
+    public void FixedAngleFrameSizeIgnoresGuideScale()
     {
         using World world = new();
         RigidBody body = world.CreateRigidBody();
@@ -999,10 +1007,58 @@ public class ConstraintDebugDrawTests
         constraint.DebugDraw(second, settings with { GuideSize = 10 });
 
         Assert.That(second.Segments, Is.EqualTo(first.Segments));
-        AssertVector(first.Segments[0].From,
-            body.Position - body.Orientation.GetBasisX() * (settings.FrameSize * (Real)1.5));
+        AssertVector(first.Segments[0].From, body.Position);
         Assert.That((first.Segments[0].To - first.Segments[0].From).Length(),
             Is.EqualTo(settings.FrameSize).Within((Real)1e-5));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FixedAngleWorldFramesStayOnThePhysicalBodyAndFollowTranslation(bool nullBodySecond)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        var shape = new BoxShape(4, 6, 2);
+        body.AddShape(shape);
+        body.Position = new JVector(5, 7, 9);
+        body.Orientation = JQuaternion.CreateRotationX((Real)0.4) * JQuaternion.CreateRotationZ((Real)2.1);
+        var constraint = world.CreateConstraint<FixedAngle>(nullBodySecond ? body : world.NullBody,
+            nullBodySecond ? world.NullBody : body);
+        constraint.Initialize();
+        var before = new TriangleDrawer();
+        constraint.DebugDraw(before);
+
+        Assert.That(before.Segments, Is.Empty);
+        Assert.That(before.Triangles, Is.Not.Empty);
+        var vertices = before.Triangles.SelectMany(t => new[] { t.A, t.B, t.C }).ToArray();
+
+        JVector translation = new(3, 2, -4);
+        body.Position += translation;
+        var after = new TriangleDrawer();
+        constraint.DebugDraw(after);
+        var translated = after.Triangles.SelectMany(t => new[] { t.A, t.B, t.C }).ToArray();
+        Assert.That(translated.Length, Is.EqualTo(vertices.Length));
+        for (int i = 0; i < vertices.Length; i++) AssertVector(translated[i], vertices[i] + translation);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void FixedAngleWorldConnectionsDrawOnlyThePhysicalBodysConstraintFrame(bool nullBodySecond)
+    {
+        using World world = new();
+        RigidBody body = world.CreateRigidBody();
+        JQuaternion target = JQuaternion.CreateRotationZ((Real)0.4);
+        body.Orientation = target;
+        var constraint = world.CreateConstraint<FixedAngle>(nullBodySecond ? body : world.NullBody,
+            nullBodySecond ? world.NullBody : body);
+        constraint.Initialize();
+        body.Orientation = JQuaternion.CreateRotationX((Real)0.7) * target;
+        var drawer = new RecordingDrawer();
+        constraint.DebugDraw(drawer, Settings);
+
+        var expected = new RecordingDrawer();
+        expected.DrawFrame(body.Position, nullBodySecond ? body.Orientation : body.Orientation * target.Conjugate(), Settings);
+        Assert.That(drawer.Segments, Is.EqualTo(expected.Segments));
     }
 
     [Test]
@@ -1013,7 +1069,6 @@ public class ConstraintDebugDrawTests
         first.Position = new JVector(-2, 1, 0);
         second.Position = new JVector(2, 1, 0);
         second.Orientation = JQuaternion.CreateRotationZ((Real)0.7);
-        JQuaternion initialSecond = second.Orientation;
         JVector anchor = new(0, 1, 0);
         var joint = new WeldJoint(world, first, second, anchor);
         JQuaternion rotation = JQuaternion.CreateRotationX((Real)0.5);
@@ -1028,12 +1083,15 @@ public class ConstraintDebugDrawTests
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, settings);
 
-        var referenceX = drawer.Segments.First(s => s.Color == settings.AxisXColor && s.From == joint.BallSocket.Anchor1);
-        AssertVector(referenceX.From, joint.BallSocket.Anchor1);
-        AssertVector(referenceX.To - referenceX.From, (rotation * initialSecond).GetBasisX() * settings.FrameSize);
-        var currentX = drawer.Segments.First(s => s.Color == settings.AxisXColor && s.From == second.Position);
+        var xAxes = drawer.Segments.Where(s => s.Color == settings.AxisXColor &&
+            MathR.Abs((s.To - s.From).Length() - settings.FrameSize) < (Real)1e-5).ToArray();
+        Assert.That(xAxes, Has.Length.EqualTo(2));
+        var referenceX = xAxes[0];
+        AssertVector(referenceX.From, first.Position);
+        AssertVector(referenceX.To - referenceX.From, rotation.GetBasisX() * settings.FrameSize);
+        var currentX = xAxes[1];
         AssertVector(currentX.From, second.Position);
-        AssertVector(currentX.To, second.Position + second.Orientation.GetBasisX() * settings.FrameSize);
+        AssertVector(currentX.To - currentX.From, JVector.UnitX * settings.FrameSize);
         AssertPointMarker(drawer, Reference, joint.BallSocket.Anchor1, settings.GuideSize * (Real)0.06);
         AssertPointMarker(drawer, Current, joint.BallSocket.Anchor2, settings.GuideSize * (Real)0.06);
     }
@@ -1142,7 +1200,7 @@ public class ConstraintDebugDrawTests
 
     [TestCase("FixedAngle")]
     [TestCase("AngularMotor")]
-    public void ReversedWorldConnectionsKeepExplicitAngularGuideOrigins(string name)
+    public void ReversedWorldConnectionsUseExplicitOriginsExceptForBodyFrames(string name)
     {
         using World world = new();
         RigidBody body = world.CreateRigidBody();
@@ -1156,11 +1214,10 @@ public class ConstraintDebugDrawTests
         if (name == "FixedAngle")
         {
             var xAxes = drawer.Segments.Where(s => s.Color == settings.AxisXColor &&
-                (s.From == origin || s.From == body.Position)).ToArray();
-            Assert.That(xAxes.Length, Is.EqualTo(2));
-            AssertVector(xAxes[0].From, origin);
-            AssertVector(xAxes[1].From, body.Position);
-            AssertVector(xAxes[1].To, body.Position + JVector.UnitX * settings.FrameSize);
+                MathR.Abs((s.To - s.From).Length() - settings.FrameSize) < (Real)1e-5).ToArray();
+            Assert.That(xAxes.Length, Is.EqualTo(1));
+            AssertVector(xAxes[0].From, body.Position);
+            AssertVector(xAxes[0].To - xAxes[0].From, body.Orientation.GetBasisX() * settings.FrameSize);
         }
         else
         {

@@ -187,12 +187,9 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     {
         ArgumentNullException.ThrowIfNull(drawer);
         VerifyNotZero();
-        JQuaternion target = Body1.Orientation * Data.Q0.Conjugate();
-        // An orientation constraint's world frame can be displayed near the connected body.
-        JVector currentOrigin = Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position;
-        JVector referenceOrigin = settings.Origin ?? currentOrigin - target.GetBasisX() * (settings.FrameSize * (Real)1.5);
-        drawer.DrawFrame(referenceOrigin, target, settings);
-        drawer.DrawFrame(currentOrigin, Body2.Orientation, settings);
-        drawer.DrawSegment(referenceOrigin, currentOrigin, settings.ReferenceColor);
+        if (Body1 != Body1.World.NullBody)
+            drawer.DrawFrame(Body1.Position, Body1.Orientation, settings);
+        if (Body2 != Body2.World.NullBody)
+            drawer.DrawFrame(Body2.Position, Body2.Orientation * Data.Q0, settings);
     }
 }

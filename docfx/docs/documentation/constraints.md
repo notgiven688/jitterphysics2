@@ -175,7 +175,7 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 | `ConeLimit`, `EllipticalConeLimit` | The white axis must stay within the outer cone and outside any red inner cone. Equal limits allow motion along one cone surface. |
 | `HingeAngle` | An arc shows the allowed angles, or a green ray marks a fixed angle. The white ray shows the current angle. Short axis arrows reveal hinge misalignment. |
 | `TwistAngle` | The dial shows the current twist and its limits. The white axis shows the current body direction; swing remains free. |
-| `FixedAngle` | Two frames compare body 2's target and current orientations, drawn near the connected body. Corresponding axes should be parallel. A joint with a ball socket places the target frame at its anchor. |
+| `FixedAngle` | An RGB frame on each body accounts for the initial relative orientation. Matching axes stay parallel when the target is met. No frame is drawn for `World.NullBody`. |
 | `LinearMotor` | Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still. |
 | `AngularMotor` | A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is static or kinematic. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow. |
 | `SpringConstraint` | The coil joins the anchors; the green cross marks the rest length along the spring direction. |
