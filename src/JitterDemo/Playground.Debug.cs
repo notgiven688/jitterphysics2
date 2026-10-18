@@ -1,6 +1,8 @@
 using System;
+using Jitter2;
 using Jitter2.Collision;
 using Jitter2.Dynamics;
+using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using JitterDemo.Renderer;
 using JitterDemo.Renderer.OpenGL;
@@ -11,9 +13,14 @@ public partial class Playground : RenderWindow
 {
     private bool debugDrawIslands;
     private bool debugDrawContacts;
-    private bool debugDrawShapes;
+    private bool debugDrawShapeBounds;
+    private bool debugDrawBodies;
+    private bool debugDrawConstraints;
+    private float debugDrawConstraintSize = 0.5f;
     private bool debugDrawTree;
     private int debugDrawTreeDepth = 1;
+
+    public bool IsConstraintDebugDrawEnabled => debugDrawConstraints;
 
     private readonly Action<TreeBox, int> drawBox;
 
@@ -35,12 +42,50 @@ public partial class Playground : RenderWindow
 
     private void DebugDraw()
     {
+        if (debugDrawBodies)
+        {
+            bool wireframe = DebugRenderer.WireframeTriangles;
+            DebugRenderer.WireframeTriangles = true;
+            try
+            {
+                var settings = new DebugDrawSettings { Segments = 16, ShapeSubdivisions = 2 };
+                foreach (RigidBody body in World.RigidBodies)
+                    body.DebugDraw(DebugRenderer, settings);
+            }
+            finally
+            {
+                DebugRenderer.WireframeTriangles = wireframe;
+            }
+        }
+
+        if (debugDrawConstraints)
+        {
+            var settings = new DebugDrawSettings
+            {
+                GuideSize = debugDrawConstraintSize,
+                FrameSize = debugDrawConstraintSize,
+                ArrowHeadSize = 0.2f * debugDrawConstraintSize,
+                ArrowShaftRadius = 0.025f * debugDrawConstraintSize,
+                Segments = 24,
+                ArrowSegments = 8
+            };
+            foreach (RigidBody body in World.RigidBodies)
+            {
+                foreach (Constraint constraint in body.Constraints)
+                {
+                    // Each constraint belongs to both bodies. NullBody is also in World.RigidBodies.
+                    if (constraint.Body1 != body || !constraint.IsValid || !constraint.IsEnabled) continue;
+                    DrawConstraint(constraint, settings);
+                }
+            }
+        }
+
         if (debugDrawTree)
         {
             World.DynamicTree.EnumerateTreeBoxes(drawBox);
         }
 
-        if (debugDrawShapes)
+        if (debugDrawShapeBounds)
         {
             foreach (var shape in World.DynamicTree.Proxies)
             {
@@ -82,7 +127,7 @@ public partial class Playground : RenderWindow
 
         if (debugDrawContacts)
         {
-            var contacts = World.RawData.ActiveContacts;
+            var contacts = World.RawData.Contacts;
 
             for (int i = 0; i < contacts.Length; i++)
             {
@@ -95,5 +140,29 @@ public partial class Playground : RenderWindow
                 if ((umask & ContactData.MaskContact3) != 0) DrawContact(cq, cq.Contact3);
             }
         }
+    }
+
+    private void DrawConstraint(Constraint constraint, DebugDrawSettings settings)
+    {
+        // Composite joints use their ball socket's anchor for the angular guides.
+        // Search the smaller body's list, since NullBody can have many unrelated constraints.
+        var candidates = constraint.Body1.Constraints.Count <= constraint.Body2.Constraints.Count
+            ? constraint.Body1.Constraints
+            : constraint.Body2.Constraints;
+        foreach (Constraint candidate in candidates)
+        {
+            if (candidate is not BallSocket socket || !socket.IsValid || !socket.IsEnabled) continue;
+            if (socket.Body1 == constraint.Body1 && socket.Body2 == constraint.Body2)
+            {
+                settings = settings with { Origin = socket.Anchor1 };
+                break;
+            }
+            if (socket.Body2 == constraint.Body1 && socket.Body1 == constraint.Body2)
+            {
+                settings = settings with { Origin = socket.Anchor2 };
+                break;
+            }
+        }
+        constraint.DebugDraw(DebugRenderer, settings);
     }
 }

@@ -353,19 +353,34 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     }
 
     /// <inheritdoc/>
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref SpringData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
+        JVector reference = JVector.UnitX;
+        DebugDraw(drawer, ref reference, settings);
+    }
 
-        JVector p1 = body1.Position + data.LocalAnchor1;
-        JVector p2 = body2.Position + data.LocalAnchor2;
-
-        drawer.DrawSegment(body1.Position, p1);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawSegment(p1, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+    /// <summary>
+    /// Draws the spring with a caller-owned coil reference. Retain this direction between frames
+    /// to keep the coil continuous through arbitrary motion, including a reversal of the spring axis.
+    /// </summary>
+    public void DebugDraw(IDebugDrawer drawer, ref JVector reference, in DebugDrawSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JVector first = Anchor1, second = Anchor2;
+        JVector displacement = second - first;
+        drawer.DrawSpring(first, second, ref reference, settings.GuideSize * (Real)0.12, settings.CurrentColor,
+            Math.Max(32, settings.Segments * 2));
+        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
+        if (displacement.LengthSquared() > (Real)1e-20)
+        {
+            JVector direction = JVector.Normalize(displacement);
+            drawer.DrawStop(first + direction * TargetDistance, direction,
+                settings.GuideSize * (Real)0.12, settings.ReferenceColor);
+        }
     }
 }

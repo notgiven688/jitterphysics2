@@ -16,6 +16,12 @@ public class BoxShape : RigidBodyShape
 {
     private JVector halfSize;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Box(ref triangleSink, halfSize);
+    }
+
     /// <summary>
     /// Creates a box shape with specified dimensions.
     /// </summary>

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
@@ -16,7 +17,7 @@ namespace Jitter2.Collision.Shapes;
 /// The shape itself does not have a position or orientation. Shapes can be associated with
 /// instances of <see cref="RigidBody"/>.
 /// </summary>
-public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable
+public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, IDebugDrawable
 {
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
@@ -71,4 +72,33 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// <inheritdoc/>
     [ReferenceFrame(ReferenceFrame.Local)]
     public abstract void GetCenter(out JVector point);
+
+    /// <summary>Draws the shape using the default visualization settings.</summary>
+    public void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <summary>Draws the shape as world-space triangles using the supplied settings.</summary>
+    /// <remarks>
+    /// Point clouds and custom shapes may use an approximate surface with gaps or overlapping faces.
+    /// Higher detail settings increase the drawing cost and do not guarantee a more accurate surface.
+    /// </remarks>
+    public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(drawer);
+        var sink = new ShapeDebugDraw.DrawerSink(drawer, JQuaternion.Identity, JVector.Zero, settings.CurrentColor);
+        DebugDrawLocal(ref sink, settings);
+    }
+
+    /// <summary>Appends debug triangles in the coordinate system used by <see cref="SupportMap"/>.</summary>
+    /// <remarks>
+    /// Override this method to supply custom surface geometry. Rigid-body and affine transforms are
+    /// applied by the caller. Use outward-facing triangles for closed surfaces.
+    /// Without an override, the shape is drawn as an approximate surface.
+    /// </remarks>
+    /// <param name="triangleSink">The destination for generated triangles.</param>
+    /// <param name="settings">The visualization settings.</param>
+    protected internal virtual void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+        where TSink : ISink<JTriangle>
+    {
+        ShapeHelper.Tessellate(this, ref triangleSink, settings.ShapeSubdivisions);
+    }
 }

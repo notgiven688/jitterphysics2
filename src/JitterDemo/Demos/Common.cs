@@ -128,8 +128,8 @@ public static class Common
         var spine0 = world.CreateConstraint<BallSocket>(head, torso);
         spine0.Initialize(new JVector(0, -0.15f, 0));
 
-        var spine1 = world.CreateConstraint<ConeLimit>(head, torso);
-        spine1.Initialize(-JVector.UnitZ, AngularLimit.FromDegree(0, 45));
+        var spine1 = world.CreateConstraint<ConeLimit>(torso, head);
+        spine1.Initialize(JVector.UnitY, AngularLimit.FromDegree(0, 45));
 
         var hipLeft0 = world.CreateConstraint<BallSocket>(torso, upperLegLeft);
         hipLeft0.Initialize(new JVector(0.11f, -0.7f, 0));

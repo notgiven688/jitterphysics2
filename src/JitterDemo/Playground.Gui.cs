@@ -36,7 +36,7 @@ public partial class Playground : RenderWindow
     {
         Position = new System.Numerics.Vector2(16f, 16f),
         Size = new System.Numerics.Vector2(0f, 760f),
-        MaxSize = new System.Numerics.Vector2(260f, 0f)
+        MaxSize = new System.Numerics.Vector2(300f, 0f)
     };
 
     private double totalTime;
@@ -260,7 +260,7 @@ public partial class Playground : RenderWindow
         for (int i = 0; i < physicsTime.Length; i++)
             maxPhysicsTime = MathF.Max(maxPhysicsTime, physicsTime[i]);
 
-        root.Window("Jitter2 Demo", statsWindowState, 260f, content =>
+        root.Window("Jitter2 Demo", statsWindowState, 300f, content =>
         {
             content.ItemSpacing(0f);
             content.Label($"{fps} fps", color: content.Theme.WindowTitleText);
@@ -343,9 +343,28 @@ public partial class Playground : RenderWindow
                 content.Column(debugDraw =>
                 {
                     debugDraw.ItemSpacing(4f);
-                    debugDraw.Checkbox("Islands", ref debugDrawIslands);
-                    debugDraw.Checkbox("Contacts", ref debugDrawContacts);
-                    debugDraw.Checkbox("Shapes", ref debugDrawShapes);
+                    debugDraw.Row(columns =>
+                    {
+                        const float columnGap = 8f;
+                        columns.ItemSpacing(columnGap);
+                        float columnWidth = (columns.AvailableWidth - columnGap) / 2f;
+                        columns.FixedWidth(columnWidth, left =>
+                        {
+                            left.ItemSpacing(4f);
+                            left.Checkbox("Island Bounds", ref debugDrawIslands);
+                            left.Checkbox("Shape Bounds", ref debugDrawShapeBounds);
+                            left.Checkbox("Contacts", ref debugDrawContacts);
+                        });
+                        columns.FixedWidth(columnWidth, right =>
+                        {
+                            right.ItemSpacing(4f);
+                            right.Checkbox("Bodies", ref debugDrawBodies);
+                            right.Checkbox("Constraints", ref debugDrawConstraints);
+                        });
+                    });
+                    if (debugDrawConstraints)
+                        debugDraw.Slider("Constraint size", ref debugDrawConstraintSize, 0.05f, 2f,
+                            debugDraw.AvailableWidth);
                 });
             }
 

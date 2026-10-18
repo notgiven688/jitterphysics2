@@ -70,8 +70,17 @@ public static class ShapeHelper
     /// <param name="subdivisions">The recursion depth, including the final emission level.
     /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
     /// <remarks>
-    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// <para>
+    /// <b>Warning:</b> The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
+    /// <see cref="ConvexHullShape"/>.
+    /// </para>
+    /// <para>
+    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
+    /// pointing inward even for smooth convex shapes.
+    /// </para>
+    /// <para>
+    /// The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </para>
     /// </remarks>
     public static void Tessellate<TSupport, TSink>(in TSupport support, ref TSink hullSink, int subdivisions = 3)
         where TSupport : ISupportMappable
@@ -133,8 +142,17 @@ public static class ShapeHelper
     /// <param name="subdivisions">The recursion depth, including the final emission level.
     /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
     /// <remarks>
+    /// <para>
     /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// <see cref="ConvexHullShape"/>.
+    /// </para>
+    /// <para>
+    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
+    /// pointing inward even for smooth convex shapes.
+    /// </para>
+    /// <para>
+    /// The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </para>
     /// </remarks>
     public static List<JTriangle> Tessellate<TSupport>(in TSupport support, int subdivisions = 3)
         where TSupport : ISupportMappable
@@ -151,8 +169,17 @@ public static class ShapeHelper
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>
+    /// <para>
     /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>. The time complexity is O(4^n), where n is the number of subdivisions.
+    /// <see cref="ConvexHullShape"/>.
+    /// </para>
+    /// <para>
+    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
+    /// pointing inward even for smooth convex shapes.
+    /// </para>
+    /// <para>
+    /// The time complexity is O(4^n), where n is the number of subdivisions.
+    /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="vertices"/> is empty.
@@ -374,6 +401,8 @@ public static class ShapeHelper
         where TSupport : ISupportMappable
     {
         MassInertiaSink sink = default;
+        // Preserve the generated winding, including inward-facing triangles. Signed tetrahedral
+        // contributions cancel overlapping coplanar patches; flipping triangles would break that cancellation.
         Tessellate(in support, ref sink, subdivisions);
 
         inertia = JSymmetricMatrix.Identity * sink.Inertia.Trace() - sink.Inertia;

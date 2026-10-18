@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using Jitter2.Dynamics;
 using Jitter2.LinearMath;
 
@@ -19,6 +20,17 @@ public abstract class RigidBodyShape : Shape
     /// and after it is removed from a body.
     /// </summary>
     public RigidBody RigidBody { get; internal set; } = null!;
+
+    /// <summary>Draws this shape using its attached body's transform, or the identity transform when unattached.</summary>
+    /// <inheritdoc cref="Shape.DebugDraw(IDebugDrawer, in DebugDrawSettings)" path="/remarks"/>
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(drawer);
+        JQuaternion orientation = RigidBody?.Orientation ?? JQuaternion.Identity;
+        JVector position = RigidBody?.Position ?? JVector.Zero;
+        var sink = new ShapeDebugDraw.DrawerSink(drawer, orientation, position, settings.CurrentColor);
+        DebugDrawLocal(ref sink, settings);
+    }
 
     public sealed override JVector Velocity => RigidBody?.Velocity ?? JVector.Zero;
 

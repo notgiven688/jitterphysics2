@@ -114,6 +114,26 @@ The vertices of the `SoftBodyShape` are represented by rigid bodies.
 The shapes (triangle and tetrahedron) are dynamically defined by the position of the vertices.
 A `SoftBodyShape` is not added to a body.
 
+## Debug drawing
+
+Shapes can be drawn individually:
+
+```cs
+var shape = new SphereShape(radius: 1);
+shape.DebugDraw(drawer);
+```
+
+Attached shapes follow their body's position and rotation. The sphere above appears at the world
+origin until it is attached to a body. See [debugging shapes on a body](bodies.md#debugging-shapes)
+for setting up the drawer and adjusting color and smoothness.
+
+Your drawer's `DrawTriangle` implementation chooses filled triangles or wireframes.
+See <xref:Jitter2.IDebugDrawer> for the drawing methods.
+
+> [!WARNING]
+> Debug drawing can be slow. Point clouds and custom shapes may appear with gaps or overlapping
+> faces. Higher detail settings increase the cost and do not guarantee a more accurate drawing.
+
 ## Custom shapes
 
 Custom shapes can easily be implemented.

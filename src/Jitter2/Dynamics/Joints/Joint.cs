@@ -67,10 +67,33 @@ public class Joint : IDebugDrawable
     }
 
     public virtual void DebugDraw(IDebugDrawer drawer)
+        => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <summary>Draws the constituent constraints, placing angular guides at the joint anchor when available.</summary>
+    public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
         foreach (var constraint in constraints)
         {
-            constraint.DebugDraw(drawer);
+            if (!constraint.IsValid) continue;
+            DebugDrawSettings jointSettings = settings;
+            if (!settings.Origin.HasValue)
+            {
+                foreach (var candidate in constraints)
+                {
+                    if (candidate is not BallSocket socket || !socket.IsValid) continue;
+                    if (socket.Body1 == constraint.Body1 && socket.Body2 == constraint.Body2)
+                    {
+                        jointSettings = settings with { Origin = socket.Anchor1 };
+                        break;
+                    }
+                    if (socket.Body2 == constraint.Body1 && socket.Body1 == constraint.Body2)
+                    {
+                        jointSettings = settings with { Origin = socket.Anchor2 };
+                        break;
+                    }
+                }
+            }
+            constraint.DebugDraw(drawer, jointSettings);
         }
     }
 }
