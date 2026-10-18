@@ -180,8 +180,8 @@ constraint.DebugDraw(drawer, new DebugDrawSettings
 axes in world units. Physical distances and angular limits keep their actual values.
 See <xref:Jitter2.DebugDrawSettings> for color, arrow, and detail settings.
 
-A drawer that implements only `DrawSegment` displays wireframes. Implement `DrawTriangle` as well
-to fill the anchor markers and arrows.
+Your drawer's `DrawTriangle` implementation controls whether anchor markers and arrows are filled
+or drawn as wireframes.
 
 ## Constraint lifetime
 

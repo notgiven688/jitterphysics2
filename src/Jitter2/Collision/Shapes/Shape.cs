@@ -80,7 +80,6 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// <remarks>
     /// Shapes with known surface geometry draw it directly. The default implementation approximates
     /// the support map on every call; its triangles may overlap or fold and have inconsistent winding.
-    /// Drawers that only implement segments receive triangle edges through the default triangle method.
     /// </remarks>
     public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {

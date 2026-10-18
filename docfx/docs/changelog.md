@@ -1,13 +1,5 @@
 # Changelog
 
-### Unreleased
-
-- **Breaking Change:** `IDebugDrawer` now requires only `DrawSegment(in JVector pA, in JVector pB, uint color)`, with colors packed as `0xRRGGBBAA`. Implement this method in existing drawers. The colored `DrawTriangle` method defaults to drawing its three edges and can be overridden to render filled triangles. The point primitive is removed; `DebugDrawGeometry.DrawPoint` generates small spheres from a shared 80-triangle mesh.
-- Shapes implement `IDebugDrawable`, and `RigidBody.DebugDraw` delegates to its attached shapes. Built-in primitives and convex hulls provide direct triangle geometry. Custom shapes can override `DebugDrawLocal`; the default support-map tessellation emits triangles with its documented approximation limitations. Body transforms and nested affine wrappers are applied automatically.
-- Added `DebugDrawSettings.ArrowHeadSegments` and `ArrowHeadSpokes` for arrowhead detail. `Segments` also controls built-in round shape detail, while `ShapeSubdivisions` controls the support-map tessellation fallback. Body and shape debug drawing use `CurrentColor`.
-- Orientation frames use configurable red, green, and blue axis colors. `DebugDrawGeometry.DrawFrame` also accepts three explicit colors or drawing settings. `DebugDrawSettings.FrameSize` controls frame axis length independently of `Scale`.
-- Constraint arrows and orientation frames draw solid cylindrical shafts and cone heads by default. `ArrowShaftRadius` (default 0.025) and `ArrowHeadSize` (default 0.2) set their dimensions in world units independently of arrow length and visualization scale, with clamps for short arrows. Configure `SolidArrows` for wire arrows, or use `DebugDrawGeometry.DrawSolidArrow` directly.
-
 ### Jitter 2.10.1 (2026-10-15)
 
 - Added `Constraint.Tag` for attaching custom user data to constraints, matching `RigidBody.Tag`.

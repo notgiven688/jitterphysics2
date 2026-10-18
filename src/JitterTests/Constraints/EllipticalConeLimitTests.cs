@@ -298,5 +298,11 @@ public class EllipticalConeLimitTests
         {
             if (color == DebugDrawColors.Green || color == DebugDrawColors.Red) Segments.Add((from, to));
         }
+        public void DrawTriangle(in JVector a, in JVector b, in JVector c, uint color)
+        {
+            DrawSegment(a, b, color);
+            DrawSegment(b, c, color);
+            DrawSegment(c, a, color);
+        }
     }
 }

@@ -131,7 +131,7 @@ public readonly struct DebugDrawSettings
 
     /// <summary>
     /// Draws arrows and orientation frames as solid shafts with cone heads. Default is true.
-    /// Set to false for wire arrows. Drawers without triangle support draw triangle edges.
+    /// Set to false for wire arrows.
     /// </summary>
     public bool SolidArrows { get => solidArrows ?? true; init => solidArrows = value; }
 

@@ -77,6 +77,13 @@ public sealed class PhysicsDebugDrawer : IDebugDrawer
         // Draw a line from pA to pB using your renderer.
         // The positions are in world space; color is packed as 0xRRGGBBAA.
     }
+
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
+    {
+        DrawSegment(pA, pB, color);
+        DrawSegment(pB, pC, color);
+        DrawSegment(pC, pA, color);
+    }
 }
 ```
 
@@ -99,9 +106,9 @@ body.DebugDraw(drawer);
 > Point clouds and custom shapes without their own drawing code rebuild their approximate surface
 > on every call. Limit debug drawing to the objects you need to inspect.
 
-This draws all shapes attached to `body`, including their offsets and rotations. With the drawer
-above, Jitter sends the edges of the shapes' triangles to `DrawSegment`, producing a wireframe.
-For filled surfaces, also implement `DrawTriangle`; see [shape drawing](shapes.md#debug-drawing).
+This draws all shapes attached to `body`, including their offsets and rotations. The drawer above
+draws each triangle as three edges, producing a wireframe. For filled surfaces, call your renderer's
+triangle-drawing function in `DrawTriangle`; see [shape drawing](shapes.md#debug-drawing).
 
 The default drawing is white. To draw green shapes and make curved surfaces smoother:
 

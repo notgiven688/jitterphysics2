@@ -127,7 +127,7 @@ Attached shapes follow their body's position and rotation. The sphere above appe
 origin until it is attached to a body. See [debugging shapes on a body](bodies.md#debugging-shapes)
 for setting up the drawer and adjusting color and smoothness.
 
-Implement `DrawTriangle` in your drawer for filled shapes; otherwise, only triangle edges are drawn.
+Your drawer's `DrawTriangle` implementation chooses filled triangles or wireframes.
 See <xref:Jitter2.IDebugDrawer> for the drawing methods.
 
 > [!WARNING]

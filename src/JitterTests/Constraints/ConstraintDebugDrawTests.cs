@@ -26,18 +26,7 @@ public class ConstraintDebugDrawTests
     }
 
     [Test]
-    public void TriangleFallbackPreservesVertexOrderAndColorForSegmentOnlyDrawers()
-    {
-        var recorder = new RecordingDrawer();
-        IDebugDrawer drawer = recorder;
-        JVector a = new(2, -3, 4), b = new(-5, 6, 7), c = new(8, 9, -1);
-        const uint color = 0x12345678;
-        drawer.DrawTriangle(a, b, c, color);
-        Assert.That(recorder.Segments, Is.EqualTo(new[] { (a, b, color), (b, c, color), (c, a, color) }));
-    }
-
-    [Test]
-    public void TriangleOverridesReceiveTheOriginalVerticesAndColorThroughTheInterface()
+    public void TrianglesPreserveVerticesAndColorThroughTheInterface()
     {
         var recorder = new TriangleDrawer();
         IDebugDrawer drawer = recorder;
@@ -81,7 +70,7 @@ public class ConstraintDebugDrawTests
     }
 
     [Test]
-    public void PointMarkersFallBackToTriangleEdgesForSegmentOnlyDrawers()
+    public void PointMarkersCanBeDrawnByAnExplicitWireframeDrawer()
     {
         var solid = new TriangleDrawer();
         var wire = new RecordingDrawer();
@@ -1130,6 +1119,12 @@ public class ConstraintDebugDrawTests
         public void DrawSegment(in JVector a, in JVector b, uint color)
         {
             AssertFinite(a); AssertFinite(b); Segments.Add((a, b, color));
+        }
+        public void DrawTriangle(in JVector a, in JVector b, in JVector c, uint color)
+        {
+            DrawSegment(a, b, color);
+            DrawSegment(b, c, color);
+            DrawSegment(c, a, color);
         }
         private static void AssertFinite(JVector value) =>
             Assert.That(Real.IsFinite(value.X) && Real.IsFinite(value.Y) && Real.IsFinite(value.Z), Is.True);

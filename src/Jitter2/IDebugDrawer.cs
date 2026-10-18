@@ -30,7 +30,7 @@ public interface IDebugDrawable
 /// Receives colored line segments and triangles for debug visualization, in world space.
 /// </summary>
 /// <remarks>
-/// Only <see cref="DrawSegment"/> is required. The default triangle implementation draws its edges.
+/// Both drawing methods must be implemented. A wireframe drawer can draw triangles as three line segments.
 /// Use <see cref="DebugDrawGeometry"/> to generate point markers and other drawing geometry.
 /// </remarks>
 public interface IDebugDrawer
@@ -45,7 +45,6 @@ public interface IDebugDrawer
 
     /// <summary>
     /// Draws a triangle with a color packed as <c>0xRRGGBBAA</c>.
-    /// The default implementation draws the three edges using <see cref="DrawSegment"/>.
     /// </summary>
     /// <remarks>
     /// Vertices are counterclockwise when viewed from the front. The front normal points along
@@ -55,10 +54,5 @@ public interface IDebugDrawer
     /// <param name="pB">The second vertex in world space.</param>
     /// <param name="pC">The third vertex in world space.</param>
     /// <param name="color">The color packed as <c>0xRRGGBBAA</c>.</param>
-    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
-    {
-        DrawSegment(pA, pB, color);
-        DrawSegment(pB, pC, color);
-        DrawSegment(pC, pA, color);
-    }
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color);
 }

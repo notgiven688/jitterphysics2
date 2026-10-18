@@ -1693,7 +1693,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Draws the body's collision shapes using their individual debug-drawing implementations.
     /// </summary>
     /// <remarks>
-    /// Emits world-space triangles. Drawers that only implement segments receive triangle edges.
+    /// Emits world-space triangles through <see cref="IDebugDrawer.DrawTriangle"/>.
     /// Custom shapes without their own surface geometry use support-map tessellation, which may
     /// contain overlapping triangles and folds with inconsistent winding.
     /// </remarks>

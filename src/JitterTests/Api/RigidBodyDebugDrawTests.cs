@@ -50,6 +50,12 @@ public class RigidBodyDebugDrawTests
     {
         public readonly List<(JVector From, JVector To, uint Color)> Segments = [];
         public void DrawSegment(in JVector from, in JVector to, uint color) => Segments.Add((from, to, color));
+        public void DrawTriangle(in JVector a, in JVector b, in JVector c, uint color)
+        {
+            DrawSegment(a, b, color);
+            DrawSegment(b, c, color);
+            DrawSegment(c, a, color);
+        }
     }
 
     private sealed class CustomSphere(Real radius) : RigidBodyShape
