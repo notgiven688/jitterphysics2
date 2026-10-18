@@ -11,10 +11,9 @@ namespace JitterTests.Robustness;
 
 public class ReproducibilityTest
 {
-    // Filtered exact EPA changes the reference trajectory.
-    // These references still require bit-identical state across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x52354ACBCA9E76C0;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x011058E85BFA3C21;
+    // Reference trajectories must remain bit-identical across single/multithreaded solves.
+    private const ulong ExpectedDeterministicSceneHashSingle = 0xDC56DB3C27FB4BEE;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0xF9AF16119FC7166D;
 
     [TestCase]
     public static void BasicReproducibilityTest()

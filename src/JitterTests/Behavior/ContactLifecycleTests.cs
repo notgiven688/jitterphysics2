@@ -8,6 +8,66 @@ public class ContactLifecycleTests
     private const Real Tolerance = 1e-5f;
 #endif
 
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void ContactIteration_ConservesLinearAndAngularMomentum(bool accelerated, bool applyBias)
+    {
+        using var world = new World();
+        var body1 = world.CreateRigidBody();
+        var body2 = world.CreateRigidBody();
+        body1.SetMassInertia(JSymmetricMatrix.CreateScale(3, 5, 7), 2);
+        body2.SetMassInertia(JSymmetricMatrix.CreateScale(4, 6, 9), 3);
+        body1.Position = new JVector(-0.6f, 0.3f, 0.4f);
+        body2.Position = new JVector(0.8f, -0.2f, -0.5f);
+        body1.Orientation = JQuaternion.CreateRotationX((Real)0.4) * JQuaternion.CreateRotationZ((Real)0.7);
+        body2.Orientation = JQuaternion.CreateRotationY((Real)0.6) * JQuaternion.CreateRotationX((Real)0.3);
+        body1.Velocity = new JVector(2, 3, -1);
+        body2.Velocity = new JVector(-1, -2, 0.5f);
+        body1.AngularVelocity = new JVector(0.2f, -0.4f, 0.1f);
+        body2.AngularVelocity = new JVector(-0.3f, 0.1f, 0.5f);
+
+        ContactData contact = default;
+        contact.Init(body1, body2);
+        contact.ResetMode();
+        contact.Friction = (Real)0.75;
+        contact.Restitution = 0;
+        JVector point = new(0.1f, 0.4f, 0.5f);
+        contact.AddContact(point, point, JVector.Normalize(new JVector(0.3f, 1, -0.4f)));
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.01));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)0.01));
+        contact.Contact0.PenaltyBias = 1;
+
+        JSymmetricMatrix.Inverse(body1.Data.InverseInertiaWorld, out var inertia1);
+        JSymmetricMatrix.Inverse(body2.Data.InverseInertiaWorld, out var inertia2);
+
+        JVector LinearMomentum() => 2 * body1.Velocity + 3 * body2.Velocity;
+        JVector AngularMomentum() => body1.Position % (2 * body1.Velocity)
+            + body2.Position % (3 * body2.Velocity)
+            + JVector.Transform(body1.AngularVelocity, inertia1)
+            + JVector.Transform(body2.AngularVelocity, inertia2);
+
+        JVector linearMomentum = LinearMomentum();
+        JVector angularMomentum = AngularMomentum();
+        JVector initialAngularVelocity = body1.AngularVelocity;
+
+        for (int i = 0; i < 8; i++)
+        {
+            if (accelerated) contact.IterateAccelerated(applyBias);
+            else contact.IterateScalar(applyBias);
+
+            Assert.That(JVector.MaxAbs(LinearMomentum() - linearMomentum), Is.LessThan(10 * Tolerance));
+            Assert.That(JVector.MaxAbs(AngularMomentum() - angularMomentum), Is.LessThan(10 * Tolerance));
+        }
+
+        Assert.That(contact.Contact0.Impulse, Is.GreaterThan(Tolerance));
+        Assert.That(MathR.Abs(contact.Contact0.TangentImpulse1) + MathR.Abs(contact.Contact0.TangentImpulse2),
+            Is.GreaterThan(Tolerance));
+        Assert.That(JVector.MaxAbs(body1.AngularVelocity - initialAngularVelocity), Is.GreaterThan(Tolerance));
+    }
+
     [TestCase(false, 0.005, 2.0)]
     [TestCase(true, 0.005, 2.0)]
     [TestCase(false, 0.1, -0.9)]

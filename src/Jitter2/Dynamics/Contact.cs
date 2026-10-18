@@ -995,13 +995,8 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                JVector angularImpulse = normalImpulse *
-                    TransformSymmetricInertia(RelativePosition1 % normal, b1.InverseInertiaWorld);
-                angularImpulse += tangentImpulse1 *
-                    TransformSymmetricInertia(RelativePosition1 % tangent1, b1.InverseInertiaWorld);
-                angularImpulse += tangentImpulse2 *
-                    TransformSymmetricInertia(RelativePosition1 % tangent2, b1.InverseInertiaWorld);
-
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition1 % impulse, b1.InverseInertiaWorld);
                 b1.AngularVelocity -= angularImpulse;
             }
 
@@ -1012,13 +1007,8 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                JVector angularImpulse = normalImpulse *
-                    TransformSymmetricInertia(RelativePosition2 % normal, b2.InverseInertiaWorld);
-                angularImpulse += tangentImpulse1 *
-                    TransformSymmetricInertia(RelativePosition2 % tangent1, b2.InverseInertiaWorld);
-                angularImpulse += tangentImpulse2 *
-                    TransformSymmetricInertia(RelativePosition2 % tangent2, b2.InverseInertiaWorld);
-
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition2 % impulse, b2.InverseInertiaWorld);
                 b2.AngularVelocity += angularImpulse;
             }
 
@@ -1235,31 +1225,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                var rp1X = Vector.Create(RelativePosition1.X);
-                var rp1Y = Vector.Create(RelativePosition1.Y);
-                var rp1Z = Vector.Create(RelativePosition1.Z);
-
-                var rrx = Vector.Subtract(Vector.Multiply(rp1Y, NormalTangentZ), Vector.Multiply(rp1Z, NormalTangentY));
-                var rry = Vector.Subtract(Vector.Multiply(rp1Z, NormalTangentX), Vector.Multiply(rp1X, NormalTangentZ));
-                var rrz = Vector.Subtract(Vector.Multiply(rp1X, NormalTangentY), Vector.Multiply(rp1Y, NormalTangentX));
-
-                var ixx = Vector.Create(b1.InverseInertiaWorld.M11);
-                var ixy = Vector.Create(b1.InverseInertiaWorld.M21);
-                var ixz = Vector.Create(b1.InverseInertiaWorld.M31);
-                var iyy = Vector.Create(b1.InverseInertiaWorld.M22);
-                var iyz = Vector.Create(b1.InverseInertiaWorld.M23);
-                var izz = Vector.Create(b1.InverseInertiaWorld.M33);
-
-                var e1 = Vector.Add(Vector.Add(Vector.Multiply(ixx, rrx), Vector.Multiply(ixy, rry)), Vector.Multiply(ixz, rrz));
-                var e2 = Vector.Add(Vector.Add(Vector.Multiply(ixy, rrx), Vector.Multiply(iyy, rry)), Vector.Multiply(iyz, rrz));
-                var e3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
-
-                Unsafe.SkipInit(out JVector angularImpulse1);
-                angularImpulse1.X = GetSum3(Vector.Multiply(impulse, e1));
-                angularImpulse1.Y = GetSum3(Vector.Multiply(impulse, e2));
-                angularImpulse1.Z = GetSum3(Vector.Multiply(impulse, e3));
-
-                b1.AngularVelocity -= angularImpulse1;
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition1 % linearImpulse, b1.InverseInertiaWorld);
+                b1.AngularVelocity -= angularImpulse;
             }
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
@@ -1269,31 +1237,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                var rp2X = Vector.Create(RelativePosition2.X);
-                var rp2Y = Vector.Create(RelativePosition2.Y);
-                var rp2Z = Vector.Create(RelativePosition2.Z);
-
-                var rrx = Vector.Subtract(Vector.Multiply(rp2Y, NormalTangentZ), Vector.Multiply(rp2Z, NormalTangentY));
-                var rry = Vector.Subtract(Vector.Multiply(rp2Z, NormalTangentX), Vector.Multiply(rp2X, NormalTangentZ));
-                var rrz = Vector.Subtract(Vector.Multiply(rp2X, NormalTangentY), Vector.Multiply(rp2Y, NormalTangentX));
-
-                var ixx = Vector.Create(b2.InverseInertiaWorld.M11);
-                var ixy = Vector.Create(b2.InverseInertiaWorld.M21);
-                var ixz = Vector.Create(b2.InverseInertiaWorld.M31);
-                var iyy = Vector.Create(b2.InverseInertiaWorld.M22);
-                var iyz = Vector.Create(b2.InverseInertiaWorld.M23);
-                var izz = Vector.Create(b2.InverseInertiaWorld.M33);
-
-                var f1 = Vector.Add(Vector.Add(Vector.Multiply(ixx, rrx), Vector.Multiply(ixy, rry)), Vector.Multiply(ixz, rrz));
-                var f2 = Vector.Add(Vector.Add(Vector.Multiply(ixy, rrx), Vector.Multiply(iyy, rry)), Vector.Multiply(iyz, rrz));
-                var f3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
-
-                Unsafe.SkipInit(out JVector angularImpulse2);
-                angularImpulse2.X = GetSum3(Vector.Multiply(impulse, f1));
-                angularImpulse2.Y = GetSum3(Vector.Multiply(impulse, f2));
-                angularImpulse2.Z = GetSum3(Vector.Multiply(impulse, f3));
-
-                b2.AngularVelocity += angularImpulse2;
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition2 % linearImpulse, b2.InverseInertiaWorld);
+                b2.AngularVelocity += angularImpulse;
             }
 
         }
