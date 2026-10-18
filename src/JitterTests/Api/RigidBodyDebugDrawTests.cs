@@ -17,7 +17,7 @@ public class RigidBodyDebugDrawTests
         body.Orientation = JQuaternion.Normalize(new JQuaternion(1, 2, 3, 4));
         byte[] before = MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref body.Data, 1)).ToArray();
         const uint color = 0x3182CE80;
-        var settings = new DebugDrawSettings { ShapeSubdivisions = subdivisions, CurrentColor = color, Scale = 7 };
+        var settings = new DebugDrawSettings { ShapeSubdivisions = subdivisions, CurrentColor = color, GuideSize = 7 };
         var drawer = new RecordingDrawer();
         IDebugDrawable drawable = body;
         drawable.DebugDraw(drawer, settings);

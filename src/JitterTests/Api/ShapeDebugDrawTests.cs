@@ -28,7 +28,7 @@ public class ShapeDebugDrawTests
     {
         var shape = Primitive(name);
         var drawer = new TriangleDrawer();
-        ((IDebugDrawable)shape).DebugDraw(drawer, Settings with { Segments = segments, Scale = 7 });
+        ((IDebugDrawable)shape).DebugDraw(drawer, Settings with { Segments = segments, GuideSize = 7 });
         Assert.That(drawer.Triangles, Is.Not.Empty);
         shape.CalculateBoundingBox(JQuaternion.Identity, JVector.Zero, out var bounds);
         var edges = new Dictionary<(JVector, JVector), int>();

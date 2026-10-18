@@ -365,7 +365,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
         JVector origin = GetDebugDrawOrigin(settings);
         DebugDrawGeometry.AngularRange(drawer, origin, axis, reference, 2 * data.MinAngle,
             2 * data.MaxAngle, Angle.Radian, settings);
-        drawer.DrawArrow(origin, JVector.Transform(data.Axis, Body2.Orientation) * (settings.Scale * (Real)0.4),
+        drawer.DrawArrow(origin, JVector.Transform(data.Axis, Body2.Orientation) * (settings.GuideSize * (Real)0.4),
             settings.CurrentColor, settings);
     }
 }

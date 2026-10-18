@@ -103,8 +103,8 @@ body.DebugDraw(drawer);
 > [!WARNING]
 > **Debug drawing can be slow**
 > Drawing many bodies or using high detail settings can significantly reduce the frame rate.
-> Point clouds and custom shapes without their own drawing code rebuild their approximate surface
-> on every call. Limit debug drawing to the objects you need to inspect.
+> Point clouds and custom shapes can be especially expensive to draw.
+> Limit debug drawing to the objects you need to inspect.
 
 This draws all shapes attached to `body`, including their offsets and rotations. The drawer above
 draws each triangle as three edges, producing a wireframe. For filled surfaces, call your renderer's

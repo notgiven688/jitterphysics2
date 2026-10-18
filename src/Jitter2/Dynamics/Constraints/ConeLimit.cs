@@ -426,15 +426,15 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
         // Choose the reference in body 1's local frame so the wire geometry rotates with it.
         JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(Data.LocalAxis1), Body1.Orientation);
         AngularLimit limit = Limit;
-        drawer.DrawArrow(origin, axis * settings.Scale, settings.ReferenceColor, settings);
-        drawer.DrawArrow(origin, AxisBody2 * settings.Scale, settings.CurrentColor, settings);
+        drawer.DrawArrow(origin, axis * settings.GuideSize, settings.ReferenceColor, settings);
+        drawer.DrawArrow(origin, AxisBody2 * settings.GuideSize, settings.CurrentColor, settings);
         if (limit.From.Radian == 0 && limit.To.Radian == MathR.PI)
-            drawer.DrawSphere(origin, settings.Scale, settings.ReferenceColor, settings.Segments);
+            drawer.DrawSphere(origin, settings.GuideSize, settings.ReferenceColor, settings.Segments);
         else
-            drawer.DrawCone(origin, axis, reference, limit.To, limit.To, settings.Scale,
+            drawer.DrawCone(origin, axis, reference, limit.To, limit.To, settings.GuideSize,
                 settings.UpperLimitColor, settings.Segments);
         if (limit.From.Radian > 0 && limit.From != limit.To)
-            drawer.DrawCone(origin, axis, reference, limit.From, limit.From, settings.Scale,
+            drawer.DrawCone(origin, axis, reference, limit.From, limit.From, settings.GuideSize,
                 settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
     }
 }

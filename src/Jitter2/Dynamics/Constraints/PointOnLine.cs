@@ -467,25 +467,27 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         JVector projected = first + axis * distance;
         Real minimum = data.Min, maximum = data.Max;
         if (minimum >= maximum) minimum = maximum = minimum * (Real)0.5 + maximum * (Real)0.5;
-        Real start = Real.IsFinite(minimum) ? minimum : MathR.Min(-settings.Scale, distance - settings.Scale);
-        Real end = Real.IsFinite(maximum) ? maximum : MathR.Max(settings.Scale, distance + settings.Scale);
+        Real start = Real.IsFinite(minimum) ? minimum : MathR.Min(-settings.GuideSize, distance - settings.GuideSize);
+        Real end = Real.IsFinite(maximum) ? maximum : MathR.Max(settings.GuideSize, distance + settings.GuideSize);
+        if (!Real.IsFinite(minimum) && Real.IsFinite(maximum)) start = MathR.Min(start, maximum - settings.GuideSize);
+        if (!Real.IsFinite(maximum) && Real.IsFinite(minimum)) end = MathR.Max(end, minimum + settings.GuideSize);
         if (Real.IsFinite(start) && Real.IsFinite(end))
         {
             drawer.DrawSegment(first + axis * start, first + axis * end, settings.ReferenceColor);
             if (Real.IsFinite(minimum))
-                drawer.DrawStop(first + axis * minimum, axis, settings.Scale * (Real)0.15,
+                drawer.DrawStop(first + axis * minimum, axis, settings.GuideSize * (Real)0.15,
                     minimum == maximum ? settings.UpperLimitColor : settings.LowerLimitColor);
-            else drawer.DrawArrow(first + axis * start, -axis * (settings.Scale * (Real)0.25),
+            else drawer.DrawArrow(first + axis * start, -axis * (settings.GuideSize * (Real)0.25),
                 settings.ReferenceColor, settings);
             if (Real.IsFinite(maximum) && minimum != maximum)
-                drawer.DrawStop(first + axis * maximum, axis, settings.Scale * (Real)0.15, settings.UpperLimitColor);
+                drawer.DrawStop(first + axis * maximum, axis, settings.GuideSize * (Real)0.15, settings.UpperLimitColor);
             else if (!Real.IsFinite(maximum))
-                drawer.DrawArrow(first + axis * end, axis * (settings.Scale * (Real)0.25),
+                drawer.DrawArrow(first + axis * end, axis * (settings.GuideSize * (Real)0.25),
                     settings.ReferenceColor, settings);
         }
         if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
         drawer.DrawSegment(second, projected, settings.CurrentColor);
-        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
     }
 }

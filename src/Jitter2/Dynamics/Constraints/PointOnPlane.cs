@@ -278,20 +278,25 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
         {
             Real offset = minimum * (Real)0.5 + maximum * (Real)0.5;
             if (Real.IsFinite(offset))
-                drawer.DrawPlane(first + normal * offset, normal, reference, settings.Scale, settings.UpperLimitColor);
+                drawer.DrawPlane(first + normal * offset, normal, reference, settings.GuideSize, settings.UpperLimitColor);
         }
         else
         {
             if (Real.IsFinite(minimum))
-                drawer.DrawPlane(first + normal * minimum, normal, reference, settings.Scale, settings.LowerLimitColor);
+                drawer.DrawPlane(first + normal * minimum, normal, reference, settings.GuideSize, settings.LowerLimitColor);
             if (Real.IsFinite(maximum))
-                drawer.DrawPlane(first + normal * maximum, normal, reference, settings.Scale, settings.UpperLimitColor);
+                drawer.DrawPlane(first + normal * maximum, normal, reference, settings.GuideSize, settings.UpperLimitColor);
             if (!Real.IsFinite(minimum) && !Real.IsFinite(maximum))
-                drawer.DrawPlane(first, normal, reference, settings.Scale, settings.ReferenceColor);
+                drawer.DrawPlane(first, normal, reference, settings.GuideSize, settings.ReferenceColor);
         }
-        drawer.DrawArrow(first, normal * (settings.Scale * (Real)0.4), settings.ReferenceColor, settings);
+        drawer.DrawArrow(first, normal * (settings.GuideSize * (Real)0.4), settings.ReferenceColor, settings);
         if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
-        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        Real distance = JVector.Dot(second - first, normal);
+        Real target = minimum >= maximum ? minimum * (Real)0.5 + maximum * (Real)0.5
+            : Real.Clamp(distance, minimum, maximum);
+        if (Real.IsFinite(target) && target != distance)
+            drawer.DrawSegment(second, second + normal * (target - distance), settings.CurrentColor);
+        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
     }
 }

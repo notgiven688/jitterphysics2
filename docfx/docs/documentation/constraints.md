@@ -166,22 +166,40 @@ Call these methods after the physics step, while the world is not being modified
 Green shows reference guides and upper or fixed limits, red shows lower limits, and white shows
 current anchors and directions. Coordinate frames use red for X, green for Y, and blue for Z.
 
+| Constraint | Reading the drawing |
+|------------|---------------------|
+| `BallSocket` | The two anchor markers should coincide. The line between them shows separation. |
+| `DistanceLimit` | Spheres around the first anchor show the allowed distances to the second anchor. |
+| `PointOnLine` | Crosses mark stops along the line; arrows mark unbounded ends. A white line shows displacement away from the line. |
+| `PointOnPlane` | Grids show the limiting planes. A white projection line appears when the anchor is outside the allowed region. The planes extend beyond the grids. |
+| `ConeLimit`, `EllipticalConeLimit` | The white axis must stay within the outer cone and outside any red inner cone. Equal limits allow motion along one cone surface. |
+| `HingeAngle` | The arc shows the allowed angles and the white ray shows the current angle. The short axis arrows reveal hinge misalignment. |
+| `TwistAngle` | The dial shows the current twist and its limits. When twist is fixed, crossed circles illustrate the two remaining swing directions. |
+| `FixedAngle` | The frame near body 2 shows its target orientation; the frame at body 2 shows its current orientation. Corresponding axes should be parallel. In a joint, the target frame is placed at the anchor. |
+| `LinearMotor` | Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still. |
+| `AngularMotor` | With a fixed support, one green circle and arrow show the rotor's target rotation. When both bodies can respond, separate green and white guides show their respective target directions. |
+| `SpringConstraint` | The coil joins the anchors; the green cross marks the rest length along the spring direction. |
+
 Pass `DebugDrawSettings` to change the appearance:
 
 ```cs
 constraint.DebugDraw(drawer, new DebugDrawSettings
 {
-    Scale = 2,
+    GuideSize = 2,
     FrameSize = 1.5f
 });
 ```
 
-`Scale` changes the size of guides and markers. `FrameSize` sets the length of coordinate-frame
-axes in world units. Physical distances and angular limits keep their actual values.
+`GuideSize` changes the size of guides and markers. `FrameSize` sets the length of coordinate-frame
+axes in world units. Arrowhead size and shaft thickness are adjusted separately using
+`ArrowHeadSize` and `ArrowShaftRadius`. Physical distances and angular limits keep their actual values.
 See <xref:Jitter2.DebugDrawSettings> for color, arrow, and detail settings.
 
-Your drawer's `DrawTriangle` implementation controls whether anchor markers and arrows are filled
-or drawn as wireframes.
+Arrows are solid by default. Set `SolidArrows = false` for wire arrows. `ArrowSegments` controls
+arrow smoothness, while `ArrowHeadSpokes` controls the number of spokes in wire arrowheads.
+Your drawer's `DrawTriangle` implementation controls whether solid arrows and anchor markers
+appear filled or as triangle edges. When drawing your own guides, `DrawArrow` and `DrawFrame`
+use the same defaults; `DrawWireArrow` and `DrawWireFrame` explicitly draw wire geometry.
 
 ## Constraint lifetime
 

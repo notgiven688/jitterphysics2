@@ -78,8 +78,8 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     /// <summary>Draws the shape as world-space triangles using the supplied settings.</summary>
     /// <remarks>
-    /// Shapes with known surface geometry draw it directly. The default implementation approximates
-    /// the support map on every call; its triangles may overlap or fold and have inconsistent winding.
+    /// Point clouds and custom shapes may use an approximate surface with gaps or overlapping faces.
+    /// Higher detail settings increase the drawing cost and do not guarantee a more accurate surface.
     /// </remarks>
     public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
@@ -91,8 +91,8 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// <summary>Appends debug triangles in the coordinate system used by <see cref="SupportMap"/>.</summary>
     /// <remarks>
     /// Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-    /// applied by the caller. Built-in closed surfaces use outward-facing winding; the support-map
-    /// fallback preserves the triangles produced by <see cref="ShapeHelper.Tessellate{TSupport, TSink}(in TSupport, ref TSink, int)"/>.
+    /// applied by the caller. Use outward-facing triangles for closed surfaces.
+    /// Without an override, the shape is drawn as an approximate surface.
     /// </remarks>
     /// <param name="triangleSink">The destination for generated triangles.</param>
     /// <param name="settings">The visualization settings.</param>

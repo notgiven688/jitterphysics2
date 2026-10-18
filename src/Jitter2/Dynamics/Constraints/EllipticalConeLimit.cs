@@ -428,16 +428,16 @@ public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.Ellipti
         JVector origin = GetDebugDrawOrigin(settings);
         JVector axis = AxisBody1, reference = ReferenceDirectionBody1;
 
-        drawer.DrawArrow(origin, axis * settings.Scale, settings.ReferenceColor, settings);
-        drawer.DrawArrow(origin, AxisBody2 * settings.Scale, settings.CurrentColor, settings);
+        drawer.DrawArrow(origin, axis * settings.GuideSize, settings.ReferenceColor, settings);
+        drawer.DrawArrow(origin, AxisBody2 * settings.GuideSize, settings.CurrentColor, settings);
 
         drawer.DrawCone(origin, axis, reference, (JAngle)Data.MaxAngle1, (JAngle)Data.MaxAngle2,
-            settings.Scale, settings.UpperLimitColor, settings.Segments);
+            settings.GuideSize, settings.UpperLimitColor, settings.Segments);
 
         if (Data.MinAngle1 > 0 && (Data.MinAngle1 != Data.MaxAngle1 || Data.MinAngle2 != Data.MaxAngle2))
         {
             drawer.DrawCone(origin, axis, reference, (JAngle)Data.MinAngle1, (JAngle)Data.MinAngle2,
-                settings.Scale, settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
+                settings.GuideSize, settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
         }
     }
 }

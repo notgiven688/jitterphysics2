@@ -181,15 +181,15 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         JVector second = JVector.Transform(data.LocalAxis2, Body2.Orientation);
         JVector referenceOrigin = Body1 == Body1.World.NullBody ? Body2.Position : Body1.Position;
         JVector secondOrigin = Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position;
-        drawer.DrawSegment(referenceOrigin - first * settings.Scale, referenceOrigin + first * settings.Scale, settings.ReferenceColor);
-        drawer.DrawSegment(secondOrigin - second * settings.Scale, secondOrigin + second * settings.Scale, settings.CurrentColor);
+        drawer.DrawSegment(referenceOrigin - first * settings.GuideSize, referenceOrigin + first * settings.GuideSize, settings.ReferenceColor);
+        drawer.DrawSegment(secondOrigin - second * settings.GuideSize, secondOrigin + second * settings.GuideSize, settings.CurrentColor);
         if (data.Velocity != 0)
         {
             Real sign = data.Velocity > 0 ? 1 : -1;
             // The solver drives dot(axis2, v2) - dot(axis1, v1) toward TargetVelocity.
-            drawer.DrawArrow(referenceOrigin, -first * (sign * settings.Scale * (Real)0.5),
+            drawer.DrawArrow(referenceOrigin, -first * (sign * settings.GuideSize * (Real)0.5),
                 settings.ReferenceColor, settings);
-            drawer.DrawArrow(secondOrigin, second * (sign * settings.Scale * (Real)0.5),
+            drawer.DrawArrow(secondOrigin, second * (sign * settings.GuideSize * (Real)0.5),
                 settings.CurrentColor, settings);
         }
     }

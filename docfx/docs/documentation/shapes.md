@@ -131,9 +131,8 @@ Your drawer's `DrawTriangle` implementation chooses filled triangles or wirefram
 See <xref:Jitter2.IDebugDrawer> for the drawing methods.
 
 > [!WARNING]
-> Debug drawing can be slow. Point clouds and custom shapes without their own drawing code rebuild
-> an approximate surface on every call. This surface can contain overlapping triangles or faces
-> that point inward. Higher detail settings increase the cost and do not guarantee a correct surface.
+> Debug drawing can be slow. Point clouds and custom shapes may appear with gaps or overlapping
+> faces. Higher detail settings increase the cost and do not guarantee a more accurate drawing.
 
 ## Custom shapes
 

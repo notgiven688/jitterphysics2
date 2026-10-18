@@ -250,7 +250,7 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
         if (Body1 != Body1.World.NullBody) drawer.DrawSegment(Body1.Position, first, settings.ReferenceColor);
         if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
         drawer.DrawSegment(first, second, settings.CurrentColor);
-        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
     }
 }

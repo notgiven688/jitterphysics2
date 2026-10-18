@@ -383,12 +383,12 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         VerifyNotZero();
         JVector first = Anchor1, second = Anchor2;
         JVector displacement = second - first;
-        drawer.DrawSpring(first, second, ref reference, settings.Scale * (Real)0.12, settings.CurrentColor,
+        drawer.DrawSpring(first, second, ref reference, settings.GuideSize * (Real)0.12, settings.CurrentColor,
             Math.Max(32, settings.Segments * 2));
-        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
         if (displacement.LengthSquared() > (Real)1e-20)
             drawer.DrawStop(first + JVector.Normalize(displacement) * TargetDistance, JVector.Normalize(displacement),
-                settings.Scale * (Real)0.12, settings.ReferenceColor);
+                settings.GuideSize * (Real)0.12, settings.ReferenceColor);
     }
 }

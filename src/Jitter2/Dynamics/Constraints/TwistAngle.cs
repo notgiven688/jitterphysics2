@@ -311,13 +311,13 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         JVector origin = GetDebugDrawOrigin(settings);
         DebugDrawGeometry.AngularRange(drawer, origin, axis, reference, data.Angle1,
             data.Angle2, Angle.Radian, settings);
-        drawer.DrawArrow(origin, JVector.Transform(data.B, Body2.Orientation) * (settings.Scale * (Real)0.6),
+        drawer.DrawArrow(origin, JVector.Transform(data.B, Body2.Orientation) * (settings.GuideSize * (Real)0.6),
             settings.CurrentColor, settings);
         if (data.Angle1 >= data.Angle2)
         {
             // Locking twist leaves two swing directions perpendicular to the reference axis.
-            drawer.DrawCircle(origin, reference, axis, settings.Scale, settings.ReferenceColor, settings.Segments);
-            drawer.DrawCircle(origin, axis % reference, axis, settings.Scale, settings.ReferenceColor, settings.Segments);
+            drawer.DrawCircle(origin, reference, axis, settings.GuideSize, settings.ReferenceColor, settings.Segments);
+            drawer.DrawCircle(origin, axis % reference, axis, settings.GuideSize, settings.ReferenceColor, settings.Segments);
         }
     }
 

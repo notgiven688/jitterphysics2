@@ -1690,12 +1690,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Draws the body's collision shapes using their individual debug-drawing implementations.
+    /// Draws the body's collision shapes at their current positions and rotations.
     /// </summary>
     /// <remarks>
     /// Emits world-space triangles through <see cref="IDebugDrawer.DrawTriangle"/>.
-    /// Custom shapes without their own surface geometry use support-map tessellation, which may
-    /// contain overlapping triangles and folds with inconsistent winding.
+    /// Point clouds and custom shapes may appear with gaps or overlapping faces.
     /// </remarks>
     /// <param name="drawer">The debug drawer receiving the shapes.</param>
     public void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
@@ -1705,7 +1704,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     /// <remarks>
     /// Uses <see cref="DebugDrawSettings.Segments"/> for built-in curved surfaces,
-    /// <see cref="DebugDrawSettings.ShapeSubdivisions"/> for support-map tessellation, and
+    /// <see cref="DebugDrawSettings.ShapeSubdivisions"/> for approximate surfaces, and
     /// <see cref="DebugDrawSettings.CurrentColor"/> for the triangles.
     /// </remarks>
     /// <param name="drawer">The debug drawer receiving the shapes.</param>

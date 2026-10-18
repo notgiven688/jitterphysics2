@@ -200,7 +200,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         cone.Softness = 0;
         AddExhibit(0, 0, "EllipticalConeLimit",
             "Inner: 25 / 12 degrees.\nOuter: 65 / 35 degrees.\nSwing between the two surfaces; twist is free.",
-            () => cone.DebugDraw(Draw, new DebugDrawSettings { Scale = DrawRadius }));
+            () => cone.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius }));
     }
 
     private static void RotateAround(RigidBody body, JVector pivot, JQuaternion rotation)
@@ -222,7 +222,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         pendulum.AngularVelocity = new JVector(0.6f, 0.1f, 0.7f);
         AddExhibit(1, 0, "ConeLimit", "Circular swing band: 20 to 60 degrees.\nTwist remains free; a ball socket holds the pivot.", () =>
         {
-            cone.DebugDraw(Draw, new DebugDrawSettings { Scale = DrawRadius });
+            cone.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius });
         });
     }
 
@@ -236,7 +236,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         RigidBody socketBody = body;
         AddExhibit(2, 0, "BallSocket", "Keeps two anchor points together.\nAll three rotations remain free.", () =>
         {
-            socket.DebugDraw(Draw, new DebugDrawSettings { Scale = 2 });
+            socket.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 2 });
             Draw.DrawFrame(socketBody.Position, socketBody.Orientation, DebugDrawSettings.Default);
         });
 
@@ -281,7 +281,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         sliderBody.Velocity = JVector.UnitX;
         sliderBody.AngularVelocity = new JVector(0.3f, 0.6f, 0.4f);
         IgnoreCollision(support, sliderBody);
-        AddExhibit(3, 0, "PointOnLine", "An anchor slides along a bounded line.\nThe body can still rotate around all three axes.", () => line.DebugDraw(Draw, new DebugDrawSettings { Scale = DrawRadius }));
+        AddExhibit(3, 0, "PointOnLine", "An anchor slides along a bounded line.\nThe body can still rotate around all three axes.", () => line.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius }));
 
         center = Center(3, 1) - JVector.UnitY * 1.5f;
         support = CreateSupport(center);
@@ -300,7 +300,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         JVector planeCenter = center;
         AddExhibit(3, 1, "PointOnPlane", "An anchor stays on the green plane.\nA distance limit keeps it inside the red circle.\nAll rotations remain free.", () =>
         {
-            plane.DebugDraw(Draw, new DebugDrawSettings { Scale = 2.1f });
+            plane.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 2.1f });
             Draw.DrawCircle(planeCenter, JVector.UnitZ, JVector.UnitX, planeRadius, DebugDrawColors.Red);
         });
 
@@ -336,11 +336,9 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         angularMotor.Initialize(JVector.UnitZ);
         angularMotor.TargetVelocity = 2;
         angularMotor.MaximumTorque = 4;
-        JVector motorCenter = center;
-        AddExhibit(4, 0, "AngularMotor", "Drives 2 rad/s with a torque limit of 4.\nBallSocket + HingeAngle keep the rotor in the green plane.", () =>
+        AddExhibit(4, 0, "AngularMotor", "Drives 2 rad/s with a torque limit of 4.\nThe green arrow shows the target rotation.\nBallSocket + HingeAngle hold the rotor on its axis.", () =>
         {
-            angularMotor.DebugDraw(Draw, new DebugDrawSettings { Scale = 1.7f });
-            Draw.DrawArrow(motorCenter, JVector.Transform(JVector.UnitX, rotor.Orientation) * 1.55f, DebugDrawColors.White, DebugDrawSettings.Default);
+            angularMotor.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 1.7f });
         });
 
         center = Center(4, 1) - JVector.UnitY * 1.5f;
@@ -360,8 +358,8 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         IgnoreCollision(support, carriage);
         AddExhibit(4, 1, "LinearMotor", "Drives +/-0.9 units/s with a force limit of 6.\nReverses near each stop; line and orientation guides form the rail.", () =>
         {
-            guide.DebugDraw(Draw, new DebugDrawSettings { Scale = DrawRadius });
-            linearMotor.DebugDraw(Draw, new DebugDrawSettings { Scale = 1.4f });
+            guide.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius });
+            linearMotor.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 1.4f });
         });
     }
 
@@ -377,7 +375,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         RotateAround(hingeBody, anchor, JQuaternion.CreateRotationZ(0.65f));
         AddExhibit(5, 0, "HingeJoint",
             "BallSocket + HingeAngle.\nOne rotational DOF, limited to +/-65 degrees.",
-            () => hinge.DebugDraw(Draw, new DebugDrawSettings { Scale = DrawRadius }));
+            () => hinge.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius }));
 
         anchor = Center(5, 1);
         support = CreateSupport(anchor);
@@ -389,7 +387,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         universalBody.AngularVelocity = new JVector(0.4f, 0.1f, 0.55f);
         AddExhibit(5, 1, "UniversalJoint",
             "BallSocket + TwistAngle.\nTwo swing DOFs; twist is locked.\nCrossed green guides show the swing axes.",
-            () => universal.DebugDraw(Draw, new DebugDrawSettings { Scale = 0.65f }));
+            () => universal.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.65f }));
 
         anchor = Center(5, 2);
         support = CreateSupport(anchor);
@@ -405,8 +403,8 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
             "BallSocket + FixedAngle.\nBoth frames keep their relative pose.",
             () =>
             {
-                suspension.DebugDraw(Draw, new DebugDrawSettings { Scale = 0.55f });
-                weld.DebugDraw(Draw, new DebugDrawSettings { Scale = 0.55f });
+                suspension.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.55f });
+                weld.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.55f });
             });
     }
 

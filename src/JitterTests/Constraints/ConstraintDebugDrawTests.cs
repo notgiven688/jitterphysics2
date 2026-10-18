@@ -9,7 +9,7 @@ public class ConstraintDebugDrawTests
     private const uint Reference = 0x3182CEFF, Lower = 0xFF0000FF, Upper = 0x00FF00FF, Current = 0xFFFFFFFF;
     private static readonly DebugDrawSettings Settings = new()
     {
-        Scale = 3,
+        GuideSize = 3,
         ReferenceColor = Reference,
         LowerLimitColor = Lower,
         UpperLimitColor = Upper,
@@ -103,6 +103,63 @@ public class ConstraintDebugDrawTests
         Assert.That(drawer.Count, Is.GreaterThan(0));
     }
 
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    public void DrawingHelpersUseTheSameDefaultsWithOrWithoutSettings(int variant)
+    {
+        var implicitDefaults = new TriangleDrawer();
+        var explicitDefaults = new TriangleDrawer();
+        JVector origin = new(2, 3, 4);
+        JQuaternion orientation = JQuaternion.CreateRotationY((Real)0.4);
+        var settings = DebugDrawSettings.Default;
+        switch (variant)
+        {
+            case 0:
+                implicitDefaults.DrawArrow(origin, JVector.UnitZ, Current);
+                explicitDefaults.DrawArrow(origin, JVector.UnitZ, Current, settings);
+                break;
+            case 1:
+                implicitDefaults.DrawFrame(origin, orientation);
+                explicitDefaults.DrawFrame(origin, orientation, settings);
+                break;
+            case 2:
+                implicitDefaults.DrawFrame(origin, orientation, 2, Current);
+                explicitDefaults.DrawFrame(origin, orientation, settings with
+                {
+                    FrameSize = 2, AxisXColor = Current, AxisYColor = Current, AxisZColor = Current
+                });
+                break;
+            default:
+                implicitDefaults.DrawFrame(origin, orientation, 2, Reference, Lower, Upper);
+                explicitDefaults.DrawFrame(origin, orientation, settings with
+                {
+                    FrameSize = 2, AxisXColor = Reference, AxisYColor = Lower, AxisZColor = Upper
+                });
+                break;
+        }
+        Assert.That(implicitDefaults.Triangles, Is.Not.Empty);
+        Assert.That(implicitDefaults.Triangles, Is.EqualTo(explicitDefaults.Triangles));
+        Assert.That(implicitDefaults.Segments, Is.EqualTo(explicitDefaults.Segments));
+    }
+
+    [Test]
+    public void ExplicitWireHelpersMatchTheWireSettings()
+    {
+        var helper = new TriangleDrawer();
+        var configured = new TriangleDrawer();
+        var settings = DebugDrawSettings.Default with { SolidArrows = false };
+        helper.DrawWireArrow(JVector.One, JVector.UnitY, Current);
+        configured.DrawArrow(JVector.One, JVector.UnitY, Current, settings);
+        helper.DrawWireFrame(JVector.Zero, JQuaternion.Identity, 1,
+            settings.AxisXColor, settings.AxisYColor, settings.AxisZColor);
+        configured.DrawFrame(JVector.Zero, JQuaternion.Identity, settings);
+        Assert.That(helper.Triangles, Is.Empty);
+        Assert.That(configured.Triangles, Is.Empty);
+        Assert.That(helper.Segments, Is.EqualTo(configured.Segments));
+    }
+
     [TestCase(1, 0, 0)]
     [TestCase(0, 1, 0)]
     [TestCase(0, 0, 1)]
@@ -111,7 +168,7 @@ public class ConstraintDebugDrawTests
     {
         var drawer = new RecordingDrawer();
         JVector origin = new(3, -4, 5), vector = new(x, y, z), tip = origin + vector;
-        drawer.DrawArrow(origin, vector, Lower);
+        drawer.DrawWireArrow(origin, vector, Lower);
         AssertVector(drawer.Segments[0].From, origin);
         AssertVector(drawer.Segments[0].To, tip);
         Assert.That(drawer.Segments.All(s => s.Color == Lower), Is.True);
@@ -136,7 +193,7 @@ public class ConstraintDebugDrawTests
     {
         var drawer = new RecordingDrawer();
         JVector origin = new(3, -4, 5), vector = JVector.UnitX * (Real)length;
-        drawer.DrawArrow(origin, vector, Lower);
+        drawer.DrawWireArrow(origin, vector, Lower);
         Assert.That(drawer.Segments.Count, Is.EqualTo(1));
         AssertVector(drawer.Segments[0].From, origin);
         AssertVector(drawer.Segments[0].To, origin + vector);
@@ -151,7 +208,7 @@ public class ConstraintDebugDrawTests
     {
         var drawer = new RecordingDrawer();
         JVector origin = new(3, -4, 5), vector = new(1, -2, 3), tip = origin + vector;
-        drawer.DrawArrow(origin, vector, Lower, segments, spokes);
+        drawer.DrawWireArrow(origin, vector, Lower, segments, spokes);
         var head = drawer.Segments.Skip(1).ToArray();
         var edges = head.Where(s => s.From != tip).ToArray();
         var ribs = head.Where(s => s.From == tip).ToArray();
@@ -173,17 +230,17 @@ public class ConstraintDebugDrawTests
         JQuaternion orientation = JQuaternion.Normalize(new JQuaternion(2, -1, 3, 4));
         var settings = new DebugDrawSettings
         {
-            Scale = 2,
+            GuideSize = 2,
             FrameSize = 2,
             AxisXColor = 0xC864325A,
             AxisYColor = 0x2864C880,
             AxisZColor = 0x64C82800,
-            ArrowHeadSegments = 5,
+            ArrowSegments = 5,
             ArrowHeadSpokes = 3,
             SolidArrows = false
         };
         if (useSettings) drawer.DrawFrame(center, orientation, settings);
-        else drawer.DrawFrame(center, orientation, settings.FrameSize,
+        else drawer.DrawWireFrame(center, orientation, settings.FrameSize,
             settings.AxisXColor, settings.AxisYColor, settings.AxisZColor, 5, 3);
 
         var axes = new[] { JVector.UnitX, JVector.UnitY, JVector.UnitZ };
@@ -197,7 +254,7 @@ public class ConstraintDebugDrawTests
         }
     }
 
-    [TestCase("AngularMotor", 0, 3)]
+    [TestCase("AngularMotor", 0, 4)]
     [TestCase("LinearMotor", 0, 2)]
     [TestCase("FixedAngle", 0, 6)]
     [TestCase("ConeLimit", 0, 2)]
@@ -217,9 +274,9 @@ public class ConstraintDebugDrawTests
         var coarse = new RecordingDrawer();
         var detailedBase = new RecordingDrawer();
         var detailedSpokes = new RecordingDrawer();
-        constraint.DebugDraw(coarse, Settings with { ArrowHeadSegments = 4, ArrowHeadSpokes = 2 });
-        constraint.DebugDraw(detailedBase, Settings with { ArrowHeadSegments = 20, ArrowHeadSpokes = 2 });
-        constraint.DebugDraw(detailedSpokes, Settings with { ArrowHeadSegments = 20, ArrowHeadSpokes = 8 });
+        constraint.DebugDraw(coarse, Settings with { ArrowSegments = 4, ArrowHeadSpokes = 2 });
+        constraint.DebugDraw(detailedBase, Settings with { ArrowSegments = 20, ArrowHeadSpokes = 2 });
+        constraint.DebugDraw(detailedSpokes, Settings with { ArrowSegments = 20, ArrowHeadSpokes = 8 });
         Assert.That(detailedBase.Segments.Count - coarse.Segments.Count, Is.EqualTo(16 * arrows));
         Assert.That(detailedSpokes.Segments.Count - detailedBase.Segments.Count, Is.EqualTo(6 * arrows));
     }
@@ -268,7 +325,7 @@ public class ConstraintDebugDrawTests
         else joint.DebugDraw(drawer);
         Assert.That(socket.ConfiguredCalls, Is.EqualTo(1));
         Assert.That(socket.Calls, Is.Zero);
-        Assert.That(socket.LastSettings.Scale, Is.EqualTo(useSettings ? Settings.Scale : (Real)1));
+        Assert.That(socket.LastSettings.GuideSize, Is.EqualTo(useSettings ? Settings.GuideSize : (Real)1));
         Assert.That(socket.LastSettings.Origin, Is.EqualTo(anchor));
         Assert.That(drawer.Segments, Is.Not.Empty);
     }
@@ -283,8 +340,8 @@ public class ConstraintDebugDrawTests
         var joint = new DrawingJoint(socket);
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, Settings);
-        AssertPointMarker(drawer, Reference, anchor, Settings.Scale * (Real)0.06);
-        AssertPointMarker(drawer, Current, anchor, Settings.Scale * (Real)0.06);
+        AssertPointMarker(drawer, Reference, anchor, Settings.GuideSize * (Real)0.06);
+        AssertPointMarker(drawer, Current, anchor, Settings.GuideSize * (Real)0.06);
     }
 
     [Test]
@@ -311,10 +368,10 @@ public class ConstraintDebugDrawTests
     public void DefaultSettingsHaveUsefulValuesAndAllowTransparentBlack()
     {
         DebugDrawSettings settings = default;
-        Assert.That(settings.Scale, Is.EqualTo(1));
+        Assert.That(settings.GuideSize, Is.EqualTo(1));
         Assert.That(settings.FrameSize, Is.EqualTo(1));
         Assert.That(settings.Segments, Is.EqualTo(48));
-        Assert.That(settings.ArrowHeadSegments, Is.EqualTo(12));
+        Assert.That(settings.ArrowSegments, Is.EqualTo(12));
         Assert.That(settings.ArrowHeadSpokes, Is.EqualTo(8));
         Assert.That(settings.ArrowHeadSize, Is.EqualTo((Real)0.2));
         Assert.That(settings.ShapeSubdivisions, Is.EqualTo(3));
@@ -336,7 +393,7 @@ public class ConstraintDebugDrawTests
     [TestCase(double.NaN)]
     [TestCase(double.PositiveInfinity)]
     public void InvalidScalesAreRejected(double scale) => Assert.Throws<ArgumentOutOfRangeException>(() =>
-        _ = new DebugDrawSettings { Scale = (Real)scale });
+        _ = new DebugDrawSettings { GuideSize = (Real)scale });
 
     [TestCase(0)]
     [TestCase(-1)]
@@ -356,7 +413,7 @@ public class ConstraintDebugDrawTests
     [TestCase(2)]
     [TestCase(257)]
     public void InvalidArrowHeadDetailIsRejected(int segments) => Assert.Throws<ArgumentOutOfRangeException>(() =>
-        _ = new DebugDrawSettings { ArrowHeadSegments = segments });
+        _ = new DebugDrawSettings { ArrowSegments = segments });
 
     [TestCase(-1)]
     [TestCase(0)]
@@ -431,7 +488,7 @@ public class ConstraintDebugDrawTests
         foreach (Real scale in new[] { (Real)1, (Real)2 })
         {
             var drawer = new TriangleDrawer();
-            var settings = new DebugDrawSettings { Scale = scale, ArrowShaftRadius = (Real)0.04 };
+            var settings = new DebugDrawSettings { GuideSize = scale, ArrowShaftRadius = (Real)0.04 };
             drawer.DrawArrow(JVector.Zero, JVector.UnitZ, Current, settings);
             Real expected = MathR.Min(settings.ArrowShaftRadius,
                 MathR.Min((Real)0.05, settings.ArrowHeadSize * (Real)0.2));
@@ -451,7 +508,7 @@ public class ConstraintDebugDrawTests
         foreach (Real length in new[] { (Real)0.6, (Real)1, (Real)3.2 })
         {
             var drawer = new TriangleDrawer();
-            var settings = new DebugDrawSettings { Scale = length };
+            var settings = new DebugDrawSettings { GuideSize = length };
             drawer.DrawArrow(JVector.Zero, JVector.UnitZ * length, Current, settings);
             var rear = ArrowVertices(drawer, Current).Where(p => p.Z == 0 && p != JVector.Zero).ToArray();
             Assert.That(rear, Is.Not.Empty);
@@ -469,7 +526,7 @@ public class ConstraintDebugDrawTests
             var drawer = new TriangleDrawer();
             var settings = new DebugDrawSettings
             {
-                Scale = scale, ArrowShaftRadius = radius, ArrowHeadSize = (Real)0.3, SolidArrows = solid
+                GuideSize = scale, ArrowShaftRadius = radius, ArrowHeadSize = (Real)0.3, SolidArrows = solid
             };
             drawer.DrawArrow(JVector.Zero, JVector.UnitZ * length, Current, settings);
             JVector[] vertices = ArrowVertices(drawer, Current);
@@ -528,10 +585,10 @@ public class ConstraintDebugDrawTests
         var small = new TriangleDrawer();
         var same = new TriangleDrawer();
         var large = new TriangleDrawer();
-        var settings = new DebugDrawSettings { Scale = 2, FrameSize = (Real)0.5, SolidArrows = solid };
+        var settings = new DebugDrawSettings { GuideSize = 2, FrameSize = (Real)0.5, SolidArrows = solid };
         JQuaternion orientation = JQuaternion.Normalize(new JQuaternion(2, -1, 3, 4));
         small.DrawFrame(JVector.Zero, orientation, settings);
-        same.DrawFrame(JVector.Zero, orientation, settings with { Scale = 10 });
+        same.DrawFrame(JVector.Zero, orientation, settings with { GuideSize = 10 });
         large.DrawFrame(JVector.Zero, orientation, settings with { FrameSize = 1 });
 
         Assert.That(same.Triangles, Is.EqualTo(small.Triangles));
@@ -573,7 +630,7 @@ public class ConstraintDebugDrawTests
         var thin = new TriangleDrawer();
         var thick = new TriangleDrawer();
         var wire = new TriangleDrawer();
-        var settings = new DebugDrawSettings { Scale = 2, ArrowShaftRadius = (Real)0.005 };
+        var settings = new DebugDrawSettings { GuideSize = 2, ArrowShaftRadius = (Real)0.005 };
         constraint.DebugDraw(thin, settings);
         constraint.DebugDraw(thick, settings with { ArrowShaftRadius = (Real)0.01 });
         constraint.DebugDraw(wire, settings with { SolidArrows = false });
@@ -643,7 +700,7 @@ public class ConstraintDebugDrawTests
         foreach (int scale in new[] { 1, 4 })
         {
             var drawer = new RecordingDrawer();
-            constraint.DebugDraw(drawer, Settings with { Scale = scale });
+            constraint.DebugDraw(drawer, Settings with { GuideSize = scale });
             AssertPointMarker(drawer, Reference, first.Position, scale * (Real)0.06);
             AssertPointMarker(drawer, Current, secondAnchor, scale * (Real)0.06);
         }
@@ -680,7 +737,7 @@ public class ConstraintDebugDrawTests
         constraint.Initialize(anchor, anchor + JVector.UnitX * 5, new LinearLimit(-2, 1));
         body.Position += JVector.UnitY * 2;
         var drawer = new RecordingDrawer();
-        constraint.DebugDraw(drawer, Settings with { Scale = scale });
+        constraint.DebugDraw(drawer, Settings with { GuideSize = scale });
         AssertSphere(drawer, Lower, anchor, 3);
         AssertSphere(drawer, Upper, anchor, 6);
     }
@@ -700,9 +757,136 @@ public class ConstraintDebugDrawTests
         JVector transformedAnchor = first.Position + JVector.Transform(anchor, rotation);
         JVector axis = JVector.Transform(JVector.UnitX, rotation);
         var drawer = new RecordingDrawer();
-        line.DebugDraw(drawer, Settings with { Scale = 12 });
+        line.DebugDraw(drawer, Settings with { GuideSize = 12 });
         AssertStop(drawer, Lower, transformedAnchor - axis * 2);
         AssertStop(drawer, Upper, transformedAnchor + axis * 5);
+    }
+
+    [TestCase(true, -20)]
+    [TestCase(true, 0)]
+    [TestCase(true, 20)]
+    [TestCase(false, -20)]
+    [TestCase(false, 0)]
+    [TestCase(false, 20)]
+    public void OneSidedLineGuidesStayOnTheAllowedSideOfTheStop(bool lowerBound, int distance)
+    {
+        using World world = new();
+        var body = world.CreateRigidBody();
+        JVector origin = new(3, 4, 5), axis = JVector.Normalize(new JVector(1, 2, 3));
+        Real bound = lowerBound ? 10 : -10;
+        var line = world.CreateConstraint<PointOnLine>(world.NullBody, body);
+        line.Initialize(axis, origin, origin + axis * distance,
+            lowerBound ? new LinearLimit(bound, Real.PositiveInfinity) : new LinearLimit(Real.NegativeInfinity, bound));
+        var drawer = new TriangleDrawer();
+        line.DebugDraw(drawer, Settings with { GuideSize = 1 });
+        var guide = drawer.Segments[0];
+        Real start = JVector.Dot(guide.From - origin, axis), end = JVector.Dot(guide.To - origin, axis);
+        Assert.That(end - start, Is.GreaterThanOrEqualTo((Real)0.999));
+        Assert.That(lowerBound ? start : end, Is.EqualTo(bound).Within((Real)1e-5));
+        foreach (var segment in drawer.Segments.Where(s => s.Color == Reference))
+        {
+            foreach (var point in new[] { segment.From, segment.To })
+            {
+                Real along = JVector.Dot(point - origin, axis);
+                Assert.That(lowerBound ? along - bound : bound - along, Is.GreaterThanOrEqualTo((Real)(-1e-5)));
+            }
+        }
+    }
+
+    [TestCase(-5, -2)]
+    [TestCase(1, 1)]
+    [TestCase(7, 4)]
+    public void PlaneProjectionShowsOnlyTheDistanceOutsideTheAllowedSlab(int distance, int expected)
+    {
+        using World world = new();
+        var body = world.CreateRigidBody();
+        JVector normal = JVector.Normalize(new JVector(1, 2, 3));
+        JVector anchor = normal * distance + MathHelper.CreateOrthonormal(normal) * 5;
+        var plane = world.CreateConstraint<PointOnPlane>(world.NullBody, body);
+        plane.Initialize(normal, JVector.Zero, anchor, new LinearLimit(-2, 4));
+        var drawer = new TriangleDrawer();
+        plane.DebugDraw(drawer, Settings);
+        var projections = drawer.Segments.Where(s => s.Color == Current && s.From == anchor).ToArray();
+        Assert.That(projections.Length, Is.EqualTo(distance == expected ? 0 : 1));
+        if (distance != expected)
+            AssertVector(projections[0].To, anchor + normal * (expected - distance));
+    }
+
+    [TestCase(false, false, 2)]
+    [TestCase(false, false, -2)]
+    [TestCase(true, false, 2)]
+    [TestCase(true, false, -2)]
+    [TestCase(false, true, 2)]
+    [TestCase(false, true, -2)]
+    [TestCase(true, true, 2)]
+    [TestCase(true, true, -2)]
+    public void AngularMotorDirectionsMatchEachBodyAxisAndTheDrivenMotion(bool reversed, bool distinctAxes, int velocity)
+    {
+        using World world = new();
+        world.Gravity = JVector.Zero;
+        var body = world.CreateRigidBody();
+        var other = world.CreateRigidBody();
+        var motor = world.CreateConstraint<AngularMotor>(reversed ? body : other,
+            reversed ? other : body);
+        JVector firstAxis = JVector.UnitZ, secondAxis = distinctAxes ? JVector.UnitX : firstAxis;
+        motor.Initialize(firstAxis, secondAxis);
+        motor.TargetVelocity = velocity;
+        motor.MaximumTorque = 100;
+        var drawer = new TriangleDrawer();
+        motor.DebugDraw(drawer, Settings);
+        var tangents = drawer.Segments.Where(s => s.From.Length() > Settings.GuideSize * (Real)0.7 &&
+            MathR.Abs((s.To - s.From).Length() - Settings.GuideSize * (Real)0.5) < (Real)1e-5).ToArray();
+        Assert.That(tangents.Length, Is.EqualTo(2));
+        foreach (var tangent in tangents)
+        {
+            JVector axis = tangent.Color == Reference ? firstAxis : secondAxis;
+            Real turn = JVector.Dot(tangent.From % (tangent.To - tangent.From), axis);
+            Assert.That(MathR.Sign(turn), Is.EqualTo(tangent.Color == Reference ? -Math.Sign(velocity) : Math.Sign(velocity)));
+        }
+        world.Step((Real)0.01, false);
+        var driven = tangents.Single(t => t.Color == (reversed ? Reference : Current));
+        Assert.That(JVector.Dot(driven.From % (driven.To - driven.From), body.AngularVelocity), Is.GreaterThan(0));
+    }
+
+    [Test]
+    public void AngularMotorWithFixedSupportUsesOneStableRotationGuide(
+        [Values(0, 1, 2)] int supportKind, [Values(false, true)] bool reversed, [Values(-2, 2)] int velocity)
+    {
+        using World world = new();
+        world.Gravity = JVector.Zero;
+        var rotor = world.CreateRigidBody();
+        var support = supportKind == 0 ? world.NullBody : world.CreateRigidBody();
+        if (supportKind == 1) support.MotionType = MotionType.Static;
+        if (supportKind == 2) support.AllowedMotion = MotionAxes.Linear;
+        var motor = world.CreateConstraint<AngularMotor>(reversed ? rotor : support, reversed ? support : rotor);
+        motor.Initialize(JVector.UnitZ);
+        motor.TargetVelocity = velocity;
+        motor.MaximumTorque = 100;
+        var before = new TriangleDrawer();
+        motor.DebugDraw(before, Settings);
+        int arrowSegments = 1 + Settings.ArrowSegments + Settings.ArrowHeadSpokes;
+        Assert.That(before.Segments.Count, Is.EqualTo(Settings.Segments + 2 * arrowSegments));
+        foreach (var segment in before.Segments.Take(Settings.Segments))
+        {
+            Assert.That(segment.Color, Is.EqualTo(Reference));
+            Assert.That(segment.From.Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+        }
+        var tangent = before.Segments[Settings.Segments + arrowSegments];
+        Assert.That(tangent.Color, Is.EqualTo(Reference));
+        Real turn = JVector.Dot(tangent.From % (tangent.To - tangent.From), JVector.UnitZ);
+        Assert.That(MathR.Sign(turn), Is.EqualTo((reversed ? -1 : 1) * Math.Sign(velocity)));
+
+        rotor.Orientation = JQuaternion.CreateRotationZ((Real)0.7);
+        var after = new TriangleDrawer();
+        motor.DebugDraw(after, Settings);
+        Assert.That(after.Segments.Count, Is.EqualTo(before.Segments.Count));
+        for (int i = 0; i < before.Segments.Count; i++)
+        {
+            AssertVector(after.Segments[i].From, before.Segments[i].From);
+            AssertVector(after.Segments[i].To, before.Segments[i].To);
+        }
+        world.Step((Real)0.01, false);
+        Assert.That(JVector.Dot(tangent.From % (tangent.To - tangent.From), rotor.AngularVelocity), Is.GreaterThan(0));
     }
 
     [TestCase(false)]
@@ -751,7 +935,7 @@ public class ConstraintDebugDrawTests
         hinge.DebugDraw(drawer, Settings with { Origin = origin });
         var ray = drawer.Segments.First(s => s.Color == Current);
         AssertVector(ray.From, origin);
-        AssertVector(ray.To, origin + JVector.Transform(localReference, second.Orientation) * Settings.Scale);
+        AssertVector(ray.To, origin + JVector.Transform(localReference, second.Orientation) * Settings.GuideSize);
         Assert.That(hinge.Angle.Radian, Is.EqualTo(angle).Within((Real)1e-5));
     }
 
@@ -784,9 +968,9 @@ public class ConstraintDebugDrawTests
         constraint.Initialize();
         var first = new RecordingDrawer();
         var second = new RecordingDrawer();
-        var settings = Settings with { FrameSize = (Real)0.75, Scale = (Real)0.1 };
+        var settings = Settings with { FrameSize = (Real)0.75, GuideSize = (Real)0.1 };
         constraint.DebugDraw(first, settings);
-        constraint.DebugDraw(second, settings with { Scale = 10 });
+        constraint.DebugDraw(second, settings with { GuideSize = 10 });
 
         Assert.That(second.Segments, Is.EqualTo(first.Segments));
         AssertVector(first.Segments[0].From,
@@ -824,8 +1008,8 @@ public class ConstraintDebugDrawTests
         var currentX = drawer.Segments.First(s => s.Color == settings.AxisXColor && s.From == second.Position);
         AssertVector(currentX.From, second.Position);
         AssertVector(currentX.To, second.Position + second.Orientation.GetBasisX() * settings.FrameSize);
-        AssertPointMarker(drawer, Reference, joint.BallSocket.Anchor1, settings.Scale * (Real)0.06);
-        AssertPointMarker(drawer, Current, joint.BallSocket.Anchor2, settings.Scale * (Real)0.06);
+        AssertPointMarker(drawer, Reference, joint.BallSocket.Anchor1, settings.GuideSize * (Real)0.06);
+        AssertPointMarker(drawer, Current, joint.BallSocket.Anchor2, settings.GuideSize * (Real)0.06);
     }
 
     [TestCase(false)]
@@ -840,8 +1024,8 @@ public class ConstraintDebugDrawTests
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, Settings with { Origin = explicitOrigin ? custom : null });
         JVector origin = explicitOrigin ? custom : anchor;
-        Assert.That((drawer.Segments[0].From - origin).Length(), Is.EqualTo(Settings.Scale).Within((Real)1e-5));
-        Assert.That((drawer.Segments[0].To - origin).Length(), Is.EqualTo(Settings.Scale).Within((Real)1e-5));
+        Assert.That((drawer.Segments[0].From - origin).Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+        Assert.That((drawer.Segments[0].To - origin).Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
         joint.Remove();
         Assert.DoesNotThrow(() => joint.DebugDraw(drawer));
     }
@@ -925,8 +1109,8 @@ public class ConstraintDebugDrawTests
         Assert.That(drawer.Segments, Is.Not.Empty);
         foreach (var segment in drawer.Segments)
         {
-            Assert.That((segment.From - body.Position).Length(), Is.LessThanOrEqualTo(2 * Settings.Scale));
-            Assert.That((segment.To - body.Position).Length(), Is.LessThanOrEqualTo(2 * Settings.Scale));
+            Assert.That((segment.From - body.Position).Length(), Is.LessThanOrEqualTo(2 * Settings.GuideSize));
+            Assert.That((segment.To - body.Position).Length(), Is.LessThanOrEqualTo(2 * Settings.GuideSize));
         }
     }
 
@@ -957,8 +1141,8 @@ public class ConstraintDebugDrawTests
             Assert.That(drawer.Segments.Any(s => s.Color == Current && s.From == origin), Is.True);
             foreach (var segment in drawer.Segments)
             {
-                Assert.That((segment.From - origin).Length(), Is.LessThanOrEqualTo(2 * settings.Scale));
-                Assert.That((segment.To - origin).Length(), Is.LessThanOrEqualTo(2 * settings.Scale));
+                Assert.That((segment.From - origin).Length(), Is.LessThanOrEqualTo(2 * settings.GuideSize));
+                Assert.That((segment.To - origin).Length(), Is.LessThanOrEqualTo(2 * settings.GuideSize));
             }
         }
     }
@@ -979,7 +1163,7 @@ public class ConstraintDebugDrawTests
         var joint = new DrawingJoint(hinge, unrelated, socket);
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, Settings);
-        Assert.That((drawer.Segments[0].From - anchor).Length(), Is.EqualTo(Settings.Scale).Within((Real)1e-5));
+        Assert.That((drawer.Segments[0].From - anchor).Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
     }
 
     [Test]

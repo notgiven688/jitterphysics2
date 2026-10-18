@@ -207,16 +207,44 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         JVector origin = GetDebugDrawOrigin(settings);
         JVector secondOrigin = settings.Origin ?? (Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position);
         JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.LocalAxis1), Body1.Orientation);
-        drawer.DrawCircle(origin, first, reference, settings.Scale, settings.ReferenceColor, settings.Segments);
-        drawer.DrawArrow(origin, first * (settings.Scale * (Real)0.5), settings.ReferenceColor, settings);
-        drawer.DrawArrow(secondOrigin, second * (settings.Scale * (Real)0.5),
-            settings.CurrentColor, settings);
-        if (data.Velocity != 0)
+        JVector secondReference = JVector.Transform(MathHelper.CreateOrthonormal(data.LocalAxis2), Body2.Orientation);
+        bool firstResponds = JVector.Dot(first, JVector.Transform(first, Body1.Data.InverseInertiaWorld)) > 0;
+        bool secondResponds = JVector.Dot(second, JVector.Transform(second, Body2.Data.InverseInertiaWorld)) > 0;
+        if (firstResponds != secondResponds)
         {
-            JVector tangent = first % reference;
+            JVector axis = firstResponds ? first : second;
+            JVector center = settings.Origin ?? (firstResponds ? Body1.Position : Body2.Position);
+            JVector fixedAxis = firstResponds ? second : first;
+            JVector fixedReference = firstResponds ? secondReference : reference;
+            // Anchor the indicator to the support so it does not orbit with the rotor.
+            JVector radial = JVector.Transform(fixedReference, JQuaternion.CreateFromToRotation(fixedAxis, axis));
+            drawer.DrawCircle(center, axis, radial, settings.GuideSize, settings.ReferenceColor, settings.Segments);
+            drawer.DrawArrow(center, axis * (settings.GuideSize * (Real)0.5), settings.CurrentColor, settings);
+            if (data.Velocity != 0)
+            {
+                Real sign = (data.Velocity > 0 ? 1 : -1) * (firstResponds ? -1 : 1);
+                JVector tangent = (axis % radial) * sign;
+                JVector tip = center + radial * settings.GuideSize;
+                JVector vector = tangent * (settings.GuideSize * (Real)0.25);
+                drawer.DrawArrow(tip - vector, vector, settings.ReferenceColor, settings);
+            }
+            return;
+        }
+        // Different radii keep both guides readable when their origins and axes coincide.
+        Real firstRadius = settings.GuideSize * (Real)0.8;
+        drawer.DrawCircle(origin, first, reference, firstRadius, settings.ReferenceColor, settings.Segments);
+        drawer.DrawCircle(secondOrigin, second, secondReference, settings.GuideSize, settings.CurrentColor, settings.Segments);
+        drawer.DrawArrow(origin, first * (settings.GuideSize * (Real)0.5), settings.ReferenceColor, settings);
+        drawer.DrawArrow(secondOrigin, second * (settings.GuideSize * (Real)0.5),
+            settings.CurrentColor, settings);
+        if (data.Velocity != 0 && firstResponds && secondResponds)
+        {
             Real sign = data.Velocity > 0 ? 1 : -1;
-            drawer.DrawArrow(origin + reference * settings.Scale,
-                tangent * (sign * settings.Scale * (Real)0.5), settings.ReferenceColor, settings);
+            // Like LinearMotor, show the signed contribution for each body's own axis.
+            drawer.DrawArrow(origin + reference * firstRadius,
+                (first % reference) * (-sign * settings.GuideSize * (Real)0.5), settings.ReferenceColor, settings);
+            drawer.DrawArrow(secondOrigin + secondReference * settings.GuideSize,
+                (second % secondReference) * (sign * settings.GuideSize * (Real)0.5), settings.CurrentColor, settings);
         }
     }
 }
