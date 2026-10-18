@@ -325,7 +325,7 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 </tr>
 <tr>
 <td><code>FixedAngle</code></td>
-<td>Two frames compare body 2's target and current orientations, drawn near the connected body. Corresponding axes should be parallel. A joint with a ball socket places the target frame at its anchor.</td>
+<td>An RGB frame on each body accounts for the initial relative orientation. Matching axes stay parallel when the target is met. No frame is drawn for <code>World.NullBody</code>.</td>
 </tr>
 <tr>
 <td><code>LinearMotor</code></td>

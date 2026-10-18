@@ -417,7 +417,7 @@ shape detail 3, solid arrows, green guides, red lower limits, white current pose
   </h3>
 
   <div class="markdown level1 summary"><p>Length of each coordinate-frame axis, in world units, independently of <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize">GuideSize</a>.
-Also controls the automatic spacing of FixedAngle's frames. Arrowhead size and shaft radius are independent.
+Arrowhead size and shaft radius are independent.
 Must be finite and greater than zero. Default is 1.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -520,7 +520,7 @@ Must be finite and greater than zero. Default is 1.</p>
 
   <div class="markdown level1 summary"><p>Optional world-space origin for angular guides. By default they use body 1's position,
 or body 2's position when body 1 is World.NullBody. Joints with a ball socket use its anchor.
-FixedAngle places its reference near body 2 by default.
+FixedAngle's frames always use the bodies' positions.
 Positional constraints always use their real anchors.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
