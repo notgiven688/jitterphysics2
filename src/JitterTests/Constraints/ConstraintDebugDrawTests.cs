@@ -254,7 +254,7 @@ public class ConstraintDebugDrawTests
         }
     }
 
-    [TestCase("AngularMotor", 0, 4)]
+    [TestCase("AngularMotor", 0, 1)]
     [TestCase("LinearMotor", 0, 2)]
     [TestCase("FixedAngle", 0, 6)]
     [TestCase("ConeLimit", 0, 2)]
@@ -829,35 +829,38 @@ public class ConstraintDebugDrawTests
         var motor = world.CreateConstraint<AngularMotor>(reversed ? body : other,
             reversed ? other : body);
         JVector firstAxis = JVector.UnitZ, secondAxis = distinctAxes ? JVector.UnitX : firstAxis;
+        motor.Body1.Orientation = JQuaternion.CreateRotationX((Real)0.3);
+        motor.Body2.Orientation = JQuaternion.CreateRotationY((Real)0.2);
         motor.Initialize(firstAxis, secondAxis);
+        JQuaternion firstRotation = JQuaternion.CreateRotationY((Real)0.4);
+        JQuaternion secondRotation = JQuaternion.CreateRotationX((Real)(-0.6));
+        motor.Body1.Orientation = firstRotation * motor.Body1.Orientation;
+        motor.Body2.Orientation = secondRotation * motor.Body2.Orientation;
+        firstAxis = JVector.Transform(firstAxis, firstRotation);
+        secondAxis = JVector.Transform(secondAxis, secondRotation);
         motor.TargetVelocity = velocity;
         motor.MaximumTorque = 100;
         var drawer = new TriangleDrawer();
         motor.DebugDraw(drawer, Settings);
-        var tangents = drawer.Segments.Where(s => s.From.Length() > Settings.GuideSize * (Real)0.7 &&
-            MathR.Abs((s.To - s.From).Length() - Settings.GuideSize * (Real)0.5) < (Real)1e-5).ToArray();
-        Assert.That(tangents.Length, Is.EqualTo(2));
-        foreach (var tangent in tangents)
-        {
-            JVector axis = tangent.Color == Reference ? firstAxis : secondAxis;
-            Real turn = JVector.Dot(tangent.From % (tangent.To - tangent.From), axis);
-            Assert.That(MathR.Sign(turn), Is.EqualTo(tangent.Color == Reference ? -Math.Sign(velocity) : Math.Sign(velocity)));
-        }
+        AssertVector(drawer.Segments[0].To - drawer.Segments[0].From, firstAxis * (Settings.GuideSize * (Real)0.4));
+        AssertVector(drawer.Segments[1].To - drawer.Segments[1].From, secondAxis * (Settings.GuideSize * (Real)0.4));
+        var arrow = drawer.Segments[2 + Settings.Segments];
+        JVector rotation = (arrow.To - motor.Body2.Position) % (arrow.To - arrow.From);
+        Assert.That(MathR.Sign(JVector.Dot(rotation, secondAxis)), Is.EqualTo(Math.Sign(velocity)));
+        Assert.That(arrow.Color, Is.EqualTo(Current));
         world.Step((Real)0.01, false);
-        var driven = tangents.Single(t => t.Color == (reversed ? Reference : Current));
-        Assert.That(JVector.Dot(driven.From % (driven.To - driven.From), body.AngularVelocity), Is.GreaterThan(0));
+        Assert.That(JVector.Dot(rotation, motor.Body2.AngularVelocity), Is.GreaterThan(0));
     }
 
     [Test]
-    public void AngularMotorWithFixedSupportUsesOneStableRotationGuide(
-        [Values(0, 1, 2)] int supportKind, [Values(false, true)] bool reversed, [Values(-2, 2)] int velocity)
+    public void AngularMotorRotationGuideMatchesTheRotorWithEitherBodyOrder(
+        [Values(0, 1)] int supportKind, [Values(false, true)] bool reversed, [Values(-2, 2)] int velocity)
     {
         using World world = new();
         world.Gravity = JVector.Zero;
         var rotor = world.CreateRigidBody();
         var support = supportKind == 0 ? world.NullBody : world.CreateRigidBody();
         if (supportKind == 1) support.MotionType = MotionType.Static;
-        if (supportKind == 2) support.AllowedMotion = MotionAxes.Linear;
         var motor = world.CreateConstraint<AngularMotor>(reversed ? rotor : support, reversed ? support : rotor);
         motor.Initialize(JVector.UnitZ);
         motor.TargetVelocity = velocity;
@@ -865,15 +868,16 @@ public class ConstraintDebugDrawTests
         var before = new TriangleDrawer();
         motor.DebugDraw(before, Settings);
         int arrowSegments = 1 + Settings.ArrowSegments + Settings.ArrowHeadSpokes;
-        Assert.That(before.Segments.Count, Is.EqualTo(Settings.Segments + 2 * arrowSegments));
-        foreach (var segment in before.Segments.Take(Settings.Segments))
+        Assert.That(before.Segments.Count, Is.EqualTo(2 + Settings.Segments + arrowSegments));
+        foreach (var segment in before.Segments.Skip(2).Take(Settings.Segments))
         {
             Assert.That(segment.Color, Is.EqualTo(Reference));
             Assert.That(segment.From.Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
         }
-        var tangent = before.Segments[Settings.Segments + arrowSegments];
-        Assert.That(tangent.Color, Is.EqualTo(Reference));
-        Real turn = JVector.Dot(tangent.From % (tangent.To - tangent.From), JVector.UnitZ);
+        var arrow = before.Segments[2 + Settings.Segments];
+        Assert.That(arrow.Color, Is.EqualTo(Current));
+        Assert.That(arrow.To.Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+        Real turn = JVector.Dot(arrow.To % (arrow.To - arrow.From), JVector.UnitZ);
         Assert.That(MathR.Sign(turn), Is.EqualTo((reversed ? -1 : 1) * Math.Sign(velocity)));
 
         rotor.Orientation = JQuaternion.CreateRotationZ((Real)0.7);
@@ -886,7 +890,30 @@ public class ConstraintDebugDrawTests
             AssertVector(after.Segments[i].To, before.Segments[i].To);
         }
         world.Step((Real)0.01, false);
-        Assert.That(JVector.Dot(tangent.From % (tangent.To - tangent.From), rotor.AngularVelocity), Is.GreaterThan(0));
+        Assert.That(JVector.Dot(arrow.To % (arrow.To - arrow.From), rotor.AngularVelocity), Is.GreaterThan(0));
+    }
+
+    [Test]
+    public void AngularMotorWithZeroTargetShowsItsAxesAndRingWithoutADirectionArrow()
+    {
+        using World world = new();
+        var first = world.CreateRigidBody();
+        var second = world.CreateRigidBody();
+        second.Position = new JVector(2, 3, 4);
+        var motor = world.CreateConstraint<AngularMotor>(first, second);
+        motor.Initialize(JVector.UnitX, JVector.UnitY);
+        var drawer = new TriangleDrawer();
+        motor.DebugDraw(drawer, Settings);
+        Assert.That(drawer.Triangles, Is.Empty);
+        Assert.That(drawer.Segments.Count, Is.EqualTo(2 + Settings.Segments));
+        AssertVector(drawer.Segments[0].To, first.Position + JVector.UnitX * (Settings.GuideSize * (Real)0.4));
+        AssertVector(drawer.Segments[1].To, second.Position + JVector.UnitY * (Settings.GuideSize * (Real)0.4));
+        foreach (var segment in drawer.Segments.Skip(2))
+        {
+            JVector radial = segment.From - second.Position;
+            Assert.That(radial.Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+            Assert.That(JVector.Dot(radial, JVector.UnitY), Is.Zero.Within((Real)1e-5));
+        }
     }
 
     [TestCase(false)]
@@ -1164,6 +1191,24 @@ public class ConstraintDebugDrawTests
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, Settings);
         Assert.That((drawer.Segments[0].From - anchor).Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+    }
+
+    [Test]
+    public void SpringDrawingDependsOnAnchorsRatherThanBodyOrientations()
+    {
+        using World world = new();
+        var first = world.CreateRigidBody();
+        var second = world.CreateRigidBody();
+        var spring = world.CreateConstraint<SpringConstraint>(first, second);
+        spring.Initialize(new JVector(1, 2, 3), new JVector(-2, -1, 4));
+        var before = new TriangleDrawer();
+        spring.DebugDraw(before, Settings);
+        first.Orientation = JQuaternion.CreateRotationY((Real)0.8);
+        second.Orientation = JQuaternion.CreateRotationX((Real)0.6);
+        var after = new TriangleDrawer();
+        spring.DebugDraw(after, Settings);
+        Assert.That(after.Segments, Is.EqualTo(before.Segments));
+        Assert.That(after.Triangles, Is.EqualTo(before.Triangles));
     }
 
     [Test]

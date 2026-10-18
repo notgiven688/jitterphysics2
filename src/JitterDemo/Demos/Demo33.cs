@@ -336,7 +336,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         angularMotor.Initialize(JVector.UnitZ);
         angularMotor.TargetVelocity = 2;
         angularMotor.MaximumTorque = 4;
-        AddExhibit(4, 0, "AngularMotor", "Drives 2 rad/s with a torque limit of 4.\nThe green arrow shows the target rotation.\nBallSocket + HingeAngle hold the rotor on its axis.", () =>
+        AddExhibit(4, 0, "AngularMotor", "Drives 2 rad/s with a torque limit of 4.\nThe white arrow around the green ring shows the target rotation.\nBallSocket + HingeAngle hold the rotor on its axis.", () =>
         {
             angularMotor.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 1.7f });
         });
@@ -386,7 +386,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         IgnoreCollision(support, universalBody);
         universalBody.AngularVelocity = new JVector(0.4f, 0.1f, 0.55f);
         AddExhibit(5, 1, "UniversalJoint",
-            "BallSocket + TwistAngle.\nTwo swing DOFs; twist is locked.\nCrossed green guides show the swing axes.",
+            "BallSocket + TwistAngle.\nTwo swing DOFs; twist is locked.\nThe dial compares current and target twist.",
             () => universal.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.65f }));
 
         anchor = Center(5, 2);

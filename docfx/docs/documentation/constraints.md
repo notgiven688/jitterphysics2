@@ -174,10 +174,10 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 | `PointOnPlane` | Grids show the limiting planes. A white projection line appears when the anchor is outside the allowed region. The planes extend beyond the grids. |
 | `ConeLimit`, `EllipticalConeLimit` | The white axis must stay within the outer cone and outside any red inner cone. Equal limits allow motion along one cone surface. |
 | `HingeAngle` | The arc shows the allowed angles and the white ray shows the current angle. The short axis arrows reveal hinge misalignment. |
-| `TwistAngle` | The dial shows the current twist and its limits. When twist is fixed, crossed circles illustrate the two remaining swing directions. |
+| `TwistAngle` | The dial shows the current twist and its limits. The white axis shows the current body direction; swing remains free. |
 | `FixedAngle` | The frame near body 2 shows its target orientation; the frame at body 2 shows its current orientation. Corresponding axes should be parallel. In a joint, the target frame is placed at the anchor. |
 | `LinearMotor` | Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still. |
-| `AngularMotor` | With a fixed support, one green circle and arrow show the rotor's target rotation. When both bodies can respond, separate green and white guides show their respective target directions. |
+| `AngularMotor` | A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is fixed. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow. |
 | `SpringConstraint` | The coil joins the anchors; the green cross marks the rest length along the spring direction. |
 
 Pass `DebugDrawSettings` to change the appearance:

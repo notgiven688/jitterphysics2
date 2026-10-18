@@ -358,18 +358,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <inheritdoc />
     public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(drawer);
-        VerifyNotZero();
-        JVector first = Anchor1, second = Anchor2;
-        JVector displacement = second - first;
-        // Transport body 1's reference frame from its downward axis to the spring direction.
-        // This keeps the drawing stateless and avoids choosing a new perpendicular axis each frame.
-        JVector reference = Body1.Orientation.GetBasisX();
-        if (displacement.LengthSquared() > (Real)1e-20)
-        {
-            JQuaternion rotation = JQuaternion.CreateFromToRotation(-Body1.Orientation.GetBasisY(), JVector.Normalize(displacement));
-            reference = JVector.Transform(reference, rotation);
-        }
+        JVector reference = JVector.UnitX;
         DebugDraw(drawer, ref reference, settings);
     }
 
@@ -388,7 +377,10 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
         drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
         if (displacement.LengthSquared() > (Real)1e-20)
-            drawer.DrawStop(first + JVector.Normalize(displacement) * TargetDistance, JVector.Normalize(displacement),
+        {
+            JVector direction = JVector.Normalize(displacement);
+            drawer.DrawStop(first + direction * TargetDistance, direction,
                 settings.GuideSize * (Real)0.12, settings.ReferenceColor);
+        }
     }
 }
