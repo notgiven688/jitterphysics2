@@ -12,13 +12,13 @@ using JitterDemo.Renderer.OpenGL;
 namespace JitterDemo;
 
 /*
- * Constraints showcase
+ * Constraints Showcase
  * Code generated and optimized with OpenAI Codex
  */
 
 public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
 {
-    public string Name => "Constraints showcase";
+    public string Name => "Constraints Showcase";
     public string Description => "Examples of the built-in constraints and joints. " +
                                  "Green guides show motion and upper limits, red shows lower limits and stops, " +
                                  "and white shows current anchors and directions. " +
@@ -378,16 +378,29 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
             () => hinge.DebugDraw(Draw, new DebugDrawSettings { GuideSize = DrawRadius }));
 
         anchor = Center(5, 1);
-        support = CreateSupport(anchor);
-        JVector direction = JVector.Normalize(new JVector(0.55f, -1, 0.35f));
-        RigidBody universalBody = CreatePendulum(anchor, direction);
-        var universal = new UniversalJoint(world, support, universalBody, anchor, -JVector.UnitY, direction);
+        JVector inputCenter = anchor - JVector.UnitX * 1.1f;
+        support = CreateSupport(inputCenter);
+        RigidBody inputShaft = CreateBody(inputCenter, new BoxShape(2, 0.16f, 0.5f));
+        JQuaternion outputTilt = JQuaternion.CreateRotationZ(-0.45f);
+        JVector outputAxis = JVector.Transform(JVector.UnitX, outputTilt);
+        RigidBody outputShaft = CreateBody(anchor + outputAxis * 1.1f, new BoxShape(2, 0.16f, 0.5f), true);
+        outputShaft.Orientation = outputTilt;
+        var drive = new HingeJoint(world, support, inputShaft, inputCenter, JVector.UnitX, AngularLimit.Full, true);
+        drive.HingeAngle.Softness = drive.BallSocket.Softness = 0;
+        drive.Motor!.TargetVelocity = 2;
+        drive.Motor.MaximumTorque = 4;
+        var universal = new UniversalJoint(world, inputShaft, outputShaft, anchor, JVector.UnitX, outputAxis);
         universal.TwistAngle.Softness = universal.BallSocket.Softness = 0;
-        IgnoreCollision(support, universalBody);
-        universalBody.AngularVelocity = new JVector(0.4f, 0.1f, 0.55f);
+        IgnoreCollision(support, inputShaft);
+        IgnoreCollision(support, outputShaft);
+        IgnoreCollision(inputShaft, outputShaft);
         AddExhibit(5, 1, "UniversalJoint",
-            "BallSocket + TwistAngle.\nTwo swing DOFs; twist is locked.\nThe dial compares current and target twist.",
-            () => universal.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.65f }));
+            "A motor turns the input shaft at 2 rad/s.\nThe universal joint couples the output rotation while allowing bending.\nDrag the free shaft to change the angle.",
+            () =>
+            {
+                drive.Motor.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.5f });
+                universal.DebugDraw(Draw, new DebugDrawSettings { GuideSize = 0.65f });
+            });
 
         anchor = Center(5, 2);
         support = CreateSupport(anchor);

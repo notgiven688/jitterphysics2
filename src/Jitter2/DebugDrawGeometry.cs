@@ -168,19 +168,17 @@ public static class DebugDrawGeometry
     public static void DrawArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color)
         => drawer.DrawArrow(origin, vector, color, DebugDrawSettings.Default);
 
-    /// <summary>Draws a wire arrow using the default arrowhead size.</summary>
+    /// <summary>Draws a wire arrow using the default arrowhead size, with every base vertex connected to the tip.</summary>
     /// <param name="segments">Number of segments around the head's base, from 3 to 4096. Default is 12.</param>
-    /// <param name="spokes">Number of segments joining the base to the tip, from 1 to 4096, clamped to the base vertex count. Default is 8.</param>
     public static void DrawWireArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color,
-        int segments = 12, int spokes = 8)
-        => DrawWireArrow(drawer, origin, vector, color, DebugDrawSettings.Default.ArrowHeadSize, segments, spokes);
+        int segments = 12)
+        => DrawWireArrow(drawer, origin, vector, color, DebugDrawSettings.Default.ArrowHeadSize, segments);
 
     private static void DrawWireArrow(IDebugDrawer drawer, JVector origin, JVector vector, uint color,
-        Real headSize, int segments, int spokes)
+        Real headSize, int segments)
     {
         Real length = vector.Length();
         ValidateCurve(length, segments);
-        if (spokes < 1 || spokes > 4096) throw new ArgumentOutOfRangeException(nameof(spokes));
         JVector tip = origin + vector;
         drawer.DrawSegment(origin, tip, color);
         if (length < (Real)1e-12) return;
@@ -190,20 +188,14 @@ public static class DebugDrawGeometry
         JVector up = direction % sideways;
         JVector root = tip - direction * headSize;
         JVector first = root + sideways, previous = first;
-        int spokeCount = Math.Min(spokes, segments), nextSpoke = 0;
-        for (int i = 0; i < segments; i++)
+        for (int i = 1; i <= segments; i++)
         {
             Real angle = 2 * MathR.PI * i / segments;
-            JVector point = i == 0 ? first : root + MathR.Cos(angle) * sideways + MathR.Sin(angle) * up;
-            if (i > 0) drawer.DrawSegment(previous, point, color);
-            if (i == nextSpoke * segments / spokeCount)
-            {
-                drawer.DrawSegment(tip, point, color);
-                nextSpoke++;
-            }
+            JVector point = i == segments ? first : root + MathR.Cos(angle) * sideways + MathR.Sin(angle) * up;
+            drawer.DrawSegment(previous, point, color);
+            drawer.DrawSegment(tip, previous, color);
             previous = point;
         }
-        drawer.DrawSegment(previous, first, color);
     }
 
     /// <summary>Draws an arrow using the settings' style, shaft thickness, arrowhead size, and detail.</summary>
@@ -215,7 +207,7 @@ public static class DebugDrawGeometry
                 settings.ArrowHeadSize, color, settings.ArrowSegments);
         else
             DrawWireArrow(drawer, origin, vector, color, settings.ArrowHeadSize,
-                settings.ArrowSegments, settings.ArrowHeadSpokes);
+                settings.ArrowSegments);
     }
 
     /// <summary>Draws a closed solid arrow with a cylindrical shaft and a cone head.</summary>
@@ -286,10 +278,9 @@ public static class DebugDrawGeometry
 
     /// <summary>Draws a wire orientation frame with a single color.</summary>
     /// <param name="segments">Number of segments around each arrowhead base, from 3 to 4096. Default is 12.</param>
-    /// <param name="spokes">Number of segments joining each base to its tip, from 1 to 4096, clamped to the base vertex count. Default is 8.</param>
     public static void DrawWireFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, Real size, uint color,
-        int segments = 12, int spokes = 8)
-        => drawer.DrawWireFrame(center, orientation, size, color, color, color, segments, spokes);
+        int segments = 12)
+        => drawer.DrawWireFrame(center, orientation, size, color, color, color, segments);
 
     /// <summary>
     /// Draws a wire orientation frame with a separate color for each local axis.
@@ -299,13 +290,12 @@ public static class DebugDrawGeometry
     /// <param name="yColor">Color of the local Y axis, packed as <c>0xRRGGBBAA</c>.</param>
     /// <param name="zColor">Color of the local Z axis, packed as <c>0xRRGGBBAA</c>.</param>
     /// <param name="segments">Number of segments around each arrowhead base, from 3 to 4096. Default is 12.</param>
-    /// <param name="spokes">Number of segments joining each base to its tip, from 1 to 4096, clamped to the base vertex count. Default is 8.</param>
     public static void DrawWireFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, Real size,
-        uint xColor, uint yColor, uint zColor, int segments = 12, int spokes = 8)
+        uint xColor, uint yColor, uint zColor, int segments = 12)
     {
-        drawer.DrawWireArrow(center, orientation.GetBasisX() * size, xColor, segments, spokes);
-        drawer.DrawWireArrow(center, orientation.GetBasisY() * size, yColor, segments, spokes);
-        drawer.DrawWireArrow(center, orientation.GetBasisZ() * size, zColor, segments, spokes);
+        drawer.DrawWireArrow(center, orientation.GetBasisX() * size, xColor, segments);
+        drawer.DrawWireArrow(center, orientation.GetBasisY() * size, yColor, segments);
+        drawer.DrawWireArrow(center, orientation.GetBasisZ() * size, zColor, segments);
     }
 
     /// <summary>

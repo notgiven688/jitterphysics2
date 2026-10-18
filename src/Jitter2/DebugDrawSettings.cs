@@ -29,7 +29,7 @@ public static class DebugDrawColors
 public readonly struct DebugDrawSettings
 {
     private readonly Real guideSize, frameSize, arrowHeadSize;
-    private readonly int segments, arrowSegments, arrowHeadSpokes, shapeSubdivisions;
+    private readonly int segments, arrowSegments, shapeSubdivisions;
     private readonly JVector? origin;
     private readonly uint? referenceColor, lowerLimitColor, upperLimitColor, currentColor;
     private readonly uint? axisXColor, axisYColor, axisZColor;
@@ -37,7 +37,7 @@ public readonly struct DebugDrawSettings
     private readonly Real? arrowShaftRadius;
 
     /// <summary>
-    /// Default settings: guide size 1, frame size 1, 48 curve segments, 12 arrow segments with 8 wire spokes,
+    /// Default settings: guide size 1, frame size 1, 48 curve segments, 12 arrow segments,
     /// shape detail 3, solid arrows, green guides, red lower limits, white current pose, and RGB orientation frames.
     /// </summary>
     public static DebugDrawSettings Default => default;
@@ -104,6 +104,7 @@ public readonly struct DebugDrawSettings
     /// <summary>
     /// Number of segments around each arrowhead base and solid shaft, from 3 to 256. Default is 12.
     /// A value of 4 draws a square base; higher values approximate a circle.
+    /// Wire arrows connect every base vertex to the tip.
     /// </summary>
     public int ArrowSegments
     {
@@ -112,20 +113,6 @@ public readonly struct DebugDrawSettings
         {
             if (value < 3 || value > 256) throw new ArgumentOutOfRangeException(nameof(ArrowSegments));
             arrowSegments = value;
-        }
-    }
-
-    /// <summary>
-    /// Number of segments joining each arrowhead base to its tip, from 1 to 256. Default is 8.
-    /// Used for wire arrows only. Clamped to <see cref="ArrowSegments"/> so every spoke meets a distinct base vertex.
-    /// </summary>
-    public int ArrowHeadSpokes
-    {
-        get => arrowHeadSpokes == 0 ? 8 : arrowHeadSpokes;
-        init
-        {
-            if (value < 1 || value > 256) throw new ArgumentOutOfRangeException(nameof(ArrowHeadSpokes));
-            arrowHeadSpokes = value;
         }
     }
 

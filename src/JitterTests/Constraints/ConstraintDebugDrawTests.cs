@@ -199,21 +199,22 @@ public class ConstraintDebugDrawTests
         AssertVector(drawer.Segments[0].To, origin + vector);
     }
 
-    [TestCase(3, 4)]
-    [TestCase(4, 4)]
-    [TestCase(5, 3)]
-    [TestCase(12, 8)]
-    [TestCase(20, 5)]
-    public void ArrowDetailChangesTheClosedBaseAndSpokesMeetItsVertices(int segments, int spokes)
+    [TestCase(3)]
+    [TestCase(4)]
+    [TestCase(5)]
+    [TestCase(12)]
+    [TestCase(20)]
+    [TestCase(256)]
+    public void WireArrowHeadsHaveClosedBasesAndConnectEveryVertexToTheTip(int segments)
     {
         var drawer = new RecordingDrawer();
         JVector origin = new(3, -4, 5), vector = new(1, -2, 3), tip = origin + vector;
-        drawer.DrawWireArrow(origin, vector, Lower, segments, spokes);
+        drawer.DrawWireArrow(origin, vector, Lower, segments);
         var head = drawer.Segments.Skip(1).ToArray();
         var edges = head.Where(s => s.From != tip).ToArray();
         var ribs = head.Where(s => s.From == tip).ToArray();
         Assert.That(edges.Length, Is.EqualTo(segments));
-        Assert.That(ribs.Length, Is.EqualTo(Math.Min(segments, spokes)));
+        Assert.That(ribs.Length, Is.EqualTo(segments));
         for (int i = 0; i < edges.Length; i++)
             Assert.That(edges[i].To, Is.EqualTo(edges[(i + 1) % edges.Length].From));
         foreach (var rib in ribs)
@@ -236,19 +237,18 @@ public class ConstraintDebugDrawTests
             AxisYColor = 0x2864C880,
             AxisZColor = 0x64C82800,
             ArrowSegments = 5,
-            ArrowHeadSpokes = 3,
             SolidArrows = false
         };
         if (useSettings) drawer.DrawFrame(center, orientation, settings);
         else drawer.DrawWireFrame(center, orientation, settings.FrameSize,
-            settings.AxisXColor, settings.AxisYColor, settings.AxisZColor, 5, 3);
+            settings.AxisXColor, settings.AxisYColor, settings.AxisZColor, 5);
 
         var axes = new[] { JVector.UnitX, JVector.UnitY, JVector.UnitZ };
         var colors = new[] { settings.AxisXColor, settings.AxisYColor, settings.AxisZColor };
         for (int i = 0; i < axes.Length; i++)
         {
             var segments = drawer.Segments.Where(s => s.Color == colors[i]).ToArray();
-            Assert.That(segments.Length, Is.EqualTo(9));
+            Assert.That(segments.Length, Is.EqualTo(11));
             AssertVector(segments[0].From, center);
             AssertVector(segments[0].To, center + JVector.Transform(axes[i], orientation) * 2);
         }
@@ -265,20 +265,17 @@ public class ConstraintDebugDrawTests
     [TestCase("TwistAngle", 1, 4)]
     [TestCase("PointOnLine", 2, 2)]
     [TestCase("PointOnPlane", 0, 1)]
-    public void EveryConstraintArrowUsesTheIndependentBaseAndSpokeSettings(string name, int range, int arrows)
+    public void EveryConstraintArrowUsesTheConfiguredDetail(string name, int range, int arrows)
     {
         using World world = new();
         RigidBody first = world.CreateRigidBody(), second = world.CreateRigidBody();
         second.Position = new JVector(2, 3, 4);
         Constraint constraint = Create(world, first, second, name, range);
         var coarse = new RecordingDrawer();
-        var detailedBase = new RecordingDrawer();
-        var detailedSpokes = new RecordingDrawer();
-        constraint.DebugDraw(coarse, Settings with { ArrowSegments = 4, ArrowHeadSpokes = 2 });
-        constraint.DebugDraw(detailedBase, Settings with { ArrowSegments = 20, ArrowHeadSpokes = 2 });
-        constraint.DebugDraw(detailedSpokes, Settings with { ArrowSegments = 20, ArrowHeadSpokes = 8 });
-        Assert.That(detailedBase.Segments.Count - coarse.Segments.Count, Is.EqualTo(16 * arrows));
-        Assert.That(detailedSpokes.Segments.Count - detailedBase.Segments.Count, Is.EqualTo(6 * arrows));
+        var detailed = new RecordingDrawer();
+        constraint.DebugDraw(coarse, Settings with { ArrowSegments = 4 });
+        constraint.DebugDraw(detailed, Settings with { ArrowSegments = 20 });
+        Assert.That(detailed.Segments.Count - coarse.Segments.Count, Is.EqualTo(32 * arrows));
     }
 
     [Test]
@@ -372,7 +369,6 @@ public class ConstraintDebugDrawTests
         Assert.That(settings.FrameSize, Is.EqualTo(1));
         Assert.That(settings.Segments, Is.EqualTo(48));
         Assert.That(settings.ArrowSegments, Is.EqualTo(12));
-        Assert.That(settings.ArrowHeadSpokes, Is.EqualTo(8));
         Assert.That(settings.ArrowHeadSize, Is.EqualTo((Real)0.2));
         Assert.That(settings.ShapeSubdivisions, Is.EqualTo(3));
         Assert.That(settings.Origin, Is.Null);
@@ -414,12 +410,6 @@ public class ConstraintDebugDrawTests
     [TestCase(257)]
     public void InvalidArrowHeadDetailIsRejected(int segments) => Assert.Throws<ArgumentOutOfRangeException>(() =>
         _ = new DebugDrawSettings { ArrowSegments = segments });
-
-    [TestCase(-1)]
-    [TestCase(0)]
-    [TestCase(257)]
-    public void InvalidArrowHeadSpokesAreRejected(int spokes) => Assert.Throws<ArgumentOutOfRangeException>(() =>
-        _ = new DebugDrawSettings { ArrowHeadSpokes = spokes });
 
     [TestCase(-1)]
     [TestCase(0)]
@@ -867,7 +857,7 @@ public class ConstraintDebugDrawTests
         motor.MaximumTorque = 100;
         var before = new TriangleDrawer();
         motor.DebugDraw(before, Settings);
-        int arrowSegments = 1 + Settings.ArrowSegments + Settings.ArrowHeadSpokes;
+        int arrowSegments = 1 + 2 * Settings.ArrowSegments;
         Assert.That(before.Segments.Count, Is.EqualTo(2 + Settings.Segments + arrowSegments));
         foreach (var segment in before.Segments.Skip(2).Take(Settings.Segments))
         {
@@ -891,6 +881,34 @@ public class ConstraintDebugDrawTests
         }
         world.Step((Real)0.01, false);
         Assert.That(JVector.Dot(arrow.To % (arrow.To - arrow.From), rotor.AngularVelocity), Is.GreaterThan(0));
+    }
+
+    [Test]
+    public void AngularMotorArrowDoesNotJumpWhenTheShaftAxisWobbles(
+        [Values(0, 1, 2)] int axisIndex, [Values(0, 1)] int supportKind, [Values(false, true)] bool reversed)
+    {
+        using World world = new();
+        var rotor = world.CreateRigidBody();
+        var support = supportKind == 0 ? world.NullBody : world.CreateRigidBody();
+        if (supportKind == 1) support.MotionType = MotionType.Static;
+        var motor = world.CreateConstraint<AngularMotor>(reversed ? rotor : support, reversed ? support : rotor);
+        JVector axis = axisIndex == 0 ? JVector.UnitX : axisIndex == 1 ? JVector.UnitY : JVector.UnitZ;
+        motor.Initialize(axis);
+        motor.TargetVelocity = 2;
+        JVector firstTiltAxis = MathHelper.CreateOrthonormal(axis), secondTiltAxis = axis % firstTiltAxis;
+        JVector? previousTip = null;
+        for (int i = 0; i < 40; i++)
+        {
+            JVector tiltAxis = i % 2 == 0 ? firstTiltAxis : secondTiltAxis;
+            rotor.Orientation = JQuaternion.CreateFromAxisAngle(tiltAxis, (i % 4 < 2 ? 1 : -1) * (Real)1e-5);
+            var drawer = new TriangleDrawer();
+            motor.DebugDraw(drawer, Settings);
+            JVector tip = drawer.Segments[2 + Settings.Segments].To;
+            Assert.That(tip.Length(), Is.EqualTo(Settings.GuideSize).Within((Real)1e-5));
+            if (previousTip.HasValue)
+                Assert.That((tip - previousTip.Value).Length(), Is.LessThan(Settings.GuideSize * (Real)1e-3));
+            previousTip = tip;
+        }
     }
 
     [Test]

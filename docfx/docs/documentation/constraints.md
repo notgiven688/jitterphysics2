@@ -173,11 +173,11 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 | `PointOnLine` | Crosses mark stops along the line; arrows mark unbounded ends. A white line shows displacement away from the line. |
 | `PointOnPlane` | Grids show the limiting planes. A white projection line appears when the anchor is outside the allowed region. The planes extend beyond the grids. |
 | `ConeLimit`, `EllipticalConeLimit` | The white axis must stay within the outer cone and outside any red inner cone. Equal limits allow motion along one cone surface. |
-| `HingeAngle` | The arc shows the allowed angles and the white ray shows the current angle. The short axis arrows reveal hinge misalignment. |
+| `HingeAngle` | An arc shows the allowed angles, or a green ray marks a fixed angle. The white ray shows the current angle. Short axis arrows reveal hinge misalignment. |
 | `TwistAngle` | The dial shows the current twist and its limits. The white axis shows the current body direction; swing remains free. |
-| `FixedAngle` | The frame near body 2 shows its target orientation; the frame at body 2 shows its current orientation. Corresponding axes should be parallel. In a joint, the target frame is placed at the anchor. |
+| `FixedAngle` | Two frames compare body 2's target and current orientations, drawn near the connected body. Corresponding axes should be parallel. A joint with a ball socket places the target frame at its anchor. |
 | `LinearMotor` | Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still. |
-| `AngularMotor` | A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is fixed. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow. |
+| `AngularMotor` | A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is static or kinematic. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow. |
 | `SpringConstraint` | The coil joins the anchors; the green cross marks the rest length along the spring direction. |
 
 Pass `DebugDrawSettings` to change the appearance:
@@ -196,7 +196,7 @@ axes in world units. Arrowhead size and shaft thickness are adjusted separately 
 See <xref:Jitter2.DebugDrawSettings> for color, arrow, and detail settings.
 
 Arrows are solid by default. Set `SolidArrows = false` for wire arrows. `ArrowSegments` controls
-arrow smoothness, while `ArrowHeadSpokes` controls the number of spokes in wire arrowheads.
+arrow smoothness. Wire arrowheads connect every vertex around the base to the tip.
 Your drawer's `DrawTriangle` implementation controls whether solid arrows and anchor markers
 appear filled or as triangle edges. When drawing your own guides, `DrawArrow` and `DrawFrame`
 use the same defaults; `DrawWireArrow` and `DrawWireFrame` explicitly draw wire geometry.

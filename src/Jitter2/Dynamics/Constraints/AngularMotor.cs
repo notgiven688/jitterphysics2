@@ -214,7 +214,12 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         bool drawFirst = Body2.MotionType != MotionType.Dynamic;
         JVector axis = drawFirst ? first : second;
         JVector center = drawFirst ? origin : secondOrigin;
-        JVector radial = MathHelper.CreateOrthonormal(axis);
+        // Keep the arrow attached to the other body's frame, rather than choosing
+        // a new perpendicular from the slightly changing world-space motor axis.
+        JQuaternion referenceOrientation = drawFirst ? Body2.Orientation : Body1.Orientation;
+        JVector referenceAxis = drawFirst ? data.LocalAxis2 : data.LocalAxis1;
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(referenceAxis), referenceOrientation);
+        JVector radial = JVector.Transform(reference, JQuaternion.CreateFromToRotation(drawFirst ? second : first, axis));
         drawer.DrawCircle(center, axis, radial, settings.GuideSize, settings.ReferenceColor, settings.Segments);
         if (data.Velocity == 0) return;
         Real sign = (data.Velocity > 0 ? 1 : -1) * (drawFirst ? -1 : 1);
