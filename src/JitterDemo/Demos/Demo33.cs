@@ -99,7 +99,8 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         JVector cameraPosition = Conversion.ToJitterVector(playground.Camera.Position);
         foreach (Exhibit exhibit in exhibits)
         {
-            exhibit.Draw();
+            if (!playground.IsConstraintDebugDrawEnabled)
+                exhibit.Draw();
             if ((exhibit.Center - cameraPosition).LengthSquared() <= LabelDistance * LabelDistance)
                 playground.DrawWorldLabel(exhibit.Center + JVector.UnitY * 0.7f, exhibit.Title, exhibit.Description);
             DrawBase(exhibit.Center);

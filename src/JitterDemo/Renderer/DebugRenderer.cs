@@ -71,6 +71,9 @@ public sealed class DebugRenderer : IDebugDrawer
     /// <summary>Applies simple directional lighting to filled debug geometry. Lines are unlit.</summary>
     public bool ShadeTriangles { get; set; } = true;
 
+    /// <summary>Queues triangle edges instead of filled faces for subsequent DrawTriangle calls.</summary>
+    public bool WireframeTriangles { get; set; }
+
     private Bucket GetBucket(uint color)
     {
         if (!buckets.TryGetValue(color, out Bucket? bucket)) buckets.Add(color, bucket = new Bucket());
@@ -104,6 +107,8 @@ public sealed class DebugRenderer : IDebugDrawer
 
         if (hasTriangles) DrawTriangles();
         shader.Set("uShade", false);
+        // Pull lines slightly toward the camera so collision surfaces remain readable over the scene meshes.
+        shader.Set("uDepthBias", 0.001f);
 
         foreach (var (color, bucket) in buckets)
         {
@@ -126,6 +131,7 @@ public sealed class DebugRenderer : IDebugDrawer
         GLDevice.Enable(Capability.CullFace);
         GLDevice.CullFace(CullMode.Back);
         shader.Set("uShade", ShadeTriangles);
+        shader.Set("uDepthBias", 0f);
         try
         {
             foreach (var (color, bucket) in triangleBuckets)
@@ -205,6 +211,18 @@ public sealed class DebugRenderer : IDebugDrawer
 
     public void DrawTriangle(in JVector a, in JVector b, in JVector c, uint color)
     {
+        if (WireframeTriangles)
+        {
+            var lines = GetBucket(color);
+            uint i0 = lines.PushVertex((float)a.X, (float)a.Y, (float)a.Z);
+            uint i1 = lines.PushVertex((float)b.X, (float)b.Y, (float)b.Z);
+            uint i2 = lines.PushVertex((float)c.X, (float)c.Y, (float)c.Z);
+            lines.PushIndex(i0, i1);
+            lines.PushIndex(i1, i2);
+            lines.PushIndex(i2, i0);
+            return;
+        }
+
         if (!triangleBuckets.TryGetValue(color, out TriangleBucket? bucket))
             triangleBuckets.Add(color, bucket = new TriangleBucket());
         bucket.Push(Conversion.FromJitter(a), Conversion.FromJitter(b), Conversion.FromJitter(c));
@@ -218,11 +236,14 @@ out vec3 vWorldPosition;
 
 uniform mat4 uView;
 uniform mat4 uProjection;
+uniform float uDepthBias;
 
 void main()
 {
     vWorldPosition = aPos;
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    vec4 viewPosition = uView * vec4(aPos, 1.0);
+    viewPosition.z += uDepthBias;
+    gl_Position = uProjection * viewPosition;
 }
 ";
 
