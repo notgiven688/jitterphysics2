@@ -7388,6 +7388,337 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.TargetDistance
   nameWithType: DistanceLimit.TargetDistance
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit
+  name: EllipticalConeLimit
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html
+  commentId: T:Jitter2.Dynamics.Constraints.EllipticalConeLimit
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit
+  nameWithType: EllipticalConeLimit
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1
+  name: AxisBody1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody1
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1
+  nameWithType: EllipticalConeLimit.AxisBody1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1*
+  name: AxisBody1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody1_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1
+  nameWithType: EllipticalConeLimit.AxisBody1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2
+  name: AxisBody2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody2
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2
+  nameWithType: EllipticalConeLimit.AxisBody2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2*
+  name: AxisBody2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody2_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2
+  nameWithType: EllipticalConeLimit.AxisBody2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Bias
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias
+  nameWithType: EllipticalConeLimit.Bias
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias*
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Bias_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias
+  nameWithType: EllipticalConeLimit.Bias
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create
+  name: Create()
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Create
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create()
+  nameWithType: EllipticalConeLimit.Create()
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create*
+  name: Create
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Create_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create
+  nameWithType: EllipticalConeLimit.Create
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: EllipticalConeLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw
+  nameWithType: EllipticalConeLimit.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData
+  name: EllipticalConeLimit.EllipticalConeLimitData
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html
+  commentId: T:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.AccumulatedImpulse
+  name: AccumulatedImpulse
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_AccumulatedImpulse
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.AccumulatedImpulse
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.AccumulatedImpulse
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.AccumulatedImpulse
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Bias
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Bias
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Bias
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Bias
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_BiasFactor
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.BiasFactor
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.BiasFactor
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body1
+  name: Body1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Body1
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body1
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Body1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body2
+  name: Body2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Body2
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body2
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Body2
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Body2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Clamp
+  name: Clamp
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Clamp
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Clamp
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Clamp
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Clamp
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.EffectiveMass
+  name: EffectiveMass
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_EffectiveMass
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.EffectiveMass
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.EffectiveMass
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Jacobian
+  name: Jacobian
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Jacobian
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Jacobian
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Jacobian
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Jacobian
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis1
+  name: LocalAxis1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_LocalAxis1
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis1
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.LocalAxis1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis2
+  name: LocalAxis2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_LocalAxis2
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis2
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalAxis2
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.LocalAxis2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalReference1
+  name: LocalReference1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_LocalReference1
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalReference1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.LocalReference1
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.LocalReference1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle1
+  name: MaxAngle1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_MaxAngle1
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle1
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.MaxAngle1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle2
+  name: MaxAngle2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_MaxAngle2
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle2
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MaxAngle2
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.MaxAngle2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle1
+  name: MinAngle1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_MinAngle1
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle1
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.MinAngle1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle2
+  name: MinAngle2
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_MinAngle2
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle2
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.MinAngle2
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.MinAngle2
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_EllipticalConeLimitData_Softness
+  commentId: F:Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Softness
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.Softness
+  nameWithType: EllipticalConeLimit.EllipticalConeLimitData.Softness
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing(Jitter2.LinearMath.JAngle@,Jitter2.LinearMath.JAngle@)
+  name: GetSwing(out JAngle, out JAngle)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_GetSwing_Jitter2_LinearMath_JAngle__Jitter2_LinearMath_JAngle__
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing(Jitter2.LinearMath.JAngle@,Jitter2.LinearMath.JAngle@)
+  name.vb: GetSwing(JAngle, JAngle)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing(out Jitter2.LinearMath.JAngle, out Jitter2.LinearMath.JAngle)
+  fullName.vb: Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing(Jitter2.LinearMath.JAngle, Jitter2.LinearMath.JAngle)
+  nameWithType: EllipticalConeLimit.GetSwing(out JAngle, out JAngle)
+  nameWithType.vb: EllipticalConeLimit.GetSwing(JAngle, JAngle)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing*
+  name: GetSwing
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_GetSwing_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing
+  nameWithType: EllipticalConeLimit.GetSwing
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Impulse
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse
+  nameWithType: EllipticalConeLimit.Impulse
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse*
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Impulse_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse
+  nameWithType: EllipticalConeLimit.Impulse
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  name: Initialize(JVector, JVector, AngularLimit, AngularLimit)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.AngularLimit, Jitter2.Dynamics.Constraints.AngularLimit)
+  nameWithType: EllipticalConeLimit.Initialize(JVector, JVector, AngularLimit, AngularLimit)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  name: Initialize(JVector, JVector, JVector, AngularLimit, AngularLimit)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.AngularLimit, Jitter2.Dynamics.Constraints.AngularLimit)
+  nameWithType: EllipticalConeLimit.Initialize(JVector, JVector, JVector, AngularLimit, AngularLimit)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize*
+  name: Initialize
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize
+  nameWithType: EllipticalConeLimit.Initialize
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_IterateEllipticalConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateEllipticalConeLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: EllipticalConeLimit.IterateEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: EllipticalConeLimit.IterateEllipticalConeLimit(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit*
+  name: IterateEllipticalConeLimit
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_IterateEllipticalConeLimit_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit
+  nameWithType: EllipticalConeLimit.IterateEllipticalConeLimit
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular
+  name: LimitAlongPerpendicular
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongPerpendicular
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular
+  nameWithType: EllipticalConeLimit.LimitAlongPerpendicular
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular*
+  name: LimitAlongPerpendicular
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongPerpendicular_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular
+  nameWithType: EllipticalConeLimit.LimitAlongPerpendicular
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference
+  name: LimitAlongReference
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongReference
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference
+  nameWithType: EllipticalConeLimit.LimitAlongReference
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference*
+  name: LimitAlongReference
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongReference_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference
+  nameWithType: EllipticalConeLimit.LimitAlongReference
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_PrepareForIterationEllipticalConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationEllipticalConeLimit(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  nameWithType.vb: EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit*
+  name: PrepareForIterationEllipticalConeLimit
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_PrepareForIterationEllipticalConeLimit_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit
+  nameWithType: EllipticalConeLimit.PrepareForIterationEllipticalConeLimit
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1
+  name: ReferenceDirectionBody1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ReferenceDirectionBody1
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1
+  nameWithType: EllipticalConeLimit.ReferenceDirectionBody1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1*
+  name: ReferenceDirectionBody1
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ReferenceDirectionBody1_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1
+  nameWithType: EllipticalConeLimit.ReferenceDirectionBody1
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart()
+  nameWithType: EllipticalConeLimit.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart
+  nameWithType: EllipticalConeLimit.ResetWarmStart
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits(Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  name: SetLimits(AngularLimit, AngularLimit)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits(Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits(Jitter2.Dynamics.Constraints.AngularLimit, Jitter2.Dynamics.Constraints.AngularLimit)
+  nameWithType: EllipticalConeLimit.SetLimits(AngularLimit, AngularLimit)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits*
+  name: SetLimits
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits
+  nameWithType: EllipticalConeLimit.SetLimits
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Softness
+  commentId: P:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
+  nameWithType: EllipticalConeLimit.Softness
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness*
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_Softness_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
+  nameWithType: EllipticalConeLimit.Softness
 - uid: Jitter2.Dynamics.Constraints.FixedAngle
   name: FixedAngle
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html

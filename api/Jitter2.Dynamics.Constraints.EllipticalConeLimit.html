@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class EllipticalConeLimit | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class EllipticalConeLimit | Jitter2 ">
+      
+      <meta name="description" content="Restricts relative swing to the region between two elliptical cones, leaving twist free.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_Dynamics_Constraints_EllipticalConeLimit.md&amp;value=---%0Auid%3A%20Jitter2.Dynamics.Constraints.EllipticalConeLimit%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit">
+
+
+
+  <h1 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit" class="text-break">
+Class EllipticalConeLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.Dynamics.html">Dynamics</a>.<a class="xref" href="Jitter2.Dynamics.Constraints.html">Constraints</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Restricts relative swing to the region between two elliptical cones, leaving twist free.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class EllipticalConeLimit : Constraint&lt;EllipticalConeLimit.EllipticalConeLimitData&gt;, IDebugDrawable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html">Constraint</a></div>
+      <div><a class="xref" href="Jitter2.Dynamics.Constraints.Constraint-1.html">Constraint</a>&lt;<a class="xref" href="Jitter2.Dynamics.Constraints.EllipticalConeLimit.html">EllipticalConeLimit</a>.<a class="xref" href="Jitter2.Dynamics.Constraints.EllipticalConeLimit.EllipticalConeLimitData.html">EllipticalConeLimitData</a>&gt;</div>
+      <div><span class="xref">EllipticalConeLimit</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="Jitter2.IDebugDrawable.html">IDebugDrawable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint-1.html#Jitter2_Dynamics_Constraints_Constraint_1_Data">Constraint&lt;EllipticalConeLimit.EllipticalConeLimitData&gt;.Data</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint-1.html#Jitter2_Dynamics_Constraints_Constraint_1_IsSmallConstraint">Constraint&lt;EllipticalConeLimit.EllipticalConeLimitData&gt;.IsSmallConstraint</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularSoftness">Constraint.DefaultAngularSoftness</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularBias">Constraint.DefaultAngularBias</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitSoftness">Constraint.DefaultAngularLimitSoftness</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitBias">Constraint.DefaultAngularLimitBias</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">Constraint.DefaultLinearSoftness</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearBias">Constraint.DefaultLinearBias</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearLimitSoftness">Constraint.DefaultLinearLimitSoftness</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearLimitBias">Constraint.DefaultLinearLimitBias</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Body1">Constraint.Body1</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Body2">Constraint.Body2</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Tag">Constraint.Tag</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Handle">Constraint.Handle</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsValid">Constraint.IsValid</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_SmallHandle">Constraint.SmallHandle</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_CheckDataSize__1">Constraint.CheckDataSize&lt;T&gt;()</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero">Constraint.VerifyNotZero()</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">Constraint.DispatchId</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___">Constraint.RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___">Constraint.RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsEnabled">Constraint.IsEnabled</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Body 1 owns the cone frame; body 2 owns the axis being constrained. The boundaries are ellipses
+in swing-angle coordinates (the shortest tilt, resolved along the two frame directions).
+Equal lower and upper boundaries constrain the axis to the cone surface. Identical ranges in
+both directions reproduce a circular cone. This constraint does not restrict translation.</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody1_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody1" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody1">
+  AxisBody1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets body 1's central cone axis in world space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector AxisBody1 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody2_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody2" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.AxisBody2">
+  AxisBody2
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets body 2's constrained axis in world space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector AxisBody2 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Bias_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Bias" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Bias">
+  Bias
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the angular error correction factor. Default is 0.2.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Bias { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Impulse_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Impulse" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Impulse">
+  Impulse
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L254"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Impulse { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongPerpendicular_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongPerpendicular" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongPerpendicular">
+  LimitAlongPerpendicular
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the inner and outer angular semiaxes in the perpendicular direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AngularLimit LimitAlongPerpendicular { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongReference_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_LimitAlongReference" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.LimitAlongReference">
+  LimitAlongReference
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the inner and outer angular semiaxes in the reference direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AngularLimit LimitAlongReference { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ReferenceDirectionBody1_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ReferenceDirectionBody1" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.ReferenceDirectionBody1">
+  ReferenceDirectionBody1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the first ellipse direction in world space, perpendicular to <a class="xref" href="Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_AxisBody1">AxisBody1</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public JVector ReferenceDirectionBody1 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Softness_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Softness" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness">
+  Softness
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L226"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the softness (compliance). Default is 0.001.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Softness { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Create_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Create" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Create">
+  Create()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
+to assign the correct registered solver pair. The id is later written into the
+unmanaged header when the constraint is enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void Create()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)">
+  DebugDraw(IDebugDrawer)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L420"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void DebugDraw(IDebugDrawer drawer)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd><p>The debug drawer to receive visualization primitives.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.notimplementedexception">NotImplementedException</a></dt>
+    <dd><p>Thrown if the derived class does not override this method.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_GetSwing_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_GetSwing_Jitter2_LinearMath_JAngle__Jitter2_LinearMath_JAngle__" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.GetSwing(Jitter2.LinearMath.JAngle@,Jitter2.LinearMath.JAngle@)">
+  GetSwing(out JAngle, out JAngle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L206"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets signed swing-angle coordinates along the reference and perpendicular directions.
+Their Euclidean length is the tilt angle. At exactly opposite axes the swing direction is ambiguous.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void GetSwing(out JAngle alongReference, out JAngle alongPerpendicular)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>alongReference</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+    <dt><code>alongPerpendicular</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)">
+  Initialize(JVector, JVector, AngularLimit, AngularLimit)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes both body axes from the same world-space direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Initialize(JVector axis, JVector referenceDirection, AngularLimit limitAlongReference, AngularLimit limitAlongPerpendicular)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>referenceDirection</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>limitAlongReference</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+    <dt><code>limitAlongPerpendicular</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The reference direction defines the first ellipse semiaxis on body 1. Its component along
+the cone axis is discarded. The second direction is axis cross reference direction.
+A positive inner boundary means the initially aligned pose lies outside the allowed region.
+See the two-axis overload to initialize a pose with nonzero swing.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)">
+  Initialize(JVector, JVector, JVector, AngularLimit, AngularLimit)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes the constraint using world-space axes and a world-space reference direction on body 1.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Initialize(JVector axisBody1, JVector axisBody2, JVector referenceDirectionBody1, AngularLimit limitAlongReference, AngularLimit limitAlongPerpendicular)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>axisBody1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The cone's central axis, attached to body 1.</p>
+</dd>
+    <dt><code>axisBody2</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The axis attached to body 2 whose swing is constrained.</p>
+</dd>
+    <dt><code>referenceDirectionBody1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The first ellipse direction, attached to body 1.</p>
+</dd>
+    <dt><code>limitAlongReference</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd><p>Inner and outer angular semiaxes in the reference direction.</p>
+</dd>
+    <dt><code>limitAlongPerpendicular</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd><p>Inner and outer angular semiaxes in the perpendicular direction.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>A direction is invalid or the reference is parallel to the cone axis.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The limits do not satisfy <a class="xref" href="Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_">SetLimits(AngularLimit, AngularLimit)</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_IterateEllipticalConeLimit_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_IterateEllipticalConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.IterateEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  IterateEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L388"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void IterateEllipticalConeLimit(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
+    <dd></dd>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_PrepareForIterationEllipticalConeLimit_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_PrepareForIterationEllipticalConeLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.PrepareForIterationEllipticalConeLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
+  PrepareForIterationEllipticalConeLimit(ref ConstraintData, in TimeStep)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L269"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void PrepareForIterationEllipticalConeLimit(ref ConstraintData constraint, in TimeStep timeStep)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>constraint</code> <a class="xref" href="Jitter2.Dynamics.Constraints.ConstraintData.html">ConstraintData</a></dt>
+    <dd></dd>
+    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.ResetWarmStart">
+  ResetWarmStart()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ResetWarmStart()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
+Useful after restoring snapshots or other discontinuous state changes where preserving
+warm-starting is undesirable.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit_" data-uid="Jitter2.Dynamics.Constraints.EllipticalConeLimit.SetLimits(Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.AngularLimit)">
+  SetLimits(AngularLimit, AngularLimit)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sets both angular ranges together and clears the cached impulse.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetLimits(AngularLimit limitAlongReference, AngularLimit limitAlongPerpendicular)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>limitAlongReference</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+    <dt><code>limitAlongPerpendicular</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_SetLimits_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Each range must satisfy 0 &lt;= From &lt;= To &lt; pi, with To strictly positive.
+The lower bounds must either both be zero (no inner boundary) or both be positive.
+Equal bounds in both ranges define a fixed elliptical cone surface.
+Fixed zero or pi tilt is unsupported; use HingeAngle with AngularLimit.Full instead.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The ranges violate the requirements above.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L24" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
