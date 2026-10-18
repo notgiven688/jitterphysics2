@@ -33,22 +33,24 @@ public class Demo01 : IDemo, IDrawUpdate
 
             JVector startPos = new JVector(-10, 8, -20);
             const int numElements = 30;
+            const float panelLength = 0.7f;
+            const float panelSpacing = 0.8f;
 
             for (int i = 0; i < numElements; i++)
             {
                 var nbody = world.CreateRigidBody();
-                nbody.AddShape(new BoxShape(0.7f, 0.1f, 4f));
-                nbody.Position = startPos + new JVector(i * 0.8f, 0, 0);
+                nbody.AddShape(new BoxShape(panelLength, 0.1f, 4f));
+                nbody.Position = startPos + new JVector(i * panelSpacing, 0, 0);
 
                 if (i == 0)
                 {
                     var hinge = new HingeJoint(world, world.NullBody, nbody,
-                        startPos + new JVector(i * 0.8f - 0.7f, 0, 0), JVector.UnitZ);
+                        nbody.Position - JVector.UnitX * (panelLength * 0.5f), JVector.UnitZ);
                 }
                 else
                 {
                     var hinge = new HingeJoint(world, body, nbody,
-                        startPos + new JVector(i * 0.8f - 0.1f, 0, 0), JVector.UnitZ);
+                        (body.Position + nbody.Position) * 0.5f, JVector.UnitZ);
 
                     hinge.BallSocket.Softness = 0.02f;
                     hinges.Add(hinge);
@@ -57,7 +59,7 @@ public class Demo01 : IDemo, IDrawUpdate
                 if (i == numElements - 1)
                 {
                     var hinge = new HingeJoint(world, nbody, world.NullBody,
-                        startPos + new JVector(i * 0.8f + 0.7f, 0, 0), JVector.UnitZ);
+                        nbody.Position + JVector.UnitX * (panelLength * 0.5f), JVector.UnitZ);
                 }
 
                 body = nbody;
