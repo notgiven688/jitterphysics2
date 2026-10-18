@@ -178,11 +178,17 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         Real acc = data.AccumulatedImpulse;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * acc, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * acc, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * acc, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * acc, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -254,11 +260,17 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * lambda, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * lambda, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * lambda, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * lambda, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

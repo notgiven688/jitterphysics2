@@ -111,8 +111,14 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
 
         data.Bias = -error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(data.AccumulatedImpulse, data.Jacobian), body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -164,8 +170,14 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
 
         data.AccumulatedImpulse += lambda;
 
-        body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(JVector.TransposedTransform(lambda, data.Jacobian), body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

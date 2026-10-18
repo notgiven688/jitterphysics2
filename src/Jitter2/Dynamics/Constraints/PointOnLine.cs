@@ -286,11 +286,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * acc.X + jacobian[5] * acc.Y + jacobian[9] * acc.Z, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * acc.X + jacobian[5] * acc.Y + jacobian[9] * acc.Z, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -445,11 +451,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda.X + jacobian[5] * lambda.Y + jacobian[9] * lambda.Z, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda.X + jacobian[5] * lambda.Y + jacobian[9] * lambda.Z, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

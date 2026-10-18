@@ -290,8 +290,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
+        }
     }
 
     /// <summary>
@@ -348,8 +354,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         data.AccumulatedImpulse += lambda;
         lambda = data.AccumulatedImpulse - oldAccumulatedImpulse;
 
-        body1.Velocity -= JVector.Multiply(lambda * data.Jacobian, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(lambda * data.Jacobian, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(lambda * data.Jacobian, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(lambda * data.Jacobian, body2.InverseMassVector);
+        }
     }
 
     /// <inheritdoc/>

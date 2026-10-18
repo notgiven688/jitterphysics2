@@ -165,8 +165,14 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
         data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
-        body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
@@ -215,7 +221,13 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.Velocity -= JVector.Multiply(j1 * lambda, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(j2 * lambda, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(j1 * lambda, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(j2 * lambda, body2.InverseMassVector);
+        }
     }
 }

@@ -231,8 +231,14 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -343,7 +349,13 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.AngularVelocity += JVector.Transform(lambda * data.Jacobian, body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(lambda * data.Jacobian, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(lambda * data.Jacobian, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(lambda * data.Jacobian, body2.InverseInertiaWorld);
+        }
     }
 }

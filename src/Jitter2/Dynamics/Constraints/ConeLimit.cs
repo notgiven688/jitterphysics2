@@ -333,11 +333,17 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         data.Bias = -error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.AngularVelocity +=
-            JVector.Transform(data.AccumulatedImpulse * jacobian[0], body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity +=
+                JVector.Transform(data.AccumulatedImpulse * jacobian[0], body1.InverseInertiaWorld);
+        }
 
-        body2.AngularVelocity +=
-            JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity +=
+                JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -410,8 +416,14 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

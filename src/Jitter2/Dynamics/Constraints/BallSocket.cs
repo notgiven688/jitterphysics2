@@ -169,11 +169,17 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity -= JVector.Multiply(acc, body1.InverseMassVector);
-        body1.AngularVelocity -= JVector.Transform(JVector.Transform(acc, cr1), body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(acc, body1.InverseMassVector);
+            body1.AngularVelocity -= JVector.Transform(JVector.Transform(acc, cr1), body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(acc, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(acc, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(JVector.Transform(acc, cr2), body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -232,11 +238,17 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 
         data.AccumulatedImpulse += lambda;
 
-        body1.Velocity -= JVector.Multiply(lambda, body1.InverseMassVector);
-        body1.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, cr1), body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(lambda, body1.InverseMassVector);
+            body1.AngularVelocity -= JVector.Transform(JVector.Transform(lambda, cr1), body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(lambda, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(lambda, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(JVector.Transform(lambda, cr2), body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

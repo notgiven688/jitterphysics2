@@ -164,8 +164,14 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 
         data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
-        body1.AngularVelocity -= JVector.Transform(j1 * data.AccumulatedImpulse, body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity -= JVector.Transform(j1 * data.AccumulatedImpulse, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
+        }
     }
 
     public static void IterateAngularMotor(ref ConstraintData constraint, in TimeStep timeStep)
@@ -190,8 +196,14 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.AngularVelocity -= JVector.Transform(j1 * lambda, body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity -= JVector.Transform(j1 * lambda, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);
+        }
     }
 
     public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
