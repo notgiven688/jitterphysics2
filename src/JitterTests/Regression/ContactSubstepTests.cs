@@ -93,20 +93,27 @@ public class ContactSubstepTests
         Assert.That(body.Contacts, Has.Count.EqualTo(1));
     }
 
-    [TestCase(SolveMode.Regular, 1)]
-    [TestCase(SolveMode.Regular, 3)]
-    [TestCase(SolveMode.Regular, 10)]
-    [TestCase(SolveMode.Deterministic, 1)]
-    [TestCase(SolveMode.Deterministic, 3)]
-    [TestCase(SolveMode.Deterministic, 10)]
-    public void RollingSphere_DoesNotAccelerateWithSolverSubsteps(SolveMode solveMode, int substeps)
+    [TestCase(SolveMode.Regular, 1, false)]
+    [TestCase(SolveMode.Regular, 3, false)]
+    [TestCase(SolveMode.Regular, 10, false)]
+    [TestCase(SolveMode.Deterministic, 1, false)]
+    [TestCase(SolveMode.Deterministic, 3, false)]
+    [TestCase(SolveMode.Deterministic, 10, false)]
+    [TestCase(SolveMode.Regular, 1, true)]
+    [TestCase(SolveMode.Regular, 3, true)]
+    [TestCase(SolveMode.Regular, 10, true)]
+    [TestCase(SolveMode.Deterministic, 1, true)]
+    [TestCase(SolveMode.Deterministic, 3, true)]
+    [TestCase(SolveMode.Deterministic, 10, true)]
+    public void RollingSphere_DoesNotAccelerateWithSolverSubsteps(
+        SolveMode solveMode, int substeps, bool auxiliaryContacts)
     {
         using World world = new();
         world.SubstepCount = substeps;
         world.SolverIterations = (4, 2);
         world.SolveMode = solveMode;
         world.AllowDeactivation = false;
-        world.EnableAuxiliaryContactPoints = false;
+        world.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
         RigidBody floor = world.CreateRigidBody();
         floor.AddShape(new BoxShape(200, 2, 200));
@@ -120,8 +127,8 @@ public class ContactSubstepTests
         sphere.AngularVelocity = -2 * JVector.UnitZ;
         sphere.Damping = (0, 0);
 
-        // Supply an exact sphere/floor contact so this tests the solver independently
-        // of narrowphase accuracy and auxiliary contact generation.
+        // Supply an exact sphere/floor contact to isolate contact generation and solving
+        // from narrowphase accuracy.
         ExactSphereFloorContact filter = new(floor);
         world.NarrowPhaseFilter = filter;
         const int steps = 1000;

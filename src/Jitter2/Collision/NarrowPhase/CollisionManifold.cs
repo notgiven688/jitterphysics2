@@ -534,11 +534,15 @@ public unsafe struct CollisionManifold
             }
         }
 
-        // If none of the feature logic produced anything, fall back to the original deepest pair.
-        if (manifoldCount == 0)
+        // Sampling support points around the normal can leave a single point offset from the
+        // original contact, especially on curved surfaces. This offset is an artifact of the
+        // manifold algorithm and can make a resting sphere start rolling. If we found at most
+        // one point, use the original deepest contact pair instead.
+        if (manifoldCount <= 1)
         {
-            mA[manifoldCount] = pAloc;
-            mB[manifoldCount++] = pBloc;
+            mA[0] = pAloc;
+            mB[0] = pBloc;
+            manifoldCount = 1;
         }
 
     Finalize:

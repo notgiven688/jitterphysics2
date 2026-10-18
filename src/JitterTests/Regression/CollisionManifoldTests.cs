@@ -98,6 +98,34 @@ public class CollisionManifoldTests
         Assert.That(negativeXNegativeZ, Is.True);
     }
 
+    [TestCase(0.5, false)]
+    [TestCase(0.5, true)]
+    [TestCase(1.0, false)]
+    [TestCase(1.0, true)]
+    public void SphereAgainstFloor_PreservesOriginalContact(double radius, bool sphereFirst)
+    {
+        RigidBodyShape floor = new BoxShape(200, 200, 200);
+        RigidBodyShape sphere = new SphereShape((Real)radius);
+        JVector floorPosition = new(0, -100, 0);
+        JVector spherePosition = new(3, (Real)radius - (Real)0.005, -2);
+        JVector floorPoint = new(3, 0, -2);
+        JVector spherePoint = new(3, -(Real)0.005, -2);
+
+        CollisionManifold manifold = default;
+        manifold.BuildManifold(sphereFirst ? sphere : floor, sphereFirst ? floor : sphere,
+            JQuaternion.Identity, JQuaternion.Identity,
+            sphereFirst ? spherePosition : floorPosition, sphereFirst ? floorPosition : spherePosition,
+            sphereFirst ? spherePoint : floorPoint, sphereFirst ? floorPoint : spherePoint,
+            sphereFirst ? -JVector.UnitY : JVector.UnitY);
+
+        const Real epsilon = (Real)1e-5;
+        Assert.That(manifold.Count, Is.EqualTo(1));
+        Assert.That(JVector.MaxAbs(manifold.ManifoldA[0] - (sphereFirst ? spherePoint : floorPoint)),
+            Is.LessThan(epsilon));
+        Assert.That(JVector.MaxAbs(manifold.ManifoldB[0] - (sphereFirst ? floorPoint : spherePoint)),
+            Is.LessThan(epsilon));
+    }
+
     [TestCase]
     public void EqualFaceBoxes_ProduceFourCornerContacts()
     {
