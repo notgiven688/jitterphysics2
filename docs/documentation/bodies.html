@@ -131,14 +131,58 @@ In the body's local reference frame, the center of mass is <span class="math">\(
 Shapes or combinations of shapes must be translated accordingly.</p>
 </div>
 <h3 id="debugging-shapes">Debugging shapes</h3>
-<p>The <code>RigidBody</code> class offers the <code>body.DebugDraw(IDebugDrawer drawer)</code> method which creates a triangle hull for each shape added to the body and calls the <code>drawer.DrawTriangle</code> method in the provided <code>IDebugDrawer</code> implementation.
-The coordinates of the triangles are in world space and can be drawn to debug the collision shape of the rigid body.</p>
+<p>Debug drawing shows the collision shapes attached to a body at their current positions and rotations.
+To display them, connect Jitter to your renderer by implementing <code>IDebugDrawer</code>:</p>
+<pre><code class="lang-cs">using Jitter2;
+using Jitter2.LinearMath;
+
+public sealed class PhysicsDebugDrawer : IDebugDrawer
+{
+    public void DrawSegment(in JVector pA, in JVector pB, uint color)
+    {
+        // Draw a line from pA to pB using your renderer.
+        // The positions are in world space; color is packed as 0xRRGGBBAA.
+    }
+
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
+    {
+        DrawSegment(pA, pB, color);
+        DrawSegment(pB, pC, color);
+        DrawSegment(pC, pA, color);
+    }
+}
+</code></pre>
+<p>Replace the comment in <code>DrawSegment</code> with a call to your renderer's line-drawing function.
+Create one drawer and reuse it:</p>
+<pre><code class="lang-cs">IDebugDrawer drawer = new PhysicsDebugDrawer();
+</code></pre>
+<p>Then call this in your application's drawing loop, after the physics step has completed:</p>
+<pre><code class="lang-cs">body.DebugDraw(drawer);
+</code></pre>
 <div class="WARNING">
 <h5>Warning</h5>
-<p><strong>body.DebugDraw performance</strong>
-Every call to <code>body.DebugDraw</code> generates the triangle hulls on the fly.
-Since this is a slow operation the method should only be called for debugging purposes.</p>
+<p><strong>Debug drawing can be slow</strong>
+Drawing many bodies or using high detail settings can significantly reduce the frame rate.
+Point clouds and custom shapes can be especially expensive to draw.
+Limit debug drawing to the objects you need to inspect.</p>
 </div>
+<p>This draws all shapes attached to <code>body</code>, including their offsets and rotations. The drawer above
+draws each triangle as three edges, producing a wireframe. For filled surfaces, call your renderer's
+triangle-drawing function in <code>DrawTriangle</code>; see <a href="shapes.html#debug-drawing">shape drawing</a>.</p>
+<p>The default drawing is white. To draw green shapes and make curved surfaces smoother:</p>
+<pre><code class="lang-cs">body.DebugDraw(drawer, new DebugDrawSettings
+{
+    CurrentColor = DebugDrawColors.Green,
+    Segments = 64
+});
+</code></pre>
+<p>Spheres, capsules, cylinders, and cones are drawn using triangles. <code>Segments</code> sets the number of
+pieces around each circular cross-section; its default is 48. For example, <code>Segments = 8</code> gives a
+cylinder an octagonal outline, while <code>64</code> makes it look much rounder. Higher values require more
+triangles. Boxes, triangle shapes, and convex hulls already have flat faces, so <code>Segments</code> has no
+effect on them. These settings affect only the visualization.</p>
+<p><code>PointCloudShape</code> and custom shapes may use an approximate surface for debug drawing. See
+<a href="shapes.html#debug-drawing">shape drawing</a> for its limitations.</p>
 <h2 id="forces-and-impulses">Forces and impulses</h2>
 <p>Forces and torques can be applied using <code>body.AddForce</code>. They accumulate until the next <code>world.Step</code> and are cleared at the end of that call. The resulting velocity change is applied during the <strong>following</strong> step. For a body initially at rest, with no gravity or other influences:</p>
 <pre><code class="lang-cs">body.AddForce(force);

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface IDebugDrawer | Jitter2 ">
       
-      <meta name="description" content="Defines an interface for drawing debug visualization elements.">
+      <meta name="description" content="Receives colored line segments and triangles for debug visualization, in world space.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_IDebugDrawer" data-uid="Jitter2.IDebugDrawer" class="text-break">
-Interface IDebugDrawer  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L26"><i class="bi bi-code-slash"></i></a>
+Interface IDebugDrawer  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Interface IDebugDrawer  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Defines an interface for drawing debug visualization elements.</p>
+  <div class="markdown summary"><p>Receives colored line segments and triangles for debug visualization, in world space.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -112,70 +112,105 @@ Interface IDebugDrawer  <a class="header-action link-secondary" title="View sour
 
 
 
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArc_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_">DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_Jitter2_DebugDrawSettings__">DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, uint, in DebugDrawSettings)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCircle_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawCircle(IDebugDrawer, JVector, JVector, JVector, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCone_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_System_Int32_">DebugDrawGeometry.DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_">DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_Jitter2_DebugDrawSettings__">DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, in DebugDrawSettings)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_">DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_">DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPlane_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_">DebugDrawGeometry.DrawPlane(IDebugDrawer, JVector, JVector, JVector, float, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPoint_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_">DebugDrawGeometry.DrawPoint(IDebugDrawer, JVector, float, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSegment_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">DebugDrawGeometry.DrawSegment(IDebugDrawer, in JVector, in JVector)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSolidArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawSolidArrow(IDebugDrawer, JVector, JVector, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSphere_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawSphere(IDebugDrawer, JVector, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSpring_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector__System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawSpring(IDebugDrawer, JVector, JVector, ref JVector, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawStop_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_">DebugDrawGeometry.DrawStop(IDebugDrawer, JVector, JVector, float, uint)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_System_Int32_">DebugDrawGeometry.DrawWireArrow(IDebugDrawer, JVector, JVector, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_Int32_">DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, int)</a>
+  </div>
+  <div>
+      <a class="xref" href="Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_System_Int32_">DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint, int)</a>
+  </div>
+  </dd></dl>
 
 
 
+  <h2 id="Jitter2_IDebugDrawer_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Both drawing methods must be implemented. A wireframe drawer can draw triangles as three line segments.
+Use <a class="xref" href="Jitter2.DebugDrawGeometry.html">DebugDrawGeometry</a> to generate point markers and other drawing geometry.</p>
+</div>
 
 
   <h2 class="section" id="methods">Methods
 </h2>
 
 
-  <a id="Jitter2_IDebugDrawer_DrawPoint_" data-uid="Jitter2.IDebugDrawer.DrawPoint*"></a>
-
-  <h3 id="Jitter2_IDebugDrawer_DrawPoint_Jitter2_LinearMath_JVector__" data-uid="Jitter2.IDebugDrawer.DrawPoint(Jitter2.LinearMath.JVector@)">
-  DrawPoint(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L47"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Draws a point at the specified position.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void DrawPoint(in JVector p)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>p</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The position of the point.</p>
-</dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <a id="Jitter2_IDebugDrawer_DrawSegment_" data-uid="Jitter2.IDebugDrawer.DrawSegment*"></a>
 
-  <h3 id="Jitter2_IDebugDrawer_DrawSegment_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  DrawSegment(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_IDebugDrawer_DrawSegment_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_UInt32_" data-uid="Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)">
+  DrawSegment(in JVector, in JVector, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L44"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Draws a line segment between two points.</p>
+  <div class="markdown level1 summary"><p>Draws a line segment between two points with a color packed as <code>0xRRGGBBAA</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void DrawSegment(in JVector pA, in JVector pB)</code></pre>
+    <pre><code class="lang-csharp hljs">void DrawSegment(in JVector pA, in JVector pB, uint color)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>pA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The start point of the segment.</p>
+    <dd><p>The start point of the segment in world space.</p>
 </dd>
     <dt><code>pB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The end point of the segment.</p>
+    <dd><p>The end point of the segment in world space.</p>
+</dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The color packed as <code>0xRRGGBBAA</code>.</p>
 </dd>
   </dl>
 
@@ -192,29 +227,32 @@ Interface IDebugDrawer  <a class="header-action link-secondary" title="View sour
 
   <a id="Jitter2_IDebugDrawer_DrawTriangle_" data-uid="Jitter2.IDebugDrawer.DrawTriangle*"></a>
 
-  <h3 id="Jitter2_IDebugDrawer_DrawTriangle_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
-  DrawTriangle(in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_IDebugDrawer_DrawTriangle_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_UInt32_" data-uid="Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)">
+  DrawTriangle(in JVector, in JVector, in JVector, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Draws a triangle defined by three vertices.</p>
+  <div class="markdown level1 summary"><p>Draws a triangle with a color packed as <code>0xRRGGBBAA</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">void DrawTriangle(in JVector pA, in JVector pB, in JVector pC)</code></pre>
+    <pre><code class="lang-csharp hljs">void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>pA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The first vertex of the triangle.</p>
+    <dd><p>The first vertex in world space.</p>
 </dd>
     <dt><code>pB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The second vertex of the triangle.</p>
+    <dd><p>The second vertex in world space.</p>
 </dd>
     <dt><code>pC</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The third vertex of the triangle.</p>
+    <dd><p>The third vertex in world space.</p>
+</dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The color packed as <code>0xRRGGBBAA</code>.</p>
 </dd>
   </dl>
 
@@ -225,6 +263,10 @@ Interface IDebugDrawer  <a class="header-action link-secondary" title="View sour
 
 
 
+  <h4 class="section" id="Jitter2_IDebugDrawer_DrawTriangle_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_UInt32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Vertices are counterclockwise when viewed from the front. The front normal points along
+<code>(pB - pA) x (pC - pA)</code>. Implementations may use back-face culling.</p>
+</div>
 
 
 
@@ -233,7 +275,7 @@ Interface IDebugDrawer  <a class="header-action link-secondary" title="View sour
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L26" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/IDebugDrawer.cs/#L36" class="edit-link">Edit this page</a>
         </div>
 
 

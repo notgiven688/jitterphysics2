@@ -168,6 +168,21 @@ These edges are often referred to as 'internal edges' and can cause major proble
 <p>The vertices of the <code>SoftBodyShape</code> are represented by rigid bodies.
 The shapes (triangle and tetrahedron) are dynamically defined by the position of the vertices.
 A <code>SoftBodyShape</code> is not added to a body.</p>
+<h2 id="debug-drawing">Debug drawing</h2>
+<p>Shapes can be drawn individually:</p>
+<pre><code class="lang-cs">var shape = new SphereShape(radius: 1);
+shape.DebugDraw(drawer);
+</code></pre>
+<p>Attached shapes follow their body's position and rotation. The sphere above appears at the world
+origin until it is attached to a body. See <a href="bodies.html#debugging-shapes">debugging shapes on a body</a>
+for setting up the drawer and adjusting color and smoothness.</p>
+<p>Your drawer's <code>DrawTriangle</code> implementation chooses filled triangles or wireframes.
+See <a class="xref" href="../../api/Jitter2.IDebugDrawer.html">IDebugDrawer</a> for the drawing methods.</p>
+<div class="WARNING">
+<h5>Warning</h5>
+<p>Debug drawing can be slow. Point clouds and custom shapes may appear with gaps or overlapping
+faces. Higher detail settings increase the cost and do not guarantee a more accurate drawing.</p>
+</div>
 <h2 id="custom-shapes">Custom shapes</h2>
 <p>Custom shapes can easily be implemented.
 A shape is defined by its support function—which can be looked up or derived.</p>

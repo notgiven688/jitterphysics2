@@ -278,6 +278,85 @@ The softness and bias parameters can be tweaked for optimal results.
 Better constraint behavior can also be achieved by sub-stepping, see <a href="world.html">World</a>.</p>
 <h3 id="enabledisable-constraints">Enable/Disable constraints</h3>
 <p>Constraints can be temporarily enabled or disabled using <code>constraint.IsEnabled</code>.</p>
+<h2 id="debug-drawing">Debug drawing</h2>
+<p>Constraints and joints can draw their anchors, axes, and limits through an <code>IDebugDrawer</code>:</p>
+<pre><code class="lang-cs">constraint.DebugDraw(drawer);
+joint.DebugDraw(drawer);
+</code></pre>
+<p>See <a href="bodies.html#debugging-shapes">setting up a debug drawer</a> to connect this to your renderer.
+Call these methods after the physics step, while the world is not being modified by another thread.</p>
+<p>Green shows reference guides and upper or fixed limits, red shows lower limits, and white shows
+current anchors and directions. Coordinate frames use red for X, green for Y, and blue for Z.</p>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>Reading the drawing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BallSocket</code></td>
+<td>The two anchor markers should coincide. The line between them shows separation.</td>
+</tr>
+<tr>
+<td><code>DistanceLimit</code></td>
+<td>Spheres around the first anchor show the allowed distances to the second anchor.</td>
+</tr>
+<tr>
+<td><code>PointOnLine</code></td>
+<td>Crosses mark stops along the line; arrows mark unbounded ends. A white line shows displacement away from the line.</td>
+</tr>
+<tr>
+<td><code>PointOnPlane</code></td>
+<td>Grids show the limiting planes. A white projection line appears when the anchor is outside the allowed region. The planes extend beyond the grids.</td>
+</tr>
+<tr>
+<td><code>ConeLimit</code>, <code>EllipticalConeLimit</code></td>
+<td>The white axis must stay within the outer cone and outside any red inner cone. Equal limits allow motion along one cone surface.</td>
+</tr>
+<tr>
+<td><code>HingeAngle</code></td>
+<td>An arc shows the allowed angles, or a green ray marks a fixed angle. The white ray shows the current angle. Short axis arrows reveal hinge misalignment.</td>
+</tr>
+<tr>
+<td><code>TwistAngle</code></td>
+<td>The dial shows the current twist and its limits. The white axis shows the current body direction; swing remains free.</td>
+</tr>
+<tr>
+<td><code>FixedAngle</code></td>
+<td>Two frames compare body 2's target and current orientations, drawn near the connected body. Corresponding axes should be parallel. A joint with a ball socket places the target frame at its anchor.</td>
+</tr>
+<tr>
+<td><code>LinearMotor</code></td>
+<td>Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still.</td>
+</tr>
+<tr>
+<td><code>AngularMotor</code></td>
+<td>A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is static or kinematic. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow.</td>
+</tr>
+<tr>
+<td><code>SpringConstraint</code></td>
+<td>The coil joins the anchors; the green cross marks the rest length along the spring direction.</td>
+</tr>
+</tbody>
+</table>
+<p>Pass <code>DebugDrawSettings</code> to change the appearance:</p>
+<pre><code class="lang-cs">constraint.DebugDraw(drawer, new DebugDrawSettings
+{
+    GuideSize = 2,
+    FrameSize = 1.5f
+});
+</code></pre>
+<p><code>GuideSize</code> changes the size of guides and markers. <code>FrameSize</code> sets the length of coordinate-frame
+axes in world units. Arrowhead size and shaft thickness are adjusted separately using
+<code>ArrowHeadSize</code> and <code>ArrowShaftRadius</code>. Physical distances and angular limits keep their actual values.
+See <a class="xref" href="../../api/Jitter2.DebugDrawSettings.html">DebugDrawSettings</a> for color, arrow, and detail settings.</p>
+<p>Arrows are solid by default. Set <code>SolidArrows = false</code> for wire arrows. <code>ArrowSegments</code> controls
+arrow smoothness. Wire arrowheads connect every vertex around the base to the tip.
+Your drawer's <code>DrawTriangle</code> implementation controls whether solid arrows and anchor markers
+appear filled or as triangle edges. When drawing your own guides, <code>DrawArrow</code> and <code>DrawFrame</code>
+use the same defaults; <code>DrawWireArrow</code> and <code>DrawWireFrame</code> explicitly draw wire geometry.</p>
 <h2 id="constraint-lifetime">Constraint lifetime</h2>
 <p>Constraints are attached to their two rigid bodies. They can become invalid without an explicit
 call to <code>world.Remove(constraint)</code> when:</p>

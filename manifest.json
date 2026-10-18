@@ -1195,6 +1195,48 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DebugDrawColors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DebugDrawColors.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DebugDrawColors",
+      "Summary": "<p sourcefile=\"api/Jitter2.DebugDrawColors.yml\" sourcestartlinenumber=\"1\">Common colors packed as <code>0xRRGGBBAA</code>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DebugDrawGeometry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DebugDrawGeometry.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DebugDrawGeometry",
+      "Summary": "<p sourcefile=\"api/Jitter2.DebugDrawGeometry.yml\" sourcestartlinenumber=\"1\">Renderer-independent drawing geometry emitted through <xref href=\"Jitter2.IDebugDrawer\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.DebugDrawSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.DebugDrawSettings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.DebugDrawSettings",
+      "Summary": "<p sourcefile=\"api/Jitter2.DebugDrawSettings.yml\" sourcestartlinenumber=\"1\">Controls the size, detail, and colors of debug visualizations.\nA default-initialized value uses the same settings as <xref href=\"Jitter2.DebugDrawSettings.Default\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Dynamics.Arbiter.yml",
       "output": {
         ".html": {
@@ -1863,7 +1905,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.IDebugDrawer",
-      "Summary": "<p sourcefile=\"api/Jitter2.IDebugDrawer.yml\" sourcestartlinenumber=\"1\">Defines an interface for drawing debug visualization elements.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.IDebugDrawer.yml\" sourcestartlinenumber=\"1\">Receives colored line segments and triangles for debug visualization, in world space.</p>\n"
     },
     {
       "type": "ManagedReference",

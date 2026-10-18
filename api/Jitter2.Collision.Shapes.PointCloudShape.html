@@ -104,7 +104,7 @@ this shape should ideally be used for a small number of points (~300).</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PointCloudShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, ICloneableShape&lt;PointCloudShape&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class PointCloudShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, IDebugDrawable, ICloneableShape&lt;PointCloudShape&gt;</code></pre>
   </div>
 
 
@@ -130,6 +130,7 @@ this shape should ideally be used for a small number of points (~300).</p>
       <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></div>
+      <div><a class="xref" href="Jitter2.IDebugDrawable.html">IDebugDrawable</a></div>
       <div><a class="xref" href="Jitter2.Collision.Shapes.ICloneableShape-1.html">ICloneableShape</a>&lt;<a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a>&gt;</div>
     </dd>
   </dl>
@@ -140,6 +141,9 @@ this shape should ideally be used for a small number of points (~300).</p>
     <dd>
     <div>
       <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_RigidBody">RigidBodyShape.RigidBody</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__">RigidBodyShape.DebugDraw(IDebugDrawer, in DebugDrawSettings)</a>
     </div>
     <div>
       <a class="xref" href="Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Velocity">RigidBodyShape.Velocity</a>
@@ -167,6 +171,12 @@ this shape should ideally be used for a small number of points (~300).</p>
     </div>
     <div>
       <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_System_Single_">Shape.SweptExpandBoundingBox(float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_">Shape.DebugDraw(IDebugDrawer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__">Shape.DebugDrawLocal&lt;TSink&gt;(ref TSink, in DebugDrawSettings)</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>

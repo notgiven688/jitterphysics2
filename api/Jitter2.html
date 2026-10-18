@@ -101,6 +101,16 @@ This attribute is primarily informational and used for documentation purposes.</
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.DebugDrawColors.html">DebugDrawColors</a></dt>
+      <dd><p>Common colors packed as <code>0xRRGGBBAA</code>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.DebugDrawGeometry.html">DebugDrawGeometry</a></dt>
+      <dd><p>Renderer-independent drawing geometry emitted through <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Logger.html">Logger</a></dt>
       <dd><p>Provides logging functionality.</p>
 </dd>
@@ -136,6 +146,12 @@ by defining the <code>USE_DOUBLE_PRECISION</code> symbol.</p>
 Structs
 </h3>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.DebugDrawSettings.html">DebugDrawSettings</a></dt>
+      <dd><p>Controls the size, detail, and colors of debug visualizations.
+A default-initialized value uses the same settings as <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Default">Default</a>.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
       <dd><p>Timing information for a simulation step and its solver substeps.</p>
 </dd>
@@ -155,7 +171,7 @@ Interfaces
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
-      <dd><p>Defines an interface for drawing debug visualization elements.</p>
+      <dd><p>Receives colored line segments and triangles for debug visualization, in world space.</p>
 </dd>
     </dl>
     <h3 id="enums">

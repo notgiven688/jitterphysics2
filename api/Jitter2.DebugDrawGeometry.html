@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DebugDrawGeometry | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DebugDrawGeometry | Jitter2 ">
+      
+      <meta name="description" content="Renderer-independent drawing geometry emitted through .">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_DebugDrawGeometry.md&amp;value=---%0Auid%3A%20Jitter2.DebugDrawGeometry%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.DebugDrawGeometry">
+
+
+
+  <h1 id="Jitter2_DebugDrawGeometry" data-uid="Jitter2.DebugDrawGeometry" class="text-break">
+Class DebugDrawGeometry  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Renderer-independent drawing geometry emitted through <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a>.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class DebugDrawGeometry</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DebugDrawGeometry</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Jitter2_DebugDrawGeometry_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Directions must be finite and nonzero. Reference directions are projected onto the drawing plane.</p>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawArc_" data-uid="Jitter2.DebugDrawGeometry.DrawArc*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawArc_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawArc(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32)">
+  DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a circular arc. Angles are measured from the reference direction around the axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawArc(this IDebugDrawer drawer, JVector center, JVector axis, JVector reference, JAngle from, JAngle to, float radius, uint color, int segments = 48)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>reference</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawArrow_" data-uid="Jitter2.DebugDrawGeometry.DrawArrow*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32)">
+  DrawArrow(IDebugDrawer, JVector, JVector, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L168"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an arrow using the default visualization settings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>vector</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawArrow_" data-uid="Jitter2.DebugDrawGeometry.DrawArrow*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_Jitter2_DebugDrawSettings__" data-uid="Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,Jitter2.DebugDrawSettings@)">
+  DrawArrow(IDebugDrawer, JVector, JVector, uint, in DebugDrawSettings)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L202"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an arrow using the settings' style, shaft thickness, arrowhead size, and detail.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color, in DebugDrawSettings settings)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>vector</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>settings</code> <a class="xref" href="Jitter2.DebugDrawSettings.html">DebugDrawSettings</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawCircle_" data-uid="Jitter2.DebugDrawGeometry.DrawCircle*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawCircle_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawCircle(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)">
+  DrawCircle(IDebugDrawer, JVector, JVector, JVector, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a circle in the plane perpendicular to the axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawCircle(this IDebugDrawer drawer, JVector center, JVector axis, JVector reference, float radius, uint color, int segments = 48)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>reference</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawCone_" data-uid="Jitter2.DebugDrawGeometry.DrawCone*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawCone_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawCone(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32,System.Int32)">
+  DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an elliptical cone on a sphere, using angular radii along two perpendicular directions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawCone(this IDebugDrawer drawer, JVector origin, JVector axis, JVector reference, JAngle alongReference, JAngle alongPerpendicular, float radius, uint color, int segments = 48, int spokeOffset = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>reference</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>alongReference</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+    <dt><code>alongPerpendicular</code> <a class="xref" href="Jitter2.LinearMath.JAngle.html">JAngle</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+    <dt><code>spokeOffset</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion)">
+  DrawFrame(IDebugDrawer, JVector, JQuaternion)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws the three axes of an orientation using the default visualization settings.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_Jitter2_DebugDrawSettings__" data-uid="Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,Jitter2.DebugDrawSettings@)">
+  DrawFrame(IDebugDrawer, JVector, JQuaternion, in DebugDrawSettings)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L308"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an orientation frame using the settings' frame size, axis colors, and arrowhead detail.
+Axis length uses FrameSize; shaft radius and arrowhead size stay fixed in world units.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, in DebugDrawSettings settings)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>settings</code> <a class="xref" href="Jitter2.DebugDrawSettings.html">DebugDrawSettings</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32)">
+  DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an orientation frame with the requested size and a single color.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, float size, uint color)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32)">
+  DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws an orientation frame with the requested size and axis colors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, float size, uint xColor, uint yColor, uint zColor)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>xColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>yColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>zColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawPlane_" data-uid="Jitter2.DebugDrawGeometry.DrawPlane*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawPlane_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawPlane(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)">
+  DrawPlane(IDebugDrawer, JVector, JVector, JVector, float, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a finite grid representing an infinite plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPlane(this IDebugDrawer drawer, JVector center, JVector normal, JVector reference, float halfExtent, uint color)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>reference</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>halfExtent</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawPoint_" data-uid="Jitter2.DebugDrawGeometry.DrawPoint*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawPoint_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawPoint(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32)">
+  DrawPoint(IDebugDrawer, JVector, float, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a spherical point marker.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPoint(this IDebugDrawer drawer, JVector point, float radius, uint color)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd><p>The debug drawer receiving the triangles.</p>
+</dd>
+    <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The center of the marker in world space.</p>
+</dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The sphere radius in world units. Must be finite and nonnegative.</p>
+</dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>The color packed as <code>0xRRGGBBAA</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_DebugDrawGeometry_DrawPoint_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A zero radius draws nothing.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawSegment_" data-uid="Jitter2.DebugDrawGeometry.DrawSegment*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawSegment_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.DebugDrawGeometry.DrawSegment(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  DrawSegment(IDebugDrawer, in JVector, in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a white line segment between two points in world space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawSegment(this IDebugDrawer drawer, in JVector from, in JVector to)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawSolidArrow_" data-uid="Jitter2.DebugDrawGeometry.DrawSolidArrow*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawSolidArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawSolidArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)">
+  DrawSolidArrow(IDebugDrawer, JVector, JVector, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L220"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a closed solid arrow with a cylindrical shaft and a cone head.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawSolidArrow(this IDebugDrawer drawer, JVector origin, JVector vector, float radius, uint color, int segments = 12)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>vector</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Shaft radius in world units, clamped to 5% of the arrow length and half the head's base radius. Must be finite and nonnegative.</p>
+</dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of sides around the shaft and head, from 3 to 4096. Default is 12.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_DebugDrawGeometry_DrawSolidArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Triangles face outward so the arrow can be rendered with back-face culling.
+Zero-radius and very short arrows are represented by a segment.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawSphere_" data-uid="Jitter2.DebugDrawGeometry.DrawSphere*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawSphere_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawSphere(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)">
+  DrawSphere(IDebugDrawer, JVector, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws three perpendicular great circles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawSphere(this IDebugDrawer drawer, JVector center, float radius, uint color, int segments = 48)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawSpring_" data-uid="Jitter2.DebugDrawGeometry.DrawSpring*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawSpring_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector__System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawSpring(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector@,System.Single,System.UInt32,System.Int32)">
+  DrawSpring(IDebugDrawer, JVector, JVector, ref JVector, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L328"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a spring. Keep a separate reference direction for each spring and pass it back on each
+call to keep the coil's orientation continuous as the anchors move.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawSpring(this IDebugDrawer drawer, JVector from, JVector to, ref JVector reference, float radius, uint color, int segments = 96)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>reference</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>radius</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawStop_" data-uid="Jitter2.DebugDrawGeometry.DrawStop*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawStop_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_" data-uid="Jitter2.DebugDrawGeometry.DrawStop(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)">
+  DrawStop(IDebugDrawer, JVector, JVector, float, uint)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L317"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a cross perpendicular to an axis, for marking a linear stop.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawStop(this IDebugDrawer drawer, JVector center, JVector axis, float size, uint color)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>axis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawWireArrow_" data-uid="Jitter2.DebugDrawGeometry.DrawWireArrow*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawWireArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawWireArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,System.Int32)">
+  DrawWireArrow(IDebugDrawer, JVector, JVector, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a wire arrow using the default arrowhead size, with every base vertex connected to the tip.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawWireArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color, int segments = 12)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>vector</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of segments around the head's base, from 3 to 4096. Default is 12.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawWireFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawWireFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.Int32)">
+  DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L284"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a wire orientation frame with a single color.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawWireFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, float size, uint color, int segments = 12)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>color</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd></dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of segments around each arrowhead base, from 3 to 4096. Default is 12.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_DebugDrawGeometry_DrawWireFrame_" data-uid="Jitter2.DebugDrawGeometry.DrawWireFrame*"></a>
+
+  <h3 id="Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_System_Int32_" data-uid="Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32,System.Int32)">
+  DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L296"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Draws a wire orientation frame with a separate color for each local axis.
+The colors follow the axes as the orientation changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawWireFrame(this IDebugDrawer drawer, JVector center, JQuaternion orientation, float size, uint xColor, uint yColor, uint zColor, int segments = 12)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd></dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+    <dt><code>xColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Color of the local X axis, packed as <code>0xRRGGBBAA</code>.</p>
+</dd>
+    <dt><code>yColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Color of the local Y axis, packed as <code>0xRRGGBBAA</code>.</p>
+</dd>
+    <dt><code>zColor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+    <dd><p>Color of the local Z axis, packed as <code>0xRRGGBBAA</code>.</p>
+</dd>
+    <dt><code>segments</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>Number of segments around each arrowhead base, from 3 to 4096. Default is 12.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawGeometry.cs/#L14" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

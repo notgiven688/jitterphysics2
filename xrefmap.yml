@@ -1850,6 +1850,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.BoxShape.CalculateMassInertia
   nameWithType: BoxShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal
+  nameWithType: BoxShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.BoxShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: BoxShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: BoxShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.BoxShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -1968,6 +1984,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CapsuleShape.CalculateMassInertia
   nameWithType: CapsuleShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal
+  nameWithType: CapsuleShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.CapsuleShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: CapsuleShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: CapsuleShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.CapsuleShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -2083,6 +2115,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia
   nameWithType: ConeShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal
+  nameWithType: ConeShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.ConeShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: ConeShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: ConeShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.ConeShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -2226,6 +2274,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ConvexHullShape.Clone
   nameWithType: ConvexHullShape.Clone
+- uid: Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal
+  nameWithType: ConvexHullShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.ConvexHullShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: ConvexHullShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: ConvexHullShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.ConvexHullShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -2341,6 +2405,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CylinderShape.CalculateMassInertia
   nameWithType: CylinderShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal
+  nameWithType: CylinderShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.CylinderShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: CylinderShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: CylinderShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.CylinderShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -2615,6 +2695,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia
   nameWithType: RigidBodyShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: RigidBodyShape.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: RigidBodyShape.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_DebugDraw_
+  commentId: Overload:Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RigidBodyShape.DebugDraw
+  nameWithType: RigidBodyShape.DebugDraw
 - uid: Jitter2.Collision.Shapes.RigidBodyShape.Distance*
   name: Distance
   href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Distance_
@@ -2727,6 +2823,44 @@ references:
   commentId: T:Jitter2.Collision.Shapes.Shape
   fullName: Jitter2.Collision.Shapes.Shape
   nameWithType: Shape
+- uid: Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: Shape.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: Shape.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: Shape.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Collision.Shapes.Shape.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_
+  commentId: Overload:Jitter2.Collision.Shapes.Shape.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.Shape.DebugDraw
+  nameWithType: Shape.DebugDraw
+- uid: Jitter2.Collision.Shapes.Shape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.Shape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.Shape.DebugDrawLocal
+  nameWithType: Shape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.Shape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.Shape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.Shape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.Shape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: Shape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: Shape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.Shape.Distance*
   name: Distance
   href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_Distance_
@@ -3095,6 +3229,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.SphereShape.CalculateMassInertia
   nameWithType: SphereShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal
+  nameWithType: SphereShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.SphereShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: SphereShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: SphereShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.SphereShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -3231,6 +3381,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia
   nameWithType: TransformedShape.CalculateMassInertia
+- uid: Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal
+  nameWithType: TransformedShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.TransformedShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: TransformedShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: TransformedShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.TransformedShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -3625,6 +3791,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.TriangleShape.CreateAllShapes
   nameWithType: TriangleShape.CreateAllShapes
+- uid: Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal*
+  name: DebugDrawLocal
+  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_DebugDrawLocal_
+  commentId: Overload:Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal
+  nameWithType: TriangleShape.DebugDrawLocal
+- uid: Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name: DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
+  fullName: Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal<TSink>(ref TSink, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Collision.Shapes.TriangleShape.DebugDrawLocal(Of TSink)(TSink, Jitter2.DebugDrawSettings)
+  nameWithType: TriangleShape.DebugDrawLocal<TSink>(ref TSink, in DebugDrawSettings)
+  nameWithType.vb: TriangleShape.DebugDrawLocal(Of TSink)(TSink, DebugDrawSettings)
 - uid: Jitter2.Collision.Shapes.TriangleShape.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_GetCenter_Jitter2_LinearMath_JVector__
@@ -5718,6 +5900,547 @@ references:
   fullName.vb: Jitter2.DataStructures.ReadOnlyPartitionedSet(Of T).this[]
   nameWithType: ReadOnlyPartitionedSet<T>.this
   nameWithType.vb: ReadOnlyPartitionedSet(Of T).this[]
+- uid: Jitter2.DebugDrawColors
+  name: DebugDrawColors
+  href: api/Jitter2.DebugDrawColors.html
+  commentId: T:Jitter2.DebugDrawColors
+  fullName: Jitter2.DebugDrawColors
+  nameWithType: DebugDrawColors
+- uid: Jitter2.DebugDrawColors.AxisX
+  name: AxisX
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_AxisX
+  commentId: F:Jitter2.DebugDrawColors.AxisX
+  fullName: Jitter2.DebugDrawColors.AxisX
+  nameWithType: DebugDrawColors.AxisX
+- uid: Jitter2.DebugDrawColors.AxisY
+  name: AxisY
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_AxisY
+  commentId: F:Jitter2.DebugDrawColors.AxisY
+  fullName: Jitter2.DebugDrawColors.AxisY
+  nameWithType: DebugDrawColors.AxisY
+- uid: Jitter2.DebugDrawColors.AxisZ
+  name: AxisZ
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_AxisZ
+  commentId: F:Jitter2.DebugDrawColors.AxisZ
+  fullName: Jitter2.DebugDrawColors.AxisZ
+  nameWithType: DebugDrawColors.AxisZ
+- uid: Jitter2.DebugDrawColors.Green
+  name: Green
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Green
+  commentId: F:Jitter2.DebugDrawColors.Green
+  fullName: Jitter2.DebugDrawColors.Green
+  nameWithType: DebugDrawColors.Green
+- uid: Jitter2.DebugDrawColors.Red
+  name: Red
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Red
+  commentId: F:Jitter2.DebugDrawColors.Red
+  fullName: Jitter2.DebugDrawColors.Red
+  nameWithType: DebugDrawColors.Red
+- uid: Jitter2.DebugDrawColors.White
+  name: White
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_White
+  commentId: F:Jitter2.DebugDrawColors.White
+  fullName: Jitter2.DebugDrawColors.White
+  nameWithType: DebugDrawColors.White
+- uid: Jitter2.DebugDrawGeometry
+  name: DebugDrawGeometry
+  href: api/Jitter2.DebugDrawGeometry.html
+  commentId: T:Jitter2.DebugDrawGeometry
+  fullName: Jitter2.DebugDrawGeometry
+  nameWithType: DebugDrawGeometry
+- uid: Jitter2.DebugDrawGeometry.DrawArc(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32)
+  name: DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArc_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawArc(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawArc(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle, Jitter2.LinearMath.JAngle, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawArc(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle, Jitter2.LinearMath.JAngle, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawArc(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawArc*
+  name: DrawArc
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArc_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawArc
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawArc
+  nameWithType: DebugDrawGeometry.DrawArc
+- uid: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32)
+  name: DrawArrow(IDebugDrawer, JVector, JVector, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32)
+  name.vb: DrawArrow(IDebugDrawer, JVector, JVector, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, UInteger)
+  nameWithType: DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,Jitter2.DebugDrawSettings@)
+  name: DrawArrow(IDebugDrawer, JVector, JVector, uint, in DebugDrawSettings)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,Jitter2.DebugDrawSettings@)
+  name.vb: DrawArrow(IDebugDrawer, JVector, JVector, UInteger, DebugDrawSettings)
+  fullName: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, uint, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, UInteger, Jitter2.DebugDrawSettings)
+  nameWithType: DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, uint, in DebugDrawSettings)
+  nameWithType.vb: DebugDrawGeometry.DrawArrow(IDebugDrawer, JVector, JVector, UInteger, DebugDrawSettings)
+- uid: Jitter2.DebugDrawGeometry.DrawArrow*
+  name: DrawArrow
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawArrow_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawArrow
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawArrow
+  nameWithType: DebugDrawGeometry.DrawArrow
+- uid: Jitter2.DebugDrawGeometry.DrawCircle(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name: DrawCircle(IDebugDrawer, JVector, JVector, JVector, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCircle_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawCircle(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawCircle(IDebugDrawer, JVector, JVector, JVector, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawCircle(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawCircle(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawCircle(IDebugDrawer, JVector, JVector, JVector, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawCircle(IDebugDrawer, JVector, JVector, JVector, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawCircle*
+  name: DrawCircle
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCircle_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawCircle
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawCircle
+  nameWithType: DebugDrawGeometry.DrawCircle
+- uid: Jitter2.DebugDrawGeometry.DrawCone(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32,System.Int32)
+  name: DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCone_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_Jitter2_LinearMath_JAngle_System_Single_System_UInt32_System_Int32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawCone(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle,Jitter2.LinearMath.JAngle,System.Single,System.UInt32,System.Int32,System.Int32)
+  name.vb: DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, Single, UInteger, Integer, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawCone(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle, Jitter2.LinearMath.JAngle, float, uint, int, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawCone(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle, Jitter2.LinearMath.JAngle, Single, UInteger, Integer, Integer)
+  nameWithType: DebugDrawGeometry.DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, float, uint, int, int)
+  nameWithType.vb: DebugDrawGeometry.DrawCone(IDebugDrawer, JVector, JVector, JVector, JAngle, JAngle, Single, UInteger, Integer, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawCone*
+  name: DrawCone
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawCone_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawCone
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawCone
+  nameWithType: DebugDrawGeometry.DrawCone
+- uid: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion)
+  name: DrawFrame(IDebugDrawer, JVector, JQuaternion)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion)
+  fullName: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion)
+  nameWithType: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion)
+- uid: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,Jitter2.DebugDrawSettings@)
+  name: DrawFrame(IDebugDrawer, JVector, JQuaternion, in DebugDrawSettings)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,Jitter2.DebugDrawSettings@)
+  name.vb: DrawFrame(IDebugDrawer, JVector, JQuaternion, DebugDrawSettings)
+  fullName: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Jitter2.DebugDrawSettings)
+  nameWithType: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, in DebugDrawSettings)
+  nameWithType.vb: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, DebugDrawSettings)
+- uid: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32)
+  name: DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32)
+  name.vb: DrawFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, float, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Single, UInteger)
+  nameWithType: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32)
+  name: DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32)
+  name.vb: DrawFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, UInteger, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, float, uint, uint, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Single, UInteger, UInteger, UInteger)
+  nameWithType: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, UInteger, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawFrame*
+  name: DrawFrame
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawFrame_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawFrame
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawFrame
+  nameWithType: DebugDrawGeometry.DrawFrame
+- uid: Jitter2.DebugDrawGeometry.DrawPlane(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name: DrawPlane(IDebugDrawer, JVector, JVector, JVector, float, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPlane_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawPlane(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name.vb: DrawPlane(IDebugDrawer, JVector, JVector, JVector, Single, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawPlane(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, float, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawPlane(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, UInteger)
+  nameWithType: DebugDrawGeometry.DrawPlane(IDebugDrawer, JVector, JVector, JVector, float, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawPlane(IDebugDrawer, JVector, JVector, JVector, Single, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawPlane*
+  name: DrawPlane
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPlane_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawPlane
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawPlane
+  nameWithType: DebugDrawGeometry.DrawPlane
+- uid: Jitter2.DebugDrawGeometry.DrawPoint(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name: DrawPoint(IDebugDrawer, JVector, float, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPoint_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawPoint(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name.vb: DrawPoint(IDebugDrawer, JVector, Single, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawPoint(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, float, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawPoint(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Single, UInteger)
+  nameWithType: DebugDrawGeometry.DrawPoint(IDebugDrawer, JVector, float, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawPoint(IDebugDrawer, JVector, Single, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawPoint*
+  name: DrawPoint
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawPoint_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawPoint
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawPoint
+  nameWithType: DebugDrawGeometry.DrawPoint
+- uid: Jitter2.DebugDrawGeometry.DrawSegment(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: DrawSegment(IDebugDrawer, in JVector, in JVector)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSegment_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.DebugDrawGeometry.DrawSegment(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name.vb: DrawSegment(IDebugDrawer, JVector, JVector)
+  fullName: Jitter2.DebugDrawGeometry.DrawSegment(Jitter2.IDebugDrawer, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawSegment(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: DebugDrawGeometry.DrawSegment(IDebugDrawer, in JVector, in JVector)
+  nameWithType.vb: DebugDrawGeometry.DrawSegment(IDebugDrawer, JVector, JVector)
+- uid: Jitter2.DebugDrawGeometry.DrawSegment*
+  name: DrawSegment
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSegment_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawSegment
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawSegment
+  nameWithType: DebugDrawGeometry.DrawSegment
+- uid: Jitter2.DebugDrawGeometry.DrawSolidArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name: DrawSolidArrow(IDebugDrawer, JVector, JVector, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSolidArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawSolidArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawSolidArrow(IDebugDrawer, JVector, JVector, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawSolidArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawSolidArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawSolidArrow(IDebugDrawer, JVector, JVector, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawSolidArrow(IDebugDrawer, JVector, JVector, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawSolidArrow*
+  name: DrawSolidArrow
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSolidArrow_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawSolidArrow
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawSolidArrow
+  nameWithType: DebugDrawGeometry.DrawSolidArrow
+- uid: Jitter2.DebugDrawGeometry.DrawSphere(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name: DrawSphere(IDebugDrawer, JVector, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSphere_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawSphere(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawSphere(IDebugDrawer, JVector, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawSphere(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawSphere(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawSphere(IDebugDrawer, JVector, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawSphere(IDebugDrawer, JVector, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawSphere*
+  name: DrawSphere
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSphere_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawSphere
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawSphere
+  nameWithType: DebugDrawGeometry.DrawSphere
+- uid: Jitter2.DebugDrawGeometry.DrawSpring(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector@,System.Single,System.UInt32,System.Int32)
+  name: DrawSpring(IDebugDrawer, JVector, JVector, ref JVector, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSpring_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector__System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawSpring(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector@,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawSpring(IDebugDrawer, JVector, JVector, JVector, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawSpring(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, ref Jitter2.LinearMath.JVector, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawSpring(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawSpring(IDebugDrawer, JVector, JVector, ref JVector, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawSpring(IDebugDrawer, JVector, JVector, JVector, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawSpring*
+  name: DrawSpring
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawSpring_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawSpring
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawSpring
+  nameWithType: DebugDrawGeometry.DrawSpring
+- uid: Jitter2.DebugDrawGeometry.DrawStop(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name: DrawStop(IDebugDrawer, JVector, JVector, float, uint)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawStop_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_System_UInt32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawStop(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single,System.UInt32)
+  name.vb: DrawStop(IDebugDrawer, JVector, JVector, Single, UInteger)
+  fullName: Jitter2.DebugDrawGeometry.DrawStop(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, float, uint)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawStop(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, UInteger)
+  nameWithType: DebugDrawGeometry.DrawStop(IDebugDrawer, JVector, JVector, float, uint)
+  nameWithType.vb: DebugDrawGeometry.DrawStop(IDebugDrawer, JVector, JVector, Single, UInteger)
+- uid: Jitter2.DebugDrawGeometry.DrawStop*
+  name: DrawStop
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawStop_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawStop
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawStop
+  nameWithType: DebugDrawGeometry.DrawStop
+- uid: Jitter2.DebugDrawGeometry.DrawWireArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,System.Int32)
+  name: DrawWireArrow(IDebugDrawer, JVector, JVector, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireArrow_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawWireArrow(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.UInt32,System.Int32)
+  name.vb: DrawWireArrow(IDebugDrawer, JVector, JVector, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawWireArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawWireArrow(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawWireArrow(IDebugDrawer, JVector, JVector, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawWireArrow(IDebugDrawer, JVector, JVector, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawWireArrow*
+  name: DrawWireArrow
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireArrow_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawWireArrow
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawWireArrow
+  nameWithType: DebugDrawGeometry.DrawWireArrow
+- uid: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.Int32)
+  name: DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.Int32)
+  name.vb: DrawWireFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, float, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Single, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32,System.Int32)
+  name: DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint, int)
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireFrame_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JQuaternion_System_Single_System_UInt32_System_UInt32_System_UInt32_System_Int32_
+  commentId: M:Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JQuaternion,System.Single,System.UInt32,System.UInt32,System.UInt32,System.Int32)
+  name.vb: DrawWireFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, UInteger, UInteger, Integer)
+  fullName: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, float, uint, uint, uint, int)
+  fullName.vb: Jitter2.DebugDrawGeometry.DrawWireFrame(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JQuaternion, Single, UInteger, UInteger, UInteger, Integer)
+  nameWithType: DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, float, uint, uint, uint, int)
+  nameWithType.vb: DebugDrawGeometry.DrawWireFrame(IDebugDrawer, JVector, JQuaternion, Single, UInteger, UInteger, UInteger, Integer)
+- uid: Jitter2.DebugDrawGeometry.DrawWireFrame*
+  name: DrawWireFrame
+  href: api/Jitter2.DebugDrawGeometry.html#Jitter2_DebugDrawGeometry_DrawWireFrame_
+  commentId: Overload:Jitter2.DebugDrawGeometry.DrawWireFrame
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawGeometry.DrawWireFrame
+  nameWithType: DebugDrawGeometry.DrawWireFrame
+- uid: Jitter2.DebugDrawSettings
+  name: DebugDrawSettings
+  href: api/Jitter2.DebugDrawSettings.html
+  commentId: T:Jitter2.DebugDrawSettings
+  fullName: Jitter2.DebugDrawSettings
+  nameWithType: DebugDrawSettings
+- uid: Jitter2.DebugDrawSettings.ArrowHeadSize
+  name: ArrowHeadSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowHeadSize
+  commentId: P:Jitter2.DebugDrawSettings.ArrowHeadSize
+  fullName: Jitter2.DebugDrawSettings.ArrowHeadSize
+  nameWithType: DebugDrawSettings.ArrowHeadSize
+- uid: Jitter2.DebugDrawSettings.ArrowHeadSize*
+  name: ArrowHeadSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowHeadSize_
+  commentId: Overload:Jitter2.DebugDrawSettings.ArrowHeadSize
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.ArrowHeadSize
+  nameWithType: DebugDrawSettings.ArrowHeadSize
+- uid: Jitter2.DebugDrawSettings.ArrowSegments
+  name: ArrowSegments
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowSegments
+  commentId: P:Jitter2.DebugDrawSettings.ArrowSegments
+  fullName: Jitter2.DebugDrawSettings.ArrowSegments
+  nameWithType: DebugDrawSettings.ArrowSegments
+- uid: Jitter2.DebugDrawSettings.ArrowSegments*
+  name: ArrowSegments
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowSegments_
+  commentId: Overload:Jitter2.DebugDrawSettings.ArrowSegments
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.ArrowSegments
+  nameWithType: DebugDrawSettings.ArrowSegments
+- uid: Jitter2.DebugDrawSettings.ArrowShaftRadius
+  name: ArrowShaftRadius
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowShaftRadius
+  commentId: P:Jitter2.DebugDrawSettings.ArrowShaftRadius
+  fullName: Jitter2.DebugDrawSettings.ArrowShaftRadius
+  nameWithType: DebugDrawSettings.ArrowShaftRadius
+- uid: Jitter2.DebugDrawSettings.ArrowShaftRadius*
+  name: ArrowShaftRadius
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowShaftRadius_
+  commentId: Overload:Jitter2.DebugDrawSettings.ArrowShaftRadius
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.ArrowShaftRadius
+  nameWithType: DebugDrawSettings.ArrowShaftRadius
+- uid: Jitter2.DebugDrawSettings.AxisXColor
+  name: AxisXColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisXColor
+  commentId: P:Jitter2.DebugDrawSettings.AxisXColor
+  fullName: Jitter2.DebugDrawSettings.AxisXColor
+  nameWithType: DebugDrawSettings.AxisXColor
+- uid: Jitter2.DebugDrawSettings.AxisXColor*
+  name: AxisXColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisXColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.AxisXColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.AxisXColor
+  nameWithType: DebugDrawSettings.AxisXColor
+- uid: Jitter2.DebugDrawSettings.AxisYColor
+  name: AxisYColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisYColor
+  commentId: P:Jitter2.DebugDrawSettings.AxisYColor
+  fullName: Jitter2.DebugDrawSettings.AxisYColor
+  nameWithType: DebugDrawSettings.AxisYColor
+- uid: Jitter2.DebugDrawSettings.AxisYColor*
+  name: AxisYColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisYColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.AxisYColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.AxisYColor
+  nameWithType: DebugDrawSettings.AxisYColor
+- uid: Jitter2.DebugDrawSettings.AxisZColor
+  name: AxisZColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisZColor
+  commentId: P:Jitter2.DebugDrawSettings.AxisZColor
+  fullName: Jitter2.DebugDrawSettings.AxisZColor
+  nameWithType: DebugDrawSettings.AxisZColor
+- uid: Jitter2.DebugDrawSettings.AxisZColor*
+  name: AxisZColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_AxisZColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.AxisZColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.AxisZColor
+  nameWithType: DebugDrawSettings.AxisZColor
+- uid: Jitter2.DebugDrawSettings.CurrentColor
+  name: CurrentColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_CurrentColor
+  commentId: P:Jitter2.DebugDrawSettings.CurrentColor
+  fullName: Jitter2.DebugDrawSettings.CurrentColor
+  nameWithType: DebugDrawSettings.CurrentColor
+- uid: Jitter2.DebugDrawSettings.CurrentColor*
+  name: CurrentColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_CurrentColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.CurrentColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.CurrentColor
+  nameWithType: DebugDrawSettings.CurrentColor
+- uid: Jitter2.DebugDrawSettings.Default
+  name: Default
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Default
+  commentId: P:Jitter2.DebugDrawSettings.Default
+  fullName: Jitter2.DebugDrawSettings.Default
+  nameWithType: DebugDrawSettings.Default
+- uid: Jitter2.DebugDrawSettings.Default*
+  name: Default
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Default_
+  commentId: Overload:Jitter2.DebugDrawSettings.Default
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.Default
+  nameWithType: DebugDrawSettings.Default
+- uid: Jitter2.DebugDrawSettings.FrameSize
+  name: FrameSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_FrameSize
+  commentId: P:Jitter2.DebugDrawSettings.FrameSize
+  fullName: Jitter2.DebugDrawSettings.FrameSize
+  nameWithType: DebugDrawSettings.FrameSize
+- uid: Jitter2.DebugDrawSettings.FrameSize*
+  name: FrameSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_FrameSize_
+  commentId: Overload:Jitter2.DebugDrawSettings.FrameSize
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.FrameSize
+  nameWithType: DebugDrawSettings.FrameSize
+- uid: Jitter2.DebugDrawSettings.GuideSize
+  name: GuideSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize
+  commentId: P:Jitter2.DebugDrawSettings.GuideSize
+  fullName: Jitter2.DebugDrawSettings.GuideSize
+  nameWithType: DebugDrawSettings.GuideSize
+- uid: Jitter2.DebugDrawSettings.GuideSize*
+  name: GuideSize
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize_
+  commentId: Overload:Jitter2.DebugDrawSettings.GuideSize
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.GuideSize
+  nameWithType: DebugDrawSettings.GuideSize
+- uid: Jitter2.DebugDrawSettings.LowerLimitColor
+  name: LowerLimitColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_LowerLimitColor
+  commentId: P:Jitter2.DebugDrawSettings.LowerLimitColor
+  fullName: Jitter2.DebugDrawSettings.LowerLimitColor
+  nameWithType: DebugDrawSettings.LowerLimitColor
+- uid: Jitter2.DebugDrawSettings.LowerLimitColor*
+  name: LowerLimitColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_LowerLimitColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.LowerLimitColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.LowerLimitColor
+  nameWithType: DebugDrawSettings.LowerLimitColor
+- uid: Jitter2.DebugDrawSettings.Origin
+  name: Origin
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Origin
+  commentId: P:Jitter2.DebugDrawSettings.Origin
+  fullName: Jitter2.DebugDrawSettings.Origin
+  nameWithType: DebugDrawSettings.Origin
+- uid: Jitter2.DebugDrawSettings.Origin*
+  name: Origin
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Origin_
+  commentId: Overload:Jitter2.DebugDrawSettings.Origin
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.Origin
+  nameWithType: DebugDrawSettings.Origin
+- uid: Jitter2.DebugDrawSettings.ReferenceColor
+  name: ReferenceColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ReferenceColor
+  commentId: P:Jitter2.DebugDrawSettings.ReferenceColor
+  fullName: Jitter2.DebugDrawSettings.ReferenceColor
+  nameWithType: DebugDrawSettings.ReferenceColor
+- uid: Jitter2.DebugDrawSettings.ReferenceColor*
+  name: ReferenceColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ReferenceColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.ReferenceColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.ReferenceColor
+  nameWithType: DebugDrawSettings.ReferenceColor
+- uid: Jitter2.DebugDrawSettings.Segments
+  name: Segments
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Segments
+  commentId: P:Jitter2.DebugDrawSettings.Segments
+  fullName: Jitter2.DebugDrawSettings.Segments
+  nameWithType: DebugDrawSettings.Segments
+- uid: Jitter2.DebugDrawSettings.Segments*
+  name: Segments
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_Segments_
+  commentId: Overload:Jitter2.DebugDrawSettings.Segments
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.Segments
+  nameWithType: DebugDrawSettings.Segments
+- uid: Jitter2.DebugDrawSettings.ShapeSubdivisions
+  name: ShapeSubdivisions
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ShapeSubdivisions
+  commentId: P:Jitter2.DebugDrawSettings.ShapeSubdivisions
+  fullName: Jitter2.DebugDrawSettings.ShapeSubdivisions
+  nameWithType: DebugDrawSettings.ShapeSubdivisions
+- uid: Jitter2.DebugDrawSettings.ShapeSubdivisions*
+  name: ShapeSubdivisions
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ShapeSubdivisions_
+  commentId: Overload:Jitter2.DebugDrawSettings.ShapeSubdivisions
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.ShapeSubdivisions
+  nameWithType: DebugDrawSettings.ShapeSubdivisions
+- uid: Jitter2.DebugDrawSettings.SolidArrows
+  name: SolidArrows
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_SolidArrows
+  commentId: P:Jitter2.DebugDrawSettings.SolidArrows
+  fullName: Jitter2.DebugDrawSettings.SolidArrows
+  nameWithType: DebugDrawSettings.SolidArrows
+- uid: Jitter2.DebugDrawSettings.SolidArrows*
+  name: SolidArrows
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_SolidArrows_
+  commentId: Overload:Jitter2.DebugDrawSettings.SolidArrows
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.SolidArrows
+  nameWithType: DebugDrawSettings.SolidArrows
+- uid: Jitter2.DebugDrawSettings.UpperLimitColor
+  name: UpperLimitColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_UpperLimitColor
+  commentId: P:Jitter2.DebugDrawSettings.UpperLimitColor
+  fullName: Jitter2.DebugDrawSettings.UpperLimitColor
+  nameWithType: DebugDrawSettings.UpperLimitColor
+- uid: Jitter2.DebugDrawSettings.UpperLimitColor*
+  name: UpperLimitColor
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_UpperLimitColor_
+  commentId: Overload:Jitter2.DebugDrawSettings.UpperLimitColor
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.UpperLimitColor
+  nameWithType: DebugDrawSettings.UpperLimitColor
 - uid: Jitter2.Dynamics
   name: Jitter2.Dynamics
   href: api/Jitter2.Dynamics.html
@@ -6065,6 +6788,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: AngularMotor.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: AngularMotor.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: AngularMotor.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.AngularMotor.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_DebugDraw_
@@ -6343,6 +7075,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: BallSocket.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: BallSocket.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: BallSocket.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.BallSocket.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_DebugDraw_
@@ -6595,6 +7336,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: ConeLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: ConeLimit.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: ConeLimit.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.ConeLimit.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_DebugDraw_
@@ -6772,6 +7522,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: Constraint.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: Constraint.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: Constraint.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.Constraint.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DebugDraw_
@@ -6840,6 +7599,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.DispatchId
   nameWithType: Constraint.DispatchId
+- uid: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(Jitter2.DebugDrawSettings@)
+  name: GetDebugDrawOrigin(in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_GetDebugDrawOrigin_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(Jitter2.DebugDrawSettings@)
+  name.vb: GetDebugDrawOrigin(DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(Jitter2.DebugDrawSettings)
+  nameWithType: Constraint.GetDebugDrawOrigin(in DebugDrawSettings)
+  nameWithType.vb: Constraint.GetDebugDrawOrigin(DebugDrawSettings)
+- uid: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin*
+  name: GetDebugDrawOrigin
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_GetDebugDrawOrigin_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin
+  nameWithType: Constraint.GetDebugDrawOrigin
 - uid: Jitter2.Dynamics.Constraints.Constraint.Handle
   name: Handle
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_Handle
@@ -7175,6 +7950,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: DistanceLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: DistanceLimit.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: DistanceLimit.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_
@@ -7452,6 +8236,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: EllipticalConeLimit.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: EllipticalConeLimit.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: EllipticalConeLimit.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_DebugDraw_
@@ -7757,6 +8550,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: FixedAngle.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: FixedAngle.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: FixedAngle.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.FixedAngle.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_DebugDraw_
@@ -7983,6 +8785,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: HingeAngle.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: HingeAngle.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: HingeAngle.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.HingeAngle.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_DebugDraw_
@@ -8363,6 +9174,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: Joint.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.Joint.html#Jitter2_Dynamics_Constraints_Joint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: Joint.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: Joint.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.Joint.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.Joint.html#Jitter2_Dynamics_Constraints_Joint_DebugDraw_
@@ -8555,6 +9375,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: LinearMotor.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: LinearMotor.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: LinearMotor.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.LinearMotor.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_DebugDraw_
@@ -8783,6 +9612,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: PointOnLine.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: PointOnLine.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: PointOnLine.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.PointOnLine.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_DebugDraw_
@@ -9071,6 +9909,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: PointOnPlane.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: PointOnPlane.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: PointOnPlane.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_DebugDraw_
@@ -9496,6 +10343,15 @@ references:
   commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: TwistAngle.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: TwistAngle.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: TwistAngle.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_DebugDraw_
@@ -10870,6 +11726,15 @@ references:
   commentId: M:Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: RigidBody.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: RigidBody.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: RigidBody.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.Dynamics.RigidBody.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_DebugDraw_
@@ -11455,6 +12320,15 @@ references:
   commentId: M:Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: IDebugDrawable.DebugDraw(IDebugDrawer)
+- uid: Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.IDebugDrawable.html#Jitter2_IDebugDrawable_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.IDebugDrawable.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: IDebugDrawable.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: IDebugDrawable.DebugDraw(IDebugDrawer, DebugDrawSettings)
 - uid: Jitter2.IDebugDrawable.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.IDebugDrawable.html#Jitter2_IDebugDrawable_DebugDraw_
@@ -11468,31 +12342,15 @@ references:
   commentId: T:Jitter2.IDebugDrawer
   fullName: Jitter2.IDebugDrawer
   nameWithType: IDebugDrawer
-- uid: Jitter2.IDebugDrawer.DrawPoint(Jitter2.LinearMath.JVector@)
-  name: DrawPoint(in JVector)
-  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawPoint_Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.IDebugDrawer.DrawPoint(Jitter2.LinearMath.JVector@)
-  name.vb: DrawPoint(JVector)
-  fullName: Jitter2.IDebugDrawer.DrawPoint(in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.IDebugDrawer.DrawPoint(Jitter2.LinearMath.JVector)
-  nameWithType: IDebugDrawer.DrawPoint(in JVector)
-  nameWithType.vb: IDebugDrawer.DrawPoint(JVector)
-- uid: Jitter2.IDebugDrawer.DrawPoint*
-  name: DrawPoint
-  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawPoint_
-  commentId: Overload:Jitter2.IDebugDrawer.DrawPoint
-  isSpec: "True"
-  fullName: Jitter2.IDebugDrawer.DrawPoint
-  nameWithType: IDebugDrawer.DrawPoint
-- uid: Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: DrawSegment(in JVector, in JVector)
-  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawSegment_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: DrawSegment(JVector, JVector)
-  fullName: Jitter2.IDebugDrawer.DrawSegment(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: IDebugDrawer.DrawSegment(in JVector, in JVector)
-  nameWithType.vb: IDebugDrawer.DrawSegment(JVector, JVector)
+- uid: Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)
+  name: DrawSegment(in JVector, in JVector, uint)
+  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawSegment_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_UInt32_
+  commentId: M:Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)
+  name.vb: DrawSegment(JVector, JVector, UInteger)
+  fullName: Jitter2.IDebugDrawer.DrawSegment(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, uint)
+  fullName.vb: Jitter2.IDebugDrawer.DrawSegment(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, UInteger)
+  nameWithType: IDebugDrawer.DrawSegment(in JVector, in JVector, uint)
+  nameWithType.vb: IDebugDrawer.DrawSegment(JVector, JVector, UInteger)
 - uid: Jitter2.IDebugDrawer.DrawSegment*
   name: DrawSegment
   href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawSegment_
@@ -11500,15 +12358,15 @@ references:
   isSpec: "True"
   fullName: Jitter2.IDebugDrawer.DrawSegment
   nameWithType: IDebugDrawer.DrawSegment
-- uid: Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name: DrawTriangle(in JVector, in JVector, in JVector)
-  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawTriangle_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
-  commentId: M:Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
-  name.vb: DrawTriangle(JVector, JVector, JVector)
-  fullName: Jitter2.IDebugDrawer.DrawTriangle(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector)
-  fullName.vb: Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
-  nameWithType: IDebugDrawer.DrawTriangle(in JVector, in JVector, in JVector)
-  nameWithType.vb: IDebugDrawer.DrawTriangle(JVector, JVector, JVector)
+- uid: Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)
+  name: DrawTriangle(in JVector, in JVector, in JVector, uint)
+  href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawTriangle_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_UInt32_
+  commentId: M:Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.UInt32)
+  name.vb: DrawTriangle(JVector, JVector, JVector, UInteger)
+  fullName: Jitter2.IDebugDrawer.DrawTriangle(in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, uint)
+  fullName.vb: Jitter2.IDebugDrawer.DrawTriangle(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, UInteger)
+  nameWithType: IDebugDrawer.DrawTriangle(in JVector, in JVector, in JVector, uint)
+  nameWithType.vb: IDebugDrawer.DrawTriangle(JVector, JVector, JVector, UInteger)
 - uid: Jitter2.IDebugDrawer.DrawTriangle*
   name: DrawTriangle
   href: api/Jitter2.IDebugDrawer.html#Jitter2_IDebugDrawer_DrawTriangle_
@@ -16817,6 +17675,24 @@ references:
   commentId: M:Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)
   fullName: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)
   nameWithType: SpringConstraint.DebugDraw(IDebugDrawer)
+- uid: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: SpringConstraint.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: SpringConstraint.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, ref JVector, in DebugDrawSettings)
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector__Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, JVector, DebugDrawSettings)
+  fullName: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer, ref Jitter2.LinearMath.JVector, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer, Jitter2.LinearMath.JVector, Jitter2.DebugDrawSettings)
+  nameWithType: SpringConstraint.DebugDraw(IDebugDrawer, ref JVector, in DebugDrawSettings)
+  nameWithType.vb: SpringConstraint.DebugDraw(IDebugDrawer, JVector, DebugDrawSettings)
 - uid: Jitter2.SoftBodies.SpringConstraint.DebugDraw*
   name: DebugDraw
   href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_DebugDraw_
