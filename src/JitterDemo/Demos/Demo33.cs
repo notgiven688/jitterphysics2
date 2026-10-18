@@ -7,7 +7,6 @@ using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.SoftBodies;
 using JitterDemo.Renderer;
-using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
@@ -87,11 +86,6 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         BuildMotors();
         BuildCompositeJoints();
         world.PreSubStep += UpdateLinearDrives;
-        // Frame all four rows from above, leaving room for the statistics panel on the left.
-        pg.Camera.Position = new Vector3(-8, 48, 76);
-        Vector3 direction = Vector3.Normalize(new Vector3(-8, 3, 0) - pg.Camera.Position);
-        pg.Camera.Phi = 0;
-        pg.Camera.Theta = Math.Acos(direction.Y);
     }
 
     public void DrawUpdate()
