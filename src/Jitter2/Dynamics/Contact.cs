@@ -647,13 +647,15 @@ public struct ContactData
         internal JVector Position2;
 
         /// <summary>
-        /// Position of the contact relative to the center of mass on the first body.
+        /// World-space contact offset from the first body's center of mass used to apply impulses.
+        /// Held fixed during the substeps of a full simulation step.
         /// </summary>
         [FieldOffset(4 + 25 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
-        /// Position of the contact relative to the center of mass on the second body.
+        /// World-space contact offset from the second body's center of mass used to apply impulses.
+        /// Held fixed during the substeps of a full simulation step.
         /// </summary>
         [FieldOffset(4 + 28 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
@@ -757,16 +759,17 @@ public struct ContactData
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public readonly unsafe bool UpdatePosition(ContactData* cd)
+        public unsafe bool UpdatePosition(ContactData* cd)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector.Transform(Position1, b1.Orientation, out var relativePos1);
-            JVector.Add(relativePos1, b1.Position, out JVector p1);
+            // Solving has finished. Refresh the offsets for contact matching in the next step.
+            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
+            JVector.Add(RelativePosition1, b1.Position, out JVector p1);
 
-            JVector.Transform(Position2, b2.Orientation, out var relativePos2);
-            JVector.Add(relativePos2, b2.Position, out JVector p2);
+            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Add(RelativePosition2, b2.Position, out JVector p2);
 
             JVector.Subtract(p1, p2, out JVector dist);
 
@@ -819,8 +822,8 @@ public struct ContactData
             JVector tangent1 = Tangent1;
             JVector tangent2 = Tangent2;
 
-            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
-            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Transform(Position1, b1.Orientation, out JVector currentRelativePosition1);
+            JVector.Transform(Position2, b2.Orientation, out JVector currentRelativePosition2);
 
             JVector inverseMassVector = JVector.Zero;
             if ((cd->Mode & SolveMode.LinearBody1) != 0) inverseMassVector = b1.InverseMassVector;
@@ -832,8 +835,8 @@ public struct ContactData
                 Bias = 0;
             }
 
-            JVector.Add(RelativePosition1, b1.Position, out JVector p1);
-            JVector.Add(RelativePosition2, b2.Position, out JVector p2);
+            JVector.Add(currentRelativePosition1, b1.Position, out JVector p1);
+            JVector.Add(currentRelativePosition2, b2.Position, out JVector p2);
             JVector.Subtract(p1, p2, out JVector dist);
             Real penetration = JVector.Dot(dist, normal);
 
@@ -1042,8 +1045,8 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
-            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Transform(Position1, b1.Orientation, out JVector currentRelativePosition1);
+            JVector.Transform(Position2, b2.Orientation, out JVector currentRelativePosition2);
 
             JVector inverseMassVector = JVector.Zero;
             if ((cd->Mode & SolveMode.LinearBody1) != 0) inverseMassVector = b1.InverseMassVector;
@@ -1062,8 +1065,8 @@ public struct ContactData
                 Bias = 0;
             }
 
-            JVector.Add(RelativePosition1, b1.Position, out JVector r1);
-            JVector.Add(RelativePosition2, b2.Position, out JVector r2);
+            JVector.Add(currentRelativePosition1, b1.Position, out JVector r1);
+            JVector.Add(currentRelativePosition2, b2.Position, out JVector r2);
             JVector.Subtract(r1, r2, out JVector dist);
 
             JVector n = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
