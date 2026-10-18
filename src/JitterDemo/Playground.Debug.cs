@@ -64,6 +64,7 @@ public partial class Playground : RenderWindow
             {
                 GuideSize = debugDrawConstraintSize,
                 FrameSize = debugDrawConstraintSize,
+                PointRadius = 0.06f * debugDrawConstraintSize,
                 ArrowHeadSize = 0.2f * debugDrawConstraintSize,
                 ArrowShaftRadius = 0.025f * debugDrawConstraintSize,
                 Segments = 24,

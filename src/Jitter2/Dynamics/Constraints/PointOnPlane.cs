@@ -308,7 +308,7 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
             : Real.Clamp(distance, minimum, maximum);
         if (Real.IsFinite(target) && target != distance)
             drawer.DrawSegment(second, second + normal * (target - distance), settings.CurrentColor);
-        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
     }
 }

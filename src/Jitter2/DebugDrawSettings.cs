@@ -34,18 +34,20 @@ public readonly struct DebugDrawSettings
     private readonly uint? referenceColor, lowerLimitColor, upperLimitColor, currentColor;
     private readonly uint? axisXColor, axisYColor, axisZColor;
     private readonly bool? solidArrows;
-    private readonly Real? arrowShaftRadius;
+    private readonly Real? arrowShaftRadius, pointRadius;
 
     /// <summary>
-    /// Default settings: guide size 1, frame size 1, 48 curve segments, 12 arrow segments,
-    /// shape detail 3, solid arrows, green guides, red lower limits, white current pose, and RGB orientation frames.
+    /// Default settings: guide size 1, frame size 1, point radius 0.06, 48 curve segments,
+    /// 12 arrow segments, shape detail 3, solid arrows, green guides, red lower limits,
+    /// white current pose, and RGB orientation frames.
     /// </summary>
     public static DebugDrawSettings Default => default;
 
     /// <summary>
     /// Radius of angular guides and half extent of plane patches, in world units.
-    /// Also sets constraint arrow lengths and marker sizes. Coordinate frames use <see cref="FrameSize"/> instead.
-    /// Arrowheads and shafts use <see cref="ArrowHeadSize"/> and <see cref="ArrowShaftRadius"/> independently.
+    /// Also sets constraint arrow lengths and stop marker sizes. Coordinate frames use <see cref="FrameSize"/> instead.
+    /// Arrowheads, shafts, and anchor spheres use <see cref="ArrowHeadSize"/>,
+    /// <see cref="ArrowShaftRadius"/>, and <see cref="PointRadius"/> independently.
     /// Physical distances and linear limits are never scaled.
     /// Must be finite and greater than zero. Default is 1.
     /// </summary>
@@ -71,6 +73,20 @@ public readonly struct DebugDrawSettings
         {
             if (!Real.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(FrameSize));
             frameSize = value;
+        }
+    }
+
+    /// <summary>
+    /// Radius of spherical anchor markers in world units, independently of <see cref="GuideSize"/>.
+    /// Default is 0.06. Must be finite and nonnegative. Zero hides the markers.
+    /// </summary>
+    public Real PointRadius
+    {
+        get => pointRadius ?? (Real)0.06;
+        init
+        {
+            if (!Real.IsFinite(value) || value < 0) throw new ArgumentOutOfRangeException(nameof(PointRadius));
+            pointRadius = value;
         }
     }
 

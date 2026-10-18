@@ -386,8 +386,8 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         JVector displacement = second - first;
         drawer.DrawSpring(first, second, ref reference, settings.GuideSize * (Real)0.12, settings.CurrentColor,
             Math.Max(32, settings.Segments * 2));
-        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
         if (displacement.LengthSquared() > (Real)1e-20)
         {
             JVector direction = JVector.Normalize(displacement);

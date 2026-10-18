@@ -190,9 +190,10 @@ constraint.DebugDraw(drawer, new DebugDrawSettings
 });
 ```
 
-`GuideSize` changes the size of guides and markers. `FrameSize` sets the length of coordinate-frame
-axes in world units. Arrowhead size and shaft thickness are adjusted separately using
-`ArrowHeadSize` and `ArrowShaftRadius`. Physical distances and angular limits keep their actual values.
+`GuideSize` changes the size of guides. `FrameSize` sets the length of coordinate-frame
+axes in world units, and `PointRadius` sets the radius of anchor spheres. Arrowhead size and
+shaft thickness are adjusted separately using `ArrowHeadSize` and `ArrowShaftRadius`.
+Physical distances and angular limits keep their actual values.
 See <xref:Jitter2.DebugDrawSettings> for color, arrow, and detail settings.
 
 Arrows are solid by default. Set `SolidArrows = false` for wire arrows. `ArrowSegments` controls

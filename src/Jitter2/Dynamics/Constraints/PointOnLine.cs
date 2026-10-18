@@ -499,7 +499,7 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         }
         if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
         drawer.DrawSegment(second, projected, settings.CurrentColor);
-        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
     }
 }

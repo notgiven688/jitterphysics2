@@ -387,8 +387,8 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         if (Body1 != Body1.World.NullBody) drawer.DrawSegment(Body1.Position, first, settings.ReferenceColor);
         if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
         drawer.DrawSegment(first, second, settings.CurrentColor);
-        drawer.DrawPoint(first, settings.GuideSize * (Real)0.06, settings.ReferenceColor);
-        drawer.DrawPoint(second, settings.GuideSize * (Real)0.06, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
         if (data.LimitMin >= data.LimitMax)
         {
             Real radius = data.Distance + data.LimitMin * (Real)0.5 + data.LimitMax * (Real)0.5;

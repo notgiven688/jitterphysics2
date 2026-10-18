@@ -10,6 +10,7 @@ public class ConstraintDebugDrawTests
     private static readonly DebugDrawSettings Settings = new()
     {
         GuideSize = 3,
+        PointRadius = (Real)0.09,
         ReferenceColor = Reference,
         LowerLimitColor = Lower,
         UpperLimitColor = Upper,
@@ -319,8 +320,8 @@ public class ConstraintDebugDrawTests
         var joint = new DrawingJoint(socket);
         var drawer = new RecordingDrawer();
         joint.DebugDraw(drawer, Settings);
-        AssertPointMarker(drawer, Reference, anchor, Settings.GuideSize * (Real)0.06);
-        AssertPointMarker(drawer, Current, anchor, Settings.GuideSize * (Real)0.06);
+        AssertPointMarker(drawer, Reference, anchor, Settings.PointRadius);
+        AssertPointMarker(drawer, Current, anchor, Settings.PointRadius);
     }
 
     [Test]
@@ -348,6 +349,7 @@ public class ConstraintDebugDrawTests
         DebugDrawSettings settings = default;
         Assert.That(settings.GuideSize, Is.EqualTo(1));
         Assert.That(settings.FrameSize, Is.EqualTo(1));
+        Assert.That(settings.PointRadius, Is.EqualTo((Real)0.06));
         Assert.That(settings.Segments, Is.EqualTo(48));
         Assert.That(settings.ArrowSegments, Is.EqualTo(12));
         Assert.That(settings.ArrowHeadSize, Is.EqualTo((Real)0.2));
@@ -655,7 +657,7 @@ public class ConstraintDebugDrawTests
     [TestCase("PointOnLine")]
     [TestCase("PointOnPlane")]
     [TestCase("SpringConstraint")]
-    public void AnchorMarkersFollowBodyTransformsAndDrawingScale(string name)
+    public void AnchorMarkersFollowBodyTransformsAndIgnoreGuideSize(string name)
     {
         using World world = new();
         RigidBody first = world.CreateRigidBody(), second = world.CreateRigidBody();
@@ -672,8 +674,8 @@ public class ConstraintDebugDrawTests
         {
             var drawer = new RecordingDrawer();
             constraint.DebugDraw(drawer, Settings with { GuideSize = scale });
-            AssertPointMarker(drawer, Reference, first.Position, scale * (Real)0.06);
-            AssertPointMarker(drawer, Current, secondAnchor, scale * (Real)0.06);
+            AssertPointMarker(drawer, Reference, first.Position, Settings.PointRadius);
+            AssertPointMarker(drawer, Current, secondAnchor, Settings.PointRadius);
         }
     }
 
@@ -1092,8 +1094,8 @@ public class ConstraintDebugDrawTests
         var currentX = xAxes[1];
         AssertVector(currentX.From, second.Position);
         AssertVector(currentX.To - currentX.From, JVector.UnitX * settings.FrameSize);
-        AssertPointMarker(drawer, Reference, joint.BallSocket.Anchor1, settings.GuideSize * (Real)0.06);
-        AssertPointMarker(drawer, Current, joint.BallSocket.Anchor2, settings.GuideSize * (Real)0.06);
+        AssertPointMarker(drawer, Reference, joint.BallSocket.Anchor1, settings.PointRadius);
+        AssertPointMarker(drawer, Current, joint.BallSocket.Anchor2, settings.PointRadius);
     }
 
     [TestCase(false)]
