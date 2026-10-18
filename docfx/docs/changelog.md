@@ -1,5 +1,14 @@
 # Changelog
 
+### Jitter 2.11.0 (2026-10-18)
+
+- **Breaking Change:** `IDebugDrawer.DrawSegment` and `DrawTriangle` now require a `uint` color packed as `0xRRGGBBAA`. Custom drawers must implement both colored methods.
+- Improved contact and constraint solver performance, especially in multithreaded scenes and for constraints attached to `World.NullBody`.
+- Improved rolling stability with substeps by fixing contact impulses that could artificially accelerate rolling objects.
+- Fixed angular velocity incorrectly influencing speculative contacts. Collision prediction and speculative response now consistently use linear motion.
+- Added `EllipticalConeLimit` for different swing limits in two perpendicular directions, with optional inner limits and unrestricted twist.
+- Expanded debug drawing for shapes, bodies, constraints, and joints, with clearer anchors, limits, axes, and motor directions.
+
 ### Jitter 2.10.1 (2026-10-15)
 
 - Added `Constraint.Tag` for attaching custom user data to constraints, matching `RigidBody.Tag`.
