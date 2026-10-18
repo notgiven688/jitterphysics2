@@ -17,6 +17,12 @@ public class ConeShape : RigidBodyShape
     private Real radius;
     private Real height;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Cone(ref triangleSink, radius, height, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the cone at its base.
     /// </summary>

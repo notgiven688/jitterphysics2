@@ -1689,34 +1689,33 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         UpdateWorldInertia();
     }
 
-    private readonly struct DebugDrawSink(IDebugDrawer drawer, JQuaternion orientation, JVector position)
-        : ISink<JTriangle>
-    {
-        public void Add(in JTriangle triangle)
-        {
-            drawer.DrawTriangle(
-                JVector.Transform(triangle.V0, orientation) + position,
-                JVector.Transform(triangle.V1, orientation) + position,
-                JVector.Transform(triangle.V2, orientation) + position);
-        }
-    }
-
     /// <summary>
-    /// Generates a rough triangle approximation of the shapes of the body.
-    /// Since the generation is slow this should only be used for debugging
-    /// purposes.
+    /// Draws the body's collision shapes using their individual debug-drawing implementations.
     /// </summary>
     /// <remarks>
-    /// This method tessellates all attached shapes and is not suitable for real-time use.
+    /// Emits world-space triangles. Drawers that only implement segments receive triangle edges.
+    /// Custom shapes without their own surface geometry use support-map tessellation, which may
+    /// contain overlapping triangles and folds with inconsistent winding.
     /// </remarks>
-    /// <param name="drawer">The debug drawer to receive the generated triangles.</param>
-    public void DebugDraw(IDebugDrawer drawer)
-    {
-        var sink = new DebugDrawSink(drawer, Data.Orientation, Data.Position);
+    /// <param name="drawer">The debug drawer receiving the shapes.</param>
+    public void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
 
+    /// <summary>
+    /// Draws the body's collision shapes using the supplied settings.
+    /// </summary>
+    /// <remarks>
+    /// Uses <see cref="DebugDrawSettings.Segments"/> for built-in curved surfaces,
+    /// <see cref="DebugDrawSettings.ShapeSubdivisions"/> for support-map tessellation, and
+    /// <see cref="DebugDrawSettings.CurrentColor"/> for the triangles.
+    /// </remarks>
+    /// <param name="drawer">The debug drawer receiving the shapes.</param>
+    /// <param name="settings">The visualization settings.</param>
+    public void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(drawer);
         foreach (var shape in InternalShapes)
         {
-            ShapeHelper.Tessellate(shape, ref sink);
+            shape.DebugDraw(drawer, settings);
         }
     }
 

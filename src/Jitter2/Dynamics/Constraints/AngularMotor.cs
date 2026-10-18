@@ -194,17 +194,29 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
         body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref AngularMotorData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        JVector first = JVector.Transform(data.LocalAxis1, Body1.Orientation);
+        JVector second = JVector.Transform(data.LocalAxis2, Body2.Orientation);
+        JVector origin = GetDebugDrawOrigin(settings);
+        JVector secondOrigin = settings.Origin ?? (Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position);
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.LocalAxis1), Body1.Orientation);
+        drawer.DrawCircle(origin, first, reference, settings.Scale, settings.ReferenceColor, settings.Segments);
+        drawer.DrawArrow(origin, first * (settings.Scale * (Real)0.5), settings.ReferenceColor, settings);
+        drawer.DrawArrow(secondOrigin, second * (settings.Scale * (Real)0.5),
+            settings.CurrentColor, settings);
+        if (data.Velocity != 0)
+        {
+            JVector tangent = first % reference;
+            Real sign = data.Velocity > 0 ? 1 : -1;
+            drawer.DrawArrow(origin + reference * settings.Scale,
+                tangent * (sign * settings.Scale * (Real)0.5), settings.ReferenceColor, settings);
+        }
     }
 }

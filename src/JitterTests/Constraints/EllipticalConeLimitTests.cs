@@ -139,8 +139,11 @@ public class EllipticalConeLimitTests
         {
             using World world = new()
             {
-                Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode,
-                SubstepCount = 1, SolverIterations = (8, 0)
+                Gravity = JVector.Zero,
+                AllowDeactivation = false,
+                SolveMode = mode,
+                SubstepCount = 1,
+                SolverIterations = (8, 0)
             };
             var cone = CreateCone(world);
             if (kind == "Band") cone.SetLimits(AngularLimit.FromDegree(20, 60), AngularLimit.FromDegree(10, 25));
@@ -249,11 +252,11 @@ public class EllipticalConeLimitTests
         var cone = CreateCone(world);
         cone.SetLimits(AngularLimit.FromDegree(20, 60), AngularLimit.FromDegree(10, 25));
         var drawer = new BoundaryDrawer();
-        cone.DebugDraw(drawer);
+        cone.DebugDraw(drawer, new DebugDrawSettings { Segments = 64, ReferenceColor = 0x0000FFFF });
         Assert.That(drawer.Segments.Count, Is.GreaterThan(128));
-        // First two segments are the central and current axes. Every remaining endpoint
-        // lies on either ellipse on the unit sphere, or at the origin of a spoke.
-        foreach (var (from, to) in drawer.Segments.Skip(2))
+        // The drawer selects the boundary colors. Each endpoint lies on an ellipse on
+        // the unit sphere, or at the origin of a spoke.
+        foreach (var (from, to) in drawer.Segments)
         {
             foreach (JVector point in new[] { from, to })
             {
@@ -291,8 +294,9 @@ public class EllipticalConeLimitTests
     private sealed class BoundaryDrawer : IDebugDrawer
     {
         public readonly List<(JVector, JVector)> Segments = [];
-        public void DrawSegment(in JVector from, in JVector to) => Segments.Add((from, to));
-        public void DrawPoint(in JVector point) { }
-        public void DrawTriangle(in JVector a, in JVector b, in JVector c) { }
+        public void DrawSegment(in JVector from, in JVector to, uint color)
+        {
+            if (color == DebugDrawColors.Green || color == DebugDrawColors.Red) Segments.Add((from, to));
+        }
     }
 }

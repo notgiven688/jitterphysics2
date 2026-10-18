@@ -452,23 +452,40 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
         body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref PointOnLineData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-        JVector.Transform(data.LocalAxis, body1.Orientation, out JVector axis);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        Real lineLength = (Real)1.0;
-        drawer.DrawSegment(p1 - axis * lineLength, p1 + axis * lineLength);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        JVector first = Body1.Position + JVector.Transform(data.LocalAnchor1, Body1.Orientation);
+        JVector second = Body2.Position + JVector.Transform(data.LocalAnchor2, Body2.Orientation);
+        JVector axis = JVector.Transform(data.LocalAxis, Body1.Orientation);
+        Real distance = JVector.Dot(second - first, axis);
+        JVector projected = first + axis * distance;
+        Real minimum = data.Min, maximum = data.Max;
+        if (minimum >= maximum) minimum = maximum = minimum * (Real)0.5 + maximum * (Real)0.5;
+        Real start = Real.IsFinite(minimum) ? minimum : MathR.Min(-settings.Scale, distance - settings.Scale);
+        Real end = Real.IsFinite(maximum) ? maximum : MathR.Max(settings.Scale, distance + settings.Scale);
+        if (Real.IsFinite(start) && Real.IsFinite(end))
+        {
+            drawer.DrawSegment(first + axis * start, first + axis * end, settings.ReferenceColor);
+            if (Real.IsFinite(minimum))
+                drawer.DrawStop(first + axis * minimum, axis, settings.Scale * (Real)0.15,
+                    minimum == maximum ? settings.UpperLimitColor : settings.LowerLimitColor);
+            else drawer.DrawArrow(first + axis * start, -axis * (settings.Scale * (Real)0.25),
+                settings.ReferenceColor, settings);
+            if (Real.IsFinite(maximum) && minimum != maximum)
+                drawer.DrawStop(first + axis * maximum, axis, settings.Scale * (Real)0.15, settings.UpperLimitColor);
+            else if (!Real.IsFinite(maximum))
+                drawer.DrawArrow(first + axis * end, axis * (settings.Scale * (Real)0.25),
+                    settings.ReferenceColor, settings);
+        }
+        if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        drawer.DrawSegment(second, projected, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
     }
 }

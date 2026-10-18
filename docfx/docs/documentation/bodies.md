@@ -63,13 +63,64 @@ Passing `MassInertiaUpdateMode.Preserve` to `body.AddShape(...)` or `body.AddSha
 
 ### Debugging shapes
 
-The `RigidBody` class offers the `body.DebugDraw(IDebugDrawer drawer)` method which creates a triangle hull for each shape added to the body and calls the `drawer.DrawTriangle` method in the provided `IDebugDrawer` implementation.
-The coordinates of the triangles are in world space and can be drawn to debug the collision shape of the rigid body.
+Debug drawing shows the collision shapes attached to a body at their current positions and rotations.
+To display them, connect Jitter to your renderer by implementing `IDebugDrawer`:
+
+```cs
+using Jitter2;
+using Jitter2.LinearMath;
+
+public sealed class PhysicsDebugDrawer : IDebugDrawer
+{
+    public void DrawSegment(in JVector pA, in JVector pB, uint color)
+    {
+        // Draw a line from pA to pB using your renderer.
+        // The positions are in world space; color is packed as 0xRRGGBBAA.
+    }
+}
+```
+
+Replace the comment in `DrawSegment` with a call to your renderer's line-drawing function.
+Create one drawer and reuse it:
+
+```cs
+IDebugDrawer drawer = new PhysicsDebugDrawer();
+```
+
+Then call this in your application's drawing loop, after the physics step has completed:
+
+```cs
+body.DebugDraw(drawer);
+```
 
 > [!WARNING]
-> **body.DebugDraw performance**
-> Every call to `body.DebugDraw` generates the triangle hulls on the fly.
-> Since this is a slow operation the method should only be called for debugging purposes.
+> **Debug drawing can be slow**
+> Drawing many bodies or using high detail settings can significantly reduce the frame rate.
+> Point clouds and custom shapes without their own drawing code rebuild their approximate surface
+> on every call. Limit debug drawing to the objects you need to inspect.
+
+This draws all shapes attached to `body`, including their offsets and rotations. With the drawer
+above, Jitter sends the edges of the shapes' triangles to `DrawSegment`, producing a wireframe.
+For filled surfaces, also implement `DrawTriangle`; see [shape drawing](shapes.md#debug-drawing).
+
+The default drawing is white. To draw green shapes and make curved surfaces smoother:
+
+```cs
+body.DebugDraw(drawer, new DebugDrawSettings
+{
+    CurrentColor = DebugDrawColors.Green,
+    Segments = 64
+});
+```
+
+Spheres, capsules, cylinders, and cones are drawn using triangles. `Segments` sets the number of
+pieces around each circular cross-section; its default is 48. For example, `Segments = 8` gives a
+cylinder an octagonal outline, while `64` makes it look much rounder. Higher values require more
+triangles. Boxes, triangle shapes, and convex hulls already have flat faces, so `Segments` has no
+effect on them. These settings affect only the visualization.
+
+`PointCloudShape` and custom shapes may use an approximate surface for debug drawing. See
+[shape drawing](shapes.md#debug-drawing) for its limitations.
 
 ## Forces and impulses
 

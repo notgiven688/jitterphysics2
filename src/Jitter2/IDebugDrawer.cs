@@ -18,31 +18,47 @@ public interface IDebugDrawable
     /// </summary>
     /// <param name="drawer">The debug drawer used for rendering debug information.</param>
     public void DebugDraw(IDebugDrawer drawer);
+
+    /// <summary>
+    /// Draws the object using the supplied visualization settings.
+    /// Implementations that only provide <see cref="DebugDraw(IDebugDrawer)"/> use their default visualization.
+    /// </summary>
+    public void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings) => DebugDraw(drawer);
 }
 
 /// <summary>
-/// Defines an interface for drawing debug visualization elements.
+/// Receives colored line segments and triangles for debug visualization, in world space.
 /// </summary>
+/// <remarks>
+/// Only <see cref="DrawSegment"/> is required. The default triangle implementation draws its edges.
+/// Use <see cref="DebugDrawGeometry"/> to generate point markers and other drawing geometry.
+/// </remarks>
 public interface IDebugDrawer
 {
     /// <summary>
-    /// Draws a line segment between two points.
+    /// Draws a line segment between two points with a color packed as <c>0xRRGGBBAA</c>.
     /// </summary>
-    /// <param name="pA">The start point of the segment.</param>
-    /// <param name="pB">The end point of the segment.</param>
-    public void DrawSegment(in JVector pA, in JVector pB);
+    /// <param name="pA">The start point of the segment in world space.</param>
+    /// <param name="pB">The end point of the segment in world space.</param>
+    /// <param name="color">The color packed as <c>0xRRGGBBAA</c>.</param>
+    public void DrawSegment(in JVector pA, in JVector pB, uint color);
 
     /// <summary>
-    /// Draws a triangle defined by three vertices.
+    /// Draws a triangle with a color packed as <c>0xRRGGBBAA</c>.
+    /// The default implementation draws the three edges using <see cref="DrawSegment"/>.
     /// </summary>
-    /// <param name="pA">The first vertex of the triangle.</param>
-    /// <param name="pB">The second vertex of the triangle.</param>
-    /// <param name="pC">The third vertex of the triangle.</param>
-    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC);
-
-    /// <summary>
-    /// Draws a point at the specified position.
-    /// </summary>
-    /// <param name="p">The position of the point.</param>
-    public void DrawPoint(in JVector p);
+    /// <remarks>
+    /// Vertices are counterclockwise when viewed from the front. The front normal points along
+    /// <c>(pB - pA) x (pC - pA)</c>. Implementations may use back-face culling.
+    /// </remarks>
+    /// <param name="pA">The first vertex in world space.</param>
+    /// <param name="pB">The second vertex in world space.</param>
+    /// <param name="pC">The third vertex in world space.</param>
+    /// <param name="color">The color packed as <c>0xRRGGBBAA</c>.</param>
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
+    {
+        DrawSegment(pA, pB, color);
+        DrawSegment(pB, pC, color);
+        DrawSegment(pC, pA, color);
+    }
 }

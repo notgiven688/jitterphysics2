@@ -169,18 +169,29 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref LinearMotorData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        JVector first = JVector.Transform(data.LocalAxis1, Body1.Orientation);
+        JVector second = JVector.Transform(data.LocalAxis2, Body2.Orientation);
+        JVector referenceOrigin = Body1 == Body1.World.NullBody ? Body2.Position : Body1.Position;
+        JVector secondOrigin = Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position;
+        drawer.DrawSegment(referenceOrigin - first * settings.Scale, referenceOrigin + first * settings.Scale, settings.ReferenceColor);
+        drawer.DrawSegment(secondOrigin - second * settings.Scale, secondOrigin + second * settings.Scale, settings.CurrentColor);
+        if (data.Velocity != 0)
+        {
+            Real sign = data.Velocity > 0 ? 1 : -1;
+            // The solver drives dot(axis2, v2) - dot(axis1, v1) toward TargetVelocity.
+            drawer.DrawArrow(referenceOrigin, -first * (sign * settings.Scale * (Real)0.5),
+                settings.ReferenceColor, settings);
+            drawer.DrawArrow(secondOrigin, second * (sign * settings.Scale * (Real)0.5),
+                settings.CurrentColor, settings);
+        }
     }
 
     public static void IterateLinearMotor(ref ConstraintData constraint, in TimeStep timeStep)

@@ -17,6 +17,12 @@ public class CapsuleShape : RigidBodyShape
     private Real radius;
     private Real halfLength;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Capsule(ref triangleSink, radius, halfLength, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the capsule.
     /// </summary>

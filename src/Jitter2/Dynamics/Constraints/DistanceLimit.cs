@@ -363,22 +363,33 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
         body2.AngularVelocity += JVector.Transform(lambda * jacobian[3], body2.InverseInertiaWorld);
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref DistanceLimitData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        drawer.DrawSegment(body1.Position, p1);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawSegment(p1, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        JVector first = Anchor1, second = Anchor2;
+        if (Body1 != Body1.World.NullBody) drawer.DrawSegment(Body1.Position, first, settings.ReferenceColor);
+        if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        drawer.DrawSegment(first, second, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.Scale * (Real)0.06, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.Scale * (Real)0.06, settings.CurrentColor);
+        if (data.LimitMin >= data.LimitMax)
+        {
+            Real radius = data.Distance + data.LimitMin * (Real)0.5 + data.LimitMax * (Real)0.5;
+            if (Real.IsFinite(radius) && radius >= 0)
+                drawer.DrawSphere(first, radius, settings.UpperLimitColor, settings.Segments);
+        }
+        else
+        {
+            Real minimum = data.Distance + data.LimitMin, maximum = data.Distance + data.LimitMax;
+            if (Real.IsFinite(minimum) && minimum > 0)
+                drawer.DrawSphere(first, minimum, settings.LowerLimitColor, settings.Segments);
+            if (Real.IsFinite(maximum) && maximum >= 0)
+                drawer.DrawSphere(first, maximum, settings.UpperLimitColor, settings.Segments);
+        }
     }
 }

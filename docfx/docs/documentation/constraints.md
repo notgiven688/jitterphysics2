@@ -151,6 +151,38 @@ Better constraint behavior can also be achieved by sub-stepping, see [World](wor
 
 Constraints can be temporarily enabled or disabled using `constraint.IsEnabled`.
 
+## Debug drawing
+
+Constraints and joints can draw their anchors, axes, and limits through an `IDebugDrawer`:
+
+```cs
+constraint.DebugDraw(drawer);
+joint.DebugDraw(drawer);
+```
+
+See [setting up a debug drawer](bodies.md#debugging-shapes) to connect this to your renderer.
+Call these methods after the physics step, while the world is not being modified by another thread.
+
+Green shows reference guides and upper or fixed limits, red shows lower limits, and white shows
+current anchors and directions. Coordinate frames use red for X, green for Y, and blue for Z.
+
+Pass `DebugDrawSettings` to change the appearance:
+
+```cs
+constraint.DebugDraw(drawer, new DebugDrawSettings
+{
+    Scale = 2,
+    FrameSize = 1.5f
+});
+```
+
+`Scale` changes the size of guides and markers. `FrameSize` sets the length of coordinate-frame
+axes in world units. Physical distances and angular limits keep their actual values.
+See <xref:Jitter2.DebugDrawSettings> for color, arrow, and detail settings.
+
+A drawer that implements only `DrawSegment` displays wireframes. Implement `DrawTriangle` as well
+to fill the anchor markers and arrows.
+
 ## Constraint lifetime
 
 Constraints are attached to their two rigid bodies. They can become invalid without an explicit

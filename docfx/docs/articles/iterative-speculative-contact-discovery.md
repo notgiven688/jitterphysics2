@@ -4,7 +4,7 @@ Speculative contacts prevent tunneling by creating a contact before two shapes a
 
 The method explored here repeats collision detection after such an impulse. This article uses the name **Iterative Speculative Contact Discovery (ISCD)** for that approach: detect a speculative contact, apply its impulse, then detect again using the updated velocities.
 
-The discussion assumes a standard impulse-based rigid-body solver. JitterDemo includes an experimental implementation in [CcdSolver.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/JitterDemo/Demos/Misc/CcdSolver.cs), and an interactive example appears below.
+The discussion assumes a standard impulse-based rigid-body solver. An experimental implementation is available in [CcdSolver.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/JitterDemo/Demos/Misc/CcdSolver.cs), and an interactive example appears below.
 
 The examples and interactive demo in this article use speculative contacts with angular response. Jitter's built-in `EnableSpeculativeContacts` mode is [linear-only](../documentation/bodies.md#speculative-contacts): it predicts translation and applies only linear impulses. The ISCD experiment explores an alternative that retains angular response.
 
