@@ -348,9 +348,10 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
     FrameSize = 1.5f
 });
 </code></pre>
-<p><code>GuideSize</code> changes the size of guides and markers. <code>FrameSize</code> sets the length of coordinate-frame
-axes in world units. Arrowhead size and shaft thickness are adjusted separately using
-<code>ArrowHeadSize</code> and <code>ArrowShaftRadius</code>. Physical distances and angular limits keep their actual values.
+<p><code>GuideSize</code> changes the size of guides. <code>FrameSize</code> sets the length of coordinate-frame
+axes in world units, and <code>PointRadius</code> sets the radius of anchor spheres. Arrowhead size and
+shaft thickness are adjusted separately using <code>ArrowHeadSize</code> and <code>ArrowShaftRadius</code>.
+Physical distances and angular limits keep their actual values.
 See <a class="xref" href="../../api/Jitter2.DebugDrawSettings.html">DebugDrawSettings</a> for color, arrow, and detail settings.</p>
 <p>Arrows are solid by default. Set <code>SolidArrows = false</code> for wire arrows. <code>ArrowSegments</code> controls
 arrow smoothness. Wire arrowheads connect every vertex around the base to the tip.

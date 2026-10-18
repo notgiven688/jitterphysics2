@@ -6376,6 +6376,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.DebugDrawSettings.Origin
   nameWithType: DebugDrawSettings.Origin
+- uid: Jitter2.DebugDrawSettings.PointRadius
+  name: PointRadius
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_PointRadius
+  commentId: P:Jitter2.DebugDrawSettings.PointRadius
+  fullName: Jitter2.DebugDrawSettings.PointRadius
+  nameWithType: DebugDrawSettings.PointRadius
+- uid: Jitter2.DebugDrawSettings.PointRadius*
+  name: PointRadius
+  href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_PointRadius_
+  commentId: Overload:Jitter2.DebugDrawSettings.PointRadius
+  isSpec: "True"
+  fullName: Jitter2.DebugDrawSettings.PointRadius
+  nameWithType: DebugDrawSettings.PointRadius
 - uid: Jitter2.DebugDrawSettings.ReferenceColor
   name: ReferenceColor
   href: api/Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ReferenceColor
