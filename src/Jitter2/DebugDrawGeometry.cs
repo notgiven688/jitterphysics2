@@ -273,7 +273,10 @@ public static class DebugDrawGeometry
         uint xColor, uint yColor, uint zColor)
         => drawer.DrawFrame(center, orientation, DebugDrawSettings.Default with
         {
-            FrameSize = size, AxisXColor = xColor, AxisYColor = yColor, AxisZColor = zColor
+            FrameSize = size,
+            AxisXColor = xColor,
+            AxisYColor = yColor,
+            AxisZColor = zColor
         });
 
     /// <summary>Draws a wire orientation frame with a single color.</summary>
