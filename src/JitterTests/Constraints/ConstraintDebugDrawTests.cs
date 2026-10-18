@@ -290,24 +290,6 @@ public class ConstraintDebugDrawTests
         Assert.That(((LegacyConstraint)constraint).Calls, Is.EqualTo(1));
     }
 
-    [TestCase(false, false)]
-    [TestCase(false, true)]
-    [TestCase(true, false)]
-    [TestCase(true, true)]
-    public void JointPreservesInheritedDrawingOverridesIncludingCallsToBase(bool useSettings, bool callBase)
-    {
-        using World world = new();
-        var socket = world.CreateConstraint<InheritedLegacyBallSocket>(world.NullBody, world.CreateRigidBody());
-        socket.Initialize(new JVector(3, 4, 5));
-        socket.CallBase = callBase;
-        var joint = new DrawingJoint(socket);
-        var drawer = new RecordingDrawer();
-        if (useSettings) joint.DebugDraw(drawer, Settings);
-        else joint.DebugDraw(drawer);
-        Assert.That(socket.Calls, Is.EqualTo(1));
-        Assert.That(drawer.Segments.Count > 0, Is.EqualTo(callBase));
-    }
-
     [TestCase(false)]
     [TestCase(true)]
     public void JointPrefersTheSettingsOverrideWhenTheSubclassProvidesBothOverloads(bool useSettings)
@@ -342,15 +324,14 @@ public class ConstraintDebugDrawTests
     }
 
     [Test]
-    public void JointDrawingDoesNotAllocateAfterDispatchInitialization()
+    public void JointDrawingDoesNotAllocateAfterInitialization()
     {
         using World world = new();
         RigidBody body = world.CreateRigidBody();
         var socket = world.CreateConstraint<UnmodifiedBallSocket>(world.NullBody, body);
         socket.Initialize(JVector.One);
-        var customized = world.CreateConstraint<InheritedLegacyBallSocket>(world.NullBody, body);
+        var customized = world.CreateConstraint<ConfiguredBallSocket>(world.NullBody, body);
         customized.Initialize(JVector.One);
-        customized.CallBase = true;
         var joint = new DrawingJoint(socket, customized);
         var drawer = new CountingDrawer();
         for (int i = 0; i < 10; i++) joint.DebugDraw(drawer, Settings);
@@ -1405,23 +1386,18 @@ public class ConstraintDebugDrawTests
         public override void DebugDraw(IDebugDrawer drawer) => Calls++;
     }
 
-    private class LegacyBallSocket : BallSocket
+    private sealed class ConfiguredBallSocket : BallSocket
     {
         public int Calls;
-        public bool CallBase;
+        public int ConfiguredCalls;
+        public DebugDrawSettings LastSettings;
+
         public override void DebugDraw(IDebugDrawer drawer)
         {
             Calls++;
-            if (CallBase) base.DebugDraw(drawer);
+            base.DebugDraw(drawer);
         }
-    }
 
-    private sealed class InheritedLegacyBallSocket : LegacyBallSocket;
-
-    private sealed class ConfiguredBallSocket : LegacyBallSocket
-    {
-        public int ConfiguredCalls;
-        public DebugDrawSettings LastSettings;
         public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
         {
             ConfiguredCalls++;

@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Jitter2.DataStructures;
 
 namespace Jitter2.Dynamics.Constraints;
@@ -95,39 +93,7 @@ public class Joint : IDebugDrawable
                     }
                 }
             }
-            if (DrawingDispatch.Get(constraint).UseSingleArgumentOverload) constraint.DebugDraw(drawer);
-            else constraint.DebugDraw(drawer, jointSettings);
-        }
-    }
-
-    private sealed class DrawingDispatch
-    {
-        private static readonly ConditionalWeakTable<Type, DrawingDispatch> cache = new();
-        private delegate void ConfiguredDraw(IDebugDrawer drawer, in DebugDrawSettings settings);
-        public readonly bool UseSingleArgumentOverload;
-
-        private DrawingDispatch(Constraint constraint)
-        {
-            Action<IDebugDrawer> singleArgument = constraint.DebugDraw;
-            ConfiguredDraw configured = constraint.DebugDraw;
-            // The delegates resolve the virtual overrides, including those inherited by subclasses.
-            // Prefer a more-derived single-argument override unless a settings override supersedes it.
-            UseSingleArgumentOverload = singleArgument.Method.DeclaringType!.IsSubclassOf(configured.Method.DeclaringType!);
-        }
-
-        public static DrawingDispatch Get(Constraint constraint)
-        {
-            Type type = constraint.GetType();
-            if (cache.TryGetValue(type, out DrawingDispatch? dispatch)) return dispatch;
-            lock (cache)
-            {
-                if (!cache.TryGetValue(type, out dispatch))
-                {
-                    dispatch = new DrawingDispatch(constraint);
-                    cache.Add(type, dispatch);
-                }
-            }
-            return dispatch;
+            constraint.DebugDraw(drawer, jointSettings);
         }
     }
 }
