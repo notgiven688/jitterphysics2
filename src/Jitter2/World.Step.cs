@@ -947,7 +947,7 @@ public sealed partial class World
                     if (Interlocked.CompareExchange(ref b2._lockFlag, 1, 0) != 0)
                     {
                         // back off
-                        Volatile.Write(ref b1._lockFlag, 0);
+                        if (b1.MotionType == MotionType.Dynamic) Volatile.Write(ref b1._lockFlag, 0);
                         return false;
                     }
                 }
@@ -975,7 +975,7 @@ public sealed partial class World
                     if (Interlocked.CompareExchange(ref b1._lockFlag, 1, 0) != 0)
                     {
                         // back off
-                        Volatile.Write(ref b2._lockFlag, 0);
+                        if (b2.MotionType == MotionType.Dynamic) Volatile.Write(ref b2._lockFlag, 0);
                         return false;
                     }
                 }
