@@ -379,7 +379,7 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
         JVector outputAxis = JVector.Transform(JVector.UnitX, outputTilt);
         RigidBody outputShaft = CreateBody(anchor + outputAxis * 1.1f, new BoxShape(2, 0.16f, 0.5f), true);
         outputShaft.Orientation = outputTilt;
-        var drive = new HingeJoint(world, support, inputShaft, inputCenter, JVector.UnitX, AngularLimit.Full, true);
+        var drive = new HingeJoint(world, support, inputShaft, inputCenter, JVector.UnitX, AngularLimit.Full, JointDrive.Motor);
         drive.HingeAngle.Softness = drive.BallSocket.Softness = 0;
         drive.Motor!.TargetVelocity = 2;
         drive.Motor.MaximumTorque = 4;

@@ -26,7 +26,7 @@ public class Demo27 : IDemo, ICleanDemo
         paddle.AffectedByGravity = false;
 
         var hinge = new HingeJoint(world, world.NullBody, paddle, paddle.Position,
-            JVector.UnitY, AngularLimit.Full, false);
+            JVector.UnitY, AngularLimit.Full);
 
         var ball = world.CreateRigidBody();
         ball.AddShape(new SphereShape(0.2f));

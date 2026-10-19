@@ -26,7 +26,7 @@ public class Demo13 : IDemo
             b1.AddShape(new BoxShape(2, 0.1f, 0.1f));
             b1.Position = new JVector(1.1f, 4, 0);
 
-            HingeJoint hj = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitX, AngularLimit.Full, true);
+            HingeJoint hj = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitX, AngularLimit.Full, JointDrive.Motor);
             UniversalJoint uj = new UniversalJoint(world, b0, b1, new JVector(0, 4, 0), JVector.UnitX, JVector.UnitX);
 
             if (hj.Motor != null)

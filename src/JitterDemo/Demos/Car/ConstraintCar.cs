@@ -93,7 +93,7 @@ public class ConstraintCar
 
         for (int i = 0; i < 4; i++)
         {
-            sockets[i] = new HingeJoint(world, damper[i], wheels[i], wheels[i].Position, JVector.UnitX, true);
+            sockets[i] = new HingeJoint(world, damper[i], wheels[i], wheels[i].Position, JVector.UnitX, JointDrive.Motor);
         }
 
         if (world.BroadPhaseFilter is not Common.IgnoreCollisionBetweenFilter filter)

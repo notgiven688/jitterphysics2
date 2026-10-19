@@ -30,10 +30,62 @@ Joints are combinations of constraints for common use cases:
 
 | Joint | Constraints used | Remaining DOF |
 |-------|------------------|---------------|
-| `HingeJoint` | `BallSocket` + `HingeAngle` (+ optional `AngularMotor`) | 1 rotational |
-| `PrismaticJoint` | `PointOnLine` + `FixedAngle` or `HingeAngle` (+ optional `LinearMotor`) | 1 translational |
-| `UniversalJoint` | `BallSocket` + `TwistAngle` (+ optional `AngularMotor`) | 2 rotational |
+| `HingeJoint` | `BallSocket` + `HingeAngle` (+ optional `AngularMotor` or `TwistServo`) | 1 rotational |
+| `PrismaticJoint` | `PointOnLine` + `FixedAngle` or `HingeAngle` (+ optional `LinearMotor` or `LinearAxisServo`) | 1 translational |
+| `UniversalJoint` | `BallSocket` + `TwistAngle` (+ optional `AngularMotor` or `AngularServo`) | 2 rotational |
 | `WeldJoint` | `BallSocket` + `FixedAngle` | 0 (fully locked) |
+
+### Joint drives
+
+`HingeJoint`, `PrismaticJoint`, and `UniversalJoint` can create an optional motor or servo.
+Select `JointDrive.Motor` for velocity control or `JointDrive.Servo` for position control.
+Omitting the drive creates the mechanical joint only (`JointDrive.None`).
+
+```cs
+var elbow = new HingeJoint(
+    world, upperArm, lowerArm, center, axis,
+    angle: AngularLimit.FromDegree(0, 135),
+    drive: JointDrive.Servo);
+
+elbow.Servo!.TargetAngle = JAngle.FromDegree(90);
+elbow.Servo.MaximumTorque = 20;
+```
+
+The hinge exposes a `TwistServo`; its target angle uses the same zero and direction as
+`HingeAngle.Angle`. The prismatic joint exposes a `LinearAxisServo` using the same coordinate
+as `Slider.Distance`:
+
+```cs
+var slider = new PrismaticJoint(
+    world, body1, body2, center, axis,
+    limit: new LinearLimit(0, 2),
+    drive: JointDrive.Servo);
+
+slider.Servo!.TargetPosition = 1.5f;
+slider.Servo.MaximumForce = 100;
+```
+
+The universal joint exposes an `AngularServo` with a target orientation for body 2 relative to
+body 1. Its initial target is the current relative orientation:
+
+```cs
+var universal = new UniversalJoint(
+    world, body1, body2, center, axis1, axis2,
+    drive: JointDrive.Servo);
+
+universal.Servo!.TargetRelativeOrientation = targetRelativeOrientation;
+universal.Servo.MaximumTorque = 20;
+```
+
+The twist constraint remains active, so only orientations allowed by the joint can be reached.
+
+Drives start with zero maximum force or torque. Mechanical limits remain independent of
+the drive. The joint includes its drive when enabled, disabled, removed, or drawn for debugging.
+`Motor` is available when selecting `JointDrive.Motor`; `Servo` is available when selecting
+`JointDrive.Servo`. Otherwise the corresponding property is null.
+
+The older `hasMotor` constructor overloads are obsolete and remain supported. Replace
+`hasMotor: true` with `drive: JointDrive.Motor`, or omit the drive when no motor is needed.
 
 ## Creating constraints
 
