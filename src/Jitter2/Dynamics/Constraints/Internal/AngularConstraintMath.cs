@@ -30,6 +30,38 @@ internal static class AngularConstraintMath
         return sine > 0 ? q.Vector * (StableMath.Atan2(sine, q.W) / sine) : JVector.Zero;
     }
 
+    internal static Real CalculateTwist(in JQuaternion left, in JQuaternion right, in JVector axis,
+        out JVector jacobian, out short hemisphere)
+    {
+        JMatrix m = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(left, right);
+        JQuaternion q = left * right;
+        jacobian = JVector.TransposedTransform(axis, m);
+        Real projection = JVector.Dot(axis, new JVector(q.X, q.Y, q.Z));
+        hemisphere = q.W < 0 ? (short)-1 : (short)1;
+        if (q.W < 0)
+        {
+            q *= -1;
+            projection *= -(Real)1;
+            jacobian *= -1;
+        }
+
+        // Use the projection angle throughout, so softness and impulses have angular units.
+        Real derivativeSquared = jacobian.LengthSquared();
+        if (derivativeSquared > 0)
+        {
+            jacobian *= (Real)1 / MathR.Sqrt(derivativeSquared);
+        }
+        else
+        {
+            // At a half turn, use the one-sided derivative along the twist direction.
+            jacobian = -JVector.Transform(axis, right);
+        }
+
+        JVector perpendicular = q.Vector - axis * projection;
+        Real cosine = MathR.Sqrt(q.W * q.W + perpendicular.LengthSquared());
+        return (Real)2 * StableMath.Atan2(projection, cosine);
+    }
+
     internal static JMatrix CalculateJacobian(in JQuaternion left, in JQuaternion right,
         out JVector error, out short hemisphere)
     {

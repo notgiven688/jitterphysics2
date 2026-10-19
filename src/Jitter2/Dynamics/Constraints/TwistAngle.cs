@@ -159,43 +159,11 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JMatrix m = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
-
-        JQuaternion q = data.Q0 * q1.Conjugate() * q2;
-
-        data.Jacobian = JVector.TransposedTransform(data.B, m);
-
-        Real error = JVector.Dot(data.B, new JVector(q.X, q.Y, q.Z));
+        Real error = AngularConstraintMath.CalculateTwist(data.Q0 * q1.Conjugate(), q2, data.B,
+            out data.Jacobian, out short hemisphere);
         Real lower = data.Angle1, upper = data.Angle2, target = data.FixedAngle;
-
-        short hemisphere = q.W < 0 ? (short)-1 : (short)1;
         if (data.Hemisphere != 0 && data.Hemisphere != hemisphere) data.AccumulatedImpulse = 0;
         data.Hemisphere = hemisphere;
-
-        if (q.W < (Real)0.0)
-        {
-            q *= -1;
-            error *= -(Real)1.0;
-            data.Jacobian *= -1;
-        }
-
-        // Use the projection angle throughout: its angular derivative has unit length.
-        // Mixing this coordinate with sin(angle / 2) changes both softness and impulse units.
-        Real derivativeSquared = data.Jacobian.LengthSquared();
-        if (derivativeSquared > 0)
-        {
-            data.Jacobian *= (Real)1.0 / MathR.Sqrt(derivativeSquared);
-        }
-        else
-        {
-            // The projection angle has a cusp at exactly a half turn. Choose its
-            // twist direction, which is a valid one-sided derivative at this pose.
-            data.Jacobian = -JVector.Transform(data.B, q2);
-        }
-
-        JVector perpendicular = q.Vector - data.B * error;
-        Real cosine = MathR.Sqrt(q.W * q.W + perpendicular.LengthSquared());
-        error = (Real)2.0 * StableMath.Atan2(error, cosine);
 
         data.Clamp = 0;
         bool fullRange = lower <= -MathR.PI && upper >= MathR.PI;

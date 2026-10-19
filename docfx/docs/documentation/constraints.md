@@ -129,6 +129,51 @@ starts at zero tilt, which violates a positive inner boundary and will be correc
 Translation and twist of body 2 about its constrained axis remain free. Combine this constraint
 with `BallSocket` for a joint, and optionally `TwistAngle` to limit twist.
 
+### Servos
+
+Servos drive bodies toward a target configuration. They can start outside that configuration,
+and their targets can change between simulation steps. Changing a target wakes sleeping
+connected dynamic bodies on the next step. Motors control velocity; servos control
+position or orientation.
+
+| Servo | Controls | Target |
+|-------|----------|--------|
+| `AngularServo` | 3 angular directions | `TargetRelativeOrientation`: body 2's orientation in body 1's frame |
+| `TwistServo` | 1 angular direction | `TargetAngle`: twist relative to the initial zero-twist pose |
+| `LinearServo` | 3 linear directions | `TargetPosition`: offset from anchor 1 to anchor 2, in body 1's frame |
+| `LinearAxisServo` | 1 linear direction | `TargetPosition`: signed anchor separation along the axis attached to body 1 |
+
+Maximum force or torque defaults to **zero**, as with motors. Set `MaximumForce` or
+`MaximumTorque` to enable the drive. Positive infinity allows unlimited force or torque.
+`Bias` controls how aggressively the servo approaches its target; `Softness` allows compliance.
+
+For example, drive two robot arm segments toward a relative orientation:
+
+```cs
+var servo = world.CreateConstraint<AngularServo>(upperArm, lowerArm);
+servo.Initialize(JQuaternion.CreateRotationX((Real)0.5));
+servo.MaximumTorque = 20;
+
+// Choose a different configuration later without moving the bodies directly.
+servo.TargetRelativeOrientation = JQuaternion.CreateRotationX((Real)1.0);
+```
+
+The parameterless `AngularServo.Initialize()` captures the current relative orientation instead.
+`LinearServo.Initialize(anchor1, anchor2)` accepts separate world-space attachment points;
+its default target of zero pulls them toward coincidence. `LinearAxisServo.Initialize` also
+accepts the desired signed separation. `TwistServo.Initialize` accepts a target angle relative
+to its initial reference, so a nonzero target begins with an angular error.
+
+`TwistServo` uses signed joint angles from -180° to +180°. Moving from -170° to +170°
+travels 340° through zero. Targets outside this interval are rejected; revolutions are not
+tracked. Use mechanical limits to keep the joint's motion inside the angular interval.
+`AngularServo` targets an orientation and uses the shortest rotation to reach it, so
+equivalent orientations represent the same target.
+
+Servos act alongside mechanical constraints. For an elbow, use a hinge to keep the arm segments
+connected and enforce the joint's angle limits, then add a `TwistServo` around the same axis.
+Its torque limit controls the actuator's strength while the hinge retains its mechanical limits.
+
 ### Fixed constraints
 
 To constrain a rigid body relative to world space, use `world.NullBody` as one of the bodies.
@@ -178,6 +223,10 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 | `FixedAngle` | An RGB frame on each body accounts for the initial relative orientation. Matching axes stay parallel when the target is met. No frame is drawn for `World.NullBody`. |
 | `LinearMotor` | Green arrows show body 1's contribution and white arrows show body 2's contribution to the requested relative motion. These show target direction, not measured velocity; a static body stays still. |
 | `AngularMotor` | A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is static or kinematic. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow. |
+| `AngularServo` | A green target frame and an RGB current frame share an origin. Corresponding axes align when the target is reached. |
+| `TwistServo` | The dial marks the target twist and the current twist angle. |
+| `LinearServo` | Green and white markers show the target and current anchor positions; the connecting line shows the position error. |
+| `LinearAxisServo` | Markers show target and current position projected onto the reference axis. Perpendicular motion is uncontrolled. |
 | `SpringConstraint` | The coil joins the anchors; the green cross marks the rest length along the spring direction. |
 
 Pass `DebugDrawSettings` to change the appearance:
