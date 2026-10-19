@@ -170,7 +170,7 @@ public class Demo34 : IDemo, IDemoGui
 
     public void DrawGui(Ui root)
     {
-        root.Window("Robot Arm", controlsWindow, 300f, controls =>
+        root.Window(MaterialSymbols.PrecisionManufacturing + " Robot Arm", controlsWindow, 300f, controls =>
         {
             controls.ItemSpacing(8f);
             controls.Spacing(4f);
