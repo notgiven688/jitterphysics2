@@ -177,17 +177,17 @@ Constraints remove one or more of these degrees of freedom.</p>
 <tbody>
 <tr>
 <td><code>HingeJoint</code></td>
-<td><code>BallSocket</code> + <code>HingeAngle</code> (+ optional <code>AngularMotor</code>)</td>
+<td><code>BallSocket</code> + <code>HingeAngle</code> (+ optional <code>AngularMotor</code> or <code>TwistServo</code>)</td>
 <td>1 rotational</td>
 </tr>
 <tr>
 <td><code>PrismaticJoint</code></td>
-<td><code>PointOnLine</code> + <code>FixedAngle</code> or <code>HingeAngle</code> (+ optional <code>LinearMotor</code>)</td>
+<td><code>PointOnLine</code> + <code>FixedAngle</code> or <code>HingeAngle</code> (+ optional <code>LinearMotor</code> or <code>LinearAxisServo</code>)</td>
 <td>1 translational</td>
 </tr>
 <tr>
 <td><code>UniversalJoint</code></td>
-<td><code>BallSocket</code> + <code>TwistAngle</code> (+ optional <code>AngularMotor</code>)</td>
+<td><code>BallSocket</code> + <code>TwistAngle</code> (+ optional <code>AngularMotor</code> or <code>AngularServo</code>)</td>
 <td>2 rotational</td>
 </tr>
 <tr>
@@ -197,6 +197,45 @@ Constraints remove one or more of these degrees of freedom.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="joint-drives">Joint drives</h3>
+<p><code>HingeJoint</code>, <code>PrismaticJoint</code>, and <code>UniversalJoint</code> can create an optional motor or servo.
+Select <code>JointDrive.Motor</code> for velocity control or <code>JointDrive.Servo</code> for position control.
+Omitting the drive creates the mechanical joint only (<code>JointDrive.None</code>).</p>
+<pre><code class="lang-cs">var elbow = new HingeJoint(
+    world, upperArm, lowerArm, center, axis,
+    angle: AngularLimit.FromDegree(0, 135),
+    drive: JointDrive.Servo);
+
+elbow.Servo!.TargetAngle = JAngle.FromDegree(90);
+elbow.Servo.MaximumTorque = 20;
+</code></pre>
+<p>The hinge exposes a <code>TwistServo</code>; its target angle uses the same zero and direction as
+<code>HingeAngle.Angle</code>. The prismatic joint exposes a <code>LinearAxisServo</code> using the same coordinate
+as <code>Slider.Distance</code>:</p>
+<pre><code class="lang-cs">var slider = new PrismaticJoint(
+    world, body1, body2, center, axis,
+    limit: new LinearLimit(0, 2),
+    drive: JointDrive.Servo);
+
+slider.Servo!.TargetPosition = 1.5f;
+slider.Servo.MaximumForce = 100;
+</code></pre>
+<p>The universal joint exposes an <code>AngularServo</code> with a target orientation for body 2 relative to
+body 1. Its initial target is the current relative orientation:</p>
+<pre><code class="lang-cs">var universal = new UniversalJoint(
+    world, body1, body2, center, axis1, axis2,
+    drive: JointDrive.Servo);
+
+universal.Servo!.TargetRelativeOrientation = targetRelativeOrientation;
+universal.Servo.MaximumTorque = 20;
+</code></pre>
+<p>The twist constraint remains active, so only orientations allowed by the joint can be reached.</p>
+<p>Drives start with zero maximum force or torque. Mechanical limits remain independent of
+the drive. The joint includes its drive when enabled, disabled, removed, or drawn for debugging.
+<code>Motor</code> is available when selecting <code>JointDrive.Motor</code>; <code>Servo</code> is available when selecting
+<code>JointDrive.Servo</code>. Otherwise the corresponding property is null.</p>
+<p>The older <code>hasMotor</code> constructor overloads are obsolete and remain supported. Replace
+<code>hasMotor: true</code> with <code>drive: JointDrive.Motor</code>, or omit the drive when no motor is needed.</p>
 <h2 id="creating-constraints">Creating constraints</h2>
 <p>Constraints are instantiated through a create method in the world class:</p>
 <pre><code class="lang-cs">var constraint = world.CreateConstraint&lt;ConstraintType&gt;(body1, body2);
@@ -264,6 +303,66 @@ The two-axis <code>Initialize</code> overload supports an initially tilted body 
 starts at zero tilt, which violates a positive inner boundary and will be corrected by the solver.</p>
 <p>Translation and twist of body 2 about its constrained axis remain free. Combine this constraint
 with <code>BallSocket</code> for a joint, and optionally <code>TwistAngle</code> to limit twist.</p>
+<h3 id="servos">Servos</h3>
+<p>Servos drive bodies toward a target configuration. They can start outside that configuration,
+and their targets can change between simulation steps. Changing a target wakes sleeping
+connected dynamic bodies on the next step. Motors control velocity; servos control
+position or orientation.</p>
+<table>
+<thead>
+<tr>
+<th>Servo</th>
+<th>Controls</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AngularServo</code></td>
+<td>3 angular directions</td>
+<td><code>TargetRelativeOrientation</code>: body 2's orientation in body 1's frame</td>
+</tr>
+<tr>
+<td><code>TwistServo</code></td>
+<td>1 angular direction</td>
+<td><code>TargetAngle</code>: twist relative to the initial zero-twist pose</td>
+</tr>
+<tr>
+<td><code>LinearServo</code></td>
+<td>3 linear directions</td>
+<td><code>TargetPosition</code>: offset from anchor 1 to anchor 2, in body 1's frame</td>
+</tr>
+<tr>
+<td><code>LinearAxisServo</code></td>
+<td>1 linear direction</td>
+<td><code>TargetPosition</code>: signed anchor separation along the axis attached to body 1</td>
+</tr>
+</tbody>
+</table>
+<p>Maximum force or torque defaults to <strong>zero</strong>, as with motors. Set <code>MaximumForce</code> or
+<code>MaximumTorque</code> to enable the drive. Positive infinity allows unlimited force or torque.
+<code>Bias</code> controls how aggressively the servo approaches its target; <code>Softness</code> allows compliance.</p>
+<p>For example, drive two robot arm segments toward a relative orientation:</p>
+<pre><code class="lang-cs">var servo = world.CreateConstraint&lt;AngularServo&gt;(upperArm, lowerArm);
+servo.Initialize(JQuaternion.CreateRotationX((Real)0.5));
+servo.MaximumTorque = 20;
+
+// Choose a different configuration later without moving the bodies directly.
+servo.TargetRelativeOrientation = JQuaternion.CreateRotationX((Real)1.0);
+</code></pre>
+<p>The parameterless <code>AngularServo.Initialize()</code> captures the current relative orientation instead.
+<code>LinearServo.Initialize(anchor1, anchor2)</code> accepts separate world-space attachment points;
+its default target of zero pulls them toward coincidence. <code>LinearAxisServo.Initialize</code> also
+accepts the desired signed separation. <code>TwistServo.Initialize</code> accepts a target angle relative
+to its initial reference, so a nonzero target begins with an angular error.</p>
+<p><code>TwistServo</code> uses signed joint angles from -180° to +180°. Moving from -170° to +170°
+travels 340° through zero. Targets outside this interval are rejected; revolutions are not
+tracked. Use mechanical limits to keep the joint's motion inside the angular interval.
+<code>AngularServo</code> targets an orientation and uses the shortest rotation to reach it, so
+equivalent orientations represent the same target.</p>
+<p>Servos act alongside mechanical constraints. For an elbow, use a hinge to keep the arm segments
+connected and enforce the joint's angle limits, then add a <code>TwistServo</code> around the same axis.
+Its torque limit controls the actuator's strength while the hinge retains its mechanical limits.</p>
 <h3 id="fixed-constraints">Fixed constraints</h3>
 <p>To constrain a rigid body relative to world space, use <code>world.NullBody</code> as one of the bodies.
 For example, to keep a capsule upright:</p>
@@ -334,6 +433,22 @@ current anchors and directions. Coordinate frames use red for X, green for Y, an
 <tr>
 <td><code>AngularMotor</code></td>
 <td>A green circle and white arrow show the target rotation of body 2, or body 1 when body 2 is static or kinematic. Short lines show both motor axes. The arrow shows target direction, not measured speed; a zero target has no arrow.</td>
+</tr>
+<tr>
+<td><code>AngularServo</code></td>
+<td>A green target frame and an RGB current frame share an origin. Corresponding axes align when the target is reached.</td>
+</tr>
+<tr>
+<td><code>TwistServo</code></td>
+<td>The dial marks the target twist and the current twist angle.</td>
+</tr>
+<tr>
+<td><code>LinearServo</code></td>
+<td>Green and white markers show the target and current anchor positions; the connecting line shows the position error.</td>
+</tr>
+<tr>
+<td><code>LinearAxisServo</code></td>
+<td>Markers show target and current position projected onto the reference axis. Perpendicular motion is uncontrolled.</td>
 </tr>
 <tr>
 <td><code>SpringConstraint</code></td>

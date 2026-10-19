@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class UniversalJoint | Jitter2 ">
       
-      <meta name="description" content="Creates a universal joint utilizing a , , and an optional  constraint.">
+      <meta name="description" content="Creates a universal joint using a  and a , with an optional  or .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Class UniversalJoint  <a class="header-action link-secondary" title="View source
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Creates a universal joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>
-constraint.</p>
+  <div class="markdown summary"><p>Creates a universal joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a> and a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>,
+with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.html">AngularServo</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -187,9 +187,9 @@ constraint.</p>
 
   <a id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)">
-  UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)">
+  UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new universal joint.</p>
@@ -197,7 +197,64 @@ constraint.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UniversalJoint(World world, RigidBody body1, RigidBody body2, JVector center, JVector rotateAxis1, JVector rotateAxis2, bool hasMotor = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public UniversalJoint(World world, RigidBody body1, RigidBody body2, JVector center, JVector rotateAxis1, JVector rotateAxis2, JointDrive drive = JointDrive.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>world</code> <a class="xref" href="Jitter2.World.html">World</a></dt>
+    <dd></dd>
+    <dt><code>body1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>rotateAxis1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>rotateAxis2</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>drive</code> <a class="xref" href="Jitter2.Dynamics.Constraints.JointDrive.html">JointDrive</a></dt>
+    <dd><p>The optional drive. Motor and servo torque default to zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">center</code> contains a non-finite value, when either rotation axis is zero
+or contains a non-finite value, when either body does not belong to <code class="paramref">world</code>,
+or when both body references are the same.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)">
+  UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new universal joint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the overload accepting JointDrive instead of hasMotor.&quot;)]
+public UniversalJoint(World world, RigidBody body1, RigidBody body2, JVector center, JVector rotateAxis1, JVector rotateAxis2, bool hasMotor)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -228,6 +285,9 @@ constraint.</p>
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
     <dd><p>Thrown when <code class="paramref">center</code> contains a non-finite value, when either rotation axis is zero
 or contains a non-finite value, when either body does not belong to <code class="paramref">world</code>,
@@ -355,6 +415,37 @@ or when both body references are the same.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_UniversalJoint_Servo_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.Servo*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint_Servo" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.Servo">
+  Servo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AngularServo? Servo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.html">AngularServo</a></dt>
     <dd></dd>
   </dl>
 

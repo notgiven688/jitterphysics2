@@ -101,6 +101,12 @@ in the reference frames of their respective bodies.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.html">AngularServo</a></dt>
+      <dd><p>Drives body 2 toward a target orientation relative to body 1 using limited torque.
+Controls three angular degrees of freedom; translation remains free.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a></dt>
       <dd><p>Implements a ball-and-socket joint that anchors a point on each body together,
 removing three translational degrees of freedom.</p>
@@ -147,7 +153,8 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html">HingeJoint</a></dt>
-      <dd><p>Constructs a hinge joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle">HingeAngle</a>, a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>.</p>
+      <dd><p>Constructs a hinge using a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle">HingeAngle</a> and a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_BallSocket">BallSocket</a>,
+with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.TwistServo.html">TwistServo</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -156,9 +163,21 @@ removing two angular degrees of freedom. Optionally enforces angular limits.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearAxisServo.html">LinearAxisServo</a></dt>
+      <dd><p>Drives the signed separation of two anchors along an axis attached to body 1 using limited force.
+Controls one translational degree of freedom; perpendicular movement and rotation remain free.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a></dt>
       <dd><p>A motor constraint that drives relative translational velocity along an axis fixed
 in the reference frame of each body.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearServo.html">LinearServo</a></dt>
+      <dd><p>Drives an anchor on body 2 toward a target position attached to body 1 using limited force.
+Controls three translational degrees of freedom; relative orientation remains free.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -179,7 +198,7 @@ freedom if the limit is enforced.</p>
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html">PrismaticJoint</a></dt>
       <dd><p>Constructs a prismatic joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.PointOnLine.html">PointOnLine</a> constraint, either a
 <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_FixedAngle">FixedAngle</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_HingeAngle">HingeAngle</a> constraint, and an optional
-<a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> constraint.</p>
+<a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.html">LinearMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.LinearAxisServo.html">LinearAxisServo</a> drive.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -189,9 +208,15 @@ degree of freedom when the limit is enforced.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistServo.html">TwistServo</a></dt>
+      <dd><p>Drives relative twist toward a target angle using limited torque.
+Controls one angular degree of freedom; translation and swing remain free.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html">UniversalJoint</a></dt>
-      <dd><p>Creates a universal joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>
-constraint.</p>
+      <dd><p>Creates a universal joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a> and a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>,
+with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.html">AngularServo</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -213,6 +238,10 @@ Used by constraints to restrict rotational motion within a specified range.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.AngularMotorData.html">AngularMotor.AngularMotorData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html">AngularServo.AngularServoData</a></dt>
       <dd></dd>
     </dl>
     <dl class="jumplist">
@@ -245,6 +274,10 @@ Used by constraints to restrict rotational motion within a specified range.</p>
       <dd></dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html">LinearAxisServo.LinearAxisServoData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearLimit.html">LinearLimit</a></dt>
       <dd><p>Represents a linear limit defined by a minimum and maximum distance.
 Used by constraints to restrict translational motion within a specified range.</p>
@@ -252,6 +285,10 @@ Used by constraints to restrict translational motion within a specified range.</
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearMotor.LinearMotorData.html">LinearMotor.LinearMotorData</a></dt>
+      <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html">LinearServo.LinearServoData</a></dt>
       <dd></dd>
     </dl>
     <dl class="jumplist">
@@ -270,6 +307,18 @@ Used by constraints to restrict translational motion within a specified range.</
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html">TwistAngle.TwistLimitData</a></dt>
       <dd></dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html">TwistServo.TwistServoData</a></dt>
+      <dd></dd>
+    </dl>
+    <h3 id="enums">
+Enums
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Jitter2.Dynamics.Constraints.JointDrive.html">JointDrive</a></dt>
+      <dd><p>Selects the optional drive created with a joint.</p>
+</dd>
     </dl>
 
 

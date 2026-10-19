@@ -1307,6 +1307,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.AngularServo.AngularServoData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.AngularServo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.AngularServo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.AngularServo",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.AngularServo.yml\" sourcestartlinenumber=\"1\">Drives body 2 toward a target orientation relative to body 1 using limited torque.\nControls three angular degrees of freedom; translation remains free.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Dynamics.Constraints.BallSocket.BallSocketData.yml",
       "output": {
         ".html": {
@@ -1527,7 +1555,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.HingeJoint",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.HingeJoint.yml\" sourcestartlinenumber=\"1\">Constructs a hinge joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref>, a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>, and an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.HingeJoint.yml\" sourcestartlinenumber=\"1\">Constructs a hinge using a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref> and a <xref href=\"Jitter2.Dynamics.Constraints.HingeJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>,\nwith an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.TwistServo\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1542,6 +1570,48 @@
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.Joint",
       "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.Joint.yml\" sourcestartlinenumber=\"1\">Base class for joints, which are composite constraints built from multiple <xref href=\"Jitter2.Dynamics.Constraints.Constraint\" data-throw-if-not-resolved=\"false\"></xref> instances.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.JointDrive.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.JointDrive.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.JointDrive",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.JointDrive.yml\" sourcestartlinenumber=\"1\">Selects the optional drive created with a joint.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearAxisServo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearAxisServo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearAxisServo",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearAxisServo.yml\" sourcestartlinenumber=\"1\">Drives the signed separation of two anchors along an axis attached to body 1 using limited force.\nControls one translational degree of freedom; perpendicular movement and rotation remain free.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1584,6 +1654,34 @@
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.LinearMotor",
       "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearMotor.yml\" sourcestartlinenumber=\"1\">A motor constraint that drives relative translational velocity along an axis fixed\nin the reference frame of each body.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearServo.LinearServoData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.LinearServo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.LinearServo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.LinearServo",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.LinearServo.yml\" sourcestartlinenumber=\"1\">Drives an anchor on body 2 toward a target position attached to body 1 using limited force.\nControls three translational degrees of freedom; relative orientation remains free.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1653,7 +1751,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.PrismaticJoint",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml\" sourcestartlinenumber=\"1\">Constructs a prismatic joint using a <xref href=\"Jitter2.Dynamics.Constraints.PointOnLine\" data-throw-if-not-resolved=\"false\"></xref> constraint, either a\n<xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref> constraint, and an optional\n<xref href=\"Jitter2.Dynamics.Constraints.LinearMotor\" data-throw-if-not-resolved=\"false\"></xref> constraint.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.PrismaticJoint.yml\" sourcestartlinenumber=\"1\">Constructs a prismatic joint using a <xref href=\"Jitter2.Dynamics.Constraints.PointOnLine\" data-throw-if-not-resolved=\"false\"></xref> constraint, either a\n<xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.FixedAngle\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.PrismaticJoint.HingeAngle\" data-throw-if-not-resolved=\"false\"></xref> constraint, and an optional\n<xref href=\"Jitter2.Dynamics.Constraints.LinearMotor\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.LinearAxisServo\" data-throw-if-not-resolved=\"false\"></xref> drive.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -1699,6 +1797,34 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.TwistServo.TwistServoData",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.Constraints.TwistServo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.Constraints.TwistServo.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.Constraints.TwistServo",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.TwistServo.yml\" sourcestartlinenumber=\"1\">Drives relative twist toward a target angle using limited torque.\nControls one angular degree of freedom; translation and swing remain free.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Dynamics.Constraints.UniversalJoint.yml",
       "output": {
         ".html": {
@@ -1709,7 +1835,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Dynamics.Constraints.UniversalJoint",
-      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.UniversalJoint.yml\" sourcestartlinenumber=\"1\">Creates a universal joint utilizing a <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.TwistAngle\" data-throw-if-not-resolved=\"false\"></xref>, <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>, and an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref>\nconstraint.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.Constraints.UniversalJoint.yml\" sourcestartlinenumber=\"1\">Creates a universal joint using a <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.TwistAngle\" data-throw-if-not-resolved=\"false\"></xref> and a <xref href=\"Jitter2.Dynamics.Constraints.UniversalJoint.BallSocket\" data-throw-if-not-resolved=\"false\"></xref>,\nwith an optional <xref href=\"Jitter2.Dynamics.Constraints.AngularMotor\" data-throw-if-not-resolved=\"false\"></xref> or <xref href=\"Jitter2.Dynamics.Constraints.AngularServo\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
     },
     {
       "type": "ManagedReference",

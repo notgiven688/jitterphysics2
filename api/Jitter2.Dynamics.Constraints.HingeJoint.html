@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class HingeJoint | Jitter2 ">
       
-      <meta name="description" content="Constructs a hinge joint utilizing a , a , and an optional .">
+      <meta name="description" content="Constructs a hinge using a  and a , with an optional  or .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_HingeJoint" data-uid="Jitter2.Dynamics.Constraints.HingeJoint" class="text-break">
-Class HingeJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L15"><i class="bi bi-code-slash"></i></a>
+Class HingeJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L16"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,8 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Constructs a hinge joint utilizing a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle">HingeAngle</a>, a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_BallSocket">BallSocket</a>, and an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a>.</p>
+  <div class="markdown summary"><p>Constructs a hinge using a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle">HingeAngle</a> and a <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_BallSocket">BallSocket</a>,
+with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.TwistServo.html">TwistServo</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -186,9 +187,9 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
   <a id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor*"></a>
 
-  <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,System.Boolean)">
-  HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_JointDrive_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.JointDrive)">
+  HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, JointDrive)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
@@ -196,7 +197,64 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, AngularLimit angle, bool hasMotor = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, AngularLimit angle, JointDrive drive = JointDrive.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>world</code> <a class="xref" href="Jitter2.World.html">World</a></dt>
+    <dd></dd>
+    <dt><code>body1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>hingeCenter</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>hingeAxis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>angle</code> <a class="xref" href="Jitter2.Dynamics.Constraints.AngularLimit.html">AngularLimit</a></dt>
+    <dd></dd>
+    <dt><code>drive</code> <a class="xref" href="Jitter2.Dynamics.Constraints.JointDrive.html">JointDrive</a></dt>
+    <dd><p>The optional drive. Motor and servo torque default to zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
+<code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
+to <code class="paramref">world</code>, or when both body references are the same.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,System.Boolean)">
+  HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, bool)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the overload accepting JointDrive instead of hasMotor.&quot;)]
+public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, AngularLimit angle, bool hasMotor)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -227,6 +285,63 @@ Class HingeJoint  <a class="header-action link-secondary" title="View source" hr
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
+    <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
+<code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
+to <code class="paramref">world</code>, or when both body references are the same.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)">
+  HingeJoint(World, RigidBody, RigidBody, JVector, JVector, JointDrive)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, JointDrive drive = JointDrive.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>world</code> <a class="xref" href="Jitter2.World.html">World</a></dt>
+    <dd></dd>
+    <dt><code>body1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+    <dt><code>hingeCenter</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>hingeAxis</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+    <dt><code>drive</code> <a class="xref" href="Jitter2.Dynamics.Constraints.JointDrive.html">JointDrive</a></dt>
+    <dd><p>The optional drive. Motor and servo torque default to zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
     <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
 <code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
@@ -240,7 +355,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)">
   HingeJoint(World, RigidBody, RigidBody, JVector, JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L89"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new hinge joint.</p>
@@ -248,7 +363,8 @@ to <code class="paramref">world</code>, or when both body references are the sam
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, bool hasMotor = false)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the overload accepting JointDrive instead of hasMotor.&quot;)]
+public HingeJoint(World world, RigidBody body1, RigidBody body2, JVector hingeCenter, JVector hingeAxis, bool hasMotor)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -277,6 +393,9 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h4 class="section">Exceptions</h4>
   <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The drive selection is invalid.</p>
+</dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></dt>
     <dd><p>Thrown when <code class="paramref">hingeCenter</code> contains a non-finite value, when
 <code class="paramref">hingeAxis</code> is zero or contains a non-finite value, when either body does not belong
@@ -294,7 +413,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_BallSocket" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.BallSocket">
   BallSocket
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -325,7 +444,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_Body1" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L17"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -356,7 +475,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_Body2" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L18"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -387,7 +506,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_HingeAngle" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.HingeAngle">
   HingeAngle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -418,7 +537,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_Motor" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.Motor">
   Motor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -445,11 +564,42 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
 
 
+  <a id="Jitter2_Dynamics_Constraints_HingeJoint_Servo_" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.Servo*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_HingeJoint_Servo" data-uid="Jitter2.Dynamics.Constraints.HingeJoint.Servo">
+  Servo
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TwistServo? Servo { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.Constraints.TwistServo.html">TwistServo</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L15" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/HingeJoint.cs/#L16" class="edit-link">Edit this page</a>
         </div>
 
 

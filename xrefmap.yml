@@ -6946,6 +6946,248 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.TargetVelocity
   nameWithType: AngularMotor.TargetVelocity
+- uid: Jitter2.Dynamics.Constraints.AngularServo
+  name: AngularServo
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html
+  commentId: T:Jitter2.Dynamics.Constraints.AngularServo
+  fullName: Jitter2.Dynamics.Constraints.AngularServo
+  nameWithType: AngularServo
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData
+  name: AngularServo.AngularServoData
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html
+  commentId: T:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData
+  nameWithType: AngularServo.AngularServoData
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.AccumulatedImpulse
+  name: AccumulatedImpulse
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_AccumulatedImpulse
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.AccumulatedImpulse
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.AccumulatedImpulse
+  nameWithType: AngularServo.AngularServoData.AccumulatedImpulse
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Bias
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Bias
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Bias
+  nameWithType: AngularServo.AngularServoData.Bias
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_BiasFactor
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.BiasFactor
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.BiasFactor
+  nameWithType: AngularServo.AngularServoData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body1
+  name: Body1
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Body1
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body1
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body1
+  nameWithType: AngularServo.AngularServoData.Body1
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body2
+  name: Body2
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Body2
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body2
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Body2
+  nameWithType: AngularServo.AngularServoData.Body2
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.EffectiveMass
+  name: EffectiveMass
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_EffectiveMass
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.EffectiveMass
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.EffectiveMass
+  nameWithType: AngularServo.AngularServoData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Hemisphere
+  name: Hemisphere
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Hemisphere
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Hemisphere
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Hemisphere
+  nameWithType: AngularServo.AngularServoData.Hemisphere
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Jacobian
+  name: Jacobian
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Jacobian
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Jacobian
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Jacobian
+  nameWithType: AngularServo.AngularServoData.Jacobian
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.MaximumTorque
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_MaximumTorque
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.MaximumTorque
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.MaximumTorque
+  nameWithType: AngularServo.AngularServoData.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_Softness
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Softness
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.Softness
+  nameWithType: AngularServo.AngularServoData.Softness
+- uid: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.TargetRelativeOrientation
+  name: TargetRelativeOrientation
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.html#Jitter2_Dynamics_Constraints_AngularServo_AngularServoData_TargetRelativeOrientation
+  commentId: F:Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.TargetRelativeOrientation
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.AngularServoData.TargetRelativeOrientation
+  nameWithType: AngularServo.AngularServoData.TargetRelativeOrientation
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Bias
+  commentId: P:Jitter2.Dynamics.Constraints.AngularServo.Bias
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Bias
+  nameWithType: AngularServo.Bias
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Bias*
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Bias_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.Bias
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Bias
+  nameWithType: AngularServo.Bias
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Create
+  name: Create()
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Create
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.Create
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Create()
+  nameWithType: AngularServo.Create()
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Create*
+  name: Create
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Create_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.Create
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Create
+  nameWithType: AngularServo.Create
+- uid: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: AngularServo.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: AngularServo.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: AngularServo.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.DebugDraw
+  nameWithType: AngularServo.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Impulse
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Impulse
+  commentId: P:Jitter2.Dynamics.Constraints.AngularServo.Impulse
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Impulse
+  nameWithType: AngularServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Impulse*
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Impulse_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.Impulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Impulse
+  nameWithType: AngularServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Initialize
+  name: Initialize()
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Initialize
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.Initialize
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Initialize()
+  nameWithType: AngularServo.Initialize()
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Initialize(Jitter2.LinearMath.JQuaternion)
+  name: Initialize(JQuaternion)
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Initialize_Jitter2_LinearMath_JQuaternion_
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.Initialize(Jitter2.LinearMath.JQuaternion)
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Initialize(Jitter2.LinearMath.JQuaternion)
+  nameWithType: AngularServo.Initialize(JQuaternion)
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Initialize*
+  name: Initialize
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Initialize_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.Initialize
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Initialize
+  nameWithType: AngularServo.Initialize
+- uid: Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateAngularServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_IterateAngularServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateAngularServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: AngularServo.IterateAngularServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: AngularServo.IterateAngularServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo*
+  name: IterateAngularServo
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_IterateAngularServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.IterateAngularServo
+  nameWithType: AngularServo.IterateAngularServo
+- uid: Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_MaximumTorque
+  commentId: P:Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque
+  nameWithType: AngularServo.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque*
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_MaximumTorque_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.MaximumTorque
+  nameWithType: AngularServo.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationAngularServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_PrepareForIterationAngularServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationAngularServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: AngularServo.PrepareForIterationAngularServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: AngularServo.PrepareForIterationAngularServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo*
+  name: PrepareForIterationAngularServo
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_PrepareForIterationAngularServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.PrepareForIterationAngularServo
+  nameWithType: AngularServo.PrepareForIterationAngularServo
+- uid: Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart()
+  nameWithType: AngularServo.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.ResetWarmStart
+  nameWithType: AngularServo.ResetWarmStart
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Softness
+  commentId: P:Jitter2.Dynamics.Constraints.AngularServo.Softness
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Softness
+  nameWithType: AngularServo.Softness
+- uid: Jitter2.Dynamics.Constraints.AngularServo.Softness*
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_Softness_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.Softness
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.Softness
+  nameWithType: AngularServo.Softness
+- uid: Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
+  name: TargetRelativeOrientation
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_TargetRelativeOrientation
+  commentId: P:Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
+  nameWithType: AngularServo.TargetRelativeOrientation
+- uid: Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation*
+  name: TargetRelativeOrientation
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_TargetRelativeOrientation_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
+  nameWithType: AngularServo.TargetRelativeOrientation
 - uid: Jitter2.Dynamics.Constraints.BallSocket
   name: BallSocket
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html
@@ -9069,6 +9311,15 @@ references:
   commentId: T:Jitter2.Dynamics.Constraints.HingeJoint
   fullName: Jitter2.Dynamics.Constraints.HingeJoint
   nameWithType: HingeJoint
+- uid: Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.JointDrive)
+  name: HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, JointDrive)
+  href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_JointDrive_
+  commentId: M:Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,Jitter2.Dynamics.Constraints.JointDrive)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, JointDrive)
+  fullName: Jitter2.Dynamics.Constraints.HingeJoint.HingeJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.AngularLimit, Jitter2.Dynamics.Constraints.JointDrive)
+  fullName.vb: Jitter2.Dynamics.Constraints.HingeJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.AngularLimit, Jitter2.Dynamics.Constraints.JointDrive)
+  nameWithType: HingeJoint.HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, JointDrive)
+  nameWithType.vb: HingeJoint.New(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, JointDrive)
 - uid: Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.AngularLimit,System.Boolean)
   name: HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, bool)
   href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_System_Boolean_
@@ -9078,6 +9329,15 @@ references:
   fullName.vb: Jitter2.Dynamics.Constraints.HingeJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.AngularLimit, Boolean)
   nameWithType: HingeJoint.HingeJoint(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, bool)
   nameWithType.vb: HingeJoint.New(World, RigidBody, RigidBody, JVector, JVector, AngularLimit, Boolean)
+- uid: Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)
+  name: HingeJoint(World, RigidBody, RigidBody, JVector, JVector, JointDrive)
+  href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_
+  commentId: M:Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, JointDrive)
+  fullName: Jitter2.Dynamics.Constraints.HingeJoint.HingeJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive)
+  fullName.vb: Jitter2.Dynamics.Constraints.HingeJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive)
+  nameWithType: HingeJoint.HingeJoint(World, RigidBody, RigidBody, JVector, JVector, JointDrive)
+  nameWithType.vb: HingeJoint.New(World, RigidBody, RigidBody, JVector, JVector, JointDrive)
 - uid: Jitter2.Dynamics.Constraints.HingeJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)
   name: HingeJoint(World, RigidBody, RigidBody, JVector, JVector, bool)
   href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_
@@ -9162,6 +9422,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeJoint.Motor
   nameWithType: HingeJoint.Motor
+- uid: Jitter2.Dynamics.Constraints.HingeJoint.Servo
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_Servo
+  commentId: P:Jitter2.Dynamics.Constraints.HingeJoint.Servo
+  fullName: Jitter2.Dynamics.Constraints.HingeJoint.Servo
+  nameWithType: HingeJoint.Servo
+- uid: Jitter2.Dynamics.Constraints.HingeJoint.Servo*
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.HingeJoint.html#Jitter2_Dynamics_Constraints_HingeJoint_Servo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.HingeJoint.Servo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.HingeJoint.Servo
+  nameWithType: HingeJoint.Servo
 - uid: Jitter2.Dynamics.Constraints.Joint
   name: Joint
   href: api/Jitter2.Dynamics.Constraints.Joint.html
@@ -9268,6 +9541,333 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Joint.Remove
   nameWithType: Joint.Remove
+- uid: Jitter2.Dynamics.Constraints.JointDrive
+  name: JointDrive
+  href: api/Jitter2.Dynamics.Constraints.JointDrive.html
+  commentId: T:Jitter2.Dynamics.Constraints.JointDrive
+  fullName: Jitter2.Dynamics.Constraints.JointDrive
+  nameWithType: JointDrive
+- uid: Jitter2.Dynamics.Constraints.JointDrive.Motor
+  name: Motor
+  href: api/Jitter2.Dynamics.Constraints.JointDrive.html#Jitter2_Dynamics_Constraints_JointDrive_Motor
+  commentId: F:Jitter2.Dynamics.Constraints.JointDrive.Motor
+  fullName: Jitter2.Dynamics.Constraints.JointDrive.Motor
+  nameWithType: JointDrive.Motor
+- uid: Jitter2.Dynamics.Constraints.JointDrive.None
+  name: None
+  href: api/Jitter2.Dynamics.Constraints.JointDrive.html#Jitter2_Dynamics_Constraints_JointDrive_None
+  commentId: F:Jitter2.Dynamics.Constraints.JointDrive.None
+  fullName: Jitter2.Dynamics.Constraints.JointDrive.None
+  nameWithType: JointDrive.None
+- uid: Jitter2.Dynamics.Constraints.JointDrive.Servo
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.JointDrive.html#Jitter2_Dynamics_Constraints_JointDrive_Servo
+  commentId: F:Jitter2.Dynamics.Constraints.JointDrive.Servo
+  fullName: Jitter2.Dynamics.Constraints.JointDrive.Servo
+  nameWithType: JointDrive.Servo
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo
+  name: LinearAxisServo
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html
+  commentId: T:Jitter2.Dynamics.Constraints.LinearAxisServo
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo
+  nameWithType: LinearAxisServo
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1
+  name: Anchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Anchor1
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1
+  nameWithType: LinearAxisServo.Anchor1
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1*
+  name: Anchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Anchor1_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor1
+  nameWithType: LinearAxisServo.Anchor1
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2
+  name: Anchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Anchor2
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2
+  nameWithType: LinearAxisServo.Anchor2
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2*
+  name: Anchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Anchor2_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Anchor2
+  nameWithType: LinearAxisServo.Anchor2
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Axis
+  name: Axis
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Axis
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Axis
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Axis
+  nameWithType: LinearAxisServo.Axis
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Axis*
+  name: Axis
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Axis_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Axis
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Axis
+  nameWithType: LinearAxisServo.Axis
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Bias
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Bias
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Bias
+  nameWithType: LinearAxisServo.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Bias*
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Bias_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Bias
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Bias
+  nameWithType: LinearAxisServo.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Create
+  name: Create()
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Create
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.Create
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Create()
+  nameWithType: LinearAxisServo.Create()
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Create*
+  name: Create
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Create_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Create
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Create
+  nameWithType: LinearAxisServo.Create
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: LinearAxisServo.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: LinearAxisServo.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: LinearAxisServo.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.DebugDraw
+  nameWithType: LinearAxisServo.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Impulse
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse
+  nameWithType: LinearAxisServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse*
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Impulse_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Impulse
+  nameWithType: LinearAxisServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single)
+  name: Initialize(JVector, JVector, JVector, float)
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Single_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Single)
+  name.vb: Initialize(JVector, JVector, JVector, Single)
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, float)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: LinearAxisServo.Initialize(JVector, JVector, JVector, float)
+  nameWithType.vb: LinearAxisServo.Initialize(JVector, JVector, JVector, Single)
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize*
+  name: Initialize
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Initialize_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Initialize
+  nameWithType: LinearAxisServo.Initialize
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateLinearAxisServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_IterateLinearAxisServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateLinearAxisServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearAxisServo.IterateLinearAxisServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearAxisServo.IterateLinearAxisServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo*
+  name: IterateLinearAxisServo
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_IterateLinearAxisServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.IterateLinearAxisServo
+  nameWithType: LinearAxisServo.IterateLinearAxisServo
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData
+  name: LinearAxisServo.LinearAxisServoData
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html
+  commentId: T:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData
+  nameWithType: LinearAxisServo.LinearAxisServoData
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.AccumulatedImpulse
+  name: AccumulatedImpulse
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_AccumulatedImpulse
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.AccumulatedImpulse
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.AccumulatedImpulse
+  nameWithType: LinearAxisServo.LinearAxisServoData.AccumulatedImpulse
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_Bias
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Bias
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Bias
+  nameWithType: LinearAxisServo.LinearAxisServoData.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_BiasFactor
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.BiasFactor
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.BiasFactor
+  nameWithType: LinearAxisServo.LinearAxisServoData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body1
+  name: Body1
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_Body1
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body1
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body1
+  nameWithType: LinearAxisServo.LinearAxisServoData.Body1
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body2
+  name: Body2
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_Body2
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body2
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Body2
+  nameWithType: LinearAxisServo.LinearAxisServoData.Body2
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.EffectiveMass
+  name: EffectiveMass
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_EffectiveMass
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.EffectiveMass
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.EffectiveMass
+  nameWithType: LinearAxisServo.LinearAxisServoData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.J0
+  name: J0
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_J0
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.J0
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.J0
+  nameWithType: LinearAxisServo.LinearAxisServoData.J0
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor1
+  name: LocalAnchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_LocalAnchor1
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor1
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor1
+  nameWithType: LinearAxisServo.LinearAxisServoData.LocalAnchor1
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor2
+  name: LocalAnchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_LocalAnchor2
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor2
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAnchor2
+  nameWithType: LinearAxisServo.LinearAxisServoData.LocalAnchor2
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAxis
+  name: LocalAxis
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_LocalAxis
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAxis
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.LocalAxis
+  nameWithType: LinearAxisServo.LinearAxisServoData.LocalAxis
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.MaximumForce
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_MaximumForce
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.MaximumForce
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.MaximumForce
+  nameWithType: LinearAxisServo.LinearAxisServoData.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_Softness
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Softness
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.Softness
+  nameWithType: LinearAxisServo.LinearAxisServoData.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.TargetPosition
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.html#Jitter2_Dynamics_Constraints_LinearAxisServo_LinearAxisServoData_TargetPosition
+  commentId: F:Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.TargetPosition
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.LinearAxisServoData.TargetPosition
+  nameWithType: LinearAxisServo.LinearAxisServoData.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_MaximumForce
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce
+  nameWithType: LinearAxisServo.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce*
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_MaximumForce_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.MaximumForce
+  nameWithType: LinearAxisServo.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Position
+  name: Position
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Position
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Position
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Position
+  nameWithType: LinearAxisServo.Position
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Position*
+  name: Position
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Position_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Position
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Position
+  nameWithType: LinearAxisServo.Position
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationLinearAxisServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_PrepareForIterationLinearAxisServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationLinearAxisServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearAxisServo.PrepareForIterationLinearAxisServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearAxisServo.PrepareForIterationLinearAxisServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo*
+  name: PrepareForIterationLinearAxisServo
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_PrepareForIterationLinearAxisServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.PrepareForIterationLinearAxisServo
+  nameWithType: LinearAxisServo.PrepareForIterationLinearAxisServo
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart()
+  nameWithType: LinearAxisServo.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.ResetWarmStart
+  nameWithType: LinearAxisServo.ResetWarmStart
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Softness
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.Softness
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Softness
+  nameWithType: LinearAxisServo.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.Softness*
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_Softness_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.Softness
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.Softness
+  nameWithType: LinearAxisServo.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_TargetPosition
+  commentId: P:Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
+  nameWithType: LinearAxisServo.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition*
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_TargetPosition_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
+  nameWithType: LinearAxisServo.TargetPosition
 - uid: Jitter2.Dynamics.Constraints.LinearLimit
   name: LinearLimit
   href: api/Jitter2.Dynamics.Constraints.LinearLimit.html
@@ -9587,6 +10187,286 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.TargetVelocity
   nameWithType: LinearMotor.TargetVelocity
+- uid: Jitter2.Dynamics.Constraints.LinearServo
+  name: LinearServo
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html
+  commentId: T:Jitter2.Dynamics.Constraints.LinearServo
+  fullName: Jitter2.Dynamics.Constraints.LinearServo
+  nameWithType: LinearServo
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Anchor1
+  name: Anchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Anchor1
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.Anchor1
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Anchor1
+  nameWithType: LinearServo.Anchor1
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Anchor1*
+  name: Anchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Anchor1_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Anchor1
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Anchor1
+  nameWithType: LinearServo.Anchor1
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Anchor2
+  name: Anchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Anchor2
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.Anchor2
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Anchor2
+  nameWithType: LinearServo.Anchor2
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Anchor2*
+  name: Anchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Anchor2_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Anchor2
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Anchor2
+  nameWithType: LinearServo.Anchor2
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Bias
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.Bias
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Bias
+  nameWithType: LinearServo.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Bias*
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Bias_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Bias
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Bias
+  nameWithType: LinearServo.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Create
+  name: Create()
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Create
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.Create
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Create()
+  nameWithType: LinearServo.Create()
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Create*
+  name: Create
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Create_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Create
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Create
+  nameWithType: LinearServo.Create
+- uid: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: LinearServo.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: LinearServo.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: LinearServo.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.DebugDraw
+  nameWithType: LinearServo.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Impulse
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Impulse
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.Impulse
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Impulse
+  nameWithType: LinearServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Impulse*
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Impulse_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Impulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Impulse
+  nameWithType: LinearServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector)
+  name: Initialize(JVector)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Initialize_Jitter2_LinearMath_JVector_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector)
+  nameWithType: LinearServo.Initialize(JVector)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
+  name: Initialize(JVector, JVector)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: LinearServo.Initialize(JVector, JVector)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Initialize*
+  name: Initialize
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Initialize_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Initialize
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Initialize
+  nameWithType: LinearServo.Initialize
+- uid: Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateLinearServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_IterateLinearServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateLinearServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearServo.IterateLinearServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearServo.IterateLinearServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo*
+  name: IterateLinearServo
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_IterateLinearServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.IterateLinearServo
+  nameWithType: LinearServo.IterateLinearServo
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData
+  name: LinearServo.LinearServoData
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html
+  commentId: T:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData
+  nameWithType: LinearServo.LinearServoData
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.AccumulatedImpulse
+  name: AccumulatedImpulse
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_AccumulatedImpulse
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.AccumulatedImpulse
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.AccumulatedImpulse
+  nameWithType: LinearServo.LinearServoData.AccumulatedImpulse
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_Bias
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Bias
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Bias
+  nameWithType: LinearServo.LinearServoData.Bias
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_BiasFactor
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.BiasFactor
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.BiasFactor
+  nameWithType: LinearServo.LinearServoData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body1
+  name: Body1
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_Body1
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body1
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body1
+  nameWithType: LinearServo.LinearServoData.Body1
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body2
+  name: Body2
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_Body2
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body2
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Body2
+  nameWithType: LinearServo.LinearServoData.Body2
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.EffectiveMass
+  name: EffectiveMass
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_EffectiveMass
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.EffectiveMass
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.EffectiveMass
+  nameWithType: LinearServo.LinearServoData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor1
+  name: LocalAnchor1
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_LocalAnchor1
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor1
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor1
+  nameWithType: LinearServo.LinearServoData.LocalAnchor1
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor2
+  name: LocalAnchor2
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_LocalAnchor2
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor2
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.LocalAnchor2
+  nameWithType: LinearServo.LinearServoData.LocalAnchor2
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.MaximumForce
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_MaximumForce
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.MaximumForce
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.MaximumForce
+  nameWithType: LinearServo.LinearServoData.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R1
+  name: R1
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_R1
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R1
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R1
+  nameWithType: LinearServo.LinearServoData.R1
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R2
+  name: R2
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_R2
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R2
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.R2
+  nameWithType: LinearServo.LinearServoData.R2
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_Softness
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Softness
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.Softness
+  nameWithType: LinearServo.LinearServoData.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.TargetPosition
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.html#Jitter2_Dynamics_Constraints_LinearServo_LinearServoData_TargetPosition
+  commentId: F:Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.TargetPosition
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.LinearServoData.TargetPosition
+  nameWithType: LinearServo.LinearServoData.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearServo.MaximumForce
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_MaximumForce
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.MaximumForce
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.MaximumForce
+  nameWithType: LinearServo.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearServo.MaximumForce*
+  name: MaximumForce
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_MaximumForce_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.MaximumForce
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.MaximumForce
+  nameWithType: LinearServo.MaximumForce
+- uid: Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationLinearServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_PrepareForIterationLinearServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationLinearServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: LinearServo.PrepareForIterationLinearServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: LinearServo.PrepareForIterationLinearServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo*
+  name: PrepareForIterationLinearServo
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_PrepareForIterationLinearServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.PrepareForIterationLinearServo
+  nameWithType: LinearServo.PrepareForIterationLinearServo
+- uid: Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart()
+  nameWithType: LinearServo.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.ResetWarmStart
+  nameWithType: LinearServo.ResetWarmStart
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Softness
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.Softness
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Softness
+  nameWithType: LinearServo.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearServo.Softness*
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_Softness_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.Softness
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.Softness
+  nameWithType: LinearServo.Softness
+- uid: Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_TargetPosition
+  commentId: P:Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
+  nameWithType: LinearServo.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearServo.TargetPosition*
+  name: TargetPosition
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_TargetPosition_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
+  nameWithType: LinearServo.TargetPosition
 - uid: Jitter2.Dynamics.Constraints.PointOnLine
   name: PointOnLine
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html
@@ -10124,6 +11004,51 @@ references:
   commentId: T:Jitter2.Dynamics.Constraints.PrismaticJoint
   fullName: Jitter2.Dynamics.Constraints.PrismaticJoint
   nameWithType: PrismaticJoint
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector)
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive,System.Boolean)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, JointDrive, bool)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_System_Boolean_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive,System.Boolean)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, JointDrive, Boolean)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive, bool)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive, Boolean)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, JointDrive, bool)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, JointDrive, Boolean)
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit)
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,Jitter2.Dynamics.Constraints.JointDrive,System.Boolean)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, JointDrive, bool)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_Jitter2_Dynamics_Constraints_JointDrive_System_Boolean_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,Jitter2.Dynamics.Constraints.JointDrive,System.Boolean)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, JointDrive, Boolean)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit, Jitter2.Dynamics.Constraints.JointDrive, bool)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit, Jitter2.Dynamics.Constraints.JointDrive, Boolean)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, JointDrive, bool)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, JointDrive, Boolean)
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,System.Boolean)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, bool)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_System_Boolean_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,System.Boolean)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, Boolean)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit, bool)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit, Boolean)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, bool)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, Boolean)
 - uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit,System.Boolean,System.Boolean)
   name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, bool, bool)
   href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_System_Boolean_System_Boolean_
@@ -10133,6 +11058,15 @@ references:
   fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.LinearLimit, Boolean, Boolean)
   nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, bool, bool)
   nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, LinearLimit, Boolean, Boolean)
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)
+  name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, bool)
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_
+  commentId: M:Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, Boolean)
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.PrismaticJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, bool)
+  fullName.vb: Jitter2.Dynamics.Constraints.PrismaticJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Boolean)
+  nameWithType: PrismaticJoint.PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, bool)
+  nameWithType.vb: PrismaticJoint.New(World, RigidBody, RigidBody, JVector, JVector, Boolean)
 - uid: Jitter2.Dynamics.Constraints.PrismaticJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean,System.Boolean)
   name: PrismaticJoint(World, RigidBody, RigidBody, JVector, JVector, bool, bool)
   href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_System_Boolean_
@@ -10217,6 +11151,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.Motor
   nameWithType: PrismaticJoint.Motor
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.Servo
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_Servo
+  commentId: P:Jitter2.Dynamics.Constraints.PrismaticJoint.Servo
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.Servo
+  nameWithType: PrismaticJoint.Servo
+- uid: Jitter2.Dynamics.Constraints.PrismaticJoint.Servo*
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_Servo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PrismaticJoint.Servo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PrismaticJoint.Servo
+  nameWithType: PrismaticJoint.Servo
 - uid: Jitter2.Dynamics.Constraints.PrismaticJoint.Slider
   name: Slider
   href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html#Jitter2_Dynamics_Constraints_PrismaticJoint_Slider
@@ -10571,12 +11518,288 @@ references:
   commentId: F:Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Softness
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.Softness
   nameWithType: TwistAngle.TwistLimitData.Softness
+- uid: Jitter2.Dynamics.Constraints.TwistServo
+  name: TwistServo
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html
+  commentId: T:Jitter2.Dynamics.Constraints.TwistServo
+  fullName: Jitter2.Dynamics.Constraints.TwistServo
+  nameWithType: TwistServo
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Angle
+  name: Angle
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Angle
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.Angle
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Angle
+  nameWithType: TwistServo.Angle
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Angle*
+  name: Angle
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Angle_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Angle
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Angle
+  nameWithType: TwistServo.Angle
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Bias
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.Bias
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Bias
+  nameWithType: TwistServo.Bias
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Bias*
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Bias_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Bias
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Bias
+  nameWithType: TwistServo.Bias
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Create
+  name: Create()
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Create
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.Create
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Create()
+  nameWithType: TwistServo.Create()
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Create*
+  name: Create
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Create_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Create
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Create
+  nameWithType: TwistServo.Create
+- uid: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer)
+  name: DebugDraw(IDebugDrawer)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_DebugDraw_Jitter2_IDebugDrawer_
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer)
+  nameWithType: TwistServo.DebugDraw(IDebugDrawer)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name: DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)
+  name.vb: DebugDraw(IDebugDrawer, DebugDrawSettings)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer, in Jitter2.DebugDrawSettings)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer, Jitter2.DebugDrawSettings)
+  nameWithType: TwistServo.DebugDraw(IDebugDrawer, in DebugDrawSettings)
+  nameWithType.vb: TwistServo.DebugDraw(IDebugDrawer, DebugDrawSettings)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw*
+  name: DebugDraw
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_DebugDraw_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.DebugDraw
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.DebugDraw
+  nameWithType: TwistServo.DebugDraw
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Impulse
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Impulse
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.Impulse
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Impulse
+  nameWithType: TwistServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Impulse*
+  name: Impulse
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Impulse_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Impulse
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Impulse
+  nameWithType: TwistServo.Impulse
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)
+  name: Initialize(JVector, JAngle)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle)
+  nameWithType: TwistServo.Initialize(JVector, JAngle)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)
+  name: Initialize(JVector, JVector, JAngle)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JAngle)
+  nameWithType: TwistServo.Initialize(JVector, JVector, JAngle)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Initialize*
+  name: Initialize
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Initialize_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Initialize
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Initialize
+  nameWithType: TwistServo.Initialize
+- uid: Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: IterateTwistServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_IterateTwistServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: IterateTwistServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: TwistServo.IterateTwistServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: TwistServo.IterateTwistServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo*
+  name: IterateTwistServo
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_IterateTwistServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo
+  nameWithType: TwistServo.IterateTwistServo
+- uid: Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_MaximumTorque
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque
+  nameWithType: TwistServo.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque*
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_MaximumTorque_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque
+  nameWithType: TwistServo.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name: PrepareForIterationTwistServo(ref ConstraintData, in TimeStep)
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_PrepareForIterationTwistServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)
+  name.vb: PrepareForIterationTwistServo(ConstraintData, TimeStep)
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo(ref Jitter2.Dynamics.Constraints.ConstraintData, in Jitter2.TimeStep)
+  fullName.vb: Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo(Jitter2.Dynamics.Constraints.ConstraintData, Jitter2.TimeStep)
+  nameWithType: TwistServo.PrepareForIterationTwistServo(ref ConstraintData, in TimeStep)
+  nameWithType.vb: TwistServo.PrepareForIterationTwistServo(ConstraintData, TimeStep)
+- uid: Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo*
+  name: PrepareForIterationTwistServo
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_PrepareForIterationTwistServo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo
+  nameWithType: TwistServo.PrepareForIterationTwistServo
+- uid: Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart
+  name: ResetWarmStart()
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_ResetWarmStart
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart()
+  nameWithType: TwistServo.ResetWarmStart()
+- uid: Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart*
+  name: ResetWarmStart
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_ResetWarmStart_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart
+  nameWithType: TwistServo.ResetWarmStart
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Softness
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.Softness
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Softness
+  nameWithType: TwistServo.Softness
+- uid: Jitter2.Dynamics.Constraints.TwistServo.Softness*
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_Softness_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.Softness
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.Softness
+  nameWithType: TwistServo.Softness
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
+  name: TargetAngle
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_TargetAngle
+  commentId: P:Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
+  nameWithType: TwistServo.TargetAngle
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TargetAngle*
+  name: TargetAngle
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_TargetAngle_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
+  nameWithType: TwistServo.TargetAngle
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData
+  name: TwistServo.TwistServoData
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html
+  commentId: T:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData
+  nameWithType: TwistServo.TwistServoData
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.AccumulatedImpulse
+  name: AccumulatedImpulse
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_AccumulatedImpulse
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.AccumulatedImpulse
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.AccumulatedImpulse
+  nameWithType: TwistServo.TwistServoData.AccumulatedImpulse
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Bias
+  name: Bias
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Bias
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Bias
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Bias
+  nameWithType: TwistServo.TwistServoData.Bias
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_BiasFactor
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.BiasFactor
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.BiasFactor
+  nameWithType: TwistServo.TwistServoData.BiasFactor
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body1
+  name: Body1
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Body1
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body1
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body1
+  nameWithType: TwistServo.TwistServoData.Body1
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body2
+  name: Body2
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Body2
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body2
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Body2
+  nameWithType: TwistServo.TwistServoData.Body2
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.EffectiveMass
+  name: EffectiveMass
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_EffectiveMass
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.EffectiveMass
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.EffectiveMass
+  nameWithType: TwistServo.TwistServoData.EffectiveMass
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Hemisphere
+  name: Hemisphere
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Hemisphere
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Hemisphere
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Hemisphere
+  nameWithType: TwistServo.TwistServoData.Hemisphere
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Jacobian
+  name: Jacobian
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Jacobian
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Jacobian
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Jacobian
+  nameWithType: TwistServo.TwistServoData.Jacobian
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.LocalAxis2
+  name: LocalAxis2
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_LocalAxis2
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.LocalAxis2
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.LocalAxis2
+  nameWithType: TwistServo.TwistServoData.LocalAxis2
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.MaximumTorque
+  name: MaximumTorque
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_MaximumTorque
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.MaximumTorque
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.MaximumTorque
+  nameWithType: TwistServo.TwistServoData.MaximumTorque
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.ReferenceOrientation
+  name: ReferenceOrientation
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_ReferenceOrientation
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.ReferenceOrientation
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.ReferenceOrientation
+  nameWithType: TwistServo.TwistServoData.ReferenceOrientation
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Softness
+  name: Softness
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_Softness
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Softness
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.Softness
+  nameWithType: TwistServo.TwistServoData.Softness
+- uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.TargetAngle
+  name: TargetAngle
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html#Jitter2_Dynamics_Constraints_TwistServo_TwistServoData_TargetAngle
+  commentId: F:Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.TargetAngle
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.TargetAngle
+  nameWithType: TwistServo.TwistServoData.TargetAngle
 - uid: Jitter2.Dynamics.Constraints.UniversalJoint
   name: UniversalJoint
   href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html
   commentId: T:Jitter2.Dynamics.Constraints.UniversalJoint
   fullName: Jitter2.Dynamics.Constraints.UniversalJoint
   nameWithType: UniversalJoint
+- uid: Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)
+  name: UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
+  href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_
+  commentId: M:Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)
+  name.vb: New(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
+  fullName: Jitter2.Dynamics.Constraints.UniversalJoint.UniversalJoint(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive)
+  fullName.vb: Jitter2.Dynamics.Constraints.UniversalJoint.New(Jitter2.World, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Dynamics.Constraints.JointDrive)
+  nameWithType: UniversalJoint.UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
+  nameWithType.vb: UniversalJoint.New(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
 - uid: Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)
   name: UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, bool)
   href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_
@@ -10648,6 +11871,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.UniversalJoint.Motor
   nameWithType: UniversalJoint.Motor
+- uid: Jitter2.Dynamics.Constraints.UniversalJoint.Servo
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_Servo
+  commentId: P:Jitter2.Dynamics.Constraints.UniversalJoint.Servo
+  fullName: Jitter2.Dynamics.Constraints.UniversalJoint.Servo
+  nameWithType: UniversalJoint.Servo
+- uid: Jitter2.Dynamics.Constraints.UniversalJoint.Servo*
+  name: Servo
+  href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_Servo_
+  commentId: Overload:Jitter2.Dynamics.Constraints.UniversalJoint.Servo
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.UniversalJoint.Servo
+  nameWithType: UniversalJoint.Servo
 - uid: Jitter2.Dynamics.Constraints.UniversalJoint.TwistAngle
   name: TwistAngle
   href: api/Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle
