@@ -1,4 +1,5 @@
 using Jitter2;
+using Vellum;
 
 namespace JitterDemo;
 
@@ -10,6 +11,11 @@ public interface ICleanDemo
 public interface IDrawUpdate
 {
     public void DrawUpdate();
+}
+
+public interface IDemoGui
+{
+    public void DrawGui(Ui ui);
 }
 
 public interface IDemo
