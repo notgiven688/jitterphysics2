@@ -1,4 +1,6 @@
-- name: Docs
+- name: Documentation
   href: ./docs/
+- name: Articles
+  href: ./docs/articles/
 - name: API (single precision)
   href: api/
