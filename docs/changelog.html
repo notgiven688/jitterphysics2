@@ -87,6 +87,13 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-2120-2026-10-19">Jitter 2.12.0 (2026-10-19)</h3>
+<ul>
+<li>Added <code>AngularServo</code>, <code>TwistServo</code>, <code>LinearServo</code>, and <code>LinearAxisServo</code> for driving target orientations, angles, and positions with torque or force limits.</li>
+<li>Added <code>JointDrive</code> to select a motor or servo when constructing hinge, prismatic, and universal joints. The existing <code>hasMotor</code> constructors remain available but are obsolete.</li>
+<li>Added <code>DebugDrawSettings.PointRadius</code> to control point marker size independently of constraint guides.</li>
+<li>Improved rolling stability by preserving the original contact in auxiliary manifolds with fewer than four points.</li>
+</ul>
 <h3 id="jitter-2110-2026-10-18">Jitter 2.11.0 (2026-10-18)</h3>
 <ul>
 <li><strong>Breaking Change:</strong> <code>IDebugDrawer.DrawSegment</code> and <code>DrawTriangle</code> now require a <code>uint</code> color packed as <code>0xRRGGBBAA</code>. Custom drawers must implement both colored methods.</li>
