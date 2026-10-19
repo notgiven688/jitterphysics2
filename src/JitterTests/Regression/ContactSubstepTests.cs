@@ -140,6 +140,38 @@ public class ContactSubstepTests
         Assert.That(filter.Queries, Is.EqualTo(steps), "Collision detection must still run once per full step.");
     }
 
+    [TestCase(SolveMode.Regular, 1)]
+    [TestCase(SolveMode.Regular, 3)]
+    [TestCase(SolveMode.Deterministic, 1)]
+    [TestCase(SolveMode.Deterministic, 3)]
+    public void RestingCylinder_DoesNotStartRollingWithAuxiliaryContacts(SolveMode solveMode, int substeps)
+    {
+        using World world = new();
+        world.SubstepCount = substeps;
+        world.SolverIterations = (4, 2);
+        world.SolveMode = solveMode;
+        world.AllowDeactivation = false;
+        world.EnableAuxiliaryContactPoints = true;
+
+        RigidBody floor = world.CreateRigidBody();
+        floor.AddShape(new BoxShape(200));
+        floor.Position = new JVector(0, -100, 0);
+        floor.MotionType = MotionType.Static;
+
+        RigidBody cylinder = world.CreateRigidBody();
+        cylinder.AddShape(new CylinderShape(2, (Real)0.5));
+        cylinder.Position = new JVector(10, (Real)0.495, 0);
+        cylinder.Orientation = JQuaternion.CreateRotationZ(MathR.PI / 2);
+        cylinder.Damping = (0, 0);
+        cylinder.Restitution = floor.Restitution = 0;
+
+        for (int i = 0; i < 1000; i++) world.Step((Real)0.01, false);
+
+        Assert.That(cylinder.Velocity.Length(), Is.LessThan((Real)0.02));
+        Assert.That(cylinder.AngularVelocity.Length(), Is.LessThan((Real)0.04));
+        Assert.That(cylinder.Position.Y, Is.EqualTo((Real)0.495).Within((Real)0.001));
+    }
+
     private sealed class RejectContacts : INarrowPhaseFilter
     {
         public bool Filter(RigidBodyShape shapeA, RigidBodyShape shapeB, ref JVector pointA,

@@ -544,6 +544,14 @@ public unsafe struct CollisionManifold
             mB[0] = pBloc;
             manifoldCount = 1;
         }
+        else if (manifoldCount < SolverContactLimit)
+        {
+            // Support sampling can also offset a small contact patch. If a solver slot is
+            // free, keep the original pair last without dropping any sampled contacts.
+            mA[manifoldCount] = pAloc;
+            mB[manifoldCount] = pBloc;
+            manifoldCount++;
+        }
 
     Finalize:
         // Final reduction from raw manifold candidates to the solver-facing contact set.
