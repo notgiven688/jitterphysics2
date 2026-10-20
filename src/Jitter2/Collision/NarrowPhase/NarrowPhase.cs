@@ -35,6 +35,18 @@ public static class NarrowPhase
     {
         private ConvexPolytope convexPolytope;
 
+        private static bool IsOnSupportPlane(in JVector point, in JVector support, in JVector normal)
+        {
+#if USE_DOUBLE_PRECISION
+            const Real roundoff = 8 * 2.2204460492503131e-16;
+#else
+            const Real roundoff = 8 * 1.1920928955078125e-7f;
+#endif
+            JVector delta = support - point;
+            Real x = delta.X * normal.X, y = delta.Y * normal.Y, z = delta.Z * normal.Z;
+            return MathR.Abs(x + y + z) <= roundoff * (MathR.Abs(x) + MathR.Abs(y) + MathR.Abs(z));
+        }
+
         private static bool TryFaceContact<Ta, Tb>(in Ta supportA, in Tb supportB,
             in JQuaternion orientationB, in JVector positionB,
             in Vertex v1, in Vertex v2, in Vertex v3, bool faceOnA, Real tolerance,
@@ -55,8 +67,10 @@ public static class NarrowPhase
             // Three support samples need not belong to one face. Check that their plane supports
             // the shape, then query the opposite shape in that face's normal direction.
             MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, faceNormal, out Vertex support);
-            Real gap = faceOnA ? JVector.Dot(support.A - a, faceNormal) : JVector.Dot(a - support.B, faceNormal);
-            if (MathR.Abs(gap) > tolerance) return false;
+            JVector faceSupport = faceOnA ? support.A : support.B;
+            // Allow only arithmetic roundoff here. The collision tolerance can also accept a
+            // triangle just inside a curved surface, which is not a supporting face.
+            if (!IsOnSupportPlane(a, faceSupport, faceNormal)) return false;
             Real depth = JVector.Dot(support.V, faceNormal);
             if (depth < (Real)0.0 || depth > penetration + tolerance) return false;
 
