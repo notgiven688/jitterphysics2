@@ -35,6 +35,47 @@ public static class NarrowPhase
     {
         private ConvexPolytope convexPolytope;
 
+        private static bool TryFaceContact<Ta, Tb>(in Ta supportA, in Tb supportB,
+            in JQuaternion orientationB, in JVector positionB,
+            in Vertex v1, in Vertex v2, in Vertex v3, bool faceOnA, Real tolerance,
+            ref JVector pointA, ref JVector pointB, ref JVector normal, ref Real penetration)
+            where Ta : ISupportMappable where Tb : ISupportMappable
+        {
+            JVector a = faceOnA ? v1.A : v1.B;
+            JVector b = faceOnA ? v2.A : v2.B;
+            JVector c = faceOnA ? v3.A : v3.B;
+            JVector ab = b - a, ac = c - a;
+            JVector rawNormal = ab % ac;
+            Real normalSq = rawNormal.LengthSquared();
+            if (!(normalSq > NumericEpsilon) || !Real.IsFinite(normalSq)) return false;
+
+            JVector faceNormal = rawNormal * ((Real)1.0 / MathR.Sqrt(normalSq));
+            if (JVector.Dot(faceNormal, normal) < (Real)0.0) faceNormal = -faceNormal;
+
+            // Three support samples need not belong to one face. Check that their plane supports
+            // the shape, then query the opposite shape in that face's normal direction.
+            MinkowskiDifference.Support(supportA, supportB, orientationB, positionB, faceNormal, out Vertex support);
+            Real gap = faceOnA ? JVector.Dot(support.A - a, faceNormal) : JVector.Dot(a - support.B, faceNormal);
+            if (MathR.Abs(gap) > tolerance) return false;
+            Real depth = JVector.Dot(support.V, faceNormal);
+            if (depth < (Real)0.0 || depth > penetration + tolerance) return false;
+
+            JVector candidateA = faceOnA ? support.B + depth * faceNormal : support.A;
+            JVector candidateB = faceOnA ? support.B : support.A - depth * faceNormal;
+            JVector point = faceOnA ? candidateA : candidateB;
+
+            // The projected point must lie on the sampled face, not just its infinite plane.
+            if (JVector.Dot(ab % (point - a), rawNormal) < (Real)0.0 ||
+                JVector.Dot((c - b) % (point - b), rawNormal) < (Real)0.0 ||
+                JVector.Dot((a - c) % (point - c), rawNormal) < (Real)0.0) return false;
+
+            pointA = candidateA;
+            pointB = candidateB;
+            normal = faceNormal;
+            penetration = depth;
+            return true;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool SolveMprEpa<Ta, Tb>(in Ta supportA, in Tb supportB, in JQuaternion orientationB, in JVector positionB,
             ref JVector point1, ref JVector point2, ref JVector normal, ref Real penetration)
@@ -298,6 +339,14 @@ public static class NarrowPhase
                         }
 
                         normal *= invnormal;
+
+                        // A portal can have an accurate normal while its interpolated shape points remain
+                        // offset along a face. Prefer a fresh support point projected onto a verified face;
+                        // this also avoids averaging curved-surface samples into a point inside the shape.
+                        if (TryFaceContact(supportA, supportB, orientationB, positionB, v1, v2, v3, true, collideEpsilon,
+                                ref pointA, ref pointB, ref normal, ref penetration) ||
+                            TryFaceContact(supportA, supportB, orientationB, positionB, v1, v2, v3, false, collideEpsilon,
+                                ref pointA, ref pointB, ref normal, ref penetration)) return true;
 
                         // Compute the barycentric coordinates of the origin
                         JVector.Cross(v1.V, temp1, out temp3);

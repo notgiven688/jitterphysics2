@@ -12,8 +12,8 @@ namespace JitterTests.Robustness;
 public class ReproducibilityTest
 {
     // Reference trajectories must remain bit-identical across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0xAF46AB68448F1AA8;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x7ECBC9B0C504D351;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x373BF488070398A9;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x92C9C46BE0D4C1FC;
 
     [TestCase]
     public static void BasicReproducibilityTest()
