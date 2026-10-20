@@ -1114,7 +1114,7 @@ public partial class DynamicTree
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private int FindBestGreedy(int node, int where)
+    private int FindBestGreedy(int node, int where, int preferredSibling = NullNode)
     {
         /*
         This method is adapted from Box2D.
@@ -1155,6 +1155,20 @@ public partial class DynamicTree
 
         int bestSibling = where;
         double bestCost = directCost;
+
+        if (preferredSibling != NullNode)
+        {
+            // Restoring the old sibling is the baseline. Equal-cost candidates must not
+            // displace it, or stationary leaves can keep changing their grouping forever.
+            bestSibling = preferredSibling;
+            bestCost = TreeBox.MergedSurface(nodes[preferredSibling].ExpandedBox, nodeTreeBox);
+            for (int ancestor = nodes[preferredSibling].Parent;
+                 ancestor != NullNode; ancestor = nodes[ancestor].Parent)
+            {
+                bestCost += TreeBox.MergedSurface(nodes[ancestor].ExpandedBox, nodeTreeBox) -
+                            nodes[ancestor].ExpandedBox.GetSurfaceArea();
+            }
+        }
 
         while (!nodes[where].IsLeaf)
         {
@@ -1303,7 +1317,7 @@ public partial class DynamicTree
         return where;
     }
 
-    private void InsertLeaf(int node, int where, bool balance = false)
+    private void InsertLeaf(int node, int where, bool balance = false, int preferredSibling = NullNode)
     {
         if (root == NullNode)
         {
@@ -1325,7 +1339,7 @@ public partial class DynamicTree
         }
 
         // search for the best sibling
-        int sibling = FindBestGreedy(node, where);
+        int sibling = FindBestGreedy(node, where, preferredSibling);
 
         // create a new parent
         int oldParent = nodes[sibling].Parent;

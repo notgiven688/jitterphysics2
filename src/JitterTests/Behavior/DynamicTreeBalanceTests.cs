@@ -100,13 +100,63 @@ public class DynamicTreeBalanceTests
         Assert.That(AssertValidTree(tree, 512), Is.GreaterThan(1));
 
         tree.EnableAutomaticOptimization = true;
+        double previousCost = initialCost;
         for (int i = 0; i < 512; i++)
         {
             tree.Update(false, (Real)0.0);
+            double cost = tree.CalculateCost();
+            Assert.That(cost, Is.LessThanOrEqualTo(previousCost));
+            previousCost = cost;
         }
 
         AssertValidTree(tree, 512);
-        Assert.That(tree.CalculateCost(), Is.LessThanOrEqualTo(initialCost));
+        Assert.That(tree.CalculateCost(), Is.LessThan(initialCost));
+    }
+
+    [TestCase(1)]
+    [TestCase(3)]
+    public void AutomaticOptimizationKeepsEqualCostGrouping(int budget)
+    {
+        using World world = new();
+        DynamicTree tree = world.DynamicTree;
+        tree.EnableAutomaticOptimization = false;
+
+        for (int i = 0; i < 3; i++)
+        {
+            RigidBody body = world.CreateRigidBody();
+            body.Position = new JVector(i * 2, 0, 0);
+            BoxShape shape = new(1, 1, 1);
+            body.AddShape(shape);
+            tree.DeactivateProxy(shape);
+        }
+
+        // Pairing the middle box with either neighbor has exactly the same cost.
+        List<TreeBox> initialBoxes = [];
+        tree.EnumerateTreeBoxes((box, depth) =>
+        {
+            if (depth == 2) initialBoxes.Add(box);
+        });
+        double initialCost = tree.CalculateCost();
+
+        tree.AutomaticOptimizationBudget = budget;
+        tree.EnableAutomaticOptimization = true;
+        for (int i = 0; i < 30; i++)
+        {
+            tree.Update(false, (Real)0.0);
+
+            List<TreeBox> boxes = [];
+            tree.EnumerateTreeBoxes((box, depth) =>
+            {
+                if (depth == 2) boxes.Add(box);
+            });
+
+            Assert.That(tree.UpdatedProxyCount, Is.Zero);
+            Assert.That(tree.CalculateCost(), Is.EqualTo(initialCost));
+            Assert.That(boxes, Is.EquivalentTo(initialBoxes),
+                "Stationary boxes must keep their grouping when reinsertion offers no improvement.");
+        }
+
+        AssertValidTree(tree, 3);
     }
 
     [Test]
