@@ -663,7 +663,8 @@ public struct ContactData
         /// <summary>
         /// Normalized contact direction. A positive normal impulse pushes <see cref="ContactData.Body2"/>
         /// along this direction and <see cref="ContactData.Body1"/> against it. For overlapping contact points,
-        /// the normal points from the point on body 2 toward the point on body 1.
+        /// the normal points from the point on body 2 toward the point on body 1. Updated when collision
+        /// detection refreshes the contact.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Normal => new(NormalTangentX.GetElement(0),
@@ -671,7 +672,8 @@ public struct ContactData
 
         /// <summary>
         /// Tangent (normalized) to the contact <see cref="Normal"/>. At creation it follows tangential
-        /// relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts retain their basis.
+        /// relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts adjust
+        /// their tangent directions when the normal changes.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Tangent1 => new(NormalTangentX.GetElement(1),
@@ -713,31 +715,44 @@ public struct ContactData
             JVector.ConjugatedTransform(RelativePosition1, b1.Orientation, out Position1);
             JVector.ConjugatedTransform(RelativePosition2, b2.Orientation, out Position2);
 
-            // Material Properties
-            if (!newContact) return;
-
-            Flag = Flags.NewContact;
-            Accumulated = Vector.Create((Real)0.0);
-
-            // Linear-only contacts also omit rotation from restitution and the friction basis.
-            JVector dv = b2.Velocity - b1.Velocity;
-            if (cd->Mode == SolveMode.None || (cd->Mode & SolveMode.Angular) != 0)
+            JVector tangent1;
+            JVector cachedImpulse = JVector.Zero;
+            if (newContact)
             {
-                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+                Flag = Flags.NewContact;
+                Accumulated = Vector.Create((Real)0.0);
+
+                // Linear-only contacts also omit rotation from restitution and the friction basis.
+                JVector dv = b2.Velocity - b1.Velocity;
+                if (cd->Mode == SolveMode.None || (cd->Mode & SolveMode.Angular) != 0)
+                {
+                    dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                    dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+                }
+
+                Real relNormalVel = JVector.Dot(dv, n);
+                Bias = 0;
+
+                // Fake restitution
+                if (relNormalVel < (Real)(-1.0))
+                {
+                    Bias = -cd->Restitution * relNormalVel;
+                }
+
+                tangent1 = dv - n * relNormalVel;
             }
-
-            Real relNormalVel = JVector.Dot(dv, n);
-
-            Bias = 0;
-
-            // Fake restitution
-            if (relNormalVel < (Real)(-1.0))
+            else
             {
-                Bias = -cd->Restitution * relNormalVel;
-            }
+                JVector previousNormal = Normal;
+                if (n == previousNormal) return;
 
-            var tangent1 = dv - n * relNormalVel;
+                JVector previousTangent1 = Tangent1;
+                cachedImpulse = Impulse * previousNormal;
+                cachedImpulse += TangentImpulse1 * previousTangent1 + TangentImpulse2 * Tangent2;
+
+                // Keep the old tangent direction as far as the new contact plane allows.
+                tangent1 = previousTangent1 - n * JVector.Dot(previousTangent1, n);
+            }
 
             Real num = tangent1.LengthSquared();
 
@@ -756,6 +771,17 @@ public struct ContactData
             NormalTangentX = Vector.Create(n.X, tangent1.X, tangent2.X, 0);
             NormalTangentY = Vector.Create(n.Y, tangent1.Y, tangent2.Y, 0);
             NormalTangentZ = Vector.Create(n.Z, tangent1.Z, tangent2.Z, 0);
+
+            if (!newContact)
+            {
+                // Re-express the cached world impulse in the new basis, within the solver's
+                // unilateral normal and per-tangent friction bounds. Do not restart restitution.
+                Real normalImpulse = MathR.Max((Real)0.0, JVector.Dot(cachedImpulse, n));
+                Real frictionLimit = cd->Friction * normalImpulse;
+                Accumulated = Vector.Create(normalImpulse,
+                    Math.Clamp(JVector.Dot(cachedImpulse, tangent1), -frictionLimit, frictionLimit),
+                    Math.Clamp(JVector.Dot(cachedImpulse, tangent2), -frictionLimit, frictionLimit), (Real)0.0);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
