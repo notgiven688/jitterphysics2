@@ -1,5 +1,11 @@
 # Changelog
 
+### Jitter 2.12.1 (2026-10-21)
+
+- Improved contact point accuracy against flat surfaces, fixing artificial acceleration of rolling spheres.
+- Fixed outdated contact normals and friction directions when contacting surfaces change orientation.
+- Avoided unnecessary dynamic tree rearrangements during optimization of stationary scenes.
+
 ### Jitter 2.12.0 (2026-10-19)
 
 - Added `AngularServo`, `TwistServo`, `LinearServo`, and `LinearAxisServo` for driving target orientations, angles, and positions with torque or force limits.
