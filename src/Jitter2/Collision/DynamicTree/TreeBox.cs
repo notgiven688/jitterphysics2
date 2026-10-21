@@ -286,7 +286,9 @@ public struct TreeBox : IEquatable<TreeBox>
         double ey = extent.GetElement(1);
         double ez = extent.GetElement(2);
 
-        return 2.0d * (ex * ey + ex * ez + ey * ez);
+        // Match GetSurfaceArea's arithmetic order so unchanged bounds have exactly zero
+        // cost change. Different rounding can otherwise make inverse rotations look cheaper.
+        return 2.0d * (ex * ey + ey * ez + ez * ex);
     }
 
     /// <summary>
