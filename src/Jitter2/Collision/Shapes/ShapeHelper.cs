@@ -48,7 +48,14 @@ public static class ShapeHelper
         return capacity;
     }
 
-    /// <inheritdoc cref="Tessellate{TSupport}(in TSupport, int)"/>
+    /// <summary>
+    /// Approximates a convex surface with triangles and appends them to the collection.
+    /// </summary>
+    /// <remarks>
+    /// The surface may contain folds, overlapping triangles, or inward-facing normals, even for a smooth shape.
+    /// Do not use these triangles to construct a <see cref="ConvexHullShape"/>.
+    /// Each additional subdivision level increases the work roughly fourfold.
+    /// </remarks>
     /// <param name="support">The convex shape.</param>
     /// <param name="hullCollection">A collection to which the triangles are added.</param>
     /// <param name="subdivisions">Sampling detail. Each level above 1 splits every triangle into four; default is 3.</param>

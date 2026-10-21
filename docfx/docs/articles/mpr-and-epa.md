@@ -2,7 +2,7 @@
 
 A physics engine usually asks for contact information when two shapes are just touching or overlap by a small amount. Occasionally, however, it receives a pair that overlaps deeply: a body may have been teleported, a large timestep may have missed the first contact, or a stack may have compressed. The same collision query has to handle both cases.
 
-Minkowski Portal Refinement (MPR) and the Expanding Polytope Algorithm (EPA) fit together particularly well here. MPR finds a contact through a small, stable local search. EPA can check whether that contact is the *least* penetration and continue searching when it is not. The trick is to run EPA only when MPR's reported depth gives us reason to doubt the local answer.
+Minkowski Portal Refinement (MPR) and the Expanding Polytope Algorithm (EPA) fit together particularly well here. MPR finds a contact through a small, stable local search. EPA can check whether a different direction would separate the shapes with less movement, and continue searching if needed. The trick is to run EPA only when MPR's reported depth gives us reason to doubt the local answer.
 
 This article assumes familiarity with Minkowski differences and support maps. Gary Snethen introduced MPR in [XenoCollide](https://github.com/notgiven688/xenocollide).
 
@@ -10,9 +10,9 @@ This article assumes familiarity with Minkowski differences and support maps. Ga
 
 Let $M=A-B$ be the Minkowski difference. Overlapping shapes put the origin inside $M$. The penetration depth is the shortest distance from the origin to its boundary; the direction to that nearest boundary gives a separating normal.
 
-MPR starts with a point $v_0$ in the interior of $M$ and keeps it fixed. It obtains three more points on the boundary from support queries. Together, the four points form a tetrahedron. Its outer triangular face is the **portal**: the origin lies in the wedge from $v_0$ through that face. MPR repeatedly asks the support map for a point beyond the portal, then replaces one portal vertex. In effect, it scans the part of the surface visible along that wedge without constructing a full boundary mesh.
+MPR starts with a point $v_0$ in the interior of $M$ and keeps it fixed. It obtains three more points on the boundary from support queries. Together, the four points form a tetrahedron. The face opposite $v_0$ is the **portal**. A ray from $v_0$ through the origin passes through this face. MPR repeatedly asks the support map for a point beyond the portal, then replaces one portal vertex. This searches the surface near the ray without constructing a mesh of the whole boundary.
 
-The resulting portal supplies a normal, a penetration estimate, and contact points. MPR turns out to be very robust.
+The final portal gives a contact normal, an estimated penetration depth, and contact points.
 
 ## Where a local answer goes wrong
 
@@ -31,27 +31,27 @@ d_* = \min_{\lVert n\rVert=1} h_M(n)
 d_* \le d_{\mathrm{MPR}} = h_M(n_{\mathrm{MPR}}).
 $$
 
-This asymmetry makes a simple handoff possible. If MPR reports a depth below a chosen tolerance, the true depth is no larger than that tolerance either. A larger reported depth leaves open the possibility that another direction is much shallower, as in the figure. The tolerance controls how much depth error we are willing to accept from the local answer. It does **not** certify that the MPR normal is globally correct: scaling the entire thin-bar example down can make its wrong rightward answer arbitrarily small.
+The upper bound gives us a simple rule for deciding when to run EPA. If MPR reports a depth below a chosen tolerance, the true depth is no larger than that tolerance either. A larger reported depth leaves open the possibility that another direction is much shallower, as in the figure. The tolerance controls how much depth error we are willing to accept from the local answer. It does **not** certify that the MPR normal is globally correct: scaling the entire thin-bar example down can make its wrong rightward answer arbitrarily small.
 
 ## Give the portal to EPA
 
 EPA takes a convex polytope containing the origin and expands its closest face using support queries. When no support point significantly extends that face, it has found the nearest boundary within its numerical tolerance. In the thin-bar example, it does not have to accept the right portal: it can expand the triangle past its interior chords until the top boundary becomes the closest edge.
 
-The awkward part is often obtaining a suitable starting polytope. GJK is excellent at distance queries for separated shapes and can also detect overlap. But once the origin is inside the Minkowski difference, its distance result is zero; it does not by itself give the penetration normal and depth. Near touching, a GJK simplex used to start EPA may be lower-dimensional or nearly degenerate. Implementations need extra work to create a useful enclosing tetrahedron. [Van den Bergen's original EPA description](https://graphics.stanford.edu/courses/cs468-01-fall/Papers/van-den-bergen.pdf) discusses these lower-dimensional cases. Spherical expansion followed by reduction is another way to make a near-touching query easier, but it adds geometry and bookkeeping. EPA is easier to initialize when the origin is comfortably enclosed, which is more likely with deeper overlap.
+EPA needs a starting polytope that encloses the origin. GJK can detect overlap, but its final set of points may be flat or nearly degenerate when the shapes barely touch. Extra work is then needed to turn those points into a tetrahedron that encloses the origin. [Van den Bergen's original EPA description](https://graphics.stanford.edu/courses/cs468-01-fall/Papers/van-den-bergen.pdf) discusses these cases.
 
-MPR has already done the setup work. Its fixed interior point and three portal vertices form a tetrahedron containing the origin. If the MPR depth exceeds the chosen threshold, those four vertices can be passed straight to EPA. EPA then examines the closest face of that tetrahedron. If the existing portal was already the global answer, its support test can confirm that quickly. Otherwise, EPA grows the hull toward a closer boundary. The cost of that broader search is paid only for contacts beyond the threshold.
+MPR has already built a suitable tetrahedron: its fixed interior point and three portal vertices enclose the origin. If the MPR depth exceeds the chosen threshold, those four vertices can be passed straight to EPA. EPA then examines the closest face of that tetrahedron. If the existing portal was already the global answer, its support test can confirm that quickly. Otherwise, EPA grows the hull toward a closer boundary. The cost of that broader search is paid only for contacts beyond the threshold.
 
 ## Interactive example
 
 Drag the circle across the fixed bar. Green shows the penetration normal when MPR finds a minimum-depth exit. When it finds a longer way out, its normal turns red and EPA's result appears in green. The readout gives both depths and normals; the arrows have a fixed length so their directions remain visible. Use **Near contact** and **Wrong portal** to jump between the two cases.
 
-The lower view shows the Minkowski sum of the bar and a disk, shifted opposite the sphere's motion. The origin stays fixed while the shape moves. MPR's final triangle is drawn inside it, with the portal edge highlighted in green or red. The green line reaches EPA's nearest boundary point. When the results differ, a red dashed line shows MPR's depth to its support plane; the small tick at its end is not necessarily on the boundary.
+The lower view shows the Minkowski sum of the bar and a disk, shifted opposite the circle's motion. The origin stays fixed while the shape moves. MPR's final triangle is drawn inside it, with the portal edge highlighted in green or red. The green line reaches EPA's nearest boundary point. When the results differ, a red dashed line shows MPR's depth to its support plane; the small tick at its end is not necessarily on the boundary.
 
 The demo runs EPA at every overlapping position so that the answers can be compared. The cutoff described above would skip EPA for sufficiently small MPR depths.
 
 <iframe class="mpr-demo" src="mpr-epa-demo.html" width="760" height="900" loading="lazy" title="Interactive MPR and EPA comparison for a draggable circle, fixed bar, and Minkowski sum"></iframe>
 
-The combination follows the needs of a physics engine: use MPR's local contact where shallow overlap makes that answer most useful, and let EPA search globally when the local estimate says there is room for a substantially shorter escape.
+This lets a physics engine use MPR for shallow contacts and pay for EPA's broader search when the reported depth is large enough to matter.
 
 For a concrete implementation of this MPR–EPA handoff, see [NarrowPhase.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs).
 

@@ -773,7 +773,16 @@ public partial class DynamicTree
         Optimize(rndFunc, sweeps, chance, incremental);
     }
 
-    /// <inheritdoc cref="Optimize(int, Real, bool)"/>
+    /// <summary>
+    /// Attempts to speed up spatial queries by regrouping proxies using caller-supplied random values.
+    /// </summary>
+    /// <remarks>
+    /// Existing proxies, node indices, bounding boxes, activity, and potential pairs are preserved.
+    /// Random selection means a call is not guaranteed to improve <see cref="CalculateCost"/>.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when <paramref name="sweeps"/> is less than one, or when <paramref name="chance"/> is outside [0, 1].
+    /// </exception>
     /// <param name="getNextRandom">A function returning random values in [0, 1).</param>
     /// <param name="sweeps">The number of optimization sweeps.</param>
     /// <param name="chance">Probability of selecting each leaf in a sweep, from 0 to 1.</param>

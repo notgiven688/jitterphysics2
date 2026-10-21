@@ -82,7 +82,10 @@ public partial class DynamicTree
         return hit;
     }
 
-    /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out Real)"/>
+    /// <summary>
+    /// Finds the nearest accepted ray hit with a hit parameter less than <paramref name="maxLambda"/>.
+    /// </summary>
+    /// <returns>True if an accepted hit is found; otherwise, false.</returns>
     /// <param name="origin">The ray origin in world space.</param>
     /// <param name="direction">The ray direction; it need not be normalized.</param>
     /// <param name="maxLambda">Exclusive upper bound for hit lambda; hits at this value are excluded.</param>

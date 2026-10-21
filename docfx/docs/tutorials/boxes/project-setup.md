@@ -1,12 +1,12 @@
 # Project Setup
 
-In this project we will use Raylib and Jitter to implement a simple scene of boxes falling to the ground.
+In this tutorial, you will use Raylib for rendering and Jitter for physics to make boxes fall onto the ground.
 
 ## Requirements
 
 Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-Ensure that dotnet is correctly set up by executing the following command:
+Check that the SDK is installed:
 
 ```sh
 dotnet --version
@@ -20,7 +20,7 @@ First, create a new directory named "BoxDrop" and navigate into it:
 mkdir BoxDrop && cd BoxDrop
 ```
 
-Next, create a new console application in this directory and add Raylib-cs and Jitter2:
+Create a console application and add Raylib-cs and Jitter2:
 
 ```sh
 dotnet new console
@@ -28,10 +28,10 @@ dotnet add package Raylib-cs --version 6.1.1
 dotnet add package Jitter2
 ```
 
-You have completed the setup. If you now execute the following command:
+Run the application:
 
 ```sh
 dotnet run
 ```
 
-Your console should display: "Hello, World!".
+The console should print `Hello, World!`.

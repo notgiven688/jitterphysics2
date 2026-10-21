@@ -1,10 +1,8 @@
 # Shapes
 
-Shapes define how the rigid body collides with other objects.
-Shapes implement the `ISupportMappable` interface and are always convex.
-They can be passed to static methods defined in the `NarrowPhase` class for collision detection.
-Shapes also implement the `IDynamicTreeProxy` interface and can be added to the `DynamicTree` class.
-When a shape is added to a rigid body this is done automatically (`world.DynamicTree`).
+Shapes define the convex geometry used for collisions. Attach them to a rigid body with `body.AddShape`; the body supplies their position and rotation.
+
+Each shape implements `ISupportMappable`, so it can also be used directly in `NarrowPhase` collision queries. Shapes implement `IDynamicTreeProxy` as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in `world.DynamicTree` automatically.
 
 > [!NOTE]
 > **Concave Shapes**
@@ -13,7 +11,7 @@ When a shape is added to a rigid body this is done automatically (`world.Dynamic
 
 ## Changing an attached shape
 
-Changing a shape's dimensions or local transformation after it has been added to a body does not automatically refresh the dynamic tree, the body's mass properties, or existing contact points. Make these changes between calls to `world.Step`, then update the affected state explicitly:
+After changing an attached shape's dimensions or local transform, update its collision bounds, cached contacts, and, if needed, the body's mass properties. Do this between calls to `world.Step`:
 
 ```cs
 box.Size = new JVector(2, 1, 1);
@@ -22,9 +20,9 @@ body.ClearContactCache();      // Discard contact points based on the old geomet
 body.SetMassInertia();          // Only if the body uses mass properties derived from its shapes.
 ```
 
-`world.DynamicTree.Update(shape)` updates one registered shape immediately. A regular world step updates active proxies, but does not track changes to inactive proxies. If the change affects a sleeping dynamic body, activate that body explicitly with `body.SetActivationState(true)`. Updating a static shape's proxy does not wake sleeping bodies that newly overlap it; activate the affected dynamic bodies yourself.
+`world.DynamicTree.Update(shape)` refreshes that shape immediately, even if its body is asleep. A regular world step only updates active objects. Wake a changed dynamic body with `body.SetActivationState(true)`. If changing static geometry creates new overlaps with sleeping bodies, wake those bodies yourself.
 
-A shape change can also leave bodies interpenetrating. The engine cannot decide how they should be separated, so the application must choose whether to move them, wake them, or allow the solver to resolve the new contacts. If mass or inertia was set explicitly, retain or recalculate it according to the application's mass policy instead of calling the parameterless `SetMassInertia()`.
+Resizing a shape can leave it overlapping other bodies. Decide whether to reposition those bodies or let the solver separate them. If you set mass or inertia manually, decide whether to keep or recalculate those values; `SetMassInertia()` without arguments replaces them with values derived from the shapes.
 
 ## Default types
 
@@ -46,7 +44,7 @@ Shape
     └── SoftBodyTriangle
 ```
 
-Most shapes are self-explanatory (additional details are in the API documentation), while some specifics are outlined below.
+The API reference describes each shape's dimensions and options. The following types need a little more setup.
 
 ### ConvexHullShape
 
@@ -56,14 +54,9 @@ The constructor of the `ConvexHullShape` takes a list of triangles.
 public ConvexHullShape(List<JTriangle> triangles)
 ```
 
-The triangles provided *must* form a convex hull.
-Apart from rejecting zero-mass hulls, the validity of the convex shape is not checked.
-Invalid shapes can lead to glitched
-collisions and/or non-terminating algorithms during collision detection.
-The triangles are used to construct an internal acceleration structure that speeds up collision detection for this shape through hill-climbing.
+The triangles *must* form a valid convex hull. Jitter2 rejects zero-mass hulls but does not fully validate the mesh. Invalid input can cause incorrect collisions or collision tests that fail to finish.
 
-The `convexHullShape.Clone()` method can be used to clone the shape:
-The internal data structure is then used for both shapes.
+Use `convexHullShape.Clone()` when several bodies need the same geometry. Each clone is a separate shape instance that shares the hull data.
 
 ### PointCloudShape
 
@@ -74,8 +67,7 @@ The constructor takes a list of vertices.
 public PointCloudShape(List<JVector> vertices)
 ```
 
-The vertices do not need to form a convex hull; however, collision detection will 'shrink-wrap' these vertices, so the final collision shape is convex.
-For example, passing the 8 vertices of a cube to the constructor generates a cube shape; adding a 9th vertex at the cube's center has no effect.
+Jitter2 uses the convex hull of the supplied points: imagine stretching a tight skin around them. Points inside that hull do not change the collision shape. For example, the eight corners of a cube define a cube; adding a point at its center changes nothing.
 
 > [!WARNING]
 > **Number of vertices**
@@ -104,15 +96,11 @@ The `TriangleShape` is constructed with a `TriangleMesh` and an index.
 public TriangleShape(TriangleMesh mesh, int index)
 ```
 
-A `TriangleMesh.Triangle` stores information about neighbour triangles.
-This information is used in the `TriangleEdgeCollisionFilter` (enabled by default) to resolve collision artifacts that occur when shapes slide over the edges between connected triangles.
-These edges are often referred to as 'internal edges' and can cause major problems when adding level geometry to a game.
+The mesh records which triangles share edges. `TriangleEdgeCollisionFilter`, enabled by default, uses this information to reduce snagging when bodies slide across those edges.
 
 ### SoftBodyShape
 
-The vertices of the `SoftBodyShape` are represented by rigid bodies.
-The shapes (triangle and tetrahedron) are dynamically defined by the position of the vertices.
-A `SoftBodyShape` is not added to a body.
+A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a `SoftBody`, rather than attaching it to one rigid body.
 
 ## Debug drawing
 
@@ -136,10 +124,9 @@ See <xref:Jitter2.IDebugDrawer> for the drawing methods.
 
 ## Custom shapes
 
-Custom shapes can easily be implemented.
-A shape is defined by its support function—which can be looked up or derived.
+To define a custom convex shape, implement its **support function**: given a direction, return the point furthest in that direction. `GetCenter` must return a point inside the shape. All coordinates are local to the shape.
 
-The following example demonstrates implementing a half-sphere (symmetry axis aligned with the y-axis) with a radius of one:
+This example defines a half-sphere with radius 1, aligned with the Y axis:
 
 ```cs
 public class HalfSphereShape : RigidBodyShape
@@ -172,8 +159,7 @@ public class HalfSphereShape : RigidBodyShape
 }
 ```
 
-Mass properties and bounding boxes are automatically calculated from the support map using methods in the `ShapeHelper` class.
-Performance can be optimized by providing overrides directly in the shape class:
+The default implementation calculates bounding boxes and approximates mass properties from the support function. Override these methods if you can provide faster or more accurate calculations, or a custom ray test:
 
 ```cs
 public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)

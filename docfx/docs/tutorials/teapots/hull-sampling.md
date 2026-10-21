@@ -1,23 +1,10 @@
 # Hull Sampling
 
-The teapot is a concave shape, which we will approximate using its convex hull ([Wikipedia](https://en.wikipedia.org/wiki/Convex_hull)).
-As a first step, we will reduce the number of vertices used to construct the convex hull.
+The teapot has concave parts, such as the space under its handle. We will approximate it with a **convex hull**: imagine a tight skin stretched around the outside. The collision shape will not include those inward curves or holes.
 
-> [!NOTE]
-> **Sampling**
->
-> We could work with the entire set of vertices, but this comes with two main disadvantages:
->
-> 1. The set may include vertices that lie inside the hull. While these do not affect the simulation outcome, they are still briefly considered during collision detection in each frame.
->
-> 2. We typically don't need an exact convex hull. Omitting a few vertices often has little effect on accuracy while significantly improving performance.
->
-> Reducing the number of vertices can help speed up the simulation without sacrificing collision fidelity.
+We can reduce collision detection work by keeping only some of the model's vertices. `ShapeHelper.SampleHull` selects outermost vertices in many directions. This removes interior points and gives us a smaller set that approximates the original hull. Fewer points are faster to test, but a coarser sample can lose detail.
 
-Jitter provides a built-in method to simplify the vertex set: `ShapeHelper.SampleHull`.
-This function samples directions uniformly across the unit sphere and returns the vertices that are furthest away in those directions. These vertices, by definition, lie on the convex hull of the original shape.
-
-Replace the content of `Program.cs` with the following code:
+Replace the contents of `Program.cs` with:
 
 ```cs
 using System.Numerics;
@@ -101,4 +88,4 @@ CloseWindow();
 
 ![plane](images/teapot.png)
 
-The teapot's wireframe is drawn in white, the green wireframe shows the convex hull, and the sampled hull vertices are depicted as red dots.
+White shows the model, green shows the approximate hull, and red dots mark the sampled vertices.
