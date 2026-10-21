@@ -30,6 +30,7 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// <summary>
     /// The bounding box of the shape in world space. It is automatically updated when the position or
     /// orientation of the corresponding instance of <see cref="RigidBody"/> changes.
+    /// It may include the body's predicted translation and rotation over the next step.
     /// </summary>
     public JBoundingBox WorldBoundingBox { get; protected set; }
 

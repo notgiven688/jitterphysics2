@@ -48,9 +48,31 @@ public abstract class RigidBodyShape : Shape
         ref var data = ref RigidBody.Data;
         CalculateBoundingBox(data.Orientation, data.Position, out box);
 
-        if (RigidBody.EnableSpeculativeContacts)
+        if (dt > (Real)0.0 && RigidBody.World.NeedsCcdBounds(RigidBody))
         {
-            // Speculative sweeps predict translation using the body's physical velocity.
+            JVector omega = data.AngularVelocity;
+            Real angularSpeed = omega.Length();
+            if (angularSpeed > (Real)0.0)
+            {
+                // Enclose the shape about the body's rotation origin, including local shape offsets.
+                JVector extent = JVector.Max(JVector.Abs(box.Min - data.Position),
+                    JVector.Abs(box.Max - data.Position));
+                Real radius = extent.Length();
+
+                // Rotation moves a point by at most radius * |omega| * dt, capped at 2 * radius.
+                // Only the angular velocity perpendicular to each world axis can move points along it.
+                Real scale = radius * MathR.Min(dt, (Real)2.0 / angularSpeed);
+                JVector expansion = scale * new JVector(
+                    MathR.Sqrt(omega.Y * omega.Y + omega.Z * omega.Z),
+                    MathR.Sqrt(omega.X * omega.X + omega.Z * omega.Z),
+                    MathR.Sqrt(omega.X * omega.X + omega.Y * omega.Y));
+
+                // Every intermediate orientation also stays inside the enclosing sphere.
+                box.Min = JVector.Max(box.Min - expansion, data.Position - new JVector(radius));
+                box.Max = JVector.Min(box.Max + expansion, data.Position + new JVector(radius));
+            }
+
+            // Preserve the linear margin after bounding the rotation about the initial body position.
             Real swept = dt * data.Velocity.Length();
             box.Min -= new JVector(swept);
             box.Max += new JVector(swept);

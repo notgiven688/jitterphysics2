@@ -140,7 +140,7 @@ public partial class Playground : RenderWindow
         world.Gravity = new JVector(0, -9.81f, 0);
         world.SubstepCount = 1;
         world.SolverIterations = (8, 4);
-        world.SpeculativeRelaxationFactor = 0.9f;
+        world.CcdRelaxationFactor = 0.9f;
     }
 
     public void AddFloor()

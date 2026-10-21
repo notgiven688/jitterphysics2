@@ -320,7 +320,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public Island Island => InternalIsland;
 
     /// <summary>
-    /// Event triggered when a new arbiter is created, including for a speculative contact before the bodies overlap.
+    /// Event triggered when a new arbiter is created, including for a CCD contact before the bodies overlap.
     /// </summary>
     /// <remarks>
     /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
@@ -591,6 +591,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             ClearContactCache();
             foreach (Constraint constraint in InternalConstraints) constraint.ResetWarmStart();
             World.ActivateBodyNextStep(this, true);
+            if (World.NeedsCcdBounds(this)) UpdateBroadphase();
         }
     }
 
@@ -639,10 +640,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         UpdateWorldInertia();
         ClearContactCache();
 
-        foreach (var shape in InternalShapes)
-        {
-            World.DynamicTree.Update(shape, EnableSpeculativeContacts ? World.BroadphaseStepDt : (Real)0.0);
-        }
+        UpdateBroadphase();
 
         World.ActivateBodyNextStep(this, true);
     }
@@ -792,9 +790,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             JVector previousVelocity = data.Velocity;
             data.Velocity = value;
 
-            if (EnableSpeculativeContacts && previousVelocity != value)
+            if (World.NeedsCcdBounds(this) && previousVelocity != value)
             {
-                UpdateSpeculativeBroadphase();
+                UpdateBroadphase();
                 // Custom shape bounds updates can relocate the body buffer.
                 data = ref Data;
             }
@@ -835,7 +833,15 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             }
 
             RestrictAngularMotion(ref value, data.AllowedMotion);
+            JVector previousAngularVelocity = data.AngularVelocity;
             data.AngularVelocity = value;
+
+            if (World.NeedsCcdBounds(this) && previousAngularVelocity != value)
+            {
+                UpdateBroadphase();
+                // Custom shape bounds updates can relocate the body buffer.
+                data = ref Data;
+            }
 
             if (data.MotionType == MotionType.Kinematic
                 ? value != JVector.Zero
@@ -860,38 +866,39 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// </summary>
     public object? Tag { get; set; }
 
-    private bool enableSpeculativeContacts;
+    private bool enableCcd;
 
     /// <summary>
-    /// Gets or sets whether linear-only speculative contacts are enabled for this body.
+    /// Gets or sets whether continuous collision detection (CCD) is enabled for this body.
     /// </summary>
     /// <remarks>
-    /// Speculative contacts help prevent tunneling from fast linear motion by generating
-    /// contacts before actual penetration occurs. Prediction and speculative bounding box
-    /// expansion use only linear velocity, with shape orientations held fixed during sweeps.
-    /// Speculative constraints ignore angular surface velocity and update only linear velocity.
-    /// They do not prevent tunneling caused by rotation. Bodies still rotate normally, and
-    /// ordinary overlap contacts retain their angular response. Enabling speculative contacts
-    /// may increase contact count and solver cost. Default is <see langword="false"/>.
+    /// CCD helps prevent tunneling by predicting translation and rotation before
+    /// penetration occurs. Discovery repeats with the velocities produced by contact impulses and
+    /// follows bodies moved by those impulses. The number of passes is controlled by
+    /// <see cref="World.CcdIterations"/>. Joints are solved afterward by the regular solver;
+    /// a finite discovery budget cannot guarantee that every collision is found. Enabling this
+    /// increases collision detection and solver cost. Default is <see langword="false"/>.
+    /// Enable CCD on both bodies when both move quickly; an unflagged moving target can be missed.
     /// </remarks>
-    public bool EnableSpeculativeContacts
+    public bool EnableCcd
     {
-        get => enableSpeculativeContacts;
+        get => enableCcd;
         set
         {
-            if (enableSpeculativeContacts == value) return;
-            enableSpeculativeContacts = value;
-            if (IsValid && Data.Velocity.LengthSquared() > (Real)0.0)
+            if (enableCcd == value) return;
+            enableCcd = value;
+            if (IsValid)
             {
-                foreach (var shape in InternalShapes)
-                {
-                    World.DynamicTree.Update(shape, value ? World.BroadphaseStepDt : (Real)0.0);
-                }
+                // During discovery, disabled bodies can still be needed as impulse recipients.
+                if (value) World.AddCcdBody(this);
+                else if (!World.IsDiscoveringCcdContacts) World.RemoveCcdBody(this);
+
+                UpdateBroadphase();
             }
         }
     }
 
-    private void UpdateSpeculativeBroadphase()
+    private void UpdateBroadphase()
     {
         foreach (var shape in InternalShapes)
         {
@@ -1006,6 +1013,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
             {
                 World.UpdateConstraintActivation(constraint);
             }
+            if (World.NeedsCcdBounds(this)) UpdateBroadphase();
         }
     }
 
@@ -1050,7 +1058,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         shape.RigidBody = this;
         try
         {
-            shape.UpdateWorldBoundingBox(EnableSpeculativeContacts ? World.BroadphaseStepDt : (Real)0.0);
+            shape.UpdateWorldBoundingBox(World.BroadphaseStepDt);
             World.DynamicTree.AddProxy(shape, IsActive);
         }
         catch
@@ -1321,9 +1329,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         World.ActivateBodyNextStep(this);
         JVector previousVelocity = data.Velocity;
         data.Velocity += JVector.Multiply(impulse, data.InverseMassVector);
-        if (EnableSpeculativeContacts && previousVelocity != data.Velocity)
+        if (World.NeedsCcdBounds(this) && previousVelocity != data.Velocity)
         {
-            UpdateSpeculativeBroadphase();
+            UpdateBroadphase();
         }
     }
 
@@ -1354,11 +1362,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
         JVector.Cross(angularImpulse, impulse, out angularImpulse);
 
         JVector previousVelocity = data.Velocity;
+        JVector previousAngularVelocity = data.AngularVelocity;
         data.Velocity += JVector.Multiply(impulse, data.InverseMassVector);
         data.AngularVelocity += JVector.Transform(angularImpulse, data.InverseInertiaWorld);
-        if (EnableSpeculativeContacts && previousVelocity != data.Velocity)
+        if (World.NeedsCcdBounds(this) &&
+            (previousVelocity != data.Velocity || previousAngularVelocity != data.AngularVelocity))
         {
-            UpdateSpeculativeBroadphase();
+            UpdateBroadphase();
         }
     }
 

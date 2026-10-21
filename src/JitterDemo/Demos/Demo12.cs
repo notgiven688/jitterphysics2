@@ -8,7 +8,7 @@ namespace JitterDemo;
 
 public class Demo12 : IDemo
 {
-    public string Name => "Speculative Contacts";
+    public string Name => "CCD: Fast bodies";
     public string Description => "High-velocity objects fired at thin walls to test tunneling prevention.";
 
     public void Build(Playground pg, World world)
@@ -17,7 +17,7 @@ public class Demo12 : IDemo
 
         world.BroadPhaseFilter = new Common.IgnoreCollisionBetweenFilter();
         
-        // For the ragdoll: joint constraints and speculative contacts compete during
+        // For the ragdoll: joint constraints and CCD contacts compete during
         // the iterative solve. A slightly higher iteration count makes this fast impact
         // case more stable.
         world.SolverIterations = (12, 4);
@@ -31,19 +31,19 @@ public class Demo12 : IDemo
         sphereBody.AddShape(new SphereShape(0.3f));
         sphereBody.Position = new JVector(-3, 8, -1);
         sphereBody.Velocity = new JVector(0, 0, -107);
-        sphereBody.EnableSpeculativeContacts = true;
+        sphereBody.EnableCcd = true;
 
         var boxBody = world.CreateRigidBody();
         boxBody.AddShape(new BoxShape(0.3f));
         boxBody.Position = new JVector(+3, 8, -1);
         boxBody.Velocity = new JVector(0, 0, -107);
-        boxBody.EnableSpeculativeContacts = true;
+        boxBody.EnableCcd = true;
 
         Common.BuildRagdoll(new JVector(0, 8, -1),
             body =>
             {
                 body.Velocity = new JVector(0, 0, -107);
-                body.EnableSpeculativeContacts = true;
+                body.EnableCcd = true;
                 body.SetActivationState(false);
             }
         );

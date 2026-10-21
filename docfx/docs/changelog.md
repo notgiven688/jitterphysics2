@@ -1,5 +1,9 @@
 # Changelog
 
+### Unreleased
+
+- **Breaking Change:** Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use `RigidBody.EnableCcd` and the `Ccd*` settings; the old speculative contact API has been removed.
+
 ### Jitter 2.12.2 (2026-10-22)
 
 - Fixed a stack overflow that could occur during dynamic tree balancing, particularly in double precision.

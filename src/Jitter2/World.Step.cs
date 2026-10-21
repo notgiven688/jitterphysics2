@@ -94,6 +94,7 @@ public sealed partial class World
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
     private Action<Parallel.Batch> solveIsland;
     private Action<Parallel.Batch> relaxIsland;
+    private Action<Parallel.Batch> findCcdHits;
 
     private void InitParallelCallbacks()
     {
@@ -111,6 +112,7 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
+        findCcdHits = FindCcdHits;
     }
 
     private readonly double[] debugTimings = new double[(int)Timings.Last];
@@ -199,6 +201,7 @@ public sealed partial class World
             // Perform narrow phase detection.
             Tracer.ProfileBegin(TraceName.NarrowPhase);
             DynamicTree.EnumerateOverlaps(detect, multiThread);
+            DiscoverCcdContacts(multiThread);
             Tracer.ProfileEnd(TraceName.NarrowPhase);
             SetTime(Timings.NarrowPhase);
 
