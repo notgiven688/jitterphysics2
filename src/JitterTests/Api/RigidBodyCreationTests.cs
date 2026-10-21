@@ -78,11 +78,11 @@ public class RigidBodyCreationTests
     }
 
     [TestCase]
-    public void DefaultEnableSpeculativeContacts_IsFalse()
+    public void DefaultEnableCcd_IsFalse()
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.That(body.EnableSpeculativeContacts, Is.False);
+        Assert.That(body.EnableCcd, Is.False);
         world.Dispose();
     }
 

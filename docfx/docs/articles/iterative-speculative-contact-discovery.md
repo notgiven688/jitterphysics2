@@ -4,9 +4,7 @@ Speculative contacts prevent tunneling by creating a contact before two shapes a
 
 The method explored here repeats collision detection after such an impulse. This article uses the name **Iterative Speculative Contact Discovery (ISCD)** for that approach: detect a speculative contact, apply its impulse, then detect again using the updated velocities.
 
-The discussion assumes a standard impulse-based rigid-body solver. An experimental implementation is available in [CcdSolver.cs](https://github.com/notgiven688/jitterphysics2/blob/main/src/JitterDemo/Demos/Misc/CcdSolver.cs), and an interactive example appears below.
-
-The examples and interactive demo in this article use speculative contacts with angular response. Jitter's built-in `EnableSpeculativeContacts` mode is [linear-only](../documentation/bodies.md#speculative-contacts): it predicts translation and applies only linear impulses. The ISCD experiment explores an alternative that retains angular response.
+The discussion assumes a standard impulse-based rigid-body solver. An interactive example appears below.
 
 ## A contact before contact
 
@@ -48,7 +46,7 @@ The new motion is shown below. A now reaches the wall as intended, but B rotates
 
 More solver iterations at A cannot fix this. The solver only knows about the contact at A; it cannot create the missing contact at B. Collision detection has to run again.
 
-A simple workaround is to omit angular response from speculative contacts and change only linear velocity. Jitter's built-in speculative contacts use this approach and also ignore angular surface velocity in the speculative constraint. That avoids the new collision in this example, but it also removes the physically expected rotation from an off-center speculative impact. It does not freeze the body's rotation or protect against tunneling caused by rotation from other sources.
+A simple workaround is to omit angular response from speculative contacts and change only linear velocity. That avoids the new collision in this example, but it also removes the physically expected rotation from an off-center speculative impact. It does not freeze the body's rotation or protect against tunneling caused by rotation from other sources.
 
 ## Respond, then detect again
 
@@ -64,9 +62,9 @@ For the box, the sequence is:
 
 In short:
 
-> **detect A → solve {A} → detect B → solve {A, B} → solve {A, B} again…**
+> **detect A → solve {A} → detect B → solve {A, B} → detect again → solve all known contacts…**
 
-Each solver pass includes every contact discovered so far. The contact at A therefore remains active when B is added, and the response at B can correct the impulse at A. Because that response may change the predicted motion again, discovery continues for a fixed number of passes.
+Every discovery pass detects contacts using the updated velocities, then solves every contact discovered so far. Even if detection finds no new contact, the accumulated contacts are solved again. The contact at A therefore remains active when B is added, and the response at B can correct the impulse at A. Because that response may change the predicted motion again, discovery continues for a fixed number of passes.
 
 <figure class="ccd-figure">
   <img src="images/iterative-speculative-contact-discovery.svg" width="680" height="650" alt="Three-stage diagram of iterative speculative contact discovery. The first sweep predicts contact A, represented by one point on the box and one on the wall. A local response changes the box's velocity. A second sweep predicts the paired points of contact B while A remains registered.">
@@ -97,9 +95,13 @@ Use **Pause** and **Step 1/30 s** to inspect individual timesteps. The dashed ou
 
 ## What still needs care
 
-Every additional pass costs another set of sweeps. In practice, ISCD can be enabled only for bodies that are expected to move fast enough to need it. Discovery must also follow bodies whose velocities change through contact. The panel in the demo begins at rest, for example, but has to be swept after the first sphere makes it rotate.
+Every additional pass costs another set of sweeps. Discovery can begin with selected fast-moving bodies, but it must also follow bodies whose velocities change through discovered contacts. The panel in the demo begins at rest, for example, but has to be swept after the first sphere makes it rotate.
+
+Contacts that have already applied impulses remain active as new ones are added. Keeping their geometry fixed avoids changing the constraint underneath an accumulated impulse. Additional sweeps can still reveal distinct contact points between the same pair of shapes.
 
 ISCD is iterative and approximate. Its result can depend on discovery order, pass count, solver convergence, sweep accuracy, and whether the contact geometry is refreshed. The final world solve can change the velocities again, so a fixed discovery budget cannot guarantee that every required contact has been found.
+
+ISCD is implemented in [Jitter's continuous collision detection](../documentation/bodies.md#continuous-collision-detection).
 
 *Disclosure: This article was written with the help of AI. The ISCD idea itself came from the author, not the AI; no claim is made that similar methods have not appeared elsewhere.*
 

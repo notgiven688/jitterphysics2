@@ -178,11 +178,11 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         ref var b1Data = ref shapeA.RigidBody.Data;
         ref var b2Data = ref shapeB.RigidBody.Data;
 
-        bool isSpeculative = penetration < (Real)0.0;
+        bool isSeparated = penetration < (Real)0.0;
 
-        if (!isSpeculative)
+        if (!isSeparated)
         {
-            // Check collision again (for non-speculative contacts),
+            // Check collision again (for overlapping contacts),
             // but with zero epa threshold parameter. This is necessary since
             // MPR is not exact for flat shapes, like triangles.
 
@@ -227,7 +227,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {neighborNormal}");
 #endif
 
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -241,7 +241,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {triangleNormal}");
 #endif
 
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -297,7 +297,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {neighborNormal}");
 
 #endif
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -310,7 +310,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {triangleNormal}");
 #endif
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;

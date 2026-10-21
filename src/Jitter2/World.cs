@@ -501,6 +501,10 @@ public sealed partial class World : IDisposable
 
         bodies.Trim();
         islands.Trim();
+        ccdBodies.TrimExcess();
+        ccdBodySet.TrimExcess();
+        ccdQueries.Clear();
+        ccdQueries.TrimExcess();
 
         deferredArbiters.Trim();
         brokenArbiters.Trim();
@@ -583,6 +587,7 @@ public sealed partial class World : IDisposable
             Remove(contact);
         }
 
+        RemoveCcdBody(body);
         memRigidBodies.Free(body.Handle);
 
         // We must be our own island.
@@ -978,6 +983,10 @@ public sealed partial class World : IDisposable
     {
         if (disposed) return;
         disposed = true;
+
+        ccdBodies.Clear();
+        ccdBodySet.Clear();
+        ccdQueries.Clear();
 
         memContacts.Dispose();
         memRigidBodies.Dispose();

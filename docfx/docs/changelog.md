@@ -1,5 +1,11 @@
 # Changelog
 
+### Unreleased
+
+- **Breaking Change:** Renamed `RigidBody.EnableSpeculativeContacts` to `RigidBody.EnableCcd`. The old property has been removed.
+- **Breaking Change:** Renamed `World.SpeculativeIterations`, `World.SpeculativeVelocityThreshold`, and `World.SpeculativeRelaxationFactor` to `CcdIterations`, `CcdVelocityThreshold`, and `CcdRelaxationFactor`. `ContactData.SpeculativeRelaxationFactor` is now `ContactData.CcdRelaxationFactor`. The old names have been removed.
+- CCD now predicts translation and rotation and repeats contact discovery after collision impulses change body motion.
+
 ### Jitter 2.12.2 (2026-10-22)
 
 - Fixed a stack overflow that could occur during dynamic tree balancing, particularly in double precision.

@@ -98,28 +98,25 @@ public sealed partial class World
     public bool PersistentContactManifold { get; set; } = true;
 
     /// <summary>
-    /// A speculative contact limits relative linear closing velocity to help prevent tunneling through
-    /// an obstacle within one frame. It does not account for rotational motion.
-    /// The <see cref="SpeculativeRelaxationFactor"/> scales the slowdown, ranging from 0
-    /// (where the body stops immediately during this frame) to 1 (where the body and the
-    /// obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
-    /// might be enough to trigger another speculative contact in the next frame.
+    /// A CCD contact limits closing velocity at the contact points to help prevent tunneling through
+    /// an obstacle within one frame. The response includes both linear and angular motion.
+    /// The <see cref="CcdRelaxationFactor"/> scales the allowed closing motion, ranging from 0
+    /// (no closing motion at the contact) to 1 (allowing the predicted gap to close over one full step).
+    /// Values below 1 leave a separation margin for the next frame.
     /// Default value: 0.9.
     /// </summary>
-    public Real SpeculativeRelaxationFactor { get; set; } = (Real)0.9;
+    public Real CcdRelaxationFactor { get; set; } = (Real)0.9;
 
     /// <summary>
-    /// Speculative contacts are generated when the relative linear speed between two bodies exceeds
-    /// the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
-    /// threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
-    /// timestep of 0.01.
-    /// Default value: 10.0.
+    /// Minimum estimated relative surface speed for CCD sweeps. Sweeps are skipped below this
+    /// threshold to avoid work for nearly stationary pairs.
+    /// Default value: 0.1.
     /// </summary>
     /// <remarks>
-    /// Angular velocity does not contribute to this threshold. Built-in speculative contacts
-    /// predict translation at fixed orientations and do not prevent tunneling caused by rotation.
+    /// The estimate includes relative linear speed and angular speed multiplied by each shape's
+    /// bounding radius about the body origin. Set this to zero to sweep even slow-moving pairs.
     /// </remarks>
-    public Real SpeculativeVelocityThreshold { get; set; } = (Real)10.0;
+    public Real CcdVelocityThreshold { get; set; } = (Real)0.1;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Detect(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -159,7 +156,6 @@ public sealed partial class World
 
         if (b1.MotionType != MotionType.Dynamic && b2.MotionType != MotionType.Dynamic) return;
 
-        bool speculative = bodyA.EnableSpeculativeContacts || bodyB.EnableSpeculativeContacts;
         INarrowPhaseFilter? narrowPhaseFilter = NarrowPhaseFilter;
 
         var colliding = NarrowPhase.MprEpa(sA, sB, b1.Orientation, b2.Orientation, b1.Position, b2.Position,
@@ -167,32 +163,6 @@ public sealed partial class World
 
         if (!colliding)
         {
-            if (!speculative) return;
-
-            JVector dv = b2.Velocity - b1.Velocity;
-
-            if (dv.LengthSquared() < SpeculativeVelocityThreshold * SpeculativeVelocityThreshold) return;
-
-            bool success = NarrowPhase.Sweep(sA, sB, b1.Orientation, b2.Orientation,
-                b1.Position, b2.Position, b1.Velocity, b2.Velocity,
-                out pA, out pB, out normal, out Real toi);
-
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (!success || toi > timeStep.StepDt || toi == (Real)0.0) return;
-
-            penetration = normal * (pA - pB) * SpeculativeRelaxationFactor;
-
-            if (narrowPhaseFilter != null)
-            {
-                if (!narrowPhaseFilter.Filter(sA, sB, ref pA, ref pB, ref normal, ref penetration))
-                {
-                    return;
-                }
-            }
-
-            RegisterContact(sA.ShapeId, sB.ShapeId, bodyA, bodyB,
-                pA, pB, normal, ContactData.SolveMode.Angular);
-
             return;
         }
 

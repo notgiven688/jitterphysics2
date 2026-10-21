@@ -100,8 +100,8 @@ public struct ContactData
     public Real Restitution;
     /// <summary>Combined friction coefficient for this contact pair.</summary>
     public Real Friction;
-    /// <summary>Relaxation factor for speculative contacts.</summary>
-    public Real SpeculativeRelaxationFactor;
+    /// <summary>Relaxation factor for predicted contact separation.</summary>
+    public Real CcdRelaxationFactor;
 
     /// <summary>Determines which velocity components are updated by the solver.</summary>
     public SolveMode Mode;
@@ -275,7 +275,7 @@ public struct ContactData
 
         Friction = MathR.Max(body1.Friction, body2.Friction);
         Restitution = MathR.Max(body1.Restitution, body2.Restitution);
-        SpeculativeRelaxationFactor = body1.World.SpeculativeRelaxationFactor;
+        CcdRelaxationFactor = body1.World.CcdRelaxationFactor;
 
         Debug.Assert(body1.World == body2.World);
 
@@ -620,7 +620,7 @@ public struct ContactData
         /// <summary>Current contact state flags.</summary>
         [FieldOffset(0)] public Flags Flag;
 
-        /// <summary>Velocity bias for restitution or speculative separation.</summary>
+        /// <summary>Velocity bias for restitution or predicted separation.</summary>
         [FieldOffset(4)] public Real Bias;
 
         /// <summary>Position-correction bias computed from penetration depth.</summary>
@@ -868,8 +868,8 @@ public struct ContactData
 
             if (penetration < -BreakThreshold)
             {
-                // Speculative contact
-                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
+                // The contact points are still separated.
+                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -1100,8 +1100,8 @@ public struct ContactData
 
             if (penetration < -BreakThreshold)
             {
-                // Speculative contact
-                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
+                // The contact points are still separated.
+                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;

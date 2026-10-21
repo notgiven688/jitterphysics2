@@ -247,22 +247,25 @@ With each `world.Step`, the angular and linear velocity of each dynamic rigid bo
 For performance reasons there is no time dependency for the damping system.
 As a result, bodies in a simulation with smaller time steps experience greater damping.
 
-## Speculative contacts
+## Continuous collision detection
 
-Jitter's built-in speculative contacts are **linear-only**. They help prevent fast, small objects
-from tunneling through thin obstacles when their translation between frames would skip a collision.
-Enable them on a per-body basis using `body.EnableSpeculativeContacts`.
+Continuous collision detection (CCD) helps prevent fast, small objects
+from tunneling through thin obstacles when their motion between frames would skip a collision.
+Enable it on a per-body basis using `body.EnableCcd`.
+Enable CCD on both bodies when both move quickly, for example two fast projectiles.
+A moving body without CCD can enter the collision path without being detected in time.
 
-Speculative bounding box expansion uses only linear velocity. Sweeps predict translation while
-holding the shapes at their current orientations. The speculative constraints also ignore angular
-surface velocity (`ω × r`) and apply impulses only to linear velocity. They do not prevent
-tunneling caused by rotation, including rotation introduced by other contacts or constraints during
-the timestep. Bodies still rotate normally, and ordinary overlap contacts retain their angular response.
+Prediction includes both translation and rotation. Contacts affect both linear and angular velocity,
+so an off-center impact can make a body rotate. Jitter repeats discovery with the changed velocities
+and follows bodies moved by those impulses, even if CCD was not enabled on them.
 
-`world.SpeculativeVelocityThreshold` sets the minimum relative linear speed for speculative
-contact generation. `world.SpeculativeRelaxationFactor` controls how much the bodies may close
-the predicted gap. This approximation trades collision-response accuracy for reduced tunneling;
-smaller timesteps may still be needed for fast translation or rotation.
+`world.CcdIterations` controls the number of discovery passes (default: four).
+`world.CcdVelocityThreshold` sets the minimum estimated relative surface speed for CCD sweeps
+(default: `0.1`), allowing nearly stationary pairs to skip sweeps.
+`world.CcdRelaxationFactor` controls how much the bodies may close
+the predicted gap. More passes cost more collision queries. Joints run in the regular solver after
+discovery and can change the motion again. This remains an approximation with a limited number
+of passes; smaller timesteps may still be needed.
 
 ## Friction and Restitution
 
