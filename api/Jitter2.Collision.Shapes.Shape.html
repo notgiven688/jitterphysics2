@@ -216,7 +216,7 @@ arranging shapes in a well-defined order.</p>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_Velocity" data-uid="Jitter2.Collision.Shapes.Shape.Velocity">
   Velocity
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L50"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the velocity of the entity, used for bounding box expansion.</p>
@@ -249,11 +249,12 @@ public abstract JVector Velocity { get; }</code></pre>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_WorldBoundingBox" data-uid="Jitter2.Collision.Shapes.Shape.WorldBoundingBox">
   WorldBoundingBox
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The bounding box of the shape in world space. It is automatically updated when the position or
-orientation of the corresponding instance of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a> changes.</p>
+orientation of the corresponding instance of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a> changes.
+It may include the body's predicted translation and rotation over the next step.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -286,7 +287,7 @@ orientation of the corresponding instance of <a class="xref" href="Jitter2.Dynam
 
   <h3 id="Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L78"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws the shape using the default visualization settings.</p>
@@ -318,7 +319,7 @@ orientation of the corresponding instance of <a class="xref" href="Jitter2.Dynam
 
   <h3 id="Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Collision.Shapes.Shape.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws the shape as world-space triangles using the supplied settings.</p>
@@ -356,7 +357,7 @@ Higher detail settings increase the drawing cost and do not guarantee a more acc
 
   <h3 id="Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__" data-uid="Jitter2.Collision.Shapes.Shape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)">
   DebugDrawLocal&lt;TSink&gt;(ref TSink, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Appends debug triangles in the coordinate system used by <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">SupportMap(in JVector, out JVector)</a>.</p>
@@ -402,7 +403,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.Shape.Distance``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the closest points between this object and the query shape.</p>
@@ -467,7 +468,7 @@ the shapes overlap. Do not use this to test whether a result was found.</p>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.Shape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
@@ -501,7 +502,7 @@ public abstract void GetCenter(out JVector point)</code></pre>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.Shape.RayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   RayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a ray cast against this object.</p>
@@ -554,7 +555,7 @@ set to zero and <code class="paramref">normal</code> set to <a class="xref" href
 
   <h3 id="Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.Shape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -591,7 +592,7 @@ public abstract void SupportMap(in JVector direction, out JVector result)</code>
 
   <h3 id="Jitter2_Collision_Shapes_Shape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.Shape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L59"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a sweep test against this object.</p>
@@ -659,7 +660,7 @@ Use the return value to determine whether a hit occurred; do not rely on this be
 
   <h3 id="Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_System_Single_" data-uid="Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(System.Single)">
   SweptExpandBoundingBox(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -690,7 +691,7 @@ Use the return value to determine whether a hit occurred; do not rely on this be
 
   <h3 id="Jitter2_Collision_Shapes_Shape_UpdateWorldBoundingBox_System_Single_" data-uid="Jitter2.Collision.Shapes.Shape.UpdateWorldBoundingBox(System.Single)">
   UpdateWorldBoundingBox(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Recomputes the world-space bounding box.</p>

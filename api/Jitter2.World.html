@@ -263,11 +263,129 @@ with <code>multiThread=true</code>, this may be invoked concurrently. Implementa
 
 
 
+  <a id="Jitter2_World_CcdIterations_" data-uid="Jitter2.World.CcdIterations*"></a>
+
+  <h3 id="Jitter2_World_CcdIterations" data-uid="Jitter2.World.CcdIterations">
+  CcdIterations
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Ccd.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Number of CCD contact discovery passes before the regular solver. Default: 4.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CcdIterations { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_World_CcdIterations_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Each pass predicts translation and rotation, then applies contact impulses so the next pass
+can discover collisions caused by the changed motion. Bodies stay at their starting poses.
+Higher values cost more sweeps and do not guarantee that every collision will be found.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The value is less than one.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_World_CcdRelaxationFactor_" data-uid="Jitter2.World.CcdRelaxationFactor*"></a>
+
+  <h3 id="Jitter2_World_CcdRelaxationFactor" data-uid="Jitter2.World.CcdRelaxationFactor">
+  CcdRelaxationFactor
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A CCD contact limits closing velocity at the contact points to help prevent tunneling through
+an obstacle within one frame. The response includes both linear and angular motion.
+The <a class="xref" href="Jitter2.World.html#Jitter2_World_CcdRelaxationFactor">CcdRelaxationFactor</a> scales the allowed closing motion, ranging from 0
+(no closing motion at the contact) to 1 (allowing the predicted gap to close over one full step).
+Values below 1 leave a separation margin for the next frame.
+Default value: 0.9.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float CcdRelaxationFactor { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_World_CcdVelocityThreshold_" data-uid="Jitter2.World.CcdVelocityThreshold*"></a>
+
+  <h3 id="Jitter2_World_CcdVelocityThreshold" data-uid="Jitter2.World.CcdVelocityThreshold">
+  CcdVelocityThreshold
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Minimum estimated relative surface speed for CCD sweeps. Sweeps are skipped below this
+threshold to avoid work for nearly stationary pairs.
+Default value: 0.1.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float CcdVelocityThreshold { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Jitter2_World_CcdVelocityThreshold_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The estimate includes relative linear speed and angular speed multiplied by each shape's
+bounding radius about the body origin. Set this to zero to sweep even slow-moving pairs.</p>
+</div>
+
+
+
+
   <a id="Jitter2_World_DebugTimings_" data-uid="Jitter2.World.DebugTimings*"></a>
 
   <h3 id="Jitter2_World_DebugTimings" data-uid="Jitter2.World.DebugTimings">
   DebugTimings
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Contains timings for the stages of the last call to <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.
@@ -401,7 +519,7 @@ Default value: (0, -9.81, 0).</p>
 
   <h3 id="Jitter2_World_IsDisposed" data-uid="Jitter2.World.IsDisposed">
   IsDisposed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L963"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L968"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a value indicating whether this world has been disposed.</p>
@@ -725,84 +843,6 @@ Default value: (solver: 6, relaxation: 4).</p>
 
 
 
-  <a id="Jitter2_World_SpeculativeRelaxationFactor_" data-uid="Jitter2.World.SpeculativeRelaxationFactor*"></a>
-
-  <h3 id="Jitter2_World_SpeculativeRelaxationFactor" data-uid="Jitter2.World.SpeculativeRelaxationFactor">
-  SpeculativeRelaxationFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L109"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>A speculative contact limits relative linear closing velocity to help prevent tunneling through
-an obstacle within one frame. It does not account for rotational motion.
-The <a class="xref" href="Jitter2.World.html#Jitter2_World_SpeculativeRelaxationFactor">SpeculativeRelaxationFactor</a> scales the slowdown, ranging from 0
-(where the body stops immediately during this frame) to 1 (where the body and the
-obstacle just touch after the next velocity integration). A value below 1 is preferred, as the leftover velocity
-might be enough to trigger another speculative contact in the next frame.
-Default value: 0.9.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float SpeculativeRelaxationFactor { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Jitter2_World_SpeculativeVelocityThreshold_" data-uid="Jitter2.World.SpeculativeVelocityThreshold*"></a>
-
-  <h3 id="Jitter2_World_SpeculativeVelocityThreshold" data-uid="Jitter2.World.SpeculativeVelocityThreshold">
-  SpeculativeVelocityThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L122"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Speculative contacts are generated when the relative linear speed between two bodies exceeds
-the threshold value. To prevent bodies with a diameter of D from tunneling through thin walls, this
-threshold should be set to approximately D / timestep, e.g., 100 for a unit cube and a
-timestep of 0.01.
-Default value: 10.0.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float SpeculativeVelocityThreshold { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-  <h4 class="section" id="Jitter2_World_SpeculativeVelocityThreshold_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Angular velocity does not contribute to this threshold. Built-in speculative contacts
-predict translation at fixed orientations and do not prevent tunneling caused by rotation.</p>
-</div>
-
-
-
-
   <a id="Jitter2_World_SubstepCount_" data-uid="Jitter2.World.SubstepCount*"></a>
 
   <h3 id="Jitter2_World_SubstepCount" data-uid="Jitter2.World.SubstepCount">
@@ -911,7 +951,7 @@ including any user-added proxies not owned by the world.</p>
 
   <h3 id="Jitter2_World_CreateConstraint__1_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.World.CreateConstraint``1(Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)">
   CreateConstraint&lt;T&gt;(RigidBody, RigidBody)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L863"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L868"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Constructs a constraint of the specified type. After creation, initialize the constraint
@@ -972,7 +1012,7 @@ by calling its <code>Initialize</code> method.</p>
 
   <h3 id="Jitter2_World_CreateRigidBody" data-uid="Jitter2.World.CreateRigidBody">
   CreateRigidBody()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L943"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L948"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates and adds a new rigid body to the simulation world.</p>
@@ -1051,7 +1091,7 @@ attached to the same body; accepts other proxy pairs.</p>
 
   <h3 id="Jitter2_World_Dispose" data-uid="Jitter2.World.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L977"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L982"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases all unmanaged memory buffers used by this simulation world.</p>
@@ -1082,7 +1122,7 @@ become invalid. Calling <a class="xref" href="Jitter2.World.html#Jitter2_World_D
 
   <h3 id="Jitter2_World_ForceSleepIsland_Jitter2_Collision_Island_" data-uid="Jitter2.World.ForceSleepIsland(Jitter2.Collision.Island)">
   ForceSleepIsland(Island)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L813"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L818"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Immediately deactivates the specified island and clears motion state for all bodies in it.</p>
@@ -1129,7 +1169,7 @@ velocities, queued forces, queued torques, and force-derived velocity deltas set
 
   <h3 id="Jitter2_World_GetArbiter_System_UInt64_System_UInt64_Jitter2_Dynamics_Arbiter__" data-uid="Jitter2.World.GetArbiter(System.UInt64,System.UInt64,Jitter2.Dynamics.Arbiter@)">
   GetArbiter(ulong, ulong, out Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L351"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> instance for the given pair of IDs.</p>
@@ -1184,7 +1224,7 @@ removal, <a class="xref" href="Jitter2.World.html#Jitter2_World_Clear">Clear()</
 
   <h3 id="Jitter2_World_GetOrCreateArbiter_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_Arbiter__" data-uid="Jitter2.World.GetOrCreateArbiter(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.Arbiter@)">
   GetOrCreateArbiter(ulong, ulong, RigidBody, RigidBody, out Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L416"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L386"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> instance for the given pair of IDs,
@@ -1244,7 +1284,7 @@ world is stepped or modified.
 
   <h3 id="Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   LockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L994"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L997"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Acquires locks on two rigid bodies using a spin-wait loop. The lock order is determined
@@ -1281,7 +1321,7 @@ by memory address to prevent deadlocks.</p>
 
   <h3 id="Jitter2_World_RegisterContact_Jitter2_Dynamics_Arbiter_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(Jitter2.Dynamics.Arbiter,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(Arbiter, in JVector, in JVector, in JVector, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L215"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers a single contact point into an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a>.</p>
@@ -1343,7 +1383,7 @@ Do not pass an arbiter after it has been removed from the world; removed arbiter
 
   <h3 id="Jitter2_World_RegisterContact_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector__Jitter2_Collision_CollisionManifold__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector@,Jitter2.Collision.CollisionManifold@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(ulong, ulong, RigidBody, RigidBody, in JVector, ref CollisionManifold, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L293"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L263"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers one or more contact points between two rigid bodies using a <a class="xref" href="Jitter2.Collision.CollisionManifold.html">CollisionManifold</a>,
@@ -1408,7 +1448,7 @@ world is stepped or modified.
 
   <h3 id="Jitter2_World_RegisterContact_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(ulong, ulong, RigidBody, RigidBody, in JVector, in JVector, in JVector, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L355"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L325"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers a contact point between two rigid bodies, creating an <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> if one does not already exist.</p>
@@ -1476,7 +1516,7 @@ world is stepped or modified.
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_Arbiter_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.Arbiter)">
   Remove(Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L649"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L654"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a particular arbiter from the world.</p>
@@ -1521,7 +1561,7 @@ world is stepped or modified.
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_Constraints_Constraint_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.Constraints.Constraint)">
   Remove(Constraint)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L611"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L616"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a specific constraint from the world. For temporary deactivation of constraints, consider using the
@@ -1570,7 +1610,7 @@ world is stepped or modified.
 
   <h3 id="Jitter2_World_Remove_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.World.Remove(Jitter2.Dynamics.RigidBody)">
   Remove(RigidBody)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L547"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L551"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes the specified body from the world. This operation also automatically discards any associated contacts
@@ -1698,7 +1738,7 @@ bound is exclusive.</p>
 
   <h3 id="Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_" data-uid="Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)">
   Stabilize(float, int, int, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L318"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L321"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Solves the existing contacts and constraints at the velocity level without advancing body transforms.</p>
@@ -1756,7 +1796,7 @@ is less than 1, or <code class="paramref">relaxationIterations</code> is negativ
 
   <h3 id="Jitter2_World_Step_System_Single_System_Boolean_" data-uid="Jitter2.World.Step(System.Single,System.Boolean)">
   Step(float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L143"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a single simulation step.</p>
@@ -1854,7 +1894,7 @@ Treat trimming as an exclusive maintenance operation. Do not call it concurrentl
 
   <h3 id="Jitter2_World_TryLockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L923"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L926"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Attempts to lock two rigid bodies. Briefly waits on contention, then backs off if unsuccessful.
@@ -1897,7 +1937,7 @@ The lock order is determined by memory address to prevent deadlocks.</p>
 
   <h3 id="Jitter2_World_UnlockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__" data-uid="Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)">
   UnlockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L1045"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Step.cs/#L1048"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases locks on two rigid bodies previously acquired by <a class="xref" href="Jitter2.World.html#Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__">LockTwoBody(ref RigidBodyData, ref RigidBodyData)</a>

@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_NarrowPhase" data-uid="Jitter2.Collision.NarrowPhase" class="text-break">
-Class NarrowPhase  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L27"><i class="bi bi-code-slash"></i></a>
+Class NarrowPhase  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L14"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -956,7 +956,7 @@ the ray origin is inside the shape.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L289"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the time of impact and the collision points in world space for two shapes with linear velocities
@@ -1036,12 +1036,10 @@ the ray origin is inside the shape.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1053"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the time of impact (TOI) and the collision points in world space for two shapes with linear
-velocities <code class="paramref">sweepA</code> and <code class="paramref">sweepB</code> and angular velocities
-<code class="paramref">sweepAngularA</code> and <code class="paramref">sweepAngularB</code>.</p>
+  <div class="markdown level1 summary"><p>Calculates the time of impact for two translating and rotating convex shapes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1058,16 +1056,16 @@ velocities <code class="paramref">sweepA</code> and <code class="paramref">sweep
     <dd><p>Shape B.</p>
 </dd>
     <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
-    <dd><p>Orientation of shape A in world space.</p>
+    <dd><p>Initial orientation of shape A in world space.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
-    <dd><p>Orientation of shape B in world space.</p>
+    <dd><p>Initial orientation of shape B in world space.</p>
 </dd>
     <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Position of shape A in world space.</p>
+    <dd><p>Initial position of shape A in world space.</p>
 </dd>
     <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Position of shape B in world space.</p>
+    <dd><p>Initial position of shape B in world space.</p>
 </dd>
     <dt><code>sweepA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
     <dd><p>Linear velocity of shape A.</p>
@@ -1076,16 +1074,16 @@ velocities <code class="paramref">sweepA</code> and <code class="paramref">sweep
     <dd><p>Linear velocity of shape B.</p>
 </dd>
     <dt><code>sweepAngularA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Angular velocity of shape A.</p>
+    <dd><p>World-space angular velocity of shape A.</p>
 </dd>
     <dt><code>sweepAngularB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Angular velocity of shape B.</p>
+    <dd><p>World-space angular velocity of shape B.</p>
 </dd>
     <dt><code>extentA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Bounding sphere radius of shape A. Used to bound the angular displacement contribution.</p>
+    <dd><p>Radius enclosing shape A about its rotation origin, including any local offset.</p>
 </dd>
     <dt><code>extentB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Bounding sphere radius of shape B. Used to bound the angular displacement contribution.</p>
+    <dd><p>Radius enclosing shape B about its rotation origin, including any local offset.</p>
 </dd>
     <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
     <dd><p>Collision point on shape A in world space at the sweep origin.</p>
@@ -1094,18 +1092,17 @@ velocities <code class="paramref">sweepA</code> and <code class="paramref">sweep
     <dd><p>Collision point on shape B in world space at the sweep origin.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Normalized collision normal in world space at time of impact (points from A to B). Zero if the shapes already
-overlap or do not hit.</p>
+    <dd><p>Unit normal from A to B at impact. Zero for initial overlap or an unsuccessful search.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Time of impact. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single.positiveinfinity">PositiveInfinity</a> if no hit is detected. Zero if shapes overlap.</p>
+    <dd><p>Time of impact in seconds; zero for initial overlap, infinity for an unsuccessful search.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>True if the shapes hit or already overlap, false otherwise.</p>
+    <dd><p>True if an impact is found. False if the shapes miss or the search fails.</p>
 </dd>
   </dl>
 
@@ -1123,9 +1120,108 @@ overlap or do not hit.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Uses conservative advancement for continuous collision detection. May fail to converge to the correct TOI
-and collision points in certain edge cases due to limitations in linear motion approximation and
-distance gradient estimation.</p>
+  <div class="markdown level1 remarks"><p>Prefer the overload with a maximum time and a <a class="xref" href="Jitter2.Collision.NarrowPhase.SweepStatus.html">NarrowPhase.SweepStatus</a> result when sweeping a simulation step.
+An unbounded search may fail to finish, especially when both shapes rotate without relative translation.</p>
+</div>
+
+
+
+
+  <a id="Jitter2_Collision_NarrowPhase_Sweep_" data-uid="Jitter2.Collision.NarrowPhase.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, float, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Searches for the first impact of two translating and rotating convex shapes between zero and
+<code class="paramref">maximumTime</code> seconds, including both endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static NarrowPhase.SweepStatus Sweep&lt;Ta, Tb&gt;(in Ta supportA, in Tb supportB, in JQuaternion orientationA, in JQuaternion orientationB, in JVector positionA, in JVector positionB, in JVector sweepA, in JVector sweepB, in JVector sweepAngularA, in JVector sweepAngularB, in float extentA, in float extentB, float maximumTime, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where Ta : ISupportMappable where Tb : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>supportA</code> <span class="xref">Ta</span></dt>
+    <dd><p>Shape A.</p>
+</dd>
+    <dt><code>supportB</code> <span class="xref">Tb</span></dt>
+    <dd><p>Shape B.</p>
+</dd>
+    <dt><code>orientationA</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Initial orientation of shape A in world space.</p>
+</dd>
+    <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>Initial orientation of shape B in world space.</p>
+</dd>
+    <dt><code>positionA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Initial position of shape A in world space.</p>
+</dd>
+    <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Initial position of shape B in world space.</p>
+</dd>
+    <dt><code>sweepA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Linear velocity of shape A.</p>
+</dd>
+    <dt><code>sweepB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Linear velocity of shape B.</p>
+</dd>
+    <dt><code>sweepAngularA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>World-space angular velocity of shape A.</p>
+</dd>
+    <dt><code>sweepAngularB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>World-space angular velocity of shape B.</p>
+</dd>
+    <dt><code>extentA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Radius enclosing shape A about its rotation origin, including any local offset.</p>
+</dd>
+    <dt><code>extentB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Radius enclosing shape B about its rotation origin, including any local offset.</p>
+</dd>
+    <dt><code>maximumTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Nonnegative last time to search. Positive infinity requests an unbounded search.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shape A in world space at the sweep origin. Zero unless a hit is found.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Collision point on shape B in world space at the sweep origin. Zero unless a hit is found.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Unit normal from A to B at impact. Zero for initial overlap or an unsuccessful search.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact in seconds; zero for initial overlap, infinity unless a hit is found.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Collision.NarrowPhase.html">NarrowPhase</a>.<a class="xref" href="Jitter2.Collision.NarrowPhase.SweepStatus.html">SweepStatus</a></dt>
+    <dd><p>Whether an impact was found, separation was proven, or the search could not finish.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>Ta</code></dt>
+    <dd></dd>
+    <dt><code>Tb</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Includes impacts occurring between separated endpoint poses.
+A hit is reported within a distance tolerance of 0.0001. Iteration exhaustion is reported as
+<a class="xref" href="Jitter2.Collision.NarrowPhase.SweepStatus.html#Jitter2_Collision_NarrowPhase_SweepStatus_Failed">Failed</a> rather than a collision or a proven miss.</p>
 </div>
 
 
@@ -1135,7 +1231,7 @@ distance gradient estimation.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Sweep&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1217"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L344"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a sweep test where shape A is fixed at the origin with identity orientation and zero velocity.</p>
@@ -1205,7 +1301,7 @@ distance gradient estimation.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L27" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.Sweep.cs/#L14" class="edit-link">Edit this page</a>
         </div>
 
 

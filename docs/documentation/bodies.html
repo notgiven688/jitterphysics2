@@ -265,19 +265,22 @@ There is a linear and an angular damping factor for each body which can be set u
 With each <code>world.Step</code>, the angular and linear velocity of each dynamic rigid body is multiplied by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the damping factor.
 For performance reasons there is no time dependency for the damping system.
 As a result, bodies in a simulation with smaller time steps experience greater damping.</p>
-<h2 id="speculative-contacts">Speculative contacts</h2>
-<p>Jitter's built-in speculative contacts are <strong>linear-only</strong>. They help prevent fast, small objects
-from tunneling through thin obstacles when their translation between frames would skip a collision.
-Enable them on a per-body basis using <code>body.EnableSpeculativeContacts</code>.</p>
-<p>Speculative bounding box expansion uses only linear velocity. Sweeps predict translation while
-holding the shapes at their current orientations. The speculative constraints also ignore angular
-surface velocity (<code>ω × r</code>) and apply impulses only to linear velocity. They do not prevent
-tunneling caused by rotation, including rotation introduced by other contacts or constraints during
-the timestep. Bodies still rotate normally, and ordinary overlap contacts retain their angular response.</p>
-<p><code>world.SpeculativeVelocityThreshold</code> sets the minimum relative linear speed for speculative
-contact generation. <code>world.SpeculativeRelaxationFactor</code> controls how much the bodies may close
-the predicted gap. This approximation trades collision-response accuracy for reduced tunneling;
-smaller timesteps may still be needed for fast translation or rotation.</p>
+<h2 id="continuous-collision-detection">Continuous collision detection</h2>
+<p>Continuous collision detection (CCD) helps prevent fast, small objects
+from tunneling through thin obstacles when their motion between frames would skip a collision.
+Enable it on a per-body basis using <code>body.EnableCcd</code>.
+Enable CCD on both bodies when both move quickly, for example two fast projectiles.
+A moving body without CCD can enter the collision path without being detected in time.</p>
+<p>Prediction includes both translation and rotation. Contacts affect both linear and angular velocity,
+so an off-center impact can make a body rotate. Jitter repeats discovery with the changed velocities
+and follows bodies moved by those impulses, even if CCD was not enabled on them.</p>
+<p><code>world.CcdIterations</code> controls the number of discovery passes (default: four).
+<code>world.CcdVelocityThreshold</code> sets the minimum estimated relative surface speed for CCD sweeps
+(default: <code>0.1</code>), allowing nearly stationary pairs to skip sweeps.
+<code>world.CcdRelaxationFactor</code> controls how much the bodies may close
+the predicted gap. More passes cost more collision queries. Joints run in the regular solver after
+discovery and can change the motion again. This remains an approximation with a limited number
+of passes; smaller timesteps may still be needed.</p>
 <h2 id="friction-and-restitution">Friction and Restitution</h2>
 <p>Friction and restitution coefficients may be set through <code>body.Friction</code> and <code>body.Restitution</code>.
 For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>

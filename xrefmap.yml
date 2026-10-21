@@ -1742,6 +1742,30 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.NarrowPhase.Sweep
   nameWithType: NarrowPhase.Sweep
+- uid: Jitter2.Collision.NarrowPhase.SweepStatus
+  name: NarrowPhase.SweepStatus
+  href: api/Jitter2.Collision.NarrowPhase.SweepStatus.html
+  commentId: T:Jitter2.Collision.NarrowPhase.SweepStatus
+  fullName: Jitter2.Collision.NarrowPhase.SweepStatus
+  nameWithType: NarrowPhase.SweepStatus
+- uid: Jitter2.Collision.NarrowPhase.SweepStatus.Failed
+  name: Failed
+  href: api/Jitter2.Collision.NarrowPhase.SweepStatus.html#Jitter2_Collision_NarrowPhase_SweepStatus_Failed
+  commentId: F:Jitter2.Collision.NarrowPhase.SweepStatus.Failed
+  fullName: Jitter2.Collision.NarrowPhase.SweepStatus.Failed
+  nameWithType: NarrowPhase.SweepStatus.Failed
+- uid: Jitter2.Collision.NarrowPhase.SweepStatus.Hit
+  name: Hit
+  href: api/Jitter2.Collision.NarrowPhase.SweepStatus.html#Jitter2_Collision_NarrowPhase_SweepStatus_Hit
+  commentId: F:Jitter2.Collision.NarrowPhase.SweepStatus.Hit
+  fullName: Jitter2.Collision.NarrowPhase.SweepStatus.Hit
+  nameWithType: NarrowPhase.SweepStatus.Hit
+- uid: Jitter2.Collision.NarrowPhase.SweepStatus.Miss
+  name: Miss
+  href: api/Jitter2.Collision.NarrowPhase.SweepStatus.html#Jitter2_Collision_NarrowPhase_SweepStatus_Miss
+  commentId: F:Jitter2.Collision.NarrowPhase.SweepStatus.Miss
+  fullName: Jitter2.Collision.NarrowPhase.SweepStatus.Miss
+  nameWithType: NarrowPhase.SweepStatus.Miss
 - uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
   name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
@@ -1760,6 +1784,15 @@ references:
   fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
   nameWithType: NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, out JVector, out JVector, out JVector, out float)
   nameWithType.vb: NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+- uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, float, out JVector, out JVector, out JVector, out float)
+  href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single__System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single@,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, Single, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in float, in float, float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: NarrowPhase.Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector, in JVector, in float, in float, float, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: NarrowPhase.Sweep(Of Ta, Tb)(Ta, Tb, JQuaternion, JQuaternion, JVector, JVector, JVector, JVector, JVector, JVector, Single, Single, Single, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.NarrowPhase.Sweep``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
   name: Sweep<Ta, Tb>(in Ta, in Tb, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.NarrowPhase.html#Jitter2_Collision_NarrowPhase_Sweep__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
@@ -12008,6 +12041,12 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Body2
   fullName: Jitter2.Dynamics.ContactData.Body2
   nameWithType: ContactData.Body2
+- uid: Jitter2.Dynamics.ContactData.CcdRelaxationFactor
+  name: CcdRelaxationFactor
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_CcdRelaxationFactor
+  commentId: F:Jitter2.Dynamics.ContactData.CcdRelaxationFactor
+  fullName: Jitter2.Dynamics.ContactData.CcdRelaxationFactor
+  nameWithType: ContactData.CcdRelaxationFactor
 - uid: Jitter2.Dynamics.ContactData.Contact
   name: ContactData.Contact
   href: api/Jitter2.Dynamics.ContactData.Contact.html
@@ -12498,12 +12537,6 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.SolveMode.None
   fullName: Jitter2.Dynamics.ContactData.SolveMode.None
   nameWithType: ContactData.SolveMode.None
-- uid: Jitter2.Dynamics.ContactData.SpeculativeRelaxationFactor
-  name: SpeculativeRelaxationFactor
-  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_SpeculativeRelaxationFactor
-  commentId: F:Jitter2.Dynamics.ContactData.SpeculativeRelaxationFactor
-  fullName: Jitter2.Dynamics.ContactData.SpeculativeRelaxationFactor
-  nameWithType: ContactData.SpeculativeRelaxationFactor
 - uid: Jitter2.Dynamics.ContactData.UpdatePosition
   name: UpdatePosition()
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_UpdatePosition
@@ -12991,6 +13024,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.DebugDraw
   nameWithType: RigidBody.DebugDraw
+- uid: Jitter2.Dynamics.RigidBody.EnableCcd
+  name: EnableCcd
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EnableCcd
+  commentId: P:Jitter2.Dynamics.RigidBody.EnableCcd
+  fullName: Jitter2.Dynamics.RigidBody.EnableCcd
+  nameWithType: RigidBody.EnableCcd
+- uid: Jitter2.Dynamics.RigidBody.EnableCcd*
+  name: EnableCcd
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EnableCcd_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.EnableCcd
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.EnableCcd
+  nameWithType: RigidBody.EnableCcd
 - uid: Jitter2.Dynamics.RigidBody.EnableGyroscopicForces
   name: EnableGyroscopicForces
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EnableGyroscopicForces
@@ -13004,19 +13050,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.EnableGyroscopicForces
   nameWithType: RigidBody.EnableGyroscopicForces
-- uid: Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts
-  name: EnableSpeculativeContacts
-  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EnableSpeculativeContacts
-  commentId: P:Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts
-  fullName: Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts
-  nameWithType: RigidBody.EnableSpeculativeContacts
-- uid: Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts*
-  name: EnableSpeculativeContacts
-  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EnableSpeculativeContacts_
-  commentId: Overload:Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.RigidBody.EnableSpeculativeContacts
-  nameWithType: RigidBody.EnableSpeculativeContacts
 - uid: Jitter2.Dynamics.RigidBody.EndCollide
   name: EndCollide
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_EndCollide
@@ -20009,6 +20042,45 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.BroadPhaseFilter
   nameWithType: World.BroadPhaseFilter
+- uid: Jitter2.World.CcdIterations
+  name: CcdIterations
+  href: api/Jitter2.World.html#Jitter2_World_CcdIterations
+  commentId: P:Jitter2.World.CcdIterations
+  fullName: Jitter2.World.CcdIterations
+  nameWithType: World.CcdIterations
+- uid: Jitter2.World.CcdIterations*
+  name: CcdIterations
+  href: api/Jitter2.World.html#Jitter2_World_CcdIterations_
+  commentId: Overload:Jitter2.World.CcdIterations
+  isSpec: "True"
+  fullName: Jitter2.World.CcdIterations
+  nameWithType: World.CcdIterations
+- uid: Jitter2.World.CcdRelaxationFactor
+  name: CcdRelaxationFactor
+  href: api/Jitter2.World.html#Jitter2_World_CcdRelaxationFactor
+  commentId: P:Jitter2.World.CcdRelaxationFactor
+  fullName: Jitter2.World.CcdRelaxationFactor
+  nameWithType: World.CcdRelaxationFactor
+- uid: Jitter2.World.CcdRelaxationFactor*
+  name: CcdRelaxationFactor
+  href: api/Jitter2.World.html#Jitter2_World_CcdRelaxationFactor_
+  commentId: Overload:Jitter2.World.CcdRelaxationFactor
+  isSpec: "True"
+  fullName: Jitter2.World.CcdRelaxationFactor
+  nameWithType: World.CcdRelaxationFactor
+- uid: Jitter2.World.CcdVelocityThreshold
+  name: CcdVelocityThreshold
+  href: api/Jitter2.World.html#Jitter2_World_CcdVelocityThreshold
+  commentId: P:Jitter2.World.CcdVelocityThreshold
+  fullName: Jitter2.World.CcdVelocityThreshold
+  nameWithType: World.CcdVelocityThreshold
+- uid: Jitter2.World.CcdVelocityThreshold*
+  name: CcdVelocityThreshold
+  href: api/Jitter2.World.html#Jitter2_World_CcdVelocityThreshold_
+  commentId: Overload:Jitter2.World.CcdVelocityThreshold
+  isSpec: "True"
+  fullName: Jitter2.World.CcdVelocityThreshold
+  nameWithType: World.CcdVelocityThreshold
 - uid: Jitter2.World.Clear
   name: Clear()
   href: api/Jitter2.World.html#Jitter2_World_Clear
@@ -20702,32 +20774,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.SpanData.TotalBytesAllocated
   nameWithType: World.SpanData.TotalBytesAllocated
-- uid: Jitter2.World.SpeculativeRelaxationFactor
-  name: SpeculativeRelaxationFactor
-  href: api/Jitter2.World.html#Jitter2_World_SpeculativeRelaxationFactor
-  commentId: P:Jitter2.World.SpeculativeRelaxationFactor
-  fullName: Jitter2.World.SpeculativeRelaxationFactor
-  nameWithType: World.SpeculativeRelaxationFactor
-- uid: Jitter2.World.SpeculativeRelaxationFactor*
-  name: SpeculativeRelaxationFactor
-  href: api/Jitter2.World.html#Jitter2_World_SpeculativeRelaxationFactor_
-  commentId: Overload:Jitter2.World.SpeculativeRelaxationFactor
-  isSpec: "True"
-  fullName: Jitter2.World.SpeculativeRelaxationFactor
-  nameWithType: World.SpeculativeRelaxationFactor
-- uid: Jitter2.World.SpeculativeVelocityThreshold
-  name: SpeculativeVelocityThreshold
-  href: api/Jitter2.World.html#Jitter2_World_SpeculativeVelocityThreshold
-  commentId: P:Jitter2.World.SpeculativeVelocityThreshold
-  fullName: Jitter2.World.SpeculativeVelocityThreshold
-  nameWithType: World.SpeculativeVelocityThreshold
-- uid: Jitter2.World.SpeculativeVelocityThreshold*
-  name: SpeculativeVelocityThreshold
-  href: api/Jitter2.World.html#Jitter2_World_SpeculativeVelocityThreshold_
-  commentId: Overload:Jitter2.World.SpeculativeVelocityThreshold
-  isSpec: "True"
-  fullName: Jitter2.World.SpeculativeVelocityThreshold
-  nameWithType: World.SpeculativeVelocityThreshold
 - uid: Jitter2.World.Stabilize(System.Single,System.Int32,System.Int32,System.Boolean)
   name: Stabilize(float, int, int, bool)
   href: api/Jitter2.World.html#Jitter2_World_Stabilize_System_Single_System_Int32_System_Int32_System_Boolean_

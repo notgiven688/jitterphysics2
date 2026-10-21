@@ -87,6 +87,10 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="unreleased">Unreleased</h3>
+<ul>
+<li><strong>Breaking Change:</strong> Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use <code>RigidBody.EnableCcd</code> and the <code>Ccd*</code> settings; the old speculative contact API has been removed.</li>
+</ul>
 <h3 id="jitter-2122-2026-10-22">Jitter 2.12.2 (2026-10-22)</h3>
 <ul>
 <li>Fixed a stack overflow that could occur during dynamic tree balancing, particularly in double precision.</li>
