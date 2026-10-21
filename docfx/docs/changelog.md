@@ -2,9 +2,7 @@
 
 ### Unreleased
 
-- **Breaking Change:** Renamed `RigidBody.EnableSpeculativeContacts` to `RigidBody.EnableCcd`. The old property has been removed.
-- **Breaking Change:** Renamed `World.SpeculativeIterations`, `World.SpeculativeVelocityThreshold`, and `World.SpeculativeRelaxationFactor` to `CcdIterations`, `CcdVelocityThreshold`, and `CcdRelaxationFactor`. `ContactData.SpeculativeRelaxationFactor` is now `ContactData.CcdRelaxationFactor`. The old names have been removed.
-- CCD now predicts translation and rotation and repeats contact discovery after collision impulses change body motion.
+- **Breaking Change:** Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use `RigidBody.EnableCcd` and the `Ccd*` settings; the old speculative contact API has been removed.
 
 ### Jitter 2.12.2 (2026-10-22)
 

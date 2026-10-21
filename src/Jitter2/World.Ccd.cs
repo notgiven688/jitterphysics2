@@ -203,7 +203,11 @@ public sealed partial class World
 
         query.Hits.Add(new CcdHit
         {
-            Candidate = candidate, PointA = pointA, PointB = pointB, Normal = normal, Time = toi
+            Candidate = candidate,
+            PointA = pointA,
+            PointB = pointB,
+            Normal = normal,
+            Time = toi
         });
     }
 

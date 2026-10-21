@@ -1003,7 +1003,7 @@ public static partial class NarrowPhase
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
-    /// The normalized collision normal pointing from KpointB to pointA. This normal remains defined even
+    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
     /// if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
     /// distance (determined by the penetration depth) to avoid overlap.
     /// </param>
