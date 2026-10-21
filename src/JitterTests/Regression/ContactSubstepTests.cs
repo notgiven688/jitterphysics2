@@ -140,6 +140,57 @@ public class ContactSubstepTests
         Assert.That(filter.Queries, Is.EqualTo(steps), "Collision detection must still run once per full step.");
     }
 
+    [TestCase(1, false, false)]
+    [TestCase(1, false, true)]
+    [TestCase(1, true, false)]
+    [TestCase(1, true, true)]
+    [TestCase(4, false, false)]
+    [TestCase(4, false, true)]
+    [TestCase(4, true, false)]
+    [TestCase(4, true, true)]
+    public void RollingSphere_KeepsSpeedWithGeneratedContacts(int substeps, bool auxiliaryContacts, bool reversed)
+    {
+        using World world = new();
+        world.Gravity = new JVector(0, (Real)(-9.81), 0);
+        world.SubstepCount = substeps;
+        world.SolverIterations = (6, 4);
+        world.AllowDeactivation = false;
+        world.EnableAuxiliaryContactPoints = auxiliaryContacts;
+
+        RigidBody floor, sphere;
+        if (reversed)
+        {
+            sphere = world.CreateRigidBody();
+            sphere.AddShape(new SphereShape((Real)0.5));
+            floor = world.CreateRigidBody();
+            floor.AddShape(new BoxShape(20));
+        }
+        else
+        {
+            floor = world.CreateRigidBody();
+            floor.AddShape(new BoxShape(20));
+            sphere = world.CreateRigidBody();
+            sphere.AddShape(new SphereShape((Real)0.5));
+        }
+
+        floor.Position = new JVector(0, -10, 0);
+        floor.MotionType = MotionType.Static;
+        floor.Damping = (0, 0);
+        floor.Friction = sphere.Friction = (Real)0.2;
+        floor.Restitution = sphere.Restitution = 0;
+        sphere.Position = new JVector(0, (Real)0.5, 0);
+        sphere.SetMassInertia(1);
+        sphere.Damping = (0, 0);
+        for (int step = 0; step < 100; step++) world.Step((Real)0.01, false);
+
+        sphere.Velocity = new JVector((Real)0.1, 0, 0);
+        sphere.AngularVelocity = new JVector(0, 0, (Real)(-0.2));
+        for (int step = 0; step < 6000; step++) world.Step((Real)0.01, false);
+
+        Assert.That((sphere.Velocity - new JVector((Real)0.1, 0, 0)).Length(), Is.LessThan((Real)1e-4));
+        Assert.That((sphere.AngularVelocity - new JVector(0, 0, (Real)(-0.2))).Length(), Is.LessThan((Real)2e-4));
+    }
+
     [TestCase(SolveMode.Regular, 1)]
     [TestCase(SolveMode.Regular, 3)]
     [TestCase(SolveMode.Deterministic, 1)]
