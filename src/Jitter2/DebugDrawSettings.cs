@@ -37,20 +37,18 @@ public readonly struct DebugDrawSettings
     private readonly Real? arrowShaftRadius, pointRadius;
 
     /// <summary>
-    /// Default settings: guide size 1, frame size 1, point radius 0.06, 48 curve segments,
-    /// 12 arrow segments, shape detail 3, solid arrows, green guides, red lower limits,
-    /// white current pose, and RGB orientation frames.
+    /// The default drawing settings. Individual properties describe their default values.
     /// </summary>
     public static DebugDrawSettings Default => default;
 
     /// <summary>
-    /// Radius of angular guides and half extent of plane patches, in world units.
-    /// Also sets constraint arrow lengths and stop marker sizes. Coordinate frames use <see cref="FrameSize"/> instead.
-    /// Arrowheads, shafts, and anchor spheres use <see cref="ArrowHeadSize"/>,
-    /// <see cref="ArrowShaftRadius"/>, and <see cref="PointRadius"/> independently.
-    /// Physical distances and linear limits are never scaled.
-    /// Must be finite and greater than zero. Default is 1.
+    /// Size of constraint guides in world units. Must be finite and positive. Default is 1.
     /// </summary>
+    /// <remarks>
+    /// Sets angular guide radii, plane half extents, constraint arrow lengths, and stop marker sizes.
+    /// Physical distances and linear limits keep their actual sizes. Coordinate frames, arrowheads,
+    /// shafts, and anchor markers have separate size properties.
+    /// </remarks>
     public Real GuideSize
     {
         get => guideSize == 0 ? 1 : guideSize;
@@ -62,9 +60,8 @@ public readonly struct DebugDrawSettings
     }
 
     /// <summary>
-    /// Length of each coordinate-frame axis, in world units, independently of <see cref="GuideSize"/>.
-    /// Arrowhead size and shaft radius are independent.
-    /// Must be finite and greater than zero. Default is 1.
+    /// Length of each coordinate-frame axis in world units. Must be finite and positive. Default is 1.
+    /// Changing this does not resize arrowheads or shafts.
     /// </summary>
     public Real FrameSize
     {
@@ -77,7 +74,7 @@ public readonly struct DebugDrawSettings
     }
 
     /// <summary>
-    /// Radius of spherical anchor markers in world units, independently of <see cref="GuideSize"/>.
+    /// Radius of spherical anchor markers in world units.
     /// Default is 0.06. Must be finite and nonnegative. Zero hides the markers.
     /// </summary>
     public Real PointRadius
@@ -91,10 +88,8 @@ public readonly struct DebugDrawSettings
     }
 
     /// <summary>
-    /// Length of arrowheads in world units, independently of arrow length, <see cref="GuideSize"/>,
-    /// <see cref="FrameSize"/>, and shaft thickness. Default is 0.2. Used by both solid and wire arrows.
-    /// Heads are clamped to half the arrow length; their base radius is 40% of their length.
-    /// Must be finite and greater than zero.
+    /// Length of solid and wire arrowheads in world units. Must be finite and positive. Default is 0.2.
+    /// Clamped to half the arrow length for short arrows.
     /// </summary>
     public Real ArrowHeadSize
     {
@@ -118,9 +113,8 @@ public readonly struct DebugDrawSettings
     }
 
     /// <summary>
-    /// Number of segments around each arrowhead base and solid shaft, from 3 to 256. Default is 12.
-    /// A value of 4 draws a square base; higher values approximate a circle.
-    /// Wire arrows connect every base vertex to the tip.
+    /// Number of sides around arrowheads and solid shafts, from 3 to 256. Default is 12.
+    /// Higher values make arrows look rounder.
     /// </summary>
     public int ArrowSegments
     {
@@ -139,10 +133,8 @@ public readonly struct DebugDrawSettings
     public bool SolidArrows { get => solidArrows ?? true; init => solidArrows = value; }
 
     /// <summary>
-    /// Radius of solid arrow shafts in world units, independently of arrow length,
-    /// <see cref="GuideSize"/>, and <see cref="FrameSize"/>. Default is 0.025.
-    /// Must be finite and greater than zero. The radius is clamped to 5% of the arrow length and
-    /// half the arrowhead's base radius. Wire arrows are unaffected.
+    /// Radius of solid arrow shafts in world units. Must be finite and positive. Default is 0.025.
+    /// Reduced for short arrows or small arrowheads. Does not affect wire arrows.
     /// </summary>
     public Real ArrowShaftRadius
     {
@@ -170,11 +162,13 @@ public readonly struct DebugDrawSettings
     }
 
     /// <summary>
-    /// Optional world-space origin for angular guides. By default they use body 1's position,
-    /// or body 2's position when body 1 is World.NullBody. Joints with a ball socket use its anchor.
-    /// FixedAngle's frames always use the bodies' positions.
-    /// Positional constraints always use their real anchors.
+    /// Optional position for angular guides, in world space. Default is null.
     /// </summary>
+    /// <remarks>
+    /// When null, angular constraints use body 1's position, or body 2's if body 1 is
+    /// <see cref="World.NullBody"/>. Joints with a ball socket use its anchor.
+    /// This does not move positional anchors or the frames drawn by <c>FixedAngle</c>.
+    /// </remarks>
     public JVector? Origin
     {
         get => origin;

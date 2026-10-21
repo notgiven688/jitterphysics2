@@ -10,8 +10,8 @@ using Jitter2.LinearMath;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Creates a universal joint using a <see cref="TwistAngle"/> and a <see cref="BallSocket"/>,
-/// with an optional <see cref="AngularMotor"/> or <see cref="AngularServo"/>.
+/// Connects two bodies at a shared anchor, allowing rotation about two axes while constraining twist.
+/// Supports an optional motor or servo.
 /// </summary>
 public class UniversalJoint : Joint
 {
@@ -26,6 +26,9 @@ public class UniversalJoint : Joint
     /// <summary>
     /// Initializes a new universal joint.
     /// </summary>
+    /// <param name="center">The shared anchor point in world space.</param>
+    /// <param name="rotateAxis1">The rotation axis attached to body 1, in world space.</param>
+    /// <param name="rotateAxis2">The rotation axis attached to body 2, in world space.</param>
     /// <param name="drive">The optional drive. Motor and servo torque default to zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">The drive selection is invalid.</exception>
     /// <exception cref="ArgumentException">

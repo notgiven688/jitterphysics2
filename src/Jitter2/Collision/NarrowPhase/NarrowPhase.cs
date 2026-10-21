@@ -13,16 +13,11 @@ using Vertex = Jitter2.Collision.MinkowskiDifference.Vertex;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Provides collision detection algorithms for convex shapes defined by support functions.
+/// Tests convex shapes for overlap, distance, ray hits, and swept collisions.
 /// </summary>
 /// <remarks>
-/// <para>
-/// Implements GJK (Gilbert-Johnson-Keerthi) for distance queries, MPR (Minkowski Portal Refinement)
-/// for fast overlap detection, and EPA (Expanding Polytope Algorithm) for penetration depth.
-/// </para>
-/// <para>
-/// All methods are thread-safe when used with thread-local solver state.
-/// </para>
+/// Shapes are supplied through <see cref="ISupportMappable"/>. Queries may run on separate threads
+/// if the supplied shapes can be read concurrently and are not modified during the queries.
 /// </remarks>
 public static partial class NarrowPhase
 {
@@ -671,9 +666,8 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
-    /// cases. It assumes that support shape A is at position zero and not rotated.
-    /// Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
+    /// Calculates contact points and signed penetration for two convex shapes, including separated shapes.
+    /// Shape A is at the origin with identity orientation; all coordinates use its local frame.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -693,8 +687,8 @@ public static partial class NarrowPhase
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
-    /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
-    /// failure, collision information reverts to the type's default values.
+    /// <c>true</c> if collision information was calculated, including for separated shapes;
+    /// <c>false</c> if the search failed. Only use the outputs when the result is <c>true</c>.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Collision<Ta, Tb>(in Ta supportA, in Tb supportB,
@@ -710,8 +704,8 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
-    /// cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.
+    /// Calculates contact points and signed penetration for two convex shapes, including separated shapes.
+    /// All output coordinates are in world space.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -733,8 +727,8 @@ public static partial class NarrowPhase
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
-    /// Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
-    /// failure, collision information reverts to the type's default values.
+    /// <c>true</c> if collision information was calculated, including for separated shapes;
+    /// <c>false</c> if the search failed. Only use the outputs when the result is <c>true</c>.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Collision<Ta, Tb>(in Ta supportA, in Tb supportB,
@@ -764,13 +758,13 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Provides the distance and closest points for non-overlapping shapes. It
-    /// assumes that support shape A is located at position zero and not rotated.
+    /// Calculates the distance and closest points between separated shapes.
+    /// Shape A is at the origin with identity orientation; all coordinates use its local frame.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
-    /// <param name="orientationB">The orientation of shape B in world space.</param>
-    /// <param name="positionB">The position of shape B in world space.</param>
+    /// <param name="orientationB">The orientation of shape B in shape A's local frame.</param>
+    /// <param name="positionB">The position of shape B in shape A's local frame.</param>
     /// <param name="pointA">Closest point on shape A. Undefined for the overlapping case.</param>
     /// <param name="pointB">Closest point on shape B. Undefined for the overlapping case.</param>
     /// <param name="normal">Unit direction from shape A toward shape B. Undefined for the overlapping case.</param>
@@ -828,7 +822,7 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Provides the distance and closest points for non-overlapping shapes.
+    /// Calculates the distance and closest points between separated shapes in world space.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -869,14 +863,13 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Performs an overlap test. It assumes that support shape A is located
-    /// at position zero and not rotated.
+    /// Tests whether two convex shapes overlap. Shape A is at the origin with identity orientation.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
-    /// <param name="orientationB">The orientation of shape B in world space.</param>
-    /// <param name="positionB">The position of shape B in world space.</param>
-    /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
+    /// <param name="orientationB">The orientation of shape B in shape A's local frame.</param>
+    /// <param name="positionB">The position of shape B in shape A's local frame.</param>
+    /// <returns><c>true</c> if the shapes overlap; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Overlap<Ta, Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationB, in JVector positionB) where Ta : ISupportMappable where Tb : ISupportMappable
@@ -917,7 +910,7 @@ public static partial class NarrowPhase
     /// <param name="orientationB">The orientation of shape B in world space.</param>
     /// <param name="positionA">The position of shape A in world space.</param>
     /// <param name="positionB">The position of shape B in world space.</param>
-    /// <returns>Returns true of the shapes overlap, and false otherwise.</returns>
+    /// <returns><c>true</c> if the shapes overlap; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Overlap<Ta, Tb>(in Ta supportA, in Tb supportB,
         in JQuaternion orientationA, in JQuaternion orientationB,
@@ -940,10 +933,8 @@ public static partial class NarrowPhase
     private const Real EpaPenetrationThreshold = (Real)0.02;
 
     /// <summary>
-    /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
-    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
-    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound exceeds
-    /// a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
+    /// Tests overlap and returns contact points, a normal, and estimated penetration in world space.
+    /// Uses MPR, with EPA refinement for penetrations exceeding <paramref name="epaThreshold"/>.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -954,9 +945,8 @@ public static partial class NarrowPhase
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
-    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-    /// if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
-    /// distance (determined by the penetration depth) to avoid overlap.
+    /// Unit normal from <paramref name="pointB"/> toward <paramref name="pointA"/>.
+    /// Moving shape B along this normal separates the shapes. Remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>
@@ -990,11 +980,9 @@ public static partial class NarrowPhase
     }
 
     /// <summary>
-    /// Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
-    /// It assumes that support shape A is at position zero and not rotated.
-    /// Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
-    /// Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound
-    /// exceeds a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).
+    /// Tests overlap and returns contact points, a normal, and estimated penetration.
+    /// Shape A is at the origin with identity orientation; all coordinates use its local frame.
+    /// Uses MPR, with EPA refinement for penetrations exceeding <paramref name="epaThreshold"/>.
     /// </summary>
     /// <param name="supportA">The support function of shape A.</param>
     /// <param name="supportB">The support function of shape B.</param>
@@ -1003,9 +991,8 @@ public static partial class NarrowPhase
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
-    /// The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-    /// if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
-    /// distance (determined by the penetration depth) to avoid overlap.
+    /// Unit normal from <paramref name="pointB"/> toward <paramref name="pointA"/>.
+    /// Moving shape B along this normal separates the shapes. Remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>

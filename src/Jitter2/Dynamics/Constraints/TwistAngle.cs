@@ -13,8 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains the relative twist of two bodies. This constraint removes one angular
-/// degree of freedom when the limit is enforced.
+/// Limits relative twist around axes attached to two bodies, leaving swing and translation free.
 /// </summary>
 public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 {
@@ -65,7 +64,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// <param name="axis2">The twist axis for body 2 in world space.</param>
     /// <param name="limit">The allowed relative twist angle range.</param>
     /// <remarks>
-    /// Stores each axis in the local frame of its body and records the initial relative orientation.
+    /// The axes rotate with their respective bodies. The initial pose defines zero twist.
     /// Equal or reversed limits fix the twist at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>

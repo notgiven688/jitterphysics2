@@ -11,11 +11,12 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Provides parallel batch processing extension methods for collections used by the physics engine.
+/// Divides collections into index ranges for parallel processing.
 /// </summary>
 /// <remarks>
-/// These methods divide collections into batches and distribute them across worker threads.
-/// The batch count is determined by the task threshold and available threads.
+/// Callbacks may run concurrently. With <c>execute: true</c>, each method waits for completion;
+/// otherwise, call <see cref="ThreadPool.Execute"/> on the shared pool to run the queued batches.
+/// Do not queue batches concurrently or change a collection while its batches are being processed.
 /// </remarks>
 public static class ParallelExtensions
 {

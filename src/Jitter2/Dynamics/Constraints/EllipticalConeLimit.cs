@@ -16,10 +16,10 @@ namespace Jitter2.Dynamics.Constraints;
 /// Restricts relative swing to the region between two elliptical cones, leaving twist free.
 /// </summary>
 /// <remarks>
-/// Body 1 owns the cone frame; body 2 owns the axis being constrained. The boundaries are ellipses
-/// in swing-angle coordinates (the shortest tilt, resolved along the two frame directions).
-/// Equal lower and upper boundaries constrain the axis to the cone surface. Identical ranges in
-/// both directions reproduce a circular cone. This constraint does not restrict translation.
+/// The cone is attached to body 1 and limits the tilt of an axis attached to body 2.
+/// The two angular ranges set the inner and outer tilt limits in perpendicular directions.
+/// Matching ranges produce a circular cone; matching inner and outer limits keep the axis
+/// on the cone surface. Translation remains free.
 /// </remarks>
 public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.EllipticalConeLimitData>
 {
@@ -68,8 +68,8 @@ public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.Ellipti
     /// Initializes both body axes from the same world-space direction.
     /// </summary>
     /// <remarks>
-    /// The reference direction defines the first ellipse semiaxis on body 1. Its component along
-    /// the cone axis is discarded. The second direction is axis cross reference direction.
+    /// The reference direction sets one direction of the ellipse on body 1; it is projected
+    /// perpendicular to the cone axis. The other direction is perpendicular to both.
     /// A positive inner boundary means the initially aligned pose lies outside the allowed region.
     /// See the two-axis overload to initialize a pose with nonzero swing.
     /// </remarks>
@@ -151,7 +151,7 @@ public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.Ellipti
     public AngularLimit LimitAlongPerpendicular => new((JAngle)Data.MinAngle2, (JAngle)Data.MaxAngle2);
 
     /// <summary>
-    /// Sets both angular ranges together and clears the cached impulse.
+    /// Sets the inner and outer tilt limits in both perpendicular directions.
     /// </summary>
     /// <remarks>
     /// Each range must satisfy 0 &lt;= From &lt;= To &lt; pi, with To strictly positive.

@@ -15,24 +15,20 @@ namespace Jitter2.Unmanaged;
 /// </summary>
 /// <remarks>
 /// <para>
-/// <b>Safety:</b> All pointers returned by allocation methods must be freed using
-/// the corresponding <see cref="Free(void*)"/> or <see cref="AlignedFree"/> method.
-/// Failure to do so will result in memory leaks.
+/// Free each allocation with the matching <see cref="Free(void*)"/> or <see cref="AlignedFree"/> method.
 /// </para>
 /// <para>
-/// <b>Threading:</b> These methods are thread-safe, but the caller is responsible
-/// for synchronizing access to the allocated memory.
+/// Allocation and deallocation are thread-safe. Synchronizing access to the allocated memory
+/// is the caller's responsibility.
 /// </para>
 /// </remarks>
 public static unsafe class MemoryHelper
 {
     /// <summary>
-    /// Represents an integer value isolated in memory to prevent false sharing
-    /// between multiple threads operating on adjacent data.
+    /// An integer padded on both sides so updates do not contend with adjacent data on a 64-byte cache line.
     /// </summary>
     /// <remarks>
-    /// The struct is padded to 132 bytes (64-byte padding on each side of the value)
-    /// to ensure the <see cref="Value"/> field resides on its own cache line.
+    /// The struct occupies 132 bytes, with 64 bytes of padding on each side of <see cref="Value"/>.
     /// </remarks>
     [StructLayout(LayoutKind.Explicit, Size = 132)]
     public struct IsolatedInt
@@ -48,11 +44,10 @@ public static unsafe class MemoryHelper
     }
 
     /// <summary>
-    /// Represents a padded array element intended to keep adjacent integer values off the same cache line.
+    /// An integer padded so adjacent array elements do not share a 64-byte cache line.
     /// </summary>
     /// <remarks>
-    /// This type is intended for arrays of counters where adjacent <see cref="Value"/> fields
-    /// should not share a cache line. For standalone fields, use <see cref="IsolatedInt"/>.
+    /// Use for arrays of counters. For standalone fields, use <see cref="IsolatedInt"/>.
     /// </remarks>
     [StructLayout(LayoutKind.Explicit, Size = 128)]
     public struct PaddedInt
@@ -64,36 +59,24 @@ public static unsafe class MemoryHelper
     /// <summary>
     /// A memory block with a size equivalent to six instances of the <see cref="Real"/> type.
     /// </summary>
-    /// <remarks>
-    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
-    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 6 * sizeof(Real))]
     public struct MemBlock6Real { }
 
     /// <summary>
     /// A memory block with a size equivalent to nine instances of the <see cref="Real"/> type.
     /// </summary>
-    /// <remarks>
-    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
-    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 9 * sizeof(Real))]
     public struct MemBlock9Real { }
 
     /// <summary>
     /// A memory block with a size equivalent to twelve instances of the <see cref="Real"/> type.
     /// </summary>
-    /// <remarks>
-    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
-    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 12 * sizeof(Real))]
     public struct MemBlock12Real { }
 
     /// <summary>
     /// A memory block with a size equivalent to sixteen instances of the <see cref="Real"/> type.
     /// </summary>
-    /// <remarks>
-    /// The struct uses sequential layout and a fixed size to provide a consistent layout.
-    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Size = 16 * sizeof(Real))]
     public struct MemBlock16Real { }
 

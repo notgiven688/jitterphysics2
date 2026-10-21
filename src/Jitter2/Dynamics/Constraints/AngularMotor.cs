@@ -13,8 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Represents a motor that drives relative angular velocity between two axes fixed
-/// in the reference frames of their respective bodies.
+/// Drives relative angular velocity about an axis attached to each body.
 /// </summary>
 public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 {
@@ -58,7 +57,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     /// <param name="axis1">The motor axis on the first body in world space.</param>
     /// <param name="axis2">The motor axis on the second body in world space.</param>
     /// <remarks>
-    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// The axes rotate with their respective bodies and are normalized internally.
     /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumTorque"/> = 0.
     /// </remarks>
     /// <exception cref="ArgumentException">

@@ -56,7 +56,7 @@ public class ConeShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the ConeShape class with specified radius and height. The symmetry axis of the cone is aligned along the Y-axis.
+    /// Creates a cone with its symmetry axis along the local Y-axis.
     /// </summary>
     /// <param name="radius">The radius of the cone at its base.</param>
     /// <param name="height">The height of the cone.</param>

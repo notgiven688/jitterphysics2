@@ -73,10 +73,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// the unit vector <paramref name="to"/>.
     /// </summary>
     /// <remarks>
-    /// This calculation relies on the half-angle formula.
-    /// If the vectors are parallel (<c>dot ≈ 1</c>), Identity is returned.
-    /// If the vectors are opposite (<c>dot ≈ -1</c>), a rotation of 180° (π radians)
-    /// around an arbitrary orthogonal axis is returned.
+    /// Nearly opposite directions produce a 180° rotation around an arbitrary axis
+    /// perpendicular to <paramref name="from"/>.
     /// </remarks>
     /// <param name="from">Source direction (must be unit length).</param>
     /// <param name="to">Target direction (must be unit length).</param>

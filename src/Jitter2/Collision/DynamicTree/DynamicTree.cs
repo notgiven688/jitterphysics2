@@ -15,12 +15,9 @@ using Jitter2.Parallelization;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents a dynamic AABB tree for broadphase collision detection.
+/// Tracks objects by their bounding boxes to find potential collisions and answer spatial queries.
 /// </summary>
-/// <remarks>
-/// Uses a bounding volume hierarchy with a Surface Area Heuristic (SAH) for insertion.
-/// Supports incremental updates for moving objects and bounded background optimization.
-/// </remarks>
+/// <remarks>Supports moving objects and automatically improves the tree during updates.</remarks>
 public partial class DynamicTree
 {
     private struct OverlapEnumerationParam
@@ -146,9 +143,8 @@ public partial class DynamicTree
     /// Gets or sets the filter function used to exclude proxy pairs from collision detection.
     /// </summary>
     /// <remarks>
-    /// The filter is called during overlap enumeration. Return <c>false</c> to exclude a pair.
-    /// In Jitter, this is typically used to exclude shapes belonging to the same rigid body.
-    /// Changing the filter rebuilds potential pairs for registered proxies.
+    /// Return <c>false</c> to exclude a pair, for example shapes on the same body.
+    /// Changing the filter rebuilds the list of potential pairs for registered proxies.
     /// </remarks>
     /// <exception cref="ArgumentNullException">Thrown when the value is null.</exception>
     public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter
@@ -549,7 +545,7 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Calculates the SAH cost of the tree (sum of all node surface areas).
+    /// Measures the tree's spatial grouping by summing all node surface areas.
     /// </summary>
     /// <returns>The total cost. Lower values indicate better spatial grouping.</returns>
     public double CalculateCost()
@@ -756,7 +752,7 @@ public partial class DynamicTree
     readonly List<IDynamicTreeProxy> tempList = new();
 
     /// <summary>
-    /// Attempts to improve the tree topology by randomly reinserting existing leaf nodes.
+    /// Attempts to speed up spatial queries by regrouping randomly selected proxies.
     /// </summary>
     /// <param name="sweeps">Number of synchronous optimization passes. Must be greater than zero.</param>
     /// <param name="chance">Probability of reinserting each proxy per probabilistic sweep. Range: [0, 1].</param>
@@ -766,9 +762,8 @@ public partial class DynamicTree
     /// This option does not spread work across calls or simulation steps.
     /// </param>
     /// <remarks>
-    /// Optimization preserves leaf node indices, expanded bounding boxes, proxy activity, and
-    /// the potential-pair cache. The operation is stochastic and is not guaranteed to reduce
-    /// <see cref="CalculateCost"/> on every invocation.
+    /// Existing proxies, node indices, bounding boxes, activity, and potential pairs are preserved.
+    /// Random selection means a call is not guaranteed to improve <see cref="CalculateCost"/>.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="sweeps"/> is less than one, or when <paramref name="chance"/> is outside [0, 1].
@@ -782,7 +777,8 @@ public partial class DynamicTree
     /// <param name="getNextRandom">A function returning random values in [0, 1).</param>
     /// <param name="sweeps">The number of optimization sweeps.</param>
     /// <param name="chance">Probability of selecting each leaf in a sweep, from 0 to 1.</param>
-    /// <param name="incremental">Whether to update the tree incrementally during optimization.</param>
+    /// <param name="incremental">If <c>true</c>, select proxies using <paramref name="chance"/> on every sweep;
+    /// otherwise, reinsert all proxies on the first sweep.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="getNextRandom"/> is <see langword="null"/>.</exception>
     public void Optimize(Func<double> getNextRandom, int sweeps, Real chance, bool incremental)
     {

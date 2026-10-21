@@ -18,12 +18,11 @@ namespace Jitter2.Unmanaged;
 /// <typeparam name="T">The unmanaged type of the data.</typeparam>
 /// <remarks>
 /// <para>
-/// <b>Validity:</b> A handle is valid only while the owning <see cref="PartitionedBuffer{T}"/>
-/// exists and the element has not been freed via <see cref="PartitionedBuffer{T}.Free"/>.
+/// A handle is valid until its element is freed or its buffer is disposed.
 /// </para>
 /// <para>
-/// <b>Do not cache</b> the <see cref="Data"/> reference across operations that may resize
-/// the buffer. Use the handle to obtain a fresh reference when needed.
+/// Buffer changes can move elements in memory. Keep the handle, and obtain a fresh
+/// <see cref="Data"/> reference after changing the buffer.
 /// </para>
 /// </remarks>
 public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unmanaged
@@ -46,19 +45,19 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
     }
 
     /// <summary>
-    /// Gets a value indicating whether this is the zero handle. A freed handle can remain nonzero;
-    /// this property does not establish that the referenced element is still valid.
+    /// Gets whether this is the zero handle.
     /// </summary>
+    /// <remarks>A freed handle can remain nonzero. This property does not check whether its element is still valid.</remarks>
     public readonly bool IsZero => Pointer == null;
 
     /// <summary>
-    /// Reinterprets a handle as a handle to a different type. Both types must have compatible layouts.
+    /// Reinterprets a handle as a handle to a different type.
     /// </summary>
     /// <typeparam name="TConvert">The target unmanaged type to reinterpret as.</typeparam>
     /// <param name="handle">The handle to reinterpret.</param>
     /// <returns>A handle reinterpreted as the target type.</returns>
     /// <remarks>
-    /// <b>Safety:</b> The caller must ensure that <typeparamref name="T"/> and <typeparamref name="TConvert"/>
+    /// The caller must ensure that <typeparamref name="T"/> and <typeparamref name="TConvert"/>
     /// have compatible memory layouts. No runtime validation is performed.
     /// </remarks>
     public static JHandle<TConvert> AsHandle<TConvert>(JHandle<T> handle) where TConvert : unmanaged
@@ -93,18 +92,14 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 }
 
 /// <summary>
-/// Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks.
-/// Each struct can either be active or inactive.
+/// Stores unmanaged structs in a resizable buffer with active and inactive partitions.
 /// </summary>
 /// <typeparam name="T">The unmanaged type to store. Must be at least 4 bytes in size.</typeparam>
 /// <remarks>
 /// <para>
-/// <b>Memory Layout Requirement:</b> The type <typeparamref name="T"/> must reserve its first
-/// 4 bytes (sizeof(int)) for internal bookkeeping. This memory region is used to store
-/// the stable ID that maps the data back to its <see cref="JHandle{T}"/>.
+/// Reserve the first 4 bytes of <typeparamref name="T"/> for the buffer's element ID.
+/// Do not overwrite these bytes. Use sequential layout with an integer as the first field:
 /// </para>
-/// <para>
-/// Do not modify these bytes manually. A compatible struct should look like this:
 /// <code>
 /// [StructLayout(LayoutKind.Sequential)]
 /// public struct RigidBodyData
@@ -116,20 +111,19 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 ///     // ... other fields
 /// }
 /// </code>
+/// <para>
+/// Do not modify the buffer concurrently. Readers that may run during an allocation must hold
+/// a read lock on <see cref="ResizeLock"/>. This protects against resizing only; callers must
+/// also prevent reads from conflicting with element moves or writes.
 /// </para>
 /// <para>
-/// <b>Threading:</b> Callers must serialize mutations, including calls to <see cref="Allocate"/>.
-/// Use <see cref="ResizeLock"/> to protect readers while an allocation may resize the buffer;
-/// the resize lock alone does not make concurrent allocations safe.
-/// </para>
-/// <para>
-/// <b>Disposal:</b> This class owns unmanaged memory and must be disposed to avoid memory leaks.
+/// Dispose the buffer when it is no longer needed to release its unmanaged memory.
 /// </para>
 /// </remarks>
 public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanaged
 {
     /// <summary>
-    /// Exception thrown when the buffer's internal indirection table reaches its maximum capacity.
+    /// Thrown when the buffer reaches its maximum element capacity.
     /// </summary>
     public class MaximumSizeException : Exception
     {
@@ -154,10 +148,9 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     private bool disposed;
 
     /// <summary>
-    /// Reader-writer lock. Locked by a writer when a resize occurs.
-    /// Resizing moves the contiguous data memory addresses. Use a reader lock
-    /// to access data if concurrent calls to Allocate are made.
+    /// Protects data access while an allocation may resize the buffer.
     /// </summary>
+    /// <remarks>Acquire a read lock before accessing data concurrently with <see cref="Allocate"/>.</remarks>
     public readonly ReaderWriterLock ResizeLock = new();
 
     /// <summary>
@@ -223,7 +216,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Returns the total amount of unmanaged memory allocated in bytes (data + indirection pages + master page table).
+    /// Returns the total number of bytes of unmanaged memory owned by the buffer, including handle storage.
     /// </summary>
     public long TotalBytesAllocated => (long)size * sizeof(T) + (long)pageCount * PageSize * sizeof(IntPtr) + MaxPages * sizeof(IntPtr);
 
@@ -397,14 +390,15 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     }
 
     /// <summary>
-    /// Allocates an unmanaged object. Growth is dynamic.
+    /// Adds an element, growing the buffer if needed.
     /// </summary>
     /// <param name="active">If <see langword="true"/>, the element is added to the active partition.</param>
     /// <param name="clear">If <see langword="true"/>, the element's memory (excluding the internal ID) is zeroed.</param>
     /// <returns>A handle to the newly allocated element.</returns>
     /// <remarks>
-    /// <b>Threading:</b> Callers must serialize allocations with other mutations. This method may
-    /// resize the buffer, which moves all data; use <see cref="ResizeLock"/> to protect concurrent readers.
+    /// Do not call concurrently with other modifications. This method can move existing elements;
+    /// obtain fresh data references afterward. Use <see cref="ResizeLock"/> to protect concurrent readers
+    /// against resizing.
     /// </remarks>
     /// <exception cref="MaximumSizeException">
     /// Thrown when the internal indirection table limit is reached.

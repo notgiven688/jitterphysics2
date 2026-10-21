@@ -13,9 +13,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains a fixed point in the reference frame of one body to a line that is fixed in
-/// the reference frame of another body. This constraint removes two degrees of translational
-/// freedom; three if the limit is enforced.
+/// Keeps an anchor on body 2 on a line attached to body 1, with optional limits along the line.
+/// Relative rotation remains free.
 /// </summary>
 public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {
@@ -79,7 +78,6 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     /// <param name="anchor2">Anchor point on body 2 constrained to the line in world space.</param>
     /// <param name="limit">Distance limit along the axis.</param>
     /// <remarks>
-    /// Computes local anchor points and axis from the current body poses.
     /// Equal or reversed distance limits fix the point at their midpoint.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>,
     /// <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultLinearLimitSoftness"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultLinearLimitBias"/>.

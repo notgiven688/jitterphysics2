@@ -9,13 +9,9 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Defines an interface for a generic convex shape characterized by its support function.
+/// Describes a convex shape by returning its furthest point in any given direction.
 /// </summary>
-/// <remarks>
-/// The support function is the fundamental operation for GJK-based collision detection algorithms.
-/// Any convex shape can be represented implicitly through its support mapping without requiring
-/// explicit vertex or face data.
-/// </remarks>
+/// <remarks>All points and directions use the shape's local coordinate system.</remarks>
 public interface ISupportMappable
 {
     /// <summary>
@@ -26,8 +22,8 @@ public interface ISupportMappable
     void SupportMap(in JVector direction, out JVector result);
 
     /// <summary>
-    /// Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.
+    /// Returns a point inside the shape. It does not need to be the center of mass.
     /// </summary>
-    /// <param name="point">A point inside the convex hull.</param>
+    /// <param name="point">An interior point in local space.</param>
     void GetCenter(out JVector point);
 }
