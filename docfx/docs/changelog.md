@@ -1,5 +1,9 @@
 # Changelog
 
+### Jitter 2.12.2 (2026-10-22)
+
+- Fixed a stack overflow that could occur during dynamic tree balancing, particularly in double precision.
+
 ### Jitter 2.12.1 (2026-10-21)
 
 - Improved contact point accuracy against flat surfaces, fixing artificial acceleration of rolling spheres.
