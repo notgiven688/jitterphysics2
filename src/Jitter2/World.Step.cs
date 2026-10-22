@@ -804,6 +804,7 @@ public sealed partial class World
     private void AssertNullBody()
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
+        Debug.Assert(rigidBody.Position == JVector.Zero, "World.NullBody must remain at the world origin.");
         Debug.Assert(rigidBody.MotionType == MotionType.Static);
         Debug.Assert(rigidBody.InverseInertiaWorld == JSymmetricMatrix.Zero);
         Debug.Assert(rigidBody.InverseMassVector == JVector.Zero);

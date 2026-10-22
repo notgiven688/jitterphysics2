@@ -605,6 +605,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Changing this value updates collision bounds and discards saved contacts.
     /// Dynamic and kinematic bodies are scheduled to wake on the next step; moving a static body
     /// wakes the bodies connected to it.
+    /// The position of <see cref="World.NullBody"/> must remain at the world origin.
     /// </remarks>
     public JVector Position
     {
