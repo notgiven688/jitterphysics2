@@ -3011,20 +3011,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "docs/documentation/images/dynamictree.odp",
+      "source_relative_path": "docs/documentation/images/dynamictree.svg",
       "output": {
         "resource": {
-          "relative_path": "docs/documentation/images/dynamictree.odp"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "docs/documentation/images/dynamictree.png",
-      "output": {
-        "resource": {
-          "relative_path": "docs/documentation/images/dynamictree.png"
+          "relative_path": "docs/documentation/images/dynamictree.svg"
         }
       },
       "version": ""

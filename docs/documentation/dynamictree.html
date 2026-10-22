@@ -89,7 +89,7 @@
 
 <p>The dynamic tree finds objects whose axis-aligned bounding boxes overlap. These boxes have edges parallel to the world axes and are often called <strong>AABBs</strong>. An object tracked by the tree is called a <strong>proxy</strong> and implements <code>IDynamicTreeProxy</code>.</p>
 <p>The tree groups nearby boxes so a query can skip whole groups that are out of range. Slightly expanded boxes also let objects move a short distance without needing to be reinserted every time.</p>
-<p><img src="images/dynamictree.png" alt="img alt"></p>
+<p><img src="images/dynamictree.svg" alt="Bounding boxes for five shapes and their dynamic tree: root i branches into a and h; a contains c and b, while h contains d and g, and d contains e and f."></p>
 <h2 id="adding-proxies">Adding proxies</h2>
 <p>All shapes added to a rigid body (<code>body.AddShape</code>) are automatically registered with <code>world.DynamicTree</code>.
 Custom implementations of <code>IDynamicTreeProxy</code> can be added to the tree using <code>tree.AddProxy</code>.
