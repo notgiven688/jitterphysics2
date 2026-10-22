@@ -124,7 +124,7 @@ float shadowForPixel(vec3 n)
 
 void main()
 {
-    vec3 n = vWorldNormal * uMat.normalFlip;
+    vec3 n = normalize(vWorldNormal) * uMat.normalFlip;
 
     vec3 ambient = uMat.vertexColorWeight * vInstanceColor + (1.0 - uMat.vertexColorWeight) * uMat.tint;
     vec3 diffuseBase = mix(vec3(0.6), texture(uDiffuse, vTexCoord).rgb, uMat.textureWeight);
@@ -147,7 +147,7 @@ void main()
 
     vec3 viewDir = normalize(uViewPos - vWorldPos);
     vec3 halfway = normalize(normalize(lightDirs[0]) + viewDir);
-    float specFactor = pow(max(dot(viewDir, halfway), 0.0), uMat.shininess);
+    float specFactor = pow(max(dot(n, halfway), 0.0), uMat.shininess);
     vec3 specular = specFactor * uMat.specular;
 
     float shadow = shadowForPixel(n);
