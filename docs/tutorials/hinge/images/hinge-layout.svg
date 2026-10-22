@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" role="img" aria-labelledby="title desc">
+  <title id="title">Two boxes and a hinge: initial front view</title>
+  <desc id="desc">Two boxes of side length two meet at x equals zero. Their centers are minus one, one, zero and one, one, zero. The left box is static. A hinge at zero, zero, zero runs along the Z axis at the bottom of their shared face. Gravity pulls the right box downward.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#536775"/></marker>
+  </defs>
+  <rect width="760" height="340" rx="12" fill="#fcfcf9"/>
+  <g font-family="system-ui, sans-serif" fill="#20374a">
+    <text x="28" y="32" font-size="16" font-weight="700">INITIAL POSE · FRONT VIEW</text>
+    <rect x="175" y="65" width="170" height="170" fill="#fff0c9" stroke="#9b6b15" stroke-width="3"/>
+    <rect x="345" y="65" width="170" height="170" fill="#ffe7de" stroke="#c75d41" stroke-width="3"/>
+    <text x="260" y="106" text-anchor="middle" font-size="19" font-weight="700">Fixed box</text>
+    <text x="430" y="106" text-anchor="middle" font-size="19" font-weight="700">Dynamic box</text>
+    <circle cx="260" cy="150" r="4" fill="#9b6b15"/>
+    <circle cx="430" cy="150" r="4" fill="#c75d41"/>
+    <text x="260" y="181" text-anchor="middle" font-size="15">(-1, 1, 0)</text>
+    <text x="430" y="181" text-anchor="middle" font-size="15">(1, 1, 0)</text>
+    <path d="M555 123V216" stroke="#536775" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="571" y="175" font-size="16">Gravity</text>
+    <circle cx="345" cy="235" r="10" fill="#fff" stroke="#32725d" stroke-width="3"/>
+    <circle cx="345" cy="235" r="3" fill="#32725d"/>
+    <path d="M345 248V271" stroke="#32725d" stroke-width="1.5"/>
+    <text x="345" y="293" text-anchor="middle" font-size="17" font-weight="700">Hinge at (0, 0, 0)</text>
+    <text x="345" y="317" text-anchor="middle" font-size="14">Z axis: out of the page, along the shared lower edge</text>
+    <path d="M60 223H124" fill="none" stroke="#536775" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M60 223V157" fill="none" stroke="#536775" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="51" y="145" font-size="16">Y</text>
+    <text x="132" y="228" font-size="16">X</text>
+  </g>
+</svg>

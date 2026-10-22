@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hinge Joint | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hinge Joint | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      <meta name="docfx:rel" content="../../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/hinge-joint.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hinge-joint">Hinge Joint</h1>
+
+<h2 id="arrange-the-bodies-first">Arrange the bodies first</h2>
+<p>Both boxes are two units wide, high, and deep. With no initial rotation, their coordinates are:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Left box</th>
+<th>Right box</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Center</td>
+<td><code>(-1, 1, 0)</code></td>
+<td><code>(1, 1, 0)</code></td>
+</tr>
+<tr>
+<td>X extent</td>
+<td><code>-2</code> to <code>0</code></td>
+<td><code>0</code> to <code>2</code></td>
+</tr>
+<tr>
+<td>Y extent</td>
+<td><code>0</code> to <code>2</code></td>
+<td><code>0</code> to <code>2</code></td>
+</tr>
+<tr>
+<td>Z extent</td>
+<td><code>-1</code> to <code>1</code></td>
+<td><code>-1</code> to <code>1</code></td>
+</tr>
+<tr>
+<td>Motion</td>
+<td>Static</td>
+<td>Dynamic</td>
+</tr>
+</tbody>
+</table>
+<p>Their faces meet at <code>x = 0</code>. The lower edge of those faces is at <code>x = 0, y = 0</code>, running from <code>z = -1</code> to <code>z = 1</code>. A point on that edge is the origin, and its direction is <code>JVector.UnitZ</code>.</p>
+<p><img src="images/hinge-layout.svg" alt="Initial arrangement viewed along the Z axis, with the hinge at the shared lower corner."></p>
+<p>Create the world and bodies:</p>
+<pre><code class="lang-csharp">using World world = new();
+world.Gravity = new JVector(0, -9.81f, 0);
+world.SubstepCount = 4;
+
+RigidBody left = world.CreateRigidBody();
+left.AddShape(new BoxShape(2));
+left.Position = new JVector(-1, 1, 0);
+left.MotionType = MotionType.Static;
+
+RigidBody right = world.CreateRigidBody();
+right.AddShape(new BoxShape(2));
+right.Position = new JVector(1, 1, 0);
+</code></pre>
+<p><code>BoxShape(2)</code> specifies the full side length, not the half extent. Adding the shape gives the dynamic body its mass and inertia. A new body is dynamic by default; only the left body needs its motion type changed.</p>
+<p>The static box stays in place even though there is no ground or support beneath it. Gravity acts on the right box. Four solver substeps help keep the hinge anchors together as it swings.</p>
+<h2 id="attach-the-hinge">Attach the hinge</h2>
+<pre><code class="lang-csharp">JVector hingeCenter = new(0, 0, 0);
+JVector hingeAxis = JVector.UnitZ;
+var hinge = new HingeJoint(world, left, right, hingeCenter, hingeAxis);
+</code></pre>
+<p>The anchor and axis are supplied in <strong>world coordinates</strong>. Create the joint after positioning the bodies: Jitter stores anchors and directions relative to them, using their initial pose as the reference.</p>
+<p>The axis is Z, even though the boxes are arranged along X. Rotation around Z lets the right box swing in the XY plane. An axis along X would describe a different connection.</p>
+<p>The right box's center of mass starts above and to the right of the anchor. Gravity therefore turns it clockwise in the front view shown above, while the left box stays fixed. There is no motor and no angular limit in this example. The bodies can still collide with each other; creating a hinge does not disable collision detection between them.</p>
+<h2 id="what-is-inside-a-hinge">What is inside a hinge?</h2>
+<p>A free body has six degrees of freedom: three translations and three rotations. This hinge is a group of two constraints:</p>
+<table>
+<thead>
+<tr>
+<th>Constraint</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BallSocket</code></td>
+<td>Keeps the two anchor points together, removing three relative translations.</td>
+</tr>
+<tr>
+<td><code>HingeAngle</code></td>
+<td>Aligns the hinge axes, removing two relative rotations.</td>
+</tr>
+</tbody>
+</table>
+<p>One relative rotation remains, around Z. <code>HingeJoint</code> creates and initializes both constraints for you. They are accessible as <code>hinge.BallSocket</code> and <code>hinge.HingeAngle</code>.</p>
+<p>To construct the same connection explicitly, <strong>replace</strong> the <code>HingeJoint</code> construction with:</p>
+<pre><code class="lang-cs">var socket = world.CreateConstraint&lt;BallSocket&gt;(left, right);
+socket.Initialize(hingeCenter);
+
+var angle = world.CreateConstraint&lt;HingeAngle&gt;(left, right);
+angle.Initialize(hingeAxis, AngularLimit.Full);
+</code></pre>
+<p>Do not add these on top of the joint: that would create duplicate constraints. The complete example keeps <code>HingeJoint</code>, which also gives us one object to draw.</p>
+<h2 id="try-an-angular-limit-later">Try an angular limit later</h2>
+<p>After running the example, replace the hinge construction with:</p>
+<pre><code class="lang-cs">var hinge = new HingeJoint(world, left, right, hingeCenter, hingeAxis,
+    angle: AngularLimit.FromDegree(-90, 0));
+</code></pre>
+<p>The initial pose is zero. With this body order and the positive Z axis, downward rotation has a negative angle. This range lets the right box rotate down by about 90 degrees, then holds it near that limit. Constraints have finite stiffness and are solved iteratively, so small anchor separations or angular errors are normal. The debug drawing will also show the allowed angular range and its endpoints.</p>
+<p>Next, <a href="debug-drawer.html">draw the bodies and joint</a> and run the simulation.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/hinge-joint.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

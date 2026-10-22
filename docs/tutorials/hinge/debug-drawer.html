@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Debug Drawer | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Debug Drawer | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      <meta name="docfx:rel" content="../../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/debug-drawer.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="debug-drawer">Debug Drawer</h1>
+
+<p>Jitter does not open a window or depend on a rendering library. Instead, objects that implement <code>IDebugDrawable</code> send geometry to an <code>IDebugDrawer</code> that you provide.</p>
+<p>For this example, the flow is:</p>
+<pre><code class="lang-text">RigidBody.DebugDraw / HingeJoint.DebugDraw
+                  |
+                  v
+       IDebugDrawer callbacks
+       DrawSegment / DrawTriangle
+                  |
+                  v
+          Raylib drawing calls
+</code></pre>
+<h2 id="implement-the-two-callbacks">Implement the two callbacks</h2>
+<p>Our drawer renders segments as lines and triangles as filled surfaces. We draw the solid boxes first, then draw the hinge guides on top so the connection stays visible through the boxes.</p>
+<pre><code class="lang-csharp">sealed class RaylibDebugDrawer : IDebugDrawer
+{
+    public bool ShadeTriangles { get; init; }
+    private static readonly Vector3 LightDirection = Vector3.Normalize(new(-1, 2, 3));
+
+    private static Vector3 ToVector(in JVector p) =&gt; new(p.X, p.Y, p.Z);
+
+    private static Color ToColor(uint rgba) =&gt; new(
+        (byte)((rgba &gt;&gt; 24) &amp; 0xFF),
+        (byte)((rgba &gt;&gt; 16) &amp; 0xFF),
+        (byte)((rgba &gt;&gt; 8) &amp; 0xFF),
+        (byte)(rgba &amp; 0xFF));
+
+    public void DrawSegment(in JVector pA, in JVector pB, uint color)
+    {
+        DrawLine3D(ToVector(pA), ToVector(pB), ToColor(color));
+    }
+
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
+    {
+        Vector3 a = ToVector(pA), b = ToVector(pB), c = ToVector(pC);
+        Color tint = ToColor(color);
+
+        // Simple face shading makes the solid boxes easier to read.
+        Vector3 normal = Vector3.Cross(b - a, c - a);
+        if (ShadeTriangles &amp;&amp; normal.LengthSquared() &gt; 0)
+        {
+            float light = 0.55f + 0.45f * Math.Max(0,
+                Vector3.Dot(Vector3.Normalize(normal), LightDirection));
+            tint = new Color((byte)(tint.R * light), (byte)(tint.G * light),
+                (byte)(tint.B * light), tint.A);
+        }
+
+        DrawTriangle3D(a, b, c, tint);
+    }
+}
+</code></pre>
+<p>There are three details to notice:</p>
+<ul>
+<li><strong>Positions are already in world space.</strong> Convert <code>JVector</code> to <code>Vector3</code> directly. Do not apply the body's position or orientation a second time.</li>
+<li><strong>Colors are packed as <code>0xRRGGBBAA</code>.</strong> The four shifts extract red, green, blue, and alpha explicitly, without depending on the machine's byte order.</li>
+<li><strong>Both methods are required.</strong> Bodies emit triangles for their shape surfaces. Constraints emit segments and can also emit triangles for anchor markers and solid arrows. An empty <code>DrawTriangle</code> method would hide the boxes.</li>
+</ul>
+<p><code>ShadeTriangles</code> adds a small amount of directional shading from each triangle's normal. This distinguishes the box faces without a shader or a separate mesh. It affects only the displayed color. We enable it for the bodies and leave it off for the joint's markers:</p>
+<pre><code class="lang-cs">var bodyDrawer = new RaylibDebugDrawer { ShadeTriangles = true };
+var jointDrawer = new RaylibDebugDrawer();
+</code></pre>
+<p>Jitter emits counterclockwise front faces. Raylib uses their winding for back-face culling. The normal is calculated from that same vertex order.</p>
+<h2 id="choose-colors-and-guide-sizes">Choose colors and guide sizes</h2>
+<pre><code class="lang-csharp">var leftStyle = new DebugDrawSettings { CurrentColor = 0xFFD166FF };
+var rightStyle = new DebugDrawSettings { CurrentColor = 0xFF997FFF };
+var hingeStyle = new DebugDrawSettings
+{
+    GuideSize = 0.65f,
+    PointRadius = 0.04f,
+    ArrowHeadSize = 0.1f,
+    SolidArrows = false,
+    ReferenceColor = 0x8CDBAAFF,
+    CurrentColor = 0xFFD166FF
+};
+</code></pre>
+<p><code>CurrentColor</code> colors each body's shape geometry. For the joint, <code>ReferenceColor</code> and <code>CurrentColor</code> distinguish its reference and current guides. The boxes are warm yellow and coral against the same blue background used in the other tutorials. The joint guides use green and gold, drawn on top of the filled boxes.</p>
+<p><code>GuideSize</code> controls the angular guide radius in world units. <code>PointRadius</code> controls anchor markers separately. <code>SolidArrows = false</code> selects wire arrows. These settings affect only drawing: changing them does not change the hinge, mass, or collision shapes.</p>
+<h2 id="draw-inside-the-cameras-3d-pass">Draw inside the camera's 3D pass</h2>
+<pre><code class="lang-csharp">BeginMode3D(camera);
+left.DebugDraw(bodyDrawer, leftStyle);
+right.DebugDraw(bodyDrawer, rightStyle);
+
+// Finish the solid geometry before changing the depth-test state.
+Rlgl.DrawRenderBatchActive();
+Rlgl.DisableDepthTest();
+hinge.DebugDraw(jointDrawer, hingeStyle);
+Rlgl.DrawRenderBatchActive();
+Rlgl.EnableDepthTest();
+EndMode3D();
+</code></pre>
+<p>The bodies draw their attached shapes in their current poses. The joint draws both of its constraints and automatically places the angular guide at the ball socket's anchor.</p>
+<p>The boxes use normal depth testing, so their visible faces cover surfaces behind them. For the joint pass, <code>Rlgl.DisableDepthTest()</code> lets the guides appear over the filled boxes, even where the guides are physically inside or behind them. This is a visualization overlay; it does not change collisions or the constraint.</p>
+<p>Raylib batches drawing commands. <code>Rlgl.DrawRenderBatchActive()</code> flushes the boxes before we disable depth testing, then flushes the guides before we restore it. Without those flushes, queued geometry could be drawn with the wrong depth-test state. Restore depth testing after the overlay so later 3D drawing behaves normally.</p>
+<p>The lines from the body centers to the anchor come from <code>BallSocket</code>. Its two anchor markers should stay close together. The circular guide and axis arrow come from <code>HingeAngle</code>. With a full angular range there are no stop markers; try the limit from the previous page to see them.</p>
+<p>Calling <code>DebugDraw</code> only draws the current state. <code>world.Step</code> advances the simulation.</p>
+<p>Next, <a href="hello-world.html">Hello World</a> brings these pieces together into a complete program and shows the hinge in motion.</p>
+<p>For more options, see <a href="../../documentation/constraints.html">Constraints</a>, <a class="xref" href="../../../api/Jitter2.IDebugDrawer.html">IDebugDrawer</a>, and <a class="xref" href="../../../api/Jitter2.DebugDrawSettings.html">DebugDrawSettings</a>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/debug-drawer.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

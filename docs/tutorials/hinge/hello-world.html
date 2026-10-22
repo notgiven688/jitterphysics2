@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Hello World | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Hello World | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../../favicon.ico">
+      <link rel="stylesheet" href="../../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../../public/main.css">
+      <meta name="docfx:navrel" content="../../../toc.html">
+      <meta name="docfx:tocrel" content="../../toc.html">
+      
+      <meta name="docfx:rel" content="../../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/hello-world.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../../index.html">
+            <img id="logo" class="svg" src="../../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="hello-world">Hello World</h1>
+
+<p>Now put the scene, hinge, and debug drawer together. The yellow box stays fixed while gravity swings the coral box around their shared lower edge. The boxes are filled, with green and gold hinge guides drawn on top so the anchors, axis, and current angle stay visible.</p>
+<p><img src="images/hinge-demo.gif" alt="Recorded simulation of a fixed yellow box and a coral box swinging under gravity around their shared lower-edge hinge, with Jitter's debug guides visible."></p>
+<p>The recording holds the initial pose briefly, then runs the simulation. It loops back to the starting arrangement at the end.</p>
+<h2 id="complete-code">Complete code</h2>
+<p>Using the project from <a href="project-setup.html">Project Setup</a>, replace <code>Program.cs</code> with the following. The <code>RaylibDebugDrawer</code> class belongs <strong>after</strong> the top-level statements in the same file.</p>
+<pre><code class="lang-csharp">using System;
+using System.Numerics;
+using Jitter2;
+using Jitter2.Collision.Shapes;
+using Jitter2.Dynamics;
+using Jitter2.Dynamics.Constraints;
+using Jitter2.LinearMath;
+using Raylib_cs;
+using static Raylib_cs.Raylib;
+
+using World world = new();
+world.Gravity = new JVector(0, -9.81f, 0);
+world.SubstepCount = 4;
+
+RigidBody left = world.CreateRigidBody();
+left.AddShape(new BoxShape(2));
+left.Position = new JVector(-1, 1, 0);
+left.MotionType = MotionType.Static;
+
+RigidBody right = world.CreateRigidBody();
+right.AddShape(new BoxShape(2));
+right.Position = new JVector(1, 1, 0);
+
+JVector hingeCenter = new(0, 0, 0);
+JVector hingeAxis = JVector.UnitZ;
+var hinge = new HingeJoint(world, left, right, hingeCenter, hingeAxis);
+
+var leftStyle = new DebugDrawSettings { CurrentColor = 0xFFD166FF };
+var rightStyle = new DebugDrawSettings { CurrentColor = 0xFF997FFF };
+var hingeStyle = new DebugDrawSettings
+{
+    GuideSize = 0.65f,
+    PointRadius = 0.04f,
+    ArrowHeadSize = 0.1f,
+    SolidArrows = false,
+    ReferenceColor = 0x8CDBAAFF,
+    CurrentColor = 0xFFD166FF
+};
+
+SetConfigFlags(ConfigFlags.Msaa4xHint);
+InitWindow(1000, 750, &quot;Jitter2 - Two boxes and a hinge&quot;);
+SetTargetFPS(100);
+
+Camera3D camera = new()
+{
+    Position = new Vector3(5, 3, 9),
+    Target = new Vector3(0, -0.2f, 0),
+    Up = Vector3.UnitY,
+    FovY = 45,
+    Projection = CameraProjection.Perspective
+};
+
+var bodyDrawer = new RaylibDebugDrawer { ShadeTriangles = true };
+var jointDrawer = new RaylibDebugDrawer();
+bool paused = true;
+
+while (!WindowShouldClose())
+{
+    if (IsKeyPressed(KeyboardKey.Space)) paused = !paused;
+
+    if (!paused)
+    {
+        world.Step(1.0f / 100.0f, true);
+    }
+
+    BeginDrawing();
+    ClearBackground(Color.Blue);
+
+    BeginMode3D(camera);
+    left.DebugDraw(bodyDrawer, leftStyle);
+    right.DebugDraw(bodyDrawer, rightStyle);
+
+    // Finish the solid geometry before changing the depth-test state.
+    Rlgl.DrawRenderBatchActive();
+    Rlgl.DisableDepthTest();
+    hinge.DebugDraw(jointDrawer, hingeStyle);
+    Rlgl.DrawRenderBatchActive();
+    Rlgl.EnableDepthTest();
+    EndMode3D();
+
+    DrawText(paused ? &quot;Paused - Space to release&quot; : &quot;Running - Space to pause&quot;,
+        20, 20, 22, Color.White);
+    DrawText(&quot;Yellow: fixed box | Coral: dynamic box | Green / gold: hinge guides&quot;,
+        20, 52, 18, Color.White);
+    EndDrawing();
+}
+
+CloseWindow();
+
+sealed class RaylibDebugDrawer : IDebugDrawer
+{
+    public bool ShadeTriangles { get; init; }
+    private static readonly Vector3 LightDirection = Vector3.Normalize(new(-1, 2, 3));
+
+    private static Vector3 ToVector(in JVector p) =&gt; new(p.X, p.Y, p.Z);
+
+    private static Color ToColor(uint rgba) =&gt; new(
+        (byte)((rgba &gt;&gt; 24) &amp; 0xFF),
+        (byte)((rgba &gt;&gt; 16) &amp; 0xFF),
+        (byte)((rgba &gt;&gt; 8) &amp; 0xFF),
+        (byte)(rgba &amp; 0xFF));
+
+    public void DrawSegment(in JVector pA, in JVector pB, uint color)
+    {
+        DrawLine3D(ToVector(pA), ToVector(pB), ToColor(color));
+    }
+
+    public void DrawTriangle(in JVector pA, in JVector pB, in JVector pC, uint color)
+    {
+        Vector3 a = ToVector(pA), b = ToVector(pB), c = ToVector(pC);
+        Color tint = ToColor(color);
+
+        // Simple face shading makes the solid boxes easier to read.
+        Vector3 normal = Vector3.Cross(b - a, c - a);
+        if (ShadeTriangles &amp;&amp; normal.LengthSquared() &gt; 0)
+        {
+            float light = 0.55f + 0.45f * Math.Max(0,
+                Vector3.Dot(Vector3.Normalize(normal), LightDirection));
+            tint = new Color((byte)(tint.R * light), (byte)(tint.G * light),
+                (byte)(tint.B * light), tint.A);
+        }
+
+        DrawTriangle3D(a, b, c, tint);
+    }
+}
+</code></pre><h2 id="run-the-example">Run the example</h2>
+<pre><code class="lang-sh">dotnet run
+</code></pre>
+<p>The program starts paused so you can inspect the boxes and the hinge. Press <strong>Space</strong> to release the right box, and press it again to pause. Restart the program to return to the initial pose. <strong>Escape</strong> closes the window.</p>
+<p>Like the earlier tutorials, this example uses <code>SetTargetFPS(100)</code> and calls <code>world.Step(1.0f / 100.0f, true)</code> once per unpaused frame. Each step advances the simulation by 0.01 seconds; <code>true</code> enables Jitter's multithreaded stepping. This simple loop runs at real-time speed when it reaches 100 frames per second and slows down if rendering falls below that target.</p>
+<p><code>using World world</code> releases Jitter's resources when the program exits. <code>CloseWindow</code> releases Raylib's window; this drawer owns no meshes or textures to unload.</p>
+<h2 id="try-a-limit">Try a limit</h2>
+<p>Replace the <code>HingeJoint</code> construction with the limited version from <a href="hinge-joint.html#try-an-angular-limit-later">Hinge Joint</a>. The box will stop near a quarter turn, and the debug guides will show the allowed range. The drawer itself needs no changes.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/tutorials/hinge/hello-world.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

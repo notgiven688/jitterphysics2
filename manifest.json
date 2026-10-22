@@ -3144,6 +3144,66 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/hinge/debug-drawer.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/hinge/debug-drawer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/hinge/hello-world.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/hinge/hello-world.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/hinge/hinge-joint.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/hinge/hinge-joint.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/hinge/images/hinge-demo.gif",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/hinge/images/hinge-demo.gif"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "docs/tutorials/hinge/images/hinge-layout.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/tutorials/hinge/images/hinge-layout.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/tutorials/hinge/project-setup.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/tutorials/hinge/project-setup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "docs/tutorials/teapots/aftermath.md",
       "output": {
         ".html": {
