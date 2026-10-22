@@ -59,62 +59,53 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Hook into the narrow-phase collision detection pipeline.
-    /// The default instance is of type <see cref="TriangleEdgeCollisionFilter"/>.
+    /// A filter that can reject collisions or adjust contact points and normals.
+    /// Defaults to <see cref="TriangleEdgeCollisionFilter"/>.
     /// </summary>
     /// <remarks>
-    /// Use this to intercept collisions after contact generation, modify contact data,
-    /// or implement custom collision responses. When <see cref="Step(Real, bool)"/> is called
-    /// with <c>multiThread=true</c>, this may be invoked concurrently. Implementations must be thread-safe.
+    /// Called after a collision is detected. With multithreaded stepping, calls can run
+    /// concurrently, so the filter must be thread-safe.
     /// </remarks>
     public INarrowPhaseFilter? NarrowPhaseFilter { get; set; } = new TriangleEdgeCollisionFilter();
 
     /// <summary>
-    /// Hook into the broadphase collision detection pipeline. The default value is null.
+    /// A filter that can reject shape pairs before testing them for collisions. Default is null.
     /// </summary>
     /// <remarks>
-    /// Use this to intercept shape pairs before narrow-phase detection, implement custom collision layers,
-    /// or handle collisions for custom proxy types. When <see cref="Step(Real, bool)"/> is called
-    /// with <c>multiThread=true</c>, this may be invoked concurrently. Implementations must be thread-safe.
+    /// Use this for collision layers or custom proxy types. With multithreaded stepping,
+    /// calls can run concurrently, so the filter must be thread-safe.
     /// </remarks>
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
     /// <summary>
-    /// Enables the generation of additional contacts for flat surfaces that are in contact.
-    /// Traditionally, the collision system reports the deepest collision point between two objects.
-    /// A full contact manifold is then generated over several time steps using contact caching, which
-    /// can be unstable. This method attempts to build a fuller or complete contact manifold within a single time step.
+    /// Generates extra contact points between touching flat surfaces to improve stability,
+    /// especially when objects first come to rest. Default is true.
     /// </summary>
     public bool EnableAuxiliaryContactPoints { set; get; } = true;
 
     /// <summary>
-    /// When enabled (the default), contact points and their accumulated impulses are cached between
-    /// frames. This allows the solver to warm-start from the previous solution and enables the
-    /// manifold to grow over several steps, which improves stability for resting contacts.
-    /// When disabled, all contact data is discarded at the end of each frame and every contact is
-    /// treated as brand-new. Disabling this removes all frame-to-frame contact memory at the cost
-    /// of solver convergence speed.
+    /// Reuses contact points and impulses from previous steps to improve resting stability.
+    /// Default is true. When false, contacts are discarded at the end of each step,
+    /// which can require more solver iterations to achieve the same stability.
     /// </summary>
     public bool PersistentContactManifold { get; set; } = true;
 
     /// <summary>
-    /// A CCD contact limits closing velocity at the contact points to help prevent tunneling through
-    /// an obstacle within one frame. The response includes both linear and angular motion.
-    /// The <see cref="CcdRelaxationFactor"/> scales the allowed closing motion, ranging from 0
-    /// (no closing motion at the contact) to 1 (allowing the predicted gap to close over one full step).
-    /// Values below 1 leave a separation margin for the next frame.
-    /// Default value: 0.9.
+    /// Fraction of the predicted gap that CCD contacts allow to close during one step. Default is 0.9.
     /// </summary>
+    /// <remarks>
+    /// Use values from 0 (no closing motion) to 1 (allow the full gap to close).
+    /// Values below 1 leave a small separation margin.
+    /// </remarks>
     public Real CcdRelaxationFactor { get; set; } = (Real)0.9;
 
     /// <summary>
-    /// Minimum estimated relative surface speed for CCD sweeps. Sweeps are skipped below this
-    /// threshold to avoid work for nearly stationary pairs.
-    /// Default value: 0.1.
+    /// Minimum relative surface speed for continuous collision detection, in world units per second.
+    /// Nearly stationary pairs below this threshold are skipped. Default is 0.1.
     /// </summary>
     /// <remarks>
-    /// The estimate includes relative linear speed and angular speed multiplied by each shape's
-    /// bounding radius about the body origin. Set this to zero to sweep even slow-moving pairs.
+    /// The speed estimate includes both translation and rotation. Set to zero to include even
+    /// slow-moving pairs.
     /// </remarks>
     public Real CcdVelocityThreshold { get; set; } = (Real)0.1;
 
@@ -191,15 +182,10 @@ public sealed partial class World
     /// Registers a single contact point into an existing <see cref="Arbiter"/>.
     /// </summary>
     /// <remarks>
-    /// This method adds a contact point to the specified <paramref name="arbiter"/>, using the provided contact points
-    /// and normal. All input vectors must be in world space. The <paramref name="normal"/> vector must be normalized.
-    /// This method assumes that the <paramref name="arbiter"/> is already valid and mapped to the correct pair of bodies.
     /// <para>
-    /// Calls that create or register contacts may run concurrently with each other. They must not run
-    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
-    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
-    /// If custom contact generation uses external worker threads, all such work must finish before the
-    /// world is stepped or modified.
+    /// Contact creation and registration calls may run concurrently with each other.
+    /// Finish all such calls before stepping the world, removing arbiters, or adding, removing,
+    /// or changing simulation objects. Do not overlap them with <see cref="Clear"/> or <see cref="Dispose"/>.
     /// </para>
     /// <para>
     /// Do not pass an arbiter after it has been removed from the world; removed arbiters may be recycled.
@@ -237,18 +223,13 @@ public sealed partial class World
     /// creating an <see cref="Arbiter"/> if one does not already exist.
     /// </summary>
     /// <remarks>
-    /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
-    /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
-    ///
     /// <para>
-    /// Calls that create or register contacts may run concurrently with each other. They must not run
-    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
-    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
-    /// If custom contact generation uses external worker threads, all such work must finish before the
-    /// world is stepped or modified.
+    /// Contact creation and registration calls may run concurrently with each other.
+    /// Finish all such calls before stepping the world, removing arbiters, or adding, removing,
+    /// or changing simulation objects. Do not overlap them with <see cref="Clear"/> or <see cref="Dispose"/>.
     /// </para>
     ///
-    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// <para>The IDs identify an ordered pair: keep their order consistent between calls.</para>
     /// </remarks>
     /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
     /// <param name="id1">The second identifier associated with the contact.</param>
@@ -297,19 +278,13 @@ public sealed partial class World
     /// Registers a contact point between two rigid bodies, creating an <see cref="Arbiter"/> if one does not already exist.
     /// </summary>
     /// <remarks>
-    /// This method ensures that contact information between the specified ID pair is tracked by an <see cref="Arbiter"/>.
-    /// If no arbiter exists for the given IDs, one is created using <paramref name="body1"/> and <paramref name="body2"/>.
-    /// The provided contact points and normal must be in world space. The <paramref name="normal"/> vector must be normalized.
-    ///
     /// <para>
-    /// Calls that create or register contacts may run concurrently with each other. They must not run
-    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
-    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
-    /// If custom contact generation uses external worker threads, all such work must finish before the
-    /// world is stepped or modified.
+    /// Contact creation and registration calls may run concurrently with each other.
+    /// Finish all such calls before stepping the world, removing arbiters, or adding, removing,
+    /// or changing simulation objects. Do not overlap them with <see cref="Clear"/> or <see cref="Dispose"/>.
     /// </para>
     ///
-    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// <para>The IDs identify an ordered pair: keep their order consistent between calls.</para>
     /// </remarks>
     /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
     /// <param name="id1">The second identifier associated with the contact.</param>
@@ -343,9 +318,8 @@ public sealed partial class World
     /// For arbiters created by the engine, <paramref name="id0"/> &lt; <paramref name="id1"/> holds
     /// for <see cref="RigidBodyShape"/>s.
     /// <para>
-    /// This method may run concurrently with contact creation and registration. It must not run
-    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
-    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
+    /// May run concurrently with contact creation and registration. Finish these calls before
+    /// stepping or modifying the world, including removing arbiters, bodies, or shapes.
     /// </para>
     /// </remarks>
     public bool GetArbiter(ulong id0, ulong id1, [MaybeNullWhen(false)] out Arbiter arbiter)
@@ -363,20 +337,16 @@ public sealed partial class World
     /// or creates a new one if none exists.
     /// </summary>
     /// <remarks>
-    /// This method ensures there is a unique <see cref="Arbiter"/> for each ordered pair of IDs.
-    /// If an arbiter already exists, it is returned via the <paramref name="arbiter"/> out parameter.
-    /// Otherwise, a new arbiter is allocated, initialized with the provided <paramref name="body1"/> and <paramref name="body2"/>,
-    /// and registered internally. The body arguments are used only when a new arbiter is created.
+    /// The body arguments are used only when creating a new arbiter. Reuse the same IDs
+    /// and body order when registering contacts for this pair.
     ///
     /// <para>
-    /// Calls that create or register contacts may run concurrently with each other. They must not run
-    /// concurrently with <see cref="Step(Real, bool)"/>, <see cref="Remove(Arbiter)"/>, body or shape
-    /// removal, <see cref="Clear"/>, <see cref="Dispose"/>, or other topology-changing operations.
-    /// If custom contact generation uses external worker threads, all such work must finish before the
-    /// world is stepped or modified.
+    /// Contact creation and registration calls may run concurrently with each other.
+    /// Finish all such calls before stepping the world, removing arbiters, or adding, removing,
+    /// or changing simulation objects. Do not overlap them with <see cref="Clear"/> or <see cref="Dispose"/>.
     /// </para>
     ///
-    /// <para><b>Note:</b> The order of <paramref name="id0"/> and <paramref name="id1"/> <i>does matter</i>.</para>
+    /// <para>The IDs identify an ordered pair: keep their order consistent between calls.</para>
     /// </remarks>
     /// <param name="id0">The first identifier associated with the contact (e.g., shape or feature ID).</param>
     /// <param name="id1">The second identifier associated with the contact.</param>

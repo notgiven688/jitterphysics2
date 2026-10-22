@@ -12,18 +12,18 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// The main entity of the collision system. Implements <see cref="ISupportMappable"/> for
-/// narrow-phase and <see cref="IDynamicTreeProxy"/> for broad-phase collision detection.
-/// The shape itself does not have a position or orientation. Shapes can be associated with
-/// instances of <see cref="RigidBody"/>.
+/// Defines collision geometry in local coordinates.
 /// </summary>
+/// <remarks>
+/// A shape has no position or orientation of its own. Shapes attached to a <see cref="RigidBody"/>
+/// use that body's transform.
+/// </remarks>
 public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, IDebugDrawable
 {
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
     /// <summary>
-    /// A 64-bit integer representing the shape ID. This is used by algorithms that require
-    /// arranging shapes in a well-defined order.
+    /// A unique identifier for this shape.
     /// </summary>
     public readonly ulong ShapeId = World.RequestId();
 
@@ -89,11 +89,10 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
         DebugDrawLocal(ref sink, settings);
     }
 
-    /// <summary>Appends debug triangles in the coordinate system used by <see cref="SupportMap"/>.</summary>
+    /// <summary>Draws the shape's surface as triangles in local coordinates.</summary>
     /// <remarks>
-    /// Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-    /// applied by the caller. Use outward-facing triangles for closed surfaces.
-    /// Without an override, the shape is drawn as an approximate surface.
+    /// Override to provide custom debug geometry; otherwise, the surface is approximated.
+    /// Use outward-facing triangles for closed surfaces. Body and shape transforms are applied automatically.
     /// </remarks>
     /// <param name="triangleSink">The destination for generated triangles.</param>
     /// <param name="settings">The visualization settings.</param>

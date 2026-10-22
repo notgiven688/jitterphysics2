@@ -13,7 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains the relative orientation between two bodies, eliminating three degrees of rotational freedom.
+/// Preserves the relative orientation of two bodies while leaving translation free.
 /// </summary>
 public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
 {
@@ -61,7 +61,6 @@ public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
     /// Initializes the constraint using the current relative orientation of the bodies.
     /// </summary>
     /// <remarks>
-    /// Records the current relative orientation as the target.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     public void Initialize()

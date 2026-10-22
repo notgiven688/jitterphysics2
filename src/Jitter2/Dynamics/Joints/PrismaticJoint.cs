@@ -10,9 +10,8 @@ using Jitter2.LinearMath;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constructs a prismatic joint using a <see cref="PointOnLine"/> constraint, either a
-/// <see cref="FixedAngle"/> or <see cref="HingeAngle"/> constraint, and an optional
-/// <see cref="LinearMotor"/> or <see cref="LinearAxisServo"/> drive.
+/// Allows two bodies to slide along an axis, with optional distance limits and a motor or servo.
+/// Relative rotation can be locked or allowed around the sliding axis.
 /// </summary>
 public class PrismaticJoint : Joint
 {
@@ -83,7 +82,7 @@ public class PrismaticJoint : Joint
     /// <param name="center">The joint center in world space.</param>
     /// <param name="axis">The sliding axis in world space.</param>
     /// <param name="limit">Allowed displacement along the sliding axis.</param>
-    /// <param name="pinned">If true, lock relative rotation with <see cref="FixedAngle"/>; otherwise constrain it with <see cref="HingeAngle"/>.</param>
+    /// <param name="pinned">If true, locks relative rotation; otherwise allows rotation around the sliding axis.</param>
     /// <param name="drive">The optional drive. Motor and servo force default to zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">The drive selection is invalid.</exception>
     /// <exception cref="ArgumentException">

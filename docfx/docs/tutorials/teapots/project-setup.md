@@ -1,16 +1,13 @@
 # Project Setup
 
-In the previous section, we created a simulation of falling boxes. Jitter includes several default shapes, such as capsules, cylinders, and spheres.
-These shapes can be transformed and/or combined, and they are already sufficient to represent many types of collidable entities.
-
-In this section, we will add a custom convex shape to the simulation—specifically, the famous *Utah teapot*. We'll construct this shape from its visual representation by loading a `teapot.obj` file and using its vertices to create the convex shape.
+The Boxes tutorial used built-in shapes. This tutorial uses vertices from a model to create a collision shape for the *Utah teapot*. We will load `teapot.obj`, simplify its vertices, and stack several teapots in the simulation.
 
 
 ### Requirements
 
 Install the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
-Ensure that dotnet is correctly set up by executing the following command:
+Check that the SDK is installed:
 
 ```sh
 dotnet --version
@@ -31,7 +28,7 @@ wget https://github.com/notgiven688/jitterphysics2/raw/refs/heads/main/src/Jitte
 unzip teapot.obj.zip
 ```
 
-Next, create a new console application in this directory and add Raylib-cs and Jitter2:
+Create a console application and add Raylib-cs and Jitter2:
 
 ```sh
 dotnet new console
@@ -39,7 +36,7 @@ dotnet add package Raylib-cs --version 6.1.1
 dotnet add package Jitter2
 ```
 
-Add the following code to `TeaDrop.csproj` to allow unsafe code, and to copy teapot.obj automatically to the output directory:
+Add these settings inside the `<Project>` element in `TeaDrop.csproj`. They allow access to Raylib's mesh data through pointers and copy `teapot.obj` to the output directory:
 
 ```xml
   <PropertyGroup>
@@ -53,10 +50,10 @@ Add the following code to `TeaDrop.csproj` to allow unsafe code, and to copy tea
   </ItemGroup>
 ```
 
-You have completed the setup. If you now execute the following command:
+Run the application:
 
 ```sh
 dotnet run
 ```
 
-Your console should display: "Hello, World!".
+The console should print `Hello, World!`.

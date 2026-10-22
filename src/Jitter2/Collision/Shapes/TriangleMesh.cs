@@ -102,8 +102,7 @@ public class TriangleMesh
     /// <param name="indices">The index buffer (must be a multiple of 3).</param>
     /// <param name="ignoreDegenerated">If <see langword="true"/>, degenerate triangles are skipped.</param>
     /// <remarks>
-    /// Vertices with exactly identical positions are canonicalized so adjacency detection also works
-    /// across duplicated seam vertices in indexed meshes.
+    /// Vertices at exactly the same position are treated as connected, including duplicated vertices at mesh seams.
     /// </remarks>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="indices"/> does not contain a multiple of three entries.

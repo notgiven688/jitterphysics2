@@ -38,8 +38,7 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Calculates the rotation quaternion corresponding to the given angular velocity using
-    /// deterministic trigonometric approximations.
+    /// Calculates the rotation produced by a constant angular velocity over a time interval.
     /// </summary>
     /// <param name="omega">The angular velocity vector in radians per second.</param>
     /// <param name="dt">The time step in seconds.</param>
@@ -78,7 +77,7 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Checks if matrix is a pure rotation matrix.
+    /// Checks whether a matrix represents a rotation without scaling or reflection.
     /// </summary>
     /// <param name="matrix">The matrix to check.</param>
     /// <param name="epsilon">The tolerance for floating-point comparisons.</param>
@@ -193,10 +192,10 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Calculates an orthonormal vector to the given vector.
+    /// Returns a unit vector perpendicular to the given vector.
     /// </summary>
     /// <remarks>
-    /// The input vector must be non-zero. Debug builds assert this condition.
+    /// The input vector must be nonzero.
     /// </remarks>
     /// <param name="vec">The input vector (must be non-zero, does not need to be normalized).</param>
     /// <returns>A unit vector orthogonal to the input.</returns>
@@ -254,7 +253,7 @@ public static class MathHelper
     }
 
     /// <summary>
-    /// Verifies whether the columns of the given matrix constitute an orthonormal basis.
+    /// Checks whether the matrix columns are mutually perpendicular unit vectors.
     /// </summary>
     /// <param name="matrix">The input matrix to check.</param>
     /// <param name="epsilon">The tolerance for floating-point comparisons.</param>
@@ -267,17 +266,15 @@ public static class MathHelper
 
     /// <summary>
     /// Computes an approximate Moore-Penrose pseudoinverse of a symmetric,
-    /// positive-semidefinite 3x3 matrix, such as a joint's inverse effective mass.
+    /// positive-semidefinite 3x3 matrix.
     /// </summary>
     /// <param name="matrix">A finite, symmetric, positive-semidefinite matrix.</param>
-    /// <returns>The inverse on responsive directions, with zero response on discarded directions.</returns>
+    /// <returns>The approximate inverse, with singular directions left at zero.</returns>
     /// <remarks>
-    /// Uses the ordinary inverse when the normalized determinant is sufficiently large.
-    /// Otherwise, Jacobi diagonalization retains eigenvalues greater than a normalized
-    /// tolerance of 1e-6 in single precision or 1e-12 in double precision. The normalization
-    /// uses the largest absolute diagonal entry. A zero matrix produces a zero pseudoinverse.
-    /// Symmetry and positive semidefiniteness are assumed and are not validated.
-    /// Compute this during constraint preparation and cache the result for solver iterations.
+    /// Uses a relative tolerance of 1e-6 in single precision or 1e-12 in double precision
+    /// to identify nearly singular matrices and discard small eigenvalues. The tolerance is
+    /// relative to the largest absolute diagonal entry. A zero matrix returns a zero matrix.
+    /// The input must be symmetric and positive semidefinite; these conditions are not checked.
     /// </remarks>
     public static JMatrix PseudoInverseSymmetric(in JMatrix matrix)
     {

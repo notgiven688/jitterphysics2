@@ -80,16 +80,14 @@ public enum MotionType
     Dynamic = 0,
 
     /// <summary>
-    /// User-controlled body that is not affected by forces or collisions, but can affect dynamic bodies.
-    /// Treated as having infinite mass in the solver. May have a non-zero velocity set by user code.
-    /// Takes part in collision island building.
+    /// Moves at a velocity set by the application and can push dynamic bodies.
+    /// Forces, impulses, and collisions do not change its motion.
     /// </summary>
     Kinematic = 1,
 
     /// <summary>
-    /// Immovable body (zero velocity) treated as having infinite mass by the solver.
-    /// The position and orientation may be changed directly by user code, which will update the
-    /// broadphase and may affect contacts on the next step.
+    /// Remains stationary and can support dynamic bodies.
+    /// The application can still change its position and orientation directly.
     /// </summary>
     Static = 2
 }
@@ -98,11 +96,9 @@ public enum MotionType
 /// Low-level simulation state for a <see cref="RigidBody"/>, stored in unmanaged memory.
 /// </summary>
 /// <remarks>
-/// This structure is layout-sensitive and intended for internal engine use. Prefer using
-/// <see cref="RigidBody"/> properties instead of accessing fields directly.
-/// All spatial values (position, velocity, orientation, inertia) are in world space.
-/// The <see cref="Flags"/> field is a bitfield: bits 0–1 encode <see cref="MotionType"/>,
-/// bit 2 indicates active state, bit 3 enables gyroscopic forces, and bits 4–9 encode motion locks.
+/// Prefer <see cref="RigidBody"/> properties when reading or changing a body.
+/// Direct field changes bypass updates to collision bounds, activation, and other dependent state.
+/// Spatial values are in world space.
 /// </remarks>
 [StructLayout(LayoutKind.Explicit, Size = Precision.RigidBodyDataSize)]
 public struct RigidBodyData
@@ -159,10 +155,8 @@ public struct RigidBodyData
     public JQuaternion Orientation;
 
     /// <summary>
-    /// Inverse inertia tensor in world space. For dynamic bodies, this is recomputed each step
-    /// from the body-space inverse inertia and current orientation. Locked angular axes
-    /// are eliminated with Schur complements to preserve the remaining inertia response.
-    /// For static and kinematic bodies, this is zero (representing infinite inertia).
+    /// Inverse inertia tensor in world space, including rotation locks.
+    /// Zero for static and kinematic bodies, which do not respond to torque.
     /// </summary>
     [FieldOffset(8 + 19 * sizeof(Real))]
     public JSymmetricMatrix InverseInertiaWorld;
@@ -250,7 +244,7 @@ public struct RigidBodyData
 }
 
 /// <summary>
-/// Represents the primary entity in the Jitter physics world.
+/// A body with a position, orientation, velocity, and collision shapes.
 /// </summary>
 public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
 {
@@ -266,19 +260,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     private Real friction = (Real)0.2;
 
     /// <summary>
-    /// Returns a by-ref view of the unmanaged simulation state for this body.
+    /// Gets a reference to this body's low-level simulation data.
     /// </summary>
     /// <remarks>
-    /// Due to performance considerations, simulation data (position, velocity, etc.) is stored
-    /// in a contiguous block of unmanaged memory. This property provides direct access to that data.
-    /// <para>
-    /// <strong>Usage notes:</strong>
-    /// <list type="bullet">
-    /// <item><description>Prefer using <see cref="RigidBody"/> properties instead of accessing fields directly.</description></item>
-    /// <item><description>Do not cache the returned reference across simulation steps.</description></item>
-    /// <item><description>Modifying fields directly can break invariants (e.g., world-space inertia) unless you know what you're doing.</description></item>
-    /// </list>
-    /// </para>
+    /// Prefer the body's properties: direct field changes bypass collision bounds and other updates.
+    /// Obtain a fresh reference after stepping or changing the world: its storage can move.
+    /// Do not access it concurrently with <see cref="World.Step(Real, bool)"/>.
+    /// It is invalid after the body is removed.
     /// </remarks>
     public ref RigidBodyData Data
     {
@@ -320,21 +308,19 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public Island Island => InternalIsland;
 
     /// <summary>
-    /// Event triggered when a new arbiter is created, including for a CCD contact before the bodies overlap.
+    /// Raised when a new contact pair begins, including a predicted CCD contact before the bodies overlap.
     /// </summary>
     /// <remarks>
-    /// This event provides an <see cref="Arbiter"/> object which contains details about the collision.
-    /// Use this event to handle logic when contact tracking begins between two bodies.
+    /// The <see cref="Arbiter"/> contains the bodies and their contact points.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? BeginCollide;
 
     /// <summary>
-    /// Event triggered when an arbiter expires during a simulation step because contact has ended.
-    /// The reference to this arbiter becomes invalid after this call.
+    /// Raised during a simulation step when a contact pair ends.
+    /// Do not retain the arbiter after the callback; it may be reused for another pair.
     /// </summary>
     /// <remarks>
-    /// This event provides an <see cref="Arbiter"/> object which contains details about the collision that has ended.
     /// Explicit arbiter, body, or shape removal does not raise this event.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
@@ -369,12 +355,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public ReadOnlyHashSet<Arbiter> Contacts => new(InternalContacts);
 
     /// <summary>
-    /// Clears the cached contact manifold state for all current contacts of this body.
+    /// Discards saved contact points and impulses for this body.
     /// </summary>
     /// <remarks>
-    /// This discards cached contact points and accumulated impulses, forcing contact
-    /// manifolds to be rebuilt on the next simulation step. This is useful after
-    /// discontinuous user-driven transform changes such as teleports.
+    /// Contact points are rebuilt on the next simulation step. Use after changing low-level
+    /// body data directly, for example when restoring a saved state. Setting <see cref="Position"/>
+    /// or <see cref="Orientation"/> already clears the cache.
     /// Do not call this concurrently with <see cref="World.Step(Real, bool)"/>.
     /// </remarks>
     public void ClearContactCache()
@@ -412,10 +398,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets the coefficient of friction used for contact resolution.
     /// </summary>
     /// <remarks>
-    /// The friction coefficient determines the resistance to sliding motion.
-    /// Values typically range from 0 (no friction) upwards.
-    /// Higher values represent strong friction or adhesion effects.
-    /// Default value: 0.2.
+    /// Zero allows frictionless sliding; higher values resist sliding more strongly.
+    /// Default is 0.2.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is negative.</exception>
     public Real Friction
@@ -431,10 +415,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets the restitution (bounciness) of this object.
     /// </summary>
     /// <remarks>
-    /// The restitution value determines how much energy is retained after a collision,
-    /// with 0 representing an inelastic collision (no bounce) and 1 representing a perfectly elastic collision (full bounce).
-    /// Values between 0 and 1 create a partially elastic collision effect.
-    /// Default value: 0.0.
+    /// Ranges from 0 (no bounce, the default) to 1 (fully elastic bounce).
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is not between 0 and 1.</exception>
     public Real Restitution
@@ -509,14 +490,11 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Gets or sets the damping factors for linear and angular motion. A damping factor of 0 means the body is not
-    /// damped, while 1 brings the body to a halt immediately. Damping is applied when calling
-    /// <see cref="World.Step(Real, bool)"/>. Jitter multiplies the respective velocity each step by 1 minus the damping
-    /// factor. Note that the values are not scaled by time; a smaller time-step in <see cref="World.Step(Real, bool)"/>
-    /// results in increased damping.
+    /// Gets or sets how much linear and angular velocity is lost each simulation step.
+    /// Zero disables damping; one stops the body. Each step multiplies velocity by one minus the factor.
     /// </summary>
-    /// <remarks>The damping factors must be within the range [0, 1].
-    /// Default values: linear = 0.002, angular = 0.005.</remarks>
+    /// <remarks>Values must be within [0, 1]. Defaults are linear = 0.002 and angular = 0.005.
+    /// Damping is applied per step, so using shorter steps increases damping over the same elapsed time.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown if either the linear or angular damping value is less than 0 or greater than 1.
     /// </exception>
@@ -555,15 +533,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// <remarks>
     /// Each assignment replaces the previous restrictions. For example,
     /// <see cref="MotionAxes.PlaneXY"/> permits translation along X and Y and rotation about Z.
-    /// Restricted directions have zero effective inverse mass or inverse inertia in the solver.
-    /// Restrictions preserve the scalar <see cref="Mass"/> and body-space <see cref="InverseInertia"/>.
-    /// Changes to mass properties or shapes update the response while retaining the restrictions. Assigning
-    /// <see cref="MotionAxes.All"/> restores the response derived from those original properties.
+    /// Restrictions survive changes to shapes and mass properties; they do not change
+    /// <see cref="Mass"/> or <see cref="InverseInertia"/>. Use <see cref="MotionAxes.All"/> to remove them.
     /// <para>
-    /// Changes immediately clear prohibited velocity components, invalidate cached impulses,
-    /// and schedule activation. Restrictions also apply to kinematic velocity. They govern
-    /// simulated motion; position and orientation can still be assigned directly. Setting
-    /// <see cref="MotionAxes.None"/> does not change <see cref="MotionType"/>.
+    /// Changing the restrictions clears prohibited velocity components and saved solver impulses,
+    /// and schedules the body to wake. Restrictions apply to dynamic and kinematic motion,
+    /// but do not prevent direct changes to <see cref="Position"/> or <see cref="Orientation"/>.
+    /// Setting <see cref="MotionAxes.None"/> does not change <see cref="MotionType"/>.
     /// </para>
     /// <para>Do not change this property concurrently with <see cref="World.Step(Real, bool)"/>.</para>
     /// </remarks>
@@ -599,10 +575,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets the world-space position of the rigid body.
     /// </summary>
     /// <remarks>
-    /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
-    /// activates connected bodies. Any currently active
-    /// cached contacts involving this body are invalidated.
+    /// Changing this value updates collision bounds and discards saved contacts.
+    /// Dynamic and kinematic bodies are scheduled to wake on the next step; moving a static body
+    /// wakes the bodies connected to it.
     /// </remarks>
     public JVector Position
     {
@@ -619,10 +594,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets the world-space orientation of the rigid body.
     /// </summary>
     /// <remarks>
-    /// Setting this property updates the broadphase proxies for all attached shapes
-    /// and schedules a dynamic or kinematic body for activation on the next step. Moving a static body
-    /// activates connected bodies. Any currently active
-    /// cached contacts involving this body are invalidated.
+    /// Changing this value updates collision bounds and discards saved contacts.
+    /// Dynamic and kinematic bodies are scheduled to wake on the next step; moving a static body
+    /// wakes the bodies connected to it.
     /// </remarks>
     public JQuaternion Orientation
     {
@@ -862,7 +836,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     public bool AffectedByGravity { get; set; } = true;
 
     /// <summary>
-    /// A managed pointer to custom user data. This is not used by the engine.
+    /// Gets or sets application data associated with this body. The engine does not use this value.
     /// </summary>
     public object? Tag { get; set; }
 
@@ -872,13 +846,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets whether continuous collision detection (CCD) is enabled for this body.
     /// </summary>
     /// <remarks>
-    /// CCD helps prevent tunneling by predicting translation and rotation before
-    /// penetration occurs. Discovery repeats with the velocities produced by contact impulses and
-    /// follows bodies moved by those impulses. The number of passes is controlled by
-    /// <see cref="World.CcdIterations"/>. Joints are solved afterward by the regular solver;
-    /// a finite discovery budget cannot guarantee that every collision is found. Enabling this
-    /// increases collision detection and solver cost. Default is <see langword="false"/>.
-    /// Enable CCD on both bodies when both move quickly; an unflagged moving target can be missed.
+    /// CCD helps prevent fast-moving or rotating bodies from passing through other shapes.
+    /// It costs additional collision detection and solver work; enable it only where needed.
+    /// Default is <see langword="false"/>. Enable it on both bodies when both move quickly,
+    /// since a moving body without CCD may otherwise be missed.
+    /// <para>
+    /// <see cref="World.CcdIterations"/> controls the number of collision discovery passes.
+    /// A finite number of passes cannot guarantee that every collision is found.
+    /// </para>
     /// </remarks>
     public bool EnableCcd
     {
@@ -943,15 +918,13 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets or sets how the rigid body participates in the simulation.
     /// </summary>
     /// <remarks>
-    /// Changing this property has immediate side effects:
-    /// <list type="bullet">
-    /// <item><description>Switching to <see cref="MotionType.Static"/> zeroes velocities, removes connections, and deactivates the body.</description></item>
-    /// <item><description>Switching from <see cref="MotionType.Static"/> rebuilds connections from existing contacts.</description></item>
-    /// <item><description>Switching to <see cref="MotionType.Kinematic"/> preserves velocities. Set both velocities to zero if the body should become stationary.</description></item>
-    /// <item><description>Constraints remain registered and are suspended while neither connected body is dynamic.</description></item>
-    /// <item><description>Any queued forces, torques, and force-derived velocity changes are discarded.</description></item>
-    /// <item><description>Dynamic bodies use their mass and inertia; static and kinematic bodies are treated as having infinite mass by the solver.</description></item>
-    /// </list>
+    /// Switching to <see cref="MotionType.Static"/> clears velocities and schedules the body to sleep.
+    /// Switching to <see cref="MotionType.Kinematic"/> preserves velocities; set them to zero
+    /// if the body should stop. Every change discards pending forces, torques, and their velocity changes.
+    /// <para>
+    /// Constraints remain registered, but are suspended while neither connected body is dynamic.
+    /// Static and kinematic bodies do not respond to forces or impulses, regardless of their stored mass.
+    /// </para>
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is not a valid <see cref="MotionType"/>.</exception>
     public MotionType MotionType
@@ -1132,17 +1105,12 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     }
 
     /// <summary>
-    /// Enables the implicit gyroscopic–torque solver for this <see cref="RigidBody"/>.
+    /// Gets or sets whether gyroscopic forces affect the body's rotation.
     /// </summary>
     /// <remarks>
-    /// When <see langword="true"/> and <see cref="AllowedMotion"/> is
-    /// <see cref="MotionAxes.All"/>, every sub-step performs an extra Newton iteration
-    /// to solve <c>ω × (I ω)</c> implicitly. The solver is skipped while any axes are locked.
-    ///
-    /// The benefit becomes noticeable for bodies with a high inertia anisotropy or very fast
-    /// spin-rates. Typical examples are long, thin rods, spinning tops, propellers, and other objects
-    /// whose principal inertia values differ by an order of magnitude. In those cases the flag eliminates artificial
-    /// precession.
+    /// Includes the change in rotation caused by a spinning body's uneven mass distribution,
+    /// as seen with spinning tops or long rods. This adds solver work each substep.
+    /// It is only applied when <see cref="AllowedMotion"/> is <see cref="MotionAxes.All"/>.
     /// </remarks>
     /// <value>
     /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
@@ -1621,9 +1589,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Computes the inertia from all attached shapes, then uniformly scales it to match the specified mass.
     /// </summary>
     /// <remarks>
-    /// This is equivalent to calling <see cref="SetMassInertia()"/> and then scaling the resulting
-    /// inertia tensor so the body has the desired total mass. Use this when you want shape-derived
-    /// inertia proportions but a specific total mass (e.g., for gameplay tuning).
+    /// Preserves the relative mass contributions of the attached shapes while scaling the total
+    /// to <paramref name="mass"/>. If there are no shapes, uses an identity inertia tensor scaled by the mass.
     /// </remarks>
     /// <param name="mass">The desired total mass of the body. Must be positive.</param>
     /// <exception cref="ArgumentException">Thrown if the specified mass is zero or negative.</exception>

@@ -76,16 +76,12 @@ public struct ContactData
 #pragma warning restore CS0649
 
     /// <summary>
-    /// The low nibble indicates which contacts are currently intact (bit set) or broken (bit unset).
-    /// The next nibble indicates which contacts were intact or broken during the solving phase.
+    /// Bits 0–3 mark contacts that are currently valid; bits 4–7 mark contacts used in the last solve.
     /// </summary>
-    /// <example>
-    /// A sphere may slide down a ramp. Within one timestep Jitter may detect the collision, create the contact,
-    /// solve the contact, integrate velocities and positions and then consider the contact as broken, since the
-    /// movement orthogonal to the contact normal exceeds a threshold. This results in no intact contact before calling
-    /// <see cref="World.Step(Real, bool)"/> and no intact contact after the call. However, the corresponding bit for the
-    /// solver-phase will be set in this scenario.
-    /// </example>
+    /// <remarks>
+    /// A contact can be used by the solver and then break as the bodies move during the same step.
+    /// Its solver bit remains set even though its current-validity bit has been cleared.
+    /// </remarks>
     public uint UsageMask;
 
     /// <summary>Handle to the first body's simulation data.</summary>
@@ -226,8 +222,7 @@ public struct ContactData
     }
 
     /// <summary>
-    /// Gets a value indicating whether the current system supports hardware acceleration
-    /// for SIMD (Single Instruction, Multiple Data) operations.
+    /// Gets whether the contact solver can use hardware-accelerated vector operations.
     /// </summary>
     public static bool IsHardwareAccelerated => Vector.IsHardwareAccelerated;
 

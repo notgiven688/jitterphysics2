@@ -50,12 +50,12 @@ public sealed partial class World
     internal bool IsDiscoveringCcdContacts { get; private set; }
 
     /// <summary>
-    /// Number of CCD contact discovery passes before the regular solver. Default: 4.
+    /// Number of continuous collision detection (CCD) passes per step. Default is 4.
     /// </summary>
     /// <remarks>
-    /// Each pass predicts translation and rotation, then applies contact impulses so the next pass
-    /// can discover collisions caused by the changed motion. Bodies stay at their starting poses.
-    /// Higher values cost more sweeps and do not guarantee that every collision will be found.
+    /// More passes can catch additional collisions caused by earlier collision responses, at a higher
+    /// cost. No finite number guarantees that every collision is found. Applies to bodies with
+    /// <see cref="RigidBody.EnableCcd"/> enabled.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is less than one.</exception>
     public int CcdIterations

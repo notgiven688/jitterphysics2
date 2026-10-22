@@ -1,27 +1,23 @@
 # Arbiters
 
-Arbiters manage contact information between two rigid bodies.
-An arbiter is created when two shapes begin overlapping and is removed when they separate or when one of the involved bodies is removed from the world.
-Each arbiter can hold up to four cached contact points (see `ContactData`).
+An **arbiter** stores contact information for a pair of shapes. It holds up to four contact points and reuses them between simulation steps. CCD can create an arbiter before the shapes touch.
 
 ## Arbiters and shapes
 
-Arbiters are created between *shapes*, not bodies.
-Since a rigid body can have multiple shapes attached to it, a single pair of bodies may produce multiple arbiters—one for each pair of overlapping shapes.
+A body with several shapes can have several arbiters with the same opposing body, one for each shape pair in contact.
 
 For example, consider two bodies where body A has two box shapes and body B has one sphere shape.
 If both boxes overlap with the sphere, two separate arbiters are created: one for each box–sphere pair.
 
 > [!NOTE]
 > **One arbiter per shape pair**
-> Even if the contact manifold changes over time, the arbiter remains the same as long as the two shapes stay in proximity.
-> Contact points within the arbiter are cached and updated across frames.
+> The contact points can change while the arbiter remains the same. It lasts until contact ends or one of the shapes or bodies is removed.
 
 ## ArbiterKey
 
 Each arbiter is identified by an `ArbiterKey`, which is an ordered pair of `ulong` identifiers.
 For arbiters created by the engine, these identifiers are the `ShapeId` values of the two shapes involved.
-The ordering is canonical: the shape with the smaller ID is always first.
+The shape with the smaller ID comes first.
 
 ```cs
 public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable<ArbiterKey>
@@ -42,15 +38,12 @@ Through `arbiter.Handle.Data`, the underlying contact information can be read an
 ref ContactData data = ref arbiter.Handle.Data;
 ```
 
-The `ContactData` structure contains up to four contact slots.
-The `UsageMask` bitfield indicates which slots are active.
-It also stores the combined `Friction` and `Restitution` coefficients for the contact pair (derived from the maximum of the two bodies' values).
+`ContactData` has four contact slots. `UsageMask` identifies the valid slots. The structure also stores the pair's friction and restitution; each is the maximum of the two bodies' values.
 
 > [!CAUTION]
 > **Lifetime**
-> The contact data is only valid while the arbiter is registered with the world.
-> Do not cache references to `ContactData`.
-> Accessing it after the arbiter has been removed results in undefined behavior.
+> Obtain a fresh data reference each time you need one; do not retain it across simulation steps or world changes.
+> Do not use an arbiter after it is removed or after its `EndCollide` callback, because it may be reused for another collision.
 
 ## Collision events
 
@@ -64,12 +57,13 @@ body.BeginCollide += (Arbiter arb) =>
 
 body.EndCollide += (Arbiter arb) =>
 {
-    // Called when an arbiter involving this body is removed.
+    // Called when this contact pair expires during a simulation step.
 };
 ```
 
-These events can be used to inspect or modify contact properties.
-For example, overriding friction for a specific contact:
+`BeginCollide` can also occur for a predicted CCD contact before the shapes touch. `EndCollide` is raised when contact expires during a simulation step. Explicitly removing a body, shape, or arbiter does not raise `EndCollide`.
+
+Use these events to inspect contacts. For example, set friction when a contact pair begins:
 
 ```cs
 body.BeginCollide += (Arbiter arb) =>
@@ -111,8 +105,9 @@ Once an arbiter exists, contacts can be registered into it:
 world.RegisterContact(arbiter, point1, point2, normal);
 ```
 
-All vectors must be in world space, and the normal must be a unit vector.
-The `removeFlags` parameter can be used to exclude certain velocity components from the solver (e.g., `ContactData.SolveMode.Angular` for angular-only or linear-only responses).
+Supply both contact points in world space. The normal must be a unit vector pointing in the direction that pushes body 2 away from body 1.
+
+The optional `removeFlags` parameter disables parts of the response. For example, `ContactData.SolveMode.Angular` removes the angular response, leaving only linear motion.
 
 Alternatively, contacts can be registered using IDs directly, which also creates the arbiter if needed:
 
@@ -122,16 +117,12 @@ world.RegisterContact(id0, id1, body1, body2, point1, point2, normal);
 
 ### Contact caching
 
-An arbiter holds at most four contact points.
-When a new contact is registered, the arbiter decides how to incorporate it:
+An arbiter keeps at most four contact points. A new point close to an existing one refreshes that contact and reuses its saved impulse. Otherwise it fills a free slot. When all slots are full, the engine chooses points that cover the touching region well.
 
-1. **Slot available**: If fewer than four contacts are active, the new point is compared to existing contacts. If it is close enough to an existing contact (within a break threshold), it replaces that contact and inherits its accumulated impulse for warm-starting. Otherwise it is inserted into an empty slot as a new contact.
-2. **All slots full**: When all four slots are occupied, the algorithm evaluates which existing contact to replace. For each of the four candidates, it computes the area of the quadrilateral formed by the new point and the three remaining contacts. The candidate whose removal maximizes this area is replaced. This heuristic keeps contacts well-distributed across the contact patch, which produces the most stable contact manifold.
-
-Contacts that drift apart beyond a distance threshold during position integration are automatically removed from the manifold.
+Contacts are removed when the shapes separate too far or the points slide too far apart. Reusing nearby contacts gives the solver a useful starting point on the next step.
 
 ## Arbiter lifecycle
 
-1. **Creation**: When two shapes begin overlapping, the engine calls `GetOrCreateArbiter` using the shape IDs as keys. The `BeginCollide` event is raised on both bodies.
-2. **Update**: Each `world.Step`, contact positions are updated. Contacts that have separated beyond a threshold are removed from the arbiter. New contacts from ongoing collisions are added.
-3. **Removal**: When all contacts in an arbiter are broken and the shapes are no longer overlapping, the arbiter is removed. The `EndCollide` event is raised on both bodies. The arbiter is returned to an internal pool for reuse.
+1. **Creation:** the engine creates an arbiter for a new shape pair, including predicted CCD contacts, and raises `BeginCollide` on both bodies.
+2. **Update:** each step adds or refreshes contact points and removes points that have separated too far.
+3. **Removal:** once contact ends, the engine raises `EndCollide` on both bodies and removes the arbiter. The arbiter object may then be reused for another pair.

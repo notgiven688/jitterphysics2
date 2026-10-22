@@ -14,9 +14,9 @@ namespace Jitter2;
 public interface IDebugDrawable
 {
     /// <summary>
-    /// Passes an <see cref="IDebugDrawer"/> to draw basic debug information for the object.
+    /// Draws the object's debug visualization with the default settings.
     /// </summary>
-    /// <param name="drawer">The debug drawer used for rendering debug information.</param>
+    /// <param name="drawer">Receives the lines and triangles to draw.</param>
     public void DebugDraw(IDebugDrawer drawer);
 
     /// <summary>

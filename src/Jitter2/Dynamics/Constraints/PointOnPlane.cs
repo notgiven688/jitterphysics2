@@ -13,9 +13,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains a fixed point in the reference frame of one body to a plane that is fixed in
-/// the reference frame of another body. This constraint removes one degree of translational
-/// freedom if the limit is enforced.
+/// Limits an anchor on body 2 to a plane or a range of distances from a plane attached to body 1.
+/// Movement along the plane and relative rotation remain free.
 /// </summary>
 public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 {
@@ -76,9 +75,8 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     /// <param name="anchor2">Anchor point on body 2 constrained to the plane in world space.</param>
     /// <param name="limit">Distance limit from the plane.</param>
     /// <remarks>
-    /// Computes local anchor points and axis from the current body poses.
-    /// Equal or reversed distance limits fix the point at their midpoint. This includes
-    /// <see cref="LinearLimit.Fixed"/> and permits correction impulses in both directions.
+    /// Equal or reversed distance limits fix the distance at their midpoint.
+    /// Use <see cref="LinearLimit.Fixed"/> to keep the anchor on the plane.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">

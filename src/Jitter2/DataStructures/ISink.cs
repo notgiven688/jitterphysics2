@@ -10,8 +10,7 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Append-only target for values produced by an algorithm. Designed as a minimal,
-/// struct-friendly alternative to <see cref="ICollection{T}"/> for hot paths.
+/// Receives values produced by an algorithm, for example by adding them to a collection.
 /// </summary>
 /// <typeparam name="T">The type of value accepted by the sink.</typeparam>
 public interface ISink<T>

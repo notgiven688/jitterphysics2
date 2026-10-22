@@ -72,7 +72,7 @@ public interface IRayCastable
 }
 
 /// <summary>
-/// Represents an entity that supports closest-point distance queries against a support-mapped query shape.
+/// Supports closest-point distance queries against a convex shape.
 /// </summary>
 public interface IDistanceTestable
 {
@@ -101,7 +101,7 @@ public interface IDistanceTestable
 }
 
 /// <summary>
-/// Represents an entity that can be sweep-tested against a moving support-mapped query shape.
+/// Supports sweep tests against a moving convex shape.
 /// </summary>
 public interface ISweepTestable
 {

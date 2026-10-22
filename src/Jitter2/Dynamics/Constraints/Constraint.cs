@@ -234,7 +234,7 @@ public abstract class Constraint : IDebugDrawable
     public RigidBody Body2 { private set; get; } = null!;
 
     /// <summary>
-    /// A managed pointer to custom user data. This is not used by the engine.
+    /// Gets or sets application data associated with this constraint. The engine does not use this value.
     /// </summary>
     public object? Tag { get; set; }
 
@@ -287,21 +287,19 @@ public abstract class Constraint : IDebugDrawable
     }
 
     /// <summary>
-    /// Sets the solver dispatch id used by this instance. Override this in derived classes
-    /// to assign the correct registered solver pair. The id is later written into the
-    /// unmanaged header when the constraint is enabled.
+    /// Called when the world creates this constraint. Override to set <see cref="DispatchId"/>
+    /// to the ID returned by registering the constraint's solver methods.
     /// </summary>
     protected virtual void Create()
     {
     }
 
     /// <summary>
-    /// Resets the cached warm-start state used by the solver for this constraint.
+    /// Clears impulses saved from the previous solve, without changing constraint settings.
     /// </summary>
     /// <remarks>
-    /// This clears only persistent solver impulses. Constraint configuration remains unchanged.
-    /// Useful after restoring snapshots or other discontinuous state changes where preserving
-    /// warm-starting is undesirable.
+    /// Use after restoring a saved state or making a sudden change to the bodies,
+    /// when impulses from their previous state should no longer be reused.
     /// </remarks>
     public virtual void ResetWarmStart()
     {

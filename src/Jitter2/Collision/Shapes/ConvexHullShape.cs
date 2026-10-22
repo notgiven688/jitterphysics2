@@ -205,11 +205,8 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     /// <summary>
-    /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
+    /// Creates a copy that shares the original hull geometry.
     /// </summary>
-    /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the
-    /// original instance.
-    /// </returns>
     public ConvexHullShape Clone()
     {
         ConvexHullShape result = new()
@@ -228,7 +225,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     /// <summary>
-    /// Gets or sets the shift applied to the convex hull vertices.
+    /// Gets or sets the offset added to the hull vertices in local coordinates.
     /// </summary>
     public JVector Shift
     {

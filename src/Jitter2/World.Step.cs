@@ -131,13 +131,10 @@ public sealed partial class World
     /// Set to <see langword="false"/> for single-threaded execution (useful for debugging or platforms without threading).</param>
     /// <remarks>
     /// The step is divided into <see cref="SubstepCount"/> substeps for improved stability.
-    /// Each <see cref="World"/> must not be stepped or modified concurrently from multiple external threads.
-    /// Different worlds may be stepped concurrently with <paramref name="multiThread"/> set to <see langword="false"/>.
-    /// When <paramref name="multiThread"/> is <see langword="true"/>, the step uses a process-wide worker pool;
-    /// therefore multithreaded steps are internally serialized across all worlds.
-    /// Callbacks (<see cref="PreStep"/>, <see cref="PostStep"/>, etc.) are invoked on the calling thread.
-    /// When <paramref name="multiThread"/> is true, <see cref="BroadPhaseFilter"/> and <see cref="NarrowPhaseFilter"/>
-    /// may be called concurrently from worker threads.
+    /// Do not step or modify this world from another thread while this call is running.
+    /// Multithreaded steps in different worlds wait for each other; single-threaded steps can run concurrently.
+    /// Step and substep events run on the calling thread. Collision filters may run concurrently
+    /// on worker threads when <paramref name="multiThread"/> is true.
     /// </remarks>
     /// <exception cref="ArgumentException">Thrown if <paramref name="dt"/> is negative or not finite.</exception>
     public void Step(Real dt, bool multiThread = true)
@@ -299,7 +296,7 @@ public sealed partial class World
     }
 
     /// <summary>
-    /// Solves the existing contacts and constraints at the velocity level without advancing body transforms.
+    /// Adjusts velocities to satisfy existing contacts and constraints without moving the bodies.
     /// </summary>
     /// <param name="dt">The reference timestep in seconds used to scale bias and softness terms.</param>
     /// <param name="solverIterations">The number of solver iterations to execute.</param>
@@ -307,12 +304,9 @@ public sealed partial class World
     /// <param name="multiThread">If <see langword="true"/>, uses the internal thread pool for parallel execution.
     /// Multithreaded calls are internally serialized across all worlds because the worker pool is process-wide.</param>
     /// <remarks>
-    /// Unlike <see cref="Step"/>, this method does not perform broadphase or narrowphase collision detection,
-    /// does not integrate forces, and does not integrate positions or orientations. It only processes the
-    /// existing active contacts and constraints already present in the world at the velocity level.
-    /// This is primarily useful after loading a previously saved scene: restore the saved contacts and
-    /// constraints first, then call <see cref="Stabilize"/> to warm-start and solve the restored system
-    /// before resuming normal simulation with <see cref="Step"/>.
+    /// Useful after restoring a saved scene, before resuming <see cref="Step"/>.
+    /// Only active contacts and constraints are solved. No new collisions are detected,
+    /// forces are not applied, and positions and orientations are left unchanged.
     /// </remarks>
     /// <exception cref="ArgumentException">
     /// Thrown if <paramref name="dt"/> is negative or not finite, <paramref name="solverIterations"/>

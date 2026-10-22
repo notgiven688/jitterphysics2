@@ -13,8 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A motor constraint that drives relative translational velocity along an axis fixed
-/// in the reference frame of each body.
+/// Drives relative linear velocity along an axis attached to each body.
 /// </summary>
 public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 {
@@ -88,7 +87,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     /// <param name="axis1">Motor axis on the first body in world space.</param>
     /// <param name="axis2">Motor axis on the second body in world space.</param>
     /// <remarks>
-    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// The axes rotate with their respective bodies and are normalized internally.
     /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
     /// </remarks>
     /// <exception cref="ArgumentException">

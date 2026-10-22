@@ -12,7 +12,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Provides helper methods for calculating the properties of implicitly defined shapes.
+/// Approximates convex surfaces and calculates their bounds and mass properties.
 /// </summary>
 public static class ShapeHelper
 {
@@ -48,10 +48,17 @@ public static class ShapeHelper
         return capacity;
     }
 
-    /// <inheritdoc cref="Tessellate{TSupport}(in TSupport, int)"/>
-    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <summary>
+    /// Approximates a convex surface with triangles and appends them to the collection.
+    /// </summary>
+    /// <remarks>
+    /// The surface may contain folds, overlapping triangles, or inward-facing normals, even for a smooth shape.
+    /// Do not use these triangles to construct a <see cref="ConvexHullShape"/>.
+    /// Each additional subdivision level increases the work roughly fourfold.
+    /// </remarks>
+    /// <param name="support">The convex shape.</param>
     /// <param name="hullCollection">A collection to which the triangles are added.</param>
-    /// <param name="subdivisions">The recursion depth, including the final emission level.</param>
+    /// <param name="subdivisions">Sampling detail. Each level above 1 splits every triangle into four; default is 3.</param>
     public static void Tessellate<TSupport, TCollection>(in TSupport support, TCollection hullCollection, int subdivisions = 3)
         where TSupport : ISupportMappable
         where TCollection : class, ICollection<JTriangle>
@@ -61,26 +68,18 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Creates a tessellation of a shape defined by its support map and appends all generated triangles to the specified sink.
+    /// Approximates a convex surface with triangles and appends them to the sink.
     /// </summary>
     /// <typeparam name="TSupport">The support shape type.</typeparam>
     /// <typeparam name="TSink">The sink type receiving the generated triangles.</typeparam>
-    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="support">The convex shape.</param>
     /// <param name="hullSink">The sink receiving the generated triangles.</param>
-    /// <param name="subdivisions">The recursion depth, including the final emission level.
-    /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
+    /// <param name="subdivisions">Sampling detail. Each level above 1 splits every triangle into four;
+    /// the default of 3 splits twice.</param>
     /// <remarks>
-    /// <para>
-    /// <b>Warning:</b> The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.
-    /// </para>
-    /// <para>
-    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
-    /// pointing inward even for smooth convex shapes.
-    /// </para>
-    /// <para>
-    /// The time complexity is O(4^n), where n is the number of subdivisions.
-    /// </para>
+    /// The surface may contain folds, overlapping triangles, or inward-facing normals, even for a smooth shape.
+    /// Do not use these triangles to construct a <see cref="ConvexHullShape"/>.
+    /// Each additional subdivision level increases the work roughly fourfold.
     /// </remarks>
     public static void Tessellate<TSupport, TSink>(in TSupport support, ref TSink hullSink, int subdivisions = 3)
         where TSupport : ISupportMappable
@@ -136,23 +135,15 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Creates a tessellation of a shape defined by its support map.
+    /// Approximates a convex surface with triangles.
     /// </summary>
-    /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="subdivisions">The recursion depth, including the final emission level.
-    /// A value of 1 emits the initial faces; the default of 3 splits each face twice.</param>
+    /// <param name="support">The convex shape.</param>
+    /// <param name="subdivisions">Sampling detail. Each level above 1 splits every triangle into four;
+    /// the default of 3 splits twice.</param>
     /// <remarks>
-    /// <para>
-    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.
-    /// </para>
-    /// <para>
-    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
-    /// pointing inward even for smooth convex shapes.
-    /// </para>
-    /// <para>
-    /// The time complexity is O(4^n), where n is the number of subdivisions.
-    /// </para>
+    /// The surface may contain folds, overlapping triangles, or inward-facing normals, even for a smooth shape.
+    /// Do not use these triangles to construct a <see cref="ConvexHullShape"/>.
+    /// Each additional subdivision level increases the work roughly fourfold.
     /// </remarks>
     public static List<JTriangle> Tessellate<TSupport>(in TSupport support, int subdivisions = 3)
         where TSupport : ISupportMappable
@@ -163,23 +154,15 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Creates a tessellation of the convex hull of a given set of 3D vertices.
+    /// Approximates the surface of the convex hull of the supplied vertices with triangles.
     /// </summary>
     /// <param name="vertices">The vertices used to approximate the hull.</param>
     /// <param name="subdivisions">The number of subdivisions used for hull generation.</param>
     /// <returns>A list of triangles representing the convex hull.</returns>
     /// <remarks>
-    /// <para>
-    /// The tessellated hull may not be perfectly convex. It is therefore not suited to be used with
-    /// <see cref="ConvexHullShape"/>.
-    /// </para>
-    /// <para>
-    /// <b>Warning:</b> The tessellation may contain overlapping triangles and folds, with geometric normals
-    /// pointing inward even for smooth convex shapes.
-    /// </para>
-    /// <para>
-    /// The time complexity is O(4^n), where n is the number of subdivisions.
-    /// </para>
+    /// The surface may contain folds, overlapping triangles, or inward-facing normals, even for a smooth shape.
+    /// Do not use these triangles to construct a <see cref="ConvexHullShape"/>.
+    /// Each additional subdivision level increases the work roughly fourfold.
     /// </remarks>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="vertices"/> is empty.
@@ -221,7 +204,7 @@ public static class ShapeHelper
     /// <summary>
     /// Calculates the axis-aligned bounding box of a shape given its orientation and position.
     /// </summary>
-    /// <param name="support">The support map interface implemented by the shape.</param>
+    /// <param name="support">The convex shape.</param>
     /// <param name="orientation">The orientation of the shape.</param>
     /// <param name="position">The position of the shape.</param>
     /// <param name="box">The resulting bounding box.</param>
@@ -258,24 +241,14 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Approximates the convex hull of a given set of 3D vertices by sampling support points
-    /// generated through recursive subdivision of an icosahedron.
+    /// Samples points on the convex hull of the supplied vertices.
     /// </summary>
     /// <param name="vertices">The vertices used to approximate the hull.</param>
     /// <param name="subdivisions">
-    /// The number of recursive subdivisions applied to each icosahedron triangle.
-    /// Higher values produce more sampling directions and better coverage,
-    /// but increase computation. Default is 3.
+    /// Sampling detail. Higher values sample more directions, at roughly four times the work per level.
+    /// Default is 3.
     /// </param>
-    /// <returns>
-    /// A list of <see cref="JVector"/> points on the convex hull, sampled using directional support mapping from a
-    /// refined spherical distribution.
-    /// </returns>
-    /// <remarks>
-    /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
-    /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
-    /// mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.
-    /// </remarks>
+    /// <returns>Sampled surface points in local coordinates, with exact duplicates removed.</returns>
     /// <exception cref="ArgumentException">
     /// Thrown when <paramref name="vertices"/> is empty.
     /// </exception>
@@ -291,26 +264,14 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Samples a convex shape's hull by evaluating support directions generated through recursive subdivision of
-    /// an icosahedron.
+    /// Samples points on the surface of a convex shape.
     /// </summary>
-    /// <param name="support">
-    /// An object implementing <see cref="ISupportMappable"/>, representing a convex shape that can be queried
-    /// with directional support mapping.
-    /// </param>
+    /// <param name="support">The convex shape.</param>
     /// <param name="subdivisions">
-    /// The number of recursive subdivisions applied to each icosahedron triangle. Higher values produce more sampling
-    /// directions and better coverage, but increase computation. Default is 3.
+    /// Sampling detail. Higher values sample more directions, at roughly four times the work per level.
+    /// Default is 3.
     /// </param>
-    /// <returns>
-    /// A list of <see cref="JVector"/> points on the convex hull, sampled using directional support mapping from a
-    /// refined spherical distribution.
-    /// </returns>
-    /// <remarks>
-    /// This method begins with a regular icosahedron and recursively subdivides each triangular face into smaller
-    /// triangles, projecting new vertices onto the unit sphere. Each final vertex direction is passed to the support
-    /// mapper to generate a hull point. The time complexity is O(4^n), where n is the number of subdivisions.
-    /// </remarks>
+    /// <returns>Sampled surface points in local coordinates, with exact duplicates removed.</returns>
     public static List<JVector> SampleHull<TSupport>(in TSupport support, int subdivisions = 3)
         where TSupport : ISupportMappable
     {
@@ -377,25 +338,17 @@ public static class ShapeHelper
     }
 
     /// <summary>
-    /// Calculates the mass properties of an implicitly defined shape, assuming unit mass density.
+    /// Approximates a convex shape's mass, center of mass, and inertia at unit density.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// The shape is approximated via surface tessellation using the specified number of <paramref name="subdivisions"/>.
-    /// </para>
-    /// <para>
-    /// <b>Note on Reference Frame:</b>
-    /// The calculated <paramref name="inertia"/> tensor is expressed relative to the <b>coordinate system origin (0,0,0)</b>,
-    /// <em>not</em> the calculated <paramref name="centerOfMass"/>.
-    /// </para>
+    /// Uses a triangle approximation of the surface. The inertia is about the shape's local origin,
+    /// not its center of mass.
     /// </remarks>
-    /// <param name="support">The support map interface implemented by the shape.</param>
-    /// <param name="inertia">
-    /// Output parameter for the inertia tensor calculated relative to the <b>Origin (0,0,0)</b>.
-    /// </param>
-    /// <param name="centerOfMass">Output parameter for the calculated center of mass vector (relative to the Origin).</param>
-    /// <param name="mass">Output parameter for the calculated mass (Volume * density 1.0).</param>
-    /// <param name="subdivisions">The recursion depth for the surface tessellation (default 4).</param>
+    /// <param name="support">The convex shape.</param>
+    /// <param name="inertia">The inertia tensor about the local origin.</param>
+    /// <param name="centerOfMass">The center of mass in local coordinates.</param>
+    /// <param name="mass">The mass at unit density, equal to the shape's volume.</param>
+    /// <param name="subdivisions">Surface sampling detail; default is 4. Higher values increase accuracy and cost.</param>
     public static void CalculateMassInertia<TSupport>(in TSupport support, out JSymmetricMatrix inertia, out JVector centerOfMass,
         out Real mass, int subdivisions = 4)
         where TSupport : ISupportMappable

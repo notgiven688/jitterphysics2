@@ -87,9 +87,8 @@ public abstract class RigidBodyShape : Shape
     }
 
     /// <summary>
-    /// Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-    /// performance or accuracy. The default implementation relies on an approximation of the shape
-    /// constructed using the support map function.
+    /// Calculates the shape's mass, center of mass, and inertia at unit density.
+    /// The default implementation approximates the surface; overrides can provide exact mass properties.
     /// </summary>
     /// <remarks>
     /// The inertia tensor is computed relative to the coordinate system origin (0,0,0),
@@ -102,9 +101,7 @@ public abstract class RigidBodyShape : Shape
     }
 
     /// <summary>
-    /// Performs a local ray cast against the shape, checking if a ray originating from a specified point
-    /// and traveling in a specified direction intersects with the object. It does not take into account the
-    /// transformation of the associated rigid body.
+    /// Casts a ray against the shape in local coordinates, without applying the body's transform.
     /// </summary>
     /// <param name="origin">The starting point of the ray.</param>
     /// <param name="direction">

@@ -13,10 +13,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains the distance between a fixed point in the reference frame of one body and a fixed
-/// point in the reference frame of another body. A fixed limit removes one translational degree
-/// of freedom; a range limit acts when a boundary is reached. For a distance of zero, use the
-/// <see cref="BallSocket"/> constraint.
+/// Keeps the distance between two body anchors within a range, or at a fixed value.
+/// For a fixed distance of zero, use <see cref="BallSocket"/>.
 /// </summary>
 public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 {
@@ -83,7 +81,6 @@ public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
     /// <param name="limit">Allowed offsets from the initial distance between anchor points.
     /// For example, a limit of (-1, 1) allows the distance to change by at most one unit in either direction.</param>
     /// <remarks>
-    /// Computes local anchor points and the initial distance from current poses.
     /// Equal or reversed limits fix the distance offset at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>.
     /// </remarks>

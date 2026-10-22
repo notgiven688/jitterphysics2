@@ -9,7 +9,7 @@ using Jitter2.LinearMath;
 
 namespace Jitter2;
 
-/// <summary>Renderer-independent drawing geometry emitted through <see cref="IDebugDrawer"/>.</summary>
+/// <summary>Draws common debug shapes using an <see cref="IDebugDrawer"/>.</summary>
 /// <remarks>Directions must be finite and nonzero. Reference directions are projected onto the drawing plane.</remarks>
 public static class DebugDrawGeometry
 {
@@ -168,7 +168,7 @@ public static class DebugDrawGeometry
     public static void DrawArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color)
         => drawer.DrawArrow(origin, vector, color, DebugDrawSettings.Default);
 
-    /// <summary>Draws a wire arrow using the default arrowhead size, with every base vertex connected to the tip.</summary>
+    /// <summary>Draws a wire arrow using the default arrowhead size.</summary>
     /// <param name="segments">Number of segments around the head's base, from 3 to 4096. Default is 12.</param>
     public static void DrawWireArrow(this IDebugDrawer drawer, JVector origin, JVector vector, uint color,
         int segments = 12)

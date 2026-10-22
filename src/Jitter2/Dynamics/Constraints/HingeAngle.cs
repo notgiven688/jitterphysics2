@@ -13,8 +13,8 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains two bodies to rotate relative to each other around a single axis,
-/// removing two angular degrees of freedom. Optionally enforces angular limits.
+/// Allows relative rotation around a single axis, with optional angular limits.
+/// Does not keep the bodies at a shared anchor; use <see cref="HingeJoint"/> for a complete hinge.
 /// </summary>
 public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 {
@@ -72,7 +72,7 @@ public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
     /// <param name="axis">The hinge axis in world space around which rotation is allowed.</param>
     /// <param name="limit">The angular limits defining the allowed rotation range.</param>
     /// <remarks>
-    /// Stores the axis in the local frame of body 2 and records the initial relative orientation.
+    /// The axis rotates with body 2. The initial relative orientation defines zero rotation.
     /// Equal or reversed limits fix the hinge at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultAngularLimitSoftness"/>,
     /// <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultAngularLimitBias"/>.

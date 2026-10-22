@@ -52,8 +52,7 @@ public partial class DynamicTree
     public delegate bool FindNearestFilterPre(IDynamicTreeProxy proxy);
 
     /// <summary>
-    /// Convenience overload of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that queries with a <see cref="SupportPrimitives.Point"/>.
+    /// Finds the nearest accepted object to a point in world space.
     /// </summary>
     public bool FindNearestPoint(in JVector position,
         FindNearestFilterPre? pre, FindNearestFilterPost? post,
@@ -62,8 +61,7 @@ public partial class DynamicTree
             out proxy, out pointA, out pointB, out normal, out distance);
 
     /// <summary>
-    /// Convenience overload of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, Real, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that queries with a <see cref="SupportPrimitives.Point"/>.
+    /// Finds the nearest accepted object to a point in world space.
     /// </summary>
     public bool FindNearestPoint(in JVector position, Real maxDistance,
         FindNearestFilterPre? pre, FindNearestFilterPost? post,
@@ -72,8 +70,7 @@ public partial class DynamicTree
             out proxy, out pointA, out pointB, out normal, out distance);
 
     /// <summary>
-    /// Convenience overload of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that queries with a <see cref="SupportPrimitives.Sphere"/>.
+    /// Finds the nearest accepted object to a sphere.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
     /// <param name="position">The query shape position in world space.</param>
@@ -91,8 +88,7 @@ public partial class DynamicTree
             out proxy, out pointA, out pointB, out normal, out distance);
 
     /// <summary>
-    /// Convenience overload of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, Real, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that queries with a <see cref="SupportPrimitives.Sphere"/>.
+    /// Finds the nearest accepted object to a sphere.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
     /// <param name="position">The query shape position in world space.</param>
@@ -169,8 +165,7 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Bounded variant of <see cref="FindNearest{T}(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that limits the search to <paramref name="maxDistance"/>.
+    /// Finds the nearest accepted object within <paramref name="maxDistance"/> of the query shape.
     /// </summary>
     /// <param name="support">The query shape.</param>
     /// <param name="orientation">The query shape orientation in world space.</param>

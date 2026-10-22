@@ -56,19 +56,16 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Ray cast against the world.
+    /// Finds the nearest accepted ray hit in the tree.
     /// </summary>
     /// <param name="origin">Origin of the ray.</param>
     /// <param name="direction">Direction of the ray. Does not have to be normalized.</param>
     /// <param name="pre">Optional pre-filter that can skip candidate shapes.</param>
     /// <param name="post">Optional post-filter that can skip candidate results.</param>
     /// <param name="proxy">The shape which was hit.</param>
-    /// <param name="normal">
-    /// <param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.</param>
-    /// The surface normal at the hit point. <see cref="JVector.Zero"/> if the ray does not hit,
-    /// or if the ray origin is inside the hit shape. Use the return value to determine whether
-    /// a hit occurred; do not rely on this being non-zero as a hit indicator.
-    /// </param>
+    /// <param name="normal">The surface normal in world space. Zero if there is no hit or the origin is inside the shape.</param>
+    /// <param name="lambda">The hit parameter: <c>hitPoint = origin + lambda * direction</c>.
+    /// Zero if the origin is inside the hit shape.</param>
     /// <returns>True if the ray hits, false otherwise.</returns>
     public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
@@ -85,7 +82,10 @@ public partial class DynamicTree
         return hit;
     }
 
-    /// <inheritdoc cref="RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out Real)"/>
+    /// <summary>
+    /// Finds the nearest accepted ray hit with a hit parameter less than <paramref name="maxLambda"/>.
+    /// </summary>
+    /// <returns>True if an accepted hit is found; otherwise, false.</returns>
     /// <param name="origin">The ray origin in world space.</param>
     /// <param name="direction">The ray direction; it need not be normalized.</param>
     /// <param name="maxLambda">Exclusive upper bound for hit lambda; hits at this value are excluded.</param>
@@ -93,7 +93,7 @@ public partial class DynamicTree
     /// <param name="post">Optional filter applied after the exact test.</param>
     /// <param name="proxy">The accepted proxy, or null if none is found.</param>
     /// <param name="normal">The result normal in world space.</param>
-    /// <param name="lambda">The ray or sweep parameter of the result.</param>
+    /// <param name="lambda">The hit parameter: <c>hitPoint = origin + lambda * direction</c>.</param>
     public bool RayCast(JVector origin, JVector direction, Real maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
         out IDynamicTreeProxy? proxy, out JVector normal, out Real lambda)
     {

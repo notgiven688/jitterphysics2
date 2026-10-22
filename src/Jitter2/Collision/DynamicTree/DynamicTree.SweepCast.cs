@@ -52,8 +52,7 @@ public partial class DynamicTree
     public delegate bool SweepCastFilterPre(IDynamicTreeProxy proxy);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Sphere"/>.
+    /// Sweeps a sphere through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
     /// <param name="position">The query shape position in world space.</param>
@@ -72,8 +71,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, Real, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Sphere"/>.
+    /// Sweeps a sphere through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The sphere radius.</param>
     /// <param name="position">The query shape position in world space.</param>
@@ -93,8 +91,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Box"/>.
+    /// Sweeps a box through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="halfExtents">The half extents of the box.</param>
     /// <param name="orientation">The query shape orientation in world space.</param>
@@ -114,8 +111,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, Real, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Box"/>.
+    /// Sweeps a box through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="halfExtents">The half extents of the box.</param>
     /// <param name="orientation">The query shape orientation in world space.</param>
@@ -136,8 +132,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Capsule"/>.
+    /// Sweeps a capsule through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The capsule radius.</param>
     /// <param name="halfLength">Half the cylindrical section length of the capsule.</param>
@@ -158,8 +153,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, Real, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Capsule"/>.
+    /// Sweeps a capsule through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The capsule radius.</param>
     /// <param name="halfLength">Half the cylindrical section length of the capsule.</param>
@@ -181,8 +175,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Cylinder"/>.
+    /// Sweeps a cylinder through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The cylinder radius.</param>
     /// <param name="halfHeight">Half the cylinder height.</param>
@@ -203,8 +196,7 @@ public partial class DynamicTree
             post, out proxy, out pointA, out pointB, out normal, out lambda);
 
     /// <summary>
-    /// Convenience overload of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, Real, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that sweeps a <see cref="SupportPrimitives.Cylinder"/>.
+    /// Sweeps a cylinder through the tree and returns the first accepted hit.
     /// </summary>
     /// <param name="radius">The cylinder radius.</param>
     /// <param name="halfHeight">Half the cylinder height.</param>
@@ -281,8 +273,7 @@ public partial class DynamicTree
     }
 
     /// <summary>
-    /// Bounded variant of <see cref="SweepCast{T}(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out Real)"/>
-    /// that limits the sweep to <paramref name="maxLambda"/>.
+    /// Finds the first accepted sweep hit up to <paramref name="maxLambda"/>.
     /// </summary>
     /// <param name="support">The query shape.</param>
     /// <param name="orientation">The query shape orientation in world space.</param>

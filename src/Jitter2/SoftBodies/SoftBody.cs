@@ -53,7 +53,7 @@ public class SoftBody
     }
 
     /// <summary>
-    /// Adds a shape to the soft body and registers it with the world's dynamic tree.
+    /// Adds a shape to the soft body and includes it in collision detection.
     /// </summary>
     /// <param name="shape">The shape to add.</param>
     public void AddShape(SoftBodyShape shape)

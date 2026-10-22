@@ -58,8 +58,7 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Creates and returns all instances of type <see cref="TriangleShape"/>
-    /// for as given <see cref="TriangleMesh"/>.
+    /// Creates one shape for each triangle in the mesh.
     /// </summary>
     public static IEnumerable<TriangleShape> CreateAllShapes(TriangleMesh mesh)
     {

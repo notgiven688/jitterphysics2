@@ -56,7 +56,7 @@ public class CapsuleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the CapsuleShape class with the specified radius and length. The symmetry axis of the capsule is aligned along the Y-axis.
+    /// Creates a capsule with its symmetry axis along the local Y-axis.
     /// </summary>
     /// <param name="radius">The radius of the capsule.</param>
     /// <param name="length">The length of the cylindrical part of the capsule, excluding the half-spheres at both ends.</param>

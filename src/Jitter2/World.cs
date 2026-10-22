@@ -56,13 +56,12 @@ public sealed class SameBodyException : ArgumentException
 }
 
 /// <summary>
-/// Represents a simulation environment that holds and manages the state of all simulation objects.
+/// Contains the bodies, contacts, and constraints of a physics simulation.
 /// </summary>
 /// <remarks>
-/// A single <see cref="World"/> instance must not be stepped or modified concurrently from multiple
-/// external threads. Different worlds may be stepped concurrently with <c>multiThread: false</c>.
-/// Calls using <c>multiThread: true</c> are internally serialized across all worlds because they share
-/// the process-wide Jitter worker pool.
+/// Do not step or modify the same world from multiple threads at once. Different worlds can
+/// run concurrently with <c>multiThread: false</c>. Multithreaded steps share a worker pool
+/// and wait for each other, even when they belong to different worlds.
 /// </remarks>
 public sealed partial class World : IDisposable
 {
@@ -84,13 +83,12 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Provides access to objects in unmanaged memory. This operation is potentially unsafe.
+    /// Provides direct access to body, contact, and constraint data stored in unmanaged memory.
     /// </summary>
     /// <remarks>
-    /// The returned spans are backed by unmanaged memory and are only valid until the next
-    /// world modification that may resize internal buffers (e.g., creating or removing bodies,
-    /// constraints, contacts, or calling <see cref="Step"/>). Do not cache these spans.
-    /// Not safe to use concurrently with <see cref="Step(Real, bool)"/>.
+    /// Do not retain spans across calls to <see cref="Step(Real, bool)"/> or changes to bodies,
+    /// contacts, or constraints: these operations can move or resize the underlying storage.
+    /// Do not access the spans while the world is being stepped.
     /// </remarks>
     public readonly struct SpanData(World world)
     {
@@ -158,9 +156,8 @@ public sealed partial class World : IDisposable
     /// constraint solving, or integration is performed.
     /// </summary>
     /// <remarks>
-    /// This event is invoked once per call to <see cref="Step"/> and receives the full
-    /// step and substep timing information. It can be used to apply external forces, modify bodies,
-    /// or gather per-step diagnostics before the simulation advances.
+    /// Use this event to apply forces or update bodies before the simulation advances.
+    /// It runs once per call to <see cref="Step"/>, on the calling thread.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreStep;
@@ -170,9 +167,8 @@ public sealed partial class World : IDisposable
     /// and integration have completed.
     /// </summary>
     /// <remarks>
-    /// This event is invoked once per call to <see cref="Step"/> and receives the full
-    /// step and substep timing information. At this point, all body states represent the final results
-    /// of the step.
+    /// Body states contain the completed step's results. This event runs once per call
+    /// to <see cref="Step"/>, on the calling thread.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostStep;
@@ -181,13 +177,9 @@ public sealed partial class World : IDisposable
     /// Raised at the beginning of each substep during a simulation step.
     /// </summary>
     /// <remarks>
-    /// A simulation step may be divided into multiple substeps for stability.
-    /// This event is invoked once per substep and receives the full step and substep
-    /// timing information. It is called immediately before force integration
-    /// and constraint solving for the substep.
-    /// Do not perform topology-changing world modifications here (for example
-    /// adding or removing bodies, constraints, or contacts, or changing body
-    /// motion types).
+    /// Runs on the calling thread, before forces are applied and constraints are solved.
+    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
+    /// in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreSubStep;
@@ -196,42 +188,33 @@ public sealed partial class World : IDisposable
     /// Raised at the end of each substep during a simulation step.
     /// </summary>
     /// <remarks>
-    /// This event is invoked once per substep and receives the full step and substep timing information.
-    /// It is called after integration and constraint solving for the substep
-    /// have completed.
-    /// Do not perform topology-changing world modifications here (for example
-    /// adding or removing bodies, constraints, or contacts, or changing body
-    /// motion types).
+    /// Runs on the calling thread, after bodies have moved and constraints have been solved.
+    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
+    /// in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
 
     /// <summary>
-    /// Raised when inactive non-static bodies in a simulation island are activated during a simulation step.
+    /// Raised when a group of connected bodies wakes up.
     /// </summary>
     /// <remarks>
-    /// This event is invoked after the island's non-static bodies, contacts, constraints, and
-    /// shapes have been moved to the active partition. Island instances are internal
-    /// connectivity objects and may later split, merge, or be reused; copy any data you
-    /// need during the callback instead of caching the island reference.
-    /// Do not perform topology-changing world modifications here (for example
-    /// adding or removing bodies, constraints, or contacts, or changing body
-    /// motion types).
+    /// The bodies are already awake when this callback runs. Islands can split, merge, or be
+    /// reused, so copy any data you need instead of retaining the island reference.
+    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
+    /// in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Island>? IslandActivated;
 
     /// <summary>
-    /// Raised when active non-static bodies in a simulation island are deactivated during a simulation step.
+    /// Raised when a group of connected bodies goes to sleep.
     /// </summary>
     /// <remarks>
-    /// This event is invoked after the island's non-static bodies, contacts, constraints, and
-    /// shapes have been moved to the inactive partition. Island instances are internal
-    /// connectivity objects and may later split, merge, or be reused; copy any data you
-    /// need during the callback instead of caching the island reference.
-    /// Do not perform topology-changing world modifications here (for example
-    /// adding or removing bodies, constraints, or contacts, or changing body
-    /// motion types).
+    /// The bodies are already asleep when this callback runs. Islands can split, merge, or be
+    /// reused, so copy any data you need instead of retaining the island reference.
+    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
+    /// in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Island>? IslandDeactivated;
@@ -250,9 +233,13 @@ public sealed partial class World : IDisposable
     public event Action<Constraint>? ConstraintRemoved;
 
     /// <summary>
-    /// Grants access to objects residing in unmanaged memory. This operation can be potentially unsafe. Use
-    /// the corresponding managed properties where possible to mitigate risk.
+    /// Provides direct access to the world's unmanaged simulation data. Prefer the properties on
+    /// <see cref="RigidBody"/>, <see cref="Constraint"/>, and <see cref="Arbiter"/> for normal use.
     /// </summary>
+    /// <remarks>
+    /// Spans must not be retained across world changes or accessed while the world is being stepped.
+    /// See <see cref="SpanData"/> for lifetime restrictions.
+    /// </remarks>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public SpanData RawData
     {
@@ -322,13 +309,13 @@ public sealed partial class World : IDisposable
     public DynamicTree DynamicTree { get; }
 
     /// <summary>
-    /// A fixed body, pinned to the world. Can be used to create constraints with.
+    /// A static body to use as one endpoint when attaching a constraint to the world.
     /// </summary>
     public RigidBody NullBody { get; }
 
     /// <summary>
-    /// Specifies whether the deactivation mechanism of Jitter is enabled.
-    /// Does not activate inactive objects if set to false.
+    /// Whether bodies can go to sleep when they stop moving. Default is true.
+    /// Setting this to false does not wake bodies that are already asleep.
     /// </summary>
     public bool AllowDeactivation { get; set; } = true;
 
@@ -481,18 +468,11 @@ public sealed partial class World : IDisposable
     /// Reduces excess capacity in internal world storage.
     /// </summary>
     /// <remarks>
-    /// This method trims world-level sets, broadphase scratch storage, island pools, deterministic
-    /// solver scratch containers, and per-body/per-island collection backing storage.
-    ///
-    /// <para>
-    /// Existing bodies, constraints, contacts, and arbiters remain valid. Unmanaged simulation
-    /// buffers are not compacted by this method.
-    /// </para>
-    ///
-    /// <para>
-    /// Treat trimming as an exclusive maintenance operation. Do not call it concurrently with
-    /// <see cref="Step(Real, bool)"/>, contact registration, body/constraint/shape changes, or broadphase queries.
-    /// </para>
+    /// Use this after removing many objects to release unused collection capacity.
+    /// Existing bodies, constraints, contacts, and arbiters remain valid.
+    /// Unmanaged simulation buffers are not compacted.
+    /// <para>Do not use or modify this world from other threads while trimming, including queries
+    /// through <see cref="DynamicTree"/>.</para>
     /// </remarks>
     /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
     public void Trim()
@@ -805,12 +785,11 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Immediately deactivates the specified island and clears motion state for all bodies in it.
+    /// Immediately puts a group of connected bodies to sleep.
     /// </summary>
     /// <remarks>
-    /// This operation ignores <see cref="AllowDeactivation"/> and does not wait for the next
-    /// simulation step. Dynamic and kinematic bodies in the island have their linear and angular
-    /// velocities, queued forces, queued torques, and force-derived velocity deltas set to zero.
+    /// Works even when <see cref="AllowDeactivation"/> is false. Clears velocities and pending
+    /// forces and torques on the island's dynamic and kinematic bodies.
     /// </remarks>
     /// <param name="island">The island to deactivate.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="island"/> is <see langword="null"/>.</exception>

@@ -68,7 +68,7 @@ public struct JMatrix(
     }
 
     /// <summary>
-    /// Gets a reference to a column vector by index using unsafe pointer arithmetic.
+    /// Gets a writable reference to a column vector without checking the index.
     /// </summary>
     /// <param name="index">The zero-based index of the column (0, 1, or 2).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

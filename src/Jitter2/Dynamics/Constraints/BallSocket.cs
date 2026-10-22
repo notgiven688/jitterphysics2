@@ -13,8 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Implements a ball-and-socket joint that anchors a point on each body together,
-/// removing three translational degrees of freedom.
+/// Keeps an anchor point on each body together while allowing all relative rotation.
 /// </summary>
 public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 {
@@ -60,7 +59,6 @@ public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
     /// </summary>
     /// <param name="anchor">The anchor point in world space, shared by both bodies.</param>
     /// <remarks>
-    /// Computes local anchor points for each body from their current poses.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">

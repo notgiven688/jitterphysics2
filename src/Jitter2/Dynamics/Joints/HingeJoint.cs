@@ -10,8 +10,8 @@ using Jitter2.LinearMath;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constructs a hinge using a <see cref="HingeAngle"/> and a <see cref="BallSocket"/>,
-/// with an optional <see cref="AngularMotor"/> or <see cref="TwistServo"/>.
+/// Connects two bodies at a shared anchor, allowing relative rotation around one axis.
+/// Supports angular limits and an optional motor or servo.
 /// </summary>
 public class HingeJoint : Joint
 {
@@ -33,6 +33,9 @@ public class HingeJoint : Joint
     /// <summary>
     /// Initializes a new hinge joint.
     /// </summary>
+    /// <param name="hingeCenter">The shared anchor point in world space.</param>
+    /// <param name="hingeAxis">The rotation axis in world space.</param>
+    /// <param name="angle">Allowed rotation relative to the initial pose.</param>
     /// <param name="drive">The optional drive. Motor and servo torque default to zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">The drive selection is invalid.</exception>
     /// <exception cref="ArgumentException">

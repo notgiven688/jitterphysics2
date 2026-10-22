@@ -11,7 +11,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).
+/// Applies translation, rotation, scaling, or shear to another shape in local coordinates.
 /// </summary>
 public class TransformedShape : RigidBodyShape
 {
@@ -51,8 +51,7 @@ public class TransformedShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Constructs a transformed shape through an affine transformation defined by
-    /// a linear map and a translation.
+    /// Creates a shape with a linear transformation followed by a translation.
     /// </summary>
     /// <param name="shape">The shape to transform.</param>
     /// <param name="translation">The translation component of the affine transform.</param>
@@ -76,7 +75,7 @@ public class TransformedShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Constructs a transformed shape with a translation (offset), assuming identity rotation/scale.
+    /// Applies a translation to the shape, with no rotation or scaling.
     /// </summary>
     public TransformedShape(RigidBodyShape shape, JVector translation) :
         this(shape, translation, JMatrix.Identity)
@@ -84,8 +83,7 @@ public class TransformedShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Constructs a transformed shape with a linear transformation (rotation, scale, or shear),
-    /// assuming zero translation.
+    /// Creates a shape with rotation, scaling, or shear and no translation.
     /// </summary>
     public TransformedShape(RigidBodyShape shape, JMatrix transform) :
         this(shape, JVector.Zero, transform)

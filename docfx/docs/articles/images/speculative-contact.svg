@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="680" height="380" viewBox="0 0 680 380" role="img" aria-labelledby="title desc">
   <title id="title">A speculative contact changes the predicted motion</title>
-  <desc id="desc">The ball starts in the same place in both rows. Its original motion carries it through the wall. Reducing its velocity lets it reach the wall without crossing it. The lower row marks both speculative contact points at the sweep origin: one on the ball and one on the wall.</desc>
+  <desc id="desc">The sphere starts in the same place in both rows. Its original motion carries it through the wall. Reducing its velocity lets it reach the wall without crossing it. The lower row marks both speculative contact points at the sweep origin: one on the sphere and one on the wall.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="context-stroke"/></marker>
     <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2L2-2M0 8L8 0M6 10L10 6" stroke="#a7b2bf" stroke-width="1.5"/></pattern>

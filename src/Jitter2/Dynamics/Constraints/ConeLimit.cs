@@ -13,7 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Limits the relative tilt between two bodies, removing one angular degree of freedom when active.
+/// Limits the angle between axes attached to two bodies, leaving twist and translation free.
 /// </summary>
 /// <remarks>
 /// Fixed tilts must lie strictly between zero and pi. Use <see cref="HingeAngle"/> with
@@ -68,8 +68,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <param name="axisBody2">The reference axis for body 2 in world space.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// Each axis is stored as a local axis on the corresponding body. The constraint measures
-    /// the angle between these axes and restricts it to the given range.
+    /// Each axis rotates with its body. The angle between the axes is kept within the given range.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -112,8 +111,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <param name="axis">The reference axis in world space for the initial pose.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// Stores the axis as a local axis on each body. The constraint measures the angle between
-    /// these axes and restricts it to the given range.
+    /// The axes start aligned and then rotate with their respective bodies.
+    /// The angle between them is kept within the given range.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
