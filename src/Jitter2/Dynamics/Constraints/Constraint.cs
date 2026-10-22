@@ -251,6 +251,22 @@ public abstract class Constraint : IDebugDrawable
     /// </summary>
     public bool IsValid => !Handle.IsZero && !Body1.World.IsDisposed;
 
+    /// <summary>Returns a short description of the constraint's ID, connected bodies, and state.</summary>
+    public override string ToString() => FormatDescription(nameof(Constraint));
+
+    /// <summary>Formats the constraint's ID, connected body IDs, and state using the supplied name.</summary>
+    /// <param name="name">The constraint type name to display.</param>
+    protected string FormatDescription(string name)
+    {
+        if (Body1 == null || Body2 == null) return $"{name} {{ Uninitialized }}";
+
+        string bodies = $"Body1={Body1.RigidBodyId}, Body2={Body2.RigidBodyId}";
+        if (!IsValid) return $"{name} {{ {bodies}, Invalid }}";
+
+        ref ConstraintData data = ref Handle.Data;
+        return $"{name} {{ Id={data.ConstraintId}, {bodies}, IsEnabled={data.IsEnabled} }}";
+    }
+
     /// <summary>
     /// Gets a handle to the constraint data reinterpreted as <see cref="SmallConstraintData"/>.
     /// </summary>
@@ -281,8 +297,8 @@ public abstract class Constraint : IDebugDrawable
         if (Handle.IsZero)
         {
             throw new InvalidOperationException(
-                $"The constraint has not been created by the world. " +
-                $"Use World.CreateConstraint<{GetType().Name}>() to create constraints.");
+                "The constraint has not been created by the world. " +
+                "Use World.CreateConstraint<T>() to create constraints.");
         }
     }
 

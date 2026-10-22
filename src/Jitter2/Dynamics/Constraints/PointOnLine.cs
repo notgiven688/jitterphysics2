@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(PointOnLine));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct PointOnLineData
     {

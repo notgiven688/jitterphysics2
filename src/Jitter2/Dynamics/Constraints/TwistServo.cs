@@ -22,6 +22,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </remarks>
 public unsafe class TwistServo : Constraint<TwistServo.TwistServoData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(TwistServo));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct TwistServoData
     {

@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class HingeAngle : Constraint<HingeAngle.HingeAngleData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(HingeAngle));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct HingeAngleData
     {

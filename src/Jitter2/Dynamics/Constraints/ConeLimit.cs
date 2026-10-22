@@ -21,6 +21,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </remarks>
 public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(ConeLimit));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct ConeLimitData
     {

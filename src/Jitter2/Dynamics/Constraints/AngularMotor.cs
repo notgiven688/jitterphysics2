@@ -17,6 +17,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(AngularMotor));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct AngularMotorData
     {

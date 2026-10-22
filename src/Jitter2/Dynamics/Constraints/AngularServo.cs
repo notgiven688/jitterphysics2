@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class AngularServo : Constraint<AngularServo.AngularServoData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(AngularServo));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct AngularServoData
     {

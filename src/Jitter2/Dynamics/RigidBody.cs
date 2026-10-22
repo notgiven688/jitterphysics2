@@ -246,7 +246,7 @@ public struct RigidBodyData
 /// <summary>
 /// A body with a position, orientation, velocity, and collision shapes.
 /// </summary>
-public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
+public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattable
 {
     private JHandle<RigidBodyData> handle;
 
@@ -289,6 +289,33 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable
     /// Gets a value indicating whether the underlying rigid body data is still valid.
     /// </summary>
     public bool IsValid => !handle.IsZero && !World.IsDisposed;
+
+    /// <summary>Returns a short description of the body's ID, motion type, activation state, and position.</summary>
+    public override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the body's description using the specified position format and the current culture.</summary>
+    public string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the body's description using the specified position format and culture.</summary>
+    /// <param name="format">A numeric format for the position, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        string id = RigidBodyId.ToString(formatProvider);
+        if (!IsValid) return $"RigidBody {{ Id={id}, Invalid }}";
+
+        ref RigidBodyData data = ref Data;
+        string motionType = data.MotionType switch
+        {
+            MotionType.Dynamic => nameof(MotionType.Dynamic),
+            MotionType.Kinematic => nameof(MotionType.Kinematic),
+            MotionType.Static => nameof(MotionType.Static),
+            _ => "Unknown"
+        };
+
+        return $"RigidBody {{ Id={id}, MotionType={motionType}, IsActive={data.IsActive}, " +
+               $"Position={{{data.Position.ToString(format, formatProvider)}}} }}";
+    }
 
     // There is only one way to create a body: world.CreateRigidBody. There, we add an island
     // to the new body. This should never be null.

@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class DistanceLimit : Constraint<DistanceLimit.DistanceLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(DistanceLimit));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct DistanceLimitData
     {

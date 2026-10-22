@@ -17,6 +17,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(TwistAngle));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct TwistLimitData
     {

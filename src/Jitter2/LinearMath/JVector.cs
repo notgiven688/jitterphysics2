@@ -14,7 +14,7 @@ namespace Jitter2.LinearMath;
 /// Represents a three-dimensional vector with components of type <see cref="Real"/>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 3 * sizeof(Real))]
-public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
+public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>, IFormattable
 {
     internal static JVector InternalZero;
     internal static JVector Arbitrary;
@@ -101,9 +101,17 @@ public partial struct JVector(Real x, Real y, Real z) : IEquatable<JVector>
     /// <summary>
     /// Returns a string representation of the <see cref="JVector"/>.
     /// </summary>
-    public readonly override string ToString()
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the components using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the components using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}";
+        return $"X={X.ToString(format, formatProvider)}, Y={Y.ToString(format, formatProvider)}, Z={Z.ToString(format, formatProvider)}";
     }
 
     public readonly override bool Equals(object? obj)

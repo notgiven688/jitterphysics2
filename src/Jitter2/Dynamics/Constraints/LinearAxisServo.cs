@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class LinearAxisServo : Constraint<LinearAxisServo.LinearAxisServoData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(LinearAxisServo));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct LinearAxisServoData
     {

@@ -14,7 +14,7 @@ namespace Jitter2.LinearMath;
 /// Represents a triangle defined by three vertices.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 9 * sizeof(Real))]
-public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatable<JTriangle>
+public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatable<JTriangle>, IFormattable
 {
     /// <summary>
     /// Specifies the face culling mode for triangles based on their winding order.
@@ -116,9 +116,18 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
     /// <summary>
     /// Returns a string representation of the <see cref="JTriangle"/>.
     /// </summary>
-    public readonly override string ToString()
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the vertices using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the vertices using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"V0={{{V0}}}, V1={{{V1}}}, V2={{{V2}}}";
+        return $"V0={{{V0.ToString(format, formatProvider)}}}, V1={{{V1.ToString(format, formatProvider)}}}, " +
+               $"V2={{{V2.ToString(format, formatProvider)}}}";
     }
 
     /// <summary>

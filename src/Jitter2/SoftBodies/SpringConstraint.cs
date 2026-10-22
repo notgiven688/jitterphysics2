@@ -26,6 +26,9 @@ namespace Jitter2.SoftBodies;
 /// </remarks>
 public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(SpringConstraint));
+
     /// <summary>
     /// Low-level data for the spring constraint, stored in unmanaged memory.
     /// </summary>

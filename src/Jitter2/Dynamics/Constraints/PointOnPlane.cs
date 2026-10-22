@@ -18,6 +18,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(PointOnPlane));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct SliderData
     {

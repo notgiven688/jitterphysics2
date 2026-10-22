@@ -23,6 +23,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </remarks>
 public unsafe class EllipticalConeLimit : Constraint<EllipticalConeLimit.EllipticalConeLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(EllipticalConeLimit));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct EllipticalConeLimitData
     {

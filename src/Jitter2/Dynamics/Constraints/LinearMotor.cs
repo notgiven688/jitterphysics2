@@ -17,6 +17,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(LinearMotor));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct LinearMotorData
     {

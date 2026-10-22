@@ -17,6 +17,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class FixedAngle : Constraint<FixedAngle.FixedAngleData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(FixedAngle));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct FixedAngleData
     {

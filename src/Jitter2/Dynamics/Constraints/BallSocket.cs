@@ -17,6 +17,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 public unsafe class BallSocket : Constraint<BallSocket.BallSocketData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(BallSocket));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct BallSocketData
     {

@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
+using System;
 using Jitter2.LinearMath;
 
 namespace Jitter2.Dynamics.Constraints;
@@ -14,7 +15,7 @@ namespace Jitter2.Dynamics.Constraints;
 /// </summary>
 /// <param name="from">The minimum angle of the limit.</param>
 /// <param name="to">The maximum angle of the limit.</param>
-public struct AngularLimit(JAngle from, JAngle to)
+public struct AngularLimit(JAngle from, JAngle to) : IFormattable
 {
     /// <summary>
     /// Gets or sets the minimum angle of the limit.
@@ -25,6 +26,20 @@ public struct AngularLimit(JAngle from, JAngle to)
     /// Gets or sets the maximum angle of the limit.
     /// </summary>
     public JAngle To { get; set; } = to;
+
+    /// <summary>Returns a string representation of the endpoints in degrees.</summary>
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the endpoints in degrees using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the endpoints in degrees using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return $"From={From.Degree.ToString(format, formatProvider)} deg, To={To.Degree.ToString(format, formatProvider)} deg";
+    }
 
     /// <summary>
     /// A limit that allows full rotation (-π to +π radians).
@@ -67,7 +82,7 @@ public struct AngularLimit(JAngle from, JAngle to)
 /// </summary>
 /// <param name="from">The minimum distance of the limit.</param>
 /// <param name="to">The maximum distance of the limit.</param>
-public struct LinearLimit(Real from, Real to)
+public struct LinearLimit(Real from, Real to) : IFormattable
 {
     /// <summary>
     /// Gets or sets the minimum distance of the limit.
@@ -78,6 +93,20 @@ public struct LinearLimit(Real from, Real to)
     /// Gets or sets the maximum distance of the limit.
     /// </summary>
     public Real To { get; set; } = to;
+
+    /// <summary>Returns a string representation of the endpoints.</summary>
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the endpoints using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the endpoints using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return $"From={From.ToString(format, formatProvider)}, To={To.ToString(format, formatProvider)}";
+    }
 
     /// <summary>
     /// A limit that allows unrestricted movement (negative to positive infinity).
