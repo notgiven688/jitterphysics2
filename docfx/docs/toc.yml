@@ -23,6 +23,17 @@
           href: tutorials/teapots/hello-world.md
         - name: Aftermath
           href: tutorials/teapots/aftermath.md
+    - name: Hinge
+      expanded: true
+      items:
+        - name: Project Setup
+          href: tutorials/hinge/project-setup.md
+        - name: Hinge Joint
+          href: tutorials/hinge/hinge-joint.md
+        - name: Debug Drawer
+          href: tutorials/hinge/debug-drawer.md
+        - name: Hello World
+          href: tutorials/hinge/hello-world.md
 - name: Overview
   expanded: true
   items:

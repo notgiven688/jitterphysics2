@@ -10,6 +10,7 @@ Learn to build a simulation with Jitter2, then explore the engine's bodies, shap
 
 - **[Falling boxes](tutorials/boxes/project-setup.md)** — Set up a .NET project, add a render loop, and simulate your first falling boxes.
 - **[Teapot stacking](tutorials/teapots/project-setup.md)** — Load convex hulls and build a tower of teapots.
+- **[Two boxes and a hinge](tutorials/hinge/project-setup.md)** — Connect bodies with a joint and render the scene through Jitter's debug drawer.
 
 ## Understand the engine
 

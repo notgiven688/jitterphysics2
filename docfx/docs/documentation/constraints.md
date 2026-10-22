@@ -2,6 +2,8 @@
 
 Constraints limit how two bodies can move relative to each other. A joint combines constraints into a familiar connection, such as a hinge or a weld.
 
+For a complete example with two boxes, a hinge, and a debug drawer, follow the [Hinge tutorial](../tutorials/hinge/project-setup.md).
+
 ## Degrees of Freedom
 
 A body can move along three axes and rotate around three axes. These are its six **degrees of freedom** (DOF). A constraint restricts one or more of them.
