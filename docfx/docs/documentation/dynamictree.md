@@ -131,6 +131,21 @@ public bool SweepCastCylinder(float radius, float halfHeight, in JQuaternion ori
 
 Each has a bounded variant with a `maxLambda` parameter.
 
+For a shape that also rotates, use the overload with linear velocity, angular velocity, and a time limit:
+
+```cs
+bool hit = tree.SweepCast(shape, orientation, position,
+    velocity, angularVelocity, maximumTime,
+    pre, post,
+    out var proxy, out var pointA, out var pointB, out var normal, out var time);
+```
+
+`angularVelocity` is a world-space vector in radians per second. The shape rotates about `position` while that origin moves with `velocity`. `maximumTime` must be finite and nonnegative; the returned `time` is in seconds. Targets stay at their current poses during the query.
+
+This overload supports all built-in shapes. Custom proxies can participate by implementing `IAngularSweepTestable`. With zero angular velocity, it uses the existing translation-only cast.
+
+The filters work as above. Contact points still refer to the initial poses, so `pointA` must be rotated about the initial `position` as well as translated to reach the impact pose. `pointB` is already at the impact point because the target stays fixed. A numerical search that cannot finish does not report a hit.
+
 #### Find nearest query
 
 All proxies implementing `IDistanceTestable` can be distance-queried, including all shapes:

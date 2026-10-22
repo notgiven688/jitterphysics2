@@ -169,6 +169,24 @@ public abstract class RigidBodyShape : Shape
             out pointA, out pointB, out normal, out lambda);
     }
 
+    /// <inheritdoc />
+    [ReferenceFrame(ReferenceFrame.World)]
+    public sealed override bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position,
+        in JVector velocity, in JVector angularVelocity, Real extent, Real maximumTime,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+    {
+        if (RigidBody == null)
+            return base.Sweep(support, orientation, position, velocity, angularVelocity, extent, maximumTime,
+                out pointA, out pointB, out normal, out lambda);
+
+        ref var data = ref RigidBody.Data;
+        CalculateBoundingBox(data.Orientation, JVector.Zero, out JBoundingBox box);
+        Real targetExtent = JVector.Max(JVector.Abs(box.Min), JVector.Abs(box.Max)).Length();
+        return NarrowPhase.Sweep(support, this, orientation, data.Orientation, position, data.Position,
+            velocity, JVector.Zero, angularVelocity, JVector.Zero, extent, targetExtent, maximumTime,
+            out pointA, out pointB, out normal, out lambda) == NarrowPhase.SweepStatus.Hit;
+    }
+
     [ReferenceFrame(ReferenceFrame.World)]
     public sealed override bool Distance<T>(in T support, in JQuaternion orientation, in JVector position,
         out JVector pointA, out JVector pointB, out JVector normal, out Real distance)

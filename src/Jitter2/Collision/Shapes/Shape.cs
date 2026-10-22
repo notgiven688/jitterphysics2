@@ -18,7 +18,7 @@ namespace Jitter2.Collision.Shapes;
 /// A shape has no position or orientation of its own. Shapes attached to a <see cref="RigidBody"/>
 /// use that body's transform.
 /// </remarks>
-public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, IDebugDrawable
+public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, IAngularSweepTestable, IDistanceTestable, IDebugDrawable
 {
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
@@ -60,6 +60,20 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     public abstract bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position, in JVector sweep,
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
         where T : ISupportMappable;
+
+    /// <inheritdoc />
+    [ReferenceFrame(ReferenceFrame.World)]
+    public virtual bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position,
+        in JVector velocity, in JVector angularVelocity, Real extent, Real maximumTime,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+        where T : ISupportMappable
+    {
+        ShapeHelper.CalculateBoundingBox(this, JQuaternion.Identity, JVector.Zero, out JBoundingBox box);
+        Real targetExtent = JVector.Max(JVector.Abs(box.Min), JVector.Abs(box.Max)).Length();
+        return NarrowPhase.Sweep(support, this, orientation, JQuaternion.Identity, position, JVector.Zero,
+            velocity, JVector.Zero, angularVelocity, JVector.Zero, extent, targetExtent, maximumTime,
+            out pointA, out pointB, out normal, out lambda) == NarrowPhase.SweepStatus.Hit;
+    }
 
     [ReferenceFrame(ReferenceFrame.World)]
     public abstract bool Distance<T>(in T support, in JQuaternion orientation, in JVector position,
