@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Unmanaged_MemoryHelper" data-uid="Jitter2.Unmanaged.MemoryHelper" class="text-break">
-Class MemoryHelper  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L27"><i class="bi bi-code-slash"></i></a>
+Class MemoryHelper  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -149,13 +149,11 @@ Class MemoryHelper  <a class="header-action link-secondary" title="View source" 
 
   <h2 id="Jitter2_Unmanaged_MemoryHelper_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-<b>Safety:</b> All pointers returned by allocation methods must be freed using
-the corresponding <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_Free_System_Void__">Free(void*)</a> or <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_AlignedFree_System_Void__">AlignedFree(void*)</a> method.
-Failure to do so will result in memory leaks.
+Free each allocation with the matching <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_Free_System_Void__">Free(void*)</a> or <a class="xref" href="Jitter2.Unmanaged.MemoryHelper.html#Jitter2_Unmanaged_MemoryHelper_AlignedFree_System_Void__">AlignedFree(void*)</a> method.
 </p>
 <p>
-<b>Threading:</b> These methods are thread-safe, but the caller is responsible
-for synchronizing access to the allocated memory.
+Allocation and deallocation are thread-safe. Synchronizing access to the allocated memory
+is the caller's responsibility.
 </p>
 </div>
 
@@ -168,7 +166,7 @@ for synchronizing access to the allocated memory.
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_AlignedAllocateHeap_System_Int32_System_Int32_" data-uid="Jitter2.Unmanaged.MemoryHelper.AlignedAllocateHeap(System.Int32,System.Int32)">
   AlignedAllocateHeap(int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Allocates a block of aligned unmanaged memory of the specified length in bytes.</p>
@@ -220,7 +218,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_AlignedAllocateHeap__1_System_Int32_System_Int32_" data-uid="Jitter2.Unmanaged.MemoryHelper.AlignedAllocateHeap``1(System.Int32,System.Int32)">
   AlignedAllocateHeap&lt;T&gt;(int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Allocates a block of aligned unmanaged memory for an array of the specified type.</p>
@@ -281,7 +279,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_AlignedFree_System_Void__" data-uid="Jitter2.Unmanaged.MemoryHelper.AlignedFree(System.Void*)">
   AlignedFree(void*)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L198"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Frees a block of aligned unmanaged memory previously allocated.</p>
@@ -314,7 +312,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_AllocateHeap_System_Int32_" data-uid="Jitter2.Unmanaged.MemoryHelper.AllocateHeap(System.Int32)">
   AllocateHeap(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L145"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Allocates a block of unmanaged memory of the specified length in bytes.</p>
@@ -363,7 +361,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_AllocateHeap__1_System_Int32_" data-uid="Jitter2.Unmanaged.MemoryHelper.AllocateHeap``1(System.Int32)">
   AllocateHeap&lt;T&gt;(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Allocates a block of unmanaged memory for an array of the specified type.</p>
@@ -421,7 +419,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_Free_System_Void__" data-uid="Jitter2.Unmanaged.MemoryHelper.Free(System.Void*)">
   Free(void*)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L175"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Frees a block of unmanaged memory previously allocated.</p>
@@ -454,7 +452,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_Free__1___0__" data-uid="Jitter2.Unmanaged.MemoryHelper.Free``1(``0*)">
   Free&lt;T&gt;(T*)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L130"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Frees a block of unmanaged memory previously allocated for an array of the specified type.</p>
@@ -493,7 +491,7 @@ The memory is not zero-initialized.</p>
 
   <h3 id="Jitter2_Unmanaged_MemoryHelper_MemSet_System_Void__System_Int32_" data-uid="Jitter2.Unmanaged.MemoryHelper.MemSet(System.Void*,System.Int32)">
   MemSet(void*, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L206"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L189"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Zeros out unmanaged memory.</p>
@@ -535,7 +533,7 @@ The memory is not zero-initialized.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L27" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/MemoryHelper.cs/#L25" class="edit-link">Edit this page</a>
         </div>
 
 

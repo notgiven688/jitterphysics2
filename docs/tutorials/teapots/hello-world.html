@@ -95,11 +95,8 @@ var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 // use these points to create a PointCloudShape.
 var pointCloudShape = new PointCloudShape(vertices);
 </code></pre>
-<p>However, we need to be a bit careful here.
-If we add this shape to a rigid body as-is, the body may not behave as intuitively expected.
-This is because the center of mass of a rigid body is always located at <code>(0, 0, 0)</code> in its local coordinate frame.</p>
-<p>If you open <code>teapot.obj</code> in a model editor, you'll notice that the model is not centered around the origin.
-To correct this, we either need to center the model manually in a model editor—or, more conveniently, use the <code>Shift</code> property of <code>PointCloudShape</code> to align the center of mass with the origin:</p>
+<p>Jitter expects the body's center of mass at its local origin, <code>(0, 0, 0)</code>. The teapot model is offset from that origin, so using it unchanged would make the body rotate around the wrong point.</p>
+<p>Use <code>PointCloudShape.Shift</code> to move the shape's center of mass to the origin:</p>
 <pre><code class="lang-cs">// find a few points on the convex hull of the teapot.
 var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 
@@ -118,17 +115,16 @@ rigidBody.AddShape(pointCloudShape);
 </code></pre>
 <div class="WARNING">
 <h5>Warning</h5>
-<p>The shift applied to the shape must also be taken into account when rendering the model, to ensure it aligns visually with the simulation.</p>
+<p>Apply the same shift when drawing the model, so the visible teapot matches its collision shape. The complete example below does this.</p>
 </div>
 <h4 id="creating-multiple-instances-of-the-same-shape">Creating Multiple Instances of the Same Shape</h4>
-<p>In Jitter, it is not valid to add the same shape instance to multiple rigid bodies.
-To create additional instances of a shape, use the <code>Clone()</code> method of <code>PointCloudShape</code>.</p>
-<p>This method creates a new shape object that shares the underlying data structure, saving both memory and computation time:</p>
+<p>Each body needs its own shape instance. Use <code>PointCloudShape.Clone()</code> to create another instance that shares the same vertex data:</p>
 <pre><code class="lang-cs">var shapeInstance1 = new PointCloudShape(vertices);
 var shapeInstance2 = shapeInstance1.Clone(); // Safe to use in a second body
 </code></pre>
-<p>This approach is especially useful when many bodies share the same geometry, such as multiple identical props or characters in a simulation.</p>
+<p>This lets us reuse the sampled vertices for every teapot.</p>
 <h3 id="putting-it-all-together">Putting it all together</h3>
+<p>Replace the contents of <code>Program.cs</code> with this complete example:</p>
 <pre><code class="lang-cs">using System.Numerics;
 using Raylib_cs;
 using Jitter2;

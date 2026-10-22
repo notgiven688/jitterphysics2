@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct Parallel.Batch | Jitter2 ">
       
-      <meta name="description" content="Represents a half-open index range processed by a parallel batch. This struct is used by  to split a for-loop into worker tasks.">
+      <meta name="description" content="An index range that includes  and excludes .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Parallelization_Parallel_Batch" data-uid="Jitter2.Parallelization.Parallel.Batch" class="text-break">
-Struct Parallel.Batch  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L24"><i class="bi bi-code-slash"></i></a>
+Struct Parallel.Batch  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,7 @@ Struct Parallel.Batch  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a half-open index range processed by a parallel batch.
-This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
+  <div class="markdown summary"><p>An index range that includes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_Start">Start</a> and excludes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_End">End</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -145,11 +144,10 @@ This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.ht
 
   <h3 id="Jitter2_Parallelization_Parallel_Batch__ctor_System_Int32_System_Int32_" data-uid="Jitter2.Parallelization.Parallel.Batch.#ctor(System.Int32,System.Int32)">
   Batch(int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Represents a half-open index range processed by a parallel batch.
-This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
+  <div class="markdown level1 summary"><p>An index range that includes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_Start">Start</a> and excludes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_End">End</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -183,7 +181,7 @@ This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.ht
 
   <h3 id="Jitter2_Parallelization_Parallel_Batch_End" data-uid="Jitter2.Parallelization.Parallel.Batch.End">
   End
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The exclusive end index of the batch.</p>
@@ -214,7 +212,7 @@ This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.ht
 
   <h3 id="Jitter2_Parallelization_Parallel_Batch_Start" data-uid="Jitter2.Parallelization.Parallel.Batch.Start">
   Start
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The inclusive start index of the batch.</p>
@@ -250,7 +248,7 @@ This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.ht
 
   <h3 id="Jitter2_Parallelization_Parallel_Batch_ToString" data-uid="Jitter2.Parallelization.Parallel.Batch.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a string representation of the batch.</p>
@@ -282,7 +280,7 @@ This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.ht
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L24" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L20" class="edit-link">Edit this page</a>
         </div>
 
 

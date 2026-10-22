@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ParallelExtensions | Jitter2 ">
       
-      <meta name="description" content="Provides parallel batch processing extension methods for collections used by the physics engine.">
+      <meta name="description" content="Divides collections into index ranges for parallel processing.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Parallelization_ParallelExtensions" data-uid="Jitter2.Parallelization.ParallelExtensions" class="text-break">
-Class ParallelExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L20"><i class="bi bi-code-slash"></i></a>
+Class ParallelExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class ParallelExtensions  <a class="header-action link-secondary" title="View so
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides parallel batch processing extension methods for collections used by the physics engine.</p>
+  <div class="markdown summary"><p>Divides collections into index ranges for parallel processing.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -148,8 +148,9 @@ Class ParallelExtensions  <a class="header-action link-secondary" title="View so
 
 
   <h2 id="Jitter2_Parallelization_ParallelExtensions_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>These methods divide collections into batches and distribute them across worker threads.
-The batch count is determined by the task threshold and available threads.</p>
+  <div class="markdown level0 remarks"><p>Callbacks may run concurrently. With <code>execute: true</code>, each method waits for completion;
+otherwise, call <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> on the shared pool to run the queued batches.
+Do not queue batches concurrently or change a collection while its batches are being processed.</p>
 </div>
 
 
@@ -161,7 +162,7 @@ The batch count is determined by the task threshold and available threads.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch_System_Array_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch(System.Array,System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch(Array, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes array elements in parallel batches.</p>
@@ -210,7 +211,7 @@ actual batches can be smaller or larger.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch__1_Jitter2_DataStructures_ReadOnlyPartitionedSet___0__System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch``1(Jitter2.DataStructures.ReadOnlyPartitionedSet{``0},System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch&lt;T&gt;(ReadOnlyPartitionedSet&lt;T&gt;, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes active elements of a <a class="xref" href="Jitter2.DataStructures.ReadOnlyPartitionedSet-1.html">ReadOnlyPartitionedSet&lt;T&gt;</a> in parallel batches.</p>
@@ -265,7 +266,7 @@ actual batches can be smaller or larger.</p>
 
   <h3 id="Jitter2_Parallelization_ParallelExtensions_ParallelForBatch__1_Jitter2_Unmanaged_PartitionedBuffer___0__System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.ParallelExtensions.ParallelForBatch``1(Jitter2.Unmanaged.PartitionedBuffer{``0},System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ParallelForBatch&lt;T&gt;(PartitionedBuffer&lt;T&gt;, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Processes active elements of a <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html">PartitionedBuffer&lt;T&gt;</a> in parallel batches.</p>
@@ -320,7 +321,7 @@ actual batches can be smaller or larger.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L20" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ParallelExtensions.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
 

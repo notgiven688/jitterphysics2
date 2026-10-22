@@ -485,7 +485,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_DispatchId" data-uid="Jitter2.Dynamics.Constraints.Constraint.DispatchId">
   DispatchId
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L310"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L308"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -548,7 +548,7 @@ Class Constraint  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_IsEnabled" data-uid="Jitter2.Dynamics.Constraints.Constraint.IsEnabled">
   IsEnabled
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L334"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L332"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets whether this constraint is enabled.</p>
@@ -684,7 +684,7 @@ Changing body motion types or activation states does not change this property.</
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L239"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>A managed pointer to custom user data. This is not used by the engine.</p>
+  <div class="markdown level1 summary"><p>Gets or sets application data associated with this constraint. The engine does not use this value.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -756,12 +756,11 @@ Changing body motion types or activation states does not change this property.</
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_Create" data-uid="Jitter2.Dynamics.Constraints.Constraint.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L294"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L293"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
-to assign the correct registered solver pair. The id is later written into the
-unmanaged header when the constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
+to the ID returned by registering the constraint's solver methods.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -785,7 +784,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L379"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -824,7 +823,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Dynamics.Constraints.Constraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L390"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L388"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws this constraint using the supplied visualization settings.
@@ -859,7 +858,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_GetDebugDrawOrigin_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(Jitter2.DebugDrawSettings@)">
   GetDebugDrawOrigin(in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L393"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L391"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the display origin for an angular constraint, keeping world-relative guides near body 2.</p>
@@ -896,7 +895,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_RegisterFullConstraint___" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterFullConstraint(,)">
   RegisterFullConstraint(delegate*&lt;ref ConstraintData, in TimeStep, void&gt;, delegate*&lt;ref ConstraintData, in TimeStep, void&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L312"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L310"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -934,7 +933,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_RegisterSmallConstraint___" data-uid="Jitter2.Dynamics.Constraints.Constraint.RegisterSmallConstraint(,)">
   RegisterSmallConstraint(delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;, delegate*&lt;ref SmallConstraintData, in TimeStep, void&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L319"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L317"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -972,10 +971,10 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_Constraint_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.Constraint.ResetWarmStart">
   ResetWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L306"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Constraint.cs/#L304"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+  <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -992,9 +991,8 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_Constraint_ResetWarmStart_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
-Useful after restoring snapshots or other discontinuous state changes where preserving
-warm-starting is undesirable.</p>
+  <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
+when impulses from their previous state should no longer be reused.</p>
 </div>
 
 

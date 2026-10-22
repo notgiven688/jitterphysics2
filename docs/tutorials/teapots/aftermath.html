@@ -88,10 +88,9 @@
 <h1 id="aftermath">Aftermath</h1>
 
 <h3 id="pointcloudshape-vs-convexhullshape"><code>PointCloudShape</code> vs <code>ConvexHullShape</code></h3>
-<p>In this example, we used the <code>PointCloudShape</code> to simulate a rigid body with a convex hull. As the name suggests, this shape only requires a set of points — they don't need to lie exactly on a convex surface. By design, Jitter treats the convex hull of these points as the actual shape for collision detection.</p>
-<p>Although the algorithm used here is brute-force, it can be extremely fast: the data is stored in a linear memory layout, and SIMD instructions are used to accelerate the support function. Because of this, <code>PointCloudShape</code> is usually the best choice for quickly and efficiently adding simple convex geometry to your simulation.</p>
-<p>The <code>ConvexHullShape</code>, on the other hand, is intended for more complex and detailed convex models. Unlike <code>PointCloudShape</code>, this shape requires a precomputed convex hull provided as a list of triangles (<code>List&lt;JTriangle&gt;</code>). Jitter does not generate this for you — you'll need to use third-party tools like Blender or dedicated convex hull libraries. The input mesh must be strictly convex for collision detection to work correctly.</p>
-<p>Internally, <code>ConvexHullShape</code> uses a hill-climbing algorithm to compute the support function. While this approach is algorithmically more efficient than brute-force, the performance benefits only become noticeable with larger shapes. As a general rule of thumb, <code>ConvexHullShape</code> starts to outperform <code>PointCloudShape</code> at around 300 vertices or more.</p>
+<p>The example uses <code>PointCloudShape</code>, which builds a convex collision shape from a set of points. Interior points are allowed, but do not change the shape.</p>
+<p><code>PointCloudShape</code> is a good starting point for simple convex geometry. For more detailed models, <code>ConvexHullShape</code> can be faster. It requires triangles forming a valid, closed convex hull, which you must prepare with a tool such as Blender or a convex hull library. Jitter does not generate that mesh for you.</p>
+<p>As a rough guide, consider <code>ConvexHullShape</code> when the geometry has around 300 vertices or more. The crossover depends on the model, so measure your scene if collision performance matters.</p>
 
 </article>
 

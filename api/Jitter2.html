@@ -97,7 +97,7 @@ Classes
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.CallbackThreadAttribute.html">CallbackThreadAttribute</a></dt>
       <dd><p>Indicates the thread context in which a callback or event is expected to be invoked.
-This attribute is primarily informational and used for documentation purposes.</p>
+Documents the calling convention; it does not enforce thread safety.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -107,7 +107,7 @@ This attribute is primarily informational and used for documentation purposes.</
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.DebugDrawGeometry.html">DebugDrawGeometry</a></dt>
-      <dd><p>Renderer-independent drawing geometry emitted through <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a>.</p>
+      <dd><p>Draws common debug shapes using an <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -124,7 +124,7 @@ by defining the <code>USE_DOUBLE_PRECISION</code> symbol.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.ReferenceFrameAttribute.html">ReferenceFrameAttribute</a></dt>
-      <dd><p>Attribute to specify the reference frame of a member.</p>
+      <dd><p>Documents the coordinate system used by a member.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -134,7 +134,7 @@ by defining the <code>USE_DOUBLE_PRECISION</code> symbol.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.World.html">World</a></dt>
-      <dd><p>Represents a simulation environment that holds and manages the state of all simulation objects.</p>
+      <dd><p>Contains the bodies, contacts, and constraints of a physics simulation.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -158,7 +158,7 @@ A default-initialized value uses the same settings as <a class="xref" href="Jitt
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.World.SpanData.html">World.SpanData</a></dt>
-      <dd><p>Provides access to objects in unmanaged memory. This operation is potentially unsafe.</p>
+      <dd><p>Provides direct access to body, contact, and constraint data stored in unmanaged memory.</p>
 </dd>
     </dl>
     <h3 id="interfaces">
@@ -184,7 +184,7 @@ Enums
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.ReferenceFrame.html">ReferenceFrame</a></dt>
-      <dd><p>Enum representing reference frames.</p>
+      <dd><p>The coordinate system in which a value is expressed.</p>
 </dd>
     </dl>
     <dl class="jumplist">

@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Unmanaged_JHandle_1" data-uid="Jitter2.Unmanaged.JHandle`1" class="text-break">
-Struct JHandle&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L29"><i class="bi bi-code-slash"></i></a>
+Struct JHandle&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -146,12 +146,11 @@ The handle remains stable even when the underlying memory is resized.</p>
 
   <h2 id="Jitter2_Unmanaged_JHandle_1_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-<b>Validity:</b> A handle is valid only while the owning <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html">PartitionedBuffer&lt;T&gt;</a>
-exists and the element has not been freed via <a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html#Jitter2_Unmanaged_PartitionedBuffer_1_Free_Jitter2_Unmanaged_JHandle__0__">Free(JHandle&lt;T&gt;)</a>.
+A handle is valid until its element is freed or its buffer is disposed.
 </p>
 <p>
-<b>Do not cache</b> the <a class="xref" href="Jitter2.Unmanaged.JHandle-1.html#Jitter2_Unmanaged_JHandle_1_Data">Data</a> reference across operations that may resize
-the buffer. Use the handle to obtain a fresh reference when needed.
+Buffer changes can move elements in memory. Keep the handle, and obtain a fresh
+<a class="xref" href="Jitter2.Unmanaged.JHandle-1.html#Jitter2_Unmanaged_JHandle_1_Data">Data</a> reference after changing the buffer.
 </p>
 </div>
 
@@ -163,7 +162,7 @@ the buffer. Use the handle to obtain a fresh reference when needed.
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Zero" data-uid="Jitter2.Unmanaged.JHandle`1.Zero">
   Zero
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L34"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A handle representing a null/invalid reference.</p>
@@ -199,7 +198,7 @@ the buffer. Use the handle to obtain a fresh reference when needed.
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Data" data-uid="Jitter2.Unmanaged.JHandle`1.Data">
   Data
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L40"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a reference to the underlying data.</p>
@@ -231,11 +230,10 @@ the buffer. Use the handle to obtain a fresh reference when needed.
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_IsZero" data-uid="Jitter2.Unmanaged.JHandle`1.IsZero">
   IsZero
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L52"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets a value indicating whether this is the zero handle. A freed handle can remain nonzero;
-this property does not establish that the referenced element is still valid.</p>
+  <div class="markdown level1 summary"><p>Gets whether this is the zero handle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -256,6 +254,9 @@ this property does not establish that the referenced element is still valid.</p>
 
 
 
+  <h4 class="section" id="Jitter2_Unmanaged_JHandle_1_IsZero_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>A freed handle can remain nonzero. This property does not check whether its element is still valid.</p>
+</div>
 
 
 
@@ -268,10 +269,10 @@ this property does not establish that the referenced element is still valid.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_AsHandle__1_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.AsHandle``1(Jitter2.Unmanaged.JHandle{`0})">
   AsHandle&lt;TConvert&gt;(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Reinterprets a handle as a handle to a different type. Both types must have compatible layouts.</p>
+  <div class="markdown level1 summary"><p>Reinterprets a handle as a handle to a different type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -306,7 +307,7 @@ this property does not establish that the referenced element is still valid.</p>
 
 
   <h4 class="section" id="Jitter2_Unmanaged_JHandle_1_AsHandle__1_Jitter2_Unmanaged_JHandle__0___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p><b>Safety:</b> The caller must ensure that <code class="typeparamref">T</code> and <code class="typeparamref">TConvert</code>
+  <div class="markdown level1 remarks"><p>The caller must ensure that <code class="typeparamref">T</code> and <code class="typeparamref">TConvert</code>
 have compatible memory layouts. No runtime validation is performed.</p>
 </div>
 
@@ -317,7 +318,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Equals_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.Equals(Jitter2.Unmanaged.JHandle{`0})">
   Equals(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -356,7 +357,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_Equals_System_Object_" data-uid="Jitter2.Unmanaged.JHandle`1.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -395,7 +396,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_GetHashCode" data-uid="Jitter2.Unmanaged.JHandle`1.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L79"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L78"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -432,7 +433,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_op_Equality_Jitter2_Unmanaged_JHandle__0__Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.op_Equality(Jitter2.Unmanaged.JHandle{`0},Jitter2.Unmanaged.JHandle{`0})">
   operator ==(JHandle&lt;T&gt;, JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -470,7 +471,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 
   <h3 id="Jitter2_Unmanaged_JHandle_1_op_Inequality_Jitter2_Unmanaged_JHandle__0__Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.JHandle`1.op_Inequality(Jitter2.Unmanaged.JHandle{`0},Jitter2.Unmanaged.JHandle{`0})">
   operator !=(JHandle&lt;T&gt;, JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -508,7 +509,7 @@ have compatible memory layouts. No runtime validation is performed.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L29" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L28" class="edit-link">Edit this page</a>
         </div>
 
 

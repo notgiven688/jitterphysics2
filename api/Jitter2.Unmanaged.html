@@ -101,13 +101,12 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.html">PartitionedBuffer&lt;T&gt;</a></dt>
-      <dd><p>Manages memory for unmanaged structs, storing them sequentially in contiguous memory blocks.
-Each struct can either be active or inactive.</p>
+      <dd><p>Stores unmanaged structs in a resizable buffer with active and inactive partitions.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Unmanaged.PartitionedBuffer-1.MaximumSizeException.html">PartitionedBuffer&lt;T&gt;.MaximumSizeException</a></dt>
-      <dd><p>Exception thrown when the buffer's internal indirection table reaches its maximum capacity.</p>
+      <dd><p>Thrown when the buffer reaches its maximum element capacity.</p>
 </dd>
     </dl>
     <h3 id="structs">
@@ -121,8 +120,7 @@ The handle remains stable even when the underlying memory is resized.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Unmanaged.MemoryHelper.IsolatedInt.html">MemoryHelper.IsolatedInt</a></dt>
-      <dd><p>Represents an integer value isolated in memory to prevent false sharing
-between multiple threads operating on adjacent data.</p>
+      <dd><p>An integer padded on both sides so updates do not contend with adjacent data on a 64-byte cache line.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -147,7 +145,7 @@ between multiple threads operating on adjacent data.</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Unmanaged.MemoryHelper.PaddedInt.html">MemoryHelper.PaddedInt</a></dt>
-      <dd><p>Represents a padded array element intended to keep adjacent integer values off the same cache line.</p>
+      <dd><p>An integer padded so adjacent array elements do not share a 64-byte cache line.</p>
 </dd>
     </dl>
 

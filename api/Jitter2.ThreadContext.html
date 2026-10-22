@@ -90,7 +90,7 @@
 
 
   <h1 id="Jitter2_ThreadContext" data-uid="Jitter2.ThreadContext" class="text-break">
-Enum ThreadContext  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Attributes.cs/#L44"><i class="bi bi-code-slash"></i></a>
+Enum ThreadContext  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Attributes.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -119,17 +119,15 @@ Enum ThreadContext  <a class="header-action link-secondary" title="View source" 
   <dl class="parameters">
     <dt id="Jitter2_ThreadContext_Any"><code>Any = 2</code></dt>
   
-  <dd><p>Could be called from either. Handle with care.</p>
+  <dd><p>May run on the calling thread or a worker thread. Shared mutable data must be protected.</p>
 </dd>
     <dt id="Jitter2_ThreadContext_MainThread"><code>MainThread = 0</code></dt>
   
-  <dd><p>Called from the main thread (or the thread calling World.Step).
-Safe to access global state.</p>
+  <dd><p>Runs on the thread calling the operation, such as <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.</p>
 </dd>
     <dt id="Jitter2_ThreadContext_ParallelWorker"><code>ParallelWorker = 1</code></dt>
   
-  <dd><p>Called from background worker threads.
-Code must be thread-safe and lock-free.</p>
+  <dd><p>Runs on a worker thread and may run concurrently with other callbacks. Shared mutable data must be protected.</p>
 </dd>
   </dl>
 
@@ -138,7 +136,7 @@ Code must be thread-safe and lock-free.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Attributes.cs/#L44" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Attributes.cs/#L46" class="edit-link">Edit this page</a>
         </div>
 
 

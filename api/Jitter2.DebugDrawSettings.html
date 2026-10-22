@@ -148,13 +148,11 @@ A default-initialized value uses the same settings as <a class="xref" href="Jitt
 
   <h3 id="Jitter2_DebugDrawSettings_ArrowHeadSize" data-uid="Jitter2.DebugDrawSettings.ArrowHeadSize">
   ArrowHeadSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Length of arrowheads in world units, independently of arrow length, <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize">GuideSize</a>,
-<a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_FrameSize">FrameSize</a>, and shaft thickness. Default is 0.2. Used by both solid and wire arrows.
-Heads are clamped to half the arrow length; their base radius is 40% of their length.
-Must be finite and greater than zero.</p>
+  <div class="markdown level1 summary"><p>Length of solid and wire arrowheads in world units. Must be finite and positive. Default is 0.2.
+Clamped to half the arrow length for short arrows.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -183,12 +181,11 @@ Must be finite and greater than zero.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_ArrowSegments" data-uid="Jitter2.DebugDrawSettings.ArrowSegments">
   ArrowSegments
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L119"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Number of segments around each arrowhead base and solid shaft, from 3 to 256. Default is 12.
-A value of 4 draws a square base; higher values approximate a circle.
-Wire arrows connect every base vertex to the tip.</p>
+  <div class="markdown level1 summary"><p>Number of sides around arrowheads and solid shafts, from 3 to 256. Default is 12.
+Higher values make arrows look rounder.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -217,13 +214,11 @@ Wire arrows connect every base vertex to the tip.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_ArrowShaftRadius" data-uid="Jitter2.DebugDrawSettings.ArrowShaftRadius">
   ArrowShaftRadius
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L139"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Radius of solid arrow shafts in world units, independently of arrow length,
-<a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize">GuideSize</a>, and <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_FrameSize">FrameSize</a>. Default is 0.025.
-Must be finite and greater than zero. The radius is clamped to 5% of the arrow length and
-half the arrowhead's base radius. Wire arrows are unaffected.</p>
+  <div class="markdown level1 summary"><p>Radius of solid arrow shafts in world units. Must be finite and positive. Default is 0.025.
+Reduced for short arrows or small arrowheads. Does not affect wire arrows.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -252,7 +247,7 @@ half the arrowhead's base radius. Wire arrows are unaffected.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_AxisXColor" data-uid="Jitter2.DebugDrawSettings.AxisXColor">
   AxisXColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L201"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L195"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of a frame's local X axis. Default is light red.</p>
@@ -284,7 +279,7 @@ half the arrowhead's base radius. Wire arrows are unaffected.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_AxisYColor" data-uid="Jitter2.DebugDrawSettings.AxisYColor">
   AxisYColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L204"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L198"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of a frame's local Y axis. Default is light green.</p>
@@ -316,7 +311,7 @@ half the arrowhead's base radius. Wire arrows are unaffected.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_AxisZColor" data-uid="Jitter2.DebugDrawSettings.AxisZColor">
   AxisZColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L207"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L201"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of a frame's local Z axis. Default is light blue.</p>
@@ -348,7 +343,7 @@ half the arrowhead's base radius. Wire arrows are unaffected.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_CurrentColor" data-uid="Jitter2.DebugDrawSettings.CurrentColor">
   CurrentColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L198"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L192"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of current anchors, directions, and shape geometry. Default is white.</p>
@@ -380,12 +375,10 @@ half the arrowhead's base radius. Wire arrows are unaffected.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_Default" data-uid="Jitter2.DebugDrawSettings.Default">
   Default
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Default settings: guide size 1, frame size 1, point radius 0.06, 48 curve segments,
-12 arrow segments, shape detail 3, solid arrows, green guides, red lower limits,
-white current pose, and RGB orientation frames.</p>
+  <div class="markdown level1 summary"><p>The default drawing settings. Individual properties describe their default values.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -414,12 +407,11 @@ white current pose, and RGB orientation frames.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_FrameSize" data-uid="Jitter2.DebugDrawSettings.FrameSize">
   FrameSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Length of each coordinate-frame axis, in world units, independently of <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize">GuideSize</a>.
-Arrowhead size and shaft radius are independent.
-Must be finite and greater than zero. Default is 1.</p>
+  <div class="markdown level1 summary"><p>Length of each coordinate-frame axis in world units. Must be finite and positive. Default is 1.
+Changing this does not resize arrowheads or shafts.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -448,15 +440,10 @@ Must be finite and greater than zero. Default is 1.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_GuideSize" data-uid="Jitter2.DebugDrawSettings.GuideSize">
   GuideSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Radius of angular guides and half extent of plane patches, in world units.
-Also sets constraint arrow lengths and stop marker sizes. Coordinate frames use <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_FrameSize">FrameSize</a> instead.
-Arrowheads, shafts, and anchor spheres use <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowHeadSize">ArrowHeadSize</a>,
-<a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowShaftRadius">ArrowShaftRadius</a>, and <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_PointRadius">PointRadius</a> independently.
-Physical distances and linear limits are never scaled.
-Must be finite and greater than zero. Default is 1.</p>
+  <div class="markdown level1 summary"><p>Size of constraint guides in world units. Must be finite and positive. Default is 1.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -477,6 +464,11 @@ Must be finite and greater than zero. Default is 1.</p>
 
 
 
+  <h4 class="section" id="Jitter2_DebugDrawSettings_GuideSize_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Sets angular guide radii, plane half extents, constraint arrow lengths, and stop marker sizes.
+Physical distances and linear limits keep their actual sizes. Coordinate frames, arrowheads,
+shafts, and anchor markers have separate size properties.</p>
+</div>
 
 
 
@@ -485,7 +477,7 @@ Must be finite and greater than zero. Default is 1.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_LowerLimitColor" data-uid="Jitter2.DebugDrawSettings.LowerLimitColor">
   LowerLimitColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L186"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of lower limits. Default is red.</p>
@@ -517,13 +509,10 @@ Must be finite and greater than zero. Default is 1.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_Origin" data-uid="Jitter2.DebugDrawSettings.Origin">
   Origin
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L178"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Optional world-space origin for angular guides. By default they use body 1's position,
-or body 2's position when body 1 is World.NullBody. Joints with a ball socket use its anchor.
-FixedAngle's frames always use the bodies' positions.
-Positional constraints always use their real anchors.</p>
+  <div class="markdown level1 summary"><p>Optional position for angular guides, in world space. Default is null.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -544,6 +533,11 @@ Positional constraints always use their real anchors.</p>
 
 
 
+  <h4 class="section" id="Jitter2_DebugDrawSettings_Origin_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>When null, angular constraints use body 1's position, or body 2's if body 1 is
+<a class="xref" href="Jitter2.World.html#Jitter2_World_NullBody">NullBody</a>. Joints with a ball socket use its anchor.
+This does not move positional anchors or the frames drawn by <code>FixedAngle</code>.</p>
+</div>
 
 
 
@@ -552,10 +546,10 @@ Positional constraints always use their real anchors.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_PointRadius" data-uid="Jitter2.DebugDrawSettings.PointRadius">
   PointRadius
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Radius of spherical anchor markers in world units, independently of <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_GuideSize">GuideSize</a>.
+  <div class="markdown level1 summary"><p>Radius of spherical anchor markers in world units.
 Default is 0.06. Must be finite and nonnegative. Zero hides the markers.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -585,7 +579,7 @@ Default is 0.06. Must be finite and nonnegative. Zero hides the markers.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_ReferenceColor" data-uid="Jitter2.DebugDrawSettings.ReferenceColor">
   ReferenceColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L189"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L183"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of reference guides. Default is green.</p>
@@ -617,7 +611,7 @@ Default is 0.06. Must be finite and nonnegative. Zero hides the markers.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_Segments" data-uid="Jitter2.DebugDrawSettings.Segments">
   Segments
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Number of segments per circle, cone boundary, or built-in round shape, from 8 to 256. Default is 48. Arrowheads use <a class="xref" href="Jitter2.DebugDrawSettings.html#Jitter2_DebugDrawSettings_ArrowSegments">ArrowSegments</a>.</p>
@@ -649,7 +643,7 @@ Default is 0.06. Must be finite and nonnegative. Zero hides the markers.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_ShapeSubdivisions" data-uid="Jitter2.DebugDrawSettings.ShapeSubdivisions">
   ShapeSubdivisions
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Drawing detail for point clouds and custom shapes that use an approximate surface.
@@ -683,7 +677,7 @@ Built-in round shapes use <a class="xref" href="Jitter2.DebugDrawSettings.html#J
 
   <h3 id="Jitter2_DebugDrawSettings_SolidArrows" data-uid="Jitter2.DebugDrawSettings.SolidArrows">
   SolidArrows
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L133"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws arrows and orientation frames as solid shafts with cone heads. Default is true.
@@ -716,7 +710,7 @@ Set to false for wire arrows.</p>
 
   <h3 id="Jitter2_DebugDrawSettings_UpperLimitColor" data-uid="Jitter2.DebugDrawSettings.UpperLimitColor">
   UpperLimitColor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/DebugDrawSettings.cs/#L189"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Color of upper and fixed limits. Default is green.</p>

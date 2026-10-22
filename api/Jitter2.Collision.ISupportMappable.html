@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Interface ISupportMappable | Jitter2 ">
       
-      <meta name="description" content="Defines an interface for a generic convex shape characterized by its support function.">
+      <meta name="description" content="Describes a convex shape by returning its furthest point in any given direction.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_ISupportMappable" data-uid="Jitter2.Collision.ISupportMappable" class="text-break">
-Interface ISupportMappable  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L19"><i class="bi bi-code-slash"></i></a>
+Interface ISupportMappable  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Interface ISupportMappable  <a class="header-action link-secondary" title="View 
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Defines an interface for a generic convex shape characterized by its support function.</p>
+  <div class="markdown summary"><p>Describes a convex shape by returning its furthest point in any given direction.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -116,9 +116,7 @@ Interface ISupportMappable  <a class="header-action link-secondary" title="View 
 
 
   <h2 id="Jitter2_Collision_ISupportMappable_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>The support function is the fundamental operation for GJK-based collision detection algorithms.
-Any convex shape can be represented implicitly through its support mapping without requiring
-explicit vertex or face data.</p>
+  <div class="markdown level0 remarks"><p>All points and directions use the shape's local coordinate system.</p>
 </div>
 
 
@@ -130,10 +128,10 @@ explicit vertex or face data.</p>
 
   <h3 id="Jitter2_Collision_ISupportMappable_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.ISupportMappable.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -144,7 +142,7 @@ explicit vertex or face data.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 
@@ -163,7 +161,7 @@ explicit vertex or face data.</p>
 
   <h3 id="Jitter2_Collision_ISupportMappable_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.ISupportMappable.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -199,7 +197,7 @@ explicit vertex or face data.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L19" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/ISupportMappable.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
 

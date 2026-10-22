@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Joint | Jitter2 ">
       
-      <meta name="description" content="Base class for joints, which are composite constraints built from multiple  instances.">
+      <meta name="description" content="Groups constraints into a joint that can be enabled, disabled, removed, or drawn as a whole.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,7 +97,7 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Base class for joints, which are composite constraints built from multiple <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html">Constraint</a> instances.</p>
+  <div class="markdown summary"><p>Groups constraints into a joint that can be enabled, disabled, removed, or drawn as a whole.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -172,10 +172,11 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Constraints" data-uid="Jitter2.Dynamics.Constraints.Joint.Constraints">
   Constraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the constraints that make up this joint.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
@@ -207,10 +208,10 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L82"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Passes an <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a> to draw basic debug information for the object.</p>
+  <div class="markdown level1 summary"><p>Draws the object's debug visualization with the default settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -221,7 +222,7 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>drawer</code> <a class="xref" href="Jitter2.IDebugDrawer.html">IDebugDrawer</a></dt>
-    <dd><p>The debug drawer used for rendering debug information.</p>
+    <dd><p>Receives the lines and triangles to draw.</p>
 </dd>
   </dl>
 
@@ -240,10 +241,10 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Dynamics.Constraints.Joint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L86"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Draws the constituent constraints, placing angular guides at the joint anchor when available.</p>
+  <div class="markdown level1 summary"><p>Draws the joint's constraints, using the joint anchor for angular guides when available.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -274,10 +275,10 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Deregister_Jitter2_Dynamics_Constraints_Constraint_" data-uid="Jitter2.Dynamics.Constraints.Joint.Deregister(Jitter2.Dynamics.Constraints.Constraint)">
   Deregister(Constraint)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Removes a constraint from the internal bookkeeping.</p>
+  <div class="markdown level1 summary"><p>Excludes a constraint from this joint without removing it from its world.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -306,10 +307,10 @@ Class Joint  <a class="header-action link-secondary" title="View source" href="h
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Disable" data-uid="Jitter2.Dynamics.Constraints.Joint.Disable">
   Disable()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Disables all constraints that this joint is composed of temporarily.
+  <div class="markdown level1 summary"><p>Temporarily disables all constraints in this joint.
 For a complete removal use <a class="xref" href="Jitter2.Dynamics.Constraints.Joint.html#Jitter2_Dynamics_Constraints_Joint_Remove">Remove()</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -334,10 +335,10 @@ For a complete removal use <a class="xref" href="Jitter2.Dynamics.Constraints.Jo
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Enable" data-uid="Jitter2.Dynamics.Constraints.Joint.Enable">
   Enable()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Enables all constraints that this joint is composed of.</p>
+  <div class="markdown level1 summary"><p>Enables all constraints in this joint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -361,10 +362,10 @@ For a complete removal use <a class="xref" href="Jitter2.Dynamics.Constraints.Jo
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Register_Jitter2_Dynamics_Constraints_Constraint_" data-uid="Jitter2.Dynamics.Constraints.Joint.Register(Jitter2.Dynamics.Constraints.Constraint)">
   Register(Constraint)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L37"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Adds a constraint to the internal bookkeeping.</p>
+  <div class="markdown level1 summary"><p>Includes a constraint in this joint. The constraint must already belong to a world.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -393,10 +394,10 @@ For a complete removal use <a class="xref" href="Jitter2.Dynamics.Constraints.Jo
 
   <h3 id="Jitter2_Dynamics_Constraints_Joint_Remove" data-uid="Jitter2.Dynamics.Constraints.Joint.Remove">
   Remove()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/Joint.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Removes all constraints that this joint is composed of from the physics world.</p>
+  <div class="markdown level1 summary"><p>Removes all constraints in this joint from their world.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

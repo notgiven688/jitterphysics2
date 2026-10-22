@@ -96,7 +96,7 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a></dt>
-      <dd><p>Represents a dynamic AABB tree for broadphase collision detection.</p>
+      <dd><p>Tracks objects by their bounding boxes to find potential collisions and answer spatial queries.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -111,7 +111,7 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.NarrowPhase.html">NarrowPhase</a></dt>
-      <dd><p>Provides collision detection algorithms for convex shapes defined by support functions.</p>
+      <dd><p>Tests convex shapes for overlap, distance, ray hits, and swept collisions.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -121,11 +121,7 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.TriangleEdgeCollisionFilter.html">TriangleEdgeCollisionFilter</a></dt>
-      <dd><p>Filters internal edge collisions for <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> geometry. Adjusts collision
-normals at shared edges to match neighboring triangles, or discards the collision if the normal
-cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
-are left unmodified. Back-face normals within <a class="xref" href="Jitter2.Collision.TriangleEdgeCollisionFilter.html#Jitter2_Collision_TriangleEdgeCollisionFilter_AngleThreshold">AngleThreshold</a> of the opposite
-triangle normal are discarded.</p>
+      <dd><p>Reduces snagging on shared edges of <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a> meshes.</p>
 </dd>
     </dl>
     <h3 id="structs">
@@ -216,8 +212,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a></dt>
-      <dd><p>Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in
-acceleration structures such as <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.</p>
+      <dd><p>An axis-aligned bounding box used by <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.</p>
 </dd>
     </dl>
     <h3 id="interfaces">
@@ -225,12 +220,12 @@ Interfaces
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.IBroadPhaseFilter.html">IBroadPhaseFilter</a></dt>
-      <dd><p>Provides a hook into the broadphase collision detection pipeline.</p>
+      <dd><p>Decides which pairs of objects should be checked for collisions.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></dt>
-      <dd><p>Represents an entity that supports closest-point distance queries against a support-mapped query shape.</p>
+      <dd><p>Supports closest-point distance queries against a convex shape.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -240,7 +235,7 @@ Interfaces
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.INarrowPhaseFilter.html">INarrowPhaseFilter</a></dt>
-      <dd><p>Provides a hook into the narrowphase collision detection pipeline.</p>
+      <dd><p>Allows detected contacts to be modified or discarded before they affect the bodies.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -250,12 +245,12 @@ Interfaces
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></dt>
-      <dd><p>Defines an interface for a generic convex shape characterized by its support function.</p>
+      <dd><p>Describes a convex shape by returning its furthest point in any given direction.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></dt>
-      <dd><p>Represents an entity that can be sweep-tested against a moving support-mapped query shape.</p>
+      <dd><p>Supports sweep tests against a moving convex shape.</p>
 </dd>
     </dl>
     <dl class="jumplist">

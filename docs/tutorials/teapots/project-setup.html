@@ -87,12 +87,10 @@
         <article data-uid="">
 <h1 id="project-setup">Project Setup</h1>
 
-<p>In the previous section, we created a simulation of falling boxes. Jitter includes several default shapes, such as capsules, cylinders, and spheres.
-These shapes can be transformed and/or combined, and they are already sufficient to represent many types of collidable entities.</p>
-<p>In this section, we will add a custom convex shape to the simulation—specifically, the famous <em>Utah teapot</em>. We'll construct this shape from its visual representation by loading a <code>teapot.obj</code> file and using its vertices to create the convex shape.</p>
+<p>The Boxes tutorial used built-in shapes. This tutorial uses vertices from a model to create a collision shape for the <em>Utah teapot</em>. We will load <code>teapot.obj</code>, simplify its vertices, and stack several teapots in the simulation.</p>
 <h3 id="requirements">Requirements</h3>
 <p>Install the <a href="https://dotnet.microsoft.com/download/dotnet/10.0">.NET 10 SDK</a>.</p>
-<p>Ensure that dotnet is correctly set up by executing the following command:</p>
+<p>Check that the SDK is installed:</p>
 <pre><code class="lang-sh">dotnet --version
 </code></pre>
 <h3 id="create-a-new-console-application-and-add-jitter-and-raylib">Create a New Console Application and Add Jitter and Raylib</h3>
@@ -103,12 +101,12 @@ These shapes can be transformed and/or combined, and they are already sufficient
 <pre><code class="lang-sh">wget https://github.com/notgiven688/jitterphysics2/raw/refs/heads/main/src/JitterDemo/assets/teapot.obj.zip
 unzip teapot.obj.zip
 </code></pre>
-<p>Next, create a new console application in this directory and add Raylib-cs and Jitter2:</p>
+<p>Create a console application and add Raylib-cs and Jitter2:</p>
 <pre><code class="lang-sh">dotnet new console
 dotnet add package Raylib-cs --version 6.1.1
 dotnet add package Jitter2
 </code></pre>
-<p>Add the following code to <code>TeaDrop.csproj</code> to allow unsafe code, and to copy teapot.obj automatically to the output directory:</p>
+<p>Add these settings inside the <code>&lt;Project&gt;</code> element in <code>TeaDrop.csproj</code>. They allow access to Raylib's mesh data through pointers and copy <code>teapot.obj</code> to the output directory:</p>
 <pre><code class="lang-xml">  &lt;PropertyGroup&gt;
     &lt;AllowUnsafeBlocks&gt;true&lt;/AllowUnsafeBlocks&gt;
   &lt;/PropertyGroup&gt;
@@ -119,10 +117,10 @@ dotnet add package Jitter2
     &lt;/None&gt;
   &lt;/ItemGroup&gt;
 </code></pre>
-<p>You have completed the setup. If you now execute the following command:</p>
+<p>Run the application:</p>
 <pre><code class="lang-sh">dotnet run
 </code></pre>
-<p>Your console should display: &quot;Hello, World!&quot;.</p>
+<p>The console should print <code>Hello, World!</code>.</p>
 
 </article>
 

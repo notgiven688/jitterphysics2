@@ -119,15 +119,12 @@ Enum SolveMode  <a class="header-action link-secondary" title="View source" href
   <dl class="parameters">
     <dt id="Jitter2_SolveMode_Deterministic"><code>Deterministic = 1</code></dt>
   
-  <dd><p>Island-based deterministic solver. Each simulation island is solved sequentially
-as an independent task. Islands are distributed across threads when multithreading
-is enabled. This mode can be significantly slower than <a class="xref" href="Jitter2.SolveMode.html#Jitter2_SolveMode_Regular">Regular</a>.</p>
+  <dd><p>Solves contacts and constraints in a repeatable order. Groups of connected bodies can
+still be solved in parallel. Can be significantly slower than <a class="xref" href="Jitter2.SolveMode.html#Jitter2_SolveMode_Regular">Regular</a>.</p>
 </dd>
     <dt id="Jitter2_SolveMode_Regular"><code>Regular = 0</code></dt>
   
-  <dd><p>Standard parallel solver. Contacts and constraints are distributed across threads
-in fixed-size batches. An incremental cache-friendly reorder pass keeps related
-contacts adjacent in memory. Fast, but non-deterministic.</p>
+  <dd><p>The default solver, optimized for speed. Multithreaded results may vary between runs.</p>
 </dd>
   </dl>
 

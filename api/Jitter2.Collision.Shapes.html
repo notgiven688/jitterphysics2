@@ -121,9 +121,7 @@ Classes
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a></dt>
-      <dd><p>Represents a convex hull shape defined by a point cloud. Unlike <a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>,
-it is not necessary for the points to lie on the convex hull. For performance optimization,
-this shape should ideally be used for a small number of points (~300).</p>
+      <dd><p>Represents the convex hull of a set of points, which may include interior points.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -133,15 +131,12 @@ this shape should ideally be used for a small number of points (~300).</p>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Shapes.Shape.html">Shape</a></dt>
-      <dd><p>The main entity of the collision system. Implements <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a> for
-narrow-phase and <a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a> for broad-phase collision detection.
-The shape itself does not have a position or orientation. Shapes can be associated with
-instances of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a>.</p>
+      <dd><p>Defines collision geometry in local coordinates.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Shapes.ShapeHelper.html">ShapeHelper</a></dt>
-      <dd><p>Provides helper methods for calculating the properties of implicitly defined shapes.</p>
+      <dd><p>Approximates convex surfaces and calculates their bounds and mass properties.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -151,7 +146,7 @@ instances of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Shapes.TransformedShape.html">TransformedShape</a></dt>
-      <dd><p>Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).</p>
+      <dd><p>Applies translation, rotation, scaling, or shear to another shape in local coordinates.</p>
 </dd>
     </dl>
     <dl class="jumplist">
@@ -178,7 +173,7 @@ Structs
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Collision.Shapes.VertexSupportMap.html">VertexSupportMap</a></dt>
-      <dd><p>Implements a SIMD accelerated support map for a set of vertices.</p>
+      <dd><p>Describes the convex hull of a set of vertices through its support points.</p>
 </dd>
     </dl>
     <h3 id="interfaces">

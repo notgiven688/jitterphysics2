@@ -123,15 +123,13 @@ Enum MotionType  <a class="header-action link-secondary" title="View source" hre
 </dd>
     <dt id="Jitter2_Dynamics_MotionType_Kinematic"><code>Kinematic = 1</code></dt>
   
-  <dd><p>User-controlled body that is not affected by forces or collisions, but can affect dynamic bodies.
-Treated as having infinite mass in the solver. May have a non-zero velocity set by user code.
-Takes part in collision island building.</p>
+  <dd><p>Moves at a velocity set by the application and can push dynamic bodies.
+Forces, impulses, and collisions do not change its motion.</p>
 </dd>
     <dt id="Jitter2_Dynamics_MotionType_Static"><code>Static = 2</code></dt>
   
-  <dd><p>Immovable body (zero velocity) treated as having infinite mass by the solver.
-The position and orientation may be changed directly by user code, which will update the
-broadphase and may affect contacts on the next step.</p>
+  <dd><p>Remains stationary and can support dynamic bodies.
+The application can still change its position and orientation directly.</p>
 </dd>
   </dl>
 

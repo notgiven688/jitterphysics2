@@ -87,8 +87,8 @@
         <article data-uid="">
 <h1 id="hello-world">Hello World</h1>
 
-<p>We will now add physics to the scene. We do this by creating a new instance of the World class and adding several rigid bodies to it.</p>
-<p>Replace the content of <code>Program.cs</code> with the following code (highlighted lines indicate the additions to the source code):</p>
+<p>Now add a <code>World</code> to simulate the scene, a static body for the ground, and dynamic bodies for the boxes.</p>
+<p>Replace the contents of <code>Program.cs</code> with the following code. The highlighted lines add the physics:</p>
 <pre><code class="lang-csharp" highlight-lines="3-6,9-18,28,41-63,88-94">using System.Numerics;
 using Raylib_cs;
 using Jitter2;
@@ -192,7 +192,7 @@ while (!WindowShouldClose())
 
 CloseWindow();
 </code></pre>
-<p>Running your program, you should now see a few boxes dynamically falling onto the ground.</p>
+<p>Run the program to see boxes fall onto the ground.</p>
 <p><img src="images/raylibjitter.gif" alt="plane"></p>
 
 </article>

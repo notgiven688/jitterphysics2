@@ -241,7 +241,7 @@ Class TriangleMesh  <a class="header-action link-secondary" title="View source" 
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_Int32__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.ReadOnlySpan{System.Int32},System.Boolean)">
   TriangleMesh(ReadOnlySpan&lt;JVector&gt;, ReadOnlySpan&lt;int&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L117"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L116"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from existing vertices and indices.</p>
@@ -273,8 +273,7 @@ Class TriangleMesh  <a class="header-action link-secondary" title="View source" 
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_Int32__System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Vertices with exactly identical positions are canonicalized so adjacency detection also works
-across duplicated seam vertices in indexed meshes.</p>
+  <div class="markdown level1 remarks"><p>Vertices at exactly the same position are treated as connected, including duplicated vertices at mesh seams.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -296,7 +295,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_UInt16__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.ReadOnlySpan{System.UInt16},System.Boolean)">
   TriangleMesh(ReadOnlySpan&lt;JVector&gt;, ReadOnlySpan&lt;ushort&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from existing vertices and indices.</p>
@@ -328,8 +327,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_UInt16__System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Vertices with exactly identical positions are canonicalized so adjacency detection also works
-across duplicated seam vertices in indexed meshes.</p>
+  <div class="markdown level1 remarks"><p>Vertices at exactly the same position are treated as connected, including duplicated vertices at mesh seams.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -351,7 +349,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_UInt32__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector},System.ReadOnlySpan{System.UInt32},System.Boolean)">
   TriangleMesh(ReadOnlySpan&lt;JVector&gt;, ReadOnlySpan&lt;uint&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L133"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from existing vertices and indices.</p>
@@ -383,8 +381,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_TriangleMesh__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__System_ReadOnlySpan_System_UInt32__System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Vertices with exactly identical positions are canonicalized so adjacency detection also works
-across duplicated seam vertices in indexed meshes.</p>
+  <div class="markdown level1 remarks"><p>Vertices at exactly the same position are treated as connected, including duplicated vertices at mesh seams.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -478,7 +475,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh_Create__1_System_ReadOnlySpan___0__System_ReadOnlySpan_System_Int32__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.Create``1(System.ReadOnlySpan{``0},System.ReadOnlySpan{System.Int32},System.Boolean)">
   Create&lt;TVertex&gt;(ReadOnlySpan&lt;TVertex&gt;, ReadOnlySpan&lt;int&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from custom vertices (e.g. System.Numerics.Vector3) and indices.</p>
@@ -543,7 +540,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh_Create__1_System_ReadOnlySpan___0__System_ReadOnlySpan_System_UInt16__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.Create``1(System.ReadOnlySpan{``0},System.ReadOnlySpan{System.UInt16},System.Boolean)">
   Create&lt;TVertex&gt;(ReadOnlySpan&lt;TVertex&gt;, ReadOnlySpan&lt;ushort&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L174"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L173"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from custom vertices (e.g. System.Numerics.Vector3) and indices.</p>
@@ -608,7 +605,7 @@ across duplicated seam vertices in indexed meshes.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleMesh_Create__1_System_ReadOnlySpan___0__System_ReadOnlySpan_System_UInt32__System_Boolean_" data-uid="Jitter2.Collision.Shapes.TriangleMesh.Create``1(System.ReadOnlySpan{``0},System.ReadOnlySpan{System.UInt32},System.Boolean)">
   Create&lt;TVertex&gt;(ReadOnlySpan&lt;TVertex&gt;, ReadOnlySpan&lt;uint&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleMesh.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a mesh from custom vertices (e.g. System.Numerics.Vector3) and indices.</p>

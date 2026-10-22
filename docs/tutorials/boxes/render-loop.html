@@ -87,7 +87,7 @@
         <article data-uid="">
 <h1 id="render-loop">Render Loop</h1>
 
-<p>The first thing we need to do is to familiarize ourselves a bit with Raylib_cs. Replace the content of <code>Program.cs</code> with the following code:</p>
+<p>Start with a Raylib window, a camera, and a ground plane. Replace the contents of <code>Program.cs</code> with:</p>
 <pre><code class="lang-cs">using System.Numerics;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
@@ -142,9 +142,9 @@ while (!WindowShouldClose())
 
 CloseWindow();
 </code></pre>
-<p>Running your program should now display a plane:</p>
+<p>Run the program to see the ground plane:</p>
 <p><img src="images/raylibplane.png" alt="plane"></p>
-<p>We will add some physically simulated boxes in the next chapter.</p>
+<p>Next, we will add falling boxes.</p>
 
 </article>
 

@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Arbiter" data-uid="Jitter2.Dynamics.Arbiter" class="text-break">
-Class Arbiter  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L35"><i class="bi bi-code-slash"></i></a>
+Class Arbiter  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L33"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -146,13 +146,11 @@ Class Arbiter  <a class="header-action link-secondary" title="View source" href=
 
   <h2 id="Jitter2_Dynamics_Arbiter_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-An arbiter is created when contacts are registered, including CCD contacts before shapes overlap, and is removed when they separate
-or when one of the involved bodies is removed from the world. Each arbiter can hold up to
-four cached contact points (see <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>).
+Holds up to four contact points for a pair of shapes. CCD may create contacts before the
+shapes overlap. The arbiter is removed when contact ends or either body is removed.
 </p>
 <p>
-In most cases arbiters are keyed by shape identifiers. For arbiters created by the engine, the ordering
-is canonical: the shape with the smaller ID is always first.
+For contacts created by the engine, the shape with the smaller ID is first.
 </p>
 <p>
 The <a class="xref" href="Jitter2.Dynamics.Arbiter.html#Jitter2_Dynamics_Arbiter_Handle">Handle</a> property provides access to the underlying <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>
@@ -174,7 +172,7 @@ removal: the same instance may subsequently represent a different pair of bodies
 
   <h3 id="Jitter2_Dynamics_Arbiter_Body1" data-uid="Jitter2.Dynamics.Arbiter.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the first rigid body involved in this contact.</p>
@@ -206,7 +204,7 @@ removal: the same instance may subsequently represent a different pair of bodies
 
   <h3 id="Jitter2_Dynamics_Arbiter_Body2" data-uid="Jitter2.Dynamics.Arbiter.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the second rigid body involved in this contact.</p>
@@ -238,7 +236,7 @@ removal: the same instance may subsequently represent a different pair of bodies
 
   <h3 id="Jitter2_Dynamics_Arbiter_Handle" data-uid="Jitter2.Dynamics.Arbiter.Handle">
   Handle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the handle to the <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a> stored in unmanaged memory.</p>
@@ -275,7 +273,7 @@ or access the handle after the arbiter's collision lifetime ends.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L35" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Arbiter.cs/#L33" class="edit-link">Edit this page</a>
         </div>
 
 

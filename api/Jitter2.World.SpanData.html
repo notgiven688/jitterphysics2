@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct World.SpanData | Jitter2 ">
       
-      <meta name="description" content="Provides access to objects in unmanaged memory. This operation is potentially unsafe.">
+      <meta name="description" content="Provides direct access to body, contact, and constraint data stored in unmanaged memory.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_World_SpanData" data-uid="Jitter2.World.SpanData" class="text-break">
-Struct World.SpanData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L95"><i class="bi bi-code-slash"></i></a>
+Struct World.SpanData  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Struct World.SpanData  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides access to objects in unmanaged memory. This operation is potentially unsafe.</p>
+  <div class="markdown summary"><p>Provides direct access to body, contact, and constraint data stored in unmanaged memory.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -138,10 +138,9 @@ Struct World.SpanData  <a class="header-action link-secondary" title="View sourc
 
 
   <h2 id="Jitter2_World_SpanData_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>The returned spans are backed by unmanaged memory and are only valid until the next
-world modification that may resize internal buffers (e.g., creating or removing bodies,
-constraints, contacts, or calling <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>). Do not cache these spans.
-Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.</p>
+  <div class="markdown level0 remarks"><p>Do not retain spans across calls to <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a> or changes to bodies,
+contacts, or constraints: these operations can move or resize the underlying storage.
+Do not access the spans while the world is being stepped.</p>
 </div>
 
 
@@ -153,10 +152,10 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData__ctor_Jitter2_World_" data-uid="Jitter2.World.SpanData.#ctor(Jitter2.World)">
   SpanData(World)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L95"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Provides access to objects in unmanaged memory. This operation is potentially unsafe.</p>
+  <div class="markdown level1 summary"><p>Provides direct access to body, contact, and constraint data stored in unmanaged memory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -178,10 +177,9 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
 
   <h4 class="section" id="Jitter2_World_SpanData__ctor_Jitter2_World__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The returned spans are backed by unmanaged memory and are only valid until the next
-world modification that may resize internal buffers (e.g., creating or removing bodies,
-constraints, contacts, or calling <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>). Do not cache these spans.
-Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.</p>
+  <div class="markdown level1 remarks"><p>Do not retain spans across calls to <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a> or changes to bodies,
+contacts, or constraints: these operations can move or resize the underlying storage.
+Do not access the spans while the world is being stepped.</p>
 </div>
 
 
@@ -195,7 +193,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_ActiveConstraints" data-uid="Jitter2.World.SpanData.ActiveConstraints">
   ActiveConstraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L123"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over active constraint data.</p>
@@ -227,7 +225,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_ActiveContacts" data-uid="Jitter2.World.SpanData.ActiveContacts">
   ActiveContacts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over active contact data.</p>
@@ -259,7 +257,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_ActiveRigidBodies" data-uid="Jitter2.World.SpanData.ActiveRigidBodies">
   ActiveRigidBodies
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over active (awake) rigid body data.</p>
@@ -291,7 +289,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_ActiveSmallConstraints" data-uid="Jitter2.World.SpanData.ActiveSmallConstraints">
   ActiveSmallConstraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over active small constraint data.</p>
@@ -323,7 +321,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_Constraints" data-uid="Jitter2.World.SpanData.Constraints">
   Constraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L131"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over all constraint data (active and inactive).</p>
@@ -355,7 +353,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_Contacts" data-uid="Jitter2.World.SpanData.Contacts">
   Contacts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over all contact data (active and inactive).</p>
@@ -387,7 +385,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_InactiveConstraints" data-uid="Jitter2.World.SpanData.InactiveConstraints">
   InactiveConstraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L126"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over inactive constraint data.</p>
@@ -419,7 +417,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_InactiveContacts" data-uid="Jitter2.World.SpanData.InactiveContacts">
   InactiveContacts
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over inactive contact data.</p>
@@ -451,7 +449,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_InactiveRigidBodies" data-uid="Jitter2.World.SpanData.InactiveRigidBodies">
   InactiveRigidBodies
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L108"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over inactive (sleeping) rigid body data.</p>
@@ -483,7 +481,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_InactiveSmallConstraints" data-uid="Jitter2.World.SpanData.InactiveSmallConstraints">
   InactiveSmallConstraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L137"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over inactive small constraint data.</p>
@@ -515,7 +513,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_RigidBodies" data-uid="Jitter2.World.SpanData.RigidBodies">
   RigidBodies
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L113"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over all rigid body data (active and inactive).</p>
@@ -547,7 +545,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_SmallConstraints" data-uid="Jitter2.World.SpanData.SmallConstraints">
   SmallConstraints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L138"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Span over all small constraint data (active and inactive).</p>
@@ -579,7 +577,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 
   <h3 id="Jitter2_World_SpanData_TotalBytesAllocated" data-uid="Jitter2.World.SpanData.TotalBytesAllocated">
   TotalBytesAllocated
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the total amount of unmanaged memory allocated in bytes.</p>
@@ -611,7 +609,7 @@ Not safe to use concurrently with <a class="xref" href="Jitter2.World.html#Jitte
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L95" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.cs/#L93" class="edit-link">Edit this page</a>
         </div>
 
 

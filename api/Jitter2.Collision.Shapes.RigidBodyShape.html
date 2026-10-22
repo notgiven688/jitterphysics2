@@ -310,12 +310,11 @@ and after it is removed from a body.</p>
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-performance or accuracy. The default implementation relies on an approximation of the shape
-constructed using the support map function.</p>
+  <div class="markdown level1 summary"><p>Calculates the shape's mass, center of mass, and inertia at unit density.
+The default implementation approximates the surface; overrides can provide exact mass properties.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -391,7 +390,7 @@ Higher detail settings increase the drawing cost and do not guarantee a more acc
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Distance``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the closest points between this object and the query shape.</p>
@@ -456,12 +455,10 @@ the shapes overlap. Do not use this to test whether a result was found.</p>
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_LocalRayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.LocalRayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   LocalRayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L124"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs a local ray cast against the shape, checking if a ray originating from a specified point
-and traveling in a specified direction intersects with the object. It does not take into account the
-transformation of the associated rigid body.</p>
+  <div class="markdown level1 summary"><p>Casts a ray against the shape in local coordinates, without applying the body's transform.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -509,7 +506,7 @@ public virtual bool LocalRayCast(in JVector origin, in JVector direction, out JV
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.RayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   RayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a ray cast against this object.</p>
@@ -562,7 +559,7 @@ set to zero and <code class="paramref">normal</code> set to <a class="xref" href
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a sweep test against this object.</p>

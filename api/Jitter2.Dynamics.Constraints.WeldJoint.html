@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class WeldJoint | Jitter2 ">
       
-      <meta name="description" content="Creates a rigid weld joint between two bodies using a  constraint for orientation locking and a  constraint for positional locking. This effectively removes all relative motion between the connected bodies.">
+      <meta name="description" content="Holds two bodies together at a shared anchor and preserves their relative orientation.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_WeldJoint" data-uid="Jitter2.Dynamics.Constraints.WeldJoint" class="text-break">
-Class WeldJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L18"><i class="bi bi-code-slash"></i></a>
+Class WeldJoint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,10 +97,7 @@ Class WeldJoint  <a class="header-action link-secondary" title="View source" hre
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Creates a rigid weld joint between two bodies using a <a class="xref" href="Jitter2.Dynamics.Constraints.FixedAngle.html">FixedAngle</a>
-constraint for orientation locking and a <a class="xref" href="Jitter2.Dynamics.Constraints.WeldJoint.html#Jitter2_Dynamics_Constraints_WeldJoint_BallSocket">BallSocket</a> constraint
-for positional locking. This effectively removes all relative motion between
-the connected bodies.</p>
+  <div class="markdown summary"><p>Holds two bodies together at a shared anchor and preserves their relative orientation.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -191,7 +188,7 @@ the connected bodies.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_WeldJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Dynamics.Constraints.WeldJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector)">
   WeldJoint(World, RigidBody, RigidBody, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L33"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L31"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new weld joint.</p>
@@ -211,7 +208,8 @@ the connected bodies.</p>
     <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
     <dd></dd>
     <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The shared anchor point in world space.</p>
+</dd>
   </dl>
 
 
@@ -240,7 +238,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_WeldJoint_BallSocket" data-uid="Jitter2.Dynamics.Constraints.WeldJoint.BallSocket">
   BallSocket
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L24"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -271,7 +269,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_WeldJoint_Body1" data-uid="Jitter2.Dynamics.Constraints.WeldJoint.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L17"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -302,7 +300,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_WeldJoint_Body2" data-uid="Jitter2.Dynamics.Constraints.WeldJoint.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L18"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -333,7 +331,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 
   <h3 id="Jitter2_Dynamics_Constraints_WeldJoint_FixedAngle" data-uid="Jitter2.Dynamics.Constraints.WeldJoint.FixedAngle">
   FixedAngle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -364,7 +362,7 @@ to <code class="paramref">world</code>, or when both body references are the sam
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/WeldJoint.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -96,22 +96,22 @@ Classes
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.Parallel.html">Parallel</a></dt>
-      <dd><p>Provides methods and structures for parallel batch processing within the Jitter physics engine.</p>
+      <dd><p>Divides index ranges into batches for processing with <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a>.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.ParallelExtensions.html">ParallelExtensions</a></dt>
-      <dd><p>Provides parallel batch processing extension methods for collections used by the physics engine.</p>
+      <dd><p>Divides collections into index ranges for parallel processing.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html">ReaderWriterLock</a></dt>
-      <dd><p>Provides a lightweight reader-writer lock optimized for rare write operations.</p>
+      <dd><p>Allows concurrent readers or one exclusive writer.</p>
 </dd>
     </dl>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a></dt>
-      <dd><p>Provides a persistent worker thread pool for parallel task execution within the physics engine.</p>
+      <dd><p>Runs queued tasks on reusable worker threads and the calling thread.</p>
 </dd>
     </dl>
     <h3 id="structs">
@@ -119,8 +119,7 @@ Structs
 </h3>
     <dl class="jumplist">
       <dt><a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Parallel.Batch</a></dt>
-      <dd><p>Represents a half-open index range processed by a parallel batch.
-This struct is used by <a class="xref" href="Jitter2.Parallelization.Parallel.html#Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_">ForBatch(int, int, int, Action&lt;Batch&gt;, bool)</a> to split a for-loop into worker tasks.</p>
+      <dd><p>An index range that includes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_Start">Start</a> and excludes <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html#Jitter2_Parallelization_Parallel_Batch_End">End</a>.</p>
 </dd>
     </dl>
 

@@ -225,10 +225,10 @@ Class EllipticalConeLimit  <a class="header-action link-secondary" title="View s
 
 
   <h2 id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>Body 1 owns the cone frame; body 2 owns the axis being constrained. The boundaries are ellipses
-in swing-angle coordinates (the shortest tilt, resolved along the two frame directions).
-Equal lower and upper boundaries constrain the axis to the cone surface. Identical ranges in
-both directions reproduce a circular cone. This constraint does not restrict translation.</p>
+  <div class="markdown level0 remarks"><p>The cone is attached to body 1 and limits the tilt of an axis attached to body 2.
+The two angular ranges set the inner and outer tilt limits in perpendicular directions.
+Matching ranges produce a circular cone; matching inner and outer limits keep the axis
+on the cone surface. Translation remains free.</p>
 </div>
 
 
@@ -503,9 +503,8 @@ both directions reproduce a circular cone. This constraint does not restrict tra
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L58"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
-to assign the correct registered solver pair. The id is later written into the
-unmanaged header when the constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
+to the ID returned by registering the constraint's solver methods.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -669,8 +668,8 @@ Their Euclidean length is the tilt angle. At exactly opposite axes the swing dir
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit_Jitter2_Dynamics_Constraints_AngularLimit__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The reference direction defines the first ellipse semiaxis on body 1. Its component along
-the cone axis is discarded. The second direction is axis cross reference direction.
+  <div class="markdown level1 remarks"><p>The reference direction sets one direction of the ellipse on body 1; it is projected
+perpendicular to the cone axis. The other direction is perpendicular to both.
 A positive inner boundary means the initially aligned pose lies outside the allowed region.
 See the two-axis overload to initialize a pose with nonzero swing.</p>
 </div>
@@ -805,7 +804,7 @@ See the two-axis overload to initialize a pose with nonzero swing.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+  <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -822,9 +821,8 @@ See the two-axis overload to initialize a pose with nonzero swing.</p>
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_EllipticalConeLimit_ResetWarmStart_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
-Useful after restoring snapshots or other discontinuous state changes where preserving
-warm-starting is undesirable.</p>
+  <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
+when impulses from their previous state should no longer be reused.</p>
 </div>
 
 
@@ -837,7 +835,7 @@ warm-starting is undesirable.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/EllipticalConeLimit.cs/#L163"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets both angular ranges together and clears the cached impulse.</p>
+  <div class="markdown level1 summary"><p>Sets the inner and outer tilt limits in both perpendicular directions.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

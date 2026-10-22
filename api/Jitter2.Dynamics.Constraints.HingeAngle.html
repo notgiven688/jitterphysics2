@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class HingeAngle | Jitter2 ">
       
-      <meta name="description" content="Constrains two bodies to rotate relative to each other around a single axis, removing two angular degrees of freedom. Optionally enforces angular limits.">
+      <meta name="description" content="Allows relative rotation around a single axis, with optional angular limits. Does not keep the bodies at a shared anchor; use  for a complete hinge.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Class HingeAngle  <a class="header-action link-secondary" title="View source" hr
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Constrains two bodies to rotate relative to each other around a single axis,
-removing two angular degrees of freedom. Optionally enforces angular limits.</p>
+  <div class="markdown summary"><p>Allows relative rotation around a single axis, with optional angular limits.
+Does not keep the bodies at a shared anchor; use <a class="xref" href="Jitter2.Dynamics.Constraints.HingeJoint.html">HingeJoint</a> for a complete hinge.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -480,9 +480,8 @@ relative rotation vector onto the hinge axis, matching the limit coordinate.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
-to assign the correct registered solver pair. The id is later written into the
-unmanaged header when the constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
+to the ID returned by registering the constraint's solver methods.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -609,7 +608,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_HingeAngle_Initialize_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_AngularLimit__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Stores the axis in the local frame of body 2 and records the initial relative orientation.
+  <div class="markdown level1 remarks"><p>The axis rotates with body 2. The initial relative orientation defines zero rotation.
 Equal or reversed limits fix the hinge at their midpoint.
 Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_Softness">Softness</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularSoftness">DefaultAngularSoftness</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_LimitSoftness">LimitSoftness</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitSoftness">DefaultAngularLimitSoftness</a>,
 <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_Bias">Bias</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularBias">DefaultAngularBias</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_LimitBias">LimitBias</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultAngularLimitBias">DefaultAngularLimitBias</a>.</p>
@@ -698,7 +697,7 @@ either value in <code class="paramref">limit</code> is not finite.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/HingeAngle.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+  <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -715,9 +714,8 @@ either value in <code class="paramref">limit</code> is not finite.</p>
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_HingeAngle_ResetWarmStart_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
-Useful after restoring snapshots or other discontinuous state changes where preserving
-warm-starting is undesirable.</p>
+  <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
+when impulses from their previous state should no longer be reused.</p>
 </div>
 
 

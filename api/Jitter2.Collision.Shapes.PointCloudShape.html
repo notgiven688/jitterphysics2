@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class PointCloudShape | Jitter2 ">
       
-      <meta name="description" content="Represents a convex hull shape defined by a point cloud. Unlike , it is not necessary for the points to lie on the convex hull. For performance optimization, this shape should ideally be used for a small number of points (~300).">
+      <meta name="description" content="Represents the convex hull of a set of points, which may include interior points.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_Shapes_PointCloudShape" data-uid="Jitter2.Collision.Shapes.PointCloudShape" class="text-break">
-Class PointCloudShape  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L19"><i class="bi bi-code-slash"></i></a>
+Class PointCloudShape  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,9 +97,7 @@ Class PointCloudShape  <a class="header-action link-secondary" title="View sourc
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a convex hull shape defined by a point cloud. Unlike <a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>,
-it is not necessary for the points to lie on the convex hull. For performance optimization,
-this shape should ideally be used for a small number of points (~300).</p>
+  <div class="markdown summary"><p>Represents the convex hull of a set of points, which may include interior points.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -204,6 +202,10 @@ this shape should ideally be used for a small number of points (~300).</p>
 
 
 
+  <h2 id="Jitter2_Collision_Shapes_PointCloudShape_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Best suited to small point sets (roughly 300 points or fewer). For larger hulls,
+consider <a class="xref" href="Jitter2.Collision.Shapes.ConvexHullShape.html">ConvexHullShape</a>.</p>
+</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -214,7 +216,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape__ctor_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.PointCloudShape.#ctor(Jitter2.Collision.Shapes.VertexSupportMap)">
   PointCloudShape(VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L57"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L59"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a> class.</p>
@@ -252,7 +254,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape__ctor_System_Collections_Generic_IEnumerable_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.#ctor(System.Collections.Generic.IEnumerable{Jitter2.LinearMath.JVector})">
   PointCloudShape(IEnumerable&lt;JVector&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a> class.</p>
@@ -294,7 +296,7 @@ this shape should ideally be used for a small number of points (~300).</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape__ctor_System_ReadOnlySpan_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.PointCloudShape.#ctor(System.ReadOnlySpan{Jitter2.LinearMath.JVector})">
   PointCloudShape(ReadOnlySpan&lt;JVector&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.Shapes.PointCloudShape.html">PointCloudShape</a> class.</p>
@@ -343,8 +345,7 @@ this shape should ideally be used for a small number of points (~300).</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets or sets the shift value for the shape. This property can be used when constructing a rigid
-body that contains one or more shapes.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the offset added to the vertices in local coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -448,9 +449,8 @@ body that contains one or more shapes.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L132"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-performance or accuracy. The default implementation relies on an approximation of the shape
-constructed using the support map function.</p>
+  <div class="markdown level1 summary"><p>Calculates the shape's mass, center of mass, and inertia at unit density.
+The default implementation approximates the surface; overrides can provide exact mass properties.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -487,11 +487,10 @@ not the center of mass.</p>
 
   <h3 id="Jitter2_Collision_Shapes_PointCloudShape_Clone" data-uid="Jitter2.Collision.Shapes.PointCloudShape.Clone">
   Clone()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates a copy of this shape. The underlying data structure is shared
-among the instances.</p>
+  <div class="markdown level1 summary"><p>Creates a copy that shares the original vertex data.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -523,7 +522,7 @@ among the instances.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L192"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -534,7 +533,7 @@ among the instances.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 
@@ -622,7 +621,7 @@ among the instances.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L19" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/PointCloudShape.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
 

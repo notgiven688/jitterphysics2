@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Struct TreeBox | Jitter2 ">
       
-      <meta name="description" content="Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in acceleration structures such as .">
+      <meta name="description" content="An axis-aligned bounding box used by .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_TreeBox" data-uid="Jitter2.Collision.TreeBox" class="text-break">
-Struct TreeBox  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L26"><i class="bi bi-code-slash"></i></a>
+Struct TreeBox  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L20"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,8 +97,7 @@ Struct TreeBox  <a class="header-action link-secondary" title="View source" href
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in
-acceleration structures such as <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.</p>
+  <div class="markdown summary"><p>An axis-aligned bounding box used by <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -135,11 +134,6 @@ acceleration structures such as <a class="xref" href="Jitter2.Collision.DynamicT
 
 
 
-  <h2 id="Jitter2_Collision_TreeBox_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>The struct is explicitly laid out to occupy exactly 8 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a> fields, enabling efficient SIMD operations and
-binary comparisons. It contains both minimum and maximum corners of the box as <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>, along with
-unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory alignment.</p>
-</div>
 
 
   <h2 class="section" id="constructors">Constructors
@@ -150,7 +144,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox__ctor_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.TreeBox.#ctor(Jitter2.LinearMath.JBoundingBox@)">
   TreeBox(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a> from an existing <a class="xref" href="Jitter2.LinearMath.JBoundingBox.html">JBoundingBox</a>.</p>
@@ -182,7 +176,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox__ctor_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.TreeBox.#ctor(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   TreeBox(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L53"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a> from minimum and maximum corner vectors.</p>
@@ -219,7 +213,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Epsilon" data-uid="Jitter2.Collision.TreeBox.Epsilon">
   Epsilon
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Small epsilon value used for ray-box intersection tests.</p>
@@ -250,7 +244,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Max" data-uid="Jitter2.Collision.TreeBox.Max">
   Max
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum corner of the bounding box.</p>
@@ -281,7 +275,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_MaxW" data-uid="Jitter2.Collision.TreeBox.MaxW">
   MaxW
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L44"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L38"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Padding for SIMD alignment. Not used directly.</p>
@@ -312,7 +306,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Min" data-uid="Jitter2.Collision.TreeBox.Min">
   Min
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L29"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The minimum corner of the bounding box.</p>
@@ -343,7 +337,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_MinW" data-uid="Jitter2.Collision.TreeBox.MinW">
   MinW
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L38"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L32"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Padding for SIMD alignment. Not used directly.</p>
@@ -379,7 +373,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Center" data-uid="Jitter2.Collision.TreeBox.Center">
   Center
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L94"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the center point of the bounding box.</p>
@@ -411,7 +405,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_VectorMax" data-uid="Jitter2.Collision.TreeBox.VectorMax">
   VectorMax
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.intrinsics.vector128-1">Vector128&lt;T&gt;</a> view of the <a class="xref" href="Jitter2.Collision.TreeBox.html#Jitter2_Collision_TreeBox_Max">Max</a> vector for SIMD operations.</p>
@@ -443,7 +437,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_VectorMin" data-uid="Jitter2.Collision.TreeBox.VectorMin">
   VectorMin
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L49"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.runtime.intrinsics.vector128-1">Vector128&lt;T&gt;</a> view of the <a class="xref" href="Jitter2.Collision.TreeBox.html#Jitter2_Collision_TreeBox_Min">Min</a> vector for SIMD operations.</p>
@@ -479,7 +473,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_AsJBoundingBox" data-uid="Jitter2.Collision.TreeBox.AsJBoundingBox">
   AsJBoundingBox()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Converts this <a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a> to a <a class="xref" href="Jitter2.LinearMath.JBoundingBox.html">JBoundingBox</a>.</p>
@@ -511,7 +505,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Contains_Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.Contains(Jitter2.Collision.TreeBox@)">
   Contains(in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L254"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L248"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box completely encloses the specified <a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a>.</p>
@@ -550,7 +544,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Contains_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.Contains(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   Contains(in TreeBox, in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L300"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L294"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the outer box completely contains the inner box using SIMD instructions.</p>
@@ -592,7 +586,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Contains_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.TreeBox.Contains(Jitter2.LinearMath.JBoundingBox@)">
   Contains(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box completely encloses the specified box.</p>
@@ -631,7 +625,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Contains_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.TreeBox.Contains(Jitter2.LinearMath.JVector@)">
   Contains(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box contains the specified point.</p>
@@ -670,7 +664,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_CreateMerged_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.CreateMerged(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   CreateMerged(in TreeBox, in TreeBox, out TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L351"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L345"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a new box that encompasses both input boxes.</p>
@@ -709,7 +703,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Disjoint_Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.Disjoint(Jitter2.Collision.TreeBox@)">
   Disjoint(in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L247"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L241"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box is completely separated from the specified <a class="xref" href="Jitter2.Collision.TreeBox.html">TreeBox</a>.</p>
@@ -748,7 +742,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Disjoint_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.Disjoint(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   Disjoint(in TreeBox, in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L333"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L327"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether two boxes are completely separated (disjoint) using SIMD instructions.</p>
@@ -790,7 +784,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Disjoint_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.TreeBox.Disjoint(Jitter2.LinearMath.JBoundingBox@)">
   Disjoint(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L113"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box is completely separated from (does not overlap) the specified box.</p>
@@ -829,7 +823,7 @@ unused W components (<code>MinW</code>, <code>MaxW</code>) to match memory align
 
   <h3 id="Jitter2_Collision_TreeBox_Encompasses_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.TreeBox.Encompasses(Jitter2.LinearMath.JBoundingBox@)">
   Encompasses(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L134"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box completely encloses the specified box.</p>
@@ -870,7 +864,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_Equals_Jitter2_Collision_TreeBox_" data-uid="Jitter2.Collision.TreeBox.Equals(Jitter2.Collision.TreeBox)">
   Equals(TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L371"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L365"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -909,7 +903,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_Equals_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.Equals(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   Equals(in TreeBox, in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L362"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L356"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether two boxes are equal using binary comparison.</p>
@@ -948,7 +942,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_Equals_System_Object_" data-uid="Jitter2.Collision.TreeBox.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L376"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L370"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -987,7 +981,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_GetHashCode" data-uid="Jitter2.Collision.TreeBox.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L375"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -1020,7 +1014,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_GetSurfaceArea" data-uid="Jitter2.Collision.TreeBox.GetSurfaceArea">
   GetSurfaceArea()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L260"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L254"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the surface area of the bounding box.</p>
@@ -1053,7 +1047,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_MergedSurface_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.MergedSurface(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   MergedSurface(in TreeBox, in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L278"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L272"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the surface area of a hypothetical box that would result from merging the two specified boxes.</p>
@@ -1095,7 +1089,7 @@ public readonly bool Encompasses(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_NotDisjoint_Jitter2_Collision_TreeBox__Jitter2_Collision_TreeBox__" data-uid="Jitter2.Collision.TreeBox.NotDisjoint(Jitter2.Collision.TreeBox@,Jitter2.Collision.TreeBox@)">
   NotDisjoint(in TreeBox, in TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L316"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L310"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether two boxes overlap using SIMD instructions.</p>
@@ -1138,7 +1132,7 @@ public static bool NotDisjoint(in TreeBox first, in TreeBox second)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_NotDisjoint_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.TreeBox.NotDisjoint(Jitter2.LinearMath.JBoundingBox@)">
   NotDisjoint(in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether this box intersects with or overlaps the specified box.</p>
@@ -1178,7 +1172,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_RayIntersect_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.TreeBox.RayIntersect(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   RayIntersect(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L189"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if an infinite ray intersects this bounding box.</p>
@@ -1220,7 +1214,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_RayIntersect_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.TreeBox.RayIntersect(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   RayIntersect(in JVector, in JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L218"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L212"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if an infinite ray intersects this bounding box and calculates the entry distance.</p>
@@ -1265,7 +1259,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_SegmentIntersect_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.TreeBox.SegmentIntersect(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SegmentIntersect(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if a finite line segment intersects this bounding box.</p>
@@ -1307,7 +1301,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_ToString" data-uid="Jitter2.Collision.TreeBox.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L235"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L229"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the fully qualified type name of this instance.</p>
@@ -1344,7 +1338,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_op_Equality_Jitter2_Collision_TreeBox_Jitter2_Collision_TreeBox_" data-uid="Jitter2.Collision.TreeBox.op_Equality(Jitter2.Collision.TreeBox,Jitter2.Collision.TreeBox)">
   operator ==(TreeBox, TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L386"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1382,7 +1376,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 
   <h3 id="Jitter2_Collision_TreeBox_op_Inequality_Jitter2_Collision_TreeBox_Jitter2_Collision_TreeBox_" data-uid="Jitter2.Collision.TreeBox.op_Inequality(Jitter2.Collision.TreeBox,Jitter2.Collision.TreeBox)">
   operator !=(TreeBox, TreeBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L391"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L385"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1425,7 +1419,7 @@ public readonly bool NotDisjoint(in JBoundingBox box)</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L26" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/TreeBox.cs/#L20" class="edit-link">Edit this page</a>
         </div>
 
 

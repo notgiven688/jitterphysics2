@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class UniversalJoint | Jitter2 ">
       
-      <meta name="description" content="Creates a universal joint using a  and a , with an optional  or .">
+      <meta name="description" content="Connects two bodies at a shared anchor, allowing rotation about two axes while constraining twist. Supports an optional motor or servo.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,8 +97,8 @@ Class UniversalJoint  <a class="header-action link-secondary" title="View source
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Creates a universal joint using a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_TwistAngle">TwistAngle</a> and a <a class="xref" href="Jitter2.Dynamics.Constraints.UniversalJoint.html#Jitter2_Dynamics_Constraints_UniversalJoint_BallSocket">BallSocket</a>,
-with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor.html">AngularMotor</a> or <a class="xref" href="Jitter2.Dynamics.Constraints.AngularServo.html">AngularServo</a>.</p>
+  <div class="markdown summary"><p>Connects two bodies at a shared anchor, allowing rotation about two axes while constraining twist.
+Supports an optional motor or servo.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -189,7 +189,7 @@ with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor
 
   <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_JointDrive_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.JointDrive)">
   UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, JointDrive)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L36"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L39"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new universal joint.</p>
@@ -209,11 +209,14 @@ with an optional <a class="xref" href="Jitter2.Dynamics.Constraints.AngularMotor
     <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
     <dd></dd>
     <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The shared anchor point in world space.</p>
+</dd>
     <dt><code>rotateAxis1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The rotation axis attached to body 1, in world space.</p>
+</dd>
     <dt><code>rotateAxis2</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The rotation axis attached to body 2, in world space.</p>
+</dd>
     <dt><code>drive</code> <a class="xref" href="Jitter2.Dynamics.Constraints.JointDrive.html">JointDrive</a></dt>
     <dd><p>The optional drive. Motor and servo torque default to zero.</p>
 </dd>
@@ -245,7 +248,7 @@ or when both body references are the same.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_UniversalJoint__ctor_Jitter2_World_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_System_Boolean_" data-uid="Jitter2.Dynamics.Constraints.UniversalJoint.#ctor(Jitter2.World,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,System.Boolean)">
   UniversalJoint(World, RigidBody, RigidBody, JVector, JVector, JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Joints/UniversalJoint.cs/#L77"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new universal joint.</p>
@@ -266,11 +269,14 @@ public UniversalJoint(World world, RigidBody body1, RigidBody body2, JVector cen
     <dt><code>body2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
     <dd></dd>
     <dt><code>center</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The shared anchor point in world space.</p>
+</dd>
     <dt><code>rotateAxis1</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The rotation axis attached to body 1, in world space.</p>
+</dd>
     <dt><code>rotateAxis2</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
+    <dd><p>The rotation axis attached to body 2, in world space.</p>
+</dd>
     <dt><code>hasMotor</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd></dd>
   </dl>

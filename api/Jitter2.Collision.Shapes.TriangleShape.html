@@ -320,7 +320,7 @@ Class TriangleShape  <a class="header-action link-secondary" title="View source"
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.TriangleShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L111"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L110"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -355,7 +355,7 @@ Class TriangleShape  <a class="header-action link-secondary" title="View source"
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.TriangleShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -396,11 +396,10 @@ Class TriangleShape  <a class="header-action link-secondary" title="View source"
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_CreateAllShapes_Jitter2_Collision_Shapes_TriangleMesh_" data-uid="Jitter2.Collision.Shapes.TriangleShape.CreateAllShapes(Jitter2.Collision.Shapes.TriangleMesh)">
   CreateAllShapes(TriangleMesh)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L64"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Creates and returns all instances of type <a class="xref" href="Jitter2.Collision.Shapes.TriangleShape.html">TriangleShape</a>
-for as given <a class="xref" href="Jitter2.Collision.Shapes.TriangleMesh.html">TriangleMesh</a>.</p>
+  <div class="markdown level1 summary"><p>Creates one shape for each triangle in the mesh.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -437,7 +436,7 @@ for as given <a class="xref" href="Jitter2.Collision.Shapes.TriangleMesh.html">T
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L30"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Appends debug triangles in the coordinate system used by <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">SupportMap(in JVector, out JVector)</a>.</p>
+  <div class="markdown level1 summary"><p>Draws the shape's surface as triangles in local coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -468,9 +467,8 @@ for as given <a class="xref" href="Jitter2.Collision.Shapes.TriangleMesh.html">T
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_TriangleShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-applied by the caller. Use outward-facing triangles for closed surfaces.
-Without an override, the shape is drawn as an approximate surface.</p>
+  <div class="markdown level1 remarks"><p>Override to provide custom debug geometry; otherwise, the surface is approximated.
+Use outward-facing triangles for closed surfaces. Body and shape transforms are applied automatically.</p>
 </div>
 
 
@@ -480,10 +478,10 @@ Without an override, the shape is drawn as an approximate surface.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TriangleShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L154"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -494,7 +492,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 
@@ -513,7 +511,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_GetWorldVertices_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TriangleShape.GetWorldVertices(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   GetWorldVertices(out JVector, out JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the vertices transformed by the attached rigid body. If the shape is unattached,
@@ -553,12 +551,10 @@ returns the mesh vertices without a world transform.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_LocalRayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.TriangleShape.LocalRayCast(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   LocalRayCast(in JVector, in JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L137"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs a local ray cast against the shape, checking if a ray originating from a specified point
-and traveling in a specified direction intersects with the object. It does not take into account the
-transformation of the associated rigid body.</p>
+  <div class="markdown level1 summary"><p>Casts a ray against the shape in local coordinates, without applying the body's transform.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -608,7 +604,7 @@ transformation of the associated rigid body.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TriangleShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TriangleShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TriangleShape.cs/#L166"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Parallel | Jitter2 ">
       
-      <meta name="description" content="Provides methods and structures for parallel batch processing within the Jitter physics engine.">
+      <meta name="description" content="Divides index ranges into batches for processing with .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Parallelization_Parallel" data-uid="Jitter2.Parallelization.Parallel" class="text-break">
-Class Parallel  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L18"><i class="bi bi-code-slash"></i></a>
+Class Parallel  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L15"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class Parallel  <a class="header-action link-secondary" title="View source" href
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides methods and structures for parallel batch processing within the Jitter physics engine.</p>
+  <div class="markdown summary"><p>Divides index ranges into batches for processing with <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -147,9 +147,6 @@ Class Parallel  <a class="header-action link-secondary" title="View source" href
 
 
 
-  <h2 id="Jitter2_Parallelization_Parallel_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>This class is used internally to distribute work across worker threads via <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a>.</p>
-</div>
 
 
   <h2 class="section" id="methods">Methods
@@ -160,10 +157,10 @@ Class Parallel  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean_" data-uid="Jitter2.Parallelization.Parallel.ForBatch(System.Int32,System.Int32,System.Int32,System.Action{Jitter2.Parallelization.Parallel.Batch},System.Boolean)">
   ForBatch(int, int, int, Action&lt;Batch&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Executes tasks in parallel by dividing the work into batches using the <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a>.</p>
+  <div class="markdown level1 summary"><p>Divides an index range into batches and queues a callback for each batch.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -198,9 +195,9 @@ Class Parallel  <a class="header-action link-secondary" title="View source" href
 
 
   <h4 class="section" id="Jitter2_Parallelization_Parallel_ForBatch_System_Int32_System_Int32_System_Int32_System_Action_Jitter2_Parallelization_Parallel_Batch__System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This method splits the range [lower, upper) into <code class="paramref">numTasks</code> batches and processes each batch in parallel.
-The <code class="paramref">action</code> callback is invoked for each batch, which is represented by a <a class="xref" href="Jitter2.Parallelization.Parallel.Batch.html">Parallel.Batch</a> struct.
-If <code class="paramref">execute</code> is true, the method will call <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> to start executing the tasks.</p>
+  <div class="markdown level1 remarks"><p>Callbacks may run concurrently. When <code class="paramref">execute</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>,
+this method waits for all queued tasks to finish. Otherwise, call <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a>
+on the shared pool to run them later. Queueing batches is not thread-safe.</p>
 </div>
 
 
@@ -210,7 +207,7 @@ If <code class="paramref">execute</code> is true, the method will call <a class=
 
   <h3 id="Jitter2_Parallelization_Parallel_GetBounds_System_Int32_System_Int32_System_Int32_System_Int32__System_Int32__" data-uid="Jitter2.Parallelization.Parallel.GetBounds(System.Int32,System.Int32,System.Int32,System.Int32@,System.Int32@)">
   GetBounds(int, int, int, out int, out int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the start and end indices for a specific part of an evenly divided range.</p>
@@ -259,7 +256,7 @@ and 4 divisions: part 0 gets [0,4), part 1 gets [4,8), part 2 gets [8,11), part 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L18" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/Parallel.cs/#L15" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -87,21 +87,21 @@
         <article data-uid="">
 <h1 id="iterative-speculative-contact-discovery-iscd">Iterative Speculative Contact Discovery (ISCD)</h1>
 
-<p>Speculative contacts prevent tunneling by creating a contact before two shapes actually touch. This works well until the contact impulse changes the motion in a way that the original collision query did not examine. An off-center impulse, for example, can make a body rotate into another collision during the same timestep.</p>
+<p>Speculative contacts help prevent <strong>tunneling</strong>, where a moving object passes through an obstacle between simulation steps. They do this by creating a contact before two shapes touch. But the resulting impulse can change the motion and cause a collision that the original query did not predict. An off-center impulse, for example, can make a body rotate into another collision during the same timestep.</p>
 <p>The method explored here repeats collision detection after such an impulse. This article uses the name <strong>Iterative Speculative Contact Discovery (ISCD)</strong> for that approach: detect a speculative contact, apply its impulse, then detect again using the updated velocities.</p>
 <p>The discussion assumes a standard impulse-based rigid-body solver. An interactive example appears below.</p>
-<h2 id="a-contact-before-contact">A contact before contact</h2>
-<p>Consider a ball whose surface is 10 units away from a thin wall. During the next timestep, its velocity would carry it 20 units. The ball starts on one side of the wall and ends on the other, so discrete overlap tests at the start and end of the step find nothing. The ball tunnels through the wall.</p>
-<p>Continuous collision detection (CCD) finds the crossing by <strong>sweeping</strong> the ball along its predicted path. The sweep reports where the surfaces would first touch. It does not move the ball and it does not change its velocity; it only detects the future collision.</p>
-<p>A <strong>speculative contact</strong> turns that prediction into a constraint for the impulse solver. Unlike a regular contact, its two contact points are still separated. The constraint allows the ball to close the 10-unit gap during this timestep, but not to travel through the wall. The solver applies an impulse that removes the excess closing velocity.</p>
+<h2 id="predicting-a-collision">Predicting a collision</h2>
+<p>Consider a sphere whose surface is 10 units away from a thin wall. During the next timestep, its velocity would carry it 20 units. The sphere starts on one side of the wall and ends on the other, so discrete overlap tests at the start and end of the step find nothing. The sphere tunnels through the wall.</p>
+<p>Continuous collision detection (CCD) finds the crossing by <strong>sweeping</strong> the sphere along its predicted path. The sweep reports where the surfaces would first touch. It does not move the sphere and it does not change its velocity; it only detects the future collision.</p>
+<p>A <strong>speculative contact</strong> turns that prediction into a constraint for the impulse solver. Unlike a regular contact, its two contact points are still separated. The constraint allows the sphere to close the 10-unit gap during this timestep, but not to travel through the wall. The solver applies an impulse that removes the excess closing velocity.</p>
 <figure class="ccd-figure">
-  <img src="images/speculative-contact.svg" width="680" height="380" alt="Two predictions from the same starting position. At the original speed, a ball passes through a thin wall. After a speculative contact reduces its speed, the predicted ball ends at the wall. The contact is represented by one point on the ball and one on the wall at the sweep origin.">
+  <img src="images/speculative-contact.svg" width="680" height="380" alt="Two predictions from the same starting position. At the original speed, a sphere passes through a thin wall. After a speculative contact reduces its speed, the predicted sphere ends at the wall. The contact is represented by one point on the sphere and one on the wall at the sweep origin.">
   <figcaption>Both rows start at the same position. The dashed circle shows the predicted position at the end of the step. After the speculative impulse, the prediction ends at the wall instead of passing through it. Bounce is omitted.</figcaption>
 </figure>
-<p>The two markers in the figure are the contact points, one on each shape. They are stored at the current poses of the bodies, which is why there is still a gap between them. Together with the contact normal, they give the solver the separation <span class="math">\(d\)</span>. For a timestep <span class="math">\(\Delta t\)</span>, the contact may close at no more than <span class="math">\(d / \Delta t\)</span>. Any faster approach would make the separation negative before the step ends.</p>
+<p>The two markers in the figure are the contact points, one on each shape. They are stored at the current poses of the bodies, which is why there is still a gap between them. The distance between the markers along the contact normal gives the solver the separation <span class="math">\(d\)</span>. For a timestep <span class="math">\(\Delta t\)</span>, the contact may close at no more than <span class="math">\(d / \Delta t\)</span>. Any faster approach would make the separation negative before the step ends.</p>
 <p>That is the essential difference from an ordinary contact: an ordinary contact assumes the shapes are already touching or overlapping, while a speculative contact constrains them while they are still separated. For background on speculative contacts and other approaches to tunneling, see <a href="https://box2d.org/files/ErinCatto_ContinuousCollision_GDC2013.pdf">Erin Catto's 2013 talk, <em>Continuous Collision</em></a>.</p>
 <h2 id="the-response-changes-the-prediction">The response changes the prediction</h2>
-<p>Now replace the ball with a slightly tilted box. The box moves straight toward the wall and has no angular velocity. Corner A is closest, so the sweep finds a collision there and creates a speculative contact.</p>
+<p>Now replace the sphere with a slightly tilted box. The box moves straight toward the wall and has no angular velocity. Corner A is closest, so the sweep finds a collision there and creates a speculative contact.</p>
 <p>The solver applies an impulse at A. Because A is offset from the center of mass, the impulse changes both the linear and angular velocity of the box. It slows A's approach, but it also starts rotating corner B toward the wall.</p>
 <p>The velocity of any point on a rigid body is</p>
 <div class="math">
@@ -111,7 +111,7 @@ v_p = v + \omega \times r,
 <p>where <span class="math">\(v\)</span> is its linear velocity, <span class="math">\(\omega\)</span> its angular velocity, and <span class="math">\(r\)</span> points from the center of mass to the point. The impulse at A changes both <span class="math">\(v\)</span> and <span class="math">\(\omega\)</span>, so it also changes the velocity at B.</p>
 <p>The new motion is shown below. A now reaches the wall as intended, but B rotates into it. The first sweep could not find this second collision because the box was not rotating until the solver responded at A.</p>
 <figure class="ccd-figure">
-  <img src="images/box-speculative-contact.svg" width="680" height="640" alt="A slightly tilted box approaches the same wall as the ball. The first sweep finds corner A, represented by one point on the box and one on the wall. A speculative push at A slows the box and starts it turning. In the new prediction A remains at the wall, but the box rotates into the obstacle.">
+  <img src="images/box-speculative-contact.svg" width="680" height="640" alt="A slightly tilted box approaches the same wall as the sphere. The first sweep finds corner A, represented by one point on the box and one on the wall. A speculative push at A slows the box and starts it turning. In the new prediction A remains at the wall, but the box rotates into the obstacle.">
   <figcaption>The solid box is the starting pose in both rows. The lower dashed box is the end-of-step prediction after the impulse at A. The overlap at B is highlighted in red, but no contact has been created there yet.</figcaption>
 </figure>
 <p>More solver iterations at A cannot fix this. The solver only knows about the contact at A; it cannot create the missing contact at B. Collision detection has to run again.</p>
@@ -125,7 +125,7 @@ v_p = v + \omega \times r,
 <li>Apply a solver iteration at A. The resulting impulse changes the box's linear and angular velocity.</li>
 <li>Sweep again from the original pose, now using the updated velocities. This sweep finds B and adds a second contact.</li>
 </ol>
-<p>In short:</p>
+<p>The sequence continues:</p>
 <blockquote>
 <p><strong>detect A → solve {A} → detect B → solve {A, B} → detect again → solve all known contacts…</strong></p>
 </blockquote>
@@ -137,7 +137,7 @@ v_p = v + \omega \times r,
 <p>The sweep's time of impact is used to select the next predicted contact. It does not create a substep and the simulation is not advanced to that time. After each response, the next sweep starts from the original poses and covers the full timestep again.</p>
 <h3 id="solving-the-contacts-together">Solving the contacts together</h3>
 <p>The impulses applied during discovery are used to expose further contacts. Once discovery ends, the normal world solver resolves all collected contacts together with the other contacts and joints in the world.</p>
-<p>At this point A and B are coupled. An impulse at B changes the velocity at A, and a later solver iteration can update the impulse at A in response. The bodies are integrated only after this solve is complete.</p>
+<p>The two contacts affect each other. An impulse at B changes the velocity at A, so a later solver iteration may need to adjust the impulse at A. The bodies are integrated only after this solve is complete.</p>
 <h2 id="interactive-example">Interactive example</h2>
 <p>The newly discovered contact does not have to involve the same pair of shapes. In this demo, a fast sphere approaches the upper half of a thin panel from the left. The panel is pinned at its center of mass, so it can rotate but cannot translate. A second sphere rests close to its lower half.</p>
 <p>The demo uses a standard impulse solver with a fixed <span class="math">\(1/30\)</span>-second step. Compare the three methods:</p>
@@ -150,7 +150,7 @@ v_p = v + \omega \times r,
 <iframe class="ccd-demo" src="iscd-demo.html" width="760" height="610" loading="lazy" title="Interactive demonstration of iterative speculative contact discovery"></iframe>
 <h2 id="what-still-needs-care">What still needs care</h2>
 <p>Every additional pass costs another set of sweeps. Discovery can begin with selected fast-moving bodies, but it must also follow bodies whose velocities change through discovered contacts. The panel in the demo begins at rest, for example, but has to be swept after the first sphere makes it rotate.</p>
-<p>Contacts that have already applied impulses remain active as new ones are added. Keeping their geometry fixed avoids changing the constraint underneath an accumulated impulse. Additional sweeps can still reveal distinct contact points between the same pair of shapes.</p>
+<p>Earlier contacts remain active as new ones are added. Their contact points and normals stay fixed during discovery so the solver can keep using the impulses it has already applied. Additional sweeps can still reveal distinct contact points between the same pair of shapes.</p>
 <p>ISCD is iterative and approximate. Its result can depend on discovery order, pass count, solver convergence, sweep accuracy, and whether the contact geometry is refreshed. The final world solve can change the velocities again, so a fixed discovery budget cannot guarantee that every required contact has been found.</p>
 <p>ISCD is implemented in <a href="../documentation/bodies.html#continuous-collision-detection">Jitter's continuous collision detection</a>.</p>
 <p><em>Disclosure: This article was written with the help of AI. The ISCD idea itself came from the author, not the AI; no claim is made that similar methods have not appeared elsewhere.</em></p>

@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class SpringConstraint | Jitter2 ">
       
-      <meta name="description" content="Constrains two bodies to maintain a target distance between anchor points, applying spring-like forces. Removes one translational degree of freedom along the line connecting the anchors.">
+      <meta name="description" content="Applies a spring force between two anchors to maintain a target distance.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_SoftBodies_SpringConstraint" data-uid="Jitter2.SoftBodies.SpringConstraint" class="text-break">
-Class SpringConstraint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L29"><i class="bi bi-code-slash"></i></a>
+Class SpringConstraint  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L27"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,9 +97,7 @@ Class SpringConstraint  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Constrains two bodies to maintain a target distance between anchor points,
-applying spring-like forces. Removes one translational degree of freedom along
-the line connecting the anchors.</p>
+  <div class="markdown summary"><p>Applies a spring force between two anchors to maintain a target distance.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -243,7 +241,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Anchor1" data-uid="Jitter2.SoftBodies.SpringConstraint.Anchor1">
   Anchor1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the first body in world space.</p>
@@ -275,7 +273,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Anchor2" data-uid="Jitter2.SoftBodies.SpringConstraint.Anchor2">
   Anchor2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L198"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L194"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the second body in world space.</p>
@@ -307,7 +305,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Bias" data-uid="Jitter2.SoftBodies.SpringConstraint.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L326"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L321"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor (error correction strength) of the spring constraint.</p>
@@ -340,7 +338,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Distance" data-uid="Jitter2.SoftBodies.SpringConstraint.Distance">
   Distance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L232"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current distance between the anchor points.</p>
@@ -372,7 +370,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Impulse" data-uid="Jitter2.SoftBodies.SpringConstraint.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L160"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
@@ -404,7 +402,7 @@ which can be set directly or computed from physical parameters using
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Softness" data-uid="Jitter2.SoftBodies.SpringConstraint.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L310"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L305"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the spring constraint.</p>
@@ -422,8 +420,7 @@ which can be set directly or computed from physical parameters using
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Default is <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>. Higher values allow more positional error but produce a softer spring.
-Scaled by inverse timestep during solving.</p>
+    <dd><p>Default is <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>. Higher values allow more positional error but produce a softer spring.</p>
 </dd>
   </dl>
 
@@ -438,7 +435,7 @@ Scaled by inverse timestep during solving.</p>
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_TargetDistance" data-uid="Jitter2.SoftBodies.SpringConstraint.TargetDistance">
   TargetDistance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L217"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the target resting distance of the spring.</p>
@@ -475,12 +472,11 @@ Scaled by inverse timestep during solving.</p>
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Create" data-uid="Jitter2.SoftBodies.SpringConstraint.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L62"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L60"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
-to assign the correct registered solver pair. The id is later written into the
-unmanaged header when the constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
+to the ID returned by registering the constraint's solver methods.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -504,7 +500,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L368"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L363"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -543,7 +539,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L371"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L366"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws this constraint using the supplied visualization settings.
@@ -578,7 +574,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_DebugDraw_Jitter2_IDebugDrawer_Jitter2_LinearMath_JVector__Jitter2_DebugDrawSettings__" data-uid="Jitter2.SoftBodies.SpringConstraint.DebugDraw(Jitter2.IDebugDrawer,Jitter2.LinearMath.JVector@,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, ref JVector, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L376"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws the spring with a caller-owned coil reference. Retain this direction between frames
@@ -615,7 +611,7 @@ to keep the coil continuous through arbitrary motion, including a reversal of th
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.SoftBodies.SpringConstraint.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   Initialize(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint from world-space anchor points.</p>
@@ -644,8 +640,7 @@ to keep the coil continuous through arbitrary motion, including a reversal of th
 
 
   <h4 class="section" id="Jitter2_SoftBodies_SpringConstraint_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Computes local anchor offsets from the current body positions.
-Default values: <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Softness">Softness</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>, <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Bias">Bias</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearBias">DefaultLinearBias</a>.
+  <div class="markdown level1 remarks"><p>Default values: <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Softness">Softness</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>, <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Bias">Bias</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearBias">DefaultLinearBias</a>.
 The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_TargetDistance">TargetDistance</a> is set to the initial distance between the anchors.</p>
 </div>
 
@@ -662,7 +657,7 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_IterateSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.SoftBodies.SpringConstraint.IterateSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   IterateSpringConstraint(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L341"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L336"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs one iteration of the spring constraint solver.</p>
@@ -698,7 +693,7 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_PrepareForIterationSpringConstraint_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.SoftBodies.SpringConstraint.PrepareForIterationSpringConstraint(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   PrepareForIterationSpringConstraint(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L254"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Prepares the spring constraint for iteration.</p>
@@ -734,10 +729,10 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_ResetWarmStart" data-uid="Jitter2.SoftBodies.SpringConstraint.ResetWarmStart">
   ResetWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+  <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -754,9 +749,8 @@ The <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftB
 
 
   <h4 class="section" id="Jitter2_SoftBodies_SpringConstraint_ResetWarmStart_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
-Useful after restoring snapshots or other discontinuous state changes where preserving
-warm-starting is undesirable.</p>
+  <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
+when impulses from their previous state should no longer be reused.</p>
 </div>
 
 
@@ -766,12 +760,10 @@ warm-starting is undesirable.</p>
 
   <h3 id="Jitter2_SoftBodies_SpringConstraint_SetSpringParameters_System_Single_System_Single_System_Single_" data-uid="Jitter2.SoftBodies.SpringConstraint.SetSpringParameters(System.Single,System.Single,System.Single)">
   SetSpringParameters(float, float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the spring parameters using physical properties. This method calculates and sets
-the <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Softness">Softness</a> and <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Bias">Bias</a> properties. It assumes that the mass
-of the involved bodies, their translation locks, the anchor direction, and the timestep size do not change.</p>
+  <div class="markdown level1 summary"><p>Sets <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Softness">Softness</a> and <a class="xref" href="Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_Bias">Bias</a> from a frequency and damping ratio.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -800,8 +792,9 @@ of the involved bodies, their translation locks, the anchor direction, and the t
 
 
   <h4 class="section" id="Jitter2_SoftBodies_SpringConstraint_SetSpringParameters_System_Single_System_Single_System_Single__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>At coincident anchors, the most responsive translation axis
-determines the effective mass used to configure the spring.</p>
+  <div class="markdown level1 remarks"><p>Call again if the bodies' masses, translation locks, anchor direction, or timestep change.
+When the anchors coincide, the calculation uses the translation direction in which
+the bodies respond most easily to a force.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -818,7 +811,7 @@ when <code class="paramref">damping</code> is negative, or when any value is not
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L29" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SpringConstraint.cs/#L27" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -211,7 +211,7 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Initializes a new instance of the ConeShape class with specified radius and height. The symmetry axis of the cone is aligned along the Y-axis.</p>
+  <div class="markdown level1 summary"><p>Creates a cone with its symmetry axis along the local Y-axis.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -372,9 +372,8 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-performance or accuracy. The default implementation relies on an approximation of the shape
-constructed using the support map function.</p>
+  <div class="markdown level1 summary"><p>Calculates the shape's mass, center of mass, and inertia at unit density.
+The default implementation approximates the surface; overrides can provide exact mass properties.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -414,7 +413,7 @@ not the center of mass.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Appends debug triangles in the coordinate system used by <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">SupportMap(in JVector, out JVector)</a>.</p>
+  <div class="markdown level1 summary"><p>Draws the shape's surface as triangles in local coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -445,9 +444,8 @@ not the center of mass.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_ConeShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-applied by the caller. Use outward-facing triangles for closed surfaces.
-Without an override, the shape is drawn as an approximate surface.</p>
+  <div class="markdown level1 remarks"><p>Override to provide custom debug geometry; otherwise, the surface is approximated.
+Use outward-facing triangles for closed surfaces. Body and shape transforms are applied automatically.</p>
 </div>
 
 
@@ -460,7 +458,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -471,7 +469,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 

@@ -87,23 +87,9 @@
         <article data-uid="">
 <h1 id="hull-sampling">Hull Sampling</h1>
 
-<p>The teapot is a concave shape, which we will approximate using its convex hull (<a href="https://en.wikipedia.org/wiki/Convex_hull">Wikipedia</a>).
-As a first step, we will reduce the number of vertices used to construct the convex hull.</p>
-<div class="NOTE">
-<h5>Note</h5>
-<p><strong>Sampling</strong></p>
-<p>We could work with the entire set of vertices, but this comes with two main disadvantages:</p>
-<ol>
-<li><p>The set may include vertices that lie inside the hull. While these do not affect the simulation outcome, they are still briefly considered during collision detection in each frame.</p>
-</li>
-<li><p>We typically don't need an exact convex hull. Omitting a few vertices often has little effect on accuracy while significantly improving performance.</p>
-</li>
-</ol>
-<p>Reducing the number of vertices can help speed up the simulation without sacrificing collision fidelity.</p>
-</div>
-<p>Jitter provides a built-in method to simplify the vertex set: <code>ShapeHelper.SampleHull</code>.
-This function samples directions uniformly across the unit sphere and returns the vertices that are furthest away in those directions. These vertices, by definition, lie on the convex hull of the original shape.</p>
-<p>Replace the content of <code>Program.cs</code> with the following code:</p>
+<p>The teapot has concave parts, such as the space under its handle. We will approximate it with a <strong>convex hull</strong>: imagine a tight skin stretched around the outside. The collision shape will not include those inward curves or holes.</p>
+<p>We can reduce collision detection work by keeping only some of the model's vertices. <code>ShapeHelper.SampleHull</code> selects outermost vertices in many directions. This removes interior points and gives us a smaller set that approximates the original hull. Fewer points are faster to test, but a coarser sample can lose detail.</p>
+<p>Replace the contents of <code>Program.cs</code> with:</p>
 <pre><code class="lang-cs">using System.Numerics;
 using Jitter2.Collision.Shapes;
 using Jitter2.LinearMath;
@@ -183,7 +169,7 @@ while (!WindowShouldClose())
 CloseWindow();
 </code></pre>
 <p><img src="images/teapot.png" alt="plane"></p>
-<p>The teapot's wireframe is drawn in white, the green wireframe shows the convex hull, and the sampled hull vertices are depicted as red dots.</p>
+<p>White shows the model, green shows the approximate hull, and red dots mark the sampled vertices.</p>
 
 </article>
 

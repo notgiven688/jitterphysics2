@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DynamicTree | Jitter2 ">
       
-      <meta name="description" content="Represents a dynamic AABB tree for broadphase collision detection.">
+      <meta name="description" content="Tracks objects by their bounding boxes to find potential collisions and answer spatial queries.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,7 +97,7 @@ Class DynamicTree  <a class="header-action link-secondary" title="View source" h
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a dynamic AABB tree for broadphase collision detection.</p>
+  <div class="markdown summary"><p>Tracks objects by their bounding boxes to find potential collisions and answer spatial queries.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -148,8 +148,7 @@ Class DynamicTree  <a class="header-action link-secondary" title="View source" h
 
 
   <h2 id="Jitter2_Collision_DynamicTree_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>Uses a bounding volume hierarchy with a Surface Area Heuristic (SAH) for insertion.
-Supports incremental updates for moving objects and bounded background optimization.</p>
+  <div class="markdown level0 remarks"><p>Supports moving objects and automatically improves the tree during updates.</p>
 </div>
 
 
@@ -161,7 +160,7 @@ Supports incremental updates for moving objects and bounded background optimizat
 
   <h3 id="Jitter2_Collision_DynamicTree__ctor_System_Func_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy_System_Boolean__" data-uid="Jitter2.Collision.DynamicTree.#ctor(System.Func{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy,System.Boolean})">
   DynamicTree(Func&lt;IDynamicTreeProxy, IDynamicTreeProxy, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L208"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L204"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a> class.</p>
@@ -235,7 +234,7 @@ See <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_D
 
   <h3 id="Jitter2_Collision_DynamicTree_ExpandEps" data-uid="Jitter2.Collision.DynamicTree.ExpandEps">
   ExpandEps
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L76"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specifies a small additional expansion of the bounding box which is constant.</p>
@@ -266,7 +265,7 @@ See <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_D
 
   <h3 id="Jitter2_Collision_DynamicTree_ExpandFactor" data-uid="Jitter2.Collision.DynamicTree.ExpandFactor">
   ExpandFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L71"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
@@ -298,7 +297,7 @@ See <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_D
 
   <h3 id="Jitter2_Collision_DynamicTree_InitialSize" data-uid="Jitter2.Collision.DynamicTree.InitialSize">
   InitialSize
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L59"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L56"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initial capacity of the internal node array.</p>
@@ -329,7 +328,7 @@ See <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_D
 
   <h3 id="Jitter2_Collision_DynamicTree_NullNode" data-uid="Jitter2.Collision.DynamicTree.NullNode">
   NullNode
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sentinel value indicating a null/invalid node index.</p>
@@ -360,7 +359,7 @@ See <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_D
 
   <h3 id="Jitter2_Collision_DynamicTree_PruningFraction" data-uid="Jitter2.Collision.DynamicTree.PruningFraction">
   PruningFraction
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fraction of the potential pairs hash set to scan per update for pruning invalid entries.
@@ -435,7 +434,7 @@ A value of 128 means 1/128th of the hash set is scanned each update.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_DebugTimings" data-uid="Jitter2.Collision.DynamicTree.DebugTimings">
   DebugTimings
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L253"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L249"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Contains timings for the stages of the last call to <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.
@@ -501,7 +500,7 @@ leaves from the root and applies non-cost-increasing rotations to their affected
 
   <h3 id="Jitter2_Collision_DynamicTree_Filter" data-uid="Jitter2.Collision.DynamicTree.Filter">
   Filter
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the filter function used to exclude proxy pairs from collision detection.</p>
@@ -526,9 +525,8 @@ leaves from the root and applies non-cost-increasing rotations to their affected
 
 
   <h4 class="section" id="Jitter2_Collision_DynamicTree_Filter_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>The filter is called during overlap enumeration. Return <code>false</code> to exclude a pair.
-In Jitter, this is typically used to exclude shapes belonging to the same rigid body.
-Changing the filter rebuilds potential pairs for registered proxies.</p>
+  <div class="markdown level1 remarks"><p>Return <code>false</code> to exclude a pair, for example shapes on the same body.
+Changing the filter rebuilds the list of potential pairs for registered proxies.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -544,7 +542,7 @@ Changing the filter rebuilds potential pairs for registered proxies.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_HashSetInfo" data-uid="Jitter2.Collision.DynamicTree.HashSetInfo">
   HashSetInfo
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L264"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L260"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the total allocated slot count and the number of entries in the internal hash set
@@ -577,7 +575,7 @@ used to store potential overlaps.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Nodes" data-uid="Jitter2.Collision.DynamicTree.Nodes">
   Nodes
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Read-only view of the internal tree nodes for debugging or visualization.
@@ -610,7 +608,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Proxies" data-uid="Jitter2.Collision.DynamicTree.Proxies">
   Proxies
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L36"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets a read-only view of all proxies registered with this tree.</p>
@@ -642,7 +640,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Root" data-uid="Jitter2.Collision.DynamicTree.Root">
   Root
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L138"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the index of the root node, or <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_NullNode">NullNode</a> if the tree is empty.</p>
@@ -674,7 +672,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_UpdatedProxyCount" data-uid="Jitter2.Collision.DynamicTree.UpdatedProxyCount">
   UpdatedProxyCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L258"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L254"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of updated proxies during the last call to <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_">Update(bool, float)</a>.</p>
@@ -710,7 +708,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_ActivateProxy__1___0_" data-uid="Jitter2.Collision.DynamicTree.ActivateProxy``1(``0)">
   ActivateProxy&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L515"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L511"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Marks a proxy as active, causing it to be tracked for movement during updates.</p>
@@ -755,7 +753,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_AddProxy__1___0_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.AddProxy``1(``0,System.Boolean)">
   AddProxy&lt;T&gt;(T, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L447"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L443"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a proxy to the tree.</p>
@@ -809,10 +807,10 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_CalculateCost" data-uid="Jitter2.Collision.DynamicTree.CalculateCost">
   CalculateCost()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L555"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L551"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the SAH cost of the tree (sum of all node surface areas).</p>
+  <div class="markdown level1 summary"><p>Measures the tree's spatial grouping by summing all node surface areas.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -842,7 +840,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_DeactivateProxy__1___0_" data-uid="Jitter2.Collision.DynamicTree.DeactivateProxy``1(``0)">
   DeactivateProxy&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L530"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L526"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Marks a proxy as inactive, assuming it will not move outside its expanded bounding box.</p>
@@ -887,7 +885,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_EnumerateOverlaps_System_Action_Jitter2_Collision_IDynamicTreeProxy_Jitter2_Collision_IDynamicTreeProxy__System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.EnumerateOverlaps(System.Action{Jitter2.Collision.IDynamicTreeProxy,Jitter2.Collision.IDynamicTreeProxy},System.Boolean)">
   EnumerateOverlaps(Action&lt;IDynamicTreeProxy, IDynamicTreeProxy&gt;, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L293"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L289"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enumerates all potential collision pairs and invokes the specified action for each.</p>
@@ -923,7 +921,7 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_EnumerateTreeBoxes_System_Action_Jitter2_Collision_TreeBox_System_Int32__" data-uid="Jitter2.Collision.DynamicTree.EnumerateTreeBoxes(System.Action{Jitter2.Collision.TreeBox,System.Int32})">
   EnumerateTreeBoxes(Action&lt;TreeBox, int&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L565"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L561"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Enumerates all axis-aligned bounding boxes in the tree.</p>
@@ -956,11 +954,10 @@ Do not cache the returned span across tree operations.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearestPoint_Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearestPoint(Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearestPoint(in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Point.html">SupportPrimitives.Point</a>.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted object to a point in world space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1008,11 +1005,10 @@ that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Po
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearestPoint_Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearestPoint(Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearestPoint(in JVector, float, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, float, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Point.html">SupportPrimitives.Point</a>.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted object to a point in world space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1062,11 +1058,10 @@ that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Po
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearestSphere_System_Single_Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearestSphere(System.Single,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearestSphere(float, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.html">SupportPrimitives.Sphere</a>.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted object to a sphere.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1125,11 +1120,10 @@ that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sp
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearestSphere_System_Single_Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearestSphere(System.Single,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearestSphere(float, in JVector, float, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, float, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.html">SupportPrimitives.Sphere</a>.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted object to a sphere.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1191,7 +1185,7 @@ that queries with a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sp
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearest``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the closest <a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a> proxy in the tree to the query shape
@@ -1268,11 +1262,10 @@ filter that returns <code>false</code> for results with <code>distance == 0</cod
 
   <h3 id="Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.FindNearest``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.FindNearestFilterPre,Jitter2.Collision.DynamicTree.FindNearestFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, float, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.FindNearest.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Bounded variant of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_FindNearest__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_FindNearestFilterPre_Jitter2_Collision_DynamicTree_FindNearestFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">FindNearest&lt;T&gt;(in T, in JQuaternion, in JVector, FindNearestFilterPre?, FindNearestFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that limits the search to <code class="paramref">maxDistance</code>.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted object within <code class="paramref">maxDistance</code> of the query shape.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1342,7 +1335,7 @@ that limits the search to <code class="paramref">maxDistance</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_IsActive__1___0_" data-uid="Jitter2.Collision.DynamicTree.IsActive``1(``0)">
   IsActive&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L503"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L499"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks whether the specified proxy is currently active.</p>
@@ -1387,10 +1380,10 @@ that limits the search to <code class="paramref">maxDistance</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Optimize_System_Func_System_Double__System_Int32_System_Single_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.Optimize(System.Func{System.Double},System.Int32,System.Single,System.Boolean)">
   Optimize(Func&lt;double&gt;, int, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L787"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L792"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Attempts to improve the tree topology by randomly reinserting existing leaf nodes.</p>
+  <div class="markdown level1 summary"><p>Attempts to speed up spatial queries by regrouping proxies using caller-supplied random values.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1404,15 +1397,14 @@ that limits the search to <code class="paramref">maxDistance</code>.</p>
     <dd><p>A function returning random values in [0, 1).</p>
 </dd>
     <dt><code>sweeps</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>Number of synchronous optimization passes. Must be greater than zero.</p>
+    <dd><p>The number of optimization sweeps.</p>
 </dd>
     <dt><code>chance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>Probability of reinserting each proxy per probabilistic sweep. Range: [0, 1].</p>
+    <dd><p>Probability of selecting each leaf in a sweep, from 0 to 1.</p>
 </dd>
     <dt><code>incremental</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>If <code>false</code>, all proxies are reinserted in random order on the first sweep. If
-<code>true</code>, every sweep selects proxies according to <code class="paramref">chance</code>.
-This option does not spread work across calls or simulation steps.</p>
+    <dd><p>If <code>true</code>, select proxies using <code class="paramref">chance</code> on every sweep;
+otherwise, reinsert all proxies on the first sweep.</p>
 </dd>
   </dl>
 
@@ -1424,9 +1416,8 @@ This option does not spread work across calls or simulation steps.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_DynamicTree_Optimize_System_Func_System_Double__System_Int32_System_Single_System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Optimization preserves leaf node indices, expanded bounding boxes, proxy activity, and
-the potential-pair cache. The operation is stochastic and is not guaranteed to reduce
-<a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_CalculateCost">CalculateCost()</a> on every invocation.</p>
+  <div class="markdown level1 remarks"><p>Existing proxies, node indices, bounding boxes, activity, and potential pairs are preserved.
+Random selection means a call is not guaranteed to improve <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_CalculateCost">CalculateCost()</a>.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -1445,10 +1436,10 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_Optimize_System_Int32_System_Single_System_Boolean_" data-uid="Jitter2.Collision.DynamicTree.Optimize(System.Int32,System.Single,System.Boolean)">
   Optimize(int, float, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L776"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L771"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Attempts to improve the tree topology by randomly reinserting existing leaf nodes.</p>
+  <div class="markdown level1 summary"><p>Attempts to speed up spatial queries by regrouping randomly selected proxies.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1479,9 +1470,8 @@ This option does not spread work across calls or simulation steps.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_DynamicTree_Optimize_System_Int32_System_Single_System_Boolean__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Optimization preserves leaf node indices, expanded bounding boxes, proxy activity, and
-the potential-pair cache. The operation is stochastic and is not guaranteed to reduce
-<a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_CalculateCost">CalculateCost()</a> on every invocation.</p>
+  <div class="markdown level1 remarks"><p>Existing proxies, node indices, bounding boxes, activity, and potential pairs are preserved.
+Random selection means a call is not guaranteed to improve <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_CalculateCost">CalculateCost()</a>.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -1497,7 +1487,7 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JBoundingBox@)">
   Query&lt;T&gt;(T, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L749"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L745"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies overlapping an axis-aligned bounding box.</p>
@@ -1539,7 +1529,7 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_Query__1___0_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Query&lt;T&gt;(T, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L736"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L732"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies whose world bounding boxes intersect a ray.</p>
@@ -1584,7 +1574,7 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JBoundingBox@)">
   Query&lt;TSink&gt;(ref TSink, in JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L681"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L677"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies overlapping an axis-aligned bounding box and appends all hits to the specified sink.</p>
@@ -1626,7 +1616,7 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_Query__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.DynamicTree.Query``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Query&lt;TSink&gt;(ref TSink, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L629"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L625"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Queries the tree for proxies whose world bounding boxes intersect a ray and appends the candidates to the sink.</p>
@@ -1671,10 +1661,10 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
 
   <h3 id="Jitter2_Collision_DynamicTree_RayCast_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Collision_DynamicTree_RayCastFilterPre_Jitter2_Collision_DynamicTree_RayCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.RayCast(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Collision.DynamicTree.RayCastFilterPre,Jitter2.Collision.DynamicTree.RayCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,System.Single@)">
   RayCast(JVector, JVector, RayCastFilterPre?, RayCastFilterPost?, out IDynamicTreeProxy?, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.RayCast.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.RayCast.cs/#L70"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Ray cast against the world.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted ray hit in the tree.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1700,13 +1690,12 @@ the potential-pair cache. The operation is stochastic and is not guaranteed to r
     <dd><p>The shape which was hit.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.
-The surface normal at the hit point. <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the ray does not hit,
-or if the ray origin is inside the hit shape. Use the return value to determine whether
-a hit occurred; do not rely on this being non-zero as a hit indicator.
+    <dd><p>The surface normal in world space. Zero if there is no hit or the origin is inside the shape.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
+    <dd><p>The hit parameter: <code>hitPoint = origin + lambda * direction</code>.
+Zero if the origin is inside the hit shape.</p>
+</dd>
   </dl>
 
   <h4 class="section">Returns</h4>
@@ -1733,7 +1722,7 @@ a hit occurred; do not rely on this being non-zero as a hit indicator.
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.RayCast.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Ray cast against the world.</p>
+  <div class="markdown level1 summary"><p>Finds the nearest accepted ray hit with a hit parameter less than <code class="paramref">maxLambda</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1744,38 +1733,35 @@ a hit occurred; do not rely on this being non-zero as a hit indicator.
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>origin</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Origin of the ray.</p>
+    <dd><p>The ray origin in world space.</p>
 </dd>
     <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>Direction of the ray. Does not have to be normalized.</p>
+    <dd><p>The ray direction; it need not be normalized.</p>
 </dd>
     <dt><code>maxLambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
     <dd><p>Exclusive upper bound for hit lambda; hits at this value are excluded.</p>
 </dd>
     <dt><code>pre</code> <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.<a class="xref" href="Jitter2.Collision.DynamicTree.RayCastFilterPre.html">RayCastFilterPre</a></dt>
-    <dd><p>Optional pre-filter that can skip candidate shapes.</p>
+    <dd><p>Optional filter applied before the exact test.</p>
 </dd>
     <dt><code>post</code> <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.<a class="xref" href="Jitter2.Collision.DynamicTree.RayCastFilterPost.html">RayCastFilterPost</a></dt>
-    <dd><p>Optional post-filter that can skip candidate results.</p>
+    <dd><p>Optional filter applied after the exact test.</p>
 </dd>
     <dt><code>proxy</code> <a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a></dt>
-    <dd><p>The shape which was hit.</p>
+    <dd><p>The accepted proxy, or null if none is found.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><param name="lambda">Distance from the origin to the hit point in units of the ray direction. Zero if the origin is inside the hit shape.
-The surface normal at the hit point. <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> if the ray does not hit,
-or if the ray origin is inside the hit shape. Use the return value to determine whether
-a hit occurred; do not rely on this being non-zero as a hit indicator.
+    <dd><p>The result normal in world space.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The ray or sweep parameter of the result.</p>
+    <dd><p>The hit parameter: <code>hitPoint = origin + lambda * direction</code>.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>True if the ray hits, false otherwise.</p>
+    <dd><p>True if an accepted hit is found; otherwise, false.</p>
 </dd>
   </dl>
 
@@ -1793,7 +1779,7 @@ a hit occurred; do not rely on this being non-zero as a hit indicator.
 
   <h3 id="Jitter2_Collision_DynamicTree_RemoveProxy_Jitter2_Collision_IDynamicTreeProxy_" data-uid="Jitter2.Collision.DynamicTree.RemoveProxy(Jitter2.Collision.IDynamicTreeProxy)">
   RemoveProxy(IDynamicTreeProxy)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L541"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L537"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes a proxy from the tree.</p>
@@ -1832,11 +1818,10 @@ a hit occurred; do not rely on this being non-zero as a hit indicator.
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastBox_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastBox(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastBox(in JVector, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Box.html">SupportPrimitives.Box</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a box through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1901,11 +1886,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Box.html
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastBox_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastBox(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastBox(in JVector, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Box.html">SupportPrimitives.Box</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a box through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1973,11 +1957,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Box.html
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastCapsule_System_Single_System_Single_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastCapsule(System.Single,System.Single,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastCapsule(float, float, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Capsule.html">SupportPrimitives.Capsule</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a capsule through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2045,11 +2028,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Capsule.
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastCapsule_System_Single_System_Single_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastCapsule(System.Single,System.Single,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastCapsule(float, float, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L171"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Capsule.html">SupportPrimitives.Capsule</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a capsule through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2120,11 +2102,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Capsule.
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastCylinder_System_Single_System_Single_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastCylinder(System.Single,System.Single,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastCylinder(float, float, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L192"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Cylinder.html">SupportPrimitives.Cylinder</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a cylinder through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2192,11 +2173,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Cylinder
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastCylinder_System_Single_System_Single_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastCylinder(System.Single,System.Single,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastCylinder(float, float, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L222"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L214"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Cylinder.html">SupportPrimitives.Cylinder</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a cylinder through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2267,11 +2247,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Cylinder
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastSphere_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastSphere(System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastSphere(float, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.html">SupportPrimitives.Sphere</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a sphere through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2333,11 +2312,10 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.h
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCastSphere_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCastSphere(System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCastSphere(float, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Convenience overload of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.html">SupportPrimitives.Sphere</a>.</p>
+  <div class="markdown level1 summary"><p>Sweeps a sphere through the tree and returns the first accepted hit.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2402,7 +2380,7 @@ that sweeps a <a class="xref" href="Jitter2.Collision.SupportPrimitives.Sphere.h
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L260"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L252"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sweeps a support-mapped query shape against all <a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a> proxies in the tree
@@ -2478,11 +2456,10 @@ is zero. <code>false</code> if no accepted hit is found, in which case <code cla
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L290"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Bounded variant of <a class="xref" href="Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)</a>
-that limits the sweep to <code class="paramref">maxLambda</code>.</p>
+  <div class="markdown level1 summary"><p>Finds the first accepted sweep hit up to <code class="paramref">maxLambda</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -2555,7 +2532,7 @@ that limits the sweep to <code class="paramref">maxLambda</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Update_System_Boolean_System_Single_" data-uid="Jitter2.Collision.DynamicTree.Update(System.Boolean,System.Single)">
   Update(bool, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L331"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L327"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates all active proxies in the tree.</p>
@@ -2591,7 +2568,7 @@ that limits the sweep to <code class="paramref">maxLambda</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Update__1___0_" data-uid="Jitter2.Collision.DynamicTree.Update``1(``0)">
   Update&lt;T&gt;(T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L414"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L410"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Forces an immediate update of a single proxy in the tree.</p>
@@ -2636,7 +2613,7 @@ that limits the sweep to <code class="paramref">maxLambda</code>.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_Update__1___0_System_Single_" data-uid="Jitter2.Collision.DynamicTree.Update``1(``0,System.Single)">
   Update&lt;T&gt;(T, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L424"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.cs/#L420"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Forces an immediate update of a single proxy in the tree using the specified timestep.</p>

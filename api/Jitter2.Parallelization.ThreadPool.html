@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ThreadPool | Jitter2 ">
       
-      <meta name="description" content="Provides a persistent worker thread pool for parallel task execution within the physics engine.">
+      <meta name="description" content="Runs queued tasks on reusable worker threads and the calling thread.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Parallelization_ThreadPool" data-uid="Jitter2.Parallelization.ThreadPool" class="text-break">
-Class ThreadPool  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L88"><i class="bi bi-code-slash"></i></a>
+Class ThreadPool  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class ThreadPool  <a class="header-action link-secondary" title="View source" hr
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides a persistent worker thread pool for parallel task execution within the physics engine.</p>
+  <div class="markdown summary"><p>Runs queued tasks on reusable worker threads and the calling thread.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -146,13 +146,12 @@ Class ThreadPool  <a class="header-action link-secondary" title="View source" hr
 
   <h2 id="Jitter2_Parallelization_ThreadPool_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-Worker threads are kept alive for the lifetime of the pool to avoid wake-up overhead.
-Tasks are distributed via per-thread queues with work stealing for load balancing.
+Add tasks with <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_AddTask__1_System_Action___0____0_">AddTask&lt;T&gt;(Action&lt;T&gt;, T)</a>, then call <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> to run them and wait
+for completion. Do not queue tasks, execute them, or change the thread count concurrently.
 </p>
 <p>
-The main thread participates as "worker 0" during <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> calls.
-Use <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_ResumeWorkers">ResumeWorkers()</a> and <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_PauseWorkers">PauseWorkers()</a> to control thread activity
-between simulation steps.
+Call <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_PauseWorkers">PauseWorkers()</a> to reduce CPU usage between executions.
+<a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_Execute">Execute()</a> resumes workers automatically.
 </p>
 </div>
 
@@ -164,7 +163,7 @@ between simulation steps.
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ThreadsPerProcessor" data-uid="Jitter2.Parallelization.ThreadPool.ThreadsPerProcessor">
   ThreadsPerProcessor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L136"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L135"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The fraction of available processors to use for worker threads.</p>
@@ -200,11 +199,10 @@ between simulation steps.
 
   <h3 id="Jitter2_Parallelization_ThreadPool_Instance" data-uid="Jitter2.Parallelization.ThreadPool.Instance">
   Instance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L282"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L279"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the shared <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a> instance. First access must be serialized by the caller;
-concurrent initialization can create more than one pool.</p>
+  <div class="markdown level1 summary"><p>Gets the shared <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a> instance.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -225,6 +223,9 @@ concurrent initialization can create more than one pool.</p>
 
 
 
+  <h4 class="section" id="Jitter2_Parallelization_ThreadPool_Instance_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Do not access this property concurrently before the pool has been initialized.</p>
+</div>
 
 
 
@@ -233,7 +234,7 @@ concurrent initialization can create more than one pool.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_InstanceInitialized" data-uid="Jitter2.Parallelization.ThreadPool.InstanceInitialized">
   InstanceInitialized
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L273"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the <a class="xref" href="Jitter2.Parallelization.ThreadPool.html">ThreadPool</a> instance is initialized.</p>
@@ -266,7 +267,7 @@ concurrent initialization can create more than one pool.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_IsPaused" data-uid="Jitter2.Parallelization.ThreadPool.IsPaused">
   IsPaused
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L166"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets whether worker threads have been requested to pause when idle.</p>
@@ -302,10 +303,10 @@ workers may still be finishing previously queued work.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ThreadCount" data-uid="Jitter2.Parallelization.ThreadPool.ThreadCount">
   ThreadCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Gets the number of worker threads managed by this pool.</p>
+  <div class="markdown level1 summary"><p>Gets the total number of threads that can process tasks, including the calling thread.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -320,8 +321,7 @@ workers may still be finishing previously queued work.</p>
   <h4 class="section">Property Value</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>Includes the main thread as worker 0.</p>
-</dd>
+    <dd></dd>
   </dl>
 
 
@@ -335,7 +335,7 @@ workers may still be finishing previously queued work.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ThreadCountSuggestion" data-uid="Jitter2.Parallelization.ThreadPool.ThreadCountSuggestion">
   ThreadCountSuggestion
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L193"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the suggested number of threads based on available processors.</p>
@@ -372,7 +372,7 @@ workers may still be finishing previously queued work.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_AddTask__1_System_Action___0____0_" data-uid="Jitter2.Parallelization.ThreadPool.AddTask``1(System.Action{``0},``0)">
   AddTask&lt;T&gt;(Action&lt;T&gt;, T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L262"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L259"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a task to the queue for later execution.</p>
@@ -424,10 +424,10 @@ This method is not thread-safe and must be called from a single thread.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ChangeThreadCount_System_Int32_" data-uid="Jitter2.Parallelization.ThreadPool.ChangeThreadCount(System.Int32)">
   ChangeThreadCount(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L208"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L205"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Changes the number of worker threads.</p>
+  <div class="markdown level1 summary"><p>Changes the total thread count, including the calling thread.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -438,7 +438,7 @@ This method is not thread-safe and must be called from a single thread.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>numThreads</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
-    <dd><p>The new thread count.</p>
+    <dd><p>The new thread count. Use 1 to process tasks only on the calling thread.</p>
 </dd>
   </dl>
 
@@ -450,8 +450,7 @@ This method is not thread-safe and must be called from a single thread.</p>
 
 
   <h4 class="section" id="Jitter2_Parallelization_ThreadPool_ChangeThreadCount_System_Int32__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Existing worker threads are stopped and new ones are created.
-This operation blocks until all previous threads have terminated.</p>
+  <div class="markdown level1 remarks"><p>This method waits for the previous worker threads to stop before creating replacements.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -467,7 +466,7 @@ This operation blocks until all previous threads have terminated.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_Execute" data-uid="Jitter2.Parallelization.ThreadPool.Execute">
   Execute()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L373"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Executes all queued tasks and blocks until completion.</p>
@@ -487,13 +486,8 @@ This operation blocks until all previous threads have terminated.</p>
 
 
   <h4 class="section" id="Jitter2_Parallelization_ThreadPool_Execute_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>
-Tasks are distributed to per-thread queues in round-robin order. The main thread
-participates as worker 0 and performs work stealing from other queues.
-</p>
-<p>
-This method automatically calls <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_ResumeWorkers">ResumeWorkers()</a> at the start.
-</p>
+  <div class="markdown level1 remarks"><p>The calling thread also processes tasks. Workers are resumed automatically.
+If a task throws an exception, all tasks finish before the exception is rethrown here.</p>
 </div>
 
 
@@ -503,7 +497,7 @@ This method automatically calls <a class="xref" href="Jitter2.Parallelization.Th
 
   <h3 id="Jitter2_Parallelization_ThreadPool_PauseWorkers" data-uid="Jitter2.Parallelization.ThreadPool.PauseWorkers">
   PauseWorkers()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L310"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L307"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Pauses all worker threads after they finish their current tasks.</p>
@@ -523,7 +517,7 @@ This method automatically calls <a class="xref" href="Jitter2.Parallelization.Th
 
 
   <h4 class="section" id="Jitter2_Parallelization_ThreadPool_PauseWorkers_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Workers will block on a wait handle until <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_ResumeWorkers">ResumeWorkers()</a> is called.
+  <div class="markdown level1 remarks"><p>Workers wait until <a class="xref" href="Jitter2.Parallelization.ThreadPool.html#Jitter2_Parallelization_ThreadPool_ResumeWorkers">ResumeWorkers()</a> is called.
 This reduces CPU usage between simulation steps.</p>
 </div>
 
@@ -534,7 +528,7 @@ This reduces CPU usage between simulation steps.</p>
 
   <h3 id="Jitter2_Parallelization_ThreadPool_ResumeWorkers" data-uid="Jitter2.Parallelization.ThreadPool.ResumeWorkers">
   ResumeWorkers()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L298"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L295"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Resumes all worker threads so they can process queued tasks.</p>
@@ -565,7 +559,7 @@ Manual calls are useful when managing the pool directly.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L88" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ThreadPool.cs/#L87" class="edit-link">Edit this page</a>
         </div>
 
 

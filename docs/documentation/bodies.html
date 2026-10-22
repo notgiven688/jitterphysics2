@@ -87,36 +87,34 @@
         <article data-uid="">
 <h1 id="rigid-bodies">Rigid Bodies</h1>
 
-<p>Rigid bodies are the main entity of the dynamics system.</p>
+<p>A rigid body represents an object's position, rotation, mass, and motion. Attach shapes to define what it collides with.</p>
 <h2 id="creating-a-body">Creating a body</h2>
-<p>Rigid bodies are associated with an instance of the <code>World</code> class:</p>
+<p>Create a body in the world that will simulate it:</p>
 <pre><code class="lang-cs">var world = new World();
 var body = world.CreateRigidBody();
 </code></pre>
 <h2 id="adding-shapes">Adding shapes</h2>
-<p>Multiple shapes can be added to a rigid body, for example:</p>
+<p>A body can have more than one shape:</p>
 <pre><code class="lang-cs">body.AddShapes([new SphereShape(radius: 2), new BoxShape(size: 1)]);
 </code></pre>
 <p>Shapes determine how bodies collide with each other.</p>
 <div class="WARNING">
 <h5>Warning</h5>
 <p><strong>Creating many bodies at once</strong>
-When calling <code>body.AddShape(shape)</code>, the shape is registered in the collision system of the engine and immediately added to the spatial tree structure (<code>DynamicTree</code>) for efficient broad-phase collision detection.
-Avoid registering many objects at <span class="math">\((0, 0, 0)\)</span> by setting the rigid body position before adding shapes.</p>
+Set each body's position before adding shapes. Shapes enter collision detection immediately,
+so adding many at the origin creates unnecessary overlap checks.</p>
 </div>
 <div class="WARNING">
 <h5>Warning</h5>
 <p><strong>Passing the same instance to multiple bodies</strong>
-Passing the same instance of a shape to multiple bodies is not allowed in Jitter and will throw an exception.</p>
+Each shape instance can belong to only one body. Create a new instance for each body, or use <code>Clone()</code> on shape types that support it.</p>
 </div>
-<p>The sphere shape is defined so that its geometric center aligns with the (local) coordinate system's center at <span class="math">\((0, 0, 0)\)</span>.
-The same holds for all basic primitives (sphere, box, capsule, cone, cylinder).</p>
-<p>After adding a shape, the mass properties (mass and inertia) of the associated rigid body are calculated accordingly.
-Unit density is assumed for the calculations.</p>
+<p>Built-in primitives use their center of mass as the local origin, <span class="math">\((0, 0, 0)\)</span>.</p>
+<p>Adding a shape recalculates the body's mass and inertia from all its shapes, assuming a density of 1.</p>
 <p>Adding just a sphere</p>
 <pre><code class="lang-cs">body.AddShape(new SphereShape(radius: 1));
 </code></pre>
-<p>will result in a body with the textbook inertia and mass of a unit-density sphere of radius one.</p>
+<p>gives the body the mass and inertia of a sphere with radius 1 and density 1.</p>
 <p>The mass properties of the body can also be set directly using <code>body.SetMassInertia</code>.
 Inertia tensors use <code>JSymmetricMatrix</code>, which stores the six independent components of a symmetric matrix.
 Both <code>body.InverseInertia</code> and shape mass-property calculations use this type.</p>
@@ -126,9 +124,8 @@ Both <code>body.InverseInertia</code> and shape mass-property calculations use t
 <p>Passing <code>MassInertiaUpdateMode.Preserve</code> to <code>body.AddShape(...)</code> or <code>body.AddShapes(...)</code> prevents the automatic recalculation of mass properties when shapes are added.</p>
 <div class="IMPORTANT">
 <h5>Important</h5>
-<p>The position of a rigid body must align with its center of mass.
-In the body's local reference frame, the center of mass is <span class="math">\((0, 0, 0)\)</span>.
-Shapes or combinations of shapes must be translated accordingly.</p>
+<p>The body's position represents its center of mass. Arrange its shapes so their combined center of mass is at the local origin, <span class="math">\((0, 0, 0)\)</span>.
+Use shape offsets when needed; see the <a href="../tutorials/teapots/hello-world.html">teapot example</a>.</p>
 </div>
 <h3 id="debugging-shapes">Debugging shapes</h3>
 <p>Debug drawing shows the collision shapes attached to a body at their current positions and rotations.
@@ -204,9 +201,8 @@ When set to <code>false</code>, the impulse is silently ignored if the body is s
 The property <code>body.AffectedByGravity</code> can be used to disable gravity for individual bodies.
 Gravity follows the <a href="#forces-and-impulses">force integration timing</a> described above.</p>
 <h2 id="restricting-motion-and-planar-simulations">Restricting motion and planar simulations</h2>
-<p><code>body.AllowedMotion</code> specifies the translations and rotations permitted by the simulation.
-The default is <code>MotionAxes.All</code>. Each assignment replaces the previous selection.
-All axes are in <strong>world space</strong>, including the angular axes.</p>
+<p><code>body.AllowedMotion</code> selects the directions in which a body can move and the axes around which it can rotate. The default, <code>MotionAxes.All</code>, allows all motion. Setting the property replaces the previous selection.</p>
+<p>All selected axes are in <strong>world space</strong>.</p>
 <p>For motion in the XY plane:</p>
 <pre><code class="lang-cs">body.AllowedMotion = MotionAxes.PlaneXY;
 // Equivalent to LinearX | LinearY | AngularZ.
@@ -217,41 +213,24 @@ You can also combine individual axes:</p>
 </code></pre>
 <p>An angular flag names the axis of rotation: <code>AngularZ</code> permits rotation around the world Z axis.
 <code>MotionAxes.Linear</code> permits all translations, and <code>MotionAxes.Angular</code> permits all rotations.</p>
-<p>Restrictions change the <strong>effective inverse mass and inverse inertia used by the solver</strong>.
-Prohibited directions behave as having infinite mass or inertia. <code>body.Mass</code> remains a scalar,
-and <code>body.InverseInertia</code> continues to describe the original inertia in body space.
-For coupled inertia tensors, restricting rotation also changes the effective response around
-the remaining axes. The engine derives this response from the original tensor.</p>
-<p>The original mass properties are preserved. Calls to <code>SetMassInertia</code> and shape changes update
-those properties while retaining the current restrictions. To restore unrestricted response
-from the latest mass properties, assign:</p>
+<p>Forces, impulses, contacts, and joints cannot move a body in a blocked direction. The restrictions also apply to kinematic velocities, but you can still set <code>Position</code> and <code>Orientation</code> directly.</p>
+<p>Restrictions preserve <code>body.Mass</code> and its body-space <code>InverseInertia</code>. If rotation around one axis affects rotation around another, locking an axis also changes the response around the remaining axes.</p>
+<p>Changing shapes or calling <code>SetMassInertia</code> updates mass properties without removing the restrictions. To allow all motion again:</p>
 <pre><code class="lang-cs">body.AllowedMotion = MotionAxes.All;
 </code></pre>
-<p>Changing <code>AllowedMotion</code> immediately clears prohibited velocity components, invalidates cached
-contact and joint impulses, and schedules the affected bodies for activation. Cleared velocities
-are not restored when motion is allowed again. Restrictions apply to forces, gravity, impulses,
-contacts, joints, and kinematic velocities. Position and orientation can still be assigned directly.
-Gyroscopic integration is skipped while any linear or angular axis is restricted.
-Do not change the property concurrently with <code>World.Step</code>.</p>
-<p><code>MotionAxes.None</code> prohibits simulated movement while preserving the body's <code>MotionType</code> and
-collision/island participation. Use <code>MotionType.Static</code> for ordinary static geometry.</p>
-<p>Planar motion uses the existing 3D collision shapes and contact generation. Bodies retain their
-initial coordinate along the prohibited translation axis; set that coordinate consistently when
-building a planar scene. This does not add separate 2D shape types or collision detection.</p>
+<p>Changing <code>AllowedMotion</code> stops motion in the blocked directions, clears saved contact and joint impulses, and schedules affected bodies to wake. Allowing motion again does not restore the old velocities. Gyroscopic forces are skipped while any axis is restricted.</p>
+<p>Do not change this property while another thread is stepping the world.</p>
+<p><code>MotionAxes.None</code> blocks all simulated movement without changing the body's <code>MotionType</code>. The body still participates in contacts and connected groups. Use <code>MotionType.Static</code> for ordinary static geometry.</p>
+<p>Planar scenes still use 3D collision shapes. Bodies keep their initial position along the blocked axis, so place them in the same plane when building the scene.</p>
 <h3 id="custom-constraints">Custom constraints</h3>
-<p>The low-level <code>RigidBodyData.InverseMassVector</code> is a <code>JVector</code>. Use
-<code>JVector.Multiply(data.InverseMassVector, impulse)</code> for the componentwise velocity response and
-<code>JVector.Multiply(direction, data.InverseMassVector) * direction</code> for a solver row's translational inverse effective mass.
-Multiplying two <code>JVector</code> values with <code>*</code> computes a dot product, so it cannot replace
-componentwise multiplication.</p>
+<p>When writing a custom solver, use <code>RigidBodyData.InverseMassVector</code> for the inverse mass along each world axis. Calculate a linear velocity change with <code>JVector.Multiply(data.InverseMassVector, impulse)</code>. Along a constraint direction, the inverse effective mass is <code>JVector.Multiply(direction, data.InverseMassVector) * direction</code>.</p>
+<p><code>JVector.Multiply</code> multiplies matching components. The <code>*</code> operator between two vectors calculates a dot product, so it cannot replace that operation.</p>
 <p><code>RigidBodyData.InverseInertiaWorld</code> is a <code>JSymmetricMatrix</code> stored in six scalars. It supports
 <code>JVector.Transform</code> and can be expanded to <code>JMatrix</code> using <code>ToMatrix()</code>. Custom solvers must handle zero
 response in prohibited directions, including singular effective-mass matrices. The body data
 occupies 128 bytes in single precision and 256 bytes in double precision. Access its fields
 by name rather than relying on field offsets.</p>
-<p>For symmetric, positive-semidefinite effective-mass matrices, use
-<code>MathHelper.PseudoInverseSymmetric</code> to invert the responsive subspace while retaining zero
-response in blocked directions:</p>
+<p>An effective-mass matrix can be singular when motion is blocked. For symmetric, positive-semidefinite matrices, <code>MathHelper.PseudoInverseSymmetric</code> calculates an inverse for the allowed motion and leaves blocked directions at zero:</p>
 <pre><code class="lang-cs">JMatrix effectiveMass = MathHelper.PseudoInverseSymmetric(inverseEffectiveMass);
 </code></pre>
 <p>Compute this during constraint preparation and reuse the result in solver iterations.
@@ -259,69 +238,46 @@ The method assumes finite, symmetric, positive-semidefinite input. It uses a num
 cutoff when diagonalizing singular or nearly singular matrices; see its API documentation
 for the precision-dependent tolerance.</p>
 <h2 id="damping">Damping</h2>
-<p>Jitter2 uses a simple damping system to slow rigid bodies down.
-This improves simulation stability and also resembles mechanical systems losing energy in the real world.
-There is a linear and an angular damping factor for each body which can be set using <code>body.Damping</code>.
-With each <code>world.Step</code>, the angular and linear velocity of each dynamic rigid body is multiplied by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the damping factor.
-For performance reasons there is no time dependency for the damping system.
-As a result, bodies in a simulation with smaller time steps experience greater damping.</p>
+<p>Damping gradually slows a body's motion. Set the linear and angular factors with <code>body.Damping</code>; zero disables damping and one stops that motion.</p>
+<p>Each call to <code>world.Step</code> multiplies velocity by <span class="math">\(1-\gamma\)</span>, where <span class="math">\(\gamma\)</span> is the corresponding damping factor. Damping is applied per step, so smaller time steps produce more damping over the same elapsed time.</p>
 <h2 id="continuous-collision-detection">Continuous collision detection</h2>
-<p>Continuous collision detection (CCD) helps prevent fast, small objects
-from tunneling through thin obstacles when their motion between frames would skip a collision.
-Enable it on a per-body basis using <code>body.EnableCcd</code>.
-Enable CCD on both bodies when both move quickly, for example two fast projectiles.
-A moving body without CCD can enter the collision path without being detected in time.</p>
-<p>Prediction includes both translation and rotation. Contacts affect both linear and angular velocity,
-so an off-center impact can make a body rotate. Jitter repeats discovery with the changed velocities
-and follows bodies moved by those impulses, even if CCD was not enabled on them.</p>
-<p><code>world.CcdIterations</code> controls the number of discovery passes (default: four).
-<code>world.CcdVelocityThreshold</code> sets the minimum estimated relative surface speed for CCD sweeps
-(default: <code>0.1</code>), allowing nearly stationary pairs to skip sweeps.
-<code>world.CcdRelaxationFactor</code> controls how much the bodies may close
-the predicted gap. More passes cost more collision queries. Joints run in the regular solver after
-discovery and can change the motion again. This remains an approximation with a limited number
-of passes; smaller timesteps may still be needed.</p>
+<p>Continuous collision detection (CCD) helps prevent fast-moving or rotating bodies from passing through obstacles between simulation steps. Enable it with <code>body.EnableCcd = true</code>.</p>
+<p>When two bodies both move quickly, enable CCD on both, for example two fast projectiles. A moving body without CCD can otherwise be missed.</p>
+<p>CCD predicts collisions from both movement and rotation. A collision response can change that prediction, so Jitter checks again using the new velocities. It also checks bodies set in motion by those responses, even if they did not have CCD enabled.</p>
+<p>Three world settings control the cost and behavior:</p>
+<ul>
+<li><code>CcdIterations</code>: number of collision discovery passes. More passes can find additional collisions but cost more. Default is 4.</li>
+<li><code>CcdVelocityThreshold</code>: pairs below this estimated relative surface speed skip CCD checks. The estimate includes translation and rotation. Default is <code>0.1</code> world units per second.</li>
+<li><code>CcdRelaxationFactor</code>: fraction of the predicted gap that a contact allows to close during one step. Default is <code>0.9</code>, leaving a small separation margin.</li>
+</ul>
+<p>A fixed number of passes cannot guarantee that every collision is found. Joints are solved afterward and can change motion again. Smaller time steps may still be needed.</p>
 <h2 id="friction-and-restitution">Friction and Restitution</h2>
 <p>Friction and restitution coefficients may be set through <code>body.Friction</code> and <code>body.Restitution</code>.
 For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>
 <h2 id="collide-events">Collide events</h2>
 <p><code>RigidBody</code> provides two events: <code>BeginCollide</code> and <code>EndCollide</code>.
-These events are triggered whenever an arbiter is created or removed which involves the rigid body.
+<code>BeginCollide</code> is raised when a contact pair begins, including a predicted CCD contact. <code>EndCollide</code> is raised when that pair expires during a simulation step; explicit removal does not raise it.
 See <a href="arbiters.html#collision-events">Arbiters</a> for details and examples.</p>
 <h2 id="activationdeactivation">Activation/Deactivation</h2>
-<p>A rigid body is always assigned to an island.
-Islands are formed by bodies which are pairwise interacting with each other through contacts or constraints.
-Different islands are not interacting with each other in any way.</p>
-<p>Active rigid bodies may be marked for deactivation by the world once their angular and linear velocity remain below the thresholds defined in <code>body.DeactivationThreshold</code> for a period defined by <code>body.DeactivationTime</code>.
-If all non-static bodies within an island are ready to sleep, the whole island gets deactivated.
-The simulation cost for inactive bodies is effectively zero.
-Islands (and their associated bodies) may get woken up as soon as a collision with an active body is registered.</p>
-<p>Using <code>body.SetActivationState</code>, the user can schedule a body for activation or deactivation.
-It will not immediately change the activation state of the body (<code>body.IsActive</code>).
-The next <code>world.Step</code> will then consider this body and its connected island for activation or deactivation.
-Calling e.g. <code>body.SetActivationState(false)</code> on a falling body with a velocity greater than <code>body.DeactivationThreshold</code> will have no lasting effect, because the body marks its island active again during the update.</p>
+<p>Bodies connected through contacts or constraints form an <strong>island</strong>. These groups go to sleep and wake together.</p>
+<p>A body is ready to sleep once its linear and angular speeds stay below <code>body.DeactivationThreshold</code> for <code>body.DeactivationTime</code> seconds. When all non-static bodies in an island are ready, the island sleeps. Sleeping bodies have very little simulation cost and can wake when they collide with an active body.</p>
+<p><code>body.SetActivationState(true)</code> requests a wake-up on the next step. Passing <code>false</code> requests sleep, but a body that is still moving too fast, or is connected to an active body, can stay awake. The call does not immediately change <code>body.IsActive</code>.</p>
 <p>For explicit immediate deactivation, use <code>world.ForceSleepIsland(island)</code>.
 This deactivates the whole island at once, ignores the normal deactivation thresholds, and clears linear velocity, angular velocity, queued forces, and queued torques for all bodies in the island.</p>
 <p>Activation state is most meaningful for dynamic and kinematic bodies:</p>
 <ul>
 <li>Dynamic bodies are actively simulated while awake and skipped while sleeping.</li>
 <li>Kinematic bodies can be part of islands. They are treated as infinite-mass bodies by the solver, but they can wake connected dynamic bodies through contacts or constraints.</li>
-<li>Static bodies are normally inactive bookkeeping objects. They do not form regular island connections and <code>body.SetActivationState(true)</code> does not make the static body itself active.</li>
+<li>Static bodies remain inactive and do not connect islands. Calling <code>body.SetActivationState(true)</code> does not activate the static body itself.</li>
 </ul>
 <h2 id="static-bodies">Static bodies</h2>
 <p>Static bodies (<code>body.MotionType == MotionType.Static</code>) have infinite mass and therefore are not affected by collisions or constraints.
 They also do not join islands.
 Static bodies do not generate collisions with other static or inactive bodies.
 Static bodies are normally inactive even if <code>body.SetActivationState(true)</code> is called.</p>
-<p>Changing the position or orientation of a static body updates its broad-phase proxies and wakes affected non-static bodies on the next step.
-The static body itself remains inactive; the bodies that have to react to the changed contact state are activated.
-This is useful for occasional edits to static level geometry, but it is a discontinuous transform from the solver's point of view.
-For continuously moving platforms or obstacles, prefer kinematic bodies.</p>
+<p>Changing a static body's position or orientation updates its collision bounds and wakes affected non-static bodies on the next step. The static body stays inactive. Use this for occasional edits to level geometry; use a kinematic body for a platform or obstacle that moves continuously.</p>
 <h2 id="kinematic-bodies">Kinematic bodies</h2>
-<p>Kinematic bodies (<code>body.MotionType == MotionType.Kinematic</code>) can have a velocity and therefore change their position.
-They act similar to static bodies during collisions—their velocity is not changed when colliding with a regular body.
-They do take part in collision islands.
-Because of that, kinematic bodies participate in island activation and deactivation like other non-static bodies.</p>
+<p>Kinematic bodies (<code>body.MotionType == MotionType.Kinematic</code>) move according to their assigned linear and angular velocities. Forces, collisions, and constraints do not change those velocities. They can push dynamic bodies and take part in island activation and sleeping.</p>
 
 </article>
 

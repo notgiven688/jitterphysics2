@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class NarrowPhase | Jitter2 ">
       
-      <meta name="description" content="Provides collision detection algorithms for convex shapes defined by support functions.">
+      <meta name="description" content="Tests convex shapes for overlap, distance, ray hits, and swept collisions.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,7 +97,7 @@ Class NarrowPhase  <a class="header-action link-secondary" title="View source" h
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides collision detection algorithms for convex shapes defined by support functions.</p>
+  <div class="markdown summary"><p>Tests convex shapes for overlap, distance, ray hits, and swept collisions.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -148,13 +148,8 @@ Class NarrowPhase  <a class="header-action link-secondary" title="View source" h
 
 
   <h2 id="Jitter2_Collision_NarrowPhase_remarks">Remarks</h2>
-  <div class="markdown level0 remarks"><p>
-Implements GJK (Gilbert-Johnson-Keerthi) for distance queries, MPR (Minkowski Portal Refinement)
-for fast overlap detection, and EPA (Expanding Polytope Algorithm) for penetration depth.
-</p>
-<p>
-All methods are thread-safe when used with thread-local solver state.
-</p>
+  <div class="markdown level0 remarks"><p>Shapes are supplied through <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a>. Queries may run on separate threads
+if the supplied shapes can be read concurrently and are not modified during the queries.</p>
 </div>
 
 
@@ -166,11 +161,11 @@ All methods are thread-safe when used with thread-local solver state.
 
   <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Collision&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L739"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L733"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
-cases. Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.</p>
+  <div class="markdown level1 summary"><p>Calculates contact points and signed penetration for two convex shapes, including separated shapes.
+All output coordinates are in world space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -218,8 +213,8 @@ positive for overlap and negative for separation. It remains defined when the po
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
-failure, collision information reverts to the type's default values.</p>
+    <dd><p><code>true</code> if collision information was calculated, including for separated shapes;
+<code>false</code> if the search failed. Only use the outputs when the result is <code>true</code>.</p>
 </dd>
   </dl>
 
@@ -244,12 +239,11 @@ failure, collision information reverts to the type's default values.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Collision__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Collision``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Collision&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L699"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L693"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Determines whether two convex shapes overlap, providing detailed information for both overlapping and separated
-cases. It assumes that support shape A is at position zero and not rotated.
-Internally, the method employs the Expanding Polytope Algorithm (EPA) to gather collision information.</p>
+  <div class="markdown level1 summary"><p>Calculates contact points and signed penetration for two convex shapes, including separated shapes.
+Shape A is at the origin with identity orientation; all coordinates use its local frame.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -291,8 +285,8 @@ positive for overlap and negative for separation. It remains defined when the po
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>Returns true if the algorithm completes successfully, false otherwise. In case of algorithm convergence
-failure, collision information reverts to the type's default values.</p>
+    <dd><p><code>true</code> if collision information was calculated, including for separated shapes;
+<code>false</code> if the search failed. Only use the outputs when the result is <code>true</code>.</p>
 </dd>
   </dl>
 
@@ -317,10 +311,10 @@ failure, collision information reverts to the type's default values.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Distance&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L845"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L839"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Provides the distance and closest points for non-overlapping shapes.</p>
+  <div class="markdown level1 summary"><p>Calculates the distance and closest points between separated shapes in world space.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -391,11 +385,11 @@ can be provided.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Distance__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.NarrowPhase.Distance``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Distance&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L780"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L774"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Provides the distance and closest points for non-overlapping shapes. It
-assumes that support shape A is located at position zero and not rotated.</p>
+  <div class="markdown level1 summary"><p>Calculates the distance and closest points between separated shapes.
+Shape A is at the origin with identity orientation; all coordinates use its local frame.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -412,10 +406,10 @@ assumes that support shape A is located at position zero and not rotated.</p>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
-    <dd><p>The orientation of shape B in world space.</p>
+    <dd><p>The orientation of shape B in shape A's local frame.</p>
 </dd>
     <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The position of shape B in world space.</p>
+    <dd><p>The position of shape B in shape A's local frame.</p>
 </dd>
     <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
     <dd><p>Closest point on shape A. Undefined for the overlapping case.</p>
@@ -460,13 +454,11 @@ can be provided.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
   MprEpa&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L964"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L954"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
-Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
-Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound exceeds
-a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).</p>
+  <div class="markdown level1 summary"><p>Tests overlap and returns contact points, a normal, and estimated penetration in world space.
+Uses MPR, with EPA refinement for penetrations exceeding <code class="paramref">epaThreshold</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -501,9 +493,8 @@ a predefined threshold, the results are further refined using the Expanding Poly
     <dd><p>The deepest point on shape B that is inside shape A.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
-distance (determined by the penetration depth) to avoid overlap.</p>
+    <dd><p>Unit normal from <code class="paramref">pointB</code> toward <code class="paramref">pointA</code>.
+Moving shape B along this normal separates the shapes. Remains defined when the points coincide.</p>
 </dd>
     <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
     <dd><p>The penetration depth.</p>
@@ -541,14 +532,12 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_MprEpa__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__System_Single_" data-uid="Jitter2.Collision.NarrowPhase.MprEpa``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,System.Single)">
   MprEpa&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1013"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L1000"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Detects whether two convex shapes overlap and provides detailed collision information for overlapping shapes.
-It assumes that support shape A is at position zero and not rotated.
-Internally, this method utilizes the Minkowski Portal Refinement (MPR) to obtain the collision information.
-Although MPR is not exact, it delivers a strict upper bound for the penetration depth. If the upper bound
-exceeds a predefined threshold, the results are further refined using the Expanding Polytope Algorithm (EPA).</p>
+  <div class="markdown level1 summary"><p>Tests overlap and returns contact points, a normal, and estimated penetration.
+Shape A is at the origin with identity orientation; all coordinates use its local frame.
+Uses MPR, with EPA refinement for penetrations exceeding <code class="paramref">epaThreshold</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -577,9 +566,8 @@ exceeds a predefined threshold, the results are further refined using the Expand
     <dd><p>The deepest point on shape B that is inside shape A.</p>
 </dd>
     <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The normalized collision normal pointing from pointB to pointA. This normal remains defined even
-if pointA and pointB coincide, representing the direction in which the shapes must be separated by the minimal
-distance (determined by the penetration depth) to avoid overlap.</p>
+    <dd><p>Unit normal from <code class="paramref">pointB</code> toward <code class="paramref">pointA</code>.
+Moving shape B along this normal separates the shapes. Remains defined when the points coincide.</p>
 </dd>
     <dt><code>penetration</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
     <dd><p>The penetration depth.</p>
@@ -617,7 +605,7 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Overlap&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JQuaternion, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L921"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L914"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs an overlap test.</p>
@@ -653,7 +641,7 @@ distance (determined by the penetration depth) to avoid overlap.</p>
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>Returns true of the shapes overlap, and false otherwise.</p>
+    <dd><p><code>true</code> if the shapes overlap; otherwise, <code>false</code>.</p>
 </dd>
   </dl>
 
@@ -678,11 +666,10 @@ distance (determined by the penetration depth) to avoid overlap.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_Overlap__2___0____1__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.Overlap``2(``0@,``1@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)">
   Overlap&lt;Ta, Tb&gt;(in Ta, in Tb, in JQuaternion, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L880"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L873"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Performs an overlap test. It assumes that support shape A is located
-at position zero and not rotated.</p>
+  <div class="markdown level1 summary"><p>Tests whether two convex shapes overlap. Shape A is at the origin with identity orientation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -699,17 +686,17 @@ at position zero and not rotated.</p>
     <dd><p>The support function of shape B.</p>
 </dd>
     <dt><code>orientationB</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
-    <dd><p>The orientation of shape B in world space.</p>
+    <dd><p>The orientation of shape B in shape A's local frame.</p>
 </dd>
     <dt><code>positionB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>The position of shape B in world space.</p>
+    <dd><p>The position of shape B in shape A's local frame.</p>
 </dd>
   </dl>
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd><p>Returns true of the shapes overlap, and false otherwise.</p>
+    <dd><p><code>true</code> if the shapes overlap; otherwise, <code>false</code>.</p>
 </dd>
   </dl>
 
@@ -734,7 +721,7 @@ at position zero and not rotated.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   PointTest&lt;Ta&gt;(in Ta, in JMatrix, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L557"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L552"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Check if a point is inside a shape.</p>
@@ -787,7 +774,7 @@ at position zero and not rotated.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_PointTest__1___0__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.PointTest``1(``0@,Jitter2.LinearMath.JVector@)">
   PointTest&lt;Ta&gt;(in Ta, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L506"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L501"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Check if a point is inside a shape.</p>
@@ -834,7 +821,7 @@ at position zero and not rotated.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
   RayCast&lt;Ta&gt;(in Ta, in JQuaternion, in JVector, in JVector, in JVector, out float, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L580"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L575"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a ray cast against a shape.</p>
@@ -898,7 +885,7 @@ the ray origin is inside the shape.</p>
 
   <h3 id="Jitter2_Collision_NarrowPhase_RayCast__1___0__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.NarrowPhase.RayCast``1(``0@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@,Jitter2.LinearMath.JVector@)">
   RayCast&lt;Ta&gt;(in Ta, in JVector, in JVector, out float, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L610"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/NarrowPhase.cs/#L605"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs a ray cast against a shape.</p>

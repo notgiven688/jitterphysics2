@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class DistanceLimit | Jitter2 ">
       
-      <meta name="description" content="Constrains the distance between a fixed point in the reference frame of one body and a fixed point in the reference frame of another body. A fixed limit removes one translational degree of freedom; a range limit acts when a boundary is reached. For a distance of zero, use the  constraint.">
+      <meta name="description" content="Keeps the distance between two body anchors within a range, or at a fixed value. For a fixed distance of zero, use .">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_DistanceLimit" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit" class="text-break">
-Class DistanceLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L21"><i class="bi bi-code-slash"></i></a>
+Class DistanceLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L19"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,10 +97,8 @@ Class DistanceLimit  <a class="header-action link-secondary" title="View source"
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Constrains the distance between a fixed point in the reference frame of one body and a fixed
-point in the reference frame of another body. A fixed limit removes one translational degree
-of freedom; a range limit acts when a boundary is reached. For a distance of zero, use the
-<a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a> constraint.</p>
+  <div class="markdown summary"><p>Keeps the distance between two body anchors within a range, or at a fixed value.
+For a fixed distance of zero, use <a class="xref" href="Jitter2.Dynamics.Constraints.BallSocket.html">BallSocket</a>.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -237,7 +235,7 @@ of freedom; a range limit acts when a boundary is reached. For a distance of zer
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Anchor1" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Anchor1">
   Anchor1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L123"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the first rigid body in world space. The anchor point is
@@ -271,7 +269,7 @@ public JVector Anchor1 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Anchor2" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Anchor2">
   Anchor2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the anchor point on the second rigid body in world space. The anchor point is
@@ -305,7 +303,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Bias" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L315"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L312"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the bias factor controlling how aggressively distance error is corrected.</p>
@@ -338,7 +336,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Distance" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Distance">
   Distance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L190"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L187"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current distance between anchor points in world space.</p>
@@ -370,7 +368,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Impulse" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L328"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L325"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated solver impulse from the last solved substep.</p>
@@ -402,7 +400,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Softness" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L299"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L296"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the constraint.</p>
@@ -435,7 +433,7 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_TargetDistance" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.TargetDistance">
   TargetDistance
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L172"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the target distance between anchor points.</p>
@@ -472,12 +470,11 @@ public JVector Anchor2 { get; set; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Create" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Sets the solver dispatch id used by this instance. Override this in derived classes
-to assign the correct registered solver pair. The id is later written into the
-unmanaged header when the constraint is enabled.</p>
+  <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
+to the ID returned by registering the constraint's solver methods.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -501,7 +498,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L378"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L375"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -540,7 +537,7 @@ unmanaged header when the constraint is enabled.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L381"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L378"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws this constraint using the supplied visualization settings.
@@ -575,7 +572,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   Initialize(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L71"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint with a fixed distance between anchor points.</p>
@@ -617,7 +614,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit_" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.Dynamics.Constraints.LinearLimit)">
   Initialize(JVector, JVector, LinearLimit)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes the constraint with distance limits between anchor points.</p>
@@ -650,8 +647,7 @@ For example, a limit of (-1, 1) allows the distance to change by at most one uni
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_DistanceLimit_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_Dynamics_Constraints_LinearLimit__remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Computes local anchor points and the initial distance from current poses.
-Equal or reversed limits fix the distance offset at their midpoint.
+  <div class="markdown level1 remarks"><p>Equal or reversed limits fix the distance offset at their midpoint.
 Default values: <a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_Softness">Softness</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearSoftness">DefaultLinearSoftness</a>, <a class="xref" href="Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_Bias">Bias</a> = <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DefaultLinearBias">DefaultLinearBias</a>.</p>
 </div>
 
@@ -669,7 +665,7 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_IterateDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.IterateDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   IterateDistanceLimit(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L327"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -702,7 +698,7 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_PrepareForIterationDistanceLimit_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.PrepareForIterationDistanceLimit(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   PrepareForIterationDistanceLimit(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L210"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -735,10 +731,10 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.DistanceLimit.ResetWarmStart">
   ResetWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Resets the cached warm-start state used by the solver for this constraint.</p>
+  <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -755,9 +751,8 @@ or when either value in <code class="paramref">limit</code> is NaN.</p>
 
 
   <h4 class="section" id="Jitter2_Dynamics_Constraints_DistanceLimit_ResetWarmStart_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>This clears only persistent solver impulses. Constraint configuration remains unchanged.
-Useful after restoring snapshots or other discontinuous state changes where preserving
-warm-starting is undesirable.</p>
+  <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
+when impulses from their previous state should no longer be reused.</p>
 </div>
 
 
@@ -767,7 +762,7 @@ warm-starting is undesirable.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L21" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/DistanceLimit.cs/#L19" class="edit-link">Edit this page</a>
         </div>
 
 

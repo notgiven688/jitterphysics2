@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class Shape | Jitter2 ">
       
-      <meta name="description" content="The main entity of the collision system. Implements  for narrow-phase and  for broad-phase collision detection. The shape itself does not have a position or orientation. Shapes can be associated with instances of .">
+      <meta name="description" content="Defines collision geometry in local coordinates.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_Shapes_Shape" data-uid="Jitter2.Collision.Shapes.Shape" class="text-break">
-Class Shape  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L20"><i class="bi bi-code-slash"></i></a>
+Class Shape  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L21"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,10 +97,7 @@ Class Shape  <a class="header-action link-secondary" title="View source" href="h
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>The main entity of the collision system. Implements <a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a> for
-narrow-phase and <a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a> for broad-phase collision detection.
-The shape itself does not have a position or orientation. Shapes can be associated with
-instances of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a>.</p>
+  <div class="markdown summary"><p>Defines collision geometry in local coordinates.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -170,6 +167,10 @@ instances of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a
 
 
 
+  <h2 id="Jitter2_Collision_Shapes_Shape_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>A shape has no position or orientation of its own. Shapes attached to a <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a>
+use that body's transform.</p>
+</div>
 
 
   <h2 class="section" id="fields">Fields
@@ -182,8 +183,7 @@ instances of <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>A 64-bit integer representing the shape ID. This is used by algorithms that require
-arranging shapes in a well-defined order.</p>
+  <div class="markdown level1 summary"><p>A unique identifier for this shape.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -357,10 +357,10 @@ Higher detail settings increase the drawing cost and do not guarantee a more acc
 
   <h3 id="Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__" data-uid="Jitter2.Collision.Shapes.Shape.DebugDrawLocal``1(``0@,Jitter2.DebugDrawSettings@)">
   DebugDrawLocal&lt;TSink&gt;(ref TSink, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Appends debug triangles in the coordinate system used by <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">SupportMap(in JVector, out JVector)</a>.</p>
+  <div class="markdown level1 summary"><p>Draws the shape's surface as triangles in local coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -391,9 +391,8 @@ Higher detail settings increase the drawing cost and do not guarantee a more acc
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-applied by the caller. Use outward-facing triangles for closed surfaces.
-Without an override, the shape is drawn as an approximate surface.</p>
+  <div class="markdown level1 remarks"><p>Override to provide custom debug geometry; otherwise, the surface is approximated.
+Use outward-facing triangles for closed surfaces. Body and shape transforms are applied automatically.</p>
 </div>
 
 
@@ -471,7 +470,7 @@ the shapes overlap. Do not use this to test whether a result was found.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -483,7 +482,7 @@ public abstract void GetCenter(out JVector point)</code></pre>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 
@@ -725,7 +724,7 @@ public abstract void UpdateWorldBoundingBox(float dt = 0)</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L20" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L21" class="edit-link">Edit this page</a>
         </div>
 
 

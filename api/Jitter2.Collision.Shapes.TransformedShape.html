@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class TransformedShape | Jitter2 ">
       
-      <meta name="description" content="Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).">
+      <meta name="description" content="Applies translation, rotation, scaling, or shear to another shape in local coordinates.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -97,7 +97,7 @@ Class TransformedShape  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Represents a shape wrapper defined by an original shape and an affine transformation (translation and linear map).</p>
+  <div class="markdown summary"><p>Applies translation, rotation, scaling, or shear to another shape in local coordinates.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -208,11 +208,10 @@ Class TransformedShape  <a class="header-action link-secondary" title="View sour
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JMatrix)">
   TransformedShape(RigidBodyShape, JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a transformed shape with a linear transformation (rotation, scale, or shear),
-assuming zero translation.</p>
+  <div class="markdown level1 summary"><p>Creates a shape with rotation, scaling, or shear and no translation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -243,10 +242,10 @@ assuming zero translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector_" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector)">
   TransformedShape(RigidBodyShape, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a transformed shape with a translation (offset), assuming identity rotation/scale.</p>
+  <div class="markdown level1 summary"><p>Applies a translation to the shape, with no rotation or scaling.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -277,11 +276,10 @@ assuming zero translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.Collision.Shapes.TransformedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@)">
   TransformedShape(RigidBodyShape, in JVector, in JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L66"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L65"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Constructs a transformed shape through an affine transformation defined by
-a linear map and a translation.</p>
+  <div class="markdown level1 summary"><p>Creates a shape with a linear transformation followed by a translation.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -330,7 +328,7 @@ a linear map and a translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_OriginalShape" data-uid="Jitter2.Collision.Shapes.TransformedShape.OriginalShape">
   OriginalShape
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L96"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the original shape that is being transformed.</p>
@@ -362,7 +360,7 @@ a linear map and a translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_Transformation" data-uid="Jitter2.Collision.Shapes.TransformedShape.Transformation">
   Transformation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L128"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the linear transformation (rotation, scale, or shear) applied to the shape.</p>
@@ -394,7 +392,7 @@ a linear map and a translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_Translation" data-uid="Jitter2.Collision.Shapes.TransformedShape.Translation">
   Translation
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the translation applied to the shape.</p>
@@ -430,7 +428,7 @@ a linear map and a translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L160"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L158"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -465,12 +463,11 @@ a linear map and a translation.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.TransformedShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L183"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L181"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Calculates the mass and inertia of the shape. Can be overridden by child classes to improve
-performance or accuracy. The default implementation relies on an approximation of the shape
-constructed using the support map function.</p>
+  <div class="markdown level1 summary"><p>Calculates the shape's mass, center of mass, and inertia at unit density.
+The default implementation approximates the surface; overrides can provide exact mass properties.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -510,7 +507,7 @@ not the center of mass.</p>
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L46"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Appends debug triangles in the coordinate system used by <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__">SupportMap(in JVector, out JVector)</a>.</p>
+  <div class="markdown level1 summary"><p>Draws the shape's surface as triangles in local coordinates.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -541,9 +538,8 @@ not the center of mass.</p>
 
 
   <h4 class="section" id="Jitter2_Collision_Shapes_TransformedShape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Override this method to supply custom surface geometry. Rigid-body and affine transforms are
-applied by the caller. Use outward-facing triangles for closed surfaces.
-Without an override, the shape is drawn as an approximate surface.</p>
+  <div class="markdown level1 remarks"><p>Override to provide custom debug geometry; otherwise, the surface is approximated.
+Use outward-facing triangles for closed surfaces. Body and shape transforms are applied automatically.</p>
 </div>
 
 
@@ -553,10 +549,10 @@ Without an override, the shape is drawn as an approximate surface.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TransformedShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L176"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L174"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Computes a representative point within the convex hull, used as an initial search point in GJK-based algorithms.</p>
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -567,7 +563,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
   <h4 class="section">Parameters</h4>
   <dl class="parameters">
     <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd><p>A point inside the convex hull.</p>
+    <dd><p>An interior point in local space.</p>
 </dd>
   </dl>
 
@@ -586,7 +582,7 @@ Without an override, the shape is drawn as an approximate surface.</p>
 
   <h3 id="Jitter2_Collision_Shapes_TransformedShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.TransformedShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L143"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/TransformedShape.cs/#L141"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>

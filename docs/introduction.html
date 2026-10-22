@@ -89,8 +89,8 @@
   <p class="jp-hero-eyebrow">Fast &middot; Lightweight &middot; Pure C# &middot; MIT License</p>
   <h1 class="jp-hero-title">Jitter Physics 2</h1>
   <p class="jp-hero-sub">
-    An impulse-based 3D rigid-body physics engine for .NET &mdash;<br>
-    zero native dependencies, runs anywhere .NET runs.
+    A 3D physics engine for .NET, written entirely in C# &mdash;<br>
+    simulate moving objects, collisions, and joints without native dependencies.
   </p>
   <div class="jp-hero-ctas">
     <a href="tutorials/boxes/project-setup.html" class="jp-btn-primary">Get Started</a>
@@ -112,7 +112,7 @@
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128296;</div>
     <div class="jp-feature-title">Impulse-Based Dynamics</div>
-    <div class="jp-feature-body">Semi-implicit Euler integrator with sub-stepping for stable, stiff simulations at interactive frame rates.</div>
+    <div class="jp-feature-body">Simulate collisions and joints, with substeps to improve stability.</div>
   </div>
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#129513;</div>
@@ -122,17 +122,17 @@
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#127919;</div>
     <div class="jp-feature-title">Continuous Collision Detection</div>
-    <div class="jp-feature-body">Predicts translation and rotation to reduce tunneling, and repeats contact discovery when collision impulses change body motion.</div>
+    <div class="jp-feature-body">Checks movement and rotation between steps to help fast objects collide with obstacles instead of passing through them.</div>
   </div>
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128260;</div>
     <div class="jp-feature-title">Float or Double Precision</div>
-    <div class="jp-feature-body">Compile-time precision switch &mdash; the same API and source code works with either <code>float</code> or <code>double</code>.</div>
+    <div class="jp-feature-body">Choose single or double precision. Both versions use the same API.</div>
   </div>
   <div class="jp-feature-card">
     <div class="jp-feature-icon">&#128085;</div>
     <div class="jp-feature-title">Soft-Body Dynamics</div>
-    <div class="jp-feature-body">Cloth and deformable bodies coexist alongside rigid bodies in the same simulation world.</div>
+    <div class="jp-feature-body">Simulate cloth and deformable objects alongside rigid bodies.</div>
   </div>
 </div>
 <div class="demo-shell">
@@ -161,7 +161,7 @@
   <a class="jp-nav-card" href="documentation/world.html">
     <div class="jp-nav-card-icon">&#128196;</div>
     <div class="jp-nav-card-title">Documentation</div>
-    <div class="jp-nav-card-body">Dive into bodies, shapes, constraints, and the broad-phase tree.</div>
+    <div class="jp-nav-card-body">Learn how to use bodies, shapes, constraints, and collision queries.</div>
   </a>
   <a class="jp-nav-card" href="../api/Jitter2.html">
     <div class="jp-nav-card-icon">&#128214;</div>

@@ -87,24 +87,20 @@
         <article data-uid="">
 <h1 id="arbiters">Arbiters</h1>
 
-<p>Arbiters manage contact information between two rigid bodies.
-An arbiter is created when two shapes begin overlapping and is removed when they separate or when one of the involved bodies is removed from the world.
-Each arbiter can hold up to four cached contact points (see <code>ContactData</code>).</p>
+<p>An <strong>arbiter</strong> stores contact information for a pair of shapes. It holds up to four contact points and reuses them between simulation steps. CCD can create an arbiter before the shapes touch.</p>
 <h2 id="arbiters-and-shapes">Arbiters and shapes</h2>
-<p>Arbiters are created between <em>shapes</em>, not bodies.
-Since a rigid body can have multiple shapes attached to it, a single pair of bodies may produce multiple arbiters—one for each pair of overlapping shapes.</p>
+<p>A body with several shapes can have several arbiters with the same opposing body, one for each shape pair in contact.</p>
 <p>For example, consider two bodies where body A has two box shapes and body B has one sphere shape.
 If both boxes overlap with the sphere, two separate arbiters are created: one for each box–sphere pair.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p><strong>One arbiter per shape pair</strong>
-Even if the contact manifold changes over time, the arbiter remains the same as long as the two shapes stay in proximity.
-Contact points within the arbiter are cached and updated across frames.</p>
+The contact points can change while the arbiter remains the same. It lasts until contact ends or one of the shapes or bodies is removed.</p>
 </div>
 <h2 id="arbiterkey">ArbiterKey</h2>
 <p>Each arbiter is identified by an <code>ArbiterKey</code>, which is an ordered pair of <code>ulong</code> identifiers.
 For arbiters created by the engine, these identifiers are the <code>ShapeId</code> values of the two shapes involved.
-The ordering is canonical: the shape with the smaller ID is always first.</p>
+The shape with the smaller ID comes first.</p>
 <pre><code class="lang-cs">public readonly struct ArbiterKey(ulong key1, ulong key2) : IEquatable&lt;ArbiterKey&gt;
 {
     public readonly ulong Key1 = key1;
@@ -117,15 +113,12 @@ The ordering is canonical: the shape with the smaller ID is always first.</p>
 Through <code>arbiter.Handle.Data</code>, the underlying contact information can be read and modified:</p>
 <pre><code class="lang-cs">ref ContactData data = ref arbiter.Handle.Data;
 </code></pre>
-<p>The <code>ContactData</code> structure contains up to four contact slots.
-The <code>UsageMask</code> bitfield indicates which slots are active.
-It also stores the combined <code>Friction</code> and <code>Restitution</code> coefficients for the contact pair (derived from the maximum of the two bodies' values).</p>
+<p><code>ContactData</code> has four contact slots. <code>UsageMask</code> identifies the valid slots. The structure also stores the pair's friction and restitution; each is the maximum of the two bodies' values.</p>
 <div class="CAUTION">
 <h5>Caution</h5>
 <p><strong>Lifetime</strong>
-The contact data is only valid while the arbiter is registered with the world.
-Do not cache references to <code>ContactData</code>.
-Accessing it after the arbiter has been removed results in undefined behavior.</p>
+Obtain a fresh data reference each time you need one; do not retain it across simulation steps or world changes.
+Do not use an arbiter after it is removed or after its <code>EndCollide</code> callback, because it may be reused for another collision.</p>
 </div>
 <h2 id="collision-events">Collision events</h2>
 <p>The <code>RigidBody</code> class provides two events that supply the associated arbiter:</p>
@@ -136,11 +129,11 @@ Accessing it after the arbiter has been removed results in undefined behavior.</
 
 body.EndCollide += (Arbiter arb) =&gt;
 {
-    // Called when an arbiter involving this body is removed.
+    // Called when this contact pair expires during a simulation step.
 };
 </code></pre>
-<p>These events can be used to inspect or modify contact properties.
-For example, overriding friction for a specific contact:</p>
+<p><code>BeginCollide</code> can also occur for a predicted CCD contact before the shapes touch. <code>EndCollide</code> is raised when contact expires during a simulation step. Explicitly removing a body, shape, or arbiter does not raise <code>EndCollide</code>.</p>
+<p>Use these events to inspect contacts. For example, set friction when a contact pair begins:</p>
 <pre><code class="lang-cs">body.BeginCollide += (Arbiter arb) =&gt;
 {
     arb.Handle.Data.Friction = 0.0f;
@@ -168,24 +161,19 @@ When creating custom arbiters, be consistent with the ordering.</p>
 <p>Once an arbiter exists, contacts can be registered into it:</p>
 <pre><code class="lang-cs">world.RegisterContact(arbiter, point1, point2, normal);
 </code></pre>
-<p>All vectors must be in world space, and the normal must be a unit vector.
-The <code>removeFlags</code> parameter can be used to exclude certain velocity components from the solver (e.g., <code>ContactData.SolveMode.Angular</code> for angular-only or linear-only responses).</p>
+<p>Supply both contact points in world space. The normal must be a unit vector pointing in the direction that pushes body 2 away from body 1.</p>
+<p>The optional <code>removeFlags</code> parameter disables parts of the response. For example, <code>ContactData.SolveMode.Angular</code> removes the angular response, leaving only linear motion.</p>
 <p>Alternatively, contacts can be registered using IDs directly, which also creates the arbiter if needed:</p>
 <pre><code class="lang-cs">world.RegisterContact(id0, id1, body1, body2, point1, point2, normal);
 </code></pre>
 <h3 id="contact-caching">Contact caching</h3>
-<p>An arbiter holds at most four contact points.
-When a new contact is registered, the arbiter decides how to incorporate it:</p>
-<ol>
-<li><strong>Slot available</strong>: If fewer than four contacts are active, the new point is compared to existing contacts. If it is close enough to an existing contact (within a break threshold), it replaces that contact and inherits its accumulated impulse for warm-starting. Otherwise it is inserted into an empty slot as a new contact.</li>
-<li><strong>All slots full</strong>: When all four slots are occupied, the algorithm evaluates which existing contact to replace. For each of the four candidates, it computes the area of the quadrilateral formed by the new point and the three remaining contacts. The candidate whose removal maximizes this area is replaced. This heuristic keeps contacts well-distributed across the contact patch, which produces the most stable contact manifold.</li>
-</ol>
-<p>Contacts that drift apart beyond a distance threshold during position integration are automatically removed from the manifold.</p>
+<p>An arbiter keeps at most four contact points. A new point close to an existing one refreshes that contact and reuses its saved impulse. Otherwise it fills a free slot. When all slots are full, the engine chooses points that cover the touching region well.</p>
+<p>Contacts are removed when the shapes separate too far or the points slide too far apart. Reusing nearby contacts gives the solver a useful starting point on the next step.</p>
 <h2 id="arbiter-lifecycle">Arbiter lifecycle</h2>
 <ol>
-<li><strong>Creation</strong>: When two shapes begin overlapping, the engine calls <code>GetOrCreateArbiter</code> using the shape IDs as keys. The <code>BeginCollide</code> event is raised on both bodies.</li>
-<li><strong>Update</strong>: Each <code>world.Step</code>, contact positions are updated. Contacts that have separated beyond a threshold are removed from the arbiter. New contacts from ongoing collisions are added.</li>
-<li><strong>Removal</strong>: When all contacts in an arbiter are broken and the shapes are no longer overlapping, the arbiter is removed. The <code>EndCollide</code> event is raised on both bodies. The arbiter is returned to an internal pool for reuse.</li>
+<li><strong>Creation:</strong> the engine creates an arbiter for a new shape pair, including predicted CCD contacts, and raises <code>BeginCollide</code> on both bodies.</li>
+<li><strong>Update:</strong> each step adds or refreshes contact points and removes points that have separated too far.</li>
+<li><strong>Removal:</strong> once contact ends, the engine raises <code>EndCollide</code> on both bodies and removes the arbiter. The arbiter object may then be reused for another pair.</li>
 </ol>
 
 </article>

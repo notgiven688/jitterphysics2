@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ReaderWriterLock | Jitter2 ">
       
-      <meta name="description" content="Provides a lightweight reader-writer lock optimized for rare write operations.">
+      <meta name="description" content="Allows concurrent readers or one exclusive writer.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Parallelization_ReaderWriterLock" data-uid="Jitter2.Parallelization.ReaderWriterLock" class="text-break">
-Class ReaderWriterLock  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L33"><i class="bi bi-code-slash"></i></a>
+Class ReaderWriterLock  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L26"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -97,7 +97,7 @@ Class ReaderWriterLock  <a class="header-action link-secondary" title="View sour
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Provides a lightweight reader-writer lock optimized for rare write operations.</p>
+  <div class="markdown summary"><p>Allows concurrent readers or one exclusive writer.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -146,18 +146,11 @@ Class ReaderWriterLock  <a class="header-action link-secondary" title="View sour
 
   <h2 id="Jitter2_Parallelization_ReaderWriterLock_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-Multiple readers can hold the lock concurrently, but writers have exclusive access.
-This implementation uses spin-waiting and is best suited for short critical sections.
+Waiting threads spin, so use this lock only for short operations with infrequent writes.
 </p>
 <p>
-This lock is non-recursive and thread-affine. Each successful acquisition must be
-released exactly once by the same thread that acquired it. Recursive acquisition,
-read-to-write upgrades, write-to-read downgrades, and releasing a lock acquired by
-another thread are not supported.
-</p>
-<p>
-Thread-safe when used according to this contract. All synchronization is performed
-using atomic operations and memory barriers.
+Release each acquired lock exactly once, on the thread that acquired it. Do not acquire
+the lock again while holding it or switch directly between a read lock and a write lock.
 </p>
 </div>
 
@@ -170,7 +163,7 @@ using atomic operations and memory barriers.
 
   <h3 id="Jitter2_Parallelization_ReaderWriterLock_EnterReadLock" data-uid="Jitter2.Parallelization.ReaderWriterLock.EnterReadLock">
   EnterReadLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L93"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Acquires the read lock.</p>
@@ -190,14 +183,9 @@ using atomic operations and memory barriers.
 
 
   <h4 class="section" id="Jitter2_Parallelization_ReaderWriterLock_EnterReadLock_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>
-Multiple threads can hold the read lock simultaneously. This method blocks
+  <div class="markdown level1 remarks"><p>Multiple threads can hold the read lock simultaneously. This method blocks
 while a writer holds the lock.
-</p>
-<p>
-The lock must be released exactly once by the acquiring thread using
-<a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html#Jitter2_Parallelization_ReaderWriterLock_ExitReadLock">ExitReadLock()</a>.
-</p>
+Release it with <a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html#Jitter2_Parallelization_ReaderWriterLock_ExitReadLock">ExitReadLock()</a> on the same thread.</p>
 </div>
 
 
@@ -207,7 +195,7 @@ The lock must be released exactly once by the acquiring thread using
 
   <h3 id="Jitter2_Parallelization_ReaderWriterLock_EnterWriteLock" data-uid="Jitter2.Parallelization.ReaderWriterLock.EnterWriteLock">
   EnterWriteLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Acquires the write lock with exclusive access.</p>
@@ -227,13 +215,8 @@ The lock must be released exactly once by the acquiring thread using
 
 
   <h4 class="section" id="Jitter2_Parallelization_ReaderWriterLock_EnterWriteLock_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>
-This method blocks until all readers and other writers have released the lock.
-</p>
-<p>
-The lock must be released exactly once by the acquiring thread using
-<a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html#Jitter2_Parallelization_ReaderWriterLock_ExitWriteLock">ExitWriteLock()</a>.
-</p>
+  <div class="markdown level1 remarks"><p>This method blocks until all readers and other writers have released the lock.
+Release it with <a class="xref" href="Jitter2.Parallelization.ReaderWriterLock.html#Jitter2_Parallelization_ReaderWriterLock_ExitWriteLock">ExitWriteLock()</a> on the same thread.</p>
 </div>
 
 
@@ -243,7 +226,7 @@ The lock must be released exactly once by the acquiring thread using
 
   <h3 id="Jitter2_Parallelization_ReaderWriterLock_ExitReadLock" data-uid="Jitter2.Parallelization.ReaderWriterLock.ExitReadLock">
   ExitReadLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases a read lock previously acquired by the current thread.</p>
@@ -274,7 +257,7 @@ The lock must be released exactly once by the acquiring thread using
 
   <h3 id="Jitter2_Parallelization_ReaderWriterLock_ExitWriteLock" data-uid="Jitter2.Parallelization.ReaderWriterLock.ExitWriteLock">
   ExitWriteLock()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L194"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Releases the write lock held by the current thread.</p>
@@ -305,7 +288,7 @@ The lock must be released exactly once by the acquiring thread using
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L33" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Parallelization/ReaderWriterLock.cs/#L26" class="edit-link">Edit this page</a>
         </div>
 
 

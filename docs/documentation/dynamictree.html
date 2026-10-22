@@ -87,44 +87,32 @@
         <article data-uid="">
 <h1 id="dynamic-tree">Dynamic Tree</h1>
 
-<p>The dynamic tree holds instances which implement the <code>IDynamicTreeProxy</code> interface.
-Its main task is to efficiently determine if a proxy's axis-aligned bounding box overlaps with the axis-aligned bounding box of any other proxy in the world.
-A naive implementation requires <span class="math">\(\mathcal{O}\left(n\right)\)</span> operations (checking for an overlap with every of the <span class="math">\(n-1\)</span> entities).
-The tree structure accelerates this to <span class="math">\(\mathcal{O}\left(\mathrm{log}(n)\right)\)</span>.
-Since proxies are dynamic and can move, the tree must be continuously updated.
-To trigger updates less frequently, entities are enclosed within slightly larger bounding boxes than their actual size.
-This bounding box extension is defined by the <code>Velocity</code> property of the <code>IDynamicTreeProxy</code> interface.</p>
+<p>The dynamic tree finds objects whose axis-aligned bounding boxes overlap. These boxes have edges parallel to the world axes and are often called <strong>AABBs</strong>. An object tracked by the tree is called a <strong>proxy</strong> and implements <code>IDynamicTreeProxy</code>.</p>
+<p>The tree groups nearby boxes so a query can skip whole groups that are out of range. Slightly expanded boxes also let objects move a short distance without needing to be reinserted every time.</p>
 <p><img src="images/dynamictree.png" alt="img alt"></p>
 <h2 id="adding-proxies">Adding proxies</h2>
 <p>All shapes added to a rigid body (<code>body.AddShape</code>) are automatically registered with <code>world.DynamicTree</code>.
 Custom implementations of <code>IDynamicTreeProxy</code> can be added to the tree using <code>tree.AddProxy</code>.
 In this case, a <code>BroadPhaseFilter</code> must be implemented and registered (using <code>world.BroadPhaseFilter</code>) to handle collisions with the custom proxy, otherwise an <code>InvalidCollisionTypeException</code> is thrown.</p>
 <h2 id="enumerate-overlaps">Enumerate Overlaps</h2>
-<p>The tree implementation needs to be updated using <code>tree.Update</code>.
-This is done automatically for the dynamic tree owned by the world class (<code>world.DynamicTree</code>).
-Internally, <code>UpdateWorldBoundingBox</code> is called for active proxies implementing the <code>IUpdatableBoundingBox</code> interface, and the internal book-keeping of overlapping pairs is updated.
-Overlaps can be queried using <code>tree.EnumerateOverlaps</code>.
-To refresh one shape after changing its geometry, call <code>world.DynamicTree.Update(shape)</code>. See <a href="shapes.html#changing-an-attached-shape">Changing an attached shape</a> for the other state that may need updating.</p>
+<p>Call <code>tree.Update</code> to refresh moving objects and the set of overlapping pairs. <code>world.Step</code> does this automatically for <code>world.DynamicTree</code>. Use <code>tree.EnumerateOverlaps</code> to visit those pairs; overlapping boxes do not necessarily mean the shapes touch.</p>
+<p>After changing a shape's geometry, call <code>world.DynamicTree.Update(shape)</code> to refresh it immediately. See <a href="shapes.html#changing-an-attached-shape">Changing an attached shape</a> for the other updates needed.</p>
 <h2 id="querying-the-tree">Querying the tree</h2>
-<p>The dynamic tree is a broadphase structure.
-Its job is to quickly reduce the set of possible candidates.
-Some APIs stop there and return proxies, while others continue with an exact narrowphase test.</p>
-<p>In practice there are two layers of queries:</p>
+<p>Choose a query based on the result you need:</p>
 <ul>
-<li>Broadphase-only queries, such as <code>Query(...)</code>, which return candidate proxies.</li>
-<li>Broadphase + narrowphase queries, such as <code>RayCast(...)</code>, <code>SweepCast(...)</code>, and <code>FindNearest(...)</code>, which continue with exact tests on supported proxies.</li>
+<li><code>Query(...)</code> tests bounding boxes and returns objects that <em>might</em> intersect the query.</li>
+<li><code>RayCast(...)</code>, <code>SweepCast(...)</code>, and <code>FindNearest(...)</code> also test the shapes and return the nearest accepted result.</li>
 </ul>
 <h3 id="broadphase-only-queries">Broadphase-only queries</h3>
-<p>All tree proxies that overlap a given axis-aligned box can be queried:</p>
+<p>Find objects whose tree bounds overlap a box:</p>
 <pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JBoundingBox box) where T : class, ICollection&lt;IDynamicTreeProxy&gt;
 public void Query&lt;TSink&gt;(ref TSink hits, in JBoundingBox box) where TSink : ISink&lt;IDynamicTreeProxy&gt;
 </code></pre>
-<p>As well as all proxies which overlap with a ray:</p>
+<p>Or find objects whose tree bounds intersect a ray:</p>
 <pre><code class="lang-cs">public void Query&lt;T&gt;(T hits, in JVector rayOrigin, in JVector rayDirection) where T : class, ICollection&lt;IDynamicTreeProxy&gt;
 public void Query&lt;TSink&gt;(ref TSink hits, in JVector rayOrigin, in JVector rayDirection) where TSink : ISink&lt;IDynamicTreeProxy&gt;
 </code></pre>
-<p>Custom broadphase queries can easily be implemented.
-An implementation which queries all proxies overlapping with a single point:</p>
+<p>For a custom query, you can traverse <code>tree.Nodes</code> directly. This example finds bounding boxes containing a point. Only run it on a nonempty tree (<code>tree.Root &gt;= 0</code>):</p>
 <pre><code class="lang-cs">var stack = new Stack&lt;int&gt;();
 stack.Push(tree.Root);
 
@@ -138,7 +126,7 @@ while (stack.TryPop(out int id))
     {
         if (node.IsLeaf)
         {
-            Console.WriteLine($&quot;{node.Proxy} contains {point}.&quot;);
+            Console.WriteLine($&quot;{node.Proxy} has a bounding box containing {point}.&quot;);
         }
         else
         {
@@ -149,23 +137,19 @@ while (stack.TryPop(out int id))
 }
 </code></pre>
 <h3 id="exact-query-helpers">Exact query helpers</h3>
-<p>The tree also provides helpers that combine broadphase pruning with an exact narrowphase test.
-These return the closest exact hit instead of raw candidate proxies.
-All exact query helpers return <code>true</code> on success and <code>false</code> when nothing is found.</p>
+<p>These methods use the tree to find candidates, then test their shapes. They return <code>true</code> when an accepted result is found and <code>false</code> otherwise.</p>
 <h4 id="ray-casting">Ray casting</h4>
 <p>All proxies implementing <code>IRayCastable</code> can be ray cast, including all shapes:</p>
 <pre><code class="lang-cs">// Unbounded
 public bool RayCast(JVector origin, JVector direction, RayCastFilterPre? pre, RayCastFilterPost? post,
     out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
 
-// Bounded: only considers hits with lambda ≤ maxLambda
+// Bounded: only considers hits with lambda &lt; maxLambda
 public bool RayCast(JVector origin, JVector direction, float maxLambda, RayCastFilterPre? pre, RayCastFilterPost? post,
     out IDynamicTreeProxy? proxy, out JVector normal, out float lambda)
 </code></pre>
-<p>The pre- and post-filters can be used to discard hits during the ray cast.
-A ray is shot from the origin into the specified direction.
-Returns <code>true</code> if a hit is found, including the case where the ray origin is inside the hit shape (in which case <code>lambda</code> is zero and <code>normal</code> is <code>JVector.Zero</code>).
-The point of collision is given by <code>hit = origin + lambda * direction</code>.</p>
+<p>The ray starts at <code>origin</code> and extends along <code>direction</code>, which need not be normalized. The hit point is <code>origin + lambda * direction</code>. With a unit direction, <code>lambda</code> is the distance to the hit.</p>
+<p>The method also returns <code>true</code> when the origin is inside a shape; in that case <code>lambda</code> is zero and <code>normal</code> is <code>JVector.Zero</code>. Use the pre- and post-filters to skip unwanted objects or hits.</p>
 <h4 id="sweep-casting">Sweep casting</h4>
 <p>All proxies implementing <code>ISweepTestable</code> can be sweep-tested, including all shapes:</p>
 <pre><code class="lang-cs">// Unbounded
@@ -180,18 +164,12 @@ public bool SweepCast&lt;T&gt;(in T support, in JQuaternion orientation, in JVec
     out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float lambda)
     where T : ISupportMappable
 </code></pre>
-<p>The query shape is defined by an <code>ISupportMappable</code> plus its world-space <code>orientation</code> and <code>position</code>.
-<code>direction</code> is the sweep direction vector; <code>lambda</code> is expressed in units of <code>direction</code>, so the query shape's center at impact is at <code>position + lambda * direction</code>.</p>
-<p><code>pointA</code> and <code>pointB</code> are the contact points at the sweep origin (before any displacement is applied).
-Because sweep cast targets are always stationary, <code>pointB</code> is simply the world-space contact point.
-The world-space contact point on the query shape at impact is <code>pointA + lambda * direction</code>.
-<code>normal</code> is the collision normal in world space.</p>
-<p>Returns <code>true</code> if a hit is found, including the case where the shapes already overlap (in which case <code>lambda</code> is zero and <code>normal</code> is <code>JVector.Zero</code>).</p>
-<p>The <strong>pre-filter</strong> (<code>SweepCastFilterPre</code>) is called before the exact narrowphase test and receives only the candidate proxy.
-Use it to cheaply skip proxies by identity (e.g. ignore the body being swept).
-The <strong>post-filter</strong> (<code>SweepCastFilterPost</code>) is called after the exact test and receives the full <code>SweepCastResult</code> (including <code>Lambda</code>, <code>Normal</code>, <code>PointA</code>, <code>PointB</code>).
-Use it to reject hits based on geometry, or to collect multiple results rather than stopping at the first.
-Returning <code>false</code> from either filter skips that candidate without terminating the sweep.</p>
+<p>Pass the convex query shape with its world-space <code>orientation</code> and <code>position</code>. It moves along <code>direction</code> without rotating. Its position at impact is <code>position + lambda * direction</code>.</p>
+<p>For a sweep over a fixed distance, set <code>direction</code> to the full displacement and use <code>maxLambda = 1</code>.</p>
+<p><code>pointA</code> is a point on the query shape at its starting position. Move it to the impact position with <code>pointA + lambda * direction</code>. The target stays stationary during the query, so <code>pointB</code> is already its world-space contact point. <code>normal</code> is also in world space.</p>
+<p>If the shapes already overlap, the result is <code>true</code>, <code>lambda</code> is zero, and <code>normal</code> is <code>JVector.Zero</code>. Contact points are undefined in that case.</p>
+<p>The <strong>pre-filter</strong> (<code>SweepCastFilterPre</code>) receives a candidate before its shape is tested. Use it to ignore objects, such as the body being swept.</p>
+<p>The <strong>post-filter</strong> (<code>SweepCastFilterPost</code>) receives the full <code>SweepCastResult</code>, including <code>Lambda</code>, <code>Normal</code>, <code>PointA</code>, and <code>PointB</code>. Use it to inspect the geometry of a hit. Returning <code>false</code> skips that result and continues the search. You can also collect results here and return <code>false</code> to keep searching.</p>
 <p>For common built-in query shapes, convenience overloads are available:</p>
 <pre><code class="lang-cs">public bool SweepCastSphere(float radius, in JVector position, in JVector direction, ...)
 public bool SweepCastBox(in JVector halfExtents, in JQuaternion orientation, in JVector position, in JVector direction, ...)
@@ -207,21 +185,16 @@ public bool FindNearest&lt;T&gt;(in T support, in JQuaternion orientation, in JV
     out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float distance)
     where T : ISupportMappable
 
-// Bounded: only considers proxies closer than maxDistance
+// Bounded: only considers proxies within maxDistance
 public bool FindNearest&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, float maxDistance,
     FindNearestFilterPre? pre, FindNearestFilterPost? post,
     out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float distance)
     where T : ISupportMappable
 </code></pre>
 <p>The query shape is defined by an <code>ISupportMappable</code> plus its world-space <code>orientation</code> and <code>position</code>.
-<code>pointA</code> and <code>pointB</code> are the closest points on the query shape and the found proxy respectively.
-<code>normal</code> is the unit direction from the query shape toward the found proxy.</p>
-<p>Returns <code>true</code> if a proxy is found, including the case where the query shape already overlaps a proxy (in which case <code>distance</code> is zero and <code>normal</code> is <code>JVector.Zero</code>).
-Returns <code>false</code> only when no proxy is found within range.</p>
-<p>The <strong>pre-filter</strong> (<code>FindNearestFilterPre</code>) is called before the exact narrowphase test and receives only the candidate proxy.
-The <strong>post-filter</strong> (<code>FindNearestFilterPost</code>) is called after the exact test and receives the full <code>FindNearestResult</code>.
-For overlap results the post-filter receives <code>distance = 0</code> and <code>normal = Zero</code>.
-Returning <code>false</code> from either filter skips that candidate and continues the search.</p>
+<code>pointA</code> and <code>pointB</code> are the closest points on the query shape and the found object, in world space. <code>normal</code> is a unit vector pointing from the query shape toward that object.</p>
+<p>An overlapping object also counts as a result. In that case <code>distance</code> is zero, <code>normal</code> is <code>JVector.Zero</code>, and the closest points are undefined. The method returns <code>false</code> when no accepted object is found within range.</p>
+<p>The <strong>pre-filter</strong> (<code>FindNearestFilterPre</code>) receives a candidate before its shape is tested. The <strong>post-filter</strong> (<code>FindNearestFilterPost</code>) receives the calculated <code>FindNearestResult</code>. Return <code>false</code> from either to skip that candidate and continue searching.</p>
 <p>To skip overlapping proxies and find the nearest <em>separated</em> proxy instead, reject overlap results in the post-filter:</p>
 <pre><code class="lang-cs">world.DynamicTree.FindNearestSphere(radius, position,
     pre: null,
@@ -234,7 +207,7 @@ public bool FindNearestSphere(float radius, in JVector position, ...)
 </code></pre>
 <p>Each has a bounded variant with a <code>maxDistance</code> parameter.</p>
 <h3 id="overlap-check-example">Overlap check example</h3>
-<p>Overlap checks can be composed by querying the tree with a bounding box first and then running an exact narrowphase overlap test against the returned candidates:</p>
+<p>To find shapes overlapping a sphere, first query its bounding box, then test each candidate against the sphere:</p>
 <pre><code class="lang-cs">// Returns all RigidBodyShapes overlapping a sphere at 'center' with 'radius'.
 static IEnumerable&lt;RigidBodyShape&gt; OverlapSphere(World world, JVector center, float radius)
 {
@@ -265,7 +238,7 @@ static IEnumerable&lt;RigidBodyShape&gt; OverlapSphere(World world, JVector cent
     }
 }
 </code></pre>
-<p>This pattern is usually enough for overlap checks and avoids introducing additional broadphase API surface.</p>
+<p>The bounding-box query limits the work; <code>NarrowPhase.Overlap</code> removes candidates whose boxes overlap but whose shapes do not.</p>
 
 </article>
 
