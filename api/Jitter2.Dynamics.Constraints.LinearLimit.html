@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_Constraints_LinearLimit" data-uid="Jitter2.Dynamics.Constraints.LinearLimit" class="text-break">
-Struct LinearLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L70"><i class="bi bi-code-slash"></i></a>
+Struct LinearLimit  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -103,13 +103,19 @@ Used by constraints to restrict translational motion within a specified range.</
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct LinearLimit</code></pre>
+    <pre><code class="lang-csharp hljs">public struct LinearLimit : IFormattable</code></pre>
   </div>
 
 
 
 
 
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
+    </dd>
+  </dl>
 
 
   <dl class="typelist inheritedMembers">
@@ -120,9 +126,6 @@ Used by constraints to restrict translational motion within a specified range.</
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode">ValueType.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.valuetype.tostring">ValueType.ToString()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
@@ -148,7 +151,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit__ctor_System_Single_System_Single_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.#ctor(System.Single,System.Single)">
   LinearLimit(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L85"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents a linear limit defined by a minimum and maximum distance.
@@ -188,7 +191,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_Fixed" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.Fixed">
   Fixed
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A limit that locks the position in place (no translation allowed).</p>
@@ -219,7 +222,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_Full" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.Full">
   Full
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L114"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A limit that allows unrestricted movement (negative to positive infinity).</p>
@@ -255,7 +258,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_From" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.From">
   From
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L75"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L90"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the minimum distance of the limit.</p>
@@ -287,7 +290,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_To" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.To">
   To
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the maximum distance of the limit.</p>
@@ -323,7 +326,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_Deconstruct_System_Single__System_Single__" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.Deconstruct(System.Single@,System.Single@)">
   Deconstruct(out float, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L139"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Deconstructs the limit into its minimum and maximum distances.</p>
@@ -359,7 +362,7 @@ Used by constraints to restrict translational motion within a specified range.</
 
   <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_FromMinMax_System_Single_System_Single_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.FromMinMax(System.Single,System.Single)">
   FromMinMax(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L100"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L129"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Creates a linear limit from minimum and maximum values.</p>
@@ -397,11 +400,121 @@ Used by constraints to restrict translational motion within a specified range.</
 
 
 
+  <a id="Jitter2_Dynamics_Constraints_LinearLimit_ToString_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_ToString" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a string representation of the endpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override readonly string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_LinearLimit_ToString_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_ToString_System_String_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String)">
+  ToString(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the endpoints using the specified numeric format and the current culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_LinearLimit_ToString_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_LinearLimit_ToString_System_String_System_IFormatProvider_" data-uid="Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String,System.IFormatProvider)">
+  ToString(string?, IFormatProvider?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the endpoints using the specified numeric format and culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format, IFormatProvider? formatProvider)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A numeric format string, or null or empty to use the general format.</p>
+</dd>
+    <dt><code>formatProvider</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformatprovider">IFormatProvider</a></dt>
+    <dd><p>The format provider, or null to use the current culture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L70" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/Limit.cs/#L85" class="edit-link">Edit this page</a>
         </div>
 
 

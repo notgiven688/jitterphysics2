@@ -102,7 +102,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct JTriangle : IEquatable&lt;JTriangle&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct JTriangle : IEquatable&lt;JTriangle&gt;, IFormattable</code></pre>
   </div>
 
 
@@ -113,6 +113,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JTriangle.html">JTriangle</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
     </dd>
   </dl>
 
@@ -281,7 +282,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_ClosestPoint_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JTriangle.ClosestPoint(Jitter2.LinearMath.JVector)">
   ClosestPoint(JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L171"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L180"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the closest point on the triangle surface to a specified point.</p>
@@ -320,7 +321,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_Equals_Jitter2_LinearMath_JTriangle_" data-uid="Jitter2.LinearMath.JTriangle.Equals(Jitter2.LinearMath.JTriangle)">
   Equals(JTriangle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L231"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L240"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -359,7 +360,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_Equals_System_Object_" data-uid="Jitter2.LinearMath.JTriangle.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L236"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L245"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -398,7 +399,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_GetArea" data-uid="Jitter2.LinearMath.JTriangle.GetArea">
   GetArea()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L147"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the area of the triangle.</p>
@@ -430,7 +431,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_GetBoundingBox" data-uid="Jitter2.LinearMath.JTriangle.GetBoundingBox">
   GetBoundingBox()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the axis-aligned bounding box (AABB) of this triangle.</p>
@@ -462,7 +463,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_GetCenter" data-uid="Jitter2.LinearMath.JTriangle.GetCenter">
   GetCenter()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the geometric center (centroid) of the triangle.</p>
@@ -494,7 +495,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_GetHashCode" data-uid="Jitter2.LinearMath.JTriangle.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L238"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -527,7 +528,7 @@ Struct JTriangle  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_JTriangle_GetNormal" data-uid="Jitter2.LinearMath.JTriangle.GetNormal">
   GetNormal()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L129"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L138"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the face normal of the triangle.
@@ -643,6 +644,84 @@ otherwise, <code>false</code>. Hits exactly on an edge are excluded.</p>
 
 
 
+  <a id="Jitter2_LinearMath_JTriangle_ToString_" data-uid="Jitter2.LinearMath.JTriangle.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JTriangle_ToString_System_String_" data-uid="Jitter2.LinearMath.JTriangle.ToString(System.String)">
+  ToString(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L122"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the vertices using the specified numeric format and the current culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JTriangle_ToString_" data-uid="Jitter2.LinearMath.JTriangle.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JTriangle_ToString_System_String_System_IFormatProvider_" data-uid="Jitter2.LinearMath.JTriangle.ToString(System.String,System.IFormatProvider)">
+  ToString(string?, IFormatProvider?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the vertices using the specified numeric format and culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format, IFormatProvider? formatProvider)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A numeric format string, or null or empty to use the general format.</p>
+</dd>
+    <dt><code>formatProvider</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformatprovider">IFormatProvider</a></dt>
+    <dd><p>The format provider, or null to use the current culture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <h2 class="section" id="operators">Operators
 </h2>
 
@@ -651,7 +730,7 @@ otherwise, <code>false</code>. Hits exactly on an edge are excluded.</p>
 
   <h3 id="Jitter2_LinearMath_JTriangle_op_Equality_Jitter2_LinearMath_JTriangle_Jitter2_LinearMath_JTriangle_" data-uid="Jitter2.LinearMath.JTriangle.op_Equality(Jitter2.LinearMath.JTriangle,Jitter2.LinearMath.JTriangle)">
   operator ==(JTriangle, JTriangle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L241"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L250"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -689,7 +768,7 @@ otherwise, <code>false</code>. Hits exactly on an edge are excluded.</p>
 
   <h3 id="Jitter2_LinearMath_JTriangle_op_Inequality_Jitter2_LinearMath_JTriangle_Jitter2_LinearMath_JTriangle_" data-uid="Jitter2.LinearMath.JTriangle.op_Inequality(Jitter2.LinearMath.JTriangle,Jitter2.LinearMath.JTriangle)">
   operator !=(JTriangle, JTriangle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L246"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JTriangle.cs/#L255"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

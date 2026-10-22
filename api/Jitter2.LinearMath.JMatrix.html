@@ -102,7 +102,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct JMatrix : IEquatable&lt;JMatrix&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct JMatrix : IEquatable&lt;JMatrix&gt;, IFormattable</code></pre>
   </div>
 
 
@@ -113,6 +113,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JMatrix.html">JMatrix</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
     </dd>
   </dl>
 
@@ -1084,7 +1085,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JMatrix_Equals_System_Object_" data-uid="Jitter2.LinearMath.JMatrix.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L701"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L710"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -1205,7 +1206,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JMatrix_GetHashCode" data-uid="Jitter2.LinearMath.JMatrix.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L706"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L715"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -1562,10 +1563,10 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JMatrix_ToString" data-uid="Jitter2.LinearMath.JMatrix.ToString">
   ToString()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L694"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L695"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Returns the fully qualified type name of this instance.</p>
+  <div class="markdown level1 summary"><p>Returns a string representation of the matrix.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -1577,8 +1578,85 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
   <h4 class="section">Returns</h4>
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
-    <dd><p>The fully qualified type name.</p>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_ToString_" data-uid="Jitter2.LinearMath.JMatrix.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_ToString_System_String_" data-uid="Jitter2.LinearMath.JMatrix.ToString(System.String)">
+  ToString(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L698"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the components using the specified numeric format and the current culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JMatrix_ToString_" data-uid="Jitter2.LinearMath.JMatrix.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JMatrix_ToString_System_String_System_IFormatProvider_" data-uid="Jitter2.LinearMath.JMatrix.ToString(System.String,System.IFormatProvider)">
+  ToString(string?, IFormatProvider?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L703"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the components using the specified numeric format and culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format, IFormatProvider? formatProvider)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A numeric format string, or null or empty to use the general format.</p>
 </dd>
+    <dt><code>formatProvider</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformatprovider">IFormatProvider</a></dt>
+    <dd><p>The format provider, or null to use the current culture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
   </dl>
 
 
@@ -1829,7 +1907,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JMatrix_op_Equality_Jitter2_LinearMath_JMatrix_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.op_Equality(Jitter2.LinearMath.JMatrix,Jitter2.LinearMath.JMatrix)">
   operator ==(JMatrix, JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L715"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L724"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1867,7 +1945,7 @@ Struct JMatrix  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JMatrix_op_Inequality_Jitter2_LinearMath_JMatrix_Jitter2_LinearMath_JMatrix_" data-uid="Jitter2.LinearMath.JMatrix.op_Inequality(Jitter2.LinearMath.JMatrix,Jitter2.LinearMath.JMatrix)">
   operator !=(JMatrix, JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L720"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JMatrix.cs/#L729"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

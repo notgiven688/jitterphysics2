@@ -176,6 +176,9 @@ Controls one angular degree of freedom; translation and swing remain free.</p>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_IsValid">Constraint.IsValid</a>
     </div>
     <div>
+      <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_FormatDescription_System_String_">Constraint.FormatDescription(string)</a>
+    </div>
+    <div>
       <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_SmallHandle">Constraint.SmallHandle</a>
     </div>
     <div>
@@ -217,9 +220,6 @@ Controls one angular degree of freedom; translation and swing remain free.</p>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
     </div>
-    <div>
-      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
-    </div>
   </dd></dl>
 
 
@@ -239,7 +239,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Angle" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Angle">
   Angle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L111"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the current relative twist angle in [-pi, pi]. Revolutions are not tracked.</p>
@@ -271,7 +271,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Bias" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets how aggressively the servo corrects its position error.</p>
@@ -304,7 +304,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Impulse" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L151"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the signed angular impulse in the last solved substep.</p>
@@ -336,7 +336,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_MaximumTorque" data-uid="Jitter2.Dynamics.Constraints.TwistServo.MaximumTorque">
   MaximumTorque
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L121"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the maximum total torque the servo can apply.</p>
@@ -369,7 +369,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Softness" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Softness">
   Softness
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L133"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L136"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the softness (compliance) of the servo.</p>
@@ -402,7 +402,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_TargetAngle" data-uid="Jitter2.Dynamics.Constraints.TwistServo.TargetAngle">
   TargetAngle
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets or sets the desired twist angle relative to the initial zero-twist pose.</p>
@@ -448,7 +448,7 @@ Combine with mechanical limits that keep motion inside this angular interval.</p
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Create" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Create">
   Create()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L51"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L54"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Called when the world creates this constraint. Override to set <a class="xref" href="Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_DispatchId">DispatchId</a>
@@ -476,7 +476,7 @@ to the ID returned by registering the constraint's solver methods.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_DebugDraw_Jitter2_IDebugDrawer_" data-uid="Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer)">
   DebugDraw(IDebugDrawer)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L194"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L197"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws a debug visualization of this constraint.</p>
@@ -515,7 +515,7 @@ to the ID returned by registering the constraint's solver methods.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__" data-uid="Jitter2.Dynamics.Constraints.TwistServo.DebugDraw(Jitter2.IDebugDrawer,Jitter2.DebugDrawSettings@)">
   DebugDraw(IDebugDrawer, in DebugDrawSettings)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L197"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L200"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Draws this constraint using the supplied visualization settings.
@@ -550,7 +550,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)">
   Initialize(JVector, JAngle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes both twist axes from the same world-space direction.</p>
@@ -584,7 +584,7 @@ Custom constraints that only override <a class="xref" href="Jitter2.Dynamics.Con
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_Initialize_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JAngle_" data-uid="Jitter2.Dynamics.Constraints.TwistServo.Initialize(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector,Jitter2.LinearMath.JAngle)">
   Initialize(JVector, JVector, JAngle)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L72"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes separate world-space twist axes and a target relative to the initial pose.</p>
@@ -630,7 +630,7 @@ A nonzero target angle starts the servo outside its target configuration.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_IterateTwistServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.TwistServo.IterateTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   IterateTwistServo(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L175"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -663,7 +663,7 @@ A nonzero target angle starts the servo outside its target configuration.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_PrepareForIterationTwistServo_Jitter2_Dynamics_Constraints_ConstraintData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.Constraints.TwistServo.PrepareForIterationTwistServo(Jitter2.Dynamics.Constraints.ConstraintData@,Jitter2.TimeStep@)">
   PrepareForIterationTwistServo(ref ConstraintData, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L150"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -696,7 +696,7 @@ A nonzero target angle starts the servo outside its target configuration.</p>
 
   <h3 id="Jitter2_Dynamics_Constraints_TwistServo_ResetWarmStart" data-uid="Jitter2.Dynamics.Constraints.TwistServo.ResetWarmStart">
   ResetWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L58"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clears impulses saved from the previous solve, without changing constraint settings.</p>
@@ -719,6 +719,38 @@ A nonzero target angle starts the servo outside its target configuration.</p>
   <div class="markdown level1 remarks"><p>Use after restoring a saved state or making a sudden change to the bodies,
 when impulses from their previous state should no longer be reused.</p>
 </div>
+
+
+
+
+  <a id="Jitter2_Dynamics_Constraints_TwistServo_ToString_" data-uid="Jitter2.Dynamics.Constraints.TwistServo.ToString*"></a>
+
+  <h3 id="Jitter2_Dynamics_Constraints_TwistServo_ToString" data-uid="Jitter2.Dynamics.Constraints.TwistServo.ToString">
+  ToString()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Constraints/TwistServo.cs/#L26"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a short description of the constraint's ID, connected bodies, and state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
 
 
 

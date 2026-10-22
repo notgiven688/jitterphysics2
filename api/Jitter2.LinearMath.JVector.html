@@ -102,7 +102,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct JVector : IEquatable&lt;JVector&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct JVector : IEquatable&lt;JVector&gt;, IFormattable</code></pre>
   </div>
 
 
@@ -113,6 +113,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
     <dt>Implements</dt>
     <dd>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</div>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformattable">IFormattable</a></div>
     </dd>
   </dl>
 
@@ -568,7 +569,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Abs_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Abs(Jitter2.LinearMath.JVector@)">
   Abs(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L188"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L196"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a vector containing the absolute values of the components of the specified vector.</p>
@@ -607,7 +608,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Add_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Add(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Add(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L406"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L414"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds two vectors.</p>
@@ -649,7 +650,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Add_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Add(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Add(in JVector, in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L419"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L427"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds two vectors.</p>
@@ -688,7 +689,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_ConjugatedTransform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JVector.ConjugatedTransform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@)">
   ConjugatedTransform(in JVector, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L284"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Transforms the vector by the conjugate of a quaternion (inverse rotation for unit quaternions).</p>
@@ -730,7 +731,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_ConjugatedTransform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.ConjugatedTransform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)">
   ConjugatedTransform(in JVector, in JQuaternion, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L347"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L355"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Transforms the vector by the conjugate of a unit quaternion (inverse rotation).</p>
@@ -769,7 +770,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Cross_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Cross(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Cross(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L464"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L472"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the cross product of two vectors (<code>u × v</code>).</p>
@@ -811,7 +812,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Cross_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Cross(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Cross(in JVector, in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L477"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L485"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the cross product of two vectors (<code>u × v</code>).</p>
@@ -850,7 +851,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Dot_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Dot(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Dot(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L394"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L402"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the dot product of two vectors (<code>u · v</code>).</p>
@@ -892,7 +893,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Equals_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JVector.Equals(Jitter2.LinearMath.JVector)">
   Equals(JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L763"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L771"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -931,7 +932,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Equals_System_Object_" data-uid="Jitter2.LinearMath.JVector.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L109"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L117"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -970,7 +971,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_GetHashCode" data-uid="Jitter2.LinearMath.JVector.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L489"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L497"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -1003,7 +1004,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Length" data-uid="Jitter2.LinearMath.JVector.Length">
   Length()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L621"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L629"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the length of the vector (<code>‖v‖</code>).</p>
@@ -1035,7 +1036,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_LengthSquared" data-uid="Jitter2.LinearMath.JVector.LengthSquared">
   LengthSquared()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L612"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L620"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the squared length of the vector (<code>‖v‖²</code>).</p>
@@ -1067,7 +1068,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Max_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Max(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Max(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L170"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a vector containing the maximum components of the specified vectors.</p>
@@ -1109,7 +1110,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Max_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Max(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Max(in JVector, in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L183"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a vector containing the maximum components of the specified vectors.</p>
@@ -1148,7 +1149,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_MaxAbs_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.MaxAbs(Jitter2.LinearMath.JVector@)">
   MaxAbs(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L199"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L207"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the maximum absolute value among the vector's components.</p>
@@ -1187,7 +1188,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Min_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Min(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Min(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L143"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a vector containing the minimum components of the specified vectors.</p>
@@ -1229,7 +1230,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Min_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Min(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Min(in JVector, in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a vector containing the minimum components of the specified vectors.</p>
@@ -1268,7 +1269,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Multiply(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L650"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L658"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies two vectors component-wise.</p>
@@ -1307,7 +1308,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,System.Single)">
   Multiply(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L642"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L650"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies a vector by a scalar.</p>
@@ -1349,7 +1350,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Multiply_Jitter2_LinearMath_JVector__System_Single_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Multiply(Jitter2.LinearMath.JVector@,System.Single,Jitter2.LinearMath.JVector@)">
   Multiply(in JVector, float, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L662"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L670"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies a vector by a scalar.</p>
@@ -1388,7 +1389,7 @@ Struct JVector  <a class="header-action link-secondary" title="View source" href
 
   <h3 id="Jitter2_LinearMath_JVector_Negate" data-uid="Jitter2.LinearMath.JVector.Negate">
   Negate()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L492"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L500"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1415,7 +1416,7 @@ public void Negate()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Negate_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Negate(Jitter2.LinearMath.JVector@)">
   Negate(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L518"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L526"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a negated copy of the vector.</p>
@@ -1454,7 +1455,7 @@ public void Negate()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Negate_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Negate(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Negate(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L530"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L538"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a negated copy of the vector.</p>
@@ -1490,7 +1491,7 @@ public void Negate()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_NegateInPlace_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.NegateInPlace(Jitter2.LinearMath.JVector@)">
   NegateInPlace(ref JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L505"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L513"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Negates the vector in-place.</p>
@@ -1523,7 +1524,7 @@ public void Negate()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Normalize" data-uid="Jitter2.LinearMath.JVector.Normalize">
   Normalize()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L569"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L577"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -1550,7 +1551,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Normalize_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Normalize(Jitter2.LinearMath.JVector@)">
   Normalize(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L547"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L555"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a normalized unit vector.</p>
@@ -1589,7 +1590,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Normalize_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Normalize(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Normalize(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L599"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L607"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a normalized unit vector.</p>
@@ -1625,7 +1626,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_NormalizeInPlace_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.NormalizeInPlace(Jitter2.LinearMath.JVector@)">
   NormalizeInPlace(ref JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L585"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L593"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Normalizes the vector in-place.</p>
@@ -1658,7 +1659,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_NormalizeSafe_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.JVector.NormalizeSafe(Jitter2.LinearMath.JVector@,System.Single)">
   NormalizeSafe(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L560"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L568"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Normalizes <code class="paramref">value</code>; returns <a class="xref" href="Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_Zero">Zero</a> when its squared-length is below <code class="paramref">epsilonSquared</code>.</p>
@@ -1700,7 +1701,7 @@ public void Normalize()</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Outer_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Outer(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Outer(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L372"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L380"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the outer product (tensor product) of two vectors.</p>
@@ -1781,7 +1782,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Subtract_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JVector.Subtract(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   Subtract(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L433"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L441"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Subtracts the second vector from the first.</p>
@@ -1823,7 +1824,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Subtract_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Subtract(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Subtract(in JVector, in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L446"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L454"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Subtracts the second vector from the first.</p>
@@ -1862,7 +1863,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Swap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Swap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   Swap(ref JVector, ref JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L630"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L638"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Swaps the values of two vectors.</p>
@@ -1924,11 +1925,89 @@ public void Set(float x, float y, float z)</code></pre>
 
 
 
+  <a id="Jitter2_LinearMath_JVector_ToString_" data-uid="Jitter2.LinearMath.JVector.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JVector_ToString_System_String_" data-uid="Jitter2.LinearMath.JVector.ToString(System.String)">
+  ToString(string?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L107"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the components using the specified numeric format and the current culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_LinearMath_JVector_ToString_" data-uid="Jitter2.LinearMath.JVector.ToString*"></a>
+
+  <h3 id="Jitter2_LinearMath_JVector_ToString_System_String_System_IFormatProvider_" data-uid="Jitter2.LinearMath.JVector.ToString(System.String,System.IFormatProvider)">
+  ToString(string?, IFormatProvider?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Formats the components using the specified numeric format and culture.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly string ToString(string? format, IFormatProvider? formatProvider)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>format</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>A numeric format string, or null or empty to use the general format.</p>
+</dd>
+    <dt><code>formatProvider</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iformatprovider">IFormatProvider</a></dt>
+    <dd><p>The format provider, or null to use the current culture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Jitter2_LinearMath_JVector_Transform_" data-uid="Jitter2.LinearMath.JVector.Transform*"></a>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@)">
   Transform(in JVector, in JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L212"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L220"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrix * vector</code> (multiplying matrix by column vector).</p>
@@ -1970,7 +2049,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@)">
   Transform(in JVector, in JMatrix, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L289"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L297"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrix * vector</code> (multiplying matrix by column vector).</p>
@@ -2009,7 +2088,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@)">
   Transform(in JVector, in JQuaternion)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L250"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L258"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Transforms the vector by a quaternion rotation.</p>
@@ -2051,7 +2130,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@)">
   Transform(in JVector, in JQuaternion, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L325"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L333"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Transforms the vector by a quaternion rotation.</p>
@@ -2090,7 +2169,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JSymmetricMatrix__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@)">
   Transform(in JVector, in JSymmetricMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L222"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L230"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrix * vector</code> using a symmetric matrix without expanding its storage.</p>
@@ -2129,7 +2208,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_Transform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.Transform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@)">
   Transform(in JVector, in JSymmetricMatrix, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L232"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L240"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrix * vector</code> using a symmetric matrix without expanding its storage.</p>
@@ -2165,7 +2244,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_TransposedTransform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__" data-uid="Jitter2.LinearMath.JVector.TransposedTransform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@)">
   TransposedTransform(in JVector, in JMatrix)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L263"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L271"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrixᵀ * vector</code> (multiplying transposed matrix by column vector).</p>
@@ -2207,7 +2286,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_TransposedTransform_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JMatrix__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.TransposedTransform(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JMatrix@,Jitter2.LinearMath.JVector@)">
   TransposedTransform(in JVector, in JMatrix, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L315"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates <code>matrixᵀ * vector</code> (multiplying transposed matrix by column vector).</p>
@@ -2388,7 +2467,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Addition_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_Addition(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   operator +(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L752"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L760"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds two vectors.</p>
@@ -2427,7 +2506,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Equality_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JVector.op_Equality(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   operator ==(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2573,7 +2652,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Inequality_Jitter2_LinearMath_JVector_Jitter2_LinearMath_JVector_" data-uid="Jitter2.LinearMath.JVector.op_Inequality(Jitter2.LinearMath.JVector,Jitter2.LinearMath.JVector)">
   operator !=(JVector, JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -2611,7 +2690,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Modulus_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_Modulus(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   operator %(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L673"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L681"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the cross product of two vectors (<code>u × v</code>).</p>
@@ -2650,7 +2729,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Multiply_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_Multiply(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   operator *(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L686"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L694"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the dot product of two vectors (<code>u · v</code>).</p>
@@ -2689,7 +2768,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Multiply_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.JVector.op_Multiply(Jitter2.LinearMath.JVector@,System.Single)">
   operator *(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L695"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L703"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies a vector by a scalar.</p>
@@ -2728,7 +2807,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Multiply_System_Single_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_Multiply(System.Single,Jitter2.LinearMath.JVector@)">
   operator *(float, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L708"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L716"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Multiplies a vector by a scalar.</p>
@@ -2767,7 +2846,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_Subtraction_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_Subtraction(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   operator -(in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L721"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L729"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Subtracts the second vector from the first.</p>
@@ -2806,7 +2885,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_UnaryNegation_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_UnaryNegation(Jitter2.LinearMath.JVector@)">
   operator -(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L734"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L742"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Negates the vector.</p>
@@ -2843,7 +2922,7 @@ public void Set(float x, float y, float z)</code></pre>
 
   <h3 id="Jitter2_LinearMath_JVector_op_UnaryPlus_Jitter2_LinearMath_JVector__" data-uid="Jitter2.LinearMath.JVector.op_UnaryPlus(Jitter2.LinearMath.JVector@)">
   operator +(in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L743"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/JVector.cs/#L751"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the vector itself.</p>

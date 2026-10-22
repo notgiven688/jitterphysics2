@@ -6749,6 +6749,37 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularLimit.To
   nameWithType: AngularLimit.To
+- uid: Jitter2.Dynamics.Constraints.AngularLimit.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.AngularLimit.html#Jitter2_Dynamics_Constraints_AngularLimit_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.AngularLimit.ToString
+  fullName: Jitter2.Dynamics.Constraints.AngularLimit.ToString()
+  nameWithType: AngularLimit.ToString()
+- uid: Jitter2.Dynamics.Constraints.AngularLimit.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.Dynamics.Constraints.AngularLimit.html#Jitter2_Dynamics_Constraints_AngularLimit_ToString_System_String_
+  commentId: M:Jitter2.Dynamics.Constraints.AngularLimit.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.Dynamics.Constraints.AngularLimit.ToString(string?)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularLimit.ToString(String)
+  nameWithType: AngularLimit.ToString(string?)
+  nameWithType.vb: AngularLimit.ToString(String)
+- uid: Jitter2.Dynamics.Constraints.AngularLimit.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.Dynamics.Constraints.AngularLimit.html#Jitter2_Dynamics_Constraints_AngularLimit_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.Dynamics.Constraints.AngularLimit.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.Dynamics.Constraints.AngularLimit.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.Dynamics.Constraints.AngularLimit.ToString(String, System.IFormatProvider)
+  nameWithType: AngularLimit.ToString(string?, IFormatProvider?)
+  nameWithType.vb: AngularLimit.ToString(String, IFormatProvider)
+- uid: Jitter2.Dynamics.Constraints.AngularLimit.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.AngularLimit.html#Jitter2_Dynamics_Constraints_AngularLimit_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularLimit.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularLimit.ToString
+  nameWithType: AngularLimit.ToString
 - uid: Jitter2.Dynamics.Constraints.AngularMotor
   name: AngularMotor
   href: api/Jitter2.Dynamics.Constraints.AngularMotor.html
@@ -6979,6 +7010,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularMotor.TargetVelocity
   nameWithType: AngularMotor.TargetVelocity
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.AngularMotor.ToString
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.ToString()
+  nameWithType: AngularMotor.ToString()
+- uid: Jitter2.Dynamics.Constraints.AngularMotor.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.AngularMotor.html#Jitter2_Dynamics_Constraints_AngularMotor_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularMotor.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularMotor.ToString
+  nameWithType: AngularMotor.ToString
 - uid: Jitter2.Dynamics.Constraints.AngularServo
   name: AngularServo
   href: api/Jitter2.Dynamics.Constraints.AngularServo.html
@@ -7221,6 +7265,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.AngularServo.TargetRelativeOrientation
   nameWithType: AngularServo.TargetRelativeOrientation
+- uid: Jitter2.Dynamics.Constraints.AngularServo.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.AngularServo.ToString
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.ToString()
+  nameWithType: AngularServo.ToString()
+- uid: Jitter2.Dynamics.Constraints.AngularServo.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.AngularServo.html#Jitter2_Dynamics_Constraints_AngularServo_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.AngularServo.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.AngularServo.ToString
+  nameWithType: AngularServo.ToString
 - uid: Jitter2.Dynamics.Constraints.BallSocket
   name: BallSocket
   href: api/Jitter2.Dynamics.Constraints.BallSocket.html
@@ -7463,6 +7520,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.BallSocket.Softness
   nameWithType: BallSocket.Softness
+- uid: Jitter2.Dynamics.Constraints.BallSocket.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.BallSocket.ToString
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.ToString()
+  nameWithType: BallSocket.ToString()
+- uid: Jitter2.Dynamics.Constraints.BallSocket.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.BallSocket.html#Jitter2_Dynamics_Constraints_BallSocket_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.BallSocket.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.BallSocket.ToString
+  nameWithType: BallSocket.ToString
 - uid: Jitter2.Dynamics.Constraints.ConeLimit
   name: ConeLimit
   href: api/Jitter2.Dynamics.Constraints.ConeLimit.html
@@ -7743,6 +7813,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.ConeLimit.Softness
   nameWithType: ConeLimit.Softness
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.ConeLimit.ToString
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ToString()
+  nameWithType: ConeLimit.ToString()
+- uid: Jitter2.Dynamics.Constraints.ConeLimit.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.ConeLimit.html#Jitter2_Dynamics_Constraints_ConeLimit_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.ConeLimit.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.ConeLimit.ToString
+  nameWithType: ConeLimit.ToString
 - uid: Jitter2.Dynamics.Constraints.Constraint
   name: Constraint
   href: api/Jitter2.Dynamics.Constraints.Constraint.html
@@ -7887,6 +7970,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.DispatchId
   nameWithType: Constraint.DispatchId
+- uid: Jitter2.Dynamics.Constraints.Constraint.FormatDescription(System.String)
+  name: FormatDescription(string)
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_FormatDescription_System_String_
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.FormatDescription(System.String)
+  name.vb: FormatDescription(String)
+  fullName: Jitter2.Dynamics.Constraints.Constraint.FormatDescription(string)
+  fullName.vb: Jitter2.Dynamics.Constraints.Constraint.FormatDescription(String)
+  nameWithType: Constraint.FormatDescription(string)
+  nameWithType.vb: Constraint.FormatDescription(String)
+- uid: Jitter2.Dynamics.Constraints.Constraint.FormatDescription*
+  name: FormatDescription
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_FormatDescription_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.FormatDescription
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.FormatDescription
+  nameWithType: Constraint.FormatDescription
 - uid: Jitter2.Dynamics.Constraints.Constraint.GetDebugDrawOrigin(Jitter2.DebugDrawSettings@)
   name: GetDebugDrawOrigin(in DebugDrawSettings)
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_GetDebugDrawOrigin_Jitter2_DebugDrawSettings__
@@ -8026,6 +8125,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.Constraint.Tag
   nameWithType: Constraint.Tag
+- uid: Jitter2.Dynamics.Constraints.Constraint.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.Constraint.ToString
+  fullName: Jitter2.Dynamics.Constraints.Constraint.ToString()
+  nameWithType: Constraint.ToString()
+- uid: Jitter2.Dynamics.Constraints.Constraint.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.Constraint.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.Constraint.ToString
+  nameWithType: Constraint.ToString
 - uid: Jitter2.Dynamics.Constraints.Constraint.VerifyNotZero
   name: VerifyNotZero()
   href: api/Jitter2.Dynamics.Constraints.Constraint.html#Jitter2_Dynamics_Constraints_Constraint_VerifyNotZero
@@ -8460,6 +8572,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.DistanceLimit.TargetDistance
   nameWithType: DistanceLimit.TargetDistance
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.DistanceLimit.ToString
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.ToString()
+  nameWithType: DistanceLimit.ToString()
+- uid: Jitter2.Dynamics.Constraints.DistanceLimit.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.DistanceLimit.html#Jitter2_Dynamics_Constraints_DistanceLimit_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.DistanceLimit.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.DistanceLimit.ToString
+  nameWithType: DistanceLimit.ToString
 - uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit
   name: EllipticalConeLimit
   href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html
@@ -8800,6 +8925,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.Softness
   nameWithType: EllipticalConeLimit.Softness
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString()
+  nameWithType: EllipticalConeLimit.ToString()
+- uid: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.EllipticalConeLimit.html#Jitter2_Dynamics_Constraints_EllipticalConeLimit_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.EllipticalConeLimit.ToString
+  nameWithType: EllipticalConeLimit.ToString
 - uid: Jitter2.Dynamics.Constraints.FixedAngle
   name: FixedAngle
   href: api/Jitter2.Dynamics.Constraints.FixedAngle.html
@@ -9022,6 +9160,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.FixedAngle.Softness
   nameWithType: FixedAngle.Softness
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.FixedAngle.ToString
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.ToString()
+  nameWithType: FixedAngle.ToString()
+- uid: Jitter2.Dynamics.Constraints.FixedAngle.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.FixedAngle.html#Jitter2_Dynamics_Constraints_FixedAngle_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.FixedAngle.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.FixedAngle.ToString
+  nameWithType: FixedAngle.ToString
 - uid: Jitter2.Dynamics.Constraints.HingeAngle
   name: HingeAngle
   href: api/Jitter2.Dynamics.Constraints.HingeAngle.html
@@ -9338,6 +9489,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.HingeAngle.Softness
   nameWithType: HingeAngle.Softness
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.HingeAngle.ToString
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.ToString()
+  nameWithType: HingeAngle.ToString()
+- uid: Jitter2.Dynamics.Constraints.HingeAngle.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.HingeAngle.html#Jitter2_Dynamics_Constraints_HingeAngle_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.HingeAngle.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.HingeAngle.ToString
+  nameWithType: HingeAngle.ToString
 - uid: Jitter2.Dynamics.Constraints.HingeJoint
   name: HingeJoint
   href: api/Jitter2.Dynamics.Constraints.HingeJoint.html
@@ -9901,6 +10065,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.TargetPosition
   nameWithType: LinearAxisServo.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.LinearAxisServo.ToString
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.ToString()
+  nameWithType: LinearAxisServo.ToString()
+- uid: Jitter2.Dynamics.Constraints.LinearAxisServo.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.LinearAxisServo.html#Jitter2_Dynamics_Constraints_LinearAxisServo_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearAxisServo.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearAxisServo.ToString
+  nameWithType: LinearAxisServo.ToString
 - uid: Jitter2.Dynamics.Constraints.LinearLimit
   name: LinearLimit
   href: api/Jitter2.Dynamics.Constraints.LinearLimit.html
@@ -9996,6 +10173,37 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearLimit.To
   nameWithType: LinearLimit.To
+- uid: Jitter2.Dynamics.Constraints.LinearLimit.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.LinearLimit.html#Jitter2_Dynamics_Constraints_LinearLimit_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.LinearLimit.ToString
+  fullName: Jitter2.Dynamics.Constraints.LinearLimit.ToString()
+  nameWithType: LinearLimit.ToString()
+- uid: Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.Dynamics.Constraints.LinearLimit.html#Jitter2_Dynamics_Constraints_LinearLimit_ToString_System_String_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.Dynamics.Constraints.LinearLimit.ToString(string?)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearLimit.ToString(String)
+  nameWithType: LinearLimit.ToString(string?)
+  nameWithType.vb: LinearLimit.ToString(String)
+- uid: Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.Dynamics.Constraints.LinearLimit.html#Jitter2_Dynamics_Constraints_LinearLimit_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.Dynamics.Constraints.LinearLimit.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.Dynamics.Constraints.LinearLimit.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.Dynamics.Constraints.LinearLimit.ToString(String, System.IFormatProvider)
+  nameWithType: LinearLimit.ToString(string?, IFormatProvider?)
+  nameWithType.vb: LinearLimit.ToString(String, IFormatProvider)
+- uid: Jitter2.Dynamics.Constraints.LinearLimit.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.LinearLimit.html#Jitter2_Dynamics_Constraints_LinearLimit_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearLimit.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearLimit.ToString
+  nameWithType: LinearLimit.ToString
 - uid: Jitter2.Dynamics.Constraints.LinearMotor
   name: LinearMotor
   href: api/Jitter2.Dynamics.Constraints.LinearMotor.html
@@ -10220,6 +10428,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearMotor.TargetVelocity
   nameWithType: LinearMotor.TargetVelocity
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.LinearMotor.ToString
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.ToString()
+  nameWithType: LinearMotor.ToString()
+- uid: Jitter2.Dynamics.Constraints.LinearMotor.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.LinearMotor.html#Jitter2_Dynamics_Constraints_LinearMotor_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearMotor.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearMotor.ToString
+  nameWithType: LinearMotor.ToString
 - uid: Jitter2.Dynamics.Constraints.LinearServo
   name: LinearServo
   href: api/Jitter2.Dynamics.Constraints.LinearServo.html
@@ -10500,6 +10721,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.LinearServo.TargetPosition
   nameWithType: LinearServo.TargetPosition
+- uid: Jitter2.Dynamics.Constraints.LinearServo.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.LinearServo.ToString
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.ToString()
+  nameWithType: LinearServo.ToString()
+- uid: Jitter2.Dynamics.Constraints.LinearServo.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.LinearServo.html#Jitter2_Dynamics_Constraints_LinearServo_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.LinearServo.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.LinearServo.ToString
+  nameWithType: LinearServo.ToString
 - uid: Jitter2.Dynamics.Constraints.PointOnLine
   name: PointOnLine
   href: api/Jitter2.Dynamics.Constraints.PointOnLine.html
@@ -10797,6 +11031,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnLine.Softness
   nameWithType: PointOnLine.Softness
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnLine.ToString
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.ToString()
+  nameWithType: PointOnLine.ToString()
+- uid: Jitter2.Dynamics.Constraints.PointOnLine.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.PointOnLine.html#Jitter2_Dynamics_Constraints_PointOnLine_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnLine.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnLine.ToString
+  nameWithType: PointOnLine.ToString
 - uid: Jitter2.Dynamics.Constraints.PointOnPlane
   name: PointOnPlane
   href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html
@@ -11031,6 +11278,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.PointOnPlane.Softness
   nameWithType: PointOnPlane.Softness
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.PointOnPlane.ToString
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.ToString()
+  nameWithType: PointOnPlane.ToString()
+- uid: Jitter2.Dynamics.Constraints.PointOnPlane.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.PointOnPlane.html#Jitter2_Dynamics_Constraints_PointOnPlane_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.PointOnPlane.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.PointOnPlane.ToString
+  nameWithType: PointOnPlane.ToString
 - uid: Jitter2.Dynamics.Constraints.PrismaticJoint
   name: PrismaticJoint
   href: api/Jitter2.Dynamics.Constraints.PrismaticJoint.html
@@ -11455,6 +11715,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.TwistAngle.Softness
   nameWithType: TwistAngle.Softness
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.TwistAngle.ToString
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.ToString()
+  nameWithType: TwistAngle.ToString()
+- uid: Jitter2.Dynamics.Constraints.TwistAngle.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.TwistAngle.html#Jitter2_Dynamics_Constraints_TwistAngle_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistAngle.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistAngle.ToString
+  nameWithType: TwistAngle.ToString
 - uid: Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData
   name: TwistAngle.TwistLimitData
   href: api/Jitter2.Dynamics.Constraints.TwistAngle.TwistLimitData.html
@@ -11734,6 +12007,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.Constraints.TwistServo.TargetAngle
   nameWithType: TwistServo.TargetAngle
+- uid: Jitter2.Dynamics.Constraints.TwistServo.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_ToString
+  commentId: M:Jitter2.Dynamics.Constraints.TwistServo.ToString
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.ToString()
+  nameWithType: TwistServo.ToString()
+- uid: Jitter2.Dynamics.Constraints.TwistServo.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.Constraints.TwistServo.html#Jitter2_Dynamics_Constraints_TwistServo_ToString_
+  commentId: Overload:Jitter2.Dynamics.Constraints.TwistServo.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.Constraints.TwistServo.ToString
+  nameWithType: TwistServo.ToString
 - uid: Jitter2.Dynamics.Constraints.TwistServo.TwistServoData
   name: TwistServo.TwistServoData
   href: api/Jitter2.Dynamics.Constraints.TwistServo.TwistServoData.html
@@ -13414,6 +13700,37 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.Tag
   nameWithType: RigidBody.Tag
+- uid: Jitter2.Dynamics.RigidBody.ToString
+  name: ToString()
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ToString
+  commentId: M:Jitter2.Dynamics.RigidBody.ToString
+  fullName: Jitter2.Dynamics.RigidBody.ToString()
+  nameWithType: RigidBody.ToString()
+- uid: Jitter2.Dynamics.RigidBody.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ToString_System_String_
+  commentId: M:Jitter2.Dynamics.RigidBody.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.Dynamics.RigidBody.ToString(string?)
+  fullName.vb: Jitter2.Dynamics.RigidBody.ToString(String)
+  nameWithType: RigidBody.ToString(string?)
+  nameWithType.vb: RigidBody.ToString(String)
+- uid: Jitter2.Dynamics.RigidBody.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.Dynamics.RigidBody.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.Dynamics.RigidBody.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.Dynamics.RigidBody.ToString(String, System.IFormatProvider)
+  nameWithType: RigidBody.ToString(string?, IFormatProvider?)
+  nameWithType.vb: RigidBody.ToString(String, IFormatProvider)
+- uid: Jitter2.Dynamics.RigidBody.ToString*
+  name: ToString
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_ToString_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.ToString
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.ToString
+  nameWithType: RigidBody.ToString
 - uid: Jitter2.Dynamics.RigidBody.Torque
   name: Torque
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_Torque
@@ -13767,6 +14084,24 @@ references:
   commentId: M:Jitter2.LinearMath.JAngle.ToString
   fullName: Jitter2.LinearMath.JAngle.ToString()
   nameWithType: JAngle.ToString()
+- uid: Jitter2.LinearMath.JAngle.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JAngle.html#Jitter2_LinearMath_JAngle_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JAngle.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JAngle.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JAngle.ToString(String)
+  nameWithType: JAngle.ToString(string?)
+  nameWithType.vb: JAngle.ToString(String)
+- uid: Jitter2.LinearMath.JAngle.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JAngle.html#Jitter2_LinearMath_JAngle_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JAngle.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JAngle.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JAngle.ToString(String, System.IFormatProvider)
+  nameWithType: JAngle.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JAngle.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JAngle.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JAngle.html#Jitter2_LinearMath_JAngle_ToString_
@@ -14360,6 +14695,24 @@ references:
   commentId: M:Jitter2.LinearMath.JBoundingBox.ToString
   fullName: Jitter2.LinearMath.JBoundingBox.ToString()
   nameWithType: JBoundingBox.ToString()
+- uid: Jitter2.LinearMath.JBoundingBox.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JBoundingBox.html#Jitter2_LinearMath_JBoundingBox_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JBoundingBox.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JBoundingBox.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JBoundingBox.ToString(String)
+  nameWithType: JBoundingBox.ToString(string?)
+  nameWithType.vb: JBoundingBox.ToString(String)
+- uid: Jitter2.LinearMath.JBoundingBox.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JBoundingBox.html#Jitter2_LinearMath_JBoundingBox_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JBoundingBox.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JBoundingBox.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JBoundingBox.ToString(String, System.IFormatProvider)
+  nameWithType: JBoundingBox.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JBoundingBox.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JBoundingBox.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JBoundingBox.html#Jitter2_LinearMath_JBoundingBox_ToString_
@@ -14857,6 +15210,24 @@ references:
   commentId: M:Jitter2.LinearMath.JMatrix.ToString
   fullName: Jitter2.LinearMath.JMatrix.ToString()
   nameWithType: JMatrix.ToString()
+- uid: Jitter2.LinearMath.JMatrix.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JMatrix.html#Jitter2_LinearMath_JMatrix_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JMatrix.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JMatrix.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JMatrix.ToString(String)
+  nameWithType: JMatrix.ToString(string?)
+  nameWithType.vb: JMatrix.ToString(String)
+- uid: Jitter2.LinearMath.JMatrix.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JMatrix.html#Jitter2_LinearMath_JMatrix_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JMatrix.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JMatrix.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JMatrix.ToString(String, System.IFormatProvider)
+  nameWithType: JMatrix.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JMatrix.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JMatrix.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JMatrix.html#Jitter2_LinearMath_JMatrix_ToString_
@@ -15613,6 +15984,24 @@ references:
   commentId: M:Jitter2.LinearMath.JQuaternion.ToString
   fullName: Jitter2.LinearMath.JQuaternion.ToString()
   nameWithType: JQuaternion.ToString()
+- uid: Jitter2.LinearMath.JQuaternion.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JQuaternion.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JQuaternion.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JQuaternion.ToString(String)
+  nameWithType: JQuaternion.ToString(string?)
+  nameWithType.vb: JQuaternion.ToString(String)
+- uid: Jitter2.LinearMath.JQuaternion.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JQuaternion.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JQuaternion.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JQuaternion.ToString(String, System.IFormatProvider)
+  nameWithType: JQuaternion.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JQuaternion.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JQuaternion.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JQuaternion.html#Jitter2_LinearMath_JQuaternion_ToString_
@@ -16163,6 +16552,24 @@ references:
   commentId: M:Jitter2.LinearMath.JSymmetricMatrix.ToString
   fullName: Jitter2.LinearMath.JSymmetricMatrix.ToString()
   nameWithType: JSymmetricMatrix.ToString()
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.ToString(String)
+  nameWithType: JSymmetricMatrix.ToString(string?)
+  nameWithType.vb: JSymmetricMatrix.ToString(String)
+- uid: Jitter2.LinearMath.JSymmetricMatrix.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JSymmetricMatrix.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JSymmetricMatrix.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JSymmetricMatrix.ToString(String, System.IFormatProvider)
+  nameWithType: JSymmetricMatrix.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JSymmetricMatrix.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JSymmetricMatrix.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JSymmetricMatrix.html#Jitter2_LinearMath_JSymmetricMatrix_ToString_
@@ -16508,6 +16915,24 @@ references:
   commentId: M:Jitter2.LinearMath.JTriangle.ToString
   fullName: Jitter2.LinearMath.JTriangle.ToString()
   nameWithType: JTriangle.ToString()
+- uid: Jitter2.LinearMath.JTriangle.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JTriangle.html#Jitter2_LinearMath_JTriangle_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JTriangle.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JTriangle.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JTriangle.ToString(String)
+  nameWithType: JTriangle.ToString(string?)
+  nameWithType.vb: JTriangle.ToString(String)
+- uid: Jitter2.LinearMath.JTriangle.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JTriangle.html#Jitter2_LinearMath_JTriangle_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JTriangle.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JTriangle.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JTriangle.ToString(String, System.IFormatProvider)
+  nameWithType: JTriangle.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JTriangle.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JTriangle.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JTriangle.html#Jitter2_LinearMath_JTriangle_ToString_
@@ -17096,6 +17521,24 @@ references:
   commentId: M:Jitter2.LinearMath.JVector.ToString
   fullName: Jitter2.LinearMath.JVector.ToString()
   nameWithType: JVector.ToString()
+- uid: Jitter2.LinearMath.JVector.ToString(System.String)
+  name: ToString(string?)
+  href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_ToString_System_String_
+  commentId: M:Jitter2.LinearMath.JVector.ToString(System.String)
+  name.vb: ToString(String)
+  fullName: Jitter2.LinearMath.JVector.ToString(string?)
+  fullName.vb: Jitter2.LinearMath.JVector.ToString(String)
+  nameWithType: JVector.ToString(string?)
+  nameWithType.vb: JVector.ToString(String)
+- uid: Jitter2.LinearMath.JVector.ToString(System.String,System.IFormatProvider)
+  name: ToString(string?, IFormatProvider?)
+  href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_ToString_System_String_System_IFormatProvider_
+  commentId: M:Jitter2.LinearMath.JVector.ToString(System.String,System.IFormatProvider)
+  name.vb: ToString(String, IFormatProvider)
+  fullName: Jitter2.LinearMath.JVector.ToString(string?, System.IFormatProvider?)
+  fullName.vb: Jitter2.LinearMath.JVector.ToString(String, System.IFormatProvider)
+  nameWithType: JVector.ToString(string?, IFormatProvider?)
+  nameWithType.vb: JVector.ToString(String, IFormatProvider)
 - uid: Jitter2.LinearMath.JVector.ToString*
   name: ToString
   href: api/Jitter2.LinearMath.JVector.html#Jitter2_LinearMath_JVector_ToString_
@@ -19180,6 +19623,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SpringConstraint.TargetDistance
   nameWithType: SpringConstraint.TargetDistance
+- uid: Jitter2.SoftBodies.SpringConstraint.ToString
+  name: ToString()
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_ToString
+  commentId: M:Jitter2.SoftBodies.SpringConstraint.ToString
+  fullName: Jitter2.SoftBodies.SpringConstraint.ToString()
+  nameWithType: SpringConstraint.ToString()
+- uid: Jitter2.SoftBodies.SpringConstraint.ToString*
+  name: ToString
+  href: api/Jitter2.SoftBodies.SpringConstraint.html#Jitter2_SoftBodies_SpringConstraint_ToString_
+  commentId: Overload:Jitter2.SoftBodies.SpringConstraint.ToString
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SpringConstraint.ToString
+  nameWithType: SpringConstraint.ToString
 - uid: Jitter2.SolveMode
   name: SolveMode
   href: api/Jitter2.SolveMode.html
