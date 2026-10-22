@@ -1,4 +1,4 @@
-- name: Welcome
+- name: Documentation
   href: introduction.md
 - name: Quickstart
   expanded: true

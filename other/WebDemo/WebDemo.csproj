@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Jitter2\Jitter2.csproj" />
+    <PackageReference Include="Jitter2" Version="2.13.0" />
     <PackageReference Include="Raylib-cs" Version="6.1.1" />
   </ItemGroup>
 
