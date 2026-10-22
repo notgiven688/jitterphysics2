@@ -11,8 +11,10 @@ public class Demo12 : IDemo
     public string Name => "CCD: Fast bodies";
     public string Description => "High-velocity objects fired at thin walls to test tunneling prevention.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         world.BroadPhaseFilter = new Common.IgnoreCollisionBetweenFilter();
@@ -39,7 +41,7 @@ public class Demo12 : IDemo
         boxBody.Velocity = new JVector(0, 0, -107);
         boxBody.EnableCcd = true;
 
-        Common.BuildRagdoll(new JVector(0, 8, -1),
+        Common.BuildRagdoll(world, new JVector(0, 8, -1),
             body =>
             {
                 body.Velocity = new JVector(0, 0, -107);

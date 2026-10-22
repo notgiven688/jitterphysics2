@@ -133,7 +133,7 @@ public sealed class FractureFragmentsDrawable : MutableMeshDrawable
     }
 }
 
-public sealed class Demo31 : IDemo, IDrawUpdate, ICleanDemo
+public sealed class Demo31 : IDemo
 {
     private sealed class BreakableBodyTag
     {
@@ -201,9 +201,9 @@ public sealed class Demo31 : IDemo, IDrawUpdate, ICleanDemo
     private readonly List<Breakable> pendingBreaks = new();
     private readonly List<FractureFragment> fragments = new();
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
-        this.world = world;
+        world = pg.World;
         fragmentsDrawable = pg.GetDrawable<FractureFragmentsDrawable>();
         fragmentsDrawable.SetFragments(fragments);
 

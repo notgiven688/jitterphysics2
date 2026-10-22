@@ -220,7 +220,7 @@ public class HeightmapDetection : IBroadPhaseFilter
     }
 }
 
-public class Demo25 : IDemo, IDrawUpdate
+public class Demo25 : IDemo
 {
     public string Name => "Heightmap (Custom Collision)";
     public string Description => "Procedural heightmap with custom per-triangle collision and raycasting.";
@@ -264,8 +264,10 @@ public class Demo25 : IDemo, IDrawUpdate
         }
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         var tester = new HeightmapTester(Heightmap.GetBoundingBox());
 
         world.BroadPhaseFilter = new HeightmapDetection(world, tester);

@@ -78,7 +78,7 @@ public class CarMesh : TriangleMeshDrawable
     }
 }
 
-public class Demo06 : IDemo, IDrawUpdate
+public class Demo06 : IDemo
 {
     public string Name => "Ray-cast Car";
     public string Description => "Drivable car using raycasts for wheel-ground contact.";
@@ -86,8 +86,10 @@ public class Demo06 : IDemo, IDrawUpdate
 
     private RayCastCar defaultCar = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         defaultCar = new RayCastCar(world);
@@ -95,9 +97,9 @@ public class Demo06 : IDemo, IDrawUpdate
         defaultCar.Body.DeactivationTime = TimeSpan.MaxValue;
         defaultCar.Body.Tag = new RigidBodyTag();
 
-        Common.BuildPyramid(-JVector.UnitZ * 20, 10);
-        Common.BuildJenga(new JVector(-20, 0, -10), 10);
-        Common.BuildWall(new JVector(30, 0, -20), 4);
+        Common.BuildPyramid(world, -JVector.UnitZ * 20, 10);
+        Common.BuildJenga(world, new JVector(-20, 0, -10), 10);
+        Common.BuildWall(world, new JVector(30, 0, -20), 4);
 
         world.SolverIterations = (4, 4);
         world.SubstepCount = 2;

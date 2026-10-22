@@ -40,7 +40,7 @@ internal static class ClothMaterial
     }
 }
 
-public class Demo17 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo17 : IDemo
 {
     public string Name => "Cloth";
     public string Description => "Cloth sheet pinned at its corners with rigid bodies falling onto it.";
@@ -51,10 +51,10 @@ public class Demo17 : IDemo, ICleanDemo, IDrawUpdate
 
     private MutableMeshDrawable clothRenderer = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

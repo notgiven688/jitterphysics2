@@ -6,7 +6,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo18 : IDemo, IDrawUpdate
+public class Demo18 : IDemo
 {
     public void DrawUpdate()
     {
@@ -42,7 +42,7 @@ public class Demo18 : IDemo, IDrawUpdate
 
     private Shape testShape = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
         testShape = new ConeShape(1f);

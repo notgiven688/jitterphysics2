@@ -9,7 +9,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo01 : IDemo, IDrawUpdate
+public class Demo01 : IDemo
 {
     public string Name => "Constraint car";
     public string Description => "Constraint-based car with a breakable hinge-joint suspension bridge.";
@@ -19,9 +19,9 @@ public class Demo01 : IDemo, IDrawUpdate
     private readonly List<HingeJoint> hinges = new();
     private World world = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
-        this.world = world;
+        world = pg.World;
 
         hinges.Clear();
 

@@ -6,7 +6,7 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class Demo30 : IDemo, IDrawUpdate
+public class Demo30 : IDemo
 {
     public string Name => "Sweep Casts";
     public string Description => "Camera-driven sweep casts through a simple physics scene. " +
@@ -37,8 +37,10 @@ public class Demo30 : IDemo, IDrawUpdate
     private const float HalfHeight = 0.45f;
     private static readonly Vector3 castColor = new(0.35f, 0.35f, 0.35f);
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         this.pg = pg;
 
         sphereDrawer = pg.Spheres;
@@ -48,9 +50,9 @@ public class Demo30 : IDemo, IDrawUpdate
 
         pg.AddFloor();
 
-        Common.BuildJenga(new JVector(-8, 0, -10), 12);
-        Common.BuildPyramid(new JVector(6, 0, -12), 10);
-        Common.BuildWall(new JVector(-4, 0, -22), 8, 8);
+        Common.BuildJenga(world, new JVector(-8, 0, -10), 12);
+        Common.BuildPyramid(world, new JVector(6, 0, -12), 10);
+        Common.BuildWall(world, new JVector(-4, 0, -22), 8, 8);
     }
 
     private void HandleInput()

@@ -14,7 +14,7 @@ namespace JitterDemo;
  * Code generated and optimized with OpenAI Codex
  */
 
-public class Demo34 : IDemo, IDemoGui
+public class Demo34 : IDemo
 {
     public string Name => "Robot Arm";
     public string Description => "A robot arm driven by hinge, universal, and prismatic servos, with adjustable joint targets.";
@@ -45,8 +45,10 @@ public class Demo34 : IDemo, IDemoGui
     private float azimuth, shoulder, elbow, wristPitch, wristTilt, roll, opening;
     private readonly WindowState controlsWindow = new();
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         controlsWindow.Position = new System.Numerics.Vector2(Math.Max(16, pg.Width - 316), 16);
         pg.AddFloor();
         world.SubstepCount = 4;

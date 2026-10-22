@@ -8,7 +8,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo22 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo22 : IDemo
 {
     public string Name => "Conveyor Belt";
     public string Description => "Kinematic planks forming a conveyor belt that transports rigid bodies.";
@@ -80,10 +80,10 @@ public class Demo22 : IDemo, ICleanDemo, IDrawUpdate
         }
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
-        this.world = world;
+        world = pg.World;
         pg.AddFloor();
         planks.Clear();
         physicsTime = 0;

@@ -115,11 +115,11 @@ public partial class Playground : RenderWindow
 
     private void SwitchDemo(int index)
     {
-        (currentDemo as ICleanDemo)?.CleanUp();
+        currentDemo?.CleanUp();
         ResetScene();
         selectedDemoIndex = index;
         currentDemo = demos[index];
-        currentDemo.Build(this, world);
+        currentDemo.Build(this);
     }
 
     public Playground()
@@ -273,7 +273,7 @@ public partial class Playground : RenderWindow
             }
         }
 
-        (currentDemo as IDrawUpdate)?.DrawUpdate();
+        currentDemo?.DrawUpdate();
 
         DebugDraw();
 

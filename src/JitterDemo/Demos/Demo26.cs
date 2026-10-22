@@ -7,7 +7,7 @@ using JitterDemo.Renderer.OpenGL;
 
 namespace JitterDemo;
 
-public class Demo26 : IDemo, IDrawUpdate
+public class Demo26 : IDemo
 {
     public string Name => "Angular Sweep";
     public string Description => "Visualizes NarrowPhase.Sweep with angular velocity. " +
@@ -24,7 +24,7 @@ public class Demo26 : IDemo, IDrawUpdate
     private JVector velocity = new JVector(0, 0, -10);
     private JVector angularVelocity = new JVector(1, 2,2);
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
         staticBar = new BoxShape(10,10,0.1f);

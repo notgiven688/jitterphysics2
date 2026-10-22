@@ -9,12 +9,14 @@ public class Demo03 : IDemo
     public string Name => "Ancient Pyramids";
     public string Description => "Large pyramids of boxes and cylinders to stress-test stacking.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
-        Common.BuildPyramid(JVector.Zero, 40);
-        Common.BuildPyramidCylinder(new JVector(10, 0, 10));
+        Common.BuildPyramid(world, JVector.Zero, 40);
+        Common.BuildPyramidCylinder(world, new JVector(10, 0, 10));
 
         world.SolverIterations = (4, 4);
     }

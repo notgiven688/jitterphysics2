@@ -10,8 +10,10 @@ public class Demo27 : IDemo
     public string Name => "CCD: Iterative discovery";
     public string Description => "Speculative contact discovery with fast-moving objects and thin geometry.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         var paddle = world.CreateRigidBody();
@@ -31,7 +33,7 @@ public class Demo27 : IDemo
         ball.AffectedByGravity = false;
         ball.EnableCcd = true;
 
-        Common.BuildRagdoll((-2.2f, 3.5f, -19.7f), body =>
+        Common.BuildRagdoll(world, (-2.2f, 3.5f, -19.7f), body =>
         {
             body.AffectedByGravity = false;
             body.EnableCcd = true;

@@ -11,8 +11,10 @@ public class Demo10 : IDemo
     public string Name => "Stacked Cubes";
     public string Description => "Tall stacks of cubes and cones using sub-stepping for stability.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         for (int i = 0; i < 32; i++)

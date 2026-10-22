@@ -21,15 +21,17 @@ public class DecomposedTeapot : TriangleMeshDrawable
     }
 }
 
-public class Demo00 : IDemo, IDrawUpdate
+public class Demo00 : IDemo
 {
     private ConvexDecomposition<DecomposedTeapot> teapotDecomp = null!;
 
     public string Name => "Convex Decomposition";
     public string Description => "Convex-decomposed teapot models with compound convex hull collision.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         teapotDecomp = new ConvexDecomposition<DecomposedTeapot>(world);

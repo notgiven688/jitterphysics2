@@ -6,7 +6,6 @@ using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
-using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
@@ -74,10 +73,8 @@ public static class Common
 
     private const int RagdollPartCount = (int)RagdollParts.Torso + 1;
 
-    public static void BuildRagdoll(JVector position, Action<RigidBody>? action = null)
+    public static void BuildRagdoll(World world, JVector position, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         RigidBody[] parts = new RigidBody[RagdollPartCount];
 
         for (int i = 0; i < parts.Length; i++)
@@ -206,10 +203,8 @@ public static class Common
         }
     }
 
-    public static void BuildPyramid(JVector position, int size = 20, Action<RigidBody>? action = null)
+    public static void BuildPyramid(World world, JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         for (int i = 0; i < size; i++)
         {
             for (int e = i; e < size; e++)
@@ -223,10 +218,8 @@ public static class Common
         }
     }
 
-    public static void BuildTower(JVector pos, int height = 40, Action<RigidBody>? action = null)
+    public static void BuildTower(World world, JVector pos, int height = 40, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         JQuaternion halfRotationStep = JQuaternion.CreateRotationY(MathF.PI * 2.0f / 64.0f);
         JQuaternion fullRotationStep = halfRotationStep * halfRotationStep;
         JQuaternion orientation = JQuaternion.Identity;
@@ -255,10 +248,8 @@ public static class Common
         }
     }
 
-    public static void BuildJenga(JVector position, int size = 20, Action<RigidBody>? action = null)
+    public static void BuildJenga(World world, JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         position += new JVector(0, 0.5f, 0);
 
         for (int i = 0; i < size; i++)
@@ -283,10 +274,8 @@ public static class Common
         }
     }
 
-    public static void BuildWall(JVector position, int sizex = 20, int sizey = 14, Action<RigidBody>? action = null)
+    public static void BuildWall(World world, JVector position, int sizex = 20, int sizey = 14, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         for (int i = 0; i < sizex; i++)
         {
             for (int e = 0; e < sizey; e++)
@@ -300,10 +289,8 @@ public static class Common
         }
     }
 
-    public static void BuildPyramidCylinder(JVector position, int size = 20, Action<RigidBody>? action = null)
+    public static void BuildPyramidCylinder(World world, JVector position, int size = 20, Action<RigidBody>? action = null)
     {
-        World world = ((Playground)RenderWindow.Instance).World;
-
         for (int i = 0; i < size; i++)
         {
             for (int e = i; e < size; e++)

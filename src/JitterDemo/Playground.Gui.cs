@@ -192,7 +192,7 @@ public partial class Playground : RenderWindow
         var frame = new RenderFrameInfo(logicalWidth, logicalHeight, framebufferWidth, framebufferHeight);
         Gui.BeginFrame(frame, logicalMouse, BuildUiInputState());
         BuildDemoOverlay(Gui);
-        (currentDemo as IDemoGui)?.DrawGui(Gui);
+        currentDemo?.DrawGui(Gui);
 
         overlayFramePrepared = true;
         WantsCaptureKeyboard = Gui.WantsCaptureKeyboard;

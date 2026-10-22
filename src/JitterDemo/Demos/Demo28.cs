@@ -78,8 +78,10 @@ public class Demo28: IDemo
         return position;
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         var size = new JVector(0.5f, 1, 3);

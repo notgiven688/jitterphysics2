@@ -15,7 +15,7 @@ namespace JitterDemo;
  * Code generated and optimized with OpenAI Codex
  */
 
-public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
+public class Demo33 : IDemo
 {
     public string Name => "Constraints Showcase";
     public string Description => "Examples of the built-in constraints and joints. " +
@@ -68,11 +68,11 @@ public class Demo33 : IDemo, IDrawUpdate, ICleanDemo
             (row - half) * GridSpacing);
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         CleanUp();
         playground = pg;
-        this.world = world;
+        world = pg.World;
         pg.AddFloor();
         world.SubstepCount = 4;
         world.SolverIterations = (12, 4);

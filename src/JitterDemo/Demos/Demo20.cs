@@ -138,7 +138,7 @@ public class Tester(Octree tree) : IDynamicTreeProxy, IRayCastable
     }
 }
 
-public class Demo20 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo20 : IDemo
 {
     public string Name => "Octree (Custom Collision)";
     public string Description => "High-poly mesh in an octree with custom narrow-phase triangle collision.";
@@ -148,10 +148,10 @@ public class Demo20 : IDemo, ICleanDemo, IDrawUpdate
 
     private Tester testShape = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

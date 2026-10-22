@@ -26,7 +26,7 @@ public class Dust : TriangleMeshDrawable
     }
 }
 
-public class Demo05 : IDemo, IDrawUpdate
+public class Demo05 : IDemo
 {
     public string Name => "Level Geometry";
     public string Description => "Triangle-mesh level loaded from an OBJ file with a player character.";
@@ -47,8 +47,10 @@ public class Demo05 : IDemo, IDrawUpdate
         return TriangleShape.CreateAllShapes(jtm);
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         tm = pg.GetDrawable<Dust>();
 
         pg.AddFloor();
@@ -58,7 +60,7 @@ public class Demo05 : IDemo, IDrawUpdate
         level.Tag = new RigidBodyTag(doNotDraw:true);
         level.MotionType = MotionType.Static;
 
-        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
+        Common.BuildJenga(world, new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
 
         player = new Player(world, new JVector(-6, 7, 32));
     }
