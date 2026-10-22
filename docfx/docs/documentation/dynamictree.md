@@ -4,7 +4,7 @@ The dynamic tree finds objects whose axis-aligned bounding boxes overlap. These 
 
 The tree groups nearby boxes so a query can skip whole groups that are out of range. Slightly expanded boxes also let objects move a short distance without needing to be reinserted every time.
 
-![img alt](images/dynamictree.png)
+![Bounding boxes for five shapes and their dynamic tree: root i branches into a and h; a contains c and b, while h contains d and g, and d contains e and f.](images/dynamictree.svg)
 
 ## Adding proxies
 
