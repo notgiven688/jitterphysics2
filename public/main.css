@@ -1,0 +1,20 @@
+/* One page background across Home, documentation, articles, and the API. */
+:root,
+[data-bs-theme="light"] {
+  --jp-page: #fcfcf9;
+  --bs-body-bg: var(--jp-page);
+  --bs-body-bg-rgb: 252, 252, 249;
+}
+
+[data-bs-theme="dark"] {
+  --jp-page: #151c26;
+  --bs-body-bg: var(--jp-page);
+  --bs-body-bg-rgb: 21, 28, 38;
+}
+
+/* Keep the high-resolution logo compact without upscaling a thumbnail. */
+.navbar-brand #logo {
+  width: 120px;
+  height: 45px;
+  object-fit: contain;
+}

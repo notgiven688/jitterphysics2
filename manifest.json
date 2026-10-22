@@ -3050,6 +3050,16 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "docs/images/playground.svg",
+      "output": {
+        "resource": {
+          "relative_path": "docs/images/playground.svg"
+        }
+      },
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "docs/introduction.md",
       "output": {
@@ -3203,7 +3213,7 @@
       "version": ""
     },
     {
-      "type": "Redirection",
+      "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
