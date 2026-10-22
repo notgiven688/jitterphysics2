@@ -1,8 +1,12 @@
 # Changelog
 
-### Unreleased
+### Jitter 2.13.0 (2026-10-22)
 
 - **Breaking Change:** Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use `RigidBody.EnableCcd` and the `Ccd*` settings; the old speculative contact API has been removed.
+- Fixed angular `NarrowPhase.Sweep` missing collisions between separated start and end poses. Added a time-limited overload that distinguishes hits, misses, and searches that could not finish.
+- Added a `DynamicTree.SweepCast` overload for shapes that translate and rotate.
+- Improved `ToString` output for bodies, constraints, limits, and math types. Added numeric format and culture options for bodies, limits, and math types.
+- Revised XML API documentation for clearer descriptions and usage guidance.
 
 ### Jitter 2.12.2 (2026-10-22)
 
