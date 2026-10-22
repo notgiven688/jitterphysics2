@@ -1,57 +1,38 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace JitterDemo.Renderer;
 
 /// <summary>
-/// Resolve native libraries from runtime directory.
+/// Resolves bundled native libraries from the application's runtimes directory.
 /// </summary>
 public static class ImportResolver
 {
-    private static string archStr = string.Empty;
+    // Keep GLFW loaded for the lifetime of its cached P/Invoke entry points.
+    private static readonly Lazy<IntPtr> glfwHandle = new(LoadGlfw);
 
-    public static void Load()
+    public static IntPtr Resolve(string libraryName)
     {
-        if (archStr.Length != 0) return;
+        return libraryName == OpenGL.Native.GLFW.LIBGLFW ? glfwHandle.Value : IntPtr.Zero;
+    }
 
-        archStr = "_";
+    private static IntPtr LoadGlfw()
+    {
+        (string platform, string fileName) = OperatingSystem.IsWindows() ? ("win", "glfw3.dll") :
+            OperatingSystem.IsLinux() ? ("linux", "libglfw.so.3") :
+            OperatingSystem.IsMacOS() ? ("osx", "libglfw.3.dylib") :
+            throw new PlatformNotSupportedException("No GLFW library is bundled for this operating system.");
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) archStr += "w";
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) archStr += "l";
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) archStr += "o";
-
-        switch (RuntimeInformation.OSArchitecture)
+        string architecture = RuntimeInformation.ProcessArchitecture switch
         {
-            case Architecture.Arm64:
-                archStr += "a";
-                break;
-            case Architecture.X64:
-                archStr += "x";
-                break;
-            case Architecture.X86:
-                archStr += "i";
-                break;
-        }
+            Architecture.X64 => "x64",
+            Architecture.Arm64 => "arm64",
+            Architecture.X86 when platform == "win" => "x86",
+            _ => throw new PlatformNotSupportedException("No GLFW library is bundled for this process architecture.")
+        };
 
-        NativeLibrary.SetDllImportResolver(typeof(ImportResolver).Assembly, (libraryName, _, _) =>
-        {
-            switch (libraryName)
-            {
-                case OpenGL.Native.GLFW.LIBGLFW:
-                    return archStr switch
-                    {
-                        "_wa" => NativeLibrary.Load("runtimes/win-arm64/native/glfw3.dll"),
-                        "_wx" => NativeLibrary.Load("runtimes/win-x64/native/glfw3.dll"),
-                        "_wi" => NativeLibrary.Load("runtimes/win-x86/native/glfw3.dll"),
-                        "_la" => NativeLibrary.Load("runtimes/linux-arm64/native/libglfw.so.3"),
-                        "_lx" => NativeLibrary.Load("runtimes/linux-x64/native/libglfw.so.3"),
-                        "_oa" => NativeLibrary.Load("runtimes/osx-arm64/native/libglfw.3.dylib"),
-                        "_ox" => NativeLibrary.Load("runtimes/osx-x64/native/libglfw.3.dylib"),
-                        _ => throw new NotSupportedException("Operating system/architecture not supported.")
-                    };
-                default:
-                    throw new InvalidOperationException("Unknown library.");
-            }
-        });
+        string path = Path.Combine(AppContext.BaseDirectory, "runtimes", $"{platform}-{architecture}", "native", fileName);
+        return NativeLibrary.Load(path);
     }
 }
