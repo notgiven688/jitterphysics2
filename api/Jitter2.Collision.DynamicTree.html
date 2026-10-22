@@ -2380,7 +2380,7 @@ Zero if the origin is inside the hit shape.</p>
 
   <h3 id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L252"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L255"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Sweeps a support-mapped query shape against all <a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a> proxies in the tree
@@ -2454,9 +2454,100 @@ is zero. <code>false</code> if no accepted hit is found, in which case <code cla
 
   <a id="Jitter2_Collision_DynamicTree_SweepCast_" data-uid="Jitter2.Collision.DynamicTree.SweepCast*"></a>
 
+  <h3 id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L339"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Sweeps a translating and rotating convex shape through the tree and returns the first accepted hit.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool SweepCast&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector velocity, in JVector angularVelocity, float maximumTime, DynamicTree.SweepCastFilterPre? pre, DynamicTree.SweepCastFilterPost? post, out IDynamicTreeProxy? proxy, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where T : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">T</span></dt>
+    <dd><p>The query shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The query shape's initial world-space orientation.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's initial world-space position and rotation origin.</p>
+</dd>
+    <dt><code>velocity</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's linear velocity in world space.</p>
+</dd>
+    <dt><code>angularVelocity</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's angular velocity in world space, in radians per second.</p>
+</dd>
+    <dt><code>maximumTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The last time to search, in seconds. Must be finite and nonnegative.</p>
+</dd>
+    <dt><code>pre</code> <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.<a class="xref" href="Jitter2.Collision.DynamicTree.SweepCastFilterPre.html">SweepCastFilterPre</a></dt>
+    <dd><p>Optional filter applied before the exact test.</p>
+</dd>
+    <dt><code>post</code> <a class="xref" href="Jitter2.Collision.DynamicTree.html">DynamicTree</a>.<a class="xref" href="Jitter2.Collision.DynamicTree.SweepCastFilterPost.html">SweepCastFilterPost</a></dt>
+    <dd><p>Optional filter applied after the exact test.</p>
+</dd>
+    <dt><code>proxy</code> <a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a></dt>
+    <dd><p>The accepted proxy, or null if none is found.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on the query shape at its initial pose, in world space.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on the found proxy in world space.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>World-space normal from the query shape toward the target at impact; zero for initial overlap.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact in seconds; zero for initial overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if an accepted impact is found; false if no accepted hit is found or the searches fail.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Targets are held at their current poses. Only proxies implementing <a class="xref" href="Jitter2.Collision.IAngularSweepTestable.html">IAngularSweepTestable</a>
+participate when angular velocity is nonzero. All built-in shapes support this query.
+As with other sweep casts, contact points refer to the initial poses; the normal is evaluated at impact.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p>The maximum time is negative or not finite.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Jitter2_Collision_DynamicTree_SweepCast_" data-uid="Jitter2.Collision.DynamicTree.SweepCast*"></a>
+
   <h3 id="Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   SweepCast&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L290"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/DynamicTree/DynamicTree.SweepCast.cs/#L293"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the first accepted sweep hit up to <code class="paramref">maxLambda</code>.</p>

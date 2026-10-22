@@ -102,7 +102,7 @@ Class RigidBodyShape  <a class="header-action link-secondary" title="View source
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class RigidBodyShape : Shape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class RigidBodyShape : Shape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
   </div>
 
 
@@ -125,6 +125,7 @@ Class RigidBodyShape  <a class="header-action link-secondary" title="View source
       <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IAngularSweepTestable.html">IAngularSweepTestable</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></div>
       <div><a class="xref" href="Jitter2.IDebugDrawable.html">IDebugDrawable</a></div>
@@ -390,7 +391,7 @@ Higher detail settings increase the drawing cost and do not guarantee a more acc
 
   <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Distance``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
   Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L190"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Finds the closest points between this object and the query shape.</p>
@@ -604,6 +605,82 @@ Use the return value to determine whether a hit occurred; do not rely on this be
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
     <dd><p><code>true</code> if the query shape hits or already overlaps this object; otherwise, <code>false</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The query support-map type.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_RigidBodyShape_Sweep_" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Sweep*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_RigidBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.RigidBodyShape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)">
+  Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/RigidBodyShape.cs/#L173"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Finds the first impact within the specified time interval.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public override sealed bool Sweep&lt;T&gt;(in T support, in JQuaternion orientation, in JVector position, in JVector velocity, in JVector angularVelocity, float extent, float maximumTime, out JVector pointA, out JVector pointB, out JVector normal, out float lambda) where T : ISupportMappable</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>support</code> <span class="xref">T</span></dt>
+    <dd><p>The query shape.</p>
+</dd>
+    <dt><code>orientation</code> <a class="xref" href="Jitter2.LinearMath.JQuaternion.html">JQuaternion</a></dt>
+    <dd><p>The query shape's initial world-space orientation.</p>
+</dd>
+    <dt><code>position</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's initial world-space position and rotation origin.</p>
+</dd>
+    <dt><code>velocity</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's linear velocity in world space.</p>
+</dd>
+    <dt><code>angularVelocity</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The query shape's angular velocity in world space, in radians per second.</p>
+</dd>
+    <dt><code>extent</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>A radius enclosing the query shape about its rotation origin, including any local offset.</p>
+</dd>
+    <dt><code>maximumTime</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The last time to search, in seconds.</p>
+</dd>
+    <dt><code>pointA</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on the query shape at its initial pose.</p>
+</dd>
+    <dt><code>pointB</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>Contact point on this object in world space.</p>
+</dd>
+    <dt><code>normal</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>World-space normal from the query shape toward this object at impact; zero for initial overlap.</p>
+</dd>
+    <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>Time of impact in seconds; zero for initial overlap.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd><p>True if an impact is found; false if the shapes miss or the search fails.</p>
 </dd>
   </dl>
 

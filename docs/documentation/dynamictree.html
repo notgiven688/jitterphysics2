@@ -177,6 +177,15 @@ public bool SweepCastCapsule(float radius, float halfLength, in JQuaternion orie
 public bool SweepCastCylinder(float radius, float halfHeight, in JQuaternion orientation, in JVector position, in JVector direction, ...)
 </code></pre>
 <p>Each has a bounded variant with a <code>maxLambda</code> parameter.</p>
+<p>For a shape that also rotates, use the overload with linear velocity, angular velocity, and a time limit:</p>
+<pre><code class="lang-cs">bool hit = tree.SweepCast(shape, orientation, position,
+    velocity, angularVelocity, maximumTime,
+    pre, post,
+    out var proxy, out var pointA, out var pointB, out var normal, out var time);
+</code></pre>
+<p><code>angularVelocity</code> is a world-space vector in radians per second. The shape rotates about <code>position</code> while that origin moves with <code>velocity</code>. <code>maximumTime</code> must be finite and nonnegative; the returned <code>time</code> is in seconds. Targets stay at their current poses during the query.</p>
+<p>This overload supports all built-in shapes. Custom proxies can participate by implementing <code>IAngularSweepTestable</code>. With zero angular velocity, it uses the existing translation-only cast.</p>
+<p>The filters work as above. Contact points still refer to the initial poses, so <code>pointA</code> must be rotated about the initial <code>position</code> as well as translated to reach the impact pose. <code>pointB</code> is already at the impact point because the target stays fixed. A numerical search that cannot finish does not report a hit.</p>
 <h4 id="find-nearest-query">Find nearest query</h4>
 <p>All proxies implementing <code>IDistanceTestable</code> can be distance-queried, including all shapes:</p>
 <pre><code class="lang-cs">// Unbounded: considers all IDistanceTestable proxies in the tree

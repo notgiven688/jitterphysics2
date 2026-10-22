@@ -481,6 +481,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Collision.IAngularSweepTestable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Collision.IAngularSweepTestable.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Collision.IAngularSweepTestable",
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.IAngularSweepTestable.yml\" sourcestartlinenumber=\"1\">Supports sweep tests in which the query shape translates and rotates while this object stays fixed.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Collision.IBroadPhaseFilter.yml",
       "output": {
         ".html": {

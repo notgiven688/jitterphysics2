@@ -1144,6 +1144,15 @@ references:
   fullName.vb: Jitter2.Collision.DynamicTree.SweepCast(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.Collision.DynamicTree.SweepCastFilterPre, Jitter2.Collision.DynamicTree.SweepCastFilterPost, Jitter2.Collision.IDynamicTreeProxy, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
   nameWithType: DynamicTree.SweepCast<T>(in T, in JQuaternion, in JVector, in JVector, DynamicTree.SweepCastFilterPre?, DynamicTree.SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
   nameWithType.vb: DynamicTree.SweepCast(Of T)(T, JQuaternion, JVector, JVector, DynamicTree.SweepCastFilterPre, DynamicTree.SweepCastFilterPost, IDynamicTreeProxy, JVector, JVector, JVector, Single)
+- uid: Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: SweepCast<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
+  href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: SweepCast(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, SweepCastFilterPre, SweepCastFilterPost, IDynamicTreeProxy, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.DynamicTree.SweepCast<T>(in T, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, float, Jitter2.Collision.DynamicTree.SweepCastFilterPre?, Jitter2.Collision.DynamicTree.SweepCastFilterPost?, out Jitter2.Collision.IDynamicTreeProxy?, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.DynamicTree.SweepCast(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Jitter2.Collision.DynamicTree.SweepCastFilterPre, Jitter2.Collision.DynamicTree.SweepCastFilterPost, Jitter2.Collision.IDynamicTreeProxy, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: DynamicTree.SweepCast<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, DynamicTree.SweepCastFilterPre?, DynamicTree.SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: DynamicTree.SweepCast(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, DynamicTree.SweepCastFilterPre, DynamicTree.SweepCastFilterPost, IDynamicTreeProxy, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.DynamicTree.SweepCast``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,Jitter2.Collision.DynamicTree.SweepCastFilterPre,Jitter2.Collision.DynamicTree.SweepCastFilterPost,Jitter2.Collision.IDynamicTreeProxy@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
   name: SweepCast<T>(in T, in JQuaternion, in JVector, in JVector, float, SweepCastFilterPre?, SweepCastFilterPost?, out IDynamicTreeProxy?, out JVector, out JVector, out JVector, out float)
   href: api/Jitter2.Collision.DynamicTree.html#Jitter2_Collision_DynamicTree_SweepCast__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_Jitter2_Collision_DynamicTree_SweepCastFilterPre_Jitter2_Collision_DynamicTree_SweepCastFilterPost_Jitter2_Collision_IDynamicTreeProxy__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
@@ -1248,6 +1257,28 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.DynamicTree.UpdatedProxyCount
   nameWithType: DynamicTree.UpdatedProxyCount
+- uid: Jitter2.Collision.IAngularSweepTestable
+  name: IAngularSweepTestable
+  href: api/Jitter2.Collision.IAngularSweepTestable.html
+  commentId: T:Jitter2.Collision.IAngularSweepTestable
+  fullName: Jitter2.Collision.IAngularSweepTestable
+  nameWithType: IAngularSweepTestable
+- uid: Jitter2.Collision.IAngularSweepTestable.Sweep*
+  name: Sweep
+  href: api/Jitter2.Collision.IAngularSweepTestable.html#Jitter2_Collision_IAngularSweepTestable_Sweep_
+  commentId: Overload:Jitter2.Collision.IAngularSweepTestable.Sweep
+  isSpec: "True"
+  fullName: Jitter2.Collision.IAngularSweepTestable.Sweep
+  nameWithType: IAngularSweepTestable.Sweep
+- uid: Jitter2.Collision.IAngularSweepTestable.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  href: api/Jitter2.Collision.IAngularSweepTestable.html#Jitter2_Collision_IAngularSweepTestable_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.IAngularSweepTestable.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.IAngularSweepTestable.Sweep<T>(in T, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, float, float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.IAngularSweepTestable.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: IAngularSweepTestable.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: IAngularSweepTestable.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.IBroadPhaseFilter
   name: IBroadPhaseFilter
   href: api/Jitter2.Collision.IBroadPhaseFilter.html
@@ -2821,6 +2852,15 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.RigidBodyShape.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
   nameWithType: RigidBodyShape.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   nameWithType.vb: RigidBodyShape.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+- uid: Jitter2.Collision.Shapes.RigidBodyShape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.RigidBodyShape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.RigidBodyShape.Sweep<T>(in T, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, float, float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.RigidBodyShape.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: RigidBodyShape.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: RigidBodyShape.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.Shapes.RigidBodyShape.UpdateWorldBoundingBox(System.Single)
   name: UpdateWorldBoundingBox(float)
   href: api/Jitter2.Collision.Shapes.RigidBodyShape.html#Jitter2_Collision_Shapes_RigidBodyShape_UpdateWorldBoundingBox_System_Single_
@@ -2980,6 +3020,15 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.Shape.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
   nameWithType: Shape.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)
   nameWithType.vb: Shape.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, JVector, JVector, Single)
+- uid: Jitter2.Collision.Shapes.Shape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name: Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__
+  commentId: M:Jitter2.Collision.Shapes.Shape.Sweep``1(``0@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single,System.Single,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Single@)
+  name.vb: Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
+  fullName: Jitter2.Collision.Shapes.Shape.Sweep<T>(in T, in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, in Jitter2.LinearMath.JVector, float, float, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector, out float)
+  fullName.vb: Jitter2.Collision.Shapes.Shape.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
+  nameWithType: Shape.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
+  nameWithType.vb: Shape.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
 - uid: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(System.Single)
   name: SweptExpandBoundingBox(float)
   href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_System_Single_
