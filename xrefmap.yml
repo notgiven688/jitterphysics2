@@ -3029,22 +3029,6 @@ references:
   fullName.vb: Jitter2.Collision.Shapes.Shape.Sweep(Of T)(T, Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single, Single, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector, Single)
   nameWithType: Shape.Sweep<T>(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)
   nameWithType.vb: Shape.Sweep(Of T)(T, JQuaternion, JVector, JVector, JVector, Single, Single, JVector, JVector, JVector, Single)
-- uid: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(System.Single)
-  name: SweptExpandBoundingBox(float)
-  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_System_Single_
-  commentId: M:Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(System.Single)
-  name.vb: SweptExpandBoundingBox(Single)
-  fullName: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(float)
-  fullName.vb: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox(Single)
-  nameWithType: Shape.SweptExpandBoundingBox(float)
-  nameWithType.vb: Shape.SweptExpandBoundingBox(Single)
-- uid: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox*
-  name: SweptExpandBoundingBox
-  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SweptExpandBoundingBox_
-  commentId: Overload:Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox
-  isSpec: "True"
-  fullName: Jitter2.Collision.Shapes.Shape.SweptExpandBoundingBox
-  nameWithType: Shape.SweptExpandBoundingBox
 - uid: Jitter2.Collision.Shapes.Shape.UpdateWorldBoundingBox(System.Single)
   name: UpdateWorldBoundingBox(float)
   href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_UpdateWorldBoundingBox_System_Single_
