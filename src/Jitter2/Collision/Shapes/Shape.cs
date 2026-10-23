@@ -36,15 +36,6 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
 
     int IDynamicTreeProxy.NodePtr { get; set; }
 
-    protected void SweptExpandBoundingBox(Real dt)
-    {
-        Real swept = dt * Velocity.Length();
-        JBoundingBox box = WorldBoundingBox;
-        box.Min -= new JVector(swept);
-        box.Max += new JVector(swept);
-        WorldBoundingBox = box;
-    }
-
     internal bool IsRegistered => (this as IPartitionedSetIndex).SetIndex != -1;
 
     [ReferenceFrame(ReferenceFrame.World)]
