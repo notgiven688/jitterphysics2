@@ -18,7 +18,8 @@ public static class GLFW
 
     static GLFW()
     {
-        ImportResolver.Load();
+        NativeLibrary.SetDllImportResolver(typeof(GLFW).Assembly,
+            static (libraryName, _, _) => ImportResolver.Resolve(libraryName));
     }
 
     public const string LIBGLFW = "glfw3";

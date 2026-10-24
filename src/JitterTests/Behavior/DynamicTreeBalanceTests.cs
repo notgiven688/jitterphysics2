@@ -2,6 +2,59 @@ namespace JitterTests.Behavior;
 
 public class DynamicTreeBalanceTests
 {
+    [TestCase(0)]
+    [TestCase(0.5)]
+    [TestCase(2)]
+    public void SurfaceAreaCostMatchesMaterializedMerge(double offset)
+    {
+        TreeBox first = new(JVector.Zero, new JVector((Real)1.2, (Real)3.4, (Real)5.6));
+        JVector shift = new((Real)offset);
+        TreeBox second = new(first.Min + shift, first.Max + shift);
+        TreeBox.CreateMerged(first, second, out TreeBox merged);
+
+        // Rounding must not make unchanged bounds look like a cost reduction.
+        Assert.That(TreeBox.MergedSurface(first, second), Is.EqualTo(merged.GetSurfaceArea()));
+    }
+
+    [Test]
+    public void NearlyCoincidentProxiesDoNotCycleDuringBalancing()
+    {
+        DynamicTree tree = new(static (_, _) => false);
+        Random random = new(16);
+
+        // These nearly identical bounds caused two inverse rotations to report a tiny
+        // cost reduction each, recursively undoing one another during insertion.
+        for (int i = 0; i < 64; i++)
+        {
+            JVector min = new(
+                (Real)(random.NextDouble() * 1e-14),
+                (Real)(random.NextDouble() * 1e-14),
+                (Real)(random.NextDouble() * 1e-14));
+            JVector size = new(
+                (Real)(3.1 + random.NextDouble() * 1e-14),
+                (Real)(1.7 + random.NextDouble() * 1e-14),
+                (Real)(2.3 + random.NextDouble() * 1e-14));
+            tree.AddProxy(new BoxProxy(new JBoundingBox(min, min + size)));
+        }
+
+        AssertValidTree(tree, 64);
+        tree.AutomaticOptimizationBudget = 64;
+        for (int i = 0; i < 4; i++) tree.Update(false, 0);
+        AssertValidTree(tree, 64);
+
+        List<IDynamicTreeProxy> hits = [];
+        tree.Query(hits, new JBoundingBox(new JVector(-1), new JVector(10)));
+        Assert.That(hits, Has.Count.EqualTo(64));
+    }
+
+    private sealed class BoxProxy(JBoundingBox box) : IDynamicTreeProxy
+    {
+        public int NodePtr { get; set; } = DynamicTree.NullNode;
+        public int SetIndex { get; set; } = -1;
+        public JVector Velocity => JVector.Zero;
+        public JBoundingBox WorldBoundingBox => box;
+    }
+
     [Test]
     public void ExplicitProxyLifecycleMutationsMaintainValidTree()
     {
@@ -100,13 +153,63 @@ public class DynamicTreeBalanceTests
         Assert.That(AssertValidTree(tree, 512), Is.GreaterThan(1));
 
         tree.EnableAutomaticOptimization = true;
+        double previousCost = initialCost;
         for (int i = 0; i < 512; i++)
         {
             tree.Update(false, (Real)0.0);
+            double cost = tree.CalculateCost();
+            Assert.That(cost, Is.LessThanOrEqualTo(previousCost));
+            previousCost = cost;
         }
 
         AssertValidTree(tree, 512);
-        Assert.That(tree.CalculateCost(), Is.LessThanOrEqualTo(initialCost));
+        Assert.That(tree.CalculateCost(), Is.LessThan(initialCost));
+    }
+
+    [TestCase(1)]
+    [TestCase(3)]
+    public void AutomaticOptimizationKeepsEqualCostGrouping(int budget)
+    {
+        using World world = new();
+        DynamicTree tree = world.DynamicTree;
+        tree.EnableAutomaticOptimization = false;
+
+        for (int i = 0; i < 3; i++)
+        {
+            RigidBody body = world.CreateRigidBody();
+            body.Position = new JVector(i * 2, 0, 0);
+            BoxShape shape = new(1, 1, 1);
+            body.AddShape(shape);
+            tree.DeactivateProxy(shape);
+        }
+
+        // Pairing the middle box with either neighbor has exactly the same cost.
+        List<TreeBox> initialBoxes = [];
+        tree.EnumerateTreeBoxes((box, depth) =>
+        {
+            if (depth == 2) initialBoxes.Add(box);
+        });
+        double initialCost = tree.CalculateCost();
+
+        tree.AutomaticOptimizationBudget = budget;
+        tree.EnableAutomaticOptimization = true;
+        for (int i = 0; i < 30; i++)
+        {
+            tree.Update(false, (Real)0.0);
+
+            List<TreeBox> boxes = [];
+            tree.EnumerateTreeBoxes((box, depth) =>
+            {
+                if (depth == 2) boxes.Add(box);
+            });
+
+            Assert.That(tree.UpdatedProxyCount, Is.Zero);
+            Assert.That(tree.CalculateCost(), Is.EqualTo(initialCost));
+            Assert.That(boxes, Is.EquivalentTo(initialBoxes),
+                "Stationary boxes must keep their grouping when reinsertion offers no improvement.");
+        }
+
+        AssertValidTree(tree, 3);
     }
 
     [Test]

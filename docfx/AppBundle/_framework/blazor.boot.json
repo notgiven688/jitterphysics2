@@ -1,23 +1,23 @@
 {
   "mainAssemblyName": "WebDemo.dll",
   "resources": {
-    "hash": "sha256-hTaBZwg08pO2ImtLM7JTW8Jw7NOSyjigcWbUoIrnt6U=",
+    "hash": "sha256-/dRLWvsO7SwP3206+p59KpXA15hSnkKbpq93Q3sTAOc=",
     "jsModuleNative": {
-      "dotnet.native.js": "sha256-Ld26ppJjNUHS/R4z8JDWuaMVqZ2/pDQ1n0jrwXUPVFc="
+      "dotnet.native.js": "sha256-vtKT1uZTTrO++RNzWSng1zgNzhEpRB4+6DMEGCEmf/Q="
     },
     "jsModuleRuntime": {
-      "dotnet.runtime.js": "sha256-3egSZfVHFUpXw3QwgiaxDQns5wWmrugiXEFPbJyCk2g="
+      "dotnet.runtime.js": "sha256-zWiDiXCfePn0/nLx2lSoJaVxxUIAaYKqTG9DTZqR/Mw="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-4sGKLs+EUqLQmrluXnsu6Q7+ACxggCRkw8oMRVbUbCI="
+      "dotnet.native.wasm": "sha256-X2aenW9XpOyYe4aqNx7ehsyeTu0d1xJ7B+Za2+LdHxE="
     },
     "coreAssembly": {
-      "Jitter2.wasm": "sha256-B7RYb1s28jtA5ZMG5vPIQaZUwX/xr+DrgnYwIgVif8A=",
-      "Raylib-cs.wasm": "sha256-p2KKxq0CN7gOlnyegcTDLBJSFervFCxCMvyHz9cQ3ts=",
-      "System.Collections.wasm": "sha256-ptn/+tzEZ/NpPs/MNR9RUUFYOfpXiKHnJCzl2/XZVIs=",
-      "System.Private.CoreLib.wasm": "sha256-aiWEhPBDrNSlvHyAs4T76AVsz2hkupJcU6GecTE1bfc=",
-      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-lzbTBaA2PajlVJeqzd5sDwoXrmCvVnqahwA8Sa7zFBo=",
-      "WebDemo.wasm": "sha256-bqGC9TuqOglAms1NcwLG/ICV7sdEzOCPdrbklt1R5Dk="
+      "Jitter2.wasm": "sha256-EfIhtmBYqvetJ1p3yi4j2+KCgnWyeqwwV4qrycKjSic=",
+      "Raylib-cs.wasm": "sha256-MucujuD141ORQunjAYHpXonb44jxPlmwye+tHxzRRJo=",
+      "System.Collections.wasm": "sha256-yu1xC2jDxhDrcybEKbTXQPiYBUIU47OYadE/ACZdVwo=",
+      "System.Private.CoreLib.wasm": "sha256-zEEow7QkKTuAiM6s8BLd6iBZUMAroCxX7VGnkAwrHr4=",
+      "System.Runtime.InteropServices.JavaScript.wasm": "sha256-Swb+s50UcqXzWsT7Giwkq1iqDufJ+8torjYKXY1UVOg=",
+      "WebDemo.wasm": "sha256-hJrS8Ybk7Ws3zQUFOGHBYV5HiFsLigBnyc5y8CeCasU="
     },
     "assembly": {},
     "coreVfs": {
@@ -33,7 +33,7 @@
         "supportFiles/1_JetBrainsMono-Regular.ttf": "sha256-oL9g7w+Dxe1NenXUWDhUix9oczct+siPcYBEkYmNE48="
       },
       "assets/lighting.fs": {
-        "supportFiles/2_lighting.fs": "sha256-9P7bpnmnFzpHKF+2l7LLdMsUr3+eHrSVFvOYCzJ9QRM="
+        "supportFiles/2_lighting.fs": "sha256-hQ86i0CaqsDFxuf0DJcOohlEtJedhobB2fnKnFZz3+U="
       },
       "assets/lighting.vs": {
         "supportFiles/3_lighting.vs": "sha256-J7tfxNROREVTHbd5xFSmwN74ufTd78DeWF/DD2wSKeI="

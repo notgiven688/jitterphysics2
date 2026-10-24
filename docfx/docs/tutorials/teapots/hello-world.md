@@ -12,12 +12,9 @@ var vertices = ShapeHelper.SampleHull(allVertices, subdivisions: 3);
 var pointCloudShape = new PointCloudShape(vertices);
 ```
 
-However, we need to be a bit careful here.
-If we add this shape to a rigid body as-is, the body may not behave as intuitively expected.
-This is because the center of mass of a rigid body is always located at `(0, 0, 0)` in its local coordinate frame.
+Jitter expects the body's center of mass at its local origin, `(0, 0, 0)`. The teapot model is offset from that origin, so using it unchanged would make the body rotate around the wrong point.
 
-If you open `teapot.obj` in a model editor, you'll notice that the model is not centered around the origin.
-To correct this, we either need to center the model manually in a model editor—or, more conveniently, use the `Shift` property of `PointCloudShape` to align the center of mass with the origin:
+Use `PointCloudShape.Shift` to move the shape's center of mass to the origin:
 
 ```cs
 // find a few points on the convex hull of the teapot.
@@ -38,24 +35,22 @@ rigidBody.AddShape(pointCloudShape);
 ```
 
 > [!WARNING]
-> The shift applied to the shape must also be taken into account when rendering the model, to ensure it aligns visually with the simulation.
+> Apply the same shift when drawing the model, so the visible teapot matches its collision shape. The complete example below does this.
 
 #### Creating Multiple Instances of the Same Shape
 
-In Jitter, it is not valid to add the same shape instance to multiple rigid bodies.
-To create additional instances of a shape, use the `Clone()` method of `PointCloudShape`.
-
-This method creates a new shape object that shares the underlying data structure, saving both memory and computation time:
+Each body needs its own shape instance. Use `PointCloudShape.Clone()` to create another instance that shares the same vertex data:
 
 ```cs
 var shapeInstance1 = new PointCloudShape(vertices);
 var shapeInstance2 = shapeInstance1.Clone(); // Safe to use in a second body
 ```
 
-This approach is especially useful when many bodies share the same geometry, such as multiple identical props or characters in a simulation.
+This lets us reuse the sampled vertices for every teapot.
 
 ### Putting it all together
 
+Replace the contents of `Program.cs` with this complete example:
 
 ```cs
 using System.Numerics;

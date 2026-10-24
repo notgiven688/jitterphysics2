@@ -13,7 +13,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Implements a SIMD accelerated support map for a set of vertices.
+/// Describes the convex hull of a set of vertices through its support points.
 /// </summary>
 public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
 {

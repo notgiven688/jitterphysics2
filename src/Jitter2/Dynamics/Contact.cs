@@ -76,16 +76,12 @@ public struct ContactData
 #pragma warning restore CS0649
 
     /// <summary>
-    /// The low nibble indicates which contacts are currently intact (bit set) or broken (bit unset).
-    /// The next nibble indicates which contacts were intact or broken during the solving phase.
+    /// Bits 0–3 mark contacts that are currently valid; bits 4–7 mark contacts used in the last solve.
     /// </summary>
-    /// <example>
-    /// A sphere may slide down a ramp. Within one timestep Jitter may detect the collision, create the contact,
-    /// solve the contact, integrate velocities and positions and then consider the contact as broken, since the
-    /// movement orthogonal to the contact normal exceeds a threshold. This results in no intact contact before calling
-    /// <see cref="World.Step(Real, bool)"/> and no intact contact after the call. However, the corresponding bit for the
-    /// solver-phase will be set in this scenario.
-    /// </example>
+    /// <remarks>
+    /// A contact can be used by the solver and then break as the bodies move during the same step.
+    /// Its solver bit remains set even though its current-validity bit has been cleared.
+    /// </remarks>
     public uint UsageMask;
 
     /// <summary>Handle to the first body's simulation data.</summary>
@@ -100,8 +96,8 @@ public struct ContactData
     public Real Restitution;
     /// <summary>Combined friction coefficient for this contact pair.</summary>
     public Real Friction;
-    /// <summary>Relaxation factor for speculative contacts.</summary>
-    public Real SpeculativeRelaxationFactor;
+    /// <summary>Relaxation factor for predicted contact separation.</summary>
+    public Real CcdRelaxationFactor;
 
     /// <summary>Determines which velocity components are updated by the solver.</summary>
     public SolveMode Mode;
@@ -225,8 +221,7 @@ public struct ContactData
     }
 
     /// <summary>
-    /// Gets a value indicating whether the current system supports hardware acceleration
-    /// for SIMD (Single Instruction, Multiple Data) operations.
+    /// Gets whether the contact solver can use hardware-accelerated vector operations.
     /// </summary>
     public static bool IsHardwareAccelerated => Vector.IsHardwareAccelerated;
 
@@ -274,7 +269,7 @@ public struct ContactData
 
         Friction = MathR.Max(body1.Friction, body2.Friction);
         Restitution = MathR.Max(body1.Restitution, body2.Restitution);
-        SpeculativeRelaxationFactor = body1.World.SpeculativeRelaxationFactor;
+        CcdRelaxationFactor = body1.World.CcdRelaxationFactor;
 
         Debug.Assert(body1.World == body2.World);
 
@@ -327,6 +322,8 @@ public struct ContactData
     /// For overlapping contact points, it points from <paramref name="point2"/> toward <paramref name="point1"/>.</param>
     public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal)
     {
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+
         if ((UsageMask & MaskContactAll) == MaskContactAll)
         {
             // All four contacts are in use. Find one candidate to be replaced by the new one.
@@ -384,7 +381,7 @@ public struct ContactData
 
         if (distanceSq < Contact.BreakThreshold * Contact.BreakThreshold)
         {
-            closest->Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, false, Restitution);
+            closest->Initialize(ptr, point1, point2, normal, false);
             return;
         }
 
@@ -392,22 +389,22 @@ public struct ContactData
 
         if ((UsageMask & MaskContact0) == 0)
         {
-            Contact0.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact0.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact0;
         }
         else if ((UsageMask & MaskContact1) == 0)
         {
-            Contact1.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact1.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact1;
         }
         else if ((UsageMask & MaskContact2) == 0)
         {
-            Contact2.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact2.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact2;
         }
         else if ((UsageMask & MaskContact3) == 0)
         {
-            Contact3.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, true, Restitution);
+            Contact3.Initialize(ptr, point1, point2, normal, true);
             UsageMask |= MaskContact3;
         }
     }
@@ -549,7 +546,7 @@ public struct ContactData
         return SelectCachedPointReplacementMaskVectorized(newPoint, contact0, contact1, contact2, contact3);
     }
 
-    private void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal)
+    private unsafe void SortCachedPoints(in JVector point1, in JVector point2, in JVector normal)
     {
         JVector.Subtract(point1, Body1.Data.Position, out JVector rp1);
 
@@ -571,7 +568,8 @@ public struct ContactData
             cref = ref Contact3;
         }
 
-        cref.Initialize(ref Body1.Data, ref Body2.Data, point1, point2, normal, false, Restitution);
+        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
+        cref.Initialize(ptr, point1, point2, normal, false);
         UsageMask |= mask;
     }
 
@@ -613,7 +611,7 @@ public struct ContactData
             SkipWarmStart = 1 << 2,
         }
 
-        /// <summary>Velocity bias for restitution or speculative separation.</summary>
+        /// <summary>Velocity bias for restitution or predicted separation.</summary>
         [FieldOffset(0)] public Real Bias;
 
         /// <summary>Position-correction bias computed from penetration depth.</summary>
@@ -640,13 +638,15 @@ public struct ContactData
         internal JVector Position2;
 
         /// <summary>
-        /// Position of the contact relative to the center of mass on the first body.
+        /// World-space contact offset from the first body's center of mass used to apply impulses.
+        /// Held fixed during the substeps of a full simulation step.
         /// </summary>
         [FieldOffset(18 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition1;
 
         /// <summary>
-        /// Position of the contact relative to the center of mass on the second body.
+        /// World-space contact offset from the second body's center of mass used to apply impulses.
+        /// Held fixed during the substeps of a full simulation step.
         /// </summary>
         [FieldOffset(21 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
@@ -662,14 +662,16 @@ public struct ContactData
         /// <summary>
         /// Normalized contact direction. A positive normal impulse pushes <see cref="ContactData.Body2"/>
         /// along this direction and <see cref="ContactData.Body1"/> against it. For overlapping contact points,
-        /// the normal points from the point on body 2 toward the point on body 1.
+        /// the normal points from the point on body 2 toward the point on body 1. Updated when collision
+        /// detection refreshes the contact.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Normal => normal;
 
         /// <summary>
         /// Tangent (normalized) to the contact <see cref="Normal"/>. At creation it follows tangential
-        /// relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts retain their basis.
+        /// relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts adjust
+        /// their tangent directions when the normal changes.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Tangent1 => tangent1;
@@ -860,36 +862,57 @@ public struct ContactData
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public void Initialize(ref RigidBodyData b1, ref RigidBodyData b2, in JVector point1, in JVector point2,
-            in JVector n, bool newContact, Real restitution)
+        public unsafe void Initialize(ContactData* cd, in JVector point1, in JVector point2,
+            in JVector n, bool newContact)
         {
             Debug.Assert(Math.Abs(n.LengthSquared() - (Real)1.0) < 1e-3);
+
+            ref var b1 = ref cd->Body1.Data;
+            ref var b2 = ref cd->Body2.Data;
 
             JVector.Subtract(point1, b1.Position, out RelativePosition1);
             JVector.Subtract(point2, b2.Position, out RelativePosition2);
             JVector.ConjugatedTransform(RelativePosition1, b1.Orientation, out Position1);
             JVector.ConjugatedTransform(RelativePosition2, b2.Orientation, out Position2);
 
-            // Material Properties
-            if (!newContact) return;
-
-            Accumulated = Vector.Create((Real)0.0);
-            Flag = Flags.NewContact;
-
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
-
-            Real relNormalVel = JVector.Dot(dv, n);
-
-            Bias = 0;
-
-            // Fake restitution
-            if (relNormalVel < (Real)(-1.0))
+            JVector tangent1;
+            JVector cachedImpulse = JVector.Zero;
+            if (newContact)
             {
-                Bias = -restitution * relNormalVel;
-            }
+                Accumulated = Vector.Create((Real)0.0);
+                Flag = Flags.NewContact;
 
-            var tangent1 = dv - n * relNormalVel;
+                // Linear-only contacts also omit rotation from restitution and the friction basis.
+                JVector dv = b2.Velocity - b1.Velocity;
+                if (cd->Mode == SolveMode.None || (cd->Mode & SolveMode.Angular) != 0)
+                {
+                    dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                    dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+                }
+
+                Real relNormalVel = JVector.Dot(dv, n);
+                Bias = 0;
+
+                // Fake restitution
+                if (relNormalVel < (Real)(-1.0))
+                {
+                    Bias = -cd->Restitution * relNormalVel;
+                }
+
+                tangent1 = dv - n * relNormalVel;
+            }
+            else
+            {
+                JVector previousNormal = Normal;
+                if (n == previousNormal) return;
+
+                JVector previousTangent1 = Tangent1;
+                cachedImpulse = Impulse * previousNormal;
+                cachedImpulse += TangentImpulse1 * previousTangent1 + TangentImpulse2 * Tangent2;
+
+                // Keep the old tangent direction as far as the new contact plane allows.
+                tangent1 = previousTangent1 - n * JVector.Dot(previousTangent1, n);
+            }
 
             Real num = tangent1.LengthSquared();
 
@@ -903,21 +926,37 @@ public struct ContactData
                 tangent1 = MathHelper.CreateOrthonormal(n);
             }
 
+            var tangent2 = tangent1 % n;
+
             normal = n;
             this.tangent1 = tangent1;
+
+            if (!newContact)
+            {
+                // Re-express the cached world impulse in the new basis, within the solver's
+                // unilateral normal and per-tangent friction bounds. Do not restart restitution.
+                Flags pendingFlags = Flag;
+                Real normalImpulse = MathR.Max((Real)0.0, JVector.Dot(cachedImpulse, n));
+                Real frictionLimit = cd->Friction * normalImpulse;
+                Accumulated = Vector.Create(normalImpulse,
+                    Math.Clamp(JVector.Dot(cachedImpulse, tangent1), -frictionLimit, frictionLimit),
+                    Math.Clamp(JVector.Dot(cachedImpulse, tangent2), -frictionLimit, frictionLimit), (Real)0.0);
+                Flag = pendingFlags;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public readonly unsafe bool UpdatePosition(ContactData* cd)
+        public unsafe bool UpdatePosition(ContactData* cd)
         {
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector.Transform(Position1, b1.Orientation, out var relativePos1);
-            JVector.Add(relativePos1, b1.Position, out JVector p1);
+            // Solving has finished. Refresh the offsets for contact matching in the next step.
+            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
+            JVector.Add(RelativePosition1, b1.Position, out JVector p1);
 
-            JVector.Transform(Position2, b2.Orientation, out var relativePos2);
-            JVector.Add(relativePos2, b2.Position, out JVector p2);
+            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Add(RelativePosition2, b2.Position, out JVector p2);
 
             JVector.Subtract(p1, p2, out JVector dist);
 
@@ -968,23 +1007,23 @@ public struct ContactData
             JVector tangent1 = Tangent1;
             JVector tangent2 = Tangent2;
 
-            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
-            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Transform(Position1, b1.Orientation, out JVector currentRelativePosition1);
+            JVector.Transform(Position2, b2.Orientation, out JVector currentRelativePosition2);
 
             if ((Flag & Flags.NewContact) == 0)
             {
                 Bias = 0;
             }
 
-            JVector.Add(RelativePosition1, b1.Position, out JVector p1);
-            JVector.Add(RelativePosition2, b2.Position, out JVector p2);
+            JVector.Add(currentRelativePosition1, b1.Position, out JVector p1);
+            JVector.Add(currentRelativePosition2, b2.Position, out JVector p2);
             JVector.Subtract(p1, p2, out JVector dist);
             Real penetration = JVector.Dot(dist, normal);
 
             if (penetration < -BreakThreshold)
             {
-                // Speculative contact
-                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
+                // The contact points are still separated.
+                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -1009,7 +1048,6 @@ public struct ContactData
                 angularImpulse += accumulatedTangentImpulse2 * angularTangent2;
                 b1.AngularVelocity -= angularImpulse;
             }
-
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
             {
@@ -1041,9 +1079,7 @@ public struct ContactData
         {
             Flags pendingFlags = Flag;
             // Begin read from VectorReal
-            VectorReal mass = CalculateEffectiveMass(cd,
-                out JVector angularNormalBody1, out JVector angularTangent1Body1, out JVector angularTangent2Body1,
-                out JVector angularNormalBody2, out JVector angularTangent1Body2, out JVector angularTangent2Body2);
+            VectorReal mass = CalculateEffectiveMass(cd);
             Real massNormal = mass.GetElement(0);
             Real massTangent1 = mass.GetElement(1);
             Real massTangent2 = mass.GetElement(2);
@@ -1057,8 +1093,12 @@ public struct ContactData
             JVector tangent1 = Tangent1;
             JVector tangent2 = Tangent2;
 
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            JVector dv = b2.Velocity - b1.Velocity;
+            if ((cd->Mode & SolveMode.Angular) != 0)
+            {
+                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            }
 
             Real bias = Bias;
             if (applyBias && PenaltyBias > 0)
@@ -1108,10 +1148,8 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                JVector angularImpulse = normalImpulse * angularNormalBody1;
-                angularImpulse += tangentImpulse1 * angularTangent1Body1;
-                angularImpulse += tangentImpulse2 * angularTangent2Body1;
-
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition1 % impulse, b1.InverseInertiaWorld);
                 b1.AngularVelocity -= angularImpulse;
             }
 
@@ -1122,10 +1160,8 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                JVector angularImpulse = normalImpulse * angularNormalBody2;
-                angularImpulse += tangentImpulse1 * angularTangent1Body2;
-                angularImpulse += tangentImpulse2 * angularTangent2Body2;
-
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition2 % impulse, b2.InverseInertiaWorld);
                 b2.AngularVelocity += angularImpulse;
             }
 
@@ -1160,16 +1196,16 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector.Transform(Position1, b1.Orientation, out RelativePosition1);
-            JVector.Transform(Position2, b2.Orientation, out RelativePosition2);
+            JVector.Transform(Position1, b1.Orientation, out JVector currentRelativePosition1);
+            JVector.Transform(Position2, b2.Orientation, out JVector currentRelativePosition2);
 
             if ((Flag & Flags.NewContact) == 0)
             {
                 Bias = 0;
             }
 
-            JVector.Add(RelativePosition1, b1.Position, out JVector r1);
-            JVector.Add(RelativePosition2, b2.Position, out JVector r2);
+            JVector.Add(currentRelativePosition1, b1.Position, out JVector r1);
+            JVector.Add(currentRelativePosition2, b2.Position, out JVector r2);
             JVector.Subtract(r1, r2, out JVector dist);
 
             JVector n = new JVector(normalTangentX.GetElement(0), normalTangentY.GetElement(0), normalTangentZ.GetElement(0));
@@ -1177,8 +1213,8 @@ public struct ContactData
 
             if (penetration < -BreakThreshold)
             {
-                // Speculative contact
-                Bias = penetration * timeStep.InverseStepDt * cd->SpeculativeRelaxationFactor;
+                // The contact points are still separated.
+                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -1221,7 +1257,6 @@ public struct ContactData
                 angularImpulse1.Z = GetSum3(Vector.Multiply(warmStartImpulse, e3));
 
                 b1.AngularVelocity -= angularImpulse1;
-
             }
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
@@ -1256,7 +1291,6 @@ public struct ContactData
                 angularImpulse2.Z = GetSum3(Vector.Multiply(warmStartImpulse, f3));
 
                 b2.AngularVelocity += angularImpulse2;
-
             }
 
             PenaltyBias = BiasFactor * timeStep.InverseStepDt * Math.Max((Real)0.0, penetration - AllowedPenetration);
@@ -1271,8 +1305,12 @@ public struct ContactData
             ref var b1 = ref cd->Body1.Data;
             ref var b2 = ref cd->Body2.Data;
 
-            JVector dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
-            dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            JVector dv = b2.Velocity - b1.Velocity;
+            if ((cd->Mode & SolveMode.Angular) != 0)
+            {
+                dv = b2.Velocity + b2.AngularVelocity % RelativePosition2;
+                dv -= b1.Velocity + b1.AngularVelocity % RelativePosition1;
+            }
 
             Real bias = Bias;
             if (applyBias && PenaltyBias > 0)
@@ -1284,7 +1322,7 @@ public struct ContactData
                 Vector.Multiply(normalTangentY, Vector.Create(dv.Y))), Vector.Multiply(normalTangentZ, Vector.Create(dv.Z)));
 
             var effectiveMass = CalculateEffectiveMassAccelerated(cd, normalTangentX, normalTangentY, normalTangentZ,
-                out var e1, out var e2, out var e3, out var f1, out var f2, out var f3);
+                out _, out _, out _, out _, out _, out _);
             var impulse = Vector.Multiply(effectiveMass, (Vector.Subtract(Vector.Create(bias, 0, 0, 0), vdots)));
             var oldImpulse = Accumulated;
 
@@ -1313,12 +1351,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                Unsafe.SkipInit(out JVector angularImpulse1);
-                angularImpulse1.X = GetSum3(Vector.Multiply(impulse, e1));
-                angularImpulse1.Y = GetSum3(Vector.Multiply(impulse, e2));
-                angularImpulse1.Z = GetSum3(Vector.Multiply(impulse, e3));
-
-                b1.AngularVelocity -= angularImpulse1;
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition1 % linearImpulse, b1.InverseInertiaWorld);
+                b1.AngularVelocity -= angularImpulse;
             }
 
             if ((cd->Mode & SolveMode.LinearBody2) != 0)
@@ -1328,12 +1363,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                Unsafe.SkipInit(out JVector angularImpulse2);
-                angularImpulse2.X = GetSum3(Vector.Multiply(impulse, f1));
-                angularImpulse2.Y = GetSum3(Vector.Multiply(impulse, f2));
-                angularImpulse2.Z = GetSum3(Vector.Multiply(impulse, f3));
-
-                b2.AngularVelocity += angularImpulse2;
+                JVector angularImpulse = TransformSymmetricInertia(
+                    RelativePosition2 % linearImpulse, b2.InverseInertiaWorld);
+                b2.AngularVelocity += angularImpulse;
             }
 
         }

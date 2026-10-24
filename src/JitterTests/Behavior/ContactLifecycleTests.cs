@@ -58,11 +58,168 @@ public class ContactLifecycleTests
         Assert.That(body.AngularVelocity.Z, Is.GreaterThan(0));
     }
 
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public void ContactIteration_ConservesLinearAndAngularMomentum(bool accelerated, bool applyBias)
+    {
+        using var world = new World();
+        var body1 = world.CreateRigidBody();
+        var body2 = world.CreateRigidBody();
+        body1.SetMassInertia(JSymmetricMatrix.CreateScale(3, 5, 7), 2);
+        body2.SetMassInertia(JSymmetricMatrix.CreateScale(4, 6, 9), 3);
+        body1.Position = new JVector(-0.6f, 0.3f, 0.4f);
+        body2.Position = new JVector(0.8f, -0.2f, -0.5f);
+        body1.Orientation = JQuaternion.CreateRotationX((Real)0.4) * JQuaternion.CreateRotationZ((Real)0.7);
+        body2.Orientation = JQuaternion.CreateRotationY((Real)0.6) * JQuaternion.CreateRotationX((Real)0.3);
+        body1.Velocity = new JVector(2, 3, -1);
+        body2.Velocity = new JVector(-1, -2, 0.5f);
+        body1.AngularVelocity = new JVector(0.2f, -0.4f, 0.1f);
+        body2.AngularVelocity = new JVector(-0.3f, 0.1f, 0.5f);
+
+        ContactData contact = default;
+        contact.Init(body1, body2);
+        contact.ResetMode();
+        contact.Friction = (Real)0.75;
+        contact.Restitution = 0;
+        JVector point = new(0.1f, 0.4f, 0.5f);
+        contact.AddContact(point, point, JVector.Normalize(new JVector(0.3f, 1, -0.4f)));
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.01));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)0.01));
+        contact.Contact0.PenaltyBias = 1;
+
+        JSymmetricMatrix.Inverse(body1.Data.InverseInertiaWorld, out var inertia1);
+        JSymmetricMatrix.Inverse(body2.Data.InverseInertiaWorld, out var inertia2);
+
+        JVector LinearMomentum() => 2 * body1.Velocity + 3 * body2.Velocity;
+        JVector AngularMomentum() => body1.Position % (2 * body1.Velocity)
+            + body2.Position % (3 * body2.Velocity)
+            + JVector.Transform(body1.AngularVelocity, inertia1)
+            + JVector.Transform(body2.AngularVelocity, inertia2);
+
+        JVector linearMomentum = LinearMomentum();
+        JVector angularMomentum = AngularMomentum();
+        JVector initialAngularVelocity = body1.AngularVelocity;
+
+        for (int i = 0; i < 8; i++)
+        {
+            if (accelerated) contact.IterateAccelerated(applyBias);
+            else contact.IterateScalar(applyBias);
+
+            Assert.That(JVector.MaxAbs(LinearMomentum() - linearMomentum), Is.LessThan(10 * Tolerance));
+            Assert.That(JVector.MaxAbs(AngularMomentum() - angularMomentum), Is.LessThan(10 * Tolerance));
+        }
+
+        Assert.That(contact.Contact0.Impulse, Is.GreaterThan(Tolerance));
+        Assert.That(MathR.Abs(contact.Contact0.TangentImpulse1) + MathR.Abs(contact.Contact0.TangentImpulse2),
+            Is.GreaterThan(Tolerance));
+        Assert.That(JVector.MaxAbs(body1.AngularVelocity - initialAngularVelocity), Is.GreaterThan(Tolerance));
+    }
+
+    [TestCase(false, 0.005, 2.0)]
+    [TestCase(true, 0.005, 2.0)]
+    [TestCase(false, 0.1, -0.9)]
+    [TestCase(true, 0.1, -0.9)]
+    public void ExplicitLinearOnlyContact_IgnoresAngularSurfaceVelocity(bool accelerated, double gap, double target)
+    {
+        using var world = new World();
+        var wall = world.CreateRigidBody();
+        var wallShape = new SphereShape(1);
+        wall.AddShape(wallShape);
+        wall.MotionType = MotionType.Static;
+        var body = world.CreateRigidBody();
+        var shape = new SphereShape(1);
+        body.AddShape(shape);
+        body.SetMassInertia(1);
+        body.Velocity = new JVector(-2, 0, 0);
+        body.AngularVelocity = new JVector(0, 0, 10);
+
+        body.Restitution = 1;
+        world.RegisterContact(wallShape.ShapeId, shape.ShapeId, wall, body,
+            new JVector(-(Real)gap, 1, 0), new JVector(0, 1, 0), JVector.UnitX,
+            ContactData.SolveMode.Angular);
+        Assert.That(world.GetArbiter(wallShape.ShapeId, shape.ShapeId, out var arbiter), Is.True);
+        ref ContactData contact = ref arbiter!.Handle.Data;
+        contact.Friction = 0;
+
+        Assert.That(contact.Contact0.Bias, Is.EqualTo(2).Within(Tolerance));
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.1));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)0.1));
+
+        if (accelerated) contact.IterateAccelerated(true);
+        else contact.IterateScalar(true);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
+        Assert.That(body.AngularVelocity, Is.EqualTo(new JVector(0, 0, 10)));
+    }
+
+    [TestCase(SolveMode.Regular, 0)]
+    [TestCase(SolveMode.Regular, 8)]
+    [TestCase(SolveMode.Deterministic, 0)]
+    [TestCase(SolveMode.Deterministic, 8)]
+    [TestCase(SolveMode.GraphColored, 0)]
+    [TestCase(SolveMode.GraphColored, 8)]
+    public void GeneratedCcdContactRespondsToRotation(SolveMode solveMode, double initialSpin)
+    {
+        using var world = new World
+        {
+            Gravity = JVector.Zero,
+            SolveMode = solveMode,
+            SubstepCount = 1,
+            SolverIterations = (4, 2)
+        };
+        var wall = world.CreateRigidBody();
+        var wallShape = new BoxShape((Real)0.2, 10, 10);
+        wall.AddShape(wallShape);
+        wall.Position = new JVector((Real)(-0.1), 0, 0);
+        wall.MotionType = MotionType.Static;
+        wall.Friction = wall.Restitution = 0;
+
+        var body = world.CreateRigidBody();
+        var shape = new BoxShape(1, 1, (Real)0.5);
+        body.AddShape(shape);
+        body.SetMassInertia(JSymmetricMatrix.Identity, 1);
+        body.Position = JVector.UnitX;
+        body.Orientation = JQuaternion.CreateRotationZ((Real)0.3);
+        body.Velocity = new JVector(-100, 0, 0);
+        body.AngularVelocity = new JVector(0, 0, (Real)initialSpin);
+        body.Damping = (0, 0);
+        body.Friction = body.Restitution = 0;
+        body.EnableCcd = true;
+
+        bool generated = false;
+        JVector normal = default, offset = default;
+        Real target = 0;
+        world.PreSubStep += step =>
+        {
+            Assert.That(world.GetArbiter(wallShape.ShapeId, shape.ShapeId, out var arbiter), Is.True);
+            var point = arbiter!.Handle.Data.Contact0;
+            normal = point.Normal;
+            offset = point.RelativePosition2;
+            Real separation = JVector.Dot(body.Position + offset - wall.Position - point.RelativePosition1, normal);
+            Assert.That(separation, Is.GreaterThan((Real)0.1), "The contact must be generated before overlap.");
+            Assert.That((offset % normal).Length(), Is.GreaterThan((Real)0.1), "The impulse must act off-center.");
+            target = -separation * step.InverseStepDt * world.CcdRelaxationFactor;
+            generated = true;
+        };
+
+        world.Step((Real)0.01, false);
+
+        Assert.That(generated, Is.True);
+        Assert.That((body.AngularVelocity - new JVector(0, 0, (Real)initialSpin)).Length(), Is.GreaterThan(1));
+        // Check velocity at the contact using the offset held fixed during the solve.
+        Real closingVelocity = JVector.Dot(body.Velocity + body.AngularVelocity % offset, normal);
+        Assert.That(closingVelocity, Is.EqualTo(target).Within(100 * Tolerance));
+    }
+
     [TestCase(false, 0.1, -0.9)]
     [TestCase(true, 0.1, -0.9)]
     [TestCase(false, 0.005, 10.0)]
     [TestCase(true, 0.005, 10.0)]
-    public void SeparatedContact_UsesOriginalSpeculativeThreshold(
+    public void SeparatedContact_UsesCcdBiasThreshold(
         bool accelerated, double gap, double target)
     {
         using var world = new World();

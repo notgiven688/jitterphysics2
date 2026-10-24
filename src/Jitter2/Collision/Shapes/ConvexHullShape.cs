@@ -58,6 +58,23 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
     private JVector shifted;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        foreach (var triangle in indices)
+        {
+            JVector a = vertices[triangle.IndexA].Vertex + shifted;
+            JVector b = vertices[triangle.IndexB].Vertex + shifted;
+            JVector c = vertices[triangle.IndexC].Vertex + shifted;
+            JVector normal = (b - a) % (c - a);
+            if (normal.LengthSquared() == 0) continue;
+
+            // Input faces may use either winding. The center of mass lies inside the convex hull.
+            if (JVector.Dot(normal, a - cachedCenter) < 0) (b, c) = (c, b);
+            triangleSink.Add(new JTriangle(a, b, c));
+        }
+    }
+
     /// <summary>
     /// Initializes a new instance of the ConvexHullShape class, creating a convex hull.
     /// </summary>
@@ -188,11 +205,8 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     /// <summary>
-    /// Creates a clone of the convex hull shape. Note that the underlying data structure is shared among instances.
+    /// Creates a copy that shares the original hull geometry.
     /// </summary>
-    /// <returns>A new instance of the ConvexHullShape class that shares the same underlying data structure as the
-    /// original instance.
-    /// </returns>
     public ConvexHullShape Clone()
     {
         ConvexHullShape result = new()
@@ -211,7 +225,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     }
 
     /// <summary>
-    /// Gets or sets the shift applied to the convex hull vertices.
+    /// Gets or sets the offset added to the hull vertices in local coordinates.
     /// </summary>
     public JVector Shift
     {

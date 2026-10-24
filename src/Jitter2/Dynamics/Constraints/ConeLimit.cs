@@ -13,7 +13,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Limits the relative tilt between two bodies, removing one angular degree of freedom when active.
+/// Limits the angle between axes attached to two bodies, leaving twist and translation free.
 /// </summary>
 /// <remarks>
 /// Fixed tilts must lie strictly between zero and pi. Use <see cref="HingeAngle"/> with
@@ -21,6 +21,9 @@ namespace Jitter2.Dynamics.Constraints;
 /// </remarks>
 public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(ConeLimit));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct ConeLimitData
     {
@@ -68,8 +71,7 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <param name="axisBody2">The reference axis for body 2 in world space.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// Each axis is stored as a local axis on the corresponding body. The constraint measures
-    /// the angle between these axes and restricts it to the given range.
+    /// Each axis rotates with its body. The angle between the axes is kept within the given range.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -112,8 +114,8 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
     /// <param name="axis">The reference axis in world space for the initial pose.</param>
     /// <param name="limit">The minimum and maximum allowed tilt angles.</param>
     /// <remarks>
-    /// Stores the axis as a local axis on each body. The constraint measures the angle between
-    /// these axes and restricts it to the given range.
+    /// The axes start aligned and then rotate with their respective bodies.
+    /// The angle between them is kept within the given range.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -333,11 +335,17 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         data.Bias = -error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.AngularVelocity +=
-            JVector.Transform(data.AccumulatedImpulse * jacobian[0], body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity +=
+                JVector.Transform(data.AccumulatedImpulse * jacobian[0], body1.InverseInertiaWorld);
+        }
 
-        body2.AngularVelocity +=
-            JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity +=
+                JVector.Transform(data.AccumulatedImpulse * jacobian[1], body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -410,21 +418,37 @@ public unsafe class ConeLimit : Constraint<ConeLimit.ConeLimitData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(lambda * jacobian[0], body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(lambda * jacobian[1], body2.InverseInertiaWorld);
+        }
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref ConeLimitData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JVector origin = GetDebugDrawOrigin(settings);
+        JVector axis = AxisBody1;
+        // Choose the reference in body 1's local frame so the wire geometry rotates with it.
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(Data.LocalAxis1), Body1.Orientation);
+        AngularLimit limit = Limit;
+        drawer.DrawArrow(origin, axis * settings.GuideSize, settings.ReferenceColor, settings);
+        drawer.DrawArrow(origin, AxisBody2 * settings.GuideSize, settings.CurrentColor, settings);
+        if (limit.From.Radian == 0 && limit.To.Radian == MathR.PI)
+            drawer.DrawSphere(origin, settings.GuideSize, settings.ReferenceColor, settings.Segments);
+        else
+            drawer.DrawCone(origin, axis, reference, limit.To, limit.To, settings.GuideSize,
+                settings.UpperLimitColor, settings.Segments);
+        if (limit.From.Radian > 0 && limit.From != limit.To)
+            drawer.DrawCone(origin, axis, reference, limit.From, limit.From, settings.GuideSize,
+                settings.LowerLimitColor, settings.Segments, settings.Segments / 16);
     }
 }

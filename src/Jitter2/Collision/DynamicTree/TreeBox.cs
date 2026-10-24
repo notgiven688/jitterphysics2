@@ -13,14 +13,8 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Represents an axis-aligned bounding box with SIMD-friendly memory layout, used for spatial partitioning in
-/// acceleration structures such as <see cref="DynamicTree"/>.
+/// An axis-aligned bounding box used by <see cref="DynamicTree"/>.
 /// </summary>
-/// <remarks>
-/// The struct is explicitly laid out to occupy exactly 8 <see cref="Real"/> fields, enabling efficient SIMD operations and
-/// binary comparisons. It contains both minimum and maximum corners of the box as <see cref="JVector"/>, along with
-/// unused W components (<c>MinW</c>, <c>MaxW</c>) to match memory alignment.
-/// </remarks>
 /// <seealso cref="JBoundingBox"/>
 /// <seealso cref="JVector"/>
 [StructLayout(LayoutKind.Explicit, Size = 8 * sizeof(Real))]
@@ -286,7 +280,9 @@ public struct TreeBox : IEquatable<TreeBox>
         double ey = extent.GetElement(1);
         double ez = extent.GetElement(2);
 
-        return 2.0d * (ex * ey + ex * ez + ey * ez);
+        // Match GetSurfaceArea's arithmetic order so unchanged bounds have exactly zero
+        // cost change. Different rounding can otherwise make inverse rotations look cheaper.
+        return 2.0d * (ex * ey + ey * ez + ez * ex);
     }
 
     /// <summary>

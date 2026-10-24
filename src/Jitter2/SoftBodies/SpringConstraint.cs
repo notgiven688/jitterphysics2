@@ -15,9 +15,7 @@ using Jitter2.Unmanaged;
 namespace Jitter2.SoftBodies;
 
 /// <summary>
-/// Constrains two bodies to maintain a target distance between anchor points,
-/// applying spring-like forces. Removes one translational degree of freedom along
-/// the line connecting the anchors.
+/// Applies a spring force between two anchors to maintain a target distance.
 /// </summary>
 /// <remarks>
 /// This constraint is designed for soft body vertices, which act as mass points.
@@ -28,6 +26,9 @@ namespace Jitter2.SoftBodies;
 /// </remarks>
 public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(SpringConstraint));
+
     /// <summary>
     /// Low-level data for the spring constraint, stored in unmanaged memory.
     /// </summary>
@@ -74,7 +75,6 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// <param name="anchor1">Anchor point on the first rigid body, in world space.</param>
     /// <param name="anchor2">Anchor point on the second rigid body, in world space.</param>
     /// <remarks>
-    /// Computes local anchor offsets from the current body positions.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>.
     /// The <see cref="TargetDistance"/> is set to the initial distance between the anchors.
     /// </remarks>
@@ -100,13 +100,12 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     }
 
     /// <summary>
-    /// Sets the spring parameters using physical properties. This method calculates and sets
-    /// the <see cref="Softness"/> and <see cref="Bias"/> properties. It assumes that the mass
-    /// of the involved bodies, their translation locks, the anchor direction, and the timestep size do not change.
+    /// Sets <see cref="Softness"/> and <see cref="Bias"/> from a frequency and damping ratio.
     /// </summary>
     /// <remarks>
-    /// At coincident anchors, the most responsive translation axis
-    /// determines the effective mass used to configure the spring.
+    /// Call again if the bodies' masses, translation locks, anchor direction, or timestep change.
+    /// When the anchors coincide, the calculation uses the translation direction in which
+    /// the bodies respond most easily to a force.
     /// </remarks>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
@@ -290,8 +289,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
 
         data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(data.AccumulatedImpulse * data.Jacobian, body2.InverseMassVector);
+        }
     }
 
     /// <summary>
@@ -299,7 +304,6 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// </summary>
     /// <value>
     /// Default is <see cref="Constraint.DefaultLinearSoftness"/>. Higher values allow more positional error but produce a softer spring.
-    /// Scaled by inverse timestep during solving.
     /// </value>
     public Real Softness
     {
@@ -348,24 +352,45 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
         data.AccumulatedImpulse += lambda;
         lambda = data.AccumulatedImpulse - oldAccumulatedImpulse;
 
-        body1.Velocity -= JVector.Multiply(lambda * data.Jacobian, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(lambda * data.Jacobian, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(lambda * data.Jacobian, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(lambda * data.Jacobian, body2.InverseMassVector);
+        }
     }
 
     /// <inheritdoc/>
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
-        ref SpringData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
+        JVector reference = JVector.UnitX;
+        DebugDraw(drawer, ref reference, settings);
+    }
 
-        JVector p1 = body1.Position + data.LocalAnchor1;
-        JVector p2 = body2.Position + data.LocalAnchor2;
-
-        drawer.DrawSegment(body1.Position, p1);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawSegment(p1, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+    /// <summary>
+    /// Draws the spring with a caller-owned coil reference. Retain this direction between frames
+    /// to keep the coil continuous through arbitrary motion, including a reversal of the spring axis.
+    /// </summary>
+    public void DebugDraw(IDebugDrawer drawer, ref JVector reference, in DebugDrawSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
+        JVector first = Anchor1, second = Anchor2;
+        JVector displacement = second - first;
+        drawer.DrawSpring(first, second, ref reference, settings.GuideSize * (Real)0.12, settings.CurrentColor,
+            Math.Max(32, settings.Segments * 2));
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
+        if (displacement.LengthSquared() > (Real)1e-20)
+        {
+            JVector direction = JVector.Normalize(displacement);
+            drawer.DrawStop(first + direction * TargetDistance, direction,
+                settings.GuideSize * (Real)0.12, settings.ReferenceColor);
+        }
     }
 }

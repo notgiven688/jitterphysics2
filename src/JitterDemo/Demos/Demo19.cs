@@ -7,7 +7,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo19 : IDemo, IDrawUpdate
+public class Demo19 : IDemo
 {
     public void DrawUpdate()
     {
@@ -42,10 +42,10 @@ public class Demo19 : IDemo, IDrawUpdate
 
     private RigidBody box = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         this.pg = pg;
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

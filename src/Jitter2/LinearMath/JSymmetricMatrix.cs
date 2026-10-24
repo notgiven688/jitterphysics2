@@ -20,7 +20,7 @@ namespace Jitter2.LinearMath;
 public struct JSymmetricMatrix(
     Real m11, Real m12, Real m13,
     Real m22, Real m23,
-    Real m33) : IEquatable<JSymmetricMatrix>
+    Real m33) : IEquatable<JSymmetricMatrix>, IFormattable
 {
     [FieldOffset(0 * sizeof(Real))] public Real M11 = m11;
     [FieldOffset(1 * sizeof(Real))] public Real M12 = m12;
@@ -293,10 +293,19 @@ public struct JSymmetricMatrix(
 
     public readonly override int GetHashCode() => HashCode.Combine(M11, M12, M13, M22, M23, M33);
 
-    public readonly override string ToString()
+    /// <summary>Returns a string representation of the matrix.</summary>
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the components using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the components using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"M11={M11:F6}, M12={M12:F6}, M13={M13:F6}, " +
-               $"M22={M22:F6}, M23={M23:F6}, M33={M33:F6}";
+        return $"M11={M11.ToString(format, formatProvider)}, M12={M12.ToString(format, formatProvider)}, M13={M13.ToString(format, formatProvider)}, " +
+               $"M22={M22.ToString(format, formatProvider)}, M23={M23.ToString(format, formatProvider)}, M33={M33.ToString(format, formatProvider)}";
     }
 
     public static bool operator ==(JSymmetricMatrix left, JSymmetricMatrix right) => left.Equals(right);

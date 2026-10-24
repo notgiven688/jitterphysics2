@@ -9,16 +9,18 @@ using System;
 namespace Jitter2;
 
 /// <summary>
-/// Enum representing reference frames.
+/// The coordinate system in which a value is expressed.
 /// </summary>
 public enum ReferenceFrame
 {
+    /// <summary>Coordinates relative to the body or shape.</summary>
     Local,
+    /// <summary>Coordinates relative to the world.</summary>
     World
 }
 
 /// <summary>
-/// Attribute to specify the reference frame of a member.
+/// Documents the coordinate system used by a member.
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
 public sealed class ReferenceFrameAttribute : Attribute
@@ -44,26 +46,24 @@ public sealed class ReferenceFrameAttribute : Attribute
 public enum ThreadContext
 {
     /// <summary>
-    /// Called from the main thread (or the thread calling World.Step).
-    /// Safe to access global state.
+    /// Runs on the thread calling the operation, such as <see cref="World.Step"/>.
     /// </summary>
     MainThread,
 
     /// <summary>
-    /// Called from background worker threads.
-    /// Code must be thread-safe and lock-free.
+    /// Runs on a worker thread and may run concurrently with other callbacks. Shared mutable data must be protected.
     /// </summary>
     ParallelWorker,
 
     /// <summary>
-    /// Could be called from either. Handle with care.
+    /// May run on the calling thread or a worker thread. Shared mutable data must be protected.
     /// </summary>
     Any
 }
 
 /// <summary>
 /// Indicates the thread context in which a callback or event is expected to be invoked.
-/// This attribute is primarily informational and used for documentation purposes.
+/// Documents the calling convention; it does not enforce thread safety.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Event)]
 public sealed class CallbackThreadAttribute(ThreadContext context) : Attribute

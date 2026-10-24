@@ -17,6 +17,12 @@ public class CylinderShape : RigidBodyShape
     private Real radius;
     private Real height;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Cylinder(ref triangleSink, radius, height, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the cylinder.
     /// </summary>
@@ -50,8 +56,7 @@ public class CylinderShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CylinderShape"/> class, creating a cylinder shape with the specified
-    /// height and radius. The symmetry axis of the cylinder is aligned along the y-axis.
+    /// Creates a cylinder with its symmetry axis along the local Y-axis.
     /// </summary>
     /// <param name="height">The height of the cylinder.</param>
     /// <param name="radius">The radius of the cylinder at its base.</param>

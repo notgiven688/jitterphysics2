@@ -16,6 +16,7 @@ namespace JitterDemo;
 public class RigidBodyTag(bool doNotDraw = true)
 {
     public bool DoNotDraw { get; set; } = doNotDraw;
+    public Vector3? Color { get; set; }
 }
 
 // Built-in primitive drawables. Subclassing is the simplest way to key them in
@@ -106,17 +107,19 @@ public partial class Playground : RenderWindow
         new Demo30(),
         new Demo31(),
         new Demo32(),
+        new Demo33(),
+        new Demo34(),
     };
 
     private IDemo? currentDemo;
 
     private void SwitchDemo(int index)
     {
-        (currentDemo as ICleanDemo)?.CleanUp();
+        currentDemo?.CleanUp();
         ResetScene();
         selectedDemoIndex = index;
         currentDemo = demos[index];
-        currentDemo.Build(this, world);
+        currentDemo.Build(this);
     }
 
     public Playground()
@@ -128,6 +131,7 @@ public partial class Playground : RenderWindow
 
     private void ResetScene()
     {
+        worldLabels.Clear();
         floorShape = null;
         world.Clear();
         world.DynamicTree.Filter = World.DefaultDynamicTreeFilter;
@@ -136,7 +140,7 @@ public partial class Playground : RenderWindow
         world.Gravity = new JVector(0, -9.81f, 0);
         world.SubstepCount = 1;
         world.SolverIterations = (8, 4);
-        world.SpeculativeRelaxationFactor = 0.9f;
+        world.CcdRelaxationFactor = 0.9f;
     }
 
     public void AddFloor()
@@ -223,6 +227,7 @@ public partial class Playground : RenderWindow
         if (!overlayFramePrepared)
             PrepareCustomOverlayFrame(logicalWidth, logicalHeight, framebufferWidth, framebufferHeight);
 
+        DrawWorldLabels(logicalWidth, logicalHeight);
         Gui.EndFrame();
         overlayFramePrepared = false;
         WantsCaptureKeyboard = Gui.WantsCaptureKeyboard;
@@ -251,8 +256,9 @@ public partial class Playground : RenderWindow
                     continue;
                 }
 
-                var color = ColorGenerator.GetColor(shape.GetHashCode());
-                if (!shape.RigidBody.Data.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
+                Vector3? bodyColor = (body.Tag as RigidBodyTag)?.Color;
+                var color = bodyColor ?? ColorGenerator.GetColor(shape.GetHashCode());
+                if (!bodyColor.HasValue && !shape.RigidBody.Data.IsActive) color += new Vector3(0.2f, 0.2f, 0.2f);
 
                 if (shape is TransformedShape ts)
                 {
@@ -267,7 +273,7 @@ public partial class Playground : RenderWindow
             }
         }
 
-        (currentDemo as IDrawUpdate)?.DrawUpdate();
+        currentDemo?.DrawUpdate();
 
         DebugDraw();
 

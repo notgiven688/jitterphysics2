@@ -1,22 +1,18 @@
-using System;
 using Jitter2;
 using Jitter2.Collision.Shapes;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
-using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo27 : IDemo, ICleanDemo
+public class Demo27 : IDemo
 {
-    public string Name => "CCD: Proof of concept";
-    public string Description => "Continuous collision detection with fast-moving objects and thin geometry.";
+    public string Name => "CCD: Iterative discovery";
+    public string Description => "Speculative contact discovery with fast-moving objects and thin geometry.";
 
-    private CcdSolver ccdSolver = null!;
-
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
-        ccdSolver = new CcdSolver(world);
+        World world = pg.World;
 
         pg.AddFloor();
 
@@ -24,9 +20,10 @@ public class Demo27 : IDemo, ICleanDemo
         paddle.AddShape(new BoxShape(5, 1, 0.01f));
         paddle.Position = (0, 3, -20);
         paddle.AffectedByGravity = false;
+        paddle.EnableCcd = true;
 
         var hinge = new HingeJoint(world, world.NullBody, paddle, paddle.Position,
-            JVector.UnitY, AngularLimit.Full, false);
+            JVector.UnitY, AngularLimit.Full);
 
         var ball = world.CreateRigidBody();
         ball.AddShape(new SphereShape(0.2f));
@@ -34,21 +31,14 @@ public class Demo27 : IDemo, ICleanDemo
         ball.Velocity = (0, 0, -400);
         ball.Damping = (0, 0);
         ball.AffectedByGravity = false;
+        ball.EnableCcd = true;
 
-        Common.BuildRagdoll((-2.2f, 3.5f, -19.7f), body =>
+        Common.BuildRagdoll(world, (-2.2f, 3.5f, -19.7f), body =>
         {
             body.AffectedByGravity = false;
-            ccdSolver.Add(body);
+            body.EnableCcd = true;
         });
 
-        ccdSolver.Add(paddle);
-        ccdSolver.Add(ball);
-
-        world.SpeculativeRelaxationFactor = 0.5f;
-    }
-
-    public void CleanUp()
-    {
-        ccdSolver.Destroy();
+        world.CcdRelaxationFactor = 0.5f;
     }
 }

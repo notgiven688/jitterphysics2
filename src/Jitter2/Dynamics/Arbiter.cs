@@ -14,13 +14,11 @@ namespace Jitter2.Dynamics;
 /// </summary>
 /// <remarks>
 /// <para>
-/// An arbiter is created when contacts are registered, including speculative contacts before shapes overlap, and is removed when they separate
-/// or when one of the involved bodies is removed from the world. Each arbiter can hold up to
-/// four cached contact points (see <see cref="ContactData"/>).
+/// Holds up to four contact points for a pair of shapes. CCD may create contacts before the
+/// shapes overlap. The arbiter is removed when contact ends or either body is removed.
 /// </para>
 /// <para>
-/// In most cases arbiters are keyed by shape identifiers. For arbiters created by the engine, the ordering
-/// is canonical: the shape with the smaller ID is always first.
+/// For contacts created by the engine, the shape with the smaller ID is first.
 /// </para>
 /// <para>
 /// The <see cref="Handle"/> property provides access to the underlying <see cref="ContactData"/>

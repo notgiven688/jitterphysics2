@@ -145,7 +145,7 @@ public class Icosahedron : RigidBodyShape
     }
 }
 
-public class Demo14 : IDemo, IDrawUpdate
+public class Demo14 : IDemo
 {
     public string Name => "Custom Shapes";
     public string Description => "Custom support-mapped shapes: ellipsoid, double-sphere, and icosahedron.";
@@ -154,8 +154,10 @@ public class Demo14 : IDemo, IDrawUpdate
 
     private List<RigidBody> demoBodies = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         this.pg = pg;
 
         pg.AddFloor();

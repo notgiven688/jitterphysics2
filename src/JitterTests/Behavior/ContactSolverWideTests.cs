@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using Jitter2.Unmanaged;
 #if USE_DOUBLE_PRECISION
@@ -62,12 +63,12 @@ public class ContactSolverWideTests
         }
     }
 
-    private static void InitializeContact(ref ContactData data, int mask, int mode, int seed)
+    private static unsafe void InitializeContact(ref ContactData data, int mask, int mode, int seed)
     {
         data.UsageMask = (uint)mask | 0xf0;
         data.Mode = (ContactData.SolveMode)mode;
         data.Friction = (Real)(0.1 + (seed % 5) * 0.2);
-        data.SpeculativeRelaxationFactor = (Real)0.5;
+        data.CcdRelaxationFactor = (Real)0.5;
         ref var body1 = ref data.Body1.Data;
         ref var body2 = ref data.Body2.Data;
         for (int slot = 0; slot < 4; slot++)
@@ -75,7 +76,8 @@ public class ContactSolverWideTests
             ref var contact = ref GetContact(ref data, slot);
             JVector point = new((Real)(0.1 + slot * 0.2), -(Real)0.5, (Real)(0.3 - slot * 0.15));
             JVector normal = JVector.Normalize(new JVector((Real)(0.03 * seed), 1, (Real)(0.04 * slot)));
-            contact.Initialize(ref body1, ref body2, point, point - normal * (Real)0.02, normal, true, 0);
+            data.Restitution = 0;
+            contact.Initialize((ContactData*)Unsafe.AsPointer(ref data), point, point - normal * (Real)0.02, normal, true);
             contact.Accumulated = Vector.Create((Real)(0.1 + 0.1 * slot), (Real)0.12, -(Real)0.06, 0);
             contact.Flag = ContactData.Contact.Flags.NewContact;
         }
@@ -126,12 +128,12 @@ public class ContactSolverWideTests
         AssertSolverValue(actual.Z, expected.Z);
     }
 
-    private static void InitializeUnpreparedContact(ref ContactData data, int mask, int mode, int seed)
+    private static unsafe void InitializeUnpreparedContact(ref ContactData data, int mask, int mode, int seed)
     {
         data.UsageMask = (uint)mask | 0xf0;
         data.Mode = (ContactData.SolveMode)mode;
         data.Friction = (Real)(0.1 + (seed % 5) * 0.2);
-        data.SpeculativeRelaxationFactor = (Real)0.5;
+        data.CcdRelaxationFactor = (Real)0.5;
         ref var body1 = ref data.Body1.Data;
         ref var body2 = ref data.Body2.Data;
         InitializePreparationBody(ref body1, seed);
@@ -156,13 +158,14 @@ public class ContactSolverWideTests
             JVector point = new((Real)(0.1 + slot * 0.2), -(Real)0.5, (Real)(0.3 - slot * 0.15));
             JVector normal = JVector.Normalize(new JVector((Real)(0.03 * seed), 1, (Real)(0.04 * slot)));
             Real depth = slot == 1 ? -(Real)0.08 : (Real)(0.01 + slot * 0.015);
-            contact.Initialize(ref body1, ref body2, point, point - normal * depth, normal, true, (Real)0.6);
+            data.Restitution = (Real)0.6;
+            contact.Initialize((ContactData*)Unsafe.AsPointer(ref data), point, point - normal * depth, normal, true);
             contact.Accumulated = Vector.Create((Real)(0.1 + 0.1 * slot), (Real)0.12, -(Real)0.06, 0);
             contact.Flag = (slot % 2 == 0 ? ContactData.Contact.Flags.NewContact : 0) |
                            (slot is 1 or 2 ? ContactData.Contact.Flags.SkipWarmStart : 0);
         }
 
-        // Cached local anchors must be transformed with the pose at preparation time.
+        // Current poses update penetration, while the stored impulse offsets remain fixed.
         body1.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitX, (Real)0.12);
         body2.Orientation = JQuaternion.CreateFromAxisAngle(JVector.UnitZ, -(Real)0.17);
         body2.Position += new JVector((Real)0.003, -(Real)0.002, (Real)0.001);

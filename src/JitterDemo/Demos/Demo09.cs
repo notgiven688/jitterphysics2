@@ -10,8 +10,10 @@ public class Demo09 : IDemo
     public string Name => "Restitution and Friction";
     public string Description => "Varying restitution and friction values across rows of bodies.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         world.SolverIterations = (20, 4);

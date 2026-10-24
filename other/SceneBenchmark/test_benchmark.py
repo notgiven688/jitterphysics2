@@ -79,8 +79,14 @@ class AggregationTests(unittest.TestCase):
                              (second["scene"], second["threads"], second["repeat"]))
             self.assertNotEqual(first["version"], second["version"])
         self.assertEqual(schedule[0]["version"], "baseline")
-        self.assertEqual(schedule[8]["version"], "candidate")
         self.assertEqual(schedule[8]["threads"], 16)
+        for scene_index, scene in enumerate(run.SCENES):
+            for threads in [1, 16]:
+                first_versions = [first["version"] for first, _ in pairs
+                                  if first["scene"] == scene and first["threads"] == threads]
+                expected = ["baseline" if (repeat + scene_index) % 2 == 0 else "candidate"
+                            for repeat in range(3)]
+                self.assertEqual(first_versions, expected)
 
     def test_multiple_curves_share_unclipped_limits(self):
         import matplotlib.pyplot as plt

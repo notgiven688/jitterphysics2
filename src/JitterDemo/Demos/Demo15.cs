@@ -6,7 +6,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo15 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo15 : IDemo
 {
     public string Name => "Pressurized Soft Bodies";
     public string Description => "Soft-body spheres using spring-connected particles and internal pressure.";
@@ -14,11 +14,11 @@ public class Demo15 : IDemo, ICleanDemo, IDrawUpdate
     private readonly List<SoftBodySphere> spheres = new();
     private World world = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         spheres.Clear();
 
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

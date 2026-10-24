@@ -26,6 +26,14 @@ public class TriangleShape : RigidBodyShape
     /// </summary>
     public readonly int Index;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ref readonly var triangle = ref Mesh.Indices[Index];
+        triangleSink.Add(new JTriangle(Mesh.Vertices[triangle.IndexA],
+            Mesh.Vertices[triangle.IndexB], Mesh.Vertices[triangle.IndexC]));
+    }
+
     /// <summary>
     /// Initializes a new instance of the TriangleShape class.
     /// </summary>
@@ -50,8 +58,7 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Creates and returns all instances of type <see cref="TriangleShape"/>
-    /// for as given <see cref="TriangleMesh"/>.
+    /// Creates one shape for each triangle in the mesh.
     /// </summary>
     public static IEnumerable<TriangleShape> CreateAllShapes(TriangleMesh mesh)
     {

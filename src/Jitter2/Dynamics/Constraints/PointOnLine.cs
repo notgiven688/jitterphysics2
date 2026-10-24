@@ -13,12 +13,14 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains a fixed point in the reference frame of one body to a line that is fixed in
-/// the reference frame of another body. This constraint removes two degrees of translational
-/// freedom; three if the limit is enforced.
+/// Keeps an anchor on body 2 on a line attached to body 1, with optional limits along the line.
+/// Relative rotation remains free.
 /// </summary>
 public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(PointOnLine));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct PointOnLineData
     {
@@ -79,7 +81,6 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
     /// <param name="anchor2">Anchor point on body 2 constrained to the line in world space.</param>
     /// <param name="limit">Distance limit along the axis.</param>
     /// <remarks>
-    /// Computes local anchor points and axis from the current body poses.
     /// Equal or reversed distance limits fix the point at their midpoint.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>,
     /// <see cref="LimitSoftness"/> = <see cref="Constraint.DefaultLinearLimitSoftness"/>, <see cref="LimitBias"/> = <see cref="Constraint.DefaultLinearLimitBias"/>.
@@ -286,11 +287,17 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         JVector acc = data.AccumulatedImpulse;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * acc.X + jacobian[5] * acc.Y + jacobian[9] * acc.Z, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * acc.X + jacobian[4] * acc.Y + jacobian[8] * acc.Z, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * acc.X + jacobian[5] * acc.Y + jacobian[9] * acc.Z, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * acc.X + jacobian[6] * acc.Y + jacobian[10] * acc.Z, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * acc.X + jacobian[7] * acc.Y + jacobian[11] * acc.Z, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -445,30 +452,55 @@ public unsafe class PointOnLine : Constraint<PointOnLine.PointOnLineData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda.X + jacobian[5] * lambda.Y + jacobian[9] * lambda.Z, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * lambda.X + jacobian[4] * lambda.Y + jacobian[8] * lambda.Z, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda.X + jacobian[5] * lambda.Y + jacobian[9] * lambda.Z, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * lambda.X + jacobian[6] * lambda.Y + jacobian[10] * lambda.Z, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda.X + jacobian[7] * lambda.Y + jacobian[11] * lambda.Z, body2.InverseInertiaWorld);
+        }
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref PointOnLineData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-        JVector.Transform(data.LocalAxis, body1.Orientation, out JVector axis);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        Real lineLength = (Real)1.0;
-        drawer.DrawSegment(p1 - axis * lineLength, p1 + axis * lineLength);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        JVector first = Body1.Position + JVector.Transform(data.LocalAnchor1, Body1.Orientation);
+        JVector second = Body2.Position + JVector.Transform(data.LocalAnchor2, Body2.Orientation);
+        JVector axis = JVector.Transform(data.LocalAxis, Body1.Orientation);
+        Real distance = JVector.Dot(second - first, axis);
+        JVector projected = first + axis * distance;
+        Real minimum = data.Min, maximum = data.Max;
+        if (minimum >= maximum) minimum = maximum = minimum * (Real)0.5 + maximum * (Real)0.5;
+        Real start = Real.IsFinite(minimum) ? minimum : MathR.Min(-settings.GuideSize, distance - settings.GuideSize);
+        Real end = Real.IsFinite(maximum) ? maximum : MathR.Max(settings.GuideSize, distance + settings.GuideSize);
+        if (!Real.IsFinite(minimum) && Real.IsFinite(maximum)) start = MathR.Min(start, maximum - settings.GuideSize);
+        if (!Real.IsFinite(maximum) && Real.IsFinite(minimum)) end = MathR.Max(end, minimum + settings.GuideSize);
+        if (Real.IsFinite(start) && Real.IsFinite(end))
+        {
+            drawer.DrawSegment(first + axis * start, first + axis * end, settings.ReferenceColor);
+            if (Real.IsFinite(minimum))
+                drawer.DrawStop(first + axis * minimum, axis, settings.GuideSize * (Real)0.15,
+                    minimum == maximum ? settings.UpperLimitColor : settings.LowerLimitColor);
+            else drawer.DrawArrow(first + axis * start, -axis * (settings.GuideSize * (Real)0.25),
+                settings.ReferenceColor, settings);
+            if (Real.IsFinite(maximum) && minimum != maximum)
+                drawer.DrawStop(first + axis * maximum, axis, settings.GuideSize * (Real)0.15, settings.UpperLimitColor);
+            else if (!Real.IsFinite(maximum))
+                drawer.DrawArrow(first + axis * end, axis * (settings.GuideSize * (Real)0.25),
+                    settings.ReferenceColor, settings);
+        }
+        if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        drawer.DrawSegment(second, projected, settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
     }
 }

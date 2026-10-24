@@ -14,7 +14,7 @@ namespace Jitter2.LinearMath;
 /// Represents an axis-aligned bounding box (AABB), a rectangular bounding box whose edges are parallel to the coordinate axes.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 6 * sizeof(Real))]
-public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
+public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>, IFormattable
 {
     public const Real Epsilon = (Real)1e-12;
 
@@ -72,9 +72,17 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>
     /// <summary>
     /// Returns a string representation of the <see cref="JBoundingBox"/>.
     /// </summary>
-    public readonly override string ToString()
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the corners using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the corners using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"Min={{{Min}}}, Max={{{Max}}}";
+        return $"Min={{{Min.ToString(format, formatProvider)}}}, Max={{{Max.ToString(format, formatProvider)}}}";
     }
 
     // Prefer using CreateTransformed for clarity and to avoid mutations.

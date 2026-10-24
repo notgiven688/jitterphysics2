@@ -200,14 +200,14 @@ public class AllowedMotionTests
         Assert.That(replacement.Data.InverseMassVector, Is.EqualTo(JVector.One));
     }
 
-    private static ContactData CreateContact(World world, RigidBody body, JVector normal, JVector point = default)
+    private static unsafe ContactData CreateContact(World world, RigidBody body, JVector normal, JVector point = default)
     {
         ContactData contact = default;
         contact.Init(world.NullBody, body);
         contact.ResetMode();
         contact.Friction = 0;
-        contact.Contact0.Initialize(ref world.NullBody.Data, ref body.Data,
-            point, point, normal, true, 0);
+        contact.Restitution = 0;
+        contact.Contact0.Initialize((ContactData*)Unsafe.AsPointer(ref contact), point, point, normal, true);
         contact.UsageMask = ContactData.MaskContact0;
         return contact;
     }
@@ -266,7 +266,7 @@ public class AllowedMotionTests
     [TestCase(true, false)]
     [TestCase(false, true)]
     [TestCase(true, true)]
-    public void ContactModes_UseOnlyParticipatingLinearMass(bool accelerated, bool linearLocks)
+    public unsafe void ContactModes_UseOnlyParticipatingLinearMass(bool accelerated, bool linearLocks)
     {
         using World world = CreateWorld();
         RigidBody body1 = CreateBody(world);
@@ -286,8 +286,9 @@ public class AllowedMotionTests
             contact.Init(body1, body2);
             contact.Mode = (ContactData.SolveMode)bits;
             contact.Friction = 0;
-            contact.Contact0.Initialize(ref body1.Data, ref body2.Data,
-                JVector.Zero, JVector.Zero, normal, true, 0);
+            contact.Restitution = 0;
+            contact.Contact0.Initialize((ContactData*)Unsafe.AsPointer(ref contact),
+                JVector.Zero, JVector.Zero, normal, true);
             contact.UsageMask = ContactData.MaskContact0;
             if (accelerated)
             {

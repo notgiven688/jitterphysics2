@@ -13,12 +13,14 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains a fixed point in the reference frame of one body to a plane that is fixed in
-/// the reference frame of another body. This constraint removes one degree of translational
-/// freedom if the limit is enforced.
+/// Limits an anchor on body 2 to a plane or a range of distances from a plane attached to body 1.
+/// Movement along the plane and relative rotation remain free.
 /// </summary>
 public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(PointOnPlane));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct SliderData
     {
@@ -76,9 +78,8 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
     /// <param name="anchor2">Anchor point on body 2 constrained to the plane in world space.</param>
     /// <param name="limit">Distance limit from the plane.</param>
     /// <remarks>
-    /// Computes local anchor points and axis from the current body poses.
-    /// Equal or reversed distance limits fix the point at their midpoint. This includes
-    /// <see cref="LinearLimit.Fixed"/> and permits correction impulses in both directions.
+    /// Equal or reversed distance limits fix the distance at their midpoint.
+    /// Use <see cref="LinearLimit.Fixed"/> to keep the anchor on the plane.
     /// Default values: <see cref="Bias"/> = <see cref="Constraint.DefaultLinearBias"/>, <see cref="Softness"/> = <see cref="Constraint.DefaultLinearSoftness"/>.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -178,11 +179,17 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         Real acc = data.AccumulatedImpulse;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * acc, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * acc, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * acc, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * acc, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * acc, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * acc, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -254,30 +261,55 @@ public unsafe class PointOnPlane : Constraint<PointOnPlane.SliderData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.Velocity += JVector.Multiply(jacobian[0] * lambda, body1.InverseMassVector);
-        body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda, body1.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity += JVector.Multiply(jacobian[0] * lambda, body1.InverseMassVector);
+            body1.AngularVelocity += JVector.Transform(jacobian[1] * lambda, body1.InverseInertiaWorld);
+        }
 
-        body2.Velocity += JVector.Multiply(jacobian[2] * lambda, body2.InverseMassVector);
-        body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(jacobian[2] * lambda, body2.InverseMassVector);
+            body2.AngularVelocity += JVector.Transform(jacobian[3] * lambda, body2.InverseInertiaWorld);
+        }
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref SliderData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAnchor1, body1.Orientation, out JVector r1);
-        JVector.Transform(data.LocalAnchor2, body2.Orientation, out JVector r2);
-        JVector.Transform(data.LocalAxis, body1.Orientation, out JVector axis);
-
-        JVector p1 = body1.Position + r1;
-        JVector p2 = body2.Position + r2;
-
-        Real normalLength = (Real)0.5;
-        drawer.DrawSegment(p1, p1 + axis * normalLength);
-        drawer.DrawSegment(body2.Position, p2);
-        drawer.DrawPoint(p1);
-        drawer.DrawPoint(p2);
+        JVector first = Body1.Position + JVector.Transform(data.LocalAnchor1, Body1.Orientation);
+        JVector second = Body2.Position + JVector.Transform(data.LocalAnchor2, Body2.Orientation);
+        JVector normal = JVector.Transform(data.LocalAxis, Body1.Orientation);
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.LocalAxis), Body1.Orientation);
+        Real minimum = data.Min, maximum = data.Max;
+        if (minimum >= maximum)
+        {
+            Real offset = minimum * (Real)0.5 + maximum * (Real)0.5;
+            if (Real.IsFinite(offset))
+                drawer.DrawPlane(first + normal * offset, normal, reference, settings.GuideSize, settings.UpperLimitColor);
+        }
+        else
+        {
+            if (Real.IsFinite(minimum))
+                drawer.DrawPlane(first + normal * minimum, normal, reference, settings.GuideSize, settings.LowerLimitColor);
+            if (Real.IsFinite(maximum))
+                drawer.DrawPlane(first + normal * maximum, normal, reference, settings.GuideSize, settings.UpperLimitColor);
+            if (!Real.IsFinite(minimum) && !Real.IsFinite(maximum))
+                drawer.DrawPlane(first, normal, reference, settings.GuideSize, settings.ReferenceColor);
+        }
+        drawer.DrawArrow(first, normal * (settings.GuideSize * (Real)0.4), settings.ReferenceColor, settings);
+        if (Body2 != Body2.World.NullBody) drawer.DrawSegment(Body2.Position, second, settings.CurrentColor);
+        Real distance = JVector.Dot(second - first, normal);
+        Real target = minimum >= maximum ? minimum * (Real)0.5 + maximum * (Real)0.5
+            : Real.Clamp(distance, minimum, maximum);
+        if (Real.IsFinite(target) && target != distance)
+            drawer.DrawSegment(second, second + normal * (target - distance), settings.CurrentColor);
+        drawer.DrawPoint(first, settings.PointRadius, settings.ReferenceColor);
+        drawer.DrawPoint(second, settings.PointRadius, settings.CurrentColor);
     }
 }

@@ -13,11 +13,13 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Represents a motor that drives relative angular velocity between two axes fixed
-/// in the reference frames of their respective bodies.
+/// Drives relative angular velocity about an axis attached to each body.
 /// </summary>
 public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(AngularMotor));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct AngularMotorData
     {
@@ -58,7 +60,7 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
     /// <param name="axis1">The motor axis on the first body in world space.</param>
     /// <param name="axis2">The motor axis on the second body in world space.</param>
     /// <remarks>
-    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// The axes rotate with their respective bodies and are normalized internally.
     /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumTorque"/> = 0.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -164,8 +166,14 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 
         data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
-        body1.AngularVelocity -= JVector.Transform(j1 * data.AccumulatedImpulse, body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity -= JVector.Transform(j1 * data.AccumulatedImpulse, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(j2 * data.AccumulatedImpulse, body2.InverseInertiaWorld);
+        }
     }
 
     public static void IterateAngularMotor(ref ConstraintData constraint, in TimeStep timeStep)
@@ -190,21 +198,47 @@ public unsafe class AngularMotor : Constraint<AngularMotor.AngularMotorData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.AngularVelocity -= JVector.Transform(j1 * lambda, body1.InverseInertiaWorld);
-        body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity -= JVector.Transform(j1 * lambda, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity += JVector.Transform(j2 * lambda, body2.InverseInertiaWorld);
+        }
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref AngularMotorData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
+        JVector first = JVector.Transform(data.LocalAxis1, Body1.Orientation);
+        JVector second = JVector.Transform(data.LocalAxis2, Body2.Orientation);
+        JVector origin = GetDebugDrawOrigin(settings);
+        JVector secondOrigin = settings.Origin ?? (Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position);
+        Real length = settings.GuideSize * (Real)0.4;
+        drawer.DrawSegment(origin, origin + first * length, settings.ReferenceColor);
+        drawer.DrawSegment(secondOrigin, secondOrigin + second * length, settings.CurrentColor);
 
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        // Show body 2's target rotation, or body 1's opposite rotation when body 2 is fixed.
+        bool drawFirst = Body2.MotionType != MotionType.Dynamic;
+        JVector axis = drawFirst ? first : second;
+        JVector center = drawFirst ? origin : secondOrigin;
+        // Keep the arrow attached to the other body's frame, rather than choosing
+        // a new perpendicular from the slightly changing world-space motor axis.
+        JQuaternion referenceOrientation = drawFirst ? Body2.Orientation : Body1.Orientation;
+        JVector referenceAxis = drawFirst ? data.LocalAxis2 : data.LocalAxis1;
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(referenceAxis), referenceOrientation);
+        JVector radial = JVector.Transform(reference, JQuaternion.CreateFromToRotation(drawFirst ? second : first, axis));
+        drawer.DrawCircle(center, axis, radial, settings.GuideSize, settings.ReferenceColor, settings.Segments);
+        if (data.Velocity == 0) return;
+        Real sign = (data.Velocity > 0 ? 1 : -1) * (drawFirst ? -1 : 1);
+        JVector vector = (axis % radial) * (sign * settings.GuideSize * (Real)0.2);
+        JVector tip = center + radial * settings.GuideSize;
+        drawer.DrawArrow(tip - vector, vector, settings.CurrentColor, settings);
     }
 }

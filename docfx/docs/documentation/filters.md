@@ -1,16 +1,24 @@
 # Collision Filters
 
-There are three types of collision filters: `world.DynamicTree.Filter`, `world.BroadPhaseFilter`, and `world.NarrowPhaseFilter`.
+Collision filters let you skip selected collisions or adjust contact information. They run at three stages:
+
+| Filter | When it runs | Use it to |
+| --- | --- | --- |
+| `world.DynamicTree.Filter` | When the tree considers a pair of objects | Exclude pairs from collision detection. |
+| `world.BroadPhaseFilter` | Before testing the shapes for contact | Apply collision groups or handle custom objects. |
+| `world.NarrowPhaseFilter` | After contact points are found | Reject a collision or adjust its contact information. |
+
+With multithreaded stepping, filter calls may run concurrently. Protect shared mutable data.
 
 ## Dynamic tree filter
 
-The `world.DynamicTree.Filter`
+`world.DynamicTree.Filter` has this type:
 
 ```cs
 public Func<IDynamicTreeProxy, IDynamicTreeProxy, bool> Filter { get; set; }
 ```
 
-is the earliest filter applied during `world.Step` and is set by default to `World.DefaultDynamicTreeFilter`:
+Its default is `World.DefaultDynamicTreeFilter`, which excludes shapes attached to the same body:
 
 ```cs
 public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
@@ -24,30 +32,25 @@ public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTr
 }
 ```
 
-This filters out collisions between shapes that belong to the same body.
-The dynamic tree will ignore these collisions, and no potential pairs will be created.
+Pairs rejected here are not passed to either of the later filters.
 
 For soft bodies, another collision filter is typically used (defined in `SoftBodies.DynamicTreeCollisionFilter.Filter`), which also filters out collisions between shapes belonging to the same soft body.
 
 ## Broad phase filter
 
-By default `world.BroadPhaseFilter`
+`world.BroadPhaseFilter` is optional:
 
 ```cs
 public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 ```
 
-is `null`. It is used to filter out collisions that passed broad phase collision detection—that is, after the `DynamicTree` has added the collision to the `PotentialPair` hash set.
+The default is `null`. When assigned, it receives pairs whose bounding boxes overlap. Return `false` to skip the shape collision test.
 
-This can be useful if custom collision proxies are added to `world.DynamicTree`.
-Since the world only knows how to handle collisions between `RigidBodyShape`s, a filter must handle the detected collision (implement custom collision response code and filter out the collision) such that no `InvalidCollisionTypeException` is thrown.
-The soft body implementation is based on this kind of filter (see `SoftBodies.BroadPhaseCollisionFilter`).
+If you add custom objects to `world.DynamicTree`, handle their collisions in this filter and return `false` for those pairs. The world's built-in collision detection only handles `RigidBodyShape` pairs; passing other types to it throws `InvalidCollisionTypeException`. Soft bodies use this approach through `SoftBodies.BroadPhaseCollisionFilter`.
 
 ### Example: Collision groups
 
-Collision groups can be implemented using a broad phase filter.
-In this example, there are two teams: team blue and team red.
-A filter that disregards all collisions between team members of different colors:
+This filter lets members of the same team collide, while ignoring collisions between red and blue. Bodies without a team collide normally:
 
 ```cs
 public class TeamFilter : IBroadPhaseFilter
@@ -88,19 +91,15 @@ bodyC.Tag = TeamFilter.TeamRed;
 
 ## Narrow phase filter
 
-The `world.NarrowPhaseFilter`
+`world.NarrowPhaseFilter` receives the detected contact:
 
 ```cs
 public INarrowPhaseFilter? NarrowPhaseFilter { get; set; }
 ```
 
-operates similarly.
-However, this callback is called after narrow phase collision detection, meaning detailed collision information (such as normal, penetration depth, and collision points) is available at this stage.
-The filter can exclude collisions and also modify collision information.
+The callback receives contact points, a normal, and penetration depth. Return `false` to reject the collision, or modify the points and normal before returning `true` to keep it. Changing penetration depth alone does not change the contact response.
 
-The default narrow phase collision filter is assigned to an instance of `TriangleEdgeCollisionFilter`, which filters out so-called 'internal edges' for `TriangleShape`s.
-These internal edges typically cause collision artifacts when rigid bodies slide over the edges of connected triangles forming static geometry.
-This problem is also known as 'ghost collisions'.
+The default, `TriangleEdgeCollisionFilter`, reduces snagging at edges shared by neighboring `TriangleShape`s. Without it, an object sliding across a flat mesh can catch on an edge between two triangles.
 
 Static and kinematic triangle bodies receive edge filtering. For dynamic triangle bodies,
 edge filtering is disabled by default to avoid destabilizing moving meshes. Enable it explicitly

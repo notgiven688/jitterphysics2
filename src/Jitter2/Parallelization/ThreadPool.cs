@@ -72,17 +72,16 @@ namespace Jitter2.Parallelization;
  */
 
 /// <summary>
-/// Provides a persistent worker thread pool for parallel task execution within the physics engine.
+/// Runs queued tasks on reusable worker threads and the calling thread.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Worker threads are kept alive for the lifetime of the pool to avoid wake-up overhead.
-/// Tasks are distributed via per-thread queues with work stealing for load balancing.
+/// Add tasks with <see cref="AddTask{T}"/>, then call <see cref="Execute"/> to run them and wait
+/// for completion. Do not queue tasks, execute them, or change the thread count concurrently.
 /// </para>
 /// <para>
-/// The main thread participates as "worker 0" during <see cref="Execute"/> calls.
-/// Use <see cref="ResumeWorkers"/> and <see cref="PauseWorkers"/> to control thread activity
-/// between simulation steps.
+/// Call <see cref="PauseWorkers"/> to reduce CPU usage between executions.
+/// <see cref="Execute"/> resumes workers automatically.
 /// </para>
 /// </remarks>
 public sealed class ThreadPool
@@ -151,9 +150,8 @@ public sealed class ThreadPool
     private static ThreadPool? _instance;
 
     /// <summary>
-    /// Gets the number of worker threads managed by this pool.
+    /// Gets the total number of threads that can process tasks, including the calling thread.
     /// </summary>
-    /// <value>Includes the main thread as worker 0.</value>
     public int ThreadCount => threadCount;
 
     /// <summary>
@@ -195,12 +193,11 @@ public sealed class ThreadPool
     public static int ThreadCountSuggestion => Math.Max((int)(Environment.ProcessorCount * ThreadsPerProcessor), 1);
 
     /// <summary>
-    /// Changes the number of worker threads.
+    /// Changes the total thread count, including the calling thread.
     /// </summary>
-    /// <param name="numThreads">The new thread count.</param>
+    /// <param name="numThreads">The new thread count. Use 1 to process tasks only on the calling thread.</param>
     /// <remarks>
-    /// Existing worker threads are stopped and new ones are created.
-    /// This operation blocks until all previous threads have terminated.
+    /// This method waits for the previous worker threads to stop before creating replacements.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="numThreads"/> is less than one.
@@ -276,9 +273,9 @@ public sealed class ThreadPool
     public static bool InstanceInitialized => _instance != null;
 
     /// <summary>
-    /// Gets the shared <see cref="ThreadPool"/> instance. First access must be serialized by the caller;
-    /// concurrent initialization can create more than one pool.
+    /// Gets the shared <see cref="ThreadPool"/> instance.
     /// </summary>
+    /// <remarks>Do not access this property concurrently before the pool has been initialized.</remarks>
     public static ThreadPool Instance
     {
         get
@@ -304,7 +301,7 @@ public sealed class ThreadPool
     /// Pauses all worker threads after they finish their current tasks.
     /// </summary>
     /// <remarks>
-    /// Workers will block on a wait handle until <see cref="ResumeWorkers"/> is called.
+    /// Workers wait until <see cref="ResumeWorkers"/> is called.
     /// This reduces CPU usage between simulation steps.
     /// </remarks>
     public void PauseWorkers()
@@ -370,13 +367,8 @@ public sealed class ThreadPool
     /// Executes all queued tasks and blocks until completion.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// Tasks are distributed to per-thread queues in round-robin order. The main thread
-    /// participates as worker 0 and performs work stealing from other queues.
-    /// </para>
-    /// <para>
-    /// This method automatically calls <see cref="ResumeWorkers"/> at the start.
-    /// </para>
+    /// The calling thread also processes tasks. Workers are resumed automatically.
+    /// If a task throws an exception, all tasks finish before the exception is rethrown here.
     /// </remarks>
     public void Execute()
     {

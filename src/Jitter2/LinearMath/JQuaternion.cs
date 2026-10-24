@@ -16,7 +16,7 @@ namespace Jitter2.LinearMath;
 /// Uses the Hamilton convention where <c>i² = j² = k² = ijk = -1</c>.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 4 * sizeof(Real))]
-public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<JQuaternion>
+public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<JQuaternion>, IFormattable
 {
     [FieldOffset(0 * sizeof(Real))] public Real X = x;
     [FieldOffset(1 * sizeof(Real))] public Real Y = y;
@@ -73,10 +73,8 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// the unit vector <paramref name="to"/>.
     /// </summary>
     /// <remarks>
-    /// This calculation relies on the half-angle formula.
-    /// If the vectors are parallel (<c>dot ≈ 1</c>), Identity is returned.
-    /// If the vectors are opposite (<c>dot ≈ -1</c>), a rotation of 180° (π radians)
-    /// around an arbitrary orthogonal axis is returned.
+    /// Nearly opposite directions produce a 180° rotation around an arbitrary axis
+    /// perpendicular to <paramref name="from"/>.
     /// </remarks>
     /// <param name="from">Source direction (must be unit length).</param>
     /// <param name="to">Target direction (must be unit length).</param>
@@ -156,9 +154,18 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <summary>
     /// Returns a string representing the quaternion in the format <c>X=..., Y=..., Z=..., W=...</c>.
     /// </summary>
-    public readonly override string ToString()
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the components using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the components using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"X={X:F6}, Y={Y:F6}, Z={Z:F6}, W={W:F6}";
+        return $"X={X.ToString(format, formatProvider)}, Y={Y.ToString(format, formatProvider)}, " +
+               $"Z={Z.ToString(format, formatProvider)}, W={W.ToString(format, formatProvider)}";
     }
 
     /// <summary>

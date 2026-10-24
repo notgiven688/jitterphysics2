@@ -13,11 +13,13 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// A motor constraint that drives relative translational velocity along an axis fixed
-/// in the reference frame of each body.
+/// Drives relative linear velocity along an axis attached to each body.
 /// </summary>
 public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(LinearMotor));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct LinearMotorData
     {
@@ -88,7 +90,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     /// <param name="axis1">Motor axis on the first body in world space.</param>
     /// <param name="axis2">Motor axis on the second body in world space.</param>
     /// <remarks>
-    /// Stores the axes in local frames. Both axes are normalized internally.
+    /// The axes rotate with their respective bodies and are normalized internally.
     /// Default values: <see cref="TargetVelocity"/> = 0, <see cref="MaximumForce"/> = 0.
     /// </remarks>
     /// <exception cref="ArgumentException">
@@ -165,22 +167,39 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
         data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
 
-        body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(j1 * data.AccumulatedImpulse, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(j2 * data.AccumulatedImpulse, body2.InverseMassVector);
+        }
     }
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref LinearMotorData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.LocalAxis1, body1.Orientation, out JVector axis1);
-        JVector.Transform(data.LocalAxis2, body2.Orientation, out JVector axis2);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis1 * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis2 * axisLength);
+        JVector first = JVector.Transform(data.LocalAxis1, Body1.Orientation);
+        JVector second = JVector.Transform(data.LocalAxis2, Body2.Orientation);
+        JVector referenceOrigin = Body1 == Body1.World.NullBody ? Body2.Position : Body1.Position;
+        JVector secondOrigin = Body2 == Body2.World.NullBody ? Body1.Position : Body2.Position;
+        drawer.DrawSegment(referenceOrigin - first * settings.GuideSize, referenceOrigin + first * settings.GuideSize, settings.ReferenceColor);
+        drawer.DrawSegment(secondOrigin - second * settings.GuideSize, secondOrigin + second * settings.GuideSize, settings.CurrentColor);
+        if (data.Velocity != 0)
+        {
+            Real sign = data.Velocity > 0 ? 1 : -1;
+            // The solver drives dot(axis2, v2) - dot(axis1, v1) toward TargetVelocity.
+            drawer.DrawArrow(referenceOrigin, -first * (sign * settings.GuideSize * (Real)0.5),
+                settings.ReferenceColor, settings);
+            drawer.DrawArrow(secondOrigin, second * (sign * settings.GuideSize * (Real)0.5),
+                settings.CurrentColor, settings);
+        }
     }
 
     public static void IterateLinearMotor(ref ConstraintData constraint, in TimeStep timeStep)
@@ -204,7 +223,13 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
 
         lambda = data.AccumulatedImpulse - oldAccumulated;
 
-        body1.Velocity -= JVector.Multiply(j1 * lambda, body1.InverseMassVector);
-        body2.Velocity += JVector.Multiply(j2 * lambda, body2.InverseMassVector);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.Velocity -= JVector.Multiply(j1 * lambda, body1.InverseMassVector);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.Velocity += JVector.Multiply(j2 * lambda, body2.InverseMassVector);
+        }
     }
 }

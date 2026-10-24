@@ -86,10 +86,21 @@ public partial class DynamicTree
 
             IDynamicTreeProxy proxy = proxies[incrementalOptimizationCursor++];
             int leaf = proxy.NodePtr;
+            int parent = nodes[leaf].Parent;
+            int sibling = NullNode;
+            int removalAncestor = NullNode;
+            if (parent != NullNode)
+            {
+                sibling = nodes[parent].Left == leaf ? nodes[parent].Right : nodes[parent].Left;
+                removalAncestor = nodes[parent].Parent;
+            }
 
-            RemoveLeaf(leaf, balance: true);
+            // Preserve the original sibling for the insertion cost comparison. Balance
+            // both affected paths after reinsertion, so removal cannot change that baseline.
+            RemoveLeaf(leaf);
             nodes[leaf].Parent = NullNode;
-            InsertLeaf(leaf, root, balance: true);
+            InsertLeaf(leaf, root, balance: true, preferredSibling: sibling);
+            if (removalAncestor != NullNode) RefitAndBalanceAncestors(removalAncestor);
         }
 
         return count;

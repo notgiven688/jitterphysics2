@@ -12,8 +12,10 @@ public class Demo13 : IDemo
     public string Name => "Motor and Limit";
     public string Description => "Hinge joints with angular motors, angular limits, and coupled rotating wheels.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         {
@@ -26,7 +28,7 @@ public class Demo13 : IDemo
             b1.AddShape(new BoxShape(2, 0.1f, 0.1f));
             b1.Position = new JVector(1.1f, 4, 0);
 
-            HingeJoint hj = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitX, AngularLimit.Full, true);
+            HingeJoint hj = new HingeJoint(world, world.NullBody, b0, b0.Position, JVector.UnitX, AngularLimit.Full, JointDrive.Motor);
             UniversalJoint uj = new UniversalJoint(world, b0, b1, new JVector(0, 4, 0), JVector.UnitX, JVector.UnitX);
 
             if (hj.Motor != null)
@@ -58,7 +60,7 @@ public class Demo13 : IDemo
             hj.HingeAngle.LimitSoftness = 0.0f;
 
             for (int i = 0; i < 4; i++)
-                Common.BuildRagdoll(new JVector(-4, 5 + i * 3, 0));
+                Common.BuildRagdoll(world, new JVector(-4, 5 + i * 3, 0));
         }
 
         {

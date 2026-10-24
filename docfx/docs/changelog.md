@@ -1,5 +1,43 @@
 # Changelog
 
+### Jitter 2.13.0 (2026-10-22)
+
+- **Breaking Change:** Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use `RigidBody.EnableCcd` and the `Ccd*` settings; the old speculative contact API has been removed.
+- Fixed angular `NarrowPhase.Sweep` missing collisions between separated start and end poses. Added a time-limited overload that distinguishes hits, misses, and searches that could not finish.
+- Added a `DynamicTree.SweepCast` overload for shapes that translate and rotate.
+- Improved `ToString` output for bodies, constraints, limits, and math types. Added numeric format and culture options for bodies, limits, and math types.
+- Revised XML API documentation for clearer descriptions and usage guidance.
+
+### Jitter 2.12.2 (2026-10-22)
+
+- Fixed a stack overflow that could occur during dynamic tree balancing, particularly in double precision.
+
+### Jitter 2.12.1 (2026-10-21)
+
+- Improved contact point accuracy against flat surfaces, fixing artificial acceleration of rolling spheres.
+- Fixed outdated contact normals and friction directions when contacting surfaces change orientation.
+- Avoided unnecessary dynamic tree rearrangements during optimization of stationary scenes.
+
+### Jitter 2.12.0 (2026-10-19)
+
+- Added `AngularServo`, `TwistServo`, `LinearServo`, and `LinearAxisServo` for driving target orientations, angles, and positions with torque or force limits.
+- Added `JointDrive` to select a motor or servo when constructing hinge, prismatic, and universal joints. The existing `hasMotor` constructors remain available but are obsolete.
+- Added `DebugDrawSettings.PointRadius` to control point marker size independently of constraint guides.
+- Improved rolling stability by preserving the original contact in auxiliary manifolds with fewer than four points.
+
+### Jitter 2.11.0 (2026-10-18)
+
+- **Breaking Change:** `IDebugDrawer.DrawSegment` and `DrawTriangle` now require a `uint` color packed as `0xRRGGBBAA`. Custom drawers must implement both colored methods.
+- Improved contact and constraint solver performance, especially in multithreaded scenes and for constraints attached to `World.NullBody`.
+- Improved rolling stability with substeps by fixing contact impulses that could artificially accelerate rolling objects.
+- Fixed angular velocity incorrectly influencing speculative contacts. Collision prediction and speculative response now consistently use linear motion.
+- Added `EllipticalConeLimit` for different swing limits in two perpendicular directions, with optional inner limits and unrestricted twist.
+- Expanded debug drawing for shapes, bodies, constraints, and joints, with clearer anchors, limits, axes, and motor directions.
+
+### Jitter 2.10.1 (2026-10-15)
+
+- Added `Constraint.Tag` for attaching custom user data to constraints, matching `RigidBody.Tag`.
+
 ### Jitter 2.10.0 (2026-10-11)
 
 - **Breaking Change:** Added `TimeStep` with full-step and substep timing information. World step and substep callbacks and `SoftBody.WorldOnPostStep` now receive `TimeStep`; custom constraint solver callbacks and contact preparation now take `in TimeStep` instead of an inverse timestep.

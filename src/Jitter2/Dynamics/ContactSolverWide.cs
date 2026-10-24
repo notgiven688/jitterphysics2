@@ -224,12 +224,15 @@ internal sealed partial class ContactSolverWide
         {
             ref RigidBodyData body1 = ref bodies1[lane].Data;
             ref RigidBodyData body2 = ref bodies2[lane].Data;
-            // Read both bodies even when their response is disabled: kinematic motion and
-            // other read-only velocity components still contribute to relative velocity.
+            // Both bodies contribute even when one is read-only. Explicit linear-only
+            // contacts omit rotation entirely, matching the scalar solver.
             velocity1.SetLane(lane, body1.Velocity);
-            angular1.SetLane(lane, body1.AngularVelocity);
             velocity2.SetLane(lane, body2.Velocity);
-            angular2.SetLane(lane, body2.AngularVelocity);
+            if ((modes[lane] & ContactData.SolveMode.Angular) != 0)
+            {
+                angular1.SetLane(lane, body1.AngularVelocity);
+                angular2.SetLane(lane, body2.AngularVelocity);
+            }
         }
 
         // Extra AVX-512 registers let the isolated arithmetic keep velocities live.

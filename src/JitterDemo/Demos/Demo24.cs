@@ -14,7 +14,7 @@ public class Teapot : TriangleMeshDrawable
     public Teapot() : base("teapot.obj.zip", 1f) { }
 }
 
-public class Demo24 : IDemo, IDrawUpdate
+public class Demo24 : IDemo
 {
     public string Name => "Convex PointCloudShape";
     public string Description => "Convex hull collision shape created from sampled teapot vertices.";
@@ -23,8 +23,10 @@ public class Demo24 : IDemo, IDrawUpdate
     private List<RigidBody> teapotBodies = null!;
     private Matrix4 shift;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         teapotBodies = new List<RigidBody>();

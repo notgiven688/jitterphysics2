@@ -1,4 +1,202 @@
 ---
-_layout: redirect
-redirect_url: docs/introduction.html
+_layout: landing
+_disableBreadcrumb: true
+_disableContribution: true
+title: Jitter Physics 2
+description: A fast, lightweight 3D physics engine written entirely in C#. Explore the live playground and build your first simulation.
 ---
+
+<div id="jp-landing">
+  <section class="jp-hero" aria-labelledby="jp-title">
+    <div class="jp-hero-copy">
+      <p class="jp-eyebrow"><span class="jp-dot"></span> JITTER PHYSICS 2</p>
+      <h1 id="jp-title">A little code.<br>A lot of <span>motion.</span></h1>
+      <p class="jp-lead">Bring your world to life with a fast, lightweight 3D physics engine. Written entirely in C#, ready for your next .NET project.</p>
+      <div class="jp-actions">
+        <a href="~/docs/tutorials/boxes/project-setup.md" class="jp-button">Start building <span aria-hidden="true">↗︎</span></a>
+        <a href="https://github.com/notgiven688/jitterphysics2" class="jp-text-link">Explore the source <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="jp-meta">Pure C# <span>·</span> .NET 8+ <span>·</span> MIT licensed</p>
+      <p><a href="~/docs/changelog.md" class="jp-text-link">What’s new in Jitter2 <span aria-hidden="true">→</span></a></p>
+    </div>
+    <div class="demo-shell">
+      <div class="jp-playground-heading"><span><span class="jp-dot"></span> THE PLAYGROUND</span><span>01 — 05</span></div>
+      <div class="demo-card" id="demo_card">
+        <img class="jp-demo-art" src="docs/images/playground.svg" alt="A colorful illustration of stacked blocks and bouncing balls" width="800" height="600">
+        <div class="demo-copy">
+          <h2>Give physics a little push.</h2>
+          <p>Five scenes. Real physics. Right in your browser.</p>
+          <button class="jp-button" id="load_demo_button" type="button" aria-controls="demo_frame_wrap"><span aria-hidden="true">▶︎</span> Launch playground</button>
+        </div>
+      </div>
+      <div class="demo-frame-wrap" id="demo_frame_wrap" hidden>
+        <iframe id="demo_frame" title="Interactive Jitter2 physics playground" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div class="jp-playground-footer"><span id="demo_controls">Stack. Collide. Tumble. Repeat.</span><a id="demo_fullsize" href="AppBundle/index.html" target="_blank" rel="noopener">Open full size <span aria-hidden="true">↗︎</span></a></div>
+      <noscript><p><a href="AppBundle/index.html">Open the playground</a> (JavaScript required).</p></noscript>
+    </div>
+  </section>
+
+  <section class="jp-capabilities" aria-labelledby="jp-features-title">
+    <div class="jp-section-intro"><p class="jp-eyebrow">SMALL ENGINE. BIG POSSIBILITIES.</p><h2 id="jp-features-title">Built for things that move.</h2><p>From your first falling box to a world of connected, colliding, and deforming objects.</p></div>
+    <div class="jp-features">
+      <div class="jp-feature"><span class="jp-feature-mark jp-blue" aria-hidden="true">↗︎</span><h3>Just C#. Just works.</h3><p>No native dependencies or P/Invoke. Add the NuGet package and start simulating on .NET 8 or later.</p></div>
+      <div class="jp-feature"><span class="jp-feature-mark jp-coral" aria-hidden="true">↔</span><h3>Make the connection.</h3><p>Rigid bodies, joints, and impulse-based dynamics, with substeps for stable simulations.</p></div>
+      <div class="jp-feature"><span class="jp-feature-mark jp-green" aria-hidden="true">≈</span><h3>Go beyond rigid.</h3><p>Bring cloth and deformable objects into the same world as your rigid bodies.</p></div>
+    </div>
+    <div class="jp-details"><span>Continuous collision detection</span><span>Optional deterministic mode</span><span>Float or double precision</span></div>
+  </section>
+
+  <section class="jp-start" aria-labelledby="jp-start-title">
+    <div><p class="jp-eyebrow">FROM ZERO TO GRAVITY</p><h2 id="jp-start-title">Your first world starts here.</h2><p>Install Jitter2, add a body, and let the simulation take over. The tutorial walks you through the rest.</p><a class="jp-text-link" href="~/docs/tutorials/boxes/project-setup.md">Build your first simulation <span aria-hidden="true">→</span></a></div>
+    <div class="jp-install"><div class="jp-code-label">ADD TO YOUR .NET PROJECT</div><pre><code class="language-shell">dotnet add package Jitter2</code></pre><div class="jp-code-label">THEN SET THINGS IN MOTION</div><pre><code class="language-csharp">using Jitter2;
+using Jitter2.Collision.Shapes;
+using Jitter2.LinearMath;
+
+using var world = new World();
+var box = world.CreateRigidBody();
+box.AddShape(new BoxShape(1, 1, 1));
+box.Position = new JVector(0, 5, 0);
+world.Step(1.0f / 60.0f);</code></pre></div>
+  </section>
+
+  <nav class="jp-resources" aria-label="Explore Jitter2">
+    <a href="~/docs/tutorials/teapots/project-setup.md"><span class="jp-resource-number">01 / TUTORIAL</span><h3>A tower of teapots <span aria-hidden="true">↗︎</span></h3><p>Load convex hulls and see how they stack up.</p></a>
+    <a href="~/docs/documentation/world.md"><span class="jp-resource-number">02 / DOCUMENTATION</span><h3>Know your world <span aria-hidden="true">↗︎</span></h3><p>Explore bodies, shapes, constraints, and queries.</p></a>
+    <a href="~/api/Jitter2.yml"><span class="jp-resource-number">03 / API REFERENCE</span><h3>Get into the details <span aria-hidden="true">↗︎</span></h3><p>Find the types and methods for your next idea.</p></a>
+  </nav>
+  <div class="jp-bottom"><strong>Made to be played with. Built to be built on.</strong><a href="https://github.com/notgiven688/jitterphysics2">Jitter2 on GitHub <span aria-hidden="true">↗︎</span></a></div>
+</div>
+
+<style>
+/* Follow DocFX's Light / Dark / Auto setting. */
+body:has(#jp-landing) {
+  --jp-page: #fcfcf9; --jp-surface: #fff; --jp-stage: #edf5f9;
+  --jp-ink: #20374a; --jp-muted: #536775; --jp-blue: #245bc5;
+  --jp-border: #dce4e7; --jp-green: #32725d; --jp-start: #f0f4ed;
+  --bs-body-bg: var(--jp-page); --bs-body-color: var(--jp-ink);
+  --bs-border-color: var(--jp-border); --bs-secondary-color: var(--jp-muted);
+  background: var(--jp-page); color: var(--jp-ink);
+}
+html[data-bs-theme="dark"] body:has(#jp-landing) {
+  --jp-page: #151c26; --jp-surface: #1c2633; --jp-stage: #202e40;
+  --jp-ink: #e9eff7; --jp-muted: #adbdce; --jp-blue: #8fb5ff;
+  --jp-border: #344355; --jp-green: #8cd4b2; --jp-start: #1c2c29;
+}
+body:has(#jp-landing) > header { background: var(--jp-page) !important; }
+body:has(#jp-landing) .navbar { --bs-navbar-color: var(--jp-muted); --bs-navbar-hover-color: var(--jp-blue); --bs-navbar-active-color: var(--jp-ink); }
+body:has(#jp-landing) .navbar .nav-link, body:has(#jp-landing) .navbar .btn { color: var(--jp-muted); }
+body:has(#jp-landing) .navbar .nav-link:hover { color: var(--jp-blue); }
+body:has(#jp-landing) .content { max-width: none; }
+#jp-landing { color: var(--jp-ink); max-width: 1160px; margin: 0 auto; font-size: 16px; }
+#jp-landing * { box-sizing: border-box; }
+#jp-landing h1, #jp-landing h2, #jp-landing h3 { color: var(--jp-ink); border: 0; padding: 0; font-weight: 750; }
+#jp-landing .anchorjs-link { display: none; }
+#jp-landing p { line-height: 1.7; }
+#jp-landing a { text-decoration: none; }
+#jp-landing a:focus-visible, #jp-landing button:focus-visible { outline: 3px solid var(--jp-blue); outline-offset: 5px; }
+.jp-hero { display: grid; grid-template-columns: 0.85fr 1.15fr; align-items: center; gap: 3rem; padding: 3.5rem 0 4rem; }
+.jp-eyebrow { font-size: .72rem; font-weight: 750; letter-spacing: .12em; margin: 0 0 1.4rem; }
+.jp-dot { display: inline-block; width: 8px; height: 8px; background: #ec795b; border-radius: 50%; margin-right: 6px; }
+#jp-landing h1 { font-size: clamp(2.8rem, 4.5vw, 4.4rem); line-height: 1.06; letter-spacing: -.055em; margin: 0 0 1.5rem; }
+#jp-landing h1 span { color: var(--jp-blue); }
+.jp-lead { color: var(--jp-muted); max-width: 29rem; font-size: 1.08rem; }
+.jp-actions { display: flex; align-items: center; gap: 1.3rem; flex-wrap: wrap; margin: 1.8rem 0 1.4rem; }
+#jp-landing .jp-button { display: inline-flex; justify-content: center; align-items: center; gap: .8rem; padding: .85rem 1.2rem; border: 0; border-radius: 8px; background: #245bc5; color: #fff; font: inherit; font-weight: 650; cursor: pointer; box-shadow: 0 3px 0 #184394; transition: background .15s, transform .15s; }
+#jp-landing .jp-button:hover { background: #194aa9; transform: translateY(-1px); }
+#jp-landing .jp-text-link { color: var(--jp-ink); font-size: .9rem; font-weight: 650; }
+#jp-landing .jp-text-link:hover { color: var(--jp-blue); text-decoration: underline; text-underline-offset: 4px; }
+.jp-meta { color: var(--jp-muted); font-size: .8rem; }
+.jp-meta span { margin: 0 .5rem; color: #83949c; }
+.demo-shell { min-width: 0; border: 1px solid var(--jp-border); border-radius: 16px; overflow: hidden; background: var(--jp-surface); box-shadow: 0 16px 45px #20374a0c; }
+.jp-playground-heading, .jp-playground-footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.2rem; font-size: .68rem; font-weight: 700; letter-spacing: .08em; }
+.jp-playground-heading { border-bottom: 1px solid var(--jp-border); }
+.jp-playground-heading .jp-dot { width: 6px; height: 6px; background: #339170; }
+.jp-playground-heading > span:last-child { color: var(--jp-muted); }
+.demo-card, .demo-frame-wrap { width: 100%; aspect-ratio: 4 / 3; background: var(--jp-stage); position: relative; }
+#jp-landing [hidden] { display: none !important; }
+.jp-demo-art { display: block; width: 100%; height: 100%; object-fit: cover; }
+.demo-copy { position: absolute; bottom: 5%; left: 4%; right: 4%; text-align: center; }
+#jp-landing .demo-copy h2 { font-size: clamp(1.1rem, 2vw, 1.5rem); margin: 0 0 .35rem; letter-spacing: -.03em; }
+.demo-copy p { color: var(--jp-muted); font-size: .8rem; margin-bottom: 1rem; }
+.demo-copy .jp-button { font-size: .85rem !important; }
+.demo-frame-wrap iframe { display: block; border: 0; width: 100%; height: 100%; }
+.jp-playground-footer { font-size: .7rem; font-weight: 500; letter-spacing: 0; color: var(--jp-muted); }
+.jp-playground-footer a { color: var(--jp-blue); font-weight: 650; white-space: nowrap; }
+.jp-capabilities { padding: 3rem 0; border-top: 1px solid var(--jp-border); }
+.jp-section-intro { max-width: 38rem; }
+.jp-section-intro .jp-eyebrow, .jp-start .jp-eyebrow { color: var(--jp-green); margin-bottom: .7rem; }
+#jp-landing h2 { font-size: clamp(1.7rem, 3vw, 2.2rem); letter-spacing: -.04em; margin: 0 0 .8rem; }
+.jp-section-intro > p:last-child, .jp-start p { color: var(--jp-muted); }
+.jp-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin: 2rem 0; }
+.jp-feature-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; font-size: 1.5rem; margin-bottom: 1rem; }
+.jp-blue { color: #245bc5; background: #e2ecff; }
+html[data-bs-theme="dark"] .jp-blue { color: #9cbfff; background: #263c60; }
+html[data-bs-theme="dark"] .jp-coral { color: #ffb3a2; background: #4b302f; }
+html[data-bs-theme="dark"] .jp-green { color: #9cddba; background: #254337; }
+.jp-coral { color: #b6442b; background: #ffe7de; }
+.jp-green { color: #227351; background: #dff2df; }
+#jp-landing h3 { font-size: 1.05rem; letter-spacing: -.02em; margin: 0 0 .6rem; }
+.jp-feature p { font-size: .9rem; color: var(--jp-muted); margin: 0; }
+.jp-details { display: flex; flex-wrap: wrap; gap: .65rem 1.5rem; font-size: .77rem; color: var(--jp-muted); padding-top: 1.5rem; border-top: 1px solid var(--jp-border); }
+.jp-details span::before { content: '✓'; color: var(--jp-green); margin-right: .5rem; font-weight: 700; }
+.jp-start { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center; padding: 2.5rem; background: var(--jp-start); border-radius: 16px; margin: .5rem 0 3rem; }
+.jp-start .jp-text-link { display: inline-block; margin-top: .5rem; }
+.jp-install { min-width: 0; background: var(--jp-surface); border: 1px solid var(--jp-border); border-radius: 10px; overflow: hidden; }
+.jp-code-label { color: var(--jp-muted); font: 650 .6rem system-ui, sans-serif; letter-spacing: .1em; padding: 1rem 1.2rem 0; }
+#jp-landing pre { margin: 0; padding: .65rem 1.2rem 1rem; background: var(--jp-surface); color: var(--jp-ink); font-size: .78rem; line-height: 1.65; border: 0; border-radius: 0; overflow-x: auto; }
+#jp-landing pre:first-of-type { border-bottom: 1px solid var(--jp-border); }
+#jp-landing pre code { background: none; padding: 0; color: inherit; }
+#jp-landing .hljs-keyword, #jp-landing .hljs-number { color: var(--jp-blue); }
+#jp-landing .hljs-title { color: var(--jp-green); }
+.jp-resources { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
+.jp-resources > a { border-top: 2px solid #e9b44c; padding-top: 1.2rem; color: var(--jp-ink); }
+.jp-resources > a:nth-child(2) { border-color: #5caa88; }
+.jp-resources > a:nth-child(3) { border-color: #7097e4; }
+.jp-resource-number { font-size: .65rem; letter-spacing: .08em; color: var(--jp-muted); display: block; margin-bottom: .8rem; }
+.jp-resources h3 { display: flex; justify-content: space-between; }
+.jp-resources > a:hover h3 { color: var(--jp-blue) !important; }
+.jp-resources p { font-size: .85rem; color: var(--jp-muted); }
+.jp-bottom { display: flex; justify-content: space-between; gap: 1.5rem; border-top: 1px solid var(--jp-border); padding: 1.5rem 0 2rem; font-size: .8rem; color: var(--jp-muted); }
+.jp-bottom a { color: var(--jp-blue); }
+@media (max-width: 900px) { .jp-hero { gap: 1.5rem; } .jp-actions { gap: 1rem; } .jp-features { gap: 1.5rem; } .jp-start { padding: 1.75rem; gap: 2rem; } }
+@media (max-width: 700px) { .demo-card { overflow: hidden; } .jp-demo-art { transform: translateY(-24px); } .jp-hero { grid-template-columns: 1fr; padding: 2rem 0; gap: 2rem; } #jp-landing h1 { font-size: clamp(2.8rem, 10vw, 4rem); } .jp-lead { max-width: 34rem; } .demo-shell { width: 100%; max-width: 560px; margin: 0 auto; } .jp-features, .jp-start, .jp-resources { grid-template-columns: 1fr; } .jp-features { gap: 1.8rem; } .jp-feature { position: relative; padding-left: 60px; } .jp-feature-mark { position: absolute; left: 0; top: 0; } .jp-start { padding: 1.25rem; } .jp-bottom { flex-direction: column; gap: .5rem; } .jp-playground-footer { padding: .75rem; font-size: .65rem; } }
+@media (prefers-reduced-motion: reduce) { #jp-landing .jp-button { transition: none; } }
+</style>
+
+<script>
+(() => {
+  const button = document.getElementById('load_demo_button');
+  const card = document.getElementById('demo_card');
+  const frameWrap = document.getElementById('demo_frame_wrap');
+  const frame = document.getElementById('demo_frame');
+  if (!button || !card || !frameWrap || !frame) return;
+  const fullsize = document.getElementById('demo_fullsize');
+  const currentTheme = () => document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'dark' : 'light';
+  const demoUrl = (embedded) => {
+    const url = new URL('AppBundle/index.html', window.location.href);
+    url.searchParams.set('theme', currentTheme());
+    if (embedded) url.searchParams.set('embed', '1');
+    return url.href;
+  };
+  const syncTheme = () => {
+    fullsize.href = demoUrl(false);
+    if (frame.hasAttribute('src')) {
+      // Update the running scene in place instead of restarting its simulation.
+      frame.contentWindow.postMessage({ type: 'jitter-theme', theme: currentTheme() }, window.location.origin);
+    }
+  };
+  frame.addEventListener('load', syncTheme);
+  new MutationObserver(syncTheme).observe(document.documentElement, {
+    attributes: true, attributeFilter: ['data-bs-theme']
+  });
+  syncTheme();
+  button.addEventListener('click', () => {
+    frame.src = demoUrl(true);
+    card.hidden = true;
+    frameWrap.hidden = false;
+    document.getElementById('demo_controls').textContent = '← → switch scenes · R reset · Tap tabs to explore';
+    frame.focus();
+  }, { once: true });
+})();
+</script>

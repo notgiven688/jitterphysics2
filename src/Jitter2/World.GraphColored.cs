@@ -147,8 +147,13 @@ public sealed partial class World
         int first = contact.Body1.Data._index, second = contact.Body2.Data._index;
         contactGraph[contact._internal] = new ContactGraphEntry
         {
-            Handle = handle, Body1 = contact.Body1, Body2 = contact.Body2, Mode = contact.Mode,
-            BodyId1 = first, BodyId2 = second, Color = -1
+            Handle = handle,
+            Body1 = contact.Body1,
+            Body2 = contact.Body2,
+            Mode = contact.Mode,
+            BodyId1 = first,
+            BodyId2 = second,
+            Color = -1
         };
         AddContactBodyReference(first, (contact.Mode & ContactData.SolveMode.FullBody1) != 0, ref rebuild);
         AddContactBodyReference(second, (contact.Mode & ContactData.SolveMode.FullBody2) != 0, ref rebuild);

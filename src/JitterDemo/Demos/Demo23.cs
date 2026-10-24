@@ -7,15 +7,17 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo23 : IDemo, IDrawUpdate
+public class Demo23 : IDemo
 {
     public string Name => "Rotating Cube";
     public string Description => "Bodies inside a large kinematic rotating hollow cube.";
 
     private RigidBody rotatingBox = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         rotatingBox = world.CreateRigidBody();
 
         float size = 50;

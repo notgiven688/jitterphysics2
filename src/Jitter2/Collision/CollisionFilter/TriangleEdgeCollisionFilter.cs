@@ -14,12 +14,13 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Filters internal edge collisions for <see cref="TriangleShape"/> geometry. Adjusts collision
-/// normals at shared edges to match neighboring triangles, or discards the collision if the normal
-/// cannot be resolved. Requires triangle adjacency information; boundary edges (no neighbor)
-/// are left unmodified. Back-face normals within <see cref="AngleThreshold"/> of the opposite
-/// triangle normal are discarded.
+/// Reduces snagging on shared edges of <see cref="TriangleShape"/> meshes.
 /// </summary>
+/// <remarks>
+/// Adjusts or discards contacts near shared edges using the mesh's neighboring triangles.
+/// Boundary edges are left unchanged. Contacts directed into the back face within
+/// <see cref="AngleThreshold"/> of the reversed triangle normal are discarded.
+/// </remarks>
 public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 {
     private enum EdgeContactEvaluation
@@ -60,9 +61,8 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
     public Real ProjectionThreshold { get; set; } = (Real)0.5;
 
     /// <summary>
-    /// Gets or sets the angle threshold used for two purposes: determining when two triangle normals
-    /// are considered coplanar (using simpler snapping logic), and discarding back-face collisions
-    /// whose normal is anti-parallel to the triangle normal within this angle.
+    /// Gets or sets the angle tolerance for treating neighboring triangles as coplanar
+    /// and for rejecting contacts directed into a triangle's back face.
     /// </summary>
     /// <value>The default value is approximately 2.5 degrees.</value>
     public JAngle AngleThreshold
@@ -178,11 +178,11 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
         ref var b1Data = ref shapeA.RigidBody.Data;
         ref var b2Data = ref shapeB.RigidBody.Data;
 
-        bool isSpeculative = penetration < (Real)0.0;
+        bool isSeparated = penetration < (Real)0.0;
 
-        if (!isSpeculative)
+        if (!isSeparated)
         {
-            // Check collision again (for non-speculative contacts),
+            // Check collision again (for overlapping contacts),
             // but with zero epa threshold parameter. This is necessary since
             // MPR is not exact for flat shapes, like triangles.
 
@@ -227,7 +227,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {neighborNormal}");
 #endif
 
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -241,7 +241,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #1: adjusting; normal {normal} -> {triangleNormal}");
 #endif
 
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -297,7 +297,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {neighborNormal}");
 
 #endif
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;
@@ -310,7 +310,7 @@ public class TriangleEdgeCollisionFilter : INarrowPhaseFilter
 #if DEBUG_EDGEFILTER
                 Console.WriteLine($"case #2: adjusting; normal {normal} -> {triangleNormal}");
 #endif
-                if (!isSpeculative)
+                if (!isSeparated)
                 {
                     penetration = 0;
                     pointA = pointB = midPoint;

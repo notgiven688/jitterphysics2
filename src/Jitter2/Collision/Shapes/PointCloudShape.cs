@@ -12,10 +12,12 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision.Shapes;
 
 /// <summary>
-/// Represents a convex hull shape defined by a point cloud. Unlike <see cref="ConvexHullShape"/>,
-/// it is not necessary for the points to lie on the convex hull. For performance optimization,
-/// this shape should ideally be used for a small number of points (~300).
+/// Represents the convex hull of a set of points, which may include interior points.
 /// </summary>
+/// <remarks>
+/// Best suited to small point sets (roughly 300 points or fewer). For larger hulls,
+/// consider <see cref="ConvexHullShape"/>.
+/// </remarks>
 public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
 {
     private JBoundingBox cachedBoundingBox;
@@ -65,8 +67,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     }
 
     /// <summary>
-    /// Creates a copy of this shape. The underlying data structure is shared
-    /// among the instances.
+    /// Creates a copy that shares the original vertex data.
     /// </summary>
     public PointCloudShape Clone()
     {
@@ -84,8 +85,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
     }
 
     /// <summary>
-    /// Gets or sets the shift value for the shape. This property can be used when constructing a rigid
-    /// body that contains one or more shapes.
+    /// Gets or sets the offset added to the vertices in local coordinates.
     /// </summary>
     public JVector Shift
     {

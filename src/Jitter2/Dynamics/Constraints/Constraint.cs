@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
 
 namespace Jitter2.Dynamics.Constraints;
@@ -233,7 +234,7 @@ public abstract class Constraint : IDebugDrawable
     public RigidBody Body2 { private set; get; } = null!;
 
     /// <summary>
-    /// A managed pointer to custom user data. This is not used by the engine.
+    /// Gets or sets application data associated with this constraint. The engine does not use this value.
     /// </summary>
     public object? Tag { get; set; }
 
@@ -249,6 +250,22 @@ public abstract class Constraint : IDebugDrawable
     /// Gets a value indicating whether the underlying constraint data is still valid.
     /// </summary>
     public bool IsValid => !Handle.IsZero && !Body1.World.IsDisposed;
+
+    /// <summary>Returns a short description of the constraint's ID, connected bodies, and state.</summary>
+    public override string ToString() => FormatDescription(nameof(Constraint));
+
+    /// <summary>Formats the constraint's ID, connected body IDs, and state using the supplied name.</summary>
+    /// <param name="name">The constraint type name to display.</param>
+    protected string FormatDescription(string name)
+    {
+        if (Body1 == null || Body2 == null) return $"{name} {{ Uninitialized }}";
+
+        string bodies = $"Body1={Body1.RigidBodyId}, Body2={Body2.RigidBodyId}";
+        if (!IsValid) return $"{name} {{ {bodies}, Invalid }}";
+
+        ref ConstraintData data = ref Handle.Data;
+        return $"{name} {{ Id={data.ConstraintId}, {bodies}, IsEnabled={data.IsEnabled} }}";
+    }
 
     /// <summary>
     /// Gets a handle to the constraint data reinterpreted as <see cref="SmallConstraintData"/>.
@@ -280,27 +297,25 @@ public abstract class Constraint : IDebugDrawable
         if (Handle.IsZero)
         {
             throw new InvalidOperationException(
-                $"The constraint has not been created by the world. " +
-                $"Use World.CreateConstraint<{GetType().Name}>() to create constraints.");
+                "The constraint has not been created by the world. " +
+                "Use World.CreateConstraint<T>() to create constraints.");
         }
     }
 
     /// <summary>
-    /// Sets the solver dispatch id used by this instance. Override this in derived classes
-    /// to assign the correct registered solver pair. The id is later written into the
-    /// unmanaged header when the constraint is enabled.
+    /// Called when the world creates this constraint. Override to set <see cref="DispatchId"/>
+    /// to the ID returned by registering the constraint's solver methods.
     /// </summary>
     protected virtual void Create()
     {
     }
 
     /// <summary>
-    /// Resets the cached warm-start state used by the solver for this constraint.
+    /// Clears impulses saved from the previous solve, without changing constraint settings.
     /// </summary>
     /// <remarks>
-    /// This clears only persistent solver impulses. Constraint configuration remains unchanged.
-    /// Useful after restoring snapshots or other discontinuous state changes where preserving
-    /// warm-starting is undesirable.
+    /// Use after restoring a saved state or making a sudden change to the bodies,
+    /// when impulses from their previous state should no longer be reused.
     /// </remarks>
     public virtual void ResetWarmStart()
     {
@@ -381,4 +396,14 @@ public abstract class Constraint : IDebugDrawable
     {
         throw new NotImplementedException();
     }
+
+    /// <summary>
+    /// Draws this constraint using the supplied visualization settings.
+    /// Custom constraints that only override <see cref="DebugDraw(IDebugDrawer)"/> use their default visualization.
+    /// </summary>
+    public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings) => DebugDraw(drawer);
+
+    /// <summary>Gets the display origin for an angular constraint, keeping world-relative guides near body 2.</summary>
+    protected JVector GetDebugDrawOrigin(in DebugDrawSettings settings) =>
+        settings.Origin ?? (Body1 == Body1.World.NullBody ? Body2.Position : Body1.Position);
 }

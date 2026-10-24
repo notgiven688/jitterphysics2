@@ -22,16 +22,13 @@ namespace Jitter2;
 public enum SolveMode
 {
     /// <summary>
-    /// Standard parallel solver. Contacts and constraints are distributed across threads
-    /// in fixed-size batches. An incremental cache-friendly reorder pass keeps related
-    /// contacts adjacent in memory. Fast, but non-deterministic.
+    /// The standard solver, optimized for speed. Multithreaded results may vary between runs.
     /// </summary>
     Regular,
 
     /// <summary>
-    /// Island-based deterministic solver. Each simulation island is solved sequentially
-    /// as an independent task. Islands are distributed across threads when multithreading
-    /// is enabled. This mode can be significantly slower than <see cref="Regular"/>.
+    /// Solves contacts and constraints in a repeatable order. Groups of connected bodies can
+    /// still be solved in parallel. Can be significantly slower than <see cref="Regular"/>.
     /// </summary>
     Deterministic,
 

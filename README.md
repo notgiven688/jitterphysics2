@@ -8,7 +8,7 @@ Jitter Physics 2 is a fast, dependency-free physics engine written in C#, with r
 
 📦 Install [Jitter2](https://www.nuget.org/packages/Jitter2) from NuGet, or [Jitter2.Double](https://www.nuget.org/packages/Jitter2.Double) for double precision. See the [changelog](https://jitterphysics.com/docs/changelog).
 
-▶️ Try the interactive demo and explore the docs at **[jitterphysics.com](https://jitterphysics.com/docs/introduction.html)**.
+▶️ Try the interactive demo and explore the docs at **[jitterphysics.com](https://jitterphysics.com/)**.
 
 ---
 
@@ -78,7 +78,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 - Single or double precision, selected at compile time.
 - Optional cross-platform deterministic solver for reproducible simulations.
 - Impulse-based solver with a semi-implicit Euler integrator and substepping.
-- Speculative contacts to reduce tunneling.
+- Continuous collision detection (CCD) with translation, rotation, and iterative contact discovery to reduce tunneling.
 - Constraints and motors with configurable softness.
 - Deactivation to reduce the cost of inactive rigid bodies.
 - Triangle meshes with filtering of internal edges.
@@ -87,7 +87,7 @@ JitterDemo uses [GLFW](https://www.glfw.org/) for accessing OpenGL and managing 
 
 ## Documentation
 
-Explore the [documentation and interactive demo](https://jitterphysics.com/docs/introduction.html) for tutorials, API details, and examples.
+Explore the [documentation and interactive demo](https://jitterphysics.com/) for tutorials, API details, and examples.
 
 ## Credits
 

@@ -61,7 +61,7 @@ public class SoftBodyCube : SoftBody
         {
             var constraint = world.CreateConstraint<BallSocket>(Center, Vertices[i]);
             constraint.Initialize(Vertices[i].Position);
-            constraint.Softness = 1;
+            constraint.Softness = 0.1f;
         }
     }
 }

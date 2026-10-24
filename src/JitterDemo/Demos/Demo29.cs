@@ -25,7 +25,7 @@ public class IgnoreGearCollisionFilter : IBroadPhaseFilter
     }
 }
 
-public class Demo29 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo29 : IDemo
 {
     public string Name => "Gears";
     public string Description => "Interlocking gear bodies coupled via constraints.";
@@ -63,8 +63,10 @@ public class Demo29 : IDemo, ICleanDemo, IDrawUpdate
         couplings.AddRange([gc0, gc1, gc2, gc3]);
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         world.BroadPhaseFilter = new IgnoreGearCollisionFilter();

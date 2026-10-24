@@ -13,11 +13,13 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Dynamics.Constraints;
 
 /// <summary>
-/// Constrains the relative twist of two bodies. This constraint removes one angular
-/// degree of freedom when the limit is enforced.
+/// Limits relative twist around axes attached to two bodies, leaving swing and translation free.
 /// </summary>
 public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 {
+    /// <inheritdoc />
+    public override string ToString() => FormatDescription(nameof(TwistAngle));
+
     [StructLayout(LayoutKind.Sequential)]
     public struct TwistLimitData
     {
@@ -65,7 +67,7 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// <param name="axis2">The twist axis for body 2 in world space.</param>
     /// <param name="limit">The allowed relative twist angle range.</param>
     /// <remarks>
-    /// Stores each axis in the local frame of its body and records the initial relative orientation.
+    /// The axes rotate with their respective bodies. The initial pose defines zero twist.
     /// Equal or reversed limits fix the twist at their midpoint.
     /// Default values: <see cref="Softness"/> = <see cref="Constraint.DefaultAngularSoftness"/>, <see cref="Bias"/> = <see cref="Constraint.DefaultAngularBias"/>.
     /// </remarks>
@@ -159,43 +161,11 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
         JQuaternion q1 = body1.Orientation;
         JQuaternion q2 = body2.Orientation;
 
-        JMatrix m = (-(Real)(1.0 / 2.0)) * QMatrix.ProjectMultiplyLeftRight(data.Q0 * q1.Conjugate(), q2);
-
-        JQuaternion q = data.Q0 * q1.Conjugate() * q2;
-
-        data.Jacobian = JVector.TransposedTransform(data.B, m);
-
-        Real error = JVector.Dot(data.B, new JVector(q.X, q.Y, q.Z));
+        Real error = AngularConstraintMath.CalculateTwist(data.Q0 * q1.Conjugate(), q2, data.B,
+            out data.Jacobian, out short hemisphere);
         Real lower = data.Angle1, upper = data.Angle2, target = data.FixedAngle;
-
-        short hemisphere = q.W < 0 ? (short)-1 : (short)1;
         if (data.Hemisphere != 0 && data.Hemisphere != hemisphere) data.AccumulatedImpulse = 0;
         data.Hemisphere = hemisphere;
-
-        if (q.W < (Real)0.0)
-        {
-            q *= -1;
-            error *= -(Real)1.0;
-            data.Jacobian *= -1;
-        }
-
-        // Use the projection angle throughout: its angular derivative has unit length.
-        // Mixing this coordinate with sin(angle / 2) changes both softness and impulse units.
-        Real derivativeSquared = data.Jacobian.LengthSquared();
-        if (derivativeSquared > 0)
-        {
-            data.Jacobian *= (Real)1.0 / MathR.Sqrt(derivativeSquared);
-        }
-        else
-        {
-            // The projection angle has a cusp at exactly a half turn. Choose its
-            // twist direction, which is a valid one-sided derivative at this pose.
-            data.Jacobian = -JVector.Transform(data.B, q2);
-        }
-
-        JVector perpendicular = q.Vector - data.B * error;
-        Real cosine = MathR.Sqrt(q.W * q.W + perpendicular.LengthSquared());
-        error = (Real)2.0 * StableMath.Atan2(error, cosine);
 
         data.Clamp = 0;
         bool fullRange = lower <= -MathR.PI && upper >= MathR.PI;
@@ -231,8 +201,14 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         data.Bias = error * data.BiasFactor * timeStep.InverseStepDt;
 
-        body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(data.AccumulatedImpulse * data.Jacobian, body2.InverseInertiaWorld);
+        }
     }
 
     /// <summary>
@@ -297,17 +273,22 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
     /// </summary>
     public Real Impulse => Data.AccumulatedImpulse;
 
-    public override void DebugDraw(IDebugDrawer drawer)
+    public override void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <inheritdoc />
+    public override void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(drawer);
+        VerifyNotZero();
         ref TwistLimitData data = ref Data;
-        ref RigidBodyData body1 = ref data.Body1.Data;
-        ref RigidBodyData body2 = ref data.Body2.Data;
-
-        JVector.Transform(data.B, body2.Orientation, out JVector axis);
-
-        const Real axisLength = (Real)0.5;
-        drawer.DrawSegment(body1.Position, body1.Position + axis * axisLength);
-        drawer.DrawSegment(body2.Position, body2.Position + axis * axisLength);
+        JQuaternion referenceOrientation = Body1.Orientation * data.Q0.Conjugate();
+        JVector axis = JVector.Transform(data.B, referenceOrientation);
+        JVector reference = JVector.Transform(MathHelper.CreateOrthonormal(data.B), referenceOrientation);
+        JVector origin = GetDebugDrawOrigin(settings);
+        DebugDrawGeometry.AngularRange(drawer, origin, axis, reference, data.Angle1,
+            data.Angle2, Angle.Radian, settings);
+        drawer.DrawArrow(origin, JVector.Transform(data.B, Body2.Orientation) * (settings.GuideSize * (Real)0.6),
+            settings.CurrentColor, settings);
     }
 
     public static void IterateTwistAngle(ref ConstraintData constraint, in TimeStep timeStep)
@@ -338,7 +319,13 @@ public unsafe class TwistAngle : Constraint<TwistAngle.TwistLimitData>
 
         lambda = data.AccumulatedImpulse - origAcc;
 
-        body1.AngularVelocity += JVector.Transform(lambda * data.Jacobian, body1.InverseInertiaWorld);
-        body2.AngularVelocity -= JVector.Transform(lambda * data.Jacobian, body2.InverseInertiaWorld);
+        if (body1.MotionType == MotionType.Dynamic)
+        {
+            body1.AngularVelocity += JVector.Transform(lambda * data.Jacobian, body1.InverseInertiaWorld);
+        }
+        if (body2.MotionType == MotionType.Dynamic)
+        {
+            body2.AngularVelocity -= JVector.Transform(lambda * data.Jacobian, body2.InverseInertiaWorld);
+        }
     }
 }

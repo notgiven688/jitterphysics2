@@ -9,26 +9,40 @@ using Jitter2.DataStructures;
 
 namespace Jitter2.Dynamics.Constraints;
 
+/// <summary>Selects the optional drive created with a joint.</summary>
+public enum JointDrive
+{
+    /// <summary>Creates the mechanical joint without a drive.</summary>
+    None,
+
+    /// <summary>Adds a motor that drives relative velocity.</summary>
+    Motor,
+
+    /// <summary>Adds a servo that drives toward a target position or angle.</summary>
+    Servo
+}
+
 /// <summary>
-/// Base class for joints, which are composite constraints built from multiple <see cref="Constraint"/> instances.
+/// Groups constraints into a joint that can be enabled, disabled, removed, or drawn as a whole.
 /// </summary>
 public class Joint : IDebugDrawable
 {
     private readonly List<Constraint> constraints = new(2);
+    /// <summary>Gets the constraints that make up this joint.</summary>
     public ReadOnlyList<Constraint> Constraints => new(constraints);
 
     /// <summary>
-    /// Adds a constraint to the internal bookkeeping.
+    /// Includes a constraint in this joint. The constraint must already belong to a world.
     /// </summary>
     protected void Register(Constraint constraint) => constraints.Add(constraint);
 
     /// <summary>
-    /// Removes a constraint from the internal bookkeeping.
+    /// Excludes a constraint from this joint without removing it from its world.
     /// </summary>
     protected void Deregister(Constraint constraint) => constraints.Remove(constraint);
 
     /// <summary>
-    /// Enables all constraints that this joint is composed of.
+    /// Enables all constraints in this joint.
     /// </summary>
     public void Enable()
     {
@@ -40,7 +54,7 @@ public class Joint : IDebugDrawable
     }
 
     /// <summary>
-    /// Disables all constraints that this joint is composed of temporarily.
+    /// Temporarily disables all constraints in this joint.
     /// For a complete removal use <see cref="Joint.Remove()"/>.
     /// </summary>
     public void Disable()
@@ -53,7 +67,7 @@ public class Joint : IDebugDrawable
     }
 
     /// <summary>
-    /// Removes all constraints that this joint is composed of from the physics world.
+    /// Removes all constraints in this joint from their world.
     /// </summary>
     public void Remove()
     {
@@ -67,10 +81,33 @@ public class Joint : IDebugDrawable
     }
 
     public virtual void DebugDraw(IDebugDrawer drawer)
+        => DebugDraw(drawer, DebugDrawSettings.Default);
+
+    /// <summary>Draws the joint's constraints, using the joint anchor for angular guides when available.</summary>
+    public virtual void DebugDraw(IDebugDrawer drawer, in DebugDrawSettings settings)
     {
         foreach (var constraint in constraints)
         {
-            constraint.DebugDraw(drawer);
+            if (!constraint.IsValid) continue;
+            DebugDrawSettings jointSettings = settings;
+            if (!settings.Origin.HasValue)
+            {
+                foreach (var candidate in constraints)
+                {
+                    if (candidate is not BallSocket socket || !socket.IsValid) continue;
+                    if (socket.Body1 == constraint.Body1 && socket.Body2 == constraint.Body2)
+                    {
+                        jointSettings = settings with { Origin = socket.Anchor1 };
+                        break;
+                    }
+                    if (socket.Body2 == constraint.Body1 && socket.Body1 == constraint.Body2)
+                    {
+                        jointSettings = settings with { Origin = socket.Anchor2 };
+                        break;
+                    }
+                }
+            }
+            constraint.DebugDraw(drawer, jointSettings);
         }
     }
 }

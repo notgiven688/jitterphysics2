@@ -19,7 +19,7 @@ namespace WebDemo;
 
 public enum BodyShape { Box, Sphere }
 
-public record struct RenderTag(BodyShape Shape, float Sx, float Sy, float Sz);
+public record struct RenderTag(BodyShape Shape, float Sx, float Sy, float Sz, Color Tint);
 
 // ─── Scene interface ──────────────────────────────────────────────────────────
 
@@ -416,8 +416,15 @@ public class Playground
 
     private Camera3D _camera;
     private Shader   _shader;
+    private int      _specularStrengthLoc;
     private Model    _modelBox, _modelSphere, _modelGround, _modelRope;
-    private Texture2D _texFull, _texQuad, _texBlue, _texYellow, _texGray;
+    private Texture2D _texGround, _texBody, _texRope;
+    private static readonly Color[] BodyColors =
+    {
+        new(65, 135, 235, 255), new(244, 121, 98, 255),
+        new(77, 184, 139, 255), new(247, 190, 63, 255),
+        new(164, 120, 219, 255), new(53, 185, 202, 255)
+    };
     private Font     _fontTitle, _fontBody, _fontSmall;
     private bool     _disposed;
     private float    _accumulatedTime;
@@ -438,9 +445,10 @@ public class Playground
     private IScene Current => _scenes[_sceneIndex];
 
     private static readonly Color SceneBgDark = new(28, 30, 36, 255);
-    private static readonly Color SceneBgLight = new(238, 243, 248, 255);
+    private static readonly Color SceneBgLight = new(232, 243, 250, 255);
 
-    private Color _sceneBackground = SceneBgDark;
+    private Color _sceneBackground = SceneBgLight;
+    private Color _textColor = new(32, 55, 74, 255);
     private Color _panelBackground = new(18, 20, 26, 255);
     private Color _tabActive = new(91, 168, 245, 255);
     private Color _tabInactive = new(50, 50, 50, 255);
@@ -466,27 +474,23 @@ public class Playground
         _modelGround = LoadModelFromMesh(GenMeshPlane(GroundSize, GroundSize, 1, 1));
         _modelRope   = LoadModelFromMesh(GenMeshCylinder(1f, 1f, 12));
 
-        var img      = LoadImage("assets/texel_checker.png");
-        _texFull     = LoadTextureFromImage(img);
-        _texQuad     = LoadTextureFromImage(ImageFromImage(img, new Rectangle(0, 0, 512, 512)));
-        UnloadImage(img);
+        var groundImage = GenImageChecked(1024, 1024, 64, 64,
+            new Color(218, 231, 234, 255), new Color(238, 245, 244, 255));
+        _texGround = LoadTextureFromImage(groundImage);
+        UnloadImage(groundImage);
 
-        var imgBlue   = GenImageChecked(1024, 1024, 256, 256, new Color(30, 90, 165, 255), new Color(55, 130, 210, 255));
-        _texBlue      = LoadTextureFromImage(imgBlue);
-        UnloadImage(imgBlue);
+        var bodyImage = GenImageColor(16, 16, Color.White);
+        _texBody = LoadTextureFromImage(bodyImage);
+        UnloadImage(bodyImage);
 
-        var imgYellow = GenImageChecked(1024, 1024, 128, 128, new Color(180, 140, 20, 255), new Color(235, 195, 50, 255));
-        _texYellow    = LoadTextureFromImage(imgYellow);
-        UnloadImage(imgYellow);
+        var ropeImage = GenImageColor(16, 16, new Color(83, 110, 126, 255));
+        _texRope = LoadTextureFromImage(ropeImage);
+        UnloadImage(ropeImage);
 
-        var imgGray = GenImageColor(16, 16, new Color(90, 93, 100, 255));
-        _texGray    = LoadTextureFromImage(imgGray);
-        UnloadImage(imgGray);
-
-        SetMaterialTexture(ref _modelBox,    0, MaterialMapIndex.Albedo, ref _texBlue);
-        SetMaterialTexture(ref _modelSphere, 0, MaterialMapIndex.Albedo, ref _texYellow);
-        SetMaterialTexture(ref _modelGround, 0, MaterialMapIndex.Albedo, ref _texFull);
-        SetMaterialTexture(ref _modelRope,   0, MaterialMapIndex.Albedo, ref _texGray);
+        SetMaterialTexture(ref _modelBox,    0, MaterialMapIndex.Albedo, ref _texBody);
+        SetMaterialTexture(ref _modelSphere, 0, MaterialMapIndex.Albedo, ref _texBody);
+        SetMaterialTexture(ref _modelGround, 0, MaterialMapIndex.Albedo, ref _texGround);
+        SetMaterialTexture(ref _modelRope,   0, MaterialMapIndex.Albedo, ref _texRope);
 
         _shader = LoadShader("assets/lighting.vs", "assets/lighting.fs");
         unsafe
@@ -494,6 +498,8 @@ public class Playground
             _shader.Locs[(int)ShaderLocationIndex.MatrixModel] = GetShaderLocation(_shader, "matModel");
             _shader.Locs[(int)ShaderLocationIndex.VectorView]  = GetShaderLocation(_shader, "viewPos");
         }
+        _specularStrengthLoc = GetShaderLocation(_shader, "specularStrength");
+        SetShaderValue(_shader, _specularStrengthLoc, 1f, ShaderUniformDataType.Float);
         int ambLoc = GetShaderLocation(_shader, "ambient");
         SetShaderValue(_shader, ambLoc, new float[] { 0.25f, 0.25f, 0.25f, 1f }, ShaderUniformDataType.Vec4);
 
@@ -511,6 +517,7 @@ public class Playground
         SetTextureFilter(_fontBody.Texture, TextureFilter.Bilinear);
         SetTextureFilter(_fontSmall.Texture, TextureFilter.Bilinear);
 
+        SetTheme(true);
         SetTargetFPS(60);
         LoadScene(0);
     }
@@ -551,11 +558,9 @@ public class Playground
         UnloadModel(_modelSphere);
         UnloadModel(_modelGround);
         UnloadModel(_modelRope);
-        UnloadTexture(_texQuad);
-        UnloadTexture(_texFull);
-        UnloadTexture(_texBlue);
-        UnloadTexture(_texYellow);
-        UnloadTexture(_texGray);
+        UnloadTexture(_texGround);
+        UnloadTexture(_texBody);
+        UnloadTexture(_texRope);
         UnloadShader(_shader);
     }
 
@@ -565,7 +570,7 @@ public class Playground
                 body.Position = pos;
         body.AddShape(new BoxShape(sx, sy, sz));
         body.DeactivationThreshold = DemoDeactivationThreshold;
-        body.Tag = new RenderTag(BodyShape.Box, sx, sy, sz);
+        body.Tag = new RenderTag(BodyShape.Box, sx, sy, sz, BodyColors[Random.Shared.Next(BodyColors.Length)]);
         return body;
     }
 
@@ -576,18 +581,19 @@ public class Playground
         body.Position = pos;
         body.DeactivationThreshold = DemoDeactivationThreshold;
         float d = radius * 2f;
-        body.Tag = new RenderTag(BodyShape.Sphere, d, d, d);
+        body.Tag = new RenderTag(BodyShape.Sphere, d, d, d, BodyColors[Random.Shared.Next(BodyColors.Length)]);
         return body;
     }
 
     public void SetTheme(bool lightTheme)
     {
         _sceneBackground = lightTheme ? SceneBgLight : SceneBgDark;
-        _panelBackground = lightTheme ? new Color(34, 48, 60, 255) : new Color(18, 20, 26, 255);
-        _tabActive = lightTheme ? new Color(91, 168, 245, 255) : new Color(91, 168, 245, 255);
-        _tabInactive = lightTheme ? new Color(78, 96, 114, 255) : new Color(50, 50, 50, 255);
-        _hintColor = lightTheme ? new Color(214, 224, 235, 255) : new Color(180, 180, 180, 255);
-        _ctrlColor = lightTheme ? new Color(176, 193, 209, 255) : new Color(130, 130, 130, 255);
+        _panelBackground = lightTheme ? new Color(250, 252, 253, 255) : new Color(18, 20, 26, 255);
+        _textColor = lightTheme ? new Color(32, 55, 74, 255) : Color.White;
+        _tabActive = new Color(36, 91, 197, 255);
+        _tabInactive = lightTheme ? new Color(229, 237, 242, 255) : new Color(50, 50, 50, 255);
+        _hintColor = lightTheme ? new Color(83, 103, 117, 255) : new Color(180, 180, 180, 255);
+        _ctrlColor = lightTheme ? new Color(83, 103, 117, 255) : new Color(160, 160, 160, 255);
     }
 
     // ─── Frame ───────────────────────────────────────────────────────────────
@@ -679,7 +685,10 @@ public class Playground
     private void DrawGround()
     {
         _modelGround.Transform = Matrix4x4.Identity;
-        DrawModel(_modelGround, Vector3.Zero, 1f, new Color(200, 200, 200, 255));
+        // A matte floor keeps the checker pattern visible without a moving hotspot.
+        SetShaderValue(_shader, _specularStrengthLoc, 0f, ShaderUniformDataType.Float);
+        DrawModel(_modelGround, Vector3.Zero, 1f, new Color(190, 190, 190, 255));
+        SetShaderValue(_shader, _specularStrengthLoc, 1f, ShaderUniformDataType.Float);
     }
 
     private void DrawBodies()
@@ -692,11 +701,11 @@ public class Playground
             {
                 case BodyShape.Box:
                     _modelBox.Transform = m;
-                    DrawModel(_modelBox, Vector3.Zero, 1f, Color.White);
+                    DrawModel(_modelBox, Vector3.Zero, 1f, tag.Tint);
                     break;
                 case BodyShape.Sphere:
                     _modelSphere.Transform = m;
-                    DrawModel(_modelSphere, Vector3.Zero, 1f, Color.White);
+                    DrawModel(_modelSphere, Vector3.Zero, 1f, tag.Tint);
                     break;
             }
         }
@@ -707,15 +716,20 @@ public class Playground
         // Soft Body: draw triangles
         if (Current is SceneSoftBall sb && sb.Sphere is { } sphere)
         {
-            var col = new Color(60, 220, 80, 255);
+            Vector3 lightDirection = Vector3.Normalize(new Vector3(-1f, 2f, -1f));
             foreach (SoftBodyTriangle tri in sphere.Shapes)
             {
                 Vector3 p1 = new(tri.Vertex1.Position.X, tri.Vertex1.Position.Y, tri.Vertex1.Position.Z);
                 Vector3 p2 = new(tri.Vertex2.Position.X, tri.Vertex2.Position.Y, tri.Vertex2.Position.Z);
                 Vector3 p3 = new(tri.Vertex3.Position.X, tri.Vertex3.Position.Y, tri.Vertex3.Position.Z);
-                DrawLine3D(p1, p2, col);
-                DrawLine3D(p2, p3, col);
-                DrawLine3D(p3, p1, col);
+                Vector3 normal = Vector3.Cross(p2 - p1, p3 - p1);
+                if (normal.LengthSquared() < 1e-10f) continue;
+                normal = Vector3.Normalize(normal);
+                float shade = 0.65f + 0.35f * MathF.Abs(Vector3.Dot(normal, lightDirection));
+                Color color = new((byte)(244 * shade), (byte)(170 * shade), (byte)(49 * shade), (byte)255);
+                // Two-sided facets keep the deforming surface visible from every angle.
+                DrawTriangle3D(p1, p2, p3, color);
+                DrawTriangle3D(p3, p2, p1, color);
             }
         }
 
@@ -803,9 +817,9 @@ public class Playground
         int tabH = 40;
 
         DrawRectangle(0, 0, sw, topBarHeight, _panelBackground);
-        DrawTextF(Current.Name, 12, 7, titleSize, Color.White);
+        DrawTextF(Current.Name, 12, 7, titleSize, _textColor);
         DrawTextF(Current.Hint, 12, 34, hintSize, _hintColor);
-        string ctrl = $"Arrow Keys to Switch Scene   R Reset   {GetFPS()} fps";
+        string ctrl = $"{GetFPS()} fps";
         DrawTextF(ctrl, sw - MeasureTextF(ctrl, ctrlSize) - 10, 10, ctrlSize, _ctrlColor);
 
         DrawRectangle(0, sh - tabH, sw, tabH, _panelBackground);
@@ -817,7 +831,7 @@ public class Playground
                 i == _sceneIndex ? _tabActive : _tabInactive);
             string label = _scenes[i].Name;
             float lw = MeasureTextF(label, tabLabelSize);
-            DrawTextF(label, tx + (tabW - lw) / 2f, sh - tabH + 13, tabLabelSize, Color.White);
+            DrawTextF(label, tx + (tabW - lw) / 2f, sh - tabH + 13, tabLabelSize, i == _sceneIndex ? Color.White : _textColor);
         }
     }
 

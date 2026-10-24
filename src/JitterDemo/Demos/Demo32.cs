@@ -13,8 +13,10 @@ public class Demo32 : IDemo
     public string Name => "2D Hanging Chain";
     public string Description => "A hanging chain swings in the XY plane. Drag a link to set it in motion.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         world.SubstepCount = 2;

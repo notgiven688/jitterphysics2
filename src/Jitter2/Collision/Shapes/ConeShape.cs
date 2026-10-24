@@ -17,6 +17,12 @@ public class ConeShape : RigidBodyShape
     private Real radius;
     private Real height;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Cone(ref triangleSink, radius, height, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the cone at its base.
     /// </summary>
@@ -50,7 +56,7 @@ public class ConeShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the ConeShape class with specified radius and height. The symmetry axis of the cone is aligned along the Y-axis.
+    /// Creates a cone with its symmetry axis along the local Y-axis.
     /// </summary>
     /// <param name="radius">The radius of the cone at its base.</param>
     /// <param name="height">The height of the cone.</param>

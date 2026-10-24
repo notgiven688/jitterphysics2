@@ -10,8 +10,10 @@ public class Demo08 : IDemo
 {
     public string Name => "Contact Manifold Test";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         world.SolverIterations = (4, 4);

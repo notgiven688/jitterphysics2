@@ -16,6 +16,12 @@ public class SphereShape : RigidBodyShape
 {
     private Real radius;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Capsule(ref triangleSink, radius, 0, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the sphere.
     /// </summary>

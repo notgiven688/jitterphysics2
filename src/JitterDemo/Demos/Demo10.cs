@@ -11,8 +11,10 @@ public class Demo10 : IDemo
     public string Name => "Stacked Cubes";
     public string Description => "Tall stacks of cubes and cones using sub-stepping for stability.";
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         pg.AddFloor();
 
         for (int i = 0; i < 32; i++)
@@ -28,9 +30,8 @@ public class Demo10 : IDemo
         {
             var body = world.CreateRigidBody();
 
-            body.Position = new JVector(10, 0.5f + i * 0.999f, 0);
-            body.AddShape(new TransformedShape(new ConeShape(), JVector.Zero, JMatrix.CreateScale(0.4f, 1, 1)));
-            body.Damping = (0.002f, 0.002f);
+            body.Position = new JVector(10, 0.5f + i * 2, 0);
+            body.AddShape(new TransformedShape(new ConeShape(), JVector.Zero, JMatrix.CreateScale(0.8f, 2, 2)));
         }
 
         world.SolverIterations = (4, 2);

@@ -17,6 +17,12 @@ public class CapsuleShape : RigidBodyShape
     private Real radius;
     private Real halfLength;
 
+    /// <inheritdoc/>
+    protected internal override void DebugDrawLocal<TSink>(ref TSink triangleSink, in DebugDrawSettings settings)
+    {
+        ShapeDebugDraw.Capsule(ref triangleSink, radius, halfLength, settings.Segments);
+    }
+
     /// <summary>
     /// Gets or sets the radius of the capsule.
     /// </summary>
@@ -50,7 +56,7 @@ public class CapsuleShape : RigidBodyShape
     }
 
     /// <summary>
-    /// Initializes a new instance of the CapsuleShape class with the specified radius and length. The symmetry axis of the capsule is aligned along the Y-axis.
+    /// Creates a capsule with its symmetry axis along the local Y-axis.
     /// </summary>
     /// <param name="radius">The radius of the capsule.</param>
     /// <param name="length">The length of the cylindrical part of the capsule, excluding the half-spheres at both ends.</param>

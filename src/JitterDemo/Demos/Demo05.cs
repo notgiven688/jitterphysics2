@@ -26,19 +26,17 @@ public class Dust : TriangleMeshDrawable
     }
 }
 
-public class Demo05 : IDemo, IDrawUpdate
+public class Demo05 : IDemo
 {
     public string Name => "Level Geometry";
     public string Description => "Triangle-mesh level loaded from an OBJ file with a player character.";
-    public string Controls => "Arrow Keys - Move player\nLeft Ctrl - Jump\nO - Toggle debug draw";
+    public string Controls => "Arrow Keys - Move player\nLeft Ctrl - Jump";
 
     private Dust tm = null!;
 
     private Player player = null!;
 
     private RigidBody level = null!;
-
-    private bool debugDraw;
 
     public IEnumerable<RigidBodyShape> CreateShapes()
     {
@@ -49,8 +47,10 @@ public class Demo05 : IDemo, IDrawUpdate
         return TriangleShape.CreateAllShapes(jtm);
     }
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
+        World world = pg.World;
+
         tm = pg.GetDrawable<Dust>();
 
         pg.AddFloor();
@@ -60,7 +60,7 @@ public class Demo05 : IDemo, IDrawUpdate
         level.Tag = new RigidBodyTag(doNotDraw:true);
         level.MotionType = MotionType.Static;
 
-        Common.BuildJenga(new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
+        Common.BuildJenga(world, new JVector(-2, 6, 24), 20, rigidBody => rigidBody.Friction = 0.3f);
 
         player = new Player(world, new JVector(-6, 7, 32));
     }
@@ -69,25 +69,7 @@ public class Demo05 : IDemo, IDrawUpdate
     {
         tm.Push(Conversion.FromJitter(level), new Vector3(0.35f, 0.35f, 0.35f));
 
-        if (debugDraw)
-        {
-            Playground pg = (Playground)RenderWindow.Instance;
-
-            foreach (var triangle in tm.Mesh.Indices)
-            {
-                var a = tm.Mesh.Vertices[triangle.T1].Position;
-                var b = tm.Mesh.Vertices[triangle.T2].Position;
-                var c = tm.Mesh.Vertices[triangle.T3].Position;
-
-                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, a, b);
-                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, b, c);
-                pg.DebugRenderer.PushLine(DebugRenderer.Color.Green, c, a);
-            }
-        }
-
         Keyboard kb = Keyboard.Instance;
-
-        if (kb.KeyPressBegin(Keyboard.Key.O)) debugDraw = !debugDraw;
 
         if (kb.IsKeyDown(Keyboard.Key.Left)) player.SetAngularInput(-1.0f);
         else if (kb.IsKeyDown(Keyboard.Key.Right)) player.SetAngularInput(1.0f);

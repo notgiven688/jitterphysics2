@@ -72,7 +72,7 @@ public interface IRayCastable
 }
 
 /// <summary>
-/// Represents an entity that supports closest-point distance queries against a support-mapped query shape.
+/// Supports closest-point distance queries against a convex shape.
 /// </summary>
 public interface IDistanceTestable
 {
@@ -101,7 +101,7 @@ public interface IDistanceTestable
 }
 
 /// <summary>
-/// Represents an entity that can be sweep-tested against a moving support-mapped query shape.
+/// Supports sweep tests against a moving convex shape.
 /// </summary>
 public interface ISweepTestable
 {
@@ -122,6 +122,31 @@ public interface ISweepTestable
     /// <param name="lambda">The time of impact expressed in units of <paramref name="sweep"/>. Zero if the shapes already overlap.</param>
     /// <returns><c>true</c> if the query shape hits or already overlaps this object; otherwise, <c>false</c>.</returns>
     public bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position, in JVector sweep,
+        out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
+        where T : ISupportMappable;
+}
+
+/// <summary>
+/// Supports sweep tests in which the query shape translates and rotates while this object stays fixed.
+/// </summary>
+public interface IAngularSweepTestable : ISweepTestable
+{
+    /// <summary>Finds the first impact within the specified time interval.</summary>
+    /// <typeparam name="T">The query support-map type.</typeparam>
+    /// <param name="support">The query shape.</param>
+    /// <param name="orientation">The query shape's initial world-space orientation.</param>
+    /// <param name="position">The query shape's initial world-space position and rotation origin.</param>
+    /// <param name="velocity">The query shape's linear velocity in world space.</param>
+    /// <param name="angularVelocity">The query shape's angular velocity in world space, in radians per second.</param>
+    /// <param name="extent">A radius enclosing the query shape about its rotation origin, including any local offset.</param>
+    /// <param name="maximumTime">The last time to search, in seconds.</param>
+    /// <param name="pointA">Contact point on the query shape at its initial pose.</param>
+    /// <param name="pointB">Contact point on this object in world space.</param>
+    /// <param name="normal">World-space normal from the query shape toward this object at impact; zero for initial overlap.</param>
+    /// <param name="lambda">Time of impact in seconds; zero for initial overlap.</param>
+    /// <returns>True if an impact is found; false if the shapes miss or the search fails.</returns>
+    public bool Sweep<T>(in T support, in JQuaternion orientation, in JVector position,
+        in JVector velocity, in JVector angularVelocity, Real extent, Real maximumTime,
         out JVector pointA, out JVector pointB, out JVector normal, out Real lambda)
         where T : ISupportMappable;
 }

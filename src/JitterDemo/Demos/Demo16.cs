@@ -7,7 +7,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo16 : IDemo, ICleanDemo, IDrawUpdate
+public class Demo16 : IDemo
 {
     public string Name => "Soft Body Cubes";
     public string Description => "Deformable soft-body cubes interacting with rigid bodies.";
@@ -15,11 +15,11 @@ public class Demo16 : IDemo, ICleanDemo, IDrawUpdate
     private readonly List<SoftBodyCube> cubes = new();
     private World world = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
         cubes.Clear();
 
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

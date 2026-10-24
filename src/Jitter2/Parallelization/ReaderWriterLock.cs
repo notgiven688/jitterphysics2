@@ -12,22 +12,15 @@ using Jitter2.Unmanaged;
 namespace Jitter2.Parallelization;
 
 /// <summary>
-/// Provides a lightweight reader-writer lock optimized for rare write operations.
+/// Allows concurrent readers or one exclusive writer.
 /// </summary>
 /// <remarks>
 /// <para>
-/// Multiple readers can hold the lock concurrently, but writers have exclusive access.
-/// This implementation uses spin-waiting and is best suited for short critical sections.
+/// Waiting threads spin, so use this lock only for short operations with infrequent writes.
 /// </para>
 /// <para>
-/// This lock is non-recursive and thread-affine. Each successful acquisition must be
-/// released exactly once by the same thread that acquired it. Recursive acquisition,
-/// read-to-write upgrades, write-to-read downgrades, and releasing a lock acquired by
-/// another thread are not supported.
-/// </para>
-/// <para>
-/// Thread-safe when used according to this contract. All synchronization is performed
-/// using atomic operations and memory barriers.
+/// Release each acquired lock exactly once, on the thread that acquired it. Do not acquire
+/// the lock again while holding it or switch directly between a read lock and a write lock.
 /// </para>
 /// </remarks>
 public sealed class ReaderWriterLock
@@ -93,14 +86,9 @@ public sealed class ReaderWriterLock
     /// Acquires the read lock.
     /// </summary>
     /// <remarks>
-    /// <para>
     /// Multiple threads can hold the read lock simultaneously. This method blocks
     /// while a writer holds the lock.
-    /// </para>
-    /// <para>
-    /// The lock must be released exactly once by the acquiring thread using
-    /// <see cref="ExitReadLock"/>.
-    /// </para>
+    /// Release it with <see cref="ExitReadLock"/> on the same thread.
     /// </remarks>
     public void EnterReadLock()
     {
@@ -130,13 +118,8 @@ public sealed class ReaderWriterLock
     /// Acquires the write lock with exclusive access.
     /// </summary>
     /// <remarks>
-    /// <para>
     /// This method blocks until all readers and other writers have released the lock.
-    /// </para>
-    /// <para>
-    /// The lock must be released exactly once by the acquiring thread using
-    /// <see cref="ExitWriteLock"/>.
-    /// </para>
+    /// Release it with <see cref="ExitWriteLock"/> on the same thread.
     /// </remarks>
     public void EnterWriteLock()
     {

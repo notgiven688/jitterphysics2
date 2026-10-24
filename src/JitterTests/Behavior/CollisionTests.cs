@@ -247,6 +247,110 @@ public class CollisionTests
         Assert.That(!overlap);
     }
 
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public void SphereOnFace_ContactRemainsBelowSphere(bool reversed, bool transformed)
+    {
+        BoxShape floor = new(20, 20, 20);
+        SphereShape sphere = new((Real)0.5);
+        var frame = transformed
+            ? JQuaternion.CreateRotationZ((Real)0.4) * JQuaternion.CreateRotationY((Real)0.7)
+            : JQuaternion.Identity;
+        var floorPosition = transformed ? new JVector(5, -10, 3) : new JVector(0, -10, 0);
+        // This pose returned a contact 0.37 mm off center even with a 1e-8 support-gap tolerance.
+        var localPosition = new JVector((Real)3.1203206f, (Real)10.0 + (Real)0.49837333f, (Real)(-0.22746953f));
+        JVector spherePosition = floorPosition + JVector.Transform(localPosition, frame);
+        var sphereOrientation = frame * new JQuaternion((Real)0.05042054f, (Real)(-0.123349205f),
+            (Real)(-0.0064961617f), (Real)(-0.9910604f));
+        JVector expectedNormal = JVector.Transform(JVector.UnitY, frame);
+        JVector expectedA = floorPosition + JVector.Transform(new JVector(localPosition.X, 10, localPosition.Z), frame);
+        JVector expectedB = spherePosition - (Real)0.5 * expectedNormal;
+
+        JVector pointA, pointB, normal;
+        Real penetration;
+        bool hit = reversed
+            ? NarrowPhase.MprEpa(sphere, floor, sphereOrientation, frame, spherePosition, floorPosition,
+                out pointB, out pointA, out normal, out penetration)
+            : NarrowPhase.MprEpa(floor, sphere, frame, sphereOrientation, floorPosition, spherePosition,
+                out pointA, out pointB, out normal, out penetration);
+
+        Assert.That(hit, Is.True);
+        Assert.That((pointA - expectedA).Length(), Is.LessThan((Real)5e-5));
+        Assert.That((pointB - expectedB).Length(), Is.LessThan((Real)5e-5));
+        Assert.That((normal - (reversed ? -expectedNormal : expectedNormal)).Length(), Is.LessThan((Real)5e-5));
+        Assert.That(penetration, Is.EqualTo((Real)10.5 - localPosition.Y).Within((Real)5e-5));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Ellipsoids_ContactDoesNotSnapToAnAlmostPlanarPatch(bool reversed)
+    {
+        var a = new TransformedShape(new SphereShape(1), new JMatrix(
+            (Real)1.2622255, 0, 0, 0, (Real)2.177816, 0, 0, 0, (Real)1.6617688));
+        var b = new TransformedShape(new SphereShape(1), new JMatrix(
+            (Real)0.696555, 0, 0, 0, (Real)2.140087, 0, 0, 0, (Real)1.546733));
+        var rotation = new JQuaternion((Real)0.12345854, (Real)(-0.7636755),
+            (Real)0.15334113, (Real)0.614853);
+        var position = new JVector((Real)(-2.5401924), (Real)(-1.3526405), (Real)(-0.80724305));
+        var expectedNormal = new JVector((Real)(-0.9243989), (Real)(-0.2980082), (Real)(-0.23807088));
+        a.SupportMap(expectedNormal, out var expectedA);
+        var expectedB = expectedA - (Real)0.001216647 * expectedNormal;
+
+        JVector pointA, pointB;
+        bool hit = reversed
+            ? NarrowPhase.MprEpa(b, a, rotation, JQuaternion.Identity, position, JVector.Zero,
+                out pointB, out pointA, out _, out _)
+            : NarrowPhase.MprEpa(a, b, rotation, position, out pointA, out pointB, out _, out _);
+
+        Assert.That(hit, Is.True);
+        Assert.That((pointA - expectedA).Length(), Is.LessThan((Real)1e-4));
+        Assert.That((pointB - expectedB).Length(), Is.LessThan((Real)1e-4));
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void OffsetBoxFaceContact_RemainsInsideBothBoxes(bool reversed)
+    {
+        BoxShape a = new(1), b = new(1);
+        var positionA = new JVector(0, (Real)(-0.5), 0);
+        var positionB = new JVector((Real)0.1, (Real)0.499, (Real)0.13);
+        JVector pointA, pointB;
+        bool hit = reversed
+            ? NarrowPhase.MprEpa(b, a, JQuaternion.Identity, JQuaternion.Identity, positionB, positionA,
+                out pointB, out pointA, out _, out _)
+            : NarrowPhase.MprEpa(a, b, JQuaternion.Identity, JQuaternion.Identity, positionA, positionB,
+                out pointA, out pointB, out _, out _);
+
+        Assert.That(hit, Is.True);
+        foreach (var localPoint in new[] { pointA - positionA, pointB - positionB })
+        {
+            Assert.That(MathR.Abs(localPoint.X), Is.LessThanOrEqualTo((Real)0.5 + (Real)1e-5));
+            Assert.That(MathR.Abs(localPoint.Y), Is.LessThanOrEqualTo((Real)0.5 + (Real)1e-5));
+            Assert.That(MathR.Abs(localPoint.Z), Is.LessThanOrEqualTo((Real)0.5 + (Real)1e-5));
+        }
+    }
+
+    [Test]
+    public void SphereOutsideFace_ContactUsesBoxEdge()
+    {
+        BoxShape box = new(2);
+        SphereShape sphere = new((Real)0.5);
+        Real offset = ((Real)0.5 - (Real)0.002) / MathR.Sqrt((Real)2.0);
+        JVector position = new((Real)1.0 + offset, (Real)1.0 + offset, 0);
+
+        Assert.That(NarrowPhase.MprEpa(box, sphere, JQuaternion.Identity, position,
+            out JVector pointA, out _, out JVector normal, out Real penetration), Is.True);
+
+        // A projection outside either face must retain the edge contact, rather than snapping
+        // the normal to one face and projecting onto that face's unbounded plane.
+        Assert.That((pointA - new JVector(1, 1, 0)).Length(), Is.LessThan((Real)5e-5));
+        Assert.That(normal.X, Is.GreaterThan((Real)0.6));
+        Assert.That(normal.Y, Is.GreaterThan((Real)0.6));
+        Assert.That(penetration, Is.EqualTo((Real)0.002).Within((Real)5e-5));
+    }
+
     [TestCase]
     public void NormalDirection()
     {

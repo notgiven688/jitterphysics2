@@ -8,7 +8,7 @@ using JitterDemo.Renderer;
 
 namespace JitterDemo;
 
-public class Demo11 : IDemo, IDrawUpdate
+public class Demo11 : IDemo
 {
     public string Name => "Double Pendulum";
 
@@ -16,9 +16,9 @@ public class Demo11 : IDemo, IDrawUpdate
 
     private World world = null!;
 
-    public void Build(Playground pg, World world)
+    public void Build(Playground pg)
     {
-        this.world = world;
+        world = pg.World;
 
         pg.AddFloor();
 

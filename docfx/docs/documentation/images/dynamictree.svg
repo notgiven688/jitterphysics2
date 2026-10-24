@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="620" viewBox="0 0 1040 620" role="img" aria-labelledby="title desc">
+  <title id="title">From bounding boxes to a dynamic tree</title>
+  <desc id="desc">On the left, five shapes B, C, E, F, and G sit inside their axis-aligned bounding boxes b, c, e, f, and g. Dashed boxes group them: a contains b and c, d contains e and f, h contains d and g, and root i contains a and h. On the right, the same hierarchy is drawn as a binary tree. Leaf nodes share their shapes' colors.</desc>
+  <rect width="1040" height="620" rx="16" fill="#fcfcf9"/>
+  <g font-family="system-ui, sans-serif" fill="#20374a">
+    <text x="36" y="40" font-size="18" font-weight="700">BOUNDING BOXES</text>
+    <text x="36" y="67" font-size="16" fill="#536775">Nearby shapes share a parent box.</text>
+    <text x="632" y="40" font-size="18" font-weight="700">TREE HIERARCHY</text>
+    <text x="632" y="67" font-size="16" fill="#536775">Each leaf represents one shape.</text>
+    <path d="M605 101V531" stroke="#dce4e7" stroke-width="1.5"/>
+
+    <!-- Internal nodes: axis-aligned boxes enclosing their children. -->
+    <g fill="none" stroke="#81929e" stroke-width="2" stroke-dasharray="7 5">
+      <rect x="36" y="100" width="540" height="432" stroke="#536775"/>
+      <rect x="62" y="116" width="258" height="206"/>
+      <rect x="229" y="200" width="328" height="314"/>
+      <rect x="240" y="346" width="233" height="162"/>
+    </g>
+
+    <!-- Leaf boxes remain rectangular even when the shapes are rotated. -->
+    <rect x="87" y="221" width="98" height="90" fill="#eef4ff" stroke="#4679bd" stroke-width="2"/>
+    <rect x="201" y="131" width="104" height="100" fill="#fff8e7" stroke="#ba882b" stroke-width="2"/>
+    <rect x="450" y="212" width="96" height="152" fill="#fff0e9" stroke="#c75d41" stroke-width="2"/>
+    <rect x="260" y="365" width="101" height="136" fill="#eff8f0" stroke="#438568" stroke-width="2"/>
+    <rect x="300" y="384" width="145" height="102" fill="#f2effb" fill-opacity="0.7" stroke="#8870b3" stroke-width="2"/>
+
+    <!-- The five original shapes, with a distinct color for each leaf. -->
+    <path d="M125 232L174 260L147 302L98 275Z" fill="#91b9eb" stroke="#4679bd" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="253" cy="182" r="37" fill="#ffd166" stroke="#ba882b" stroke-width="2"/>
+    <path d="M529 225L461 286L540 354Z" fill="#ff997f" stroke="#c75d41" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M344 377L272 441L356 490Z" fill="#8cdbab" stroke="#438568" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M397 390L435 442L384 476L346 424Z" fill="#bba5de" stroke="#8870b3" stroke-width="2" stroke-linejoin="round"/>
+    <g font-size="22" font-weight="600" text-anchor="middle">
+      <text x="136" y="274" transform="rotate(30 136 266)">B</text>
+      <text x="253" y="190">C</text>
+      <text x="511" y="294" transform="rotate(45 511 286)">G</text>
+      <text x="322" y="448" transform="rotate(-45 322 440)">E</text>
+      <text x="391" y="440" transform="rotate(-35 391 432)">F</text>
+    </g>
+
+    <g font-size="19" font-weight="600">
+      <text x="49" y="520">i</text>
+      <text x="73" y="139">a</text>
+      <text x="531" y="502">h</text>
+      <text x="410" y="376">d</text>
+      <text x="96" y="242" fill="#315c94">b</text>
+      <text x="210" y="152" fill="#8e651a">c</text>
+      <text x="459" y="234" fill="#a1442c">g</text>
+      <text x="269" y="490" fill="#2d6c50">e</text>
+      <text x="428" y="475" fill="#705398">f</text>
+    </g>
+
+    <!-- Connectors sit behind the nodes. -->
+    <g fill="none" stroke="#a4b1ba" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M819 150L719 235L665 320M719 235L773 320"/>
+      <path d="M819 150L919 235L973 320M919 235L867 320L821 405M867 320L913 405"/>
+    </g>
+    <g fill="#fcfcf9" stroke="#536775" stroke-width="2.5">
+      <circle cx="819" cy="150" r="25"/>
+      <circle cx="719" cy="235" r="25"/>
+      <circle cx="919" cy="235" r="25"/>
+      <circle cx="867" cy="320" r="25"/>
+    </g>
+    <g stroke-width="2.5">
+      <circle cx="665" cy="320" r="25" fill="#fff0c9" stroke="#ba882b"/>
+      <circle cx="773" cy="320" r="25" fill="#dceaff" stroke="#4679bd"/>
+      <circle cx="973" cy="320" r="25" fill="#ffe7de" stroke="#c75d41"/>
+      <circle cx="821" cy="405" r="25" fill="#d9f2e2" stroke="#438568"/>
+      <circle cx="913" cy="405" r="25" fill="#e9e0f5" stroke="#8870b3"/>
+    </g>
+    <g font-size="23" font-weight="600" text-anchor="middle" dominant-baseline="central">
+      <text x="819" y="150">i</text>
+      <text x="719" y="235">a</text>
+      <text x="919" y="235">h</text>
+      <text x="665" y="320">c</text>
+      <text x="773" y="320">b</text>
+      <text x="867" y="320">d</text>
+      <text x="973" y="320">g</text>
+      <text x="821" y="405">e</text>
+      <text x="913" y="405">f</text>
+    </g>
+    <text x="819" y="109" text-anchor="middle" font-size="15" fill="#536775">Root</text>
+    <text x="819" y="488" text-anchor="middle" font-size="16" fill="#536775">Same boxes. Different view.</text>
+
+    <path d="M36 555H1004" stroke="#dce4e7" stroke-width="1.5"/>
+    <rect x="36" y="578" width="24" height="18" fill="none" stroke="#81929e" stroke-width="2" stroke-dasharray="5 3"/>
+    <text x="72" y="592" font-size="16" fill="#536775">Parent bounds</text>
+    <rect x="258" y="578" width="24" height="18" fill="#eef4ff" stroke="#4679bd" stroke-width="2"/>
+    <text x="294" y="592" font-size="16" fill="#536775">Leaf bounds</text>
+    <text x="632" y="592" font-size="16" fill="#536775">Uppercase: shape · Lowercase: tree node</text>
+  </g>
+</svg>

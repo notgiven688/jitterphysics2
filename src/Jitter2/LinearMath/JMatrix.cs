@@ -17,7 +17,7 @@ namespace Jitter2.LinearMath;
 public struct JMatrix(
     Real m11, Real m12, Real m13,
     Real m21, Real m22, Real m23,
-    Real m31, Real m32, Real m33) : IEquatable<JMatrix>
+    Real m31, Real m32, Real m33) : IEquatable<JMatrix>, IFormattable
 {
     [FieldOffset(0 * sizeof(Real))] public Real M11 = m11;
     [FieldOffset(1 * sizeof(Real))] public Real M21 = m21;
@@ -68,7 +68,7 @@ public struct JMatrix(
     }
 
     /// <summary>
-    /// Gets a reference to a column vector by index using unsafe pointer arithmetic.
+    /// Gets a writable reference to a column vector without checking the index.
     /// </summary>
     /// <param name="index">The zero-based index of the column (0, 1, or 2).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -691,11 +691,20 @@ public struct JMatrix(
                M33.Equals(other.M33);
     }
 
-    public readonly override string ToString()
+    /// <summary>Returns a string representation of the matrix.</summary>
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the components using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the components using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"M11={M11:F6}, M12={M12:F6}, M13={M13:F6}, " +
-               $"M21={M21:F6}, M22={M22:F6}, M23={M23:F6}, " +
-               $"M31={M31:F6}, M32={M32:F6}, M33={M33:F6}";
+        return $"M11={M11.ToString(format, formatProvider)}, M12={M12.ToString(format, formatProvider)}, M13={M13.ToString(format, formatProvider)}, " +
+               $"M21={M21.ToString(format, formatProvider)}, M22={M22.ToString(format, formatProvider)}, M23={M23.ToString(format, formatProvider)}, " +
+               $"M31={M31.ToString(format, formatProvider)}, M32={M32.ToString(format, formatProvider)}, M33={M33.ToString(format, formatProvider)}";
     }
 
     public readonly override bool Equals(object? obj)

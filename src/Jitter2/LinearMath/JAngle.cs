@@ -14,7 +14,7 @@ namespace Jitter2.LinearMath;
 /// ambiguity between radians and degrees in the Jitter API.
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 1 * sizeof(Real))]
-public struct JAngle : IEquatable<JAngle>
+public struct JAngle : IEquatable<JAngle>, IFormattable
 {
     /// <summary>
     /// Gets or sets the angle value in radians.
@@ -25,9 +25,17 @@ public struct JAngle : IEquatable<JAngle>
     /// <summary>
     /// Returns a string representation of the <see cref="JAngle"/>.
     /// </summary>
-    public readonly override string ToString()
+    public readonly override string ToString() => ToString(null, null);
+
+    /// <summary>Formats the angle in radians and degrees using the specified numeric format and the current culture.</summary>
+    public readonly string ToString(string? format) => ToString(format, null);
+
+    /// <summary>Formats the angle in radians and degrees using the specified numeric format and culture.</summary>
+    /// <param name="format">A numeric format string, or null or empty to use the general format.</param>
+    /// <param name="formatProvider">The format provider, or null to use the current culture.</param>
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
-        return $"Radian={Radian}, Degree={Degree}";
+        return $"Radian={Radian.ToString(format, formatProvider)}, Degree={Degree.ToString(format, formatProvider)}";
     }
 
     public readonly override bool Equals(object? obj)

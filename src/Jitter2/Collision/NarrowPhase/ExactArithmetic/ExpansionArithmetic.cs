@@ -9,7 +9,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Jitter2.LinearMath;
 
-namespace Jitter2.Collision.ExactArithmetic;
+namespace Jitter2.Collision;
 
 // Exact sums of nonoverlapping doubles, stored from least to most significant.
 // Callers must keep coordinates inside PlaneFilter's safe range: error-free
