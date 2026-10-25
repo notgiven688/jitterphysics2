@@ -89,6 +89,15 @@ public sealed partial class World
     private int contactGraphRebuildCount, contactGraphReuseCount, contactGraphIncrementalCount;
     private long contactRecordSwapCount;
 
+    // Within a color segment the records are ordered by a locality key, so that a worker's
+    // contiguous slice of every color covers the same bodies and those bodies stay in its caches
+    // across the color passes. Incremental changes append and move records out of order; the
+    // keyed order is restored after this many incremental updates.
+    private const int ResortInterval = 16;
+    private int incrementalChangesSinceSort;
+    private long[] sortKeys = Array.Empty<long>();
+    private int[] sortOrder = Array.Empty<int>(), sortTarget = Array.Empty<int>();
+
     private int SegmentEnd(int segment) =>
         segment + 1 < SegmentCount ? segmentStart[segment + 1] : memContacts.Active.Length;
 
@@ -156,6 +165,7 @@ public sealed partial class World
         {
             // Retry overflow only when the graph has changed.
             RetryOverflowContacts();
+            if (++incrementalChangesSinceSort >= ResortInterval) SortContactsBySegment();
             RefreshContactColorBundles();
             contactGraphIncrementalCount++;
         }
@@ -280,37 +290,64 @@ public sealed partial class World
         return entry.Handle.IsZero || entry.Color < 0 ? UncoloredSegment : ColorSegment(entry.Color);
     }
 
-    // Group the active records by segment in place. Each record is swapped at most once into
-    // its own segment, so a full rebuild costs one pass over the active contacts.
+    // The locality key of a record: the stable index of the body it writes, the lower one when it
+    // writes both. In scenes built in spatial order this approximates a spatial sort for free.
+    private int SortKey(ref ContactData contact)
+    {
+        int id = contact._internal;
+        if (id >= contactGraph.Length) return 0;
+        ref ContactGraphEntry entry = ref contactGraph[id];
+        if (entry.Handle.IsZero) return 0;
+        bool writes1 = (entry.Mode & ContactData.SolveMode.FullBody1) != 0;
+        bool writes2 = (entry.Mode & ContactData.SolveMode.FullBody2) != 0;
+        if (writes1 && writes2) return Math.Min(entry.BodyId1, entry.BodyId2);
+        return writes1 ? entry.BodyId1 : entry.BodyId2;
+    }
+
+    // Groups the active records by segment and orders each segment by the locality key. Each
+    // record is swapped at most once into its final position.
     private void SortContactsBySegment()
     {
         var active = memContacts.Active;
-        Span<int> cursor = stackalloc int[SegmentCount];
-        cursor.Clear();
-        foreach (ref ContactData contact in active) cursor[SegmentOf(ref contact)]++;
+        int n = active.Length;
+        if (sortKeys.Length < n)
+        {
+            int capacity = Math.Max(n, sortKeys.Length * 2);
+            sortKeys = new long[capacity];
+            sortOrder = new int[capacity];
+            sortTarget = new int[capacity];
+        }
+
+        Span<int> counts = stackalloc int[SegmentCount];
+        counts.Clear();
+        for (int i = 0; i < n; i++)
+        {
+            int segment = SegmentOf(ref active[i]);
+            counts[segment]++;
+            sortKeys[i] = ((long)segment << 32) | (uint)SortKey(ref active[i]);
+            sortOrder[i] = i;
+        }
+
         int offset = 0;
         for (int s = 0; s < SegmentCount; s++)
         {
             segmentStart[s] = offset;
-            offset += cursor[s];
-            cursor[s] = segmentStart[s];
+            offset += counts[s];
         }
 
-        for (int s = 0; s < SegmentCount; s++)
+        Array.Sort(sortKeys, sortOrder, 0, n);
+        for (int rank = 0; rank < n; rank++) sortTarget[sortOrder[rank]] = rank;
+        for (int i = 0; i < n; i++)
         {
-            int end = SegmentEnd(s);
-            for (int i = segmentStart[s]; i < end; i++)
+            while (sortTarget[i] != i)
             {
-                int target;
-                while ((target = SegmentOf(ref active[i])) != s)
-                {
-                    // Records before a segment's cursor are already in place.
-                    while (SegmentOf(ref active[cursor[target]]) == target) cursor[target]++;
-                    memContacts.Swap(i, cursor[target]++);
-                    contactRecordSwapCount++;
-                }
+                int j = sortTarget[i];
+                memContacts.Swap(i, j);
+                (sortTarget[i], sortTarget[j]) = (sortTarget[j], sortTarget[i]);
+                contactRecordSwapCount++;
             }
         }
+        incrementalChangesSinceSort = 0;
     }
 
     // Moves a record across the segment boundaries between two segments. Every boundary
@@ -983,6 +1020,7 @@ public sealed partial class World
         contactColorCount = 0;
         contactGraphValid = false;
         contactGraphChanged = false;
+        incrementalChangesSinceSort = 0;
         contactGraph = Array.Empty<ContactGraphEntry>();
         contactBodyReferences = Array.Empty<int>();
         pendingColoredContacts.Clear();
@@ -1000,5 +1038,7 @@ public sealed partial class World
         lockedContactIndices.TrimExcess();
         pendingColoredContacts.TrimExcess();
         pendingContactChanges.Trim();
+        sortKeys = Array.Empty<long>();
+        sortOrder = sortTarget = Array.Empty<int>();
     }
 }

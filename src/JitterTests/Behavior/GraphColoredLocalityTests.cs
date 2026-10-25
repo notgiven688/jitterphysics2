@@ -135,7 +135,7 @@ public class GraphColoredLocalityTests
     }
 
     [Test]
-    public void SharedReadOnlyFloor_KeepsInsertionOrder()
+    public void SharedReadOnlyFloor_OrdersRecordsByDynamicBodyIndex()
     {
         using var world = CreateWorld();
         var floor = world.CreateRigidBody();
@@ -151,9 +151,11 @@ public class GraphColoredLocalityTests
         }
         ContactHandle[] input = ActiveHandles(world);
         AssertGreedyColoring(world);
-        // A single color needs no grouping, so the records keep their insertion order.
-        Assert.That(ColorSets(world)[0], Is.EqualTo(input));
-        Assert.That(ActiveHandles(world), Is.EqualTo(input));
+        // Records of a color are ordered by the index of the body they write, so a worker's slice
+        // of every color covers the same bodies.
+        var ordered = ColorSets(world)[0];
+        Assert.That(ordered, Is.EquivalentTo(input));
+        Assert.That(ordered.Select(handle => handle.Data.Body2.Data._index), Is.Ordered);
         Assert.That(Read<int>(world, "contactColorCount"), Is.EqualTo(1));
     }
 

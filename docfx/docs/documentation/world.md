@@ -105,10 +105,13 @@ bodies can be shared when their velocities are read-only. Colors run sequentiall
 manifolds within a color run without body locks and can be distributed across workers.
 
 Active contact records are stored grouped by color, so each color is a contiguous range
-of `RawData.ActiveContacts` and a SIMD bundle covers consecutive records. The color
-graph is retained across steps and updated incrementally as contacts change; a changed
-contact is moved into the storage range of its new color. A full rebuild assigns colors
-in the current storage order and regroups all records in one pass.
+of `RawData.ActiveContacts` and a SIMD bundle covers consecutive records. Within a
+color, records are ordered by the index of the body they write, so each worker's share
+of every color covers the same bodies and keeps them in its caches across the color
+passes. The color graph is retained across steps and updated incrementally as contacts
+change; a changed contact is moved into the storage range of its new color, and the
+keyed order is restored after a number of incremental updates. A full rebuild assigns
+colors in the current storage order and regroups all records in one pass.
 
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
