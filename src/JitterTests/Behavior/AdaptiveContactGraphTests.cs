@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reflection;
 using Jitter2.Unmanaged;
 using ContactHandle = Jitter2.Unmanaged.JHandle<Jitter2.Dynamics.ContactData>;
@@ -9,7 +8,7 @@ namespace JitterTests.Behavior;
 public class AdaptiveContactGraphTests
 {
     private const BindingFlags Fields = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-    private static World NewWorld() => new() { SolveMode = SolveMode.GraphColored,
+    private static World NewWorld() => new() { SolveMode = SolveMode.Regular,
         Gravity = JVector.Zero, AllowDeactivation = false, SolverIterations = (8, 4) };
     private static T Read<T>(object o, string name) => (T)o.GetType().GetField(name, Fields)!.GetValue(o)!;
     private static int Count(World world, string name) => Read<int>(world, name);
@@ -49,23 +48,37 @@ public class AdaptiveContactGraphTests
             expectedReferences[handle.Data.Body2.Data._index]++;
         }
         var result = new Dictionary<ContactHandle, int>();
-        var colors = Read<IList>(world, "contactColors");
+        var segmentStart = Read<int[]>(world, "segmentStart");
         int count = Read<int>(world, "contactColorCount");
-        for (int colorIndex = 0; colorIndex <= 64; colorIndex++)
+        var records = world.RawData.ActiveContacts;
+        Assert.That(segmentStart[0], Is.Zero);
+        for (int segment = 0; segment < segmentStart.Length; segment++)
         {
-            if (colorIndex >= count && colorIndex != 64) continue;
-            var list = colorIndex == 64 ? Read<List<ContactHandle>>(world, "contactColorOverflow") :
-                Read<List<ContactHandle>>(colors[colorIndex]!, "Contacts");
+            int start = segmentStart[segment];
+            int end = segment + 1 < segmentStart.Length ? segmentStart[segment + 1] : records.Length;
+            Assert.That(end, Is.GreaterThanOrEqualTo(start), "Segment bounds must be ordered.");
+            // Storage holds colors in reverse order, then the overflow, then uncolored records.
+            int colorIndex = segment == 65 ? -1 : segment == 64 ? 64 : 63 - segment;
+            if (colorIndex >= count && colorIndex < 64)
+                Assert.That(end - start, Is.Zero, $"Color {colorIndex} lies beyond the color count but is not empty.");
             var occupied = new HashSet<JHandle<RigidBodyData>>();
-            for (int slot = 0; slot < list.Count; slot++)
+            for (int i = start; i < end; i++)
             {
-                var handle = list[slot];
-                Assert.That(active.Contains(handle), Is.True, "Cached graph includes an inactive/empty contact.");
+                var handle = memory.GetHandle(ref records[i]);
+                if (colorIndex < 0)
+                {
+                    Assert.That(active.Contains(handle), Is.False, "A used contact is stored outside its color segment.");
+                    if (handle.Data._internal < graph.Length)
+                        Assert.That(Read<ContactHandle>(graph.GetValue(handle.Data._internal)!, "Handle").IsZero, Is.True,
+                            "An uncolored record retains a graph entry.");
+                    continue;
+                }
+                Assert.That(active.Contains(handle), Is.True,
+                    $"Color segment {segment} holds an inactive/empty contact at index {i}.");
                 Assert.That(result.TryAdd(handle, colorIndex), Is.True, "Contact appears twice in graph.");
                 object entry = graph.GetValue(handle.Data._internal)!;
                 Assert.That(Read<ContactHandle>(entry, "Handle"), Is.EqualTo(handle));
                 Assert.That(Read<int>(entry, "Color"), Is.EqualTo(colorIndex));
-                Assert.That(Read<int>(entry, "Slot"), Is.EqualTo(slot));
                 Assert.That(Read<ContactData.SolveMode>(entry, "Mode"), Is.EqualTo(handle.Data.Mode));
                 Assert.That(Read<JHandle<RigidBodyData>>(entry, "Body1"), Is.EqualTo(handle.Data.Body1));
                 Assert.That(Read<JHandle<RigidBodyData>>(entry, "Body2"), Is.EqualTo(handle.Data.Body2));
@@ -183,9 +196,9 @@ public class AdaptiveContactGraphTests
             Assert.That(Inspect(world).Count, Is.EqualTo(count));
         }
         Assert.That(Count(world, "contactGraphIncrementalCount"), Is.GreaterThan(increments));
-        world.SolveMode = SolveMode.Regular;
+        world.SolveMode = SolveMode.Deterministic;
         world.Step((Real).01, false);
-        world.SolveMode = SolveMode.GraphColored;
+        world.SolveMode = SolveMode.Regular;
         world.Step((Real).01, false);
         Inspect(world);
         world.Trim();

@@ -27,9 +27,6 @@ public class CcdDiscoveryTests
     [TestCase(1, SolveMode.Deterministic, false)]
     [TestCase(4, SolveMode.Deterministic, false)]
     [TestCase(4, SolveMode.Deterministic, true)]
-    [TestCase(1, SolveMode.GraphColored, false)]
-    [TestCase(4, SolveMode.GraphColored, false)]
-    [TestCase(4, SolveMode.GraphColored, true)]
     public void FollowsMotionCreatedByContact(int passes, SolveMode mode, bool multiThread)
     {
         using var world = new World
@@ -369,7 +366,7 @@ public class CcdDiscoveryTests
     {
         using var world = new World
         {
-            SolveMode = SolveMode.GraphColored,
+            SolveMode = SolveMode.Regular,
             Gravity = JVector.Zero,
             SubstepCount = substeps,
             AllowDeactivation = false

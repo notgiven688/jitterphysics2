@@ -189,8 +189,9 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// Runs on the calling thread, after bodies have moved and constraints have been solved.
-    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
-    /// in this callback.
+    /// In the last substep of a step, <see cref="SolveMode.Regular"/> has already refreshed the
+    /// contact offsets used for contact matching. Do not add or remove bodies, shapes,
+    /// constraints, or contacts, or change body motion types in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
@@ -490,6 +491,7 @@ public sealed partial class World : IDisposable
 
         deferredArbiters.Trim();
         brokenArbiters.Trim();
+        pendingBrokenArbiters.Trim();
         dispatchArbiters.TrimExcess();
         retiredArbiters.TrimExcess();
 
@@ -658,6 +660,9 @@ public sealed partial class World : IDisposable
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
+        pendingBrokenArbiters.Remove(arbiter.Handle);
+        int id = arbiter.Handle.Data._internal;
+        if (id < brokenArbiterQueued.Length) brokenArbiterQueued[id] = false;
         RemoveColoredContact(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 

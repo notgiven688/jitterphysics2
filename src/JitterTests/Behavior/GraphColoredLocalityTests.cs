@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reflection;
 using Jitter2.Unmanaged;
 using ContactHandle = Jitter2.Unmanaged.JHandle<Jitter2.Dynamics.ContactData>;
@@ -16,7 +15,7 @@ public class GraphColoredLocalityTests
 
     private static World CreateWorld() => new()
     {
-        SolveMode = SolveMode.GraphColored,
+        SolveMode = SolveMode.Regular,
         AllowDeactivation = false,
         Gravity = JVector.Zero
     };
@@ -52,9 +51,28 @@ public class GraphColoredLocalityTests
         return result;
     }
 
-    // Use sets rather than the production bit masks to check the initial greedy
-    // assignment and the order in which contacts enter each color.
-    private static void AssertColoredOrder(World world)
+    // Handles of every color segment (index 64 is the overflow), read from storage order.
+    private static List<ContactHandle>[] ColorSets(World world)
+    {
+        var contacts = Read<PartitionedBuffer<ContactData>>(world, "memContacts");
+        var segmentStart = Read<int[]>(world, "segmentStart");
+        var active = contacts.Active;
+        var result = new List<ContactHandle>[65];
+        for (int color = 0; color <= 64; color++)
+        {
+            // Colors are stored in reverse order; the overflow follows color 0.
+            int segment = color == 64 ? 64 : 63 - color;
+            int end = segment + 1 < segmentStart.Length ? segmentStart[segment + 1] : active.Length;
+            var list = new List<ContactHandle>();
+            for (int i = segmentStart[segment]; i < end; i++) list.Add(contacts.GetHandle(ref active[i]));
+            result[color] = list;
+        }
+        return result;
+    }
+
+    // Use sets rather than the production bit masks to check the greedy assignment made
+    // in storage order. Grouping may permute the records but must keep every handle.
+    private static void AssertGreedyColoring(World world)
     {
         ContactHandle[] input = ActiveHandles(world);
         var writable = WritableBodies(input);
@@ -82,36 +100,29 @@ public class GraphColoredLocalityTests
             occupied[color].UnionWith(endpoints);
         }
 
-        typeof(World).GetMethod("BuildContactColors", Fields)!.Invoke(world, null);
+        AdaptiveContactGraphTests.Build(world);
         Assert.That(Read<int>(world, "contactColorCount"), Is.EqualTo(expected.Count));
-        var colors = Read<IList>(world, "contactColors");
+        var sets = ColorSets(world);
         for (int i = 0; i < expected.Count; i++)
-        {
-            var actual = Read<List<ContactHandle>>(colors[i]!, "Contacts");
-            Assert.That(actual, Is.EqualTo(expected[i]),
-                $"Color {i} must retain greedy membership in insertion order.");
-        }
-        Assert.That(Read<List<ContactHandle>>(world, "contactColorOverflow"), Is.EqualTo(overflow),
-            "The serial overflow must retain its original order.");
-        Assert.That(ActiveHandles(world), Is.EqualTo(input), "Grouping must not move the persistent contact records.");
+            Assert.That(sets[i], Is.EquivalentTo(expected[i]), $"Color {i} must hold the greedy membership.");
+        Assert.That(sets[64], Is.EquivalentTo(overflow), "The overflow must hold the remaining conflicts.");
+        Assert.That(ActiveHandles(world), Is.EquivalentTo(input), "Grouping must keep every contact record.");
+        AdaptiveContactGraphTests.Inspect(world);
     }
 
     // Retained colors need not equal a new greedy coloring after physical moves.
-    // Moving body storage must not reorder a color's handles.
-    private static void AssertRetainedOrderAfterMoves(World world)
+    // Moving body storage must not change a color's membership or move contact records.
+    private static void AssertRetainedColorsAfterMoves(World world)
     {
         var input = ActiveHandles(world);
         AdaptiveContactGraphTests.Build(world);
         AdaptiveContactGraphTests.Inspect(world);
-        int count = Read<int>(world, "contactColorCount");
-        var colors = Read<IList>(world, "contactColors");
-        var expected = Enumerable.Range(0, count)
-            .Select(c => Read<List<ContactHandle>>(colors[c]!, "Contacts").ToArray()).ToArray();
+        var expected = ColorSets(world);
         for (int i = 0; i < 64; i++) AdaptiveContactGraphTests.Build(world);
         AdaptiveContactGraphTests.Inspect(world);
-        for (int c = 0; c < count; c++)
-            Assert.That(Read<List<ContactHandle>>(colors[c]!, "Contacts"), Is.EqualTo(expected[c]),
-                "Physical body moves must not alter retained color lists.");
+        var actual = ColorSets(world);
+        for (int c = 0; c <= 64; c++)
+            Assert.That(actual[c], Is.EqualTo(expected[c]), "Physical body moves must not alter retained colors.");
         Assert.That(ActiveHandles(world), Is.EqualTo(input));
     }
 
@@ -131,9 +142,10 @@ public class GraphColoredLocalityTests
             AddContact(world, floor, bodies[index]);
         }
         ContactHandle[] input = ActiveHandles(world);
-        AssertColoredOrder(world);
-        var color = Read<IList>(world, "contactColors")[0]!;
-        Assert.That(Read<List<ContactHandle>>(color, "Contacts"), Is.EqualTo(input));
+        AssertGreedyColoring(world);
+        // A single color needs no grouping, so the records keep their insertion order.
+        Assert.That(ColorSets(world)[0], Is.EqualTo(input));
+        Assert.That(ActiveHandles(world), Is.EqualTo(input));
         Assert.That(Read<int>(world, "contactColorCount"), Is.EqualTo(1));
     }
 
@@ -152,9 +164,9 @@ public class GraphColoredLocalityTests
         }
         AddContact(world, bodies[388], bodies[389], ContactData.SolveMode.None);
         AddContact(world, bodies[387], bodies[389]).Data.UsageMask = 0;
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         Assert.That(Read<int>(world, "contactColorCount"), Is.EqualTo(64));
-        Assert.That(Read<List<ContactHandle>>(world, "contactColorOverflow"), Has.Count.EqualTo(68));
+        Assert.That(ColorSets(world)[64], Has.Count.EqualTo(68));
     }
 
     [Test]
@@ -164,7 +176,7 @@ public class GraphColoredLocalityTests
         var unused = Enumerable.Range(0, 130).Select(_ => world.CreateRigidBody()).ToArray();
         var bodies = Enumerable.Range(0, 385).Select(_ => world.CreateRigidBody()).ToArray();
         for (int i = 0; i < bodies.Length; i++) AddContact(world, world.NullBody, bodies[i]);
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         foreach (var body in unused) world.Remove(body);
         var storage = Read<PartitionedBuffer<RigidBodyData>>(world, "memRigidBodies");
         for (int i = 0; i < bodies.Length / 2; i++)
@@ -173,29 +185,29 @@ public class GraphColoredLocalityTests
         storage.MoveToActive(bodies[0].Handle);
         Assert.That(bodies.Any(body => body.Handle.Data._index != storage.GetIndex(body.Handle)), Is.True,
             "The test must distinguish stable handle IDs from physical slots.");
-        AssertRetainedOrderAfterMoves(world);
+        AssertRetainedColorsAfterMoves(world);
     }
 
     [Test]
     public void GrowthTrimAndClear_RebuildWithoutStaleBundles()
     {
         using var world = CreateWorld();
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         foreach (int count in new[] { 1, 130, 1025 })
         {
             var bodies = Enumerable.Range(0, count).Select(_ => world.CreateRigidBody()).ToArray();
             for (int i = count - 1; i >= 0; i--) AddContact(world, world.NullBody, bodies[i]);
-            AssertColoredOrder(world);
-            AssertColoredOrder(world);
+            AssertGreedyColoring(world);
+            AssertGreedyColoring(world);
         }
         world.Trim();
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         world.Clear();
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         world.Trim();
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
         AddContact(world, world.NullBody, world.CreateRigidBody());
-        AssertColoredOrder(world);
+        AssertGreedyColoring(world);
     }
 
     [TestCase(false)]
@@ -225,9 +237,8 @@ public class GraphColoredLocalityTests
                 }
             }
 
-            // Above ReorderContacts' 1024-contact threshold. Interleave independent
-            // stars so the first visited manifold must relocate connected records.
-            // Each color has 129 manifolds: two worker batches and a SIMD tail.
+            // Interleave independent stars so grouping by color must relocate records.
+            // Each color has 129 manifolds: several worker batches and a partial bundle.
             for (int leaf = 0; leaf < leavesPerStar; leaf++)
             for (int i = 0; i < starCount; i++)
             {
@@ -237,8 +248,6 @@ public class GraphColoredLocalityTests
             var handles = ActiveHandles(world);
             var identities = handles.Select(handle =>
                 (handle.Data.Key, handle.Data.Body1, handle.Data.Body2)).ToArray();
-            var contacts = Read<PartitionedBuffer<ContactData>>(world, "memContacts");
-            var originalSlots = handles.Select(contacts.GetIndex).ToArray();
 
             for (int step = 0; step < 6; step++)
             {
@@ -252,8 +261,6 @@ public class GraphColoredLocalityTests
                     if ((contact.UsageMask & ContactData.MaskContactAll) == 0)
                         Assert.Fail($"Handle {i} lost its contact points after step {step}.");
                 }
-                Assert.That(handles.Where((handle, i) => contacts.GetIndex(handle) != originalSlots[i]),
-                    Is.Not.Empty, "Actual contact records must move; ordering the color lists alone is insufficient.");
             }
 
             AdaptiveContactGraphTests.Build(world);

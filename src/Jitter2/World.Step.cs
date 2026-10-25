@@ -34,7 +34,14 @@ public sealed partial class World
     // Note: A SlimBag of the reference type 'Arbiter' does not introduce GC problems (not setting
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
-    private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
+
+    // Manifolds that lost all their points are retired one step later, after the next narrow
+    // phase had a chance to refill them. Marks made during a step collect in the pending bag and
+    // become the removal candidates of the next step; the flag per stable contact ID keeps a
+    // manifold from being queued twice while it waits.
+    private SlimBag<JHandle<ContactData>> brokenArbiters = [];
+    private SlimBag<JHandle<ContactData>> pendingBrokenArbiters = [];
+    private bool[] brokenArbiterQueued = Array.Empty<bool>();
     private readonly List<Arbiter> dispatchArbiters = [];
     private readonly List<Arbiter> retiredArbiters = [];
 
@@ -52,7 +59,7 @@ public sealed partial class World
         /// <summary>Time spent creating deferred arbiters.</summary>
         AddArbiter,
 
-        /// <summary>Time spent reordering contacts (for cache optimization or deterministic results)</summary>
+        /// <summary>Time spent preparing the deterministic solve order.</summary>
         ReorderContacts,
 
         /// <summary>Time spent evaluating body deactivation (sleeping).</summary>
@@ -61,10 +68,11 @@ public sealed partial class World
         /// <summary>Time spent in substeps: force integration, constraint solving, and velocity integration.</summary>
         Solve,
 
-        /// <summary>Time spent removing broken arbiters.</summary>
+        /// <summary>Time spent removing arbiters whose contact points all broke during the previous step.</summary>
         RemoveArbiter,
 
-        /// <summary>Time spent updating contact state after solving.</summary>
+        /// <summary>Time spent updating contact state after solving. The regular solver performs this
+        /// update inside its final sweep, so only <see cref="SolveMode.Deterministic"/> reports time here.</summary>
         UpdateContacts,
 
         /// <summary>Time spent finalizing body state and broadphase proxy updates.</summary>
@@ -82,9 +90,6 @@ public sealed partial class World
 
     private Action<Parallel.Batch> integrateVelocities;
     private Action<Parallel.Batch> integrateForces;
-    private Action<Parallel.Batch> prepareContacts;
-    private Action<Parallel.Batch> iterateContacts;
-    private Action<Parallel.Batch> relaxVelocities;
     private Action<Parallel.Batch> updateContacts;
     private Action<Parallel.Batch> prepareConstraints;
     private Action<Parallel.Batch> iterateConstraints;
@@ -100,9 +105,6 @@ public sealed partial class World
     {
         integrateVelocities = IntegrateVelocities;
         integrateForces = IntegrateForces;
-        prepareContacts = PrepareContacts;
-        iterateContacts = IterateContacts;
-        relaxVelocities = RelaxVelocities;
         prepareConstraints = PrepareConstraints;
         iterateConstraints = IterateConstraints;
         prepareSmallConstraints = PrepareSmallConstraints;
@@ -112,9 +114,8 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
-        prepareContactColor = PrepareContactColor;
-        iterateContactColor = IterateContactColor;
-        finishContactColor = FinishContactColor;
+        validateContactGraph = ValidateContactGraph;
+        solverWorkerEntry = SolverWorkerEntry;
         findCcdHits = FindCcdHits;
     }
 
@@ -207,6 +208,7 @@ public sealed partial class World
 
             Tracer.ProfileBegin(TraceName.AddArbiter);
             HandleDeferredArbiters();
+            if (brokenArbiterQueued.Length < memContacts.Capacity) Array.Resize(ref brokenArbiterQueued, memContacts.Capacity);
             Tracer.ProfileEnd(TraceName.AddArbiter);
             SetTime(Timings.AddArbiter);
 
@@ -218,16 +220,7 @@ public sealed partial class World
 
             Tracer.ProfileBegin(TraceName.ReorderContacts);
 
-            switch (SolveMode)
-            {
-                case SolveMode.Regular:
-                case SolveMode.GraphColored:
-                    ReorderContacts();
-                    break;
-                case SolveMode.Deterministic:
-                    PrepareIslandSolveOrder();
-                    break;
-            }
+            if (SolveMode == Jitter2.SolveMode.Deterministic) PrepareIslandSolveOrder();
 
             Tracer.ProfileEnd(TraceName.ReorderContacts);
             SetTime(Timings.ReorderContacts);
@@ -246,17 +239,12 @@ public sealed partial class World
                     IntegrateVelocities(multiThread); // FAST SWEEP
                     RelaxIslands(multiThread, velocityRelaxations); // FAST SWEEP
                 }
-                else if (SolveMode == Jitter2.SolveMode.GraphColored)
-                {
-                    SolveColoredContacts(multiThread, solverIterations);
-                    IntegrateVelocities(multiThread);
-                    RelaxColoredContacts(multiThread, velocityRelaxations);
-                }
                 else
                 {
-                    SolveVelocities(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
+                    // The last substep also refreshes the contact state that UpdateContacts
+                    // would otherwise compute in a separate pass.
+                    SolveContactsAndJoints(multiThread, solverIterations, velocityRelaxations,
+                        integrateVelocities: true, updateContacts: i == timeStep.SubstepCount - 1);
                 }
 
                 PostSubStep?.Invoke(timeStep);
@@ -265,16 +253,16 @@ public sealed partial class World
             Tracer.ProfileEnd(TraceName.Solve);
             SetTime(Timings.Solve);
 
+            Tracer.ProfileBegin(TraceName.UpdateContacts);
+            if (SolveMode == Jitter2.SolveMode.Deterministic) UpdateContacts(multiThread); // FAST SWEEP
+            Tracer.ProfileEnd(TraceName.UpdateContacts);
+            SetTime(Timings.UpdateContacts);
+
             Tracer.ProfileBegin(TraceName.RemoveArbiter);
             RemoveBrokenArbiters();
             Tracer.ProfileEnd(TraceName.RemoveArbiter);
             SetTime(Timings.RemoveArbiter);
             AssertIslandActivationInvariants();
-
-            Tracer.ProfileBegin(TraceName.UpdateContacts);
-            UpdateContacts(multiThread); // FAST SWEEP
-            Tracer.ProfileEnd(TraceName.UpdateContacts);
-            SetTime(Timings.UpdateContacts);
 
             Tracer.ProfileBegin(TraceName.UpdateBodies);
             ForeachActiveBody(multiThread);
@@ -378,20 +366,12 @@ public sealed partial class World
                     RelaxIslands(multiThread, relaxationIterations);
                 }
             }
-            else if (SolveMode == Jitter2.SolveMode.GraphColored)
-            {
-                for (int i = 0; i < timeStep.SubstepCount; i++)
-                {
-                    SolveColoredContacts(multiThread, solverIterations);
-                    RelaxColoredContacts(multiThread, relaxationIterations);
-                }
-            }
             else
             {
                 for (int i = 0; i < timeStep.SubstepCount; i++)
                 {
-                    SolveVelocities(multiThread, solverIterations);
-                    RelaxVelocities(multiThread, relaxationIterations);
+                    SolveContactsAndJoints(multiThread, solverIterations, relaxationIterations,
+                        integrateVelocities: false, updateContacts: false);
                 }
             }
 
@@ -438,106 +418,6 @@ public sealed partial class World
             Sse.Prefetch0(body1 + 3 * SolverPrefetchCacheLineSize);
             Sse.Prefetch0(body2 + 3 * SolverPrefetchCacheLineSize);
         }
-    }
-
-    private void PrepareContacts(Parallel.Batch batch)
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-        var localQueue = deferredContacts.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ContactData next = ref span[i + SolverPrefetchDistance];
-                PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ContactData contact = ref span[i];
-            ref RigidBodyData b1 = ref contact.Body1.Data;
-            ref RigidBodyData b2 = ref contact.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeBegin();
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ContactData contact = ref span[i];
-            ref RigidBodyData b1 = ref contact.Body1.Data;
-            ref RigidBodyData b2 = ref contact.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
-    }
-
-    private void IterateContacts(Parallel.Batch batch) => IterateContacts(batch, applyBias: true);
-
-    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts(batch, applyBias: false);
-
-    private void IterateContacts(Parallel.Batch batch, bool applyBias)
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-        var localQueue = deferredContacts.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ContactData next = ref span[i + SolverPrefetchDistance];
-                PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeBegin();
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TryLockTwoBody(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
     private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
@@ -738,87 +618,6 @@ public sealed partial class World
         }
     }
 
-    private JHandle<RigidBodyData> lastVisited = JHandle<RigidBodyData>.Zero;
-    private int sortCounter;
-
-    /// <summary>
-    /// This method gradually improves the memory layout of <see cref="memContacts"/>, moving connected contacts
-    /// next to each other. This improves cache coherence.
-    /// </summary>
-    private void ReorderContacts()
-    {
-        int activeCount = memContacts.Active.Length;
-
-        // Don't even bother with sorting contacts when the set is small.
-        if (activeCount < 1024) return;
-
-        const int fraction = 1024;
-
-        // The basic idea here is to gradually improve the spatial locality of the contact array.
-        // Each frame, only a small fraction of contacts (1/1024th of the total) are visited.
-        // For each visited contact, the algorithm checks whether it is already adjacent to another
-        // contact that shares one of its bodies. If not, it attempts to move contacts that
-        // involve the same bodies forward in memory, grouping connected contacts together.
-
-        int iterations = activeCount / fraction;
-
-        for (int iter = 0; iter < iterations; iter++)
-        {
-            if (sortCounter > activeCount - 2) sortCounter = 0;
-
-            ref var current = ref memContacts.Active[sortCounter];
-            ref var next = ref memContacts.Active[sortCounter + 1];
-
-            if (current.Body1 == next.Body1 || current.Body1 == next.Body2)
-            {
-                lastVisited = current.Body1;
-                sortCounter += 1;
-                continue;
-            }
-
-            if (current.Body2 == next.Body1 || current.Body2 == next.Body2)
-            {
-                lastVisited = current.Body2;
-                sortCounter += 1;
-                continue;
-            }
-
-            int swaps = 0;
-
-            if (arbiters.TryGetValue(current.Key, out var arbiter))
-            {
-                if (lastVisited != arbiter.Body1.Handle)
-                {
-                    foreach (var arb in arbiter.Body1.Contacts)
-                    {
-                        int index = memContacts.GetIndex(arb.Handle);
-                        if (index <= sortCounter || index >= activeCount) continue;
-
-                        swaps++;
-                        memContacts.Swap(sortCounter + swaps, index);
-                    }
-
-                    lastVisited = arbiter.Body1.Handle;
-                }
-                else
-                {
-                    foreach (var arb in arbiter.Body2.Contacts)
-                    {
-                        int index = memContacts.GetIndex(arb.Handle);
-                        if (index <= sortCounter || index >= activeCount) continue;
-
-                        swaps++;
-                        memContacts.Swap(sortCounter + swaps, index);
-                    }
-
-                    lastVisited = arbiter.Body2.Handle;
-                }
-            }
-
-            sortCounter += Math.Max(1, swaps);
-        }
-    }
-
     private void AssertNullBody()
     {
         ref RigidBodyData rigidBody = ref NullBody.Data;
@@ -856,7 +655,18 @@ public sealed partial class World
     {
         foreach (var handle in brokenArbiters)
         {
-            if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
+            ref ContactData contact = ref handle.Data;
+            // UpdatePosition keeps the mask the manifold had while this step was solved in the
+            // upper nibble. A manifold refilled by this step's narrow phase is not retired, even
+            // if the update emptied it again: it is queued once more and judged next step.
+            if (((contact.UsageMask >> 4) & ContactData.MaskContactAll) != 0)
+            {
+                if ((contact.UsageMask & ContactData.MaskContactAll) == 0) pendingBrokenArbiters.Add(handle);
+                else brokenArbiterQueued[contact._internal] = false;
+                continue;
+            }
+
+            brokenArbiterQueued[contact._internal] = false;
             var arb = arbiters[handle.Data.Key];
 
             AddToActiveList(arb.Body1.InternalIsland);
@@ -874,23 +684,25 @@ public sealed partial class World
         }
 
         brokenArbiters.Clear();
+        (brokenArbiters, pendingBrokenArbiters) = (pendingBrokenArbiters, brokenArbiters);
     }
 
-    private void UpdateContacts(Parallel.Batch batch)
+    private void UpdateContacts(Parallel.Batch batch) => UpdateContactRecords(memContacts.Active[batch.Start..batch.End]);
+
+    // Refreshes the offsets of the records for contact matching, breaks drifted points and
+    // queues emptied manifolds for retirement after the next step. Solving has finished for
+    // every record passed here; the regular solver calls this from its final sweep.
+    private void UpdateContactRecords(Span<ContactData> records)
     {
-        var span = memContacts.Active[batch.Start..batch.End];
-
-        for (int i = 0; i < span.Length; i++)
+        for (int i = 0; i < records.Length; i++)
         {
-            // get rid of broken contacts
-            ref ContactData cq = ref span[i];
-            cq.UpdatePosition();
-
-            if ((cq.UsageMask & ContactData.MaskContactAll) == 0)
-            {
-                var h = memContacts.GetHandle(ref cq);
-                brokenArbiters.ConcurrentAdd(h);
-            }
+            ref ContactData contact = ref records[i];
+            contact.UpdatePosition();
+            if ((contact.UsageMask & ContactData.MaskContactAll) != 0) continue;
+            ref bool queued = ref brokenArbiterQueued[contact._internal];
+            if (queued) continue;
+            queued = true;
+            pendingBrokenArbiters.ConcurrentAdd(memContacts.GetHandle(ref contact));
         }
     }
 
@@ -1146,64 +958,6 @@ public sealed partial class World
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
             JSymmetricMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
             rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, timeStep.SubstepDt);
-        }
-    }
-
-    private void RelaxVelocities(bool multiThread, int iterations)
-    {
-        if (multiThread)
-        {
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                memContacts.ParallelForBatch(64, relaxVelocities);
-            }
-        }
-        else
-        {
-            var batchContacts = new Parallel.Batch(0, memContacts.Active.Length);
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                RelaxVelocities(batchContacts);
-            }
-        }
-    }
-
-    private void SolveVelocities(bool multiThread, int iterations)
-    {
-        if (multiThread)
-        {
-            memContacts.ParallelForBatch(64, prepareContacts, false);
-            memConstraints.ParallelForBatch(64, prepareConstraints, false);
-            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
-
-            ThreadPool.Instance.Execute();
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                memContacts.ParallelForBatch(64, iterateContacts, false);
-                memConstraints.ParallelForBatch(64, iterateConstraints, false);
-                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
-
-                ThreadPool.Instance.Execute();
-            }
-        }
-        else
-        {
-            Parallel.Batch batchContacts = new(0, memContacts.Active.Length);
-            Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
-            Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
-
-            PrepareContacts(batchContacts);
-            PrepareConstraints(batchConstraints);
-            PrepareSmallConstraints(batchSmallConstraints);
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                IterateContacts(batchContacts);
-                IterateConstraints(batchConstraints);
-                IterateSmallConstraints(batchSmallConstraints);
-            }
         }
     }
 

@@ -162,8 +162,6 @@ public class ContactLifecycleTests
     [TestCase(SolveMode.Regular, 8)]
     [TestCase(SolveMode.Deterministic, 0)]
     [TestCase(SolveMode.Deterministic, 8)]
-    [TestCase(SolveMode.GraphColored, 0)]
-    [TestCase(SolveMode.GraphColored, 8)]
     public void GeneratedCcdContactRespondsToRotation(SolveMode solveMode, double initialSpin)
     {
         using var world = new World

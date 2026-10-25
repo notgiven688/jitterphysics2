@@ -10,7 +10,7 @@ using PhysicsThreads = Jitter2.Parallelization.ThreadPool;
 // Positional arguments keep this standalone harness dependency-free.
 if (args.Length > 5 || args.Any(a => a is "--help" or "-h"))
 {
-    Console.WriteLine("[regular|graphcolored|both] [ground|pile|both] [threads=4] [warmup=80] [steps=120]");
+    Console.WriteLine("[regular|deterministic|both] [ground|pile|both] [threads=4] [warmup=80] [steps=120]");
     return;
 }
 
@@ -22,9 +22,9 @@ int measuredSteps = ParsePositive(args.ElementAtOrDefault(4), 120, "steps");
 SolveMode[] modes = modeArgument switch
 {
     "regular" => [SolveMode.Regular],
-    "graphcolored" => [SolveMode.GraphColored],
-    "both" => [SolveMode.Regular, SolveMode.GraphColored],
-    _ => throw new ArgumentException("Mode must be regular, graphcolored, or both.")
+    "deterministic" => [SolveMode.Deterministic],
+    "both" => [SolveMode.Regular, SolveMode.Deterministic],
+    _ => throw new ArgumentException("Mode must be regular, deterministic, or both.")
 };
 string[] scenes = sceneArgument switch
 {

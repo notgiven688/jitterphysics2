@@ -25,7 +25,7 @@ public class GraphColoredSolverTests
 
     private static World CreateWorld(int substeps = 1) => new()
     {
-        SolveMode = SolveMode.GraphColored,
+        SolveMode = SolveMode.Regular,
         AllowDeactivation = false,
         SubstepCount = substeps,
         SolverIterations = (8, 4)

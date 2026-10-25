@@ -22,7 +22,11 @@ namespace Jitter2;
 public enum SolveMode
 {
     /// <summary>
-    /// The standard solver, optimized for speed. Multithreaded results may vary between runs.
+    /// The standard solver, optimized for speed. Contact manifolds are colored into batches
+    /// without conflicting body accesses and independent manifolds are solved together using
+    /// SIMD. Colors run sequentially; work within a color can run in parallel without body
+    /// locks. Joints, small colors and overflow contacts use a lock-based pass per sweep.
+    /// Multithreaded results may vary between runs.
     /// </summary>
     Regular,
 
@@ -30,23 +34,15 @@ public enum SolveMode
     /// Solves contacts and constraints in a repeatable order. Groups of connected bodies can
     /// still be solved in parallel. Can be significantly slower than <see cref="Regular"/>.
     /// </summary>
-    Deterministic,
-
-    /// <summary>
-    /// Colors contact manifolds into batches without conflicting body accesses and solves
-    /// independent manifolds together using SIMD. Colors run sequentially; work within a
-    /// color can run in parallel without body locks. Joints use the regular solver in
-    /// separate passes. This mode does not guarantee deterministic simulations.
-    /// </summary>
-    GraphColored
+    Deterministic
 }
 
 public sealed partial class World
 {
-    private SolveMode solveMode = Jitter2.SolveMode.GraphColored;
+    private SolveMode solveMode = Jitter2.SolveMode.Regular;
 
     /// <summary>
-    /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.GraphColored"/>.
+    /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.Regular"/>.
     /// </summary>
     /// <remarks>
     /// <see cref="Jitter2.SolveMode.Deterministic"/> can be significantly slower than

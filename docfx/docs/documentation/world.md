@@ -84,15 +84,14 @@ Any callbacks shared by worlds running concurrently must be thread-safe. This in
 
 ## Solver Mode
 
-Jitter2 offers three solver strategies through <xref:Jitter2.SolveMode>:
+Jitter2 offers two solver strategies through <xref:Jitter2.SolveMode>:
 
 ```cs
-world.SolveMode = SolveMode.Regular;       // standard solver
+world.SolveMode = SolveMode.Regular;       // default: SIMD across independent contact manifolds
 world.SolveMode = SolveMode.Deterministic; // reproducible, slower
-world.SolveMode = SolveMode.GraphColored;  // default: SIMD across independent contact manifolds
 ```
 
-`SolveMode.GraphColored` is the default. `SolveMode.Regular` remains available as the standard solver. With multithreading, the order in which regular contacts and constraints are solved can vary between runs.
+`SolveMode.Regular` is the default. With multithreading, the order in which its lock-based contacts and constraints are solved can vary between runs.
 
 `SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
 
@@ -100,16 +99,16 @@ Use deterministic mode for tests, replays, or applications that need the same in
 
 ### Graph-colored contacts
 
-`SolveMode.GraphColored` groups contact manifolds into colors so that no body written by
+`SolveMode.Regular` groups contact manifolds into colors so that no body written by
 one manifold is accessed by another manifold in the same color. Static and kinematic
 bodies can be shared when their velocities are read-only. Colors run sequentially;
 manifolds within a color run without body locks and can be distributed across workers.
 
-Like regular mode, this mode incrementally reorders the active contact records once
-per world step to improve memory locality. The color graph is retained across steps
-and updated incrementally as contacts change. A full rebuild uses the current contact
-order. An unchanged graph preserves the color ordering; incremental removal can move
-another contact within its color to fill the vacant slot.
+Active contact records are stored grouped by color, so each color is a contiguous range
+of `RawData.ActiveContacts` and a SIMD bundle covers consecutive records. The color
+graph is retained across steps and updated incrementally as contacts change; a changed
+contact is moved into the storage range of its new color. A full rebuild assigns colors
+in the current storage order and regroups all records in one pass.
 
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
@@ -120,22 +119,31 @@ inertia and effective masses for that substep. Each iteration
 computes angular velocity changes from the combined normal and friction impulse instead
 of storing separate angular responses for each direction. Solving and relaxation share
 the same prepared geometry; relaxation removes penetration correction while retaining
-restitution and speculative-contact bias. Joints use the regular solver in separate
-passes, with a synchronization barrier before the next contact pass.
+restitution and speculative-contact bias. Every color ends with a worker barrier, so
+with multithreading only colors offering enough manifolds per worker are solved as
+lock-free bundles. Smaller colors, overflow contacts and joints use the regular
+lock-based solver together in one shared pass per sweep, with a synchronization
+barrier before the next contact pass. All passes of a substep, including velocity
+integration, run as one cooperative job on the worker threads with lightweight
+barriers in between; each worker keeps the same slice of every pass from sweep to
+sweep and takes over the tail of another worker's slice when it runs out of work.
+The final sweep of the last substep also refreshes each manifold's world offsets and
+breaks drifted points while the records are still in cache, so the regular solver
+reports no time under `World.Timings.UpdateContacts`.
 
 This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
 values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current
 runtime. Partial bundles and systems without hardware SIMD use the existing contact
 preparation and iteration. The cached graph is validated after `PreSubStep` for each
-substep, including direct edits to contact endpoints or solve modes. At most 64 colors
-are used; excess conflicts are solved
-sequentially after each sweep. `World.Trim()` releases the cached coloring and SIMD storage.
+substep, including direct edits to contact endpoints or solve modes; for large scenes
+this comparison runs on the workers. At most 64 colors are used; excess conflicts join
+the lock-based pass. `World.Trim()` releases the cached coloring and SIMD storage.
 
 Graph coloring changes constraint order and does not guarantee deterministic results.
 Its benefit depends on contact density, SIMD occupancy, iteration count, and worker
-synchronization costs. Benchmark representative scenes before selecting it. The
-`other/GraphColoredSolverBenchmark` program compares independent floor contacts and
-a connected box pile. Coloring and preparation costs are included in `World.Timings.Solve`.
+synchronization costs. The `other/GraphColoredSolverBenchmark` program compares the
+regular and deterministic solvers on independent floor contacts and a connected box
+pile. Coloring, grouping and preparation costs are included in `World.Timings.Solve`.
 
 ## Solver Iterations
 

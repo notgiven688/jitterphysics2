@@ -7,7 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Jitter2.Dynamics;
 using Jitter2.Parallelization;
 using Jitter2.Unmanaged;
@@ -18,47 +21,84 @@ namespace Jitter2;
 public sealed partial class World
 {
     // Limit synchronization overhead for high-degree graphs. Contacts that cannot be
-    // assigned one of these colors are solved sequentially after every colored sweep.
+    // assigned one of these colors are solved with body locks in the shared locked pass.
     private const int MaximumContactColors = 64;
+
+    // Active contacts are stored grouped by color. Segment s occupies
+    // [segmentStart[s], segmentStart[s + 1]); the final segment ends at the active count.
+    // Colors are stored in reverse order, then the overflow, then contacts that are not part
+    // of the graph. The buffer allocates, activates, deactivates and frees at the active
+    // boundary, which lies inside that last segment, so those operations never disturb a
+    // color. Moving a record between segments costs one swap per non-empty segment crossed;
+    // the reverse order keeps the large, frequently changing low colors next to the tail.
+    private const int OverflowSegment = MaximumContactColors;
+    private const int UncoloredSegment = MaximumContactColors + 1;
+    private const int SegmentCount = MaximumContactColors + 2;
+
+    private static int ColorSegment(int color) =>
+        color == OverflowSegment ? OverflowSegment : MaximumContactColors - 1 - color;
+
+    // Every lock-free color ends with a barrier whose cost grows with the worker count while
+    // the work per worker shrinks, so the contact count at which a color pays for its barrier
+    // grows with the square of the worker count. Smaller colors and overflow contacts take body
+    // locks and share the pass that also solves the joints, adding no barrier of their own.
+    private const int WideColorBarrierFactor = 2;
+
+    // Bundles per task when a wide color is spread over the workers.
+    private const int MinimumBundlesPerTask = 2;
+
+    // Validating the cached graph reads every active contact. Above this count the read-only
+    // comparison runs on the workers; only changed contacts are then processed serially.
+    private const int ParallelValidationThreshold = 4096;
 
     private sealed class ContactColor
     {
-        internal readonly List<JHandle<ContactData>> Contacts = new();
         internal readonly List<ContactSolverWide> Bundles = new();
         internal int BundleCount;
     }
 
-    private readonly List<ContactColor> contactColors = new();
-    private readonly List<JHandle<ContactData>> contactColorOverflow = new();
+    private readonly ContactColor?[] contactColors = new ContactColor?[MaximumContactColors];
+    private readonly int[] segmentStart = new int[SegmentCount];
+    // Planned once per solve: colors solved lock-free as bundles, and contacts solved with locks.
+    private readonly List<int> wideColors = new();
+    private readonly List<int> lockedContactIndices = new();
     private ulong[] bodyContactColors = Array.Empty<ulong>();
     private bool[] contactBodyWritable = Array.Empty<bool>();
+    private byte[] contactGraphDirty = Array.Empty<byte>();
     private int contactColorCount;
-    private ContactColor currentContactColor = null!;
-    private bool coloredApplyBias;
-    private Action<Parallel.Batch> prepareContactColor = null!;
-    private Action<Parallel.Batch> iterateContactColor = null!;
-    private Action<Parallel.Batch> finishContactColor = null!;
+    private Action<Parallel.Batch> validateContactGraph = null!;
 
     // These entries are indexed by the stable PartitionedBuffer handle ID, never
-    // the physical slot: activation and contact reordering can move that slot.
+    // the physical slot: activation and color grouping move that slot.
     private struct ContactGraphEntry
     {
         internal JHandle<ContactData> Handle;
         internal JHandle<RigidBodyData> Body1, Body2;
         internal ContactData.SolveMode Mode;
         internal int BodyId1, BodyId2;
-        internal int Color, Slot;
+        // -1 while uncolored, otherwise a color or the overflow segment.
+        internal int Color;
     }
 
     private ContactGraphEntry[] contactGraph = Array.Empty<ContactGraphEntry>();
     private int[] contactBodyReferences = Array.Empty<int>();
     private readonly List<JHandle<ContactData>> pendingColoredContacts = new();
+    private readonly List<JHandle<ContactData>> dirtyColoredContacts = new();
     private bool contactGraphValid;
     private bool contactGraphChanged;
     // Diagnostic counts used by the focused benchmark and lifecycle checks.
     private int contactGraphRebuildCount, contactGraphReuseCount, contactGraphIncrementalCount;
+    private long contactRecordSwapCount;
 
-    private void BuildContactColors()
+    private int SegmentEnd(int segment) =>
+        segment + 1 < SegmentCount ? segmentStart[segment + 1] : memContacts.Active.Length;
+
+    private int SegmentLength(int segment) => SegmentEnd(segment) - segmentStart[segment];
+
+    // Serial entry point used by graph diagnostics and tests.
+    private void BuildContactColors() => UpdateContactColors(false);
+
+    private void UpdateContactColors(bool multiThread)
     {
         if (!contactGraphValid)
         {
@@ -67,24 +107,30 @@ public sealed partial class World
         }
 
         pendingColoredContacts.Clear();
-        bool rebuild = false;
-        // Public contact fields can be edited directly, including in PreSubStep.
-        // Validate once in physical contact order. An unchanged edge does not touch
-        // body masks, color lists, or SIMD bundle allocation.
-        foreach (ref ContactData contact in memContacts.Active)
+        dirtyColoredContacts.Clear();
+        // Public contact fields can be edited directly, including in PreSubStep, so every
+        // active contact is compared with its cached entry once per substep. Only this
+        // read-only comparison runs on the workers. Changed contacts are collected by stable
+        // handle first: applying a change moves records between segments, which would
+        // invalidate a scan by physical index. An unchanged edge does not touch body masks,
+        // storage order, or SIMD bundle allocation.
+        var active = memContacts.Active;
+        if (multiThread && active.Length >= ParallelValidationThreshold)
         {
-            EnsureContactGraphCapacity(contact._internal);
-            ref ContactGraphEntry entry = ref contactGraph[contact._internal];
-            bool used = (contact.UsageMask & ContactData.MaskContactAll) != 0;
-            if (!entry.Handle.IsZero && used && entry.Body1 == contact.Body1 &&
-                entry.Body2 == contact.Body2 && entry.Mode == contact.Mode) continue;
-            if (!entry.Handle.IsZero) RemoveColoredContact(entry.Handle);
-            if (!used) continue;
-            var handle = memContacts.GetHandle(ref contact);
-            InitializeContactGraphEntry(handle, ref rebuild);
-            pendingColoredContacts.Add(handle);
-            contactGraphChanged = true;
+            if (contactGraphDirty.Length < active.Length)
+                Array.Resize(ref contactGraphDirty, Math.Max(active.Length, contactGraphDirty.Length * 2));
+            memContacts.ParallelForBatch(1024, validateContactGraph);
+            for (int i = 0; i < active.Length; i++)
+                if (contactGraphDirty[i] != 0) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
         }
+        else
+        {
+            for (int i = 0; i < active.Length; i++)
+                if (!IsContactGraphEntryCurrent(ref active[i])) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
+        }
+
+        bool rebuild = false;
+        foreach (var handle in dirtyColoredContacts) UpdateContactGraphEntry(handle, ref rebuild);
 
         // Only a reader-to-writer promotion invalidates colors already assigned to
         // other contacts. Ordinary contact churn can stay incremental.
@@ -97,19 +143,43 @@ public sealed partial class World
         foreach (var handle in pendingColoredContacts) AddColoredContact(handle);
         if (contactGraphChanged)
         {
-            // Retry serial overflow only when the graph has changed.
-            for (int i = contactColorOverflow.Count - 1; i >= 0; i--)
-            {
-                var handle = contactColorOverflow[i];
-                ref ContactGraphEntry entry = ref contactGraph[handle.Data._internal];
-                RemoveContactColorSlot(ref entry);
-                AddColoredContact(handle);
-            }
+            // Retry overflow only when the graph has changed.
+            RetryOverflowContacts();
             RefreshContactColorBundles();
             contactGraphIncrementalCount++;
         }
         else contactGraphReuseCount++;
         contactGraphChanged = false;
+    }
+
+    private void ValidateContactGraph(Parallel.Batch batch)
+    {
+        var active = memContacts.Active;
+        for (int i = batch.Start; i < batch.End; i++)
+            contactGraphDirty[i] = IsContactGraphEntryCurrent(ref active[i]) ? (byte)0 : (byte)1;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool IsContactGraphEntryCurrent(ref ContactData contact)
+    {
+        int id = contact._internal;
+        if (id >= contactGraph.Length) return false;
+        ref ContactGraphEntry entry = ref contactGraph[id];
+        return !entry.Handle.IsZero && (contact.UsageMask & ContactData.MaskContactAll) != 0 &&
+               entry.Body1 == contact.Body1 && entry.Body2 == contact.Body2 && entry.Mode == contact.Mode;
+    }
+
+    private void UpdateContactGraphEntry(JHandle<ContactData> handle, ref bool rebuild)
+    {
+        int id = handle.Data._internal;
+        EnsureContactGraphCapacity(id);
+        // Removal moves records between segments: read the contact through its handle
+        // afterwards, never through a reference into its previous storage slot.
+        if (!contactGraph[id].Handle.IsZero) RemoveColoredContact(handle);
+        if ((handle.Data.UsageMask & ContactData.MaskContactAll) == 0) return;
+        InitializeContactGraphEntry(handle, ref rebuild);
+        pendingColoredContacts.Add(handle);
+        contactGraphChanged = true;
     }
 
     private void EnsureContactGraphCapacity(int id)
@@ -165,69 +235,154 @@ public sealed partial class World
         Array.Clear(bodyContactColors);
         Array.Clear(contactBodyWritable);
         Array.Clear(contactBodyReferences);
-        contactColorOverflow.Clear();
         pendingColoredContacts.Clear();
         contactColorCount = 0;
-        foreach (ContactColor color in contactColors) color.Contacts.Clear();
         bool ignored = false;
+        var active = memContacts.Active;
         // Classify global writers before assigning any edges, including custom modes.
-        foreach (ref ContactData contact in memContacts.Active)
+        foreach (ref ContactData contact in active)
             if ((contact.UsageMask & ContactData.MaskContactAll) != 0)
                 InitializeContactGraphEntry(memContacts.GetHandle(ref contact), ref ignored);
-        foreach (ref ContactData contact in memContacts.Active)
+        foreach (ref ContactData contact in active)
             if ((contact.UsageMask & ContactData.MaskContactAll) != 0)
-                AddColoredContact(memContacts.GetHandle(ref contact));
+                AssignContactColor(ref contactGraph[contact._internal]);
+        SortContactsBySegment();
         RefreshContactColorBundles();
         contactGraphValid = true;
         contactGraphChanged = false;
         contactGraphRebuildCount++;
     }
 
-    private void AddColoredContact(JHandle<ContactData> handle)
+    private int SegmentOf(ref ContactData contact)
     {
-        ref ContactGraphEntry entry = ref contactGraph[handle.Data._internal];
+        int id = contact._internal;
+        if (id >= contactGraph.Length) return UncoloredSegment;
+        ref ContactGraphEntry entry = ref contactGraph[id];
+        return entry.Handle.IsZero || entry.Color < 0 ? UncoloredSegment : ColorSegment(entry.Color);
+    }
+
+    // Group the active records by segment in place. Each record is swapped at most once into
+    // its own segment, so a full rebuild costs one pass over the active contacts.
+    private void SortContactsBySegment()
+    {
+        var active = memContacts.Active;
+        Span<int> cursor = stackalloc int[SegmentCount];
+        cursor.Clear();
+        foreach (ref ContactData contact in active) cursor[SegmentOf(ref contact)]++;
+        int offset = 0;
+        for (int s = 0; s < SegmentCount; s++)
+        {
+            segmentStart[s] = offset;
+            offset += cursor[s];
+            cursor[s] = segmentStart[s];
+        }
+
+        for (int s = 0; s < SegmentCount; s++)
+        {
+            int end = SegmentEnd(s);
+            for (int i = segmentStart[s]; i < end; i++)
+            {
+                int target;
+                while ((target = SegmentOf(ref active[i])) != s)
+                {
+                    // Records before a segment's cursor are already in place.
+                    while (SegmentOf(ref active[cursor[target]]) == target) cursor[target]++;
+                    memContacts.Swap(i, cursor[target]++);
+                    contactRecordSwapCount++;
+                }
+            }
+        }
+    }
+
+    // Moves a record across the segment boundaries between two segments. Every boundary
+    // crossed shifts by one: the record at that boundary takes the vacated slot and the moving
+    // record ends up at the last boundary. One rotation copies each record exactly once.
+    private void MoveContactToSegment(JHandle<ContactData> handle, int from, int to)
+    {
+        if (from == to) return;
+        Span<int> path = stackalloc int[SegmentCount + 1];
+        int length = 0;
+        path[length++] = memContacts.GetIndex(handle);
+        if (to < from)
+        {
+            for (int s = from; s > to; s--)
+            {
+                int first = segmentStart[s];
+                if (first != path[length - 1]) path[length++] = first;
+                segmentStart[s]++;
+            }
+        }
+        else
+        {
+            for (int s = from; s < to; s++)
+            {
+                int last = SegmentEnd(s) - 1;
+                if (last != path[length - 1]) path[length++] = last;
+                segmentStart[s + 1]--;
+            }
+        }
+        memContacts.Rotate(path[..length]);
+        contactRecordSwapCount += length - 1;
+    }
+
+    // Picks the first color free of conflicts and reserves it on the writable endpoints.
+    private int AssignContactColor(ref ContactGraphEntry entry)
+    {
         bool writable1 = contactBodyWritable[entry.BodyId1], writable2 = contactBodyWritable[entry.BodyId2];
         ulong occupied = (writable1 ? bodyContactColors[entry.BodyId1] : 0) |
                          (writable2 ? bodyContactColors[entry.BodyId2] : 0);
         int index = BitOperations.TrailingZeroCount(~occupied);
-        entry.Color = index;
         if (index >= MaximumContactColors)
         {
-            entry.Slot = contactColorOverflow.Count;
-            contactColorOverflow.Add(handle);
-            return;
+            entry.Color = OverflowSegment;
+            return OverflowSegment;
         }
-        if (index == contactColors.Count) contactColors.Add(new ContactColor());
-        ContactColor color = contactColors[index];
-        entry.Slot = color.Contacts.Count;
-        color.Contacts.Add(handle);
+        entry.Color = index;
         contactColorCount = Math.Max(contactColorCount, index + 1);
         ulong bit = 1UL << index;
         if (writable1) bodyContactColors[entry.BodyId1] |= bit;
         if (writable2) bodyContactColors[entry.BodyId2] |= bit;
+        return index;
     }
 
-    private void RemoveContactColorSlot(ref ContactGraphEntry entry)
+    private void AddColoredContact(JHandle<ContactData> handle)
+    {
+        ref ContactGraphEntry entry = ref contactGraph[handle.Data._internal];
+        int from = entry.Color < 0 ? UncoloredSegment : ColorSegment(entry.Color);
+        int to = ColorSegment(AssignContactColor(ref entry));
+        MoveContactToSegment(handle, from, to);
+    }
+
+    private void ClearContactColor(JHandle<ContactData> handle, ref ContactGraphEntry entry)
     {
         if (entry.Color < 0) return;
-        List<JHandle<ContactData>> contacts;
-        if (entry.Color == MaximumContactColors) contacts = contactColorOverflow;
-        else
+        if (entry.Color < MaximumContactColors)
         {
-            contacts = contactColors[entry.Color].Contacts;
             ulong bit = ~(1UL << entry.Color);
             if (contactBodyWritable[entry.BodyId1]) bodyContactColors[entry.BodyId1] &= bit;
             if (contactBodyWritable[entry.BodyId2]) bodyContactColors[entry.BodyId2] &= bit;
         }
-        int last = contacts.Count - 1;
-        if (entry.Slot != last)
-        {
-            var moved = contacts[last];
-            contacts[entry.Slot] = moved;
-            contactGraph[moved.Data._internal].Slot = entry.Slot;
-        }
-        contacts.RemoveAt(last);
+        MoveContactToSegment(handle, ColorSegment(entry.Color), UncoloredSegment);
         entry.Color = -1;
+    }
+
+    private void RetryOverflowContacts()
+    {
+        var active = memContacts.Active;
+        for (int i = segmentStart[OverflowSegment]; i < segmentStart[UncoloredSegment];)
+        {
+            var handle = memContacts.GetHandle(ref active[i]);
+            ref ContactGraphEntry entry = ref contactGraph[handle.Data._internal];
+            int color = AssignContactColor(ref entry);
+            if (color == OverflowSegment)
+            {
+                i++;
+                continue;
+            }
+            // The record from the segment start now occupies index i and is examined next.
+            MoveContactToSegment(handle, OverflowSegment, ColorSegment(color));
+            if (i < segmentStart[OverflowSegment]) i = segmentStart[OverflowSegment];
+        }
     }
 
     private void RemoveContactBodyReference(int id)
@@ -237,14 +392,15 @@ public sealed partial class World
         contactBodyWritable[id] = false;
     }
 
-    // Remove before freeing/recycling a handle or moving it into sleeping storage.
+    // Remove before freeing/recycling a handle or moving it into sleeping storage. The record
+    // is moved into the uncolored segment first, where the buffer performs those operations.
     // Use cached endpoints: public fields may already refer to different bodies.
     private void RemoveColoredContact(JHandle<ContactData> handle)
     {
         int id = handle.Data._internal;
         if (id >= contactGraph.Length || contactGraph[id].Handle.IsZero) return;
         ref ContactGraphEntry entry = ref contactGraph[id];
-        RemoveContactColorSlot(ref entry);
+        ClearContactColor(handle, ref entry);
         RemoveContactBodyReference(entry.BodyId1);
         RemoveContactBodyReference(entry.BodyId2);
         entry = default;
@@ -253,140 +409,566 @@ public sealed partial class World
 
     private void RefreshContactColorBundles()
     {
-        while (contactColorCount > 0 && contactColors[contactColorCount - 1].Contacts.Count == 0) contactColorCount--;
+        while (contactColorCount > 0 && SegmentLength(ColorSegment(contactColorCount - 1)) == 0) contactColorCount--;
         for (int c = 0; c < contactColorCount; c++)
         {
-            ContactColor color = contactColors[c];
+            ContactColor color = contactColors[c] ??= new ContactColor();
+            // A final partial bundle keeps every contact of a wide color on the SIMD path.
             color.BundleCount = System.Numerics.Vector.IsHardwareAccelerated
-                ? color.Contacts.Count / ContactSolverWide.Width : 0;
+                ? (SegmentLength(ColorSegment(c)) + ContactSolverWide.Width - 1) / ContactSolverWide.Width : 0;
             while (color.Bundles.Count < color.BundleCount) color.Bundles.Add(new ContactSolverWide());
         }
     }
 
-    private void DispatchContactColors(bool multiThread, Action<Parallel.Batch> action)
+    // Decide which colors are worth a lock-free barrier of their own. The plan is kept
+    // between the biased solve and the relaxation of the same substep: the bundles of a
+    // wide color hold the prepared coefficients until their final write-back.
+    private void PlanColoredSolve(bool multiThread)
     {
-        for (int i = 0; i < contactColorCount; i++)
+        wideColors.Clear();
+        lockedContactIndices.Clear();
+        int threadCount = ThreadPool.Instance.ThreadCount;
+        int threshold = multiThread ? WideColorBarrierFactor * threadCount * threadCount : 0;
+        for (int c = 0; c < contactColorCount; c++)
         {
-            currentContactColor = contactColors[i];
-            int count = currentContactColor.Contacts.Count;
-            int jobs = (count + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
-            int tasks = multiThread ? Math.Min(count / 128 + 1, ThreadPool.Instance.ThreadCount) : 1;
-            if (tasks == 1) action(new Parallel.Batch(0, jobs));
-            else Parallel.ForBatch(0, jobs, Math.Min(tasks, jobs), action);
-            // ForBatch completes here: no body shared by adjacent colors is in flight.
+            int segment = ColorSegment(c);
+            int count = SegmentLength(segment);
+            if (count == 0) continue;
+            if (contactColors[c]!.BundleCount > 0 && count >= threshold) wideColors.Add(c);
+            else AddLockedContactRange(segmentStart[segment], SegmentEnd(segment));
         }
+        AddLockedContactRange(segmentStart[OverflowSegment], segmentStart[UncoloredSegment]);
     }
 
-    private void PrepareContactColor(Parallel.Batch batch)
+    private void AddLockedContactRange(int start, int end)
     {
-        ContactColor color = currentContactColor;
-        var contacts = CollectionsMarshal.AsSpan(color.Contacts);
-        int width = ContactSolverWide.Width;
-        for (int i = batch.Start; i < batch.End; i++)
-        {
-            var lanes = contacts.Slice(i * width, Math.Min(width, contacts.Length - i * width));
-            if (i < color.BundleCount) color.Bundles[i].Prepare(lanes, timeStep);
-            else foreach (var handle in lanes) handle.Data.PrepareForIteration(timeStep);
-        }
+        for (int i = start; i < end; i++) lockedContactIndices.Add(i);
     }
 
-    private void IterateContactColor(Parallel.Batch batch)
+    private Span<ContactData> BundleLanes(int color, int bundle)
     {
-        ContactColor color = currentContactColor;
-        var contacts = CollectionsMarshal.AsSpan(color.Contacts);
-        int width = ContactSolverWide.Width;
-        for (int i = batch.Start; i < batch.End; i++)
+        int segment = ColorSegment(color);
+        int offset = bundle * ContactSolverWide.Width;
+        int count = Math.Min(ContactSolverWide.Width, SegmentLength(segment) - offset);
+        return memContacts.Active.Slice(segmentStart[segment] + offset, count);
+    }
+
+    // Contacts outside the wide colors use the lock-based scalar path. They run in the
+    // same pass as the joints, which also take body locks, so a single barrier covers both.
+    private bool HasLockedSolverWork => lockedContactIndices.Count != 0 ||
+                                        memConstraints.Active.Length != 0 || memSmallConstraints.Active.Length != 0;
+
+    private void PrepareLockedContacts(Parallel.Batch batch)
+    {
+        var active = memContacts.Active;
+        var indices = CollectionsMarshal.AsSpan(lockedContactIndices)[batch.Start..batch.End];
+        var localQueue = deferredContacts.Value!;
+
+        for (int i = 0; i < indices.Length; i++)
         {
-            if (i < color.BundleCount)
+            ref ContactData contact = ref active[indices[i]];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
             {
-                color.Bundles[i].Iterate(coloredApplyBias);
+                localQueue.Enqueue(i);
+                continue;
             }
-            else
-            {
-                int end = Math.Min((i + 1) * width, contacts.Length);
-                for (int j = i * width; j < end; j++) contacts[j].Data.Iterate(coloredApplyBias);
-            }
-        }
-    }
 
-    private void FinishContactColor(Parallel.Batch batch)
-    {
-        ContactColor color = currentContactColor;
-        int end = Math.Min(batch.End, color.BundleCount);
-        for (int i = batch.Start; i < end; i++)
+            contact.PrepareForIteration(timeStep);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        while (localQueue.TryDequeue(out int i))
         {
-            color.Bundles[i].WriteBack();
+            ref ContactData contact = ref active[indices[i]];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            contact.PrepareForIteration(timeStep);
+            UnlockTwoBody(ref b1, ref b2);
         }
     }
 
-    private void IterateColoredContacts(bool multiThread, bool applyBias)
+    private void IterateLockedContacts(Parallel.Batch batch, bool applyBias)
     {
-        coloredApplyBias = applyBias;
-        DispatchContactColors(multiThread, iterateContactColor);
-        foreach (var handle in contactColorOverflow) handle.Data.Iterate(applyBias);
+        var active = memContacts.Active;
+        var indices = CollectionsMarshal.AsSpan(lockedContactIndices)[batch.Start..batch.End];
+        var localQueue = deferredContacts.Value!;
+
+        for (int i = 0; i < indices.Length; i++)
+        {
+            ref ContactData contact = ref active[indices[i]];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            contact.Iterate(applyBias);
+            UnlockTwoBody(ref b1, ref b2);
+        }
+
+        while (localQueue.TryDequeue(out int i))
+        {
+            ref ContactData contact = ref active[indices[i]];
+            ref RigidBodyData b1 = ref contact.Body1.Data;
+            ref RigidBodyData b2 = ref contact.Body2.Data;
+
+            if (!TryLockTwoBody(ref b1, ref b2))
+            {
+                localQueue.Enqueue(i);
+                continue;
+            }
+
+            contact.Iterate(applyBias);
+            UnlockTwoBody(ref b1, ref b2);
+        }
     }
 
-    private void SolveColoredContacts(bool multiThread, int iterations)
+    // ---- Solver schedule -----------------------------------------------------------------
+    // One broadcast per substep runs the whole solve on every participating pool thread:
+    // preparation, the biased sweeps, velocity integration and the relaxation sweeps. Passes
+    // that must not overlap are separated by a spin barrier, which costs far less than
+    // dispatching each pass through the pool queues. Every worker owns the same slice of each
+    // pass in every sweep, so the bodies and bundles it touches stay in its own caches; a
+    // worker that runs out of work steals the tail of another worker's slice.
+
+    private enum SolverPassKind : byte
     {
-        // Validate after PreSubStep; retain occupancy masks and color lists
+        PrepareColor,
+        IterateColor,
+        WriteBackColor,
+        PrepareLocked,
+        IterateLocked,
+        UpdateLocked,
+        IntegrateVelocities
+    }
+
+    private struct SolverPass
+    {
+        internal SolverPassKind Kind;
+        internal int Color, Total, Grain;
+        internal bool ApplyBias, WriteBack, Joints;
+        // The final pass over each contact also refreshes its offsets and breaks drifted
+        // points, replacing the separate UpdateContacts sweep of the step.
+        internal bool UpdateContacts;
+    }
+
+    // A locked pass that includes the joints is divided so that every worker's slice holds its
+    // share of each list: scalar contacts cost several times a joint, so slicing the lists
+    // end to end would hand all contacts to the first workers. Slice w spans
+    // [lockedSliceStart[w], lockedSliceStart[w + 1]) of the pass's index space.
+    private int[] lockedSliceStart = Array.Empty<int>();
+
+    // Each worker's range is a packed (next, end) pair on its own cache line.
+    private const int RangeStride = 8;
+    private const int LockedItemsPerWorker = 64;
+    private const int BodiesPerWorker = 256;
+
+    private readonly List<SolverPass> solverPasses = new();
+    private long[] solverRanges = Array.Empty<long>();
+    private int solverWorkerCount;
+    private int solverArrivals;
+    private int solverEpoch;
+    private ExceptionDispatchInfo? solverFailure;
+    private Action<int> solverWorkerEntry = null!;
+
+    private void SolveContactsAndJoints(bool multiThread, int iterations, int relaxations, bool integrateVelocities,
+        bool updateContacts)
+    {
+        // Validate after PreSubStep; retain occupancy masks and storage order
         // when endpoints, participation and write modes are unchanged.
-        BuildContactColors();
-        DispatchContactColors(multiThread, prepareContactColor);
-        foreach (var handle in contactColorOverflow) handle.Data.PrepareForIteration(timeStep);
+        UpdateContactColors(multiThread);
+        PlanColoredSolve(multiThread);
 
-        // Joint tasks may share bodies with any color. They retain their existing locks
-        // and must complete before starting the next lock-free contact pass.
+        int workers = 1;
         if (multiThread)
         {
-            memConstraints.ParallelForBatch(64, prepareConstraints, false);
-            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
-            ThreadPool.Instance.Execute();
+            // Let the largest pass decide how many workers are worth synchronizing.
+            int demand = (lockedContactIndices.Count + memConstraints.Active.Length +
+                          memSmallConstraints.Active.Length) / LockedItemsPerWorker;
+            for (int i = 0; i < wideColors.Count; i++)
+                demand = Math.Max(demand, contactColors[wideColors[i]]!.BundleCount / MinimumBundlesPerTask);
+            if (integrateVelocities) demand = Math.Max(demand, memRigidBodies.Active.Length / BodiesPerWorker);
+            workers = Math.Clamp(demand, 1, ThreadPool.Instance.ThreadCount);
         }
-        else
+
+        solverWorkerCount = workers;
+        PlanLockedSlices(workers);
+        BuildSolverPasses(iterations, relaxations, integrateVelocities, updateContacts);
+        if (solverPasses.Count == 0) return;
+        if (solverRanges.Length < workers * RangeStride) solverRanges = new long[workers * RangeStride];
+        InitializeSolverRanges(solverPasses[0]);
+        solverArrivals = workers;
+        solverEpoch = 0;
+        solverFailure = null;
+        if (workers == 1)
         {
-            PrepareConstraints(new Parallel.Batch(0, memConstraints.Active.Length));
-            PrepareSmallConstraints(new Parallel.Batch(0, memSmallConstraints.Active.Length));
+            RunSolverProgram(0);
+            return;
         }
+
+        ThreadPool.Instance.ExecuteWorkerLoop(solverWorkerEntry);
+        solverFailure?.Throw();
+    }
+
+    private static int SliceLength(int total, int parts, int part)
+    {
+        Parallel.GetBounds(total, parts, part, out int start, out int end);
+        return end - start;
+    }
+
+    private void PlanLockedSlices(int workers)
+    {
+        if (lockedSliceStart.Length < workers + 1) lockedSliceStart = new int[workers + 1];
+        int contacts = lockedContactIndices.Count;
+        int constraints = memConstraints.Active.Length, small = memSmallConstraints.Active.Length;
+        int offset = 0;
+        for (int w = 0; w < workers; w++)
+        {
+            lockedSliceStart[w] = offset;
+            offset += SliceLength(contacts, workers, w) + SliceLength(constraints, workers, w) +
+                      SliceLength(small, workers, w);
+        }
+        lockedSliceStart[workers] = offset;
+    }
+
+    private int UncoloredContactCount => memContacts.Active.Length - segmentStart[UncoloredSegment];
+
+    private void BuildSolverPasses(int iterations, int relaxations, bool integrateVelocities, bool updateContacts)
+    {
+        solverPasses.Clear();
+        bool locked = HasLockedSolverWork;
+        int lockedTotal = lockedSliceStart[solverWorkerCount];
+
+        foreach (int c in wideColors) AddColorPass(SolverPassKind.PrepareColor, c, false, false, false);
+        if (locked) AddPass(SolverPassKind.PrepareLocked, lockedTotal, applyBias: false, joints: true, update: false);
 
         for (int iter = 0; iter < iterations; iter++)
         {
-            IterateColoredContacts(multiThread, applyBias: true);
-            if (multiThread)
-            {
-                memConstraints.ParallelForBatch(64, iterateConstraints, false);
-                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
-                ThreadPool.Instance.Execute();
-            }
-            else
-            {
-                IterateConstraints(new Parallel.Batch(0, memConstraints.Active.Length));
-                IterateSmallConstraints(new Parallel.Batch(0, memSmallConstraints.Active.Length));
-            }
+            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: true, false, false);
+            if (locked) AddPass(SolverPassKind.IterateLocked, lockedTotal, applyBias: true, joints: true, update: false);
+        }
+
+        if (integrateVelocities)
+            AddPass(SolverPassKind.IntegrateVelocities, memRigidBodies.Active.Length, false, false, false);
+
+        // Integration changes velocities and transforms, but world inertia is refreshed by
+        // UpdateBodies at the end of Step. Keep the prepared anchors and inertia fixed so
+        // velocity relaxation operates on the same constraints. The final sweep also publishes
+        // the accumulated impulses for warm starting while each bundle is still in cache, and
+        // refreshes the contact state when this is the last substep. Contacts outside the graph
+        // join that final locked pass for the refresh only.
+        for (int iter = 0; iter < relaxations; iter++)
+        {
+            bool last = iter == relaxations - 1, update = last && updateContacts;
+            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: false, last, update);
+            int total = lockedContactIndices.Count + (update ? UncoloredContactCount : 0);
+            if (total != 0) AddPass(SolverPassKind.IterateLocked, total, applyBias: false, joints: false, update);
+        }
+
+        if (relaxations != 0) return;
+        // Persist warm-start state even when there are no relaxation iterations.
+        foreach (int c in wideColors) AddColorPass(SolverPassKind.WriteBackColor, c, false, false, updateContacts);
+        int remaining = lockedContactIndices.Count + UncoloredContactCount;
+        if (updateContacts && remaining != 0) AddPass(SolverPassKind.UpdateLocked, remaining, false, false, update: true);
+    }
+
+    private void AddColorPass(SolverPassKind kind, int color, bool applyBias, bool writeBack, bool update)
+    {
+        int bundles = contactColors[color]!.BundleCount;
+        solverPasses.Add(new SolverPass
+        {
+            Kind = kind, Color = color, Total = bundles, Grain = Math.Max(1, bundles / (solverWorkerCount * 8)),
+            ApplyBias = applyBias, WriteBack = writeBack, UpdateContacts = update
+        });
+    }
+
+    private void AddPass(SolverPassKind kind, int total, bool applyBias, bool joints, bool update)
+    {
+        int minimumGrain = kind == SolverPassKind.IntegrateVelocities ? BodiesPerWorker / 8 : LockedItemsPerWorker / 4;
+        solverPasses.Add(new SolverPass
+        {
+            Kind = kind, Total = total, Grain = Math.Max(minimumGrain, total / (solverWorkerCount * 8)),
+            ApplyBias = applyBias, Joints = joints, UpdateContacts = update
+        });
+    }
+
+    private void SolverWorkerEntry(int worker)
+    {
+        // Workers beyond the planned count only acknowledge the broadcast.
+        if (worker >= solverWorkerCount) return;
+        try
+        {
+            RunSolverProgram(worker);
+        }
+        catch (Exception exception)
+        {
+            // Peers spinning at a barrier observe the failure and leave. The caller rethrows
+            // once every worker has returned.
+            Interlocked.CompareExchange(ref solverFailure, ExceptionDispatchInfo.Capture(exception), null);
         }
     }
 
-    private void RelaxColoredContacts(bool multiThread, int iterations)
+    // Every participating worker runs the same pass list. The serial case is the same program
+    // with a single worker, whose barriers pass immediately.
+    private void RunSolverProgram(int worker)
     {
-        // Integration changes velocities and transforms, but world inertia is refreshed
-        // by UpdateBodies at the end of Step. Keep the prepared anchors and inertia
-        // fixed so velocity relaxation operates on the same constraints.
-        for (int iter = 0; iter < iterations; iter++) IterateColoredContacts(multiThread, applyBias: false);
+        var passes = CollectionsMarshal.AsSpan(solverPasses);
+        for (int k = 0; k < passes.Length; k++)
+        {
+            RunDistributedPass(worker, in passes[k]);
+            if (!SolverBarrier(k)) return;
+        }
+    }
 
-        // Persist warm-start state even when there are no relaxation iterations.
-        DispatchContactColors(multiThread, finishContactColor);
+    private bool SolverBarrier(int pass)
+    {
+        int epoch = Volatile.Read(ref solverEpoch);
+        if (Volatile.Read(ref solverFailure) != null) return false;
+        if (Interlocked.Decrement(ref solverArrivals) == 0)
+        {
+            // Last to arrive: hand out the next pass's slices, rearm, then release the others.
+            if (pass + 1 < solverPasses.Count) InitializeSolverRanges(solverPasses[pass + 1]);
+            solverArrivals = solverWorkerCount;
+            Volatile.Write(ref solverEpoch, epoch + 1);
+            return true;
+        }
+
+        var spinner = new SpinWait();
+        while (Volatile.Read(ref solverEpoch) == epoch)
+        {
+            if (Volatile.Read(ref solverFailure) != null) return false;
+            // Yield under oversubscription, but never sleep for a millisecond.
+            spinner.SpinOnce(sleep1Threshold: -1);
+        }
+        return true;
+    }
+
+    private static bool IsInterleaved(in SolverPass pass) =>
+        pass.Joints && pass.Kind is SolverPassKind.PrepareLocked or SolverPassKind.IterateLocked;
+
+    private void InitializeSolverRanges(in SolverPass pass)
+    {
+        bool interleaved = IsInterleaved(in pass);
+        for (int w = 0; w < solverWorkerCount; w++)
+        {
+            int start, end;
+            if (interleaved)
+            {
+                start = lockedSliceStart[w];
+                end = lockedSliceStart[w + 1];
+            }
+            else Parallel.GetBounds(pass.Total, solverWorkerCount, w, out start, out end);
+            solverRanges[w * RangeStride] = PackRange(start, end);
+        }
+    }
+
+    private static long PackRange(int next, int end) => ((long)next << 32) | (uint)end;
+
+    // The owner takes a grain from the front of its range; thieves take half of the remainder
+    // from the back. Both go through one compare-exchange on the packed pair, so every item is
+    // processed exactly once.
+    private static bool ClaimRange(ref long state, int grain, out int start, out int end)
+    {
+        while (true)
+        {
+            long current = Volatile.Read(ref state);
+            int next = (int)(current >> 32), limit = (int)current;
+            if (next >= limit)
+            {
+                start = end = 0;
+                return false;
+            }
+            int take = Math.Min(grain, limit - next);
+            if (Interlocked.CompareExchange(ref state, PackRange(next + take, limit), current) != current) continue;
+            start = next;
+            end = next + take;
+            return true;
+        }
+    }
+
+    private static bool StealRange(ref long state, out int start, out int end)
+    {
+        while (true)
+        {
+            long current = Volatile.Read(ref state);
+            int next = (int)(current >> 32), limit = (int)current;
+            int remaining = limit - next;
+            if (remaining <= 0)
+            {
+                start = end = 0;
+                return false;
+            }
+            int take = (remaining + 1) / 2;
+            if (Interlocked.CompareExchange(ref state, PackRange(next, limit - take), current) != current) continue;
+            start = limit - take;
+            end = limit;
+            return true;
+        }
+    }
+
+    private void RunDistributedPass(int worker, in SolverPass pass)
+    {
+        ref long own = ref solverRanges[worker * RangeStride];
+        while (ClaimRange(ref own, pass.Grain, out int start, out int end)) RunPassItems(in pass, start, end);
+        if (solverWorkerCount == 1) return;
+
+        // Help until every slice is empty. Stolen work is republished as this worker's own
+        // slice, so it can be shared again.
+        for (int victim = (worker + 1) % solverWorkerCount; victim != worker; victim = (victim + 1) % solverWorkerCount)
+        {
+            if (!StealRange(ref solverRanges[victim * RangeStride], out int start, out int end)) continue;
+            Volatile.Write(ref own, PackRange(start, end));
+            while (ClaimRange(ref own, pass.Grain, out start, out end)) RunPassItems(in pass, start, end);
+            victim = worker;
+        }
+    }
+
+    private void RunPassItems(in SolverPass pass, int start, int end)
+    {
+        switch (pass.Kind)
+        {
+            case SolverPassKind.PrepareColor:
+            {
+                ContactColor color = contactColors[pass.Color]!;
+                for (int i = start; i < end; i++) color.Bundles[i].Prepare(BundleLanes(pass.Color, i), timeStep);
+                break;
+            }
+            case SolverPassKind.IterateColor:
+            {
+                ContactColor color = contactColors[pass.Color]!;
+                for (int i = start; i < end; i++)
+                {
+                    color.Bundles[i].Iterate(pass.ApplyBias, pass.WriteBack);
+                    if (pass.UpdateContacts) UpdateContactRecords(BundleLanes(pass.Color, i));
+                }
+                break;
+            }
+            case SolverPassKind.WriteBackColor:
+            {
+                ContactColor color = contactColors[pass.Color]!;
+                for (int i = start; i < end; i++)
+                {
+                    color.Bundles[i].WriteBack();
+                    if (pass.UpdateContacts) UpdateContactRecords(BundleLanes(pass.Color, i));
+                }
+                break;
+            }
+            case SolverPassKind.PrepareLocked:
+                RunLockedItems(start, end, prepare: true, applyBias: false, pass.Joints);
+                break;
+            case SolverPassKind.IterateLocked:
+                RunLockedItems(start, end, prepare: false, pass.ApplyBias, pass.Joints);
+                if (pass.UpdateContacts) UpdateLockedAndUncoloredContacts(start, end);
+                break;
+            case SolverPassKind.UpdateLocked:
+                UpdateLockedAndUncoloredContacts(start, end);
+                break;
+            case SolverPassKind.IntegrateVelocities:
+                IntegrateVelocities(new Parallel.Batch(start, end));
+                break;
+        }
+    }
+
+    // Items below the locked count are locked contacts; the rest are records outside the graph.
+    private void UpdateLockedAndUncoloredContacts(int start, int end)
+    {
+        var active = memContacts.Active;
+        int locked = lockedContactIndices.Count;
+        var indices = CollectionsMarshal.AsSpan(lockedContactIndices);
+        for (int i = start; i < Math.Min(end, locked); i++) UpdateContactRecords(active.Slice(indices[i], 1));
+        if (end > locked)
+        {
+            int first = segmentStart[UncoloredSegment] + Math.Max(start, locked) - locked;
+            UpdateContactRecords(active.Slice(first, end - Math.Max(start, locked)));
+        }
+    }
+
+    // Contacts outside the wide colors use the lock-based scalar path. They run in the same
+    // pass as the joints, which also take body locks, so a single barrier covers both.
+    private void RunLockedItems(int start, int end, bool prepare, bool applyBias, bool joints)
+    {
+        if (!joints)
+        {
+            // A relaxation pass may extend past the locked contacts to cover uncolored records
+            // that only need their state refreshed.
+            end = Math.Min(end, lockedContactIndices.Count);
+            if (start >= end) return;
+            if (prepare) PrepareLockedContacts(new Parallel.Batch(start, end));
+            else IterateLockedContacts(new Parallel.Batch(start, end), applyBias);
+            return;
+        }
+
+        int workers = solverWorkerCount;
+        int contacts = lockedContactIndices.Count;
+        int constraints = memConstraints.Active.Length, small = memSmallConstraints.Active.Length;
+        int w = 0;
+        while (lockedSliceStart[w + 1] <= start) w++;
+        for (; w < workers && lockedSliceStart[w] < end; w++)
+        {
+            // Positions within slice w: its share of the contacts, then of the joints, then of
+            // the small joints.
+            int sliceStart = lockedSliceStart[w];
+            int from = Math.Max(start, sliceStart) - sliceStart;
+            int to = Math.Min(end, lockedSliceStart[w + 1]) - sliceStart;
+            int offset = 0;
+
+            Parallel.GetBounds(contacts, workers, w, out int first, out int last);
+            int a = Math.Max(from, offset) - offset, b = Math.Min(to, offset + last - first) - offset;
+            if (a < b)
+            {
+                if (prepare) PrepareLockedContacts(new Parallel.Batch(first + a, first + b));
+                else IterateLockedContacts(new Parallel.Batch(first + a, first + b), applyBias);
+            }
+            offset += last - first;
+
+            Parallel.GetBounds(constraints, workers, w, out first, out last);
+            a = Math.Max(from, offset) - offset;
+            b = Math.Min(to, offset + last - first) - offset;
+            if (a < b)
+            {
+                if (prepare) PrepareConstraints(new Parallel.Batch(first + a, first + b));
+                else IterateConstraints(new Parallel.Batch(first + a, first + b));
+            }
+            offset += last - first;
+
+            Parallel.GetBounds(small, workers, w, out first, out last);
+            a = Math.Max(from, offset) - offset;
+            b = Math.Min(to, offset + last - first) - offset;
+            if (a < b)
+            {
+                if (prepare) PrepareSmallConstraints(new Parallel.Batch(first + a, first + b));
+                else IterateSmallConstraints(new Parallel.Batch(first + a, first + b));
+            }
+        }
     }
 
     private void ClearContactColors()
     {
-        contactColors.Clear();
-        contactColorOverflow.Clear();
+        Array.Clear(contactColors);
+        Array.Clear(segmentStart);
+        wideColors.Clear();
+        lockedContactIndices.Clear();
         contactColorCount = 0;
-        currentContactColor = null!;
         contactGraphValid = false;
         contactGraphChanged = false;
         contactGraph = Array.Empty<ContactGraphEntry>();
+        contactGraphDirty = Array.Empty<byte>();
         contactBodyReferences = Array.Empty<int>();
         pendingColoredContacts.Clear();
+        dirtyColoredContacts.Clear();
         bodyContactColors = Array.Empty<ulong>();
         contactBodyWritable = Array.Empty<bool>();
     }
@@ -394,10 +976,11 @@ public sealed partial class World
     private void TrimContactColors()
     {
         // Scratch is rebuilt on the next solve. Releasing it avoids retaining bundles
-        // and handle arrays belonging to a formerly much larger scene.
+        // and index lists belonging to a formerly much larger scene.
         ClearContactColors();
-        contactColors.TrimExcess();
-        contactColorOverflow.TrimExcess();
+        wideColors.TrimExcess();
+        lockedContactIndices.TrimExcess();
         pendingColoredContacts.TrimExcess();
+        dirtyColoredContacts.TrimExcess();
     }
 }

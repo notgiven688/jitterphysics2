@@ -1,7 +1,7 @@
 # Graph-colored contact solver benchmark
 
-This dependency-free .NET 10 console program compares `SolveMode.Regular` with
-`SolveMode.GraphColored` in two contact-heavy scenes. `ground` has 1,024 independent
+This dependency-free .NET 10 console program compares the graph-colored
+`SolveMode.Regular` solver with `SolveMode.Deterministic` in two contact-heavy scenes. `ground` has 1,024 independent
 boxes sharing one static floor, exposing SIMD throughput and the benefit of not
 coloring static-body references. `pile` has 768 boxes in an 8 × 8 × 12 pile with
 alternating layers offset to connect neighboring columns. Sleeping is disabled;
@@ -15,7 +15,7 @@ dotnet run --project other/GraphColoredSolverBenchmark -c Release -- both both 4
 ```
 
 Arguments are `mode scene threads warmupSteps measuredSteps`, with the defaults
-shown above. Mode is `regular`, `graphcolored`, or `both`; scene is `ground`,
+shown above. Mode is `regular`, `deterministic`, or `both`; scene is `ground`,
 `pile`, or `both`. Thread count includes the calling thread; `1` exercises the
 single-threaded path. Wall-clock duration depends on the machine, typically a
 few seconds to tens of seconds. For a longer comparison, build once and run each
@@ -24,7 +24,7 @@ configuration in separate processes on an otherwise idle host:
 ```sh
 dotnet build other/GraphColoredSolverBenchmark -c Release
 dotnet other/GraphColoredSolverBenchmark/bin/Release/net10.0/GraphColoredSolverBenchmark.dll regular pile 4 300 1000
-dotnet other/GraphColoredSolverBenchmark/bin/Release/net10.0/GraphColoredSolverBenchmark.dll graphcolored pile 4 300 1000
+dotnet other/GraphColoredSolverBenchmark/bin/Release/net10.0/GraphColoredSolverBenchmark.dll deterministic pile 4 300 1000
 ```
 
 Output is CSV preceded by runtime/SIMD metadata. `step_ms` times only `World.Step`;
