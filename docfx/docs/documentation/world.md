@@ -134,10 +134,12 @@ reports no time under `World.Timings.UpdateContacts`.
 This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
 values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current
 runtime. Partial bundles and systems without hardware SIMD use the existing contact
-preparation and iteration. The cached graph is validated after `PreSubStep` for each
-substep, including direct edits to contact endpoints or solve modes; for large scenes
-this comparison runs on the workers. At most 64 colors are used; excess conflicts join
-the lock-based pass. `World.Trim()` releases the cached coloring and SIMD storage.
+preparation and iteration. The engine keeps the cached graph current: manifolds that
+gain or lose their points, change their solve mode through `RegisterContact`, or wake
+up are recorded as that happens and reconciled before the next solve. `RawData` is
+read-only; direct edits of contact records are not detected. At most 64 colors are
+used; excess conflicts join the lock-based pass. `World.Trim()` releases the cached
+coloring and SIMD storage.
 
 Graph coloring changes constraint order and does not guarantee deterministic results.
 Its benefit depends on contact density, SIMD occupancy, iteration count, and worker

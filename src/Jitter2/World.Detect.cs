@@ -207,9 +207,11 @@ public sealed partial class World
             memContacts.ResizeLock.EnterReadLock();
             try
             {
-                if (!PersistentContactManifold) arbiter.Handle.Data.UsageMask = 0;
-                arbiter.Handle.Data.ResetMode(removeFlags);
-                arbiter.Handle.Data.AddContact(point1, point2, normal);
+                ref ContactData data = ref arbiter.Handle.Data;
+                if (!PersistentContactManifold) data.UsageMask = 0;
+                data.ResetMode(removeFlags);
+                data.AddContact(point1, point2, normal);
+                NoteContactRegistered(arbiter.Handle, ref data);
             }
             finally
             {
@@ -254,8 +256,9 @@ public sealed partial class World
 
             try
             {
-                if (!PersistentContactManifold) arbiter.Handle.Data.UsageMask = 0;
-                arbiter.Handle.Data.ResetMode(removeFlags);
+                ref ContactData data = ref arbiter.Handle.Data;
+                if (!PersistentContactManifold) data.UsageMask = 0;
+                data.ResetMode(removeFlags);
 
                 ReadOnlySpan<JVector> manifoldA = manifold.ManifoldA;
                 ReadOnlySpan<JVector> manifoldB = manifold.ManifoldB;
@@ -264,8 +267,10 @@ public sealed partial class World
                 {
                     JVector mfA = manifoldA[e];
                     JVector mfB = manifoldB[e];
-                    arbiter.Handle.Data.AddContact(mfA, mfB, normal);
+                    data.AddContact(mfA, mfB, normal);
                 }
+
+                NoteContactRegistered(arbiter.Handle, ref data);
             }
             finally
             {

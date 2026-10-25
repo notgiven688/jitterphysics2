@@ -88,7 +88,8 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Do not retain spans across calls to <see cref="Step(Real, bool)"/> or changes to bodies,
     /// contacts, or constraints: these operations can move or resize the underlying storage.
-    /// Do not access the spans while the world is being stepped.
+    /// Do not access the spans while the world is being stepped. Treat the data as read-only:
+    /// the solver caches state derived from it and does not detect direct edits.
     /// </remarks>
     public readonly struct SpanData(World world)
     {

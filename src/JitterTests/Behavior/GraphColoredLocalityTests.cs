@@ -25,9 +25,17 @@ public class GraphColoredLocalityTests
     {
         ulong id = (ulong)world.RawData.ActiveContacts.Length * 2 + 1000;
         world.GetOrCreateArbiter(id, id + 1, first, second, out var arbiter);
-        world.RegisterContact(arbiter, JVector.Zero, JVector.Zero, JVector.UnitY);
-        if (mode.HasValue) arbiter.Handle.Data.Mode = mode.Value;
+        // The requested mode is expressed through the flags a registration removes.
+        var removeFlags = mode.HasValue ? ContactData.SolveMode.Full & ~mode.Value : ContactData.SolveMode.None;
+        world.RegisterContact(arbiter, JVector.Zero, JVector.Zero, JVector.UnitY, removeFlags);
         return arbiter.Handle;
+    }
+
+    // An active record without points, as the narrow phase leaves it before registering any.
+    private static void AddEmptyContact(World world, RigidBody first, RigidBody second)
+    {
+        ulong id = (ulong)world.RawData.ActiveContacts.Length * 2 + 1000;
+        world.GetOrCreateArbiter(id, id + 1, first, second, out _);
     }
 
     private static ContactHandle[] ActiveHandles(World world)
@@ -163,7 +171,7 @@ public class GraphColoredLocalityTests
             AddContact(world, bodies[star * 96], bodies[star * 96 + leaf + 1], mode);
         }
         AddContact(world, bodies[388], bodies[389], ContactData.SolveMode.None);
-        AddContact(world, bodies[387], bodies[389]).Data.UsageMask = 0;
+        AddEmptyContact(world, bodies[387], bodies[389]);
         AssertGreedyColoring(world);
         Assert.That(Read<int>(world, "contactColorCount"), Is.EqualTo(64));
         Assert.That(ColorSets(world)[64], Has.Count.EqualTo(68));

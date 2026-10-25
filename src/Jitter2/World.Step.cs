@@ -114,7 +114,6 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
-        validateContactGraph = ValidateContactGraph;
         solverWorkerEntry = SolverWorkerEntry;
         findCcdHits = FindCcdHits;
     }
@@ -699,10 +698,12 @@ public sealed partial class World
             ref ContactData contact = ref records[i];
             contact.UpdatePosition();
             if ((contact.UsageMask & ContactData.MaskContactAll) != 0) continue;
+            var handle = memContacts.GetHandle(ref contact);
+            MarkContactGraphChange(handle);
             ref bool queued = ref brokenArbiterQueued[contact._internal];
             if (queued) continue;
             queued = true;
-            pendingBrokenArbiters.ConcurrentAdd(memContacts.GetHandle(ref contact));
+            pendingBrokenArbiters.ConcurrentAdd(handle);
         }
     }
 
@@ -1110,6 +1111,7 @@ public sealed partial class World
                     foreach (var c in body.InternalContacts)
                     {
                         memContacts.MoveToActive(c.Handle);
+                        MarkContactGraphChange(c.Handle);
                     }
 
                     foreach (var c in body.InternalConstraints)

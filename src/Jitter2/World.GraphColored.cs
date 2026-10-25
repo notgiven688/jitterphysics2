@@ -6,11 +6,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Parallelization;
 using Jitter2.Unmanaged;
@@ -47,10 +49,6 @@ public sealed partial class World
     // Bundles per task when a wide color is spread over the workers.
     private const int MinimumBundlesPerTask = 2;
 
-    // Validating the cached graph reads every active contact. Above this count the read-only
-    // comparison runs on the workers; only changed contacts are then processed serially.
-    private const int ParallelValidationThreshold = 4096;
-
     private sealed class ContactColor
     {
         internal readonly List<ContactSolverWide> Bundles = new();
@@ -64,9 +62,7 @@ public sealed partial class World
     private readonly List<int> lockedContactIndices = new();
     private ulong[] bodyContactColors = Array.Empty<ulong>();
     private bool[] contactBodyWritable = Array.Empty<bool>();
-    private byte[] contactGraphDirty = Array.Empty<byte>();
     private int contactColorCount;
-    private Action<Parallel.Batch> validateContactGraph = null!;
 
     // These entries are indexed by the stable PartitionedBuffer handle ID, never
     // the physical slot: activation and color grouping move that slot.
@@ -83,7 +79,10 @@ public sealed partial class World
     private ContactGraphEntry[] contactGraph = Array.Empty<ContactGraphEntry>();
     private int[] contactBodyReferences = Array.Empty<int>();
     private readonly List<JHandle<ContactData>> pendingColoredContacts = new();
-    private readonly List<JHandle<ContactData>> dirtyColoredContacts = new();
+    // Manifolds whose participation or solve mode may have changed since the last solve. Marks
+    // come from RegisterContact (possibly on narrow-phase workers), the contact update, wake-ups
+    // and ClearContactCache. RawData is read-only, so no other path changes what the graph caches.
+    private readonly SlimBag<JHandle<ContactData>> pendingContactChanges = [];
     private bool contactGraphValid;
     private bool contactGraphChanged;
     // Diagnostic counts used by the focused benchmark and lifecycle checks.
@@ -96,9 +95,35 @@ public sealed partial class World
     private int SegmentLength(int segment) => SegmentEnd(segment) - segmentStart[segment];
 
     // Serial entry point used by graph diagnostics and tests.
-    private void BuildContactColors() => UpdateContactColors(false);
+    private void BuildContactColors() => UpdateContactColors();
 
-    private void UpdateContactColors(bool multiThread)
+    /// <summary>
+    /// Records that a manifold's participation or solve mode may have changed. Safe to call from
+    /// narrow-phase workers; the mark is applied before the next solve.
+    /// </summary>
+    internal void MarkContactGraphChange(JHandle<ContactData> handle)
+    {
+        if (!contactGraphValid || solveMode != Jitter2.SolveMode.Regular) return;
+        pendingContactChanges.ConcurrentAdd(handle);
+    }
+
+    // Called by RegisterContact after the points were added. Registration happens every step
+    // for every manifold, so only a new manifold or a changed solve mode leaves a mark. The graph
+    // only changes while solving, so reading the cached entry here is race-free.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void NoteContactRegistered(JHandle<ContactData> handle, ref ContactData contact)
+    {
+        if (!contactGraphValid || solveMode != Jitter2.SolveMode.Regular) return;
+        int id = contact._internal;
+        if (id < contactGraph.Length)
+        {
+            ref ContactGraphEntry entry = ref contactGraph[id];
+            if (!entry.Handle.IsZero && entry.Mode == contact.Mode) return;
+        }
+        pendingContactChanges.ConcurrentAdd(handle);
+    }
+
+    private void UpdateContactColors()
     {
         if (!contactGraphValid)
         {
@@ -107,30 +132,16 @@ public sealed partial class World
         }
 
         pendingColoredContacts.Clear();
-        dirtyColoredContacts.Clear();
-        // Public contact fields can be edited directly, including in PreSubStep, so every
-        // active contact is compared with its cached entry once per substep. Only this
-        // read-only comparison runs on the workers. Changed contacts are collected by stable
-        // handle first: applying a change moves records between segments, which would
-        // invalidate a scan by physical index. An unchanged edge does not touch body masks,
-        // storage order, or SIMD bundle allocation.
-        var active = memContacts.Active;
-        if (multiThread && active.Length >= ParallelValidationThreshold)
-        {
-            if (contactGraphDirty.Length < active.Length)
-                Array.Resize(ref contactGraphDirty, Math.Max(active.Length, contactGraphDirty.Length * 2));
-            memContacts.ParallelForBatch(1024, validateContactGraph);
-            for (int i = 0; i < active.Length; i++)
-                if (contactGraphDirty[i] != 0) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
-        }
-        else
-        {
-            for (int i = 0; i < active.Length; i++)
-                if (!IsContactGraphEntryCurrent(ref active[i])) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
-        }
-
         bool rebuild = false;
-        foreach (var handle in dirtyColoredContacts) UpdateContactGraphEntry(handle, ref rebuild);
+        // Applying a mark re-reads the record, so repeated marks are harmless. A record freed
+        // since it was marked is skipped; a recycled slot is simply re-evaluated.
+        int activeCount = memContacts.Active.Length;
+        foreach (var handle in pendingContactChanges)
+        {
+            if (memContacts.GetIndex(handle) >= activeCount) continue;
+            if (!IsContactGraphEntryCurrent(ref handle.Data)) UpdateContactGraphEntry(handle, ref rebuild);
+        }
+        pendingContactChanges.Clear();
 
         // Only a reader-to-writer promotion invalidates colors already assigned to
         // other contacts. Ordinary contact churn can stay incremental.
@@ -150,13 +161,20 @@ public sealed partial class World
         }
         else contactGraphReuseCount++;
         contactGraphChanged = false;
+        AssertContactGraphCurrent();
     }
 
-    private void ValidateContactGraph(Parallel.Batch batch)
+    // Debug safety net for the marking contract: every used manifold has a current entry and
+    // every unused record sits outside the graph.
+    [Conditional("DEBUG")]
+    private void AssertContactGraphCurrent()
     {
-        var active = memContacts.Active;
-        for (int i = batch.Start; i < batch.End; i++)
-            contactGraphDirty[i] = IsContactGraphEntryCurrent(ref active[i]) ? (byte)0 : (byte)1;
+        foreach (ref ContactData contact in memContacts.Active)
+        {
+            bool used = (contact.UsageMask & ContactData.MaskContactAll) != 0;
+            Debug.Assert(used ? IsContactGraphEntryCurrent(ref contact) : SegmentOf(ref contact) == UncoloredSegment,
+                "A contact changed without a graph mark.");
+        }
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -236,6 +254,7 @@ public sealed partial class World
         Array.Clear(contactBodyWritable);
         Array.Clear(contactBodyReferences);
         pendingColoredContacts.Clear();
+        pendingContactChanges.Clear();
         contactColorCount = 0;
         bool ignored = false;
         var active = memContacts.Active;
@@ -589,7 +608,7 @@ public sealed partial class World
     {
         // Validate after PreSubStep; retain occupancy masks and storage order
         // when endpoints, participation and write modes are unchanged.
-        UpdateContactColors(multiThread);
+        UpdateContactColors();
         PlanColoredSolve(multiThread);
 
         int workers = 1;
@@ -965,10 +984,9 @@ public sealed partial class World
         contactGraphValid = false;
         contactGraphChanged = false;
         contactGraph = Array.Empty<ContactGraphEntry>();
-        contactGraphDirty = Array.Empty<byte>();
         contactBodyReferences = Array.Empty<int>();
         pendingColoredContacts.Clear();
-        dirtyColoredContacts.Clear();
+        pendingContactChanges.Clear();
         bodyContactColors = Array.Empty<ulong>();
         contactBodyWritable = Array.Empty<bool>();
     }
@@ -981,6 +999,6 @@ public sealed partial class World
         wideColors.TrimExcess();
         lockedContactIndices.TrimExcess();
         pendingColoredContacts.TrimExcess();
-        dirtyColoredContacts.TrimExcess();
+        pendingContactChanges.Trim();
     }
 }
