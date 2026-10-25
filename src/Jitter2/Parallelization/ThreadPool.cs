@@ -147,6 +147,15 @@ public sealed class ThreadPool
     private int threadCount;
     private ExceptionDispatchInfo? capturedException;
 
+    private readonly object pauseWorkersLock = new();
+
+    // A worker loop broadcast bypasses the queues and work stealing: every worker thread runs
+    // the published callback exactly once per epoch, so barrier participants cannot be left
+    // behind in another worker's queue. Only the serialized stepping thread publishes.
+    private Action<int>? workerLoop;
+    private int workerLoopEpoch;
+    private MemoryHelper.IsolatedInt workerLoopsLeft;
+
     private static ThreadPool? _instance;
 
     /// <summary>
@@ -230,11 +239,12 @@ public sealed class ThreadPool
         for (int i = 0; i < threadCount - 1; i++)
         {
             int index = i;
+            int initialWorkerLoopEpoch = Volatile.Read(ref workerLoopEpoch);
 
             threads[i] = new Thread(() =>
             {
                 initWaitHandle.Set();
-                ThreadProc(index + 1);
+                ThreadProc(index + 1, initialWorkerLoopEpoch);
             });
 
             threads[i].IsBackground = true;
@@ -306,15 +316,31 @@ public sealed class ThreadPool
     /// </remarks>
     public void PauseWorkers()
     {
-        mainResetEvent.Reset();
+        // A single-threaded step of another world may request a pause while this pool runs a
+        // worker loop broadcast. Unlike queued tasks, its participants cannot be taken over by
+        // the caller if they park before seeing the epoch, so keep the event set while any
+        // loop is outstanding. Pause requests are serialized so an earlier request's restoring
+        // Set cannot outlive the final pause after the broadcast has completed.
+        lock (pauseWorkersLock)
+        {
+            mainResetEvent.Reset();
+            if (Volatile.Read(ref workerLoopsLeft.Value) != 0) mainResetEvent.Set();
+        }
     }
 
-    private void ThreadProc(int index)
+    private void ThreadProc(int index, int seenWorkerLoopEpoch)
     {
         var myQueue = queues[index];
 
         while (running)
         {
+            int publishedEpoch = Volatile.Read(ref workerLoopEpoch);
+            if (publishedEpoch != seenWorkerLoopEpoch)
+            {
+                seenWorkerLoopEpoch = publishedEpoch;
+                PerformWorkerLoop(index);
+            }
+
             int performedTasks = 0;
 
             while (myQueue.TryDequeue(out var task))
@@ -360,6 +386,51 @@ public sealed class ThreadPool
         finally
         {
             Interlocked.Decrement(ref tasksLeft.Value);
+        }
+    }
+
+    /// <summary>
+    /// Runs a cooperating loop once on every worker thread, with the calling thread as worker
+    /// zero, and waits for all loops to finish.
+    /// </summary>
+    /// <remarks>
+    /// No tasks may be staged or executing. Like <see cref="Execute"/>, this is called only from
+    /// the serialized stepping thread. The callback must abort its own barriers when a
+    /// participant fails; capturing an exception here alone cannot release other participants.
+    /// Worker indices are stable until <see cref="ChangeThreadCount"/>.
+    /// </remarks>
+    internal void ExecuteWorkerLoop(Action<int> action)
+    {
+        if (taskList.Count != 0 || Volatile.Read(ref tasksLeft.Value) != 0)
+            throw new InvalidOperationException("Worker loops require an empty task queue.");
+
+        Interlocked.Exchange(ref capturedException, null);
+        workerLoop = action;
+        Volatile.Write(ref workerLoopsLeft.Value, threadCount);
+        // Publish the callback and count before announcing the work to the workers.
+        Interlocked.Increment(ref workerLoopEpoch);
+        ResumeWorkers();
+
+        PerformWorkerLoop(0);
+        while (Volatile.Read(ref workerLoopsLeft.Value) > 0) Thread.SpinWait(1);
+        workerLoop = null;
+        Volatile.Read(ref capturedException)?.Throw();
+    }
+
+    private void PerformWorkerLoop(int index)
+    {
+        try
+        {
+            workerLoop!(index);
+        }
+        catch (Exception exception)
+        {
+            Interlocked.CompareExchange(ref capturedException,
+                ExceptionDispatchInfo.Capture(exception), null);
+        }
+        finally
+        {
+            Interlocked.Decrement(ref workerLoopsLeft.Value);
         }
     }
 
