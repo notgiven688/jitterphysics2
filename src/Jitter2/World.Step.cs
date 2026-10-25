@@ -665,15 +665,15 @@ public sealed partial class World
         brokenArbiters.Clear();
     }
 
+    private void UpdateContacts(Parallel.Batch batch) => UpdateContactRecords(memContacts.Active[batch.Start..batch.End]);
+
     // Refreshes the offsets of the records for contact matching, breaks drifted points and
     // queues emptied manifolds for retirement after the next step.
-    private void UpdateContacts(Parallel.Batch batch)
+    private void UpdateContactRecords(Span<ContactData> records)
     {
-        var span = memContacts.Active[batch.Start..batch.End];
-
-        for (int i = 0; i < span.Length; i++)
+        for (int i = 0; i < records.Length; i++)
         {
-            ref ContactData contact = ref span[i];
+            ref ContactData contact = ref records[i];
             contact.UpdatePosition();
 
             if ((contact.UsageMask & ContactData.MaskContactAll) == 0)
@@ -940,7 +940,13 @@ public sealed partial class World
 
     private void UpdateContacts(bool multiThread)
     {
-        if (multiThread)
+        if (multiThread && SolveMode == Jitter2.SolveMode.Regular && solverWorkerCount > 1)
+        {
+            // The records are grouped by color, so consecutive records touch distinct bodies.
+            // Slicing by storage segment on the solver's workers keeps the update local instead.
+            UpdateContactsOnSolverWorkers();
+        }
+        else if (multiThread)
         {
             memContacts.ParallelForBatch(256, updateContacts);
         }

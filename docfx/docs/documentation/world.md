@@ -133,7 +133,9 @@ lock-based solver together in one shared pass per sweep, with a synchronization
 barrier before the next contact pass. All passes of a substep, including velocity
 integration, run as one cooperative job on the worker threads with lightweight
 barriers in between; each worker keeps the same slice of every pass from sweep to
-sweep, so the bodies and bundles it touches stay in its own caches.
+sweep, so the bodies and bundles it touches stay in its own caches. The contact update
+at the end of the step runs on the same workers, sliced by storage segment, so each
+worker refreshes the records it has just solved.
 
 This mode supports `Step`, `Stabilize`, substeps, float and double precision, and both
 values of `multiThread`. SIMD width follows `System.Numerics.Vector<T>` on the current

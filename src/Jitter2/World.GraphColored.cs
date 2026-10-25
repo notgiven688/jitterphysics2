@@ -587,7 +587,8 @@ public sealed partial class World
         WriteBackColor,
         PrepareLocked,
         IterateLocked,
-        IntegrateVelocities
+        IntegrateVelocities,
+        UpdateContacts
     }
 
     private struct SolverPass
@@ -635,11 +636,25 @@ public sealed partial class World
         solverWorkerCount = workers;
         PlanLockedSlices(workers);
         BuildSolverPasses(iterations, relaxations, integrateVelocities);
-        if (solverPasses.Count == 0) return;
-        solverArrivals = workers;
+        if (solverPasses.Count != 0) ExecuteSolverProgram();
+    }
+
+    // Runs the contact update of the step as one pass on the solver's workers. Worker w refreshes
+    // its share of every storage segment, which are the records it has just solved and, by the
+    // locality order, mostly the bodies it has just integrated; both are still in its caches.
+    private void UpdateContactsOnSolverWorkers()
+    {
+        solverPasses.Clear();
+        solverPasses.Add(new SolverPass { Kind = SolverPassKind.UpdateContacts });
+        ExecuteSolverProgram();
+    }
+
+    private void ExecuteSolverProgram()
+    {
+        solverArrivals = solverWorkerCount;
         solverEpoch = 0;
         solverFailure = null;
-        if (workers == 1)
+        if (solverWorkerCount == 1)
         {
             RunSolverProgram(0);
             return;
@@ -774,6 +789,12 @@ public sealed partial class World
     // Worker w processes the same slice of a pass in every sweep.
     private void RunDistributedPass(int worker, in SolverPass pass)
     {
+        if (pass.Kind == SolverPassKind.UpdateContacts)
+        {
+            UpdateContactSegments(worker);
+            return;
+        }
+
         int start, end;
         if (IsInterleaved(in pass))
         {
@@ -815,6 +836,16 @@ public sealed partial class World
             case SolverPassKind.IntegrateVelocities:
                 IntegrateVelocities(new Parallel.Batch(start, end));
                 break;
+        }
+    }
+
+    private void UpdateContactSegments(int worker)
+    {
+        var active = memContacts.Active;
+        for (int s = 0; s < SegmentCount; s++)
+        {
+            Parallel.GetBounds(SegmentLength(s), solverWorkerCount, worker, out int start, out int end);
+            if (start < end) UpdateContactRecords(active.Slice(segmentStart[s] + start, end - start));
         }
     }
 
