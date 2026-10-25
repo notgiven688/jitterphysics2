@@ -158,50 +158,24 @@ internal static class IslandHelper
 
         body1.InternalIslandMarker = 1;
         body2.InternalIslandMarker = 2;
+        // Connections of every body each front has reached: the work it has done plus the work
+        // still queued.
+        int leftWork = body1.InternalConnections.Count, rightWork = body2.InternalConnections.Count;
 
         try
         {
             while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
             {
-                RigidBody currentNode = leftSearchQueue.Dequeue();
-                if (currentNode.Data.MotionType != MotionType.Static)
-                {
-                    for (int i = 0; i < currentNode.InternalConnections.Count; i++)
-                    {
-                        RigidBody connectedNode = currentNode.InternalConnections[i];
-
-                        if (connectedNode.InternalIslandMarker == 0)
-                        {
-                            leftSearchQueue.Enqueue(connectedNode);
-                            visitedBodiesLeft.Add(connectedNode);
-                            connectedNode.InternalIslandMarker = 1;
-                        }
-                        else if (connectedNode.InternalIslandMarker == 2)
-                        {
-                            return;
-                        }
-                    }
-                }
-
-                currentNode = rightSearchQueue.Dequeue();
-                if (currentNode.Data.MotionType != MotionType.Static)
-                {
-                    for (int i = 0; i < currentNode.InternalConnections.Count; i++)
-                    {
-                        RigidBody connectedNode = currentNode.InternalConnections[i];
-
-                        if (connectedNode.InternalIslandMarker == 0)
-                        {
-                            rightSearchQueue.Enqueue(connectedNode);
-                            visitedBodiesRight.Add(connectedNode);
-                            connectedNode.InternalIslandMarker = 2;
-                        }
-                        else if (connectedNode.InternalIslandMarker == 1)
-                        {
-                            return;
-                        }
-                    }
-                }
+                // Expand the front that has done less work, so that both fronts grow at the same
+                // cost and meet in the middle, and a small component runs dry after a few
+                // expansions however cheap the other front's bodies are. A body touching hundreds
+                // of others, such as a container, is found as a neighbour of the other front
+                // instead of having all of its connections enqueued: in a pile of ragdolls that
+                // hub was most of the cost of every removed contact.
+                bool met = leftWork <= rightWork
+                    ? Expand(leftSearchQueue, visitedBodiesLeft, ref leftWork, own: 1, other: 2)
+                    : Expand(rightSearchQueue, visitedBodiesRight, ref rightWork, own: 2, other: 1);
+                if (met) return;
             }
 
             Island island = GetFromPool(islandPool);
@@ -235,6 +209,28 @@ internal static class IslandHelper
             visitedBodiesLeft.Clear();
             visitedBodiesRight.Clear();
         }
+    }
+
+    // Expands the next body of a front, adding the connections of newly reached bodies to the
+    // front's work; true when it reaches a body of the other front.
+    private static bool Expand(Queue<RigidBody> front, List<RigidBody> visited, ref int work, int own, int other)
+    {
+        RigidBody node = front.Dequeue();
+        if (node.Data.MotionType == MotionType.Static) return false;
+
+        for (int i = 0; i < node.InternalConnections.Count; i++)
+        {
+            RigidBody next = node.InternalConnections[i];
+            if (next.InternalIslandMarker == other) return true;
+            if (next.InternalIslandMarker != 0) continue;
+
+            next.InternalIslandMarker = own;
+            visited.Add(next);
+            front.Enqueue(next);
+            work += next.InternalConnections.Count;
+        }
+
+        return false;
     }
 
     // Both bodies must be !static
