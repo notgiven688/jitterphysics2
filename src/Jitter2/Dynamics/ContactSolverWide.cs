@@ -255,12 +255,7 @@ internal sealed unsafe partial class ContactSolverWide
             }
         }
 
-        // Extra AVX-512 registers let the isolated arithmetic keep velocities live.
-        // Other targets inline the core into packing to retain baseline register pressure.
-        if (System.Runtime.Intrinsics.X86.Avx512F.VL.IsSupported)
-            IterateVelocities(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
-        else
-            IterateVelocitiesCore(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
+        IterateVelocities(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
 
         for (int lane = 0; lane < Count; lane++)
         {
@@ -278,28 +273,8 @@ internal sealed unsafe partial class ContactSolverWide
         if (writeBack) WriteBack();
     }
 
-    // Keep lane-indexed packing outside this method. Exposing the working vectors to
-    // SetLane/GetLane in the same JIT compilation keeps them on the stack throughout
-    // the point loop. Copy in and out once so the arithmetic can use promoted locals.
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private void IterateVelocities(bool applyBias, ref Vector3Wide bodyVelocity1, ref Vector3Wide bodyAngular1,
-        ref Vector3Wide bodyVelocity2, ref Vector3Wide bodyAngular2)
-    {
-        Vector3Wide velocity1 = bodyVelocity1, angular1 = bodyAngular1;
-        Vector3Wide velocity2 = bodyVelocity2, angular2 = bodyAngular2;
-
-        IterateVelocitiesCore(applyBias, ref velocity1, ref angular1, ref velocity2, ref angular2);
-
-        bodyVelocity1 = velocity1;
-        bodyAngular1 = angular1;
-        bodyVelocity2 = velocity2;
-        bodyAngular2 = angular2;
-    }
-
-    // Share the arithmetic while allowing each call site to choose whether the
-    // working vectors are the lane-addressed caller locals or fresh wrapper locals.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void IterateVelocitiesCore(bool applyBias, ref Vector3Wide velocity1, ref Vector3Wide angular1,
+    private void IterateVelocities(bool applyBias, ref Vector3Wide velocity1, ref Vector3Wide angular1,
         ref Vector3Wide velocity2, ref Vector3Wide angular2)
     {
         // The second tangent and each point's second offset are derived here instead of being

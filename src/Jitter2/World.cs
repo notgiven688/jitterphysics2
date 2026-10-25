@@ -88,8 +88,7 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Do not retain spans across calls to <see cref="Step(Real, bool)"/> or changes to bodies,
     /// contacts, or constraints: these operations can move or resize the underlying storage.
-    /// Do not access the spans while the world is being stepped. Treat the data as read-only:
-    /// the solver caches state derived from it and does not detect direct edits.
+    /// Do not access the spans while the world is being stepped.
     /// </remarks>
     public readonly struct SpanData(World world)
     {
@@ -190,9 +189,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// Runs on the calling thread, after bodies have moved and constraints have been solved.
-    /// In the last substep of a step, <see cref="SolveMode.Regular"/> has already refreshed the
-    /// contact offsets used for contact matching. Do not add or remove bodies, shapes,
-    /// constraints, or contacts, or change body motion types in this callback.
+    /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
+    /// in this callback.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
@@ -492,7 +490,6 @@ public sealed partial class World : IDisposable
 
         deferredArbiters.Trim();
         brokenArbiters.Trim();
-        pendingBrokenArbiters.Trim();
         dispatchArbiters.TrimExcess();
         retiredArbiters.TrimExcess();
 
@@ -661,9 +658,6 @@ public sealed partial class World : IDisposable
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
-        pendingBrokenArbiters.Remove(arbiter.Handle);
-        int id = arbiter.Handle.Data._internal;
-        if (id < brokenArbiterQueued.Length) brokenArbiterQueued[id] = false;
         RemoveColoredContact(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 

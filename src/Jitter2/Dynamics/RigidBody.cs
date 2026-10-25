@@ -395,7 +395,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         foreach (var arbiter in InternalContacts)
         {
             arbiter.Handle.Data.UsageMask = 0;
-            World.MarkContactGraphChange(arbiter.Handle);
         }
     }
 

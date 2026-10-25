@@ -6,13 +6,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Jitter2.DataStructures;
 using Jitter2.Dynamics;
 using Jitter2.Parallelization;
 using Jitter2.Unmanaged;
@@ -49,6 +47,10 @@ public sealed partial class World
     // Bundles per task when a wide color is spread over the workers.
     private const int MinimumBundlesPerTask = 2;
 
+    // Validating the cached graph reads every active contact. Above this count the read-only
+    // comparison runs on the workers; only changed contacts are then processed serially.
+    private const int ParallelValidationThreshold = 4096;
+
     private sealed class ContactColor
     {
         internal readonly List<ContactSolverWide> Bundles = new();
@@ -62,7 +64,9 @@ public sealed partial class World
     private readonly List<int> lockedContactIndices = new();
     private ulong[] bodyContactColors = Array.Empty<ulong>();
     private bool[] contactBodyWritable = Array.Empty<bool>();
+    private byte[] contactGraphDirty = Array.Empty<byte>();
     private int contactColorCount;
+    private Action<Parallel.Batch> validateContactGraph = null!;
 
     // These entries are indexed by the stable PartitionedBuffer handle ID, never
     // the physical slot: activation and color grouping move that slot.
@@ -79,10 +83,7 @@ public sealed partial class World
     private ContactGraphEntry[] contactGraph = Array.Empty<ContactGraphEntry>();
     private int[] contactBodyReferences = Array.Empty<int>();
     private readonly List<JHandle<ContactData>> pendingColoredContacts = new();
-    // Manifolds whose participation or solve mode may have changed since the last solve. Marks
-    // come from RegisterContact (possibly on narrow-phase workers), the contact update, wake-ups
-    // and ClearContactCache. RawData is read-only, so no other path changes what the graph caches.
-    private readonly SlimBag<JHandle<ContactData>> pendingContactChanges = [];
+    private readonly List<JHandle<ContactData>> dirtyColoredContacts = new();
     private bool contactGraphValid;
     private bool contactGraphChanged;
     // Diagnostic counts used by the focused benchmark and lifecycle checks.
@@ -104,35 +105,9 @@ public sealed partial class World
     private int SegmentLength(int segment) => SegmentEnd(segment) - segmentStart[segment];
 
     // Serial entry point used by graph diagnostics and tests.
-    private void BuildContactColors() => UpdateContactColors();
+    private void BuildContactColors() => UpdateContactColors(false);
 
-    /// <summary>
-    /// Records that a manifold's participation or solve mode may have changed. Safe to call from
-    /// narrow-phase workers; the mark is applied before the next solve.
-    /// </summary>
-    internal void MarkContactGraphChange(JHandle<ContactData> handle)
-    {
-        if (!contactGraphValid || solveMode != Jitter2.SolveMode.Regular) return;
-        pendingContactChanges.ConcurrentAdd(handle);
-    }
-
-    // Called by RegisterContact after the points were added. Registration happens every step
-    // for every manifold, so only a new manifold or a changed solve mode leaves a mark. The graph
-    // only changes while solving, so reading the cached entry here is race-free.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void NoteContactRegistered(JHandle<ContactData> handle, ref ContactData contact)
-    {
-        if (!contactGraphValid || solveMode != Jitter2.SolveMode.Regular) return;
-        int id = contact._internal;
-        if (id < contactGraph.Length)
-        {
-            ref ContactGraphEntry entry = ref contactGraph[id];
-            if (!entry.Handle.IsZero && entry.Mode == contact.Mode) return;
-        }
-        pendingContactChanges.ConcurrentAdd(handle);
-    }
-
-    private void UpdateContactColors()
+    private void UpdateContactColors(bool multiThread)
     {
         if (!contactGraphValid)
         {
@@ -141,16 +116,30 @@ public sealed partial class World
         }
 
         pendingColoredContacts.Clear();
-        bool rebuild = false;
-        // Applying a mark re-reads the record, so repeated marks are harmless. A record freed
-        // since it was marked is skipped; a recycled slot is simply re-evaluated.
-        int activeCount = memContacts.Active.Length;
-        foreach (var handle in pendingContactChanges)
+        dirtyColoredContacts.Clear();
+        // Public contact fields can be edited directly, including in PreSubStep, so every
+        // active contact is compared with its cached entry once per substep. Only this
+        // read-only comparison runs on the workers. Changed contacts are collected by stable
+        // handle first: applying a change moves records between segments, which would
+        // invalidate a scan by physical index. An unchanged edge does not touch body masks,
+        // storage order, or SIMD bundle allocation.
+        var active = memContacts.Active;
+        if (multiThread && active.Length >= ParallelValidationThreshold)
         {
-            if (memContacts.GetIndex(handle) >= activeCount) continue;
-            if (!IsContactGraphEntryCurrent(ref handle.Data)) UpdateContactGraphEntry(handle, ref rebuild);
+            if (contactGraphDirty.Length < active.Length)
+                Array.Resize(ref contactGraphDirty, Math.Max(active.Length, contactGraphDirty.Length * 2));
+            memContacts.ParallelForBatch(1024, validateContactGraph);
+            for (int i = 0; i < active.Length; i++)
+                if (contactGraphDirty[i] != 0) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
         }
-        pendingContactChanges.Clear();
+        else
+        {
+            for (int i = 0; i < active.Length; i++)
+                if (!IsContactGraphEntryCurrent(ref active[i])) dirtyColoredContacts.Add(memContacts.GetHandle(ref active[i]));
+        }
+
+        bool rebuild = false;
+        foreach (var handle in dirtyColoredContacts) UpdateContactGraphEntry(handle, ref rebuild);
 
         // Only a reader-to-writer promotion invalidates colors already assigned to
         // other contacts. Ordinary contact churn can stay incremental.
@@ -171,20 +160,13 @@ public sealed partial class World
         }
         else contactGraphReuseCount++;
         contactGraphChanged = false;
-        AssertContactGraphCurrent();
     }
 
-    // Debug safety net for the marking contract: every used manifold has a current entry and
-    // every unused record sits outside the graph.
-    [Conditional("DEBUG")]
-    private void AssertContactGraphCurrent()
+    private void ValidateContactGraph(Parallel.Batch batch)
     {
-        foreach (ref ContactData contact in memContacts.Active)
-        {
-            bool used = (contact.UsageMask & ContactData.MaskContactAll) != 0;
-            Debug.Assert(used ? IsContactGraphEntryCurrent(ref contact) : SegmentOf(ref contact) == UncoloredSegment,
-                "A contact changed without a graph mark.");
-        }
+        var active = memContacts.Active;
+        for (int i = batch.Start; i < batch.End; i++)
+            contactGraphDirty[i] = IsContactGraphEntryCurrent(ref active[i]) ? (byte)0 : (byte)1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -264,7 +246,6 @@ public sealed partial class World
         Array.Clear(contactBodyWritable);
         Array.Clear(contactBodyReferences);
         pendingColoredContacts.Clear();
-        pendingContactChanges.Clear();
         contactColorCount = 0;
         bool ignored = false;
         var active = memContacts.Active;
@@ -597,8 +578,7 @@ public sealed partial class World
     // preparation, the biased sweeps, velocity integration and the relaxation sweeps. Passes
     // that must not overlap are separated by a spin barrier, which costs far less than
     // dispatching each pass through the pool queues. Every worker owns the same slice of each
-    // pass in every sweep, so the bodies and bundles it touches stay in its own caches; a
-    // worker that runs out of work steals the tail of another worker's slice.
+    // pass in every sweep, so the bodies and bundles it touches stay in its own caches.
 
     private enum SolverPassKind : byte
     {
@@ -607,18 +587,14 @@ public sealed partial class World
         WriteBackColor,
         PrepareLocked,
         IterateLocked,
-        UpdateLocked,
         IntegrateVelocities
     }
 
     private struct SolverPass
     {
         internal SolverPassKind Kind;
-        internal int Color, Total, Grain;
+        internal int Color, Total;
         internal bool ApplyBias, WriteBack, Joints;
-        // The final pass over each contact also refreshes its offsets and breaks drifted
-        // points, replacing the separate UpdateContacts sweep of the step.
-        internal bool UpdateContacts;
     }
 
     // A locked pass that includes the joints is divided so that every worker's slice holds its
@@ -627,25 +603,21 @@ public sealed partial class World
     // [lockedSliceStart[w], lockedSliceStart[w + 1]) of the pass's index space.
     private int[] lockedSliceStart = Array.Empty<int>();
 
-    // Each worker's range is a packed (next, end) pair on its own cache line.
-    private const int RangeStride = 8;
     private const int LockedItemsPerWorker = 64;
     private const int BodiesPerWorker = 256;
 
     private readonly List<SolverPass> solverPasses = new();
-    private long[] solverRanges = Array.Empty<long>();
     private int solverWorkerCount;
     private int solverArrivals;
     private int solverEpoch;
     private ExceptionDispatchInfo? solverFailure;
     private Action<int> solverWorkerEntry = null!;
 
-    private void SolveContactsAndJoints(bool multiThread, int iterations, int relaxations, bool integrateVelocities,
-        bool updateContacts)
+    private void SolveContactsAndJoints(bool multiThread, int iterations, int relaxations, bool integrateVelocities)
     {
         // Validate after PreSubStep; retain occupancy masks and storage order
         // when endpoints, participation and write modes are unchanged.
-        UpdateContactColors();
+        UpdateContactColors(multiThread);
         PlanColoredSolve(multiThread);
 
         int workers = 1;
@@ -662,10 +634,8 @@ public sealed partial class World
 
         solverWorkerCount = workers;
         PlanLockedSlices(workers);
-        BuildSolverPasses(iterations, relaxations, integrateVelocities, updateContacts);
+        BuildSolverPasses(iterations, relaxations, integrateVelocities);
         if (solverPasses.Count == 0) return;
-        if (solverRanges.Length < workers * RangeStride) solverRanges = new long[workers * RangeStride];
-        InitializeSolverRanges(solverPasses[0]);
         solverArrivals = workers;
         solverEpoch = 0;
         solverFailure = null;
@@ -700,65 +670,52 @@ public sealed partial class World
         lockedSliceStart[workers] = offset;
     }
 
-    private int UncoloredContactCount => memContacts.Active.Length - segmentStart[UncoloredSegment];
-
-    private void BuildSolverPasses(int iterations, int relaxations, bool integrateVelocities, bool updateContacts)
+    private void BuildSolverPasses(int iterations, int relaxations, bool integrateVelocities)
     {
         solverPasses.Clear();
         bool locked = HasLockedSolverWork;
         int lockedTotal = lockedSliceStart[solverWorkerCount];
 
-        foreach (int c in wideColors) AddColorPass(SolverPassKind.PrepareColor, c, false, false, false);
-        if (locked) AddPass(SolverPassKind.PrepareLocked, lockedTotal, applyBias: false, joints: true, update: false);
+        foreach (int c in wideColors) AddColorPass(SolverPassKind.PrepareColor, c, applyBias: false, writeBack: false);
+        if (locked) AddPass(SolverPassKind.PrepareLocked, lockedTotal, applyBias: false, joints: true);
 
         for (int iter = 0; iter < iterations; iter++)
         {
-            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: true, false, false);
-            if (locked) AddPass(SolverPassKind.IterateLocked, lockedTotal, applyBias: true, joints: true, update: false);
+            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: true, writeBack: false);
+            if (locked) AddPass(SolverPassKind.IterateLocked, lockedTotal, applyBias: true, joints: true);
         }
 
         if (integrateVelocities)
-            AddPass(SolverPassKind.IntegrateVelocities, memRigidBodies.Active.Length, false, false, false);
+            AddPass(SolverPassKind.IntegrateVelocities, memRigidBodies.Active.Length, applyBias: false, joints: false);
 
         // Integration changes velocities and transforms, but world inertia is refreshed by
         // UpdateBodies at the end of Step. Keep the prepared anchors and inertia fixed so
         // velocity relaxation operates on the same constraints. The final sweep also publishes
-        // the accumulated impulses for warm starting while each bundle is still in cache, and
-        // refreshes the contact state when this is the last substep. Contacts outside the graph
-        // join that final locked pass for the refresh only.
+        // the accumulated impulses for warm starting while each bundle is still in cache.
         for (int iter = 0; iter < relaxations; iter++)
         {
-            bool last = iter == relaxations - 1, update = last && updateContacts;
-            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: false, last, update);
-            int total = lockedContactIndices.Count + (update ? UncoloredContactCount : 0);
-            if (total != 0) AddPass(SolverPassKind.IterateLocked, total, applyBias: false, joints: false, update);
+            bool last = iter == relaxations - 1;
+            foreach (int c in wideColors) AddColorPass(SolverPassKind.IterateColor, c, applyBias: false, writeBack: last);
+            if (lockedContactIndices.Count != 0)
+                AddPass(SolverPassKind.IterateLocked, lockedContactIndices.Count, applyBias: false, joints: false);
         }
 
-        if (relaxations != 0) return;
         // Persist warm-start state even when there are no relaxation iterations.
-        foreach (int c in wideColors) AddColorPass(SolverPassKind.WriteBackColor, c, false, false, updateContacts);
-        int remaining = lockedContactIndices.Count + UncoloredContactCount;
-        if (updateContacts && remaining != 0) AddPass(SolverPassKind.UpdateLocked, remaining, false, false, update: true);
+        if (relaxations == 0)
+            foreach (int c in wideColors) AddColorPass(SolverPassKind.WriteBackColor, c, applyBias: false, writeBack: true);
     }
 
-    private void AddColorPass(SolverPassKind kind, int color, bool applyBias, bool writeBack, bool update)
+    private void AddColorPass(SolverPassKind kind, int color, bool applyBias, bool writeBack)
     {
-        int bundles = contactColors[color]!.BundleCount;
         solverPasses.Add(new SolverPass
         {
-            Kind = kind, Color = color, Total = bundles, Grain = Math.Max(1, bundles / (solverWorkerCount * 8)),
-            ApplyBias = applyBias, WriteBack = writeBack, UpdateContacts = update
+            Kind = kind, Color = color, Total = contactColors[color]!.BundleCount, ApplyBias = applyBias, WriteBack = writeBack
         });
     }
 
-    private void AddPass(SolverPassKind kind, int total, bool applyBias, bool joints, bool update)
+    private void AddPass(SolverPassKind kind, int total, bool applyBias, bool joints)
     {
-        int minimumGrain = kind == SolverPassKind.IntegrateVelocities ? BodiesPerWorker / 8 : LockedItemsPerWorker / 4;
-        solverPasses.Add(new SolverPass
-        {
-            Kind = kind, Total = total, Grain = Math.Max(minimumGrain, total / (solverWorkerCount * 8)),
-            ApplyBias = applyBias, Joints = joints, UpdateContacts = update
-        });
+        solverPasses.Add(new SolverPass { Kind = kind, Total = total, ApplyBias = applyBias, Joints = joints });
     }
 
     private void SolverWorkerEntry(int worker)
@@ -785,18 +742,17 @@ public sealed partial class World
         for (int k = 0; k < passes.Length; k++)
         {
             RunDistributedPass(worker, in passes[k]);
-            if (!SolverBarrier(k)) return;
+            if (!SolverBarrier()) return;
         }
     }
 
-    private bool SolverBarrier(int pass)
+    private bool SolverBarrier()
     {
         int epoch = Volatile.Read(ref solverEpoch);
         if (Volatile.Read(ref solverFailure) != null) return false;
         if (Interlocked.Decrement(ref solverArrivals) == 0)
         {
-            // Last to arrive: hand out the next pass's slices, rearm, then release the others.
-            if (pass + 1 < solverPasses.Count) InitializeSolverRanges(solverPasses[pass + 1]);
+            // Last to arrive: rearm, then release the others.
             solverArrivals = solverWorkerCount;
             Volatile.Write(ref solverEpoch, epoch + 1);
             return true;
@@ -815,81 +771,17 @@ public sealed partial class World
     private static bool IsInterleaved(in SolverPass pass) =>
         pass.Joints && pass.Kind is SolverPassKind.PrepareLocked or SolverPassKind.IterateLocked;
 
-    private void InitializeSolverRanges(in SolverPass pass)
-    {
-        bool interleaved = IsInterleaved(in pass);
-        for (int w = 0; w < solverWorkerCount; w++)
-        {
-            int start, end;
-            if (interleaved)
-            {
-                start = lockedSliceStart[w];
-                end = lockedSliceStart[w + 1];
-            }
-            else Parallel.GetBounds(pass.Total, solverWorkerCount, w, out start, out end);
-            solverRanges[w * RangeStride] = PackRange(start, end);
-        }
-    }
-
-    private static long PackRange(int next, int end) => ((long)next << 32) | (uint)end;
-
-    // The owner takes a grain from the front of its range; thieves take half of the remainder
-    // from the back. Both go through one compare-exchange on the packed pair, so every item is
-    // processed exactly once.
-    private static bool ClaimRange(ref long state, int grain, out int start, out int end)
-    {
-        while (true)
-        {
-            long current = Volatile.Read(ref state);
-            int next = (int)(current >> 32), limit = (int)current;
-            if (next >= limit)
-            {
-                start = end = 0;
-                return false;
-            }
-            int take = Math.Min(grain, limit - next);
-            if (Interlocked.CompareExchange(ref state, PackRange(next + take, limit), current) != current) continue;
-            start = next;
-            end = next + take;
-            return true;
-        }
-    }
-
-    private static bool StealRange(ref long state, out int start, out int end)
-    {
-        while (true)
-        {
-            long current = Volatile.Read(ref state);
-            int next = (int)(current >> 32), limit = (int)current;
-            int remaining = limit - next;
-            if (remaining <= 0)
-            {
-                start = end = 0;
-                return false;
-            }
-            int take = (remaining + 1) / 2;
-            if (Interlocked.CompareExchange(ref state, PackRange(next, limit - take), current) != current) continue;
-            start = limit - take;
-            end = limit;
-            return true;
-        }
-    }
-
+    // Worker w processes the same slice of a pass in every sweep.
     private void RunDistributedPass(int worker, in SolverPass pass)
     {
-        ref long own = ref solverRanges[worker * RangeStride];
-        while (ClaimRange(ref own, pass.Grain, out int start, out int end)) RunPassItems(in pass, start, end);
-        if (solverWorkerCount == 1) return;
-
-        // Help until every slice is empty. Stolen work is republished as this worker's own
-        // slice, so it can be shared again.
-        for (int victim = (worker + 1) % solverWorkerCount; victim != worker; victim = (victim + 1) % solverWorkerCount)
+        int start, end;
+        if (IsInterleaved(in pass))
         {
-            if (!StealRange(ref solverRanges[victim * RangeStride], out int start, out int end)) continue;
-            Volatile.Write(ref own, PackRange(start, end));
-            while (ClaimRange(ref own, pass.Grain, out start, out end)) RunPassItems(in pass, start, end);
-            victim = worker;
+            start = lockedSliceStart[worker];
+            end = lockedSliceStart[worker + 1];
         }
+        else Parallel.GetBounds(pass.Total, solverWorkerCount, worker, out start, out end);
+        if (start < end) RunPassItems(in pass, start, end);
     }
 
     private void RunPassItems(in SolverPass pass, int start, int end)
@@ -905,21 +797,13 @@ public sealed partial class World
             case SolverPassKind.IterateColor:
             {
                 ContactColor color = contactColors[pass.Color]!;
-                for (int i = start; i < end; i++)
-                {
-                    color.Bundles[i].Iterate(pass.ApplyBias, pass.WriteBack);
-                    if (pass.UpdateContacts) UpdateContactRecords(BundleLanes(pass.Color, i));
-                }
+                for (int i = start; i < end; i++) color.Bundles[i].Iterate(pass.ApplyBias, pass.WriteBack);
                 break;
             }
             case SolverPassKind.WriteBackColor:
             {
                 ContactColor color = contactColors[pass.Color]!;
-                for (int i = start; i < end; i++)
-                {
-                    color.Bundles[i].WriteBack();
-                    if (pass.UpdateContacts) UpdateContactRecords(BundleLanes(pass.Color, i));
-                }
+                for (int i = start; i < end; i++) color.Bundles[i].WriteBack();
                 break;
             }
             case SolverPassKind.PrepareLocked:
@@ -927,28 +811,10 @@ public sealed partial class World
                 break;
             case SolverPassKind.IterateLocked:
                 RunLockedItems(start, end, prepare: false, pass.ApplyBias, pass.Joints);
-                if (pass.UpdateContacts) UpdateLockedAndUncoloredContacts(start, end);
-                break;
-            case SolverPassKind.UpdateLocked:
-                UpdateLockedAndUncoloredContacts(start, end);
                 break;
             case SolverPassKind.IntegrateVelocities:
                 IntegrateVelocities(new Parallel.Batch(start, end));
                 break;
-        }
-    }
-
-    // Items below the locked count are locked contacts; the rest are records outside the graph.
-    private void UpdateLockedAndUncoloredContacts(int start, int end)
-    {
-        var active = memContacts.Active;
-        int locked = lockedContactIndices.Count;
-        var indices = CollectionsMarshal.AsSpan(lockedContactIndices);
-        for (int i = start; i < Math.Min(end, locked); i++) UpdateContactRecords(active.Slice(indices[i], 1));
-        if (end > locked)
-        {
-            int first = segmentStart[UncoloredSegment] + Math.Max(start, locked) - locked;
-            UpdateContactRecords(active.Slice(first, end - Math.Max(start, locked)));
         }
     }
 
@@ -958,10 +824,6 @@ public sealed partial class World
     {
         if (!joints)
         {
-            // A relaxation pass may extend past the locked contacts to cover uncolored records
-            // that only need their state refreshed.
-            end = Math.Min(end, lockedContactIndices.Count);
-            if (start >= end) return;
             if (prepare) PrepareLockedContacts(new Parallel.Batch(start, end));
             else IterateLockedContacts(new Parallel.Batch(start, end), applyBias);
             return;
@@ -1024,7 +886,8 @@ public sealed partial class World
         contactGraph = Array.Empty<ContactGraphEntry>();
         contactBodyReferences = Array.Empty<int>();
         pendingColoredContacts.Clear();
-        pendingContactChanges.Clear();
+        dirtyColoredContacts.Clear();
+        contactGraphDirty = Array.Empty<byte>();
         bodyContactColors = Array.Empty<ulong>();
         contactBodyWritable = Array.Empty<bool>();
     }
@@ -1037,7 +900,7 @@ public sealed partial class World
         wideColors.TrimExcess();
         lockedContactIndices.TrimExcess();
         pendingColoredContacts.TrimExcess();
-        pendingContactChanges.Trim();
+        dirtyColoredContacts.TrimExcess();
         sortKeys = Array.Empty<long>();
         sortOrder = sortTarget = Array.Empty<int>();
     }

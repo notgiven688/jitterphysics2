@@ -35,13 +35,7 @@ public sealed partial class World
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
 
-    // Manifolds that lost all their points are retired one step later, after the next narrow
-    // phase had a chance to refill them. Marks made during a step collect in the pending bag and
-    // become the removal candidates of the next step; the flag per stable contact ID keeps a
-    // manifold from being queued twice while it waits.
-    private SlimBag<JHandle<ContactData>> brokenArbiters = [];
-    private SlimBag<JHandle<ContactData>> pendingBrokenArbiters = [];
-    private bool[] brokenArbiterQueued = Array.Empty<bool>();
+    private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
     private readonly List<Arbiter> dispatchArbiters = [];
     private readonly List<Arbiter> retiredArbiters = [];
 
@@ -114,6 +108,7 @@ public sealed partial class World
         detect = Detect;
         solveIsland = SolveIslandBatch;
         relaxIsland = RelaxIslandBatch;
+        validateContactGraph = ValidateContactGraph;
         solverWorkerEntry = SolverWorkerEntry;
         findCcdHits = FindCcdHits;
     }
@@ -207,7 +202,6 @@ public sealed partial class World
 
             Tracer.ProfileBegin(TraceName.AddArbiter);
             HandleDeferredArbiters();
-            if (brokenArbiterQueued.Length < memContacts.Capacity) Array.Resize(ref brokenArbiterQueued, memContacts.Capacity);
             Tracer.ProfileEnd(TraceName.AddArbiter);
             SetTime(Timings.AddArbiter);
 
@@ -240,10 +234,7 @@ public sealed partial class World
                 }
                 else
                 {
-                    // The last substep also refreshes the contact state that UpdateContacts
-                    // would otherwise compute in a separate pass.
-                    SolveContactsAndJoints(multiThread, solverIterations, velocityRelaxations,
-                        integrateVelocities: true, updateContacts: i == timeStep.SubstepCount - 1);
+                    SolveContactsAndJoints(multiThread, solverIterations, velocityRelaxations, integrateVelocities: true);
                 }
 
                 PostSubStep?.Invoke(timeStep);
@@ -252,16 +243,16 @@ public sealed partial class World
             Tracer.ProfileEnd(TraceName.Solve);
             SetTime(Timings.Solve);
 
-            Tracer.ProfileBegin(TraceName.UpdateContacts);
-            if (SolveMode == Jitter2.SolveMode.Deterministic) UpdateContacts(multiThread); // FAST SWEEP
-            Tracer.ProfileEnd(TraceName.UpdateContacts);
-            SetTime(Timings.UpdateContacts);
-
             Tracer.ProfileBegin(TraceName.RemoveArbiter);
             RemoveBrokenArbiters();
             Tracer.ProfileEnd(TraceName.RemoveArbiter);
             SetTime(Timings.RemoveArbiter);
             AssertIslandActivationInvariants();
+
+            Tracer.ProfileBegin(TraceName.UpdateContacts);
+            UpdateContacts(multiThread); // FAST SWEEP
+            Tracer.ProfileEnd(TraceName.UpdateContacts);
+            SetTime(Timings.UpdateContacts);
 
             Tracer.ProfileBegin(TraceName.UpdateBodies);
             ForeachActiveBody(multiThread);
@@ -369,8 +360,7 @@ public sealed partial class World
             {
                 for (int i = 0; i < timeStep.SubstepCount; i++)
                 {
-                    SolveContactsAndJoints(multiThread, solverIterations, relaxationIterations,
-                        integrateVelocities: false, updateContacts: false);
+                    SolveContactsAndJoints(multiThread, solverIterations, relaxationIterations, integrateVelocities: false);
                 }
             }
 
@@ -654,18 +644,8 @@ public sealed partial class World
     {
         foreach (var handle in brokenArbiters)
         {
-            ref ContactData contact = ref handle.Data;
-            // UpdatePosition keeps the mask the manifold had while this step was solved in the
-            // upper nibble. A manifold refilled by this step's narrow phase is not retired, even
-            // if the update emptied it again: it is queued once more and judged next step.
-            if (((contact.UsageMask >> 4) & ContactData.MaskContactAll) != 0)
-            {
-                if ((contact.UsageMask & ContactData.MaskContactAll) == 0) pendingBrokenArbiters.Add(handle);
-                else brokenArbiterQueued[contact._internal] = false;
-                continue;
-            }
-
-            brokenArbiterQueued[contact._internal] = false;
+            // A manifold refilled by this step's narrow phase is not retired.
+            if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
             var arb = arbiters[handle.Data.Key];
 
             AddToActiveList(arb.Body1.InternalIsland);
@@ -683,27 +663,23 @@ public sealed partial class World
         }
 
         brokenArbiters.Clear();
-        (brokenArbiters, pendingBrokenArbiters) = (pendingBrokenArbiters, brokenArbiters);
     }
 
-    private void UpdateContacts(Parallel.Batch batch) => UpdateContactRecords(memContacts.Active[batch.Start..batch.End]);
-
     // Refreshes the offsets of the records for contact matching, breaks drifted points and
-    // queues emptied manifolds for retirement after the next step. Solving has finished for
-    // every record passed here; the regular solver calls this from its final sweep.
-    private void UpdateContactRecords(Span<ContactData> records)
+    // queues emptied manifolds for retirement after the next step.
+    private void UpdateContacts(Parallel.Batch batch)
     {
-        for (int i = 0; i < records.Length; i++)
+        var span = memContacts.Active[batch.Start..batch.End];
+
+        for (int i = 0; i < span.Length; i++)
         {
-            ref ContactData contact = ref records[i];
+            ref ContactData contact = ref span[i];
             contact.UpdatePosition();
-            if ((contact.UsageMask & ContactData.MaskContactAll) != 0) continue;
-            var handle = memContacts.GetHandle(ref contact);
-            MarkContactGraphChange(handle);
-            ref bool queued = ref brokenArbiterQueued[contact._internal];
-            if (queued) continue;
-            queued = true;
-            pendingBrokenArbiters.ConcurrentAdd(handle);
+
+            if ((contact.UsageMask & ContactData.MaskContactAll) == 0)
+            {
+                brokenArbiters.ConcurrentAdd(memContacts.GetHandle(ref contact));
+            }
         }
     }
 
@@ -1111,7 +1087,6 @@ public sealed partial class World
                     foreach (var c in body.InternalContacts)
                     {
                         memContacts.MoveToActive(c.Handle);
-                        MarkContactGraphChange(c.Handle);
                     }
 
                     foreach (var c in body.InternalConstraints)

@@ -213,7 +213,7 @@ public class AdaptiveContactGraphTests
     }
 
     [Test]
-    public void PreSubStepRegistrations_ReclassifySharedReadersAndRefillEmptiedManifolds()
+    public void PreSubStepDirectEdits_ReclassifySharedReadersAndReconcileCachedEndpoints()
     {
         using var world = NewWorld();
         var hub = world.CreateRigidBody();
@@ -227,11 +227,8 @@ public class AdaptiveContactGraphTests
         world.SubstepCount = 3;
         World.WorldStep before = _ =>
         {
-            // A registration without remove flags promotes the hub to a writer of this manifold.
-            if (stage == 0) world.RegisterContact(arbiters[0], JVector.Zero, JVector.Zero, JVector.UnitY);
-            // Discarding a body's contact cache empties its manifolds through the engine API.
-            if (stage == 1) leaves[1].ClearContactCache();
-            // Refilling the emptied manifold returns it to the graph as a shared reader.
+            if (stage == 0) arbiters[0].Handle.Data.Mode = ContactData.SolveMode.Full;
+            if (stage == 1) arbiters[1].Handle.Data.UsageMask = 0;
             if (stage == 2) world.RegisterContact(arbiters[1], JVector.Zero, JVector.Zero, JVector.UnitY,
                 ContactData.SolveMode.FullBody1);
             stage++;
@@ -252,10 +249,18 @@ public class AdaptiveContactGraphTests
         Assert.That(observations, Is.EqualTo(3));
         Assert.That(Count(world, "contactGraphRebuildCount"), Is.GreaterThan(rebuilds), "Read-to-write upgrade must rebuild old reader assignments.");
 
-        // Removing the write mode again through a registration downgrades the hub for this manifold.
-        world.RegisterContact(arbiters[0], JVector.Zero, JVector.Zero, JVector.UnitY, ContactData.SolveMode.FullBody1);
+        arbiters[0].Handle.Data.Mode = ContactData.SolveMode.FullBody2;
         Build(world);
         Inspect(world); // Conservative reservations after the downgrade are allowed.
+        var edited = arbiters[2].Handle;
+        var originalEndpoint = edited.Data.Body2;
+        edited.Data.Body2 = leaves[3].Handle;
+        Build(world);
+        Inspect(world);
+        edited.Data.Body2 = originalEndpoint;
+        Build(world);
+        Inspect(world);
+        // Restore endpoints before actual physics/island processing.
         world.SubstepCount = 1;
         world.Step((Real).01, false);
         Inspect(world);

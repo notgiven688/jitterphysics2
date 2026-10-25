@@ -211,7 +211,6 @@ public sealed partial class World
                 if (!PersistentContactManifold) data.UsageMask = 0;
                 data.ResetMode(removeFlags);
                 data.AddContact(point1, point2, normal);
-                NoteContactRegistered(arbiter.Handle, ref data);
             }
             finally
             {
@@ -269,8 +268,6 @@ public sealed partial class World
                     JVector mfB = manifoldB[e];
                     data.AddContact(mfA, mfB, normal);
                 }
-
-                NoteContactRegistered(arbiter.Handle, ref data);
             }
             finally
             {
