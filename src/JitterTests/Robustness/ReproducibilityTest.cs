@@ -439,6 +439,9 @@ public class ReproducibilityTest
 
         if (simd.Bias != scalar.Bias ||
             simd.PenaltyBias != scalar.PenaltyBias ||
+            GetElement(simd.MassNormalTangent, 0) != GetElement(scalar.MassNormalTangent, 0) ||
+            GetElement(simd.MassNormalTangent, 1) != GetElement(scalar.MassNormalTangent, 1) ||
+            GetElement(simd.MassNormalTangent, 2) != GetElement(scalar.MassNormalTangent, 2) ||
             simd.Impulse != scalar.Impulse ||
             simd.TangentImpulse1 != scalar.TangentImpulse1 ||
             simd.TangentImpulse2 != scalar.TangentImpulse2 ||
@@ -451,6 +454,8 @@ public class ReproducibilityTest
                 $"{phase} mismatch: " +
                 $"simd bias={Format(simd.Bias)}, scalar bias={Format(scalar.Bias)}, " +
                 $"simd penalty={Format(simd.PenaltyBias)}, scalar penalty={Format(scalar.PenaltyBias)}, " +
+                $"simd mass=[{Format(GetElement(simd.MassNormalTangent, 0))}, {Format(GetElement(simd.MassNormalTangent, 1))}, {Format(GetElement(simd.MassNormalTangent, 2))}], " +
+                $"scalar mass=[{Format(GetElement(scalar.MassNormalTangent, 0))}, {Format(GetElement(scalar.MassNormalTangent, 1))}, {Format(GetElement(scalar.MassNormalTangent, 2))}], " +
                 $"simd impulse=[{Format(simd.Impulse)}, {Format(simd.TangentImpulse1)}, {Format(simd.TangentImpulse2)}], " +
                 $"scalar impulse=[{Format(scalar.Impulse)}, {Format(scalar.TangentImpulse1)}, {Format(scalar.TangentImpulse2)}], " +
                 $"simd body1 vel={Format(simdBody1.Velocity)}, scalar body1 vel={Format(scalarBody1.Velocity)}, " +

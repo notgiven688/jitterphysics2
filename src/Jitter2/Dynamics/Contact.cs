@@ -112,7 +112,7 @@ public struct ContactData
     public Contact Contact3;
 
     /// <summary>
-    /// Prepares all active contacts for solver iterations by updating contact geometry and warm-starting impulses.
+    /// Prepares all active contacts for solver iterations by updating contact geometry, computing effective masses and warm-starting impulses.
     /// </summary>
     /// <param name="timeStep">The full step and substep timing information.</param>
     public unsafe void PrepareForIteration(in TimeStep timeStep)
@@ -651,6 +651,13 @@ public struct ContactData
         [FieldOffset(21 * sizeof(Real))]
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
+        /// <summary>
+        /// Inverse effective masses along the normal and the two tangents, computed by the
+        /// scalar preparation and reused by every iteration of the substep. The fourth lane
+        /// is unused. SIMD bundles keep their own copy.
+        /// </summary>
+        [FieldOffset(24 * sizeof(Real))] internal VectorReal MassNormalTangent;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ResetImpulses()
         {
@@ -1028,6 +1035,12 @@ public struct ContactData
 
             Flag &= ~Flags.NewContact;
 
+            // The effective masses stay fixed for the substep. Their angular responses also
+            // replay the accumulated impulses for the warm start.
+            MassNormalTangent = CalculateEffectiveMass(cd, out JVector angularNormal1, out JVector angularTangent1Body1,
+                out JVector angularTangent2Body1, out JVector angularNormal2, out JVector angularTangent1Body2,
+                out JVector angularTangent2Body2);
+
             JVector impulse = accumulatedNormalImpulse * normal;
             impulse += accumulatedTangentImpulse1 * tangent1;
             impulse += accumulatedTangentImpulse2 * tangent2;
@@ -1039,13 +1052,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                JVector angularNormal = TransformSymmetricInertia(RelativePosition1 % normal, b1.InverseInertiaWorld);
-                JVector angularTangent1 = TransformSymmetricInertia(RelativePosition1 % tangent1, b1.InverseInertiaWorld);
-                JVector angularTangent2 = TransformSymmetricInertia(RelativePosition1 % tangent2, b1.InverseInertiaWorld);
-
-                JVector angularImpulse = accumulatedNormalImpulse * angularNormal;
-                angularImpulse += accumulatedTangentImpulse1 * angularTangent1;
-                angularImpulse += accumulatedTangentImpulse2 * angularTangent2;
+                JVector angularImpulse = accumulatedNormalImpulse * angularNormal1;
+                angularImpulse += accumulatedTangentImpulse1 * angularTangent1Body1;
+                angularImpulse += accumulatedTangentImpulse2 * angularTangent2Body1;
                 b1.AngularVelocity -= angularImpulse;
             }
 
@@ -1056,13 +1065,9 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                JVector angularNormal = TransformSymmetricInertia(RelativePosition2 % normal, b2.InverseInertiaWorld);
-                JVector angularTangent1 = TransformSymmetricInertia(RelativePosition2 % tangent1, b2.InverseInertiaWorld);
-                JVector angularTangent2 = TransformSymmetricInertia(RelativePosition2 % tangent2, b2.InverseInertiaWorld);
-
-                JVector angularImpulse = accumulatedNormalImpulse * angularNormal;
-                angularImpulse += accumulatedTangentImpulse1 * angularTangent1;
-                angularImpulse += accumulatedTangentImpulse2 * angularTangent2;
+                JVector angularImpulse = accumulatedNormalImpulse * angularNormal2;
+                angularImpulse += accumulatedTangentImpulse1 * angularTangent1Body2;
+                angularImpulse += accumulatedTangentImpulse2 * angularTangent2Body2;
                 b2.AngularVelocity += angularImpulse;
             }
 
@@ -1079,7 +1084,7 @@ public struct ContactData
         {
             Flags pendingFlags = Flag;
             // Begin read from VectorReal
-            VectorReal mass = CalculateEffectiveMass(cd);
+            VectorReal mass = MassNormalTangent;
             Real massNormal = mass.GetElement(0);
             Real massTangent1 = mass.GetElement(1);
             Real massTangent2 = mass.GetElement(2);
@@ -1219,6 +1224,11 @@ public struct ContactData
 
             Flag &= ~Flags.NewContact;
 
+            // The effective masses stay fixed for the substep. Their angular responses also
+            // replay the accumulated impulses for the warm start.
+            MassNormalTangent = CalculateEffectiveMassAccelerated(cd, normalTangentX, normalTangentY, normalTangentZ,
+                out var e1, out var e2, out var e3, out var f1, out var f2, out var f3);
+
             // warm-starting, linear
             Unsafe.SkipInit(out JVector linearImpulse);
             linearImpulse.X = GetSum3(Vector.Multiply(warmStartImpulse, normalTangentX));
@@ -1232,25 +1242,6 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody1) != 0)
             {
-                var rp1X = Vector.Create(RelativePosition1.X);
-                var rp1Y = Vector.Create(RelativePosition1.Y);
-                var rp1Z = Vector.Create(RelativePosition1.Z);
-
-                var rrx = Vector.Subtract(Vector.Multiply(rp1Y, normalTangentZ), Vector.Multiply(rp1Z, normalTangentY));
-                var rry = Vector.Subtract(Vector.Multiply(rp1Z, normalTangentX), Vector.Multiply(rp1X, normalTangentZ));
-                var rrz = Vector.Subtract(Vector.Multiply(rp1X, normalTangentY), Vector.Multiply(rp1Y, normalTangentX));
-
-                var ixx = Vector.Create(b1.InverseInertiaWorld.M11);
-                var ixy = Vector.Create(b1.InverseInertiaWorld.M21);
-                var ixz = Vector.Create(b1.InverseInertiaWorld.M31);
-                var iyy = Vector.Create(b1.InverseInertiaWorld.M22);
-                var iyz = Vector.Create(b1.InverseInertiaWorld.M23);
-                var izz = Vector.Create(b1.InverseInertiaWorld.M33);
-
-                var e1 = Vector.Add(Vector.Add(Vector.Multiply(ixx, rrx), Vector.Multiply(ixy, rry)), Vector.Multiply(ixz, rrz));
-                var e2 = Vector.Add(Vector.Add(Vector.Multiply(ixy, rrx), Vector.Multiply(iyy, rry)), Vector.Multiply(iyz, rrz));
-                var e3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
-
                 Unsafe.SkipInit(out JVector angularImpulse1);
                 angularImpulse1.X = GetSum3(Vector.Multiply(warmStartImpulse, e1));
                 angularImpulse1.Y = GetSum3(Vector.Multiply(warmStartImpulse, e2));
@@ -1266,25 +1257,6 @@ public struct ContactData
 
             if ((cd->Mode & SolveMode.AngularBody2) != 0)
             {
-                var rp2X = Vector.Create(RelativePosition2.X);
-                var rp2Y = Vector.Create(RelativePosition2.Y);
-                var rp2Z = Vector.Create(RelativePosition2.Z);
-
-                var rrx = Vector.Subtract(Vector.Multiply(rp2Y, normalTangentZ), Vector.Multiply(rp2Z, normalTangentY));
-                var rry = Vector.Subtract(Vector.Multiply(rp2Z, normalTangentX), Vector.Multiply(rp2X, normalTangentZ));
-                var rrz = Vector.Subtract(Vector.Multiply(rp2X, normalTangentY), Vector.Multiply(rp2Y, normalTangentX));
-
-                var ixx = Vector.Create(b2.InverseInertiaWorld.M11);
-                var ixy = Vector.Create(b2.InverseInertiaWorld.M21);
-                var ixz = Vector.Create(b2.InverseInertiaWorld.M31);
-                var iyy = Vector.Create(b2.InverseInertiaWorld.M22);
-                var iyz = Vector.Create(b2.InverseInertiaWorld.M23);
-                var izz = Vector.Create(b2.InverseInertiaWorld.M33);
-
-                var f1 = Vector.Add(Vector.Add(Vector.Multiply(ixx, rrx), Vector.Multiply(ixy, rry)), Vector.Multiply(ixz, rrz));
-                var f2 = Vector.Add(Vector.Add(Vector.Multiply(ixy, rrx), Vector.Multiply(iyy, rry)), Vector.Multiply(iyz, rrz));
-                var f3 = Vector.Add(Vector.Add(Vector.Multiply(ixz, rrx), Vector.Multiply(iyz, rry)), Vector.Multiply(izz, rrz));
-
                 Unsafe.SkipInit(out JVector angularImpulse2);
                 angularImpulse2.X = GetSum3(Vector.Multiply(warmStartImpulse, f1));
                 angularImpulse2.Y = GetSum3(Vector.Multiply(warmStartImpulse, f2));
@@ -1321,9 +1293,7 @@ public struct ContactData
             var vdots = Vector.Add(Vector.Add(Vector.Multiply(normalTangentX, Vector.Create(dv.X)),
                 Vector.Multiply(normalTangentY, Vector.Create(dv.Y))), Vector.Multiply(normalTangentZ, Vector.Create(dv.Z)));
 
-            var effectiveMass = CalculateEffectiveMassAccelerated(cd, normalTangentX, normalTangentY, normalTangentZ,
-                out _, out _, out _, out _, out _, out _);
-            var impulse = Vector.Multiply(effectiveMass, (Vector.Subtract(Vector.Create(bias, 0, 0, 0), vdots)));
+            var impulse = Vector.Multiply(MassNormalTangent, Vector.Subtract(Vector.Create(bias, 0, 0, 0), vdots));
             var oldImpulse = Accumulated;
 
             // Use the pre-update normal impulse for the friction cone; this keeps the

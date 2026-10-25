@@ -9,10 +9,12 @@ public class ContactLifecycleTests
 #endif
 
     [Test]
-    public void ContactPointStorage_IsCompact()
+    public void ContactPointStorage_HoldsBasisImpulsesAnchorsAndMasses()
     {
+        // Bias, penalty bias, normal, first tangent, accumulated impulses with flags, two local
+        // anchors, two world offsets, and the cached effective masses for the scalar solver.
         Assert.That(System.Runtime.CompilerServices.Unsafe.SizeOf<ContactData.Contact>(),
-            Is.EqualTo(24 * System.Runtime.CompilerServices.Unsafe.SizeOf<Real>()));
+            Is.EqualTo(28 * System.Runtime.CompilerServices.Unsafe.SizeOf<Real>()));
     }
 
     [Test]
