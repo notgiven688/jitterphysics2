@@ -18,7 +18,7 @@ using Wide = System.Numerics.Vector<float>;
 
 namespace Jitter2.Dynamics;
 
-internal sealed partial class ContactSolverWide
+internal sealed unsafe partial class ContactSolverWide
 {
     private struct QuaternionWide
     {
@@ -67,7 +67,20 @@ internal sealed partial class ContactSolverWide
     /// </summary>
     internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source, in TimeStep timeStep)
     {
-        InitializeBundle(source);
+        SetLanes(source);
+        PrepareLanes(timeStep);
+    }
+
+    /// <summary>Prepares consecutive contact records as the lanes of this bundle.</summary>
+    internal void Prepare(Span<ContactData> source, in TimeStep timeStep)
+    {
+        SetLanes(source);
+        PrepareLanes(timeStep);
+    }
+
+    private void PrepareLanes(in TimeStep timeStep)
+    {
+        InitializeBundle();
 
         Vector3Wide position1 = default, position2 = default;
         Vector3Wide velocity1 = default, angular1 = default, velocity2 = default, angular2 = default;
@@ -92,7 +105,7 @@ internal sealed partial class ContactSolverWide
             SetLane(ref linearLocks, lane, hasLinearLocks ? 1 : 0);
             anyLinearLocks |= hasLinearLocks;
             combinedMode |= modes[lane];
-            SetLane(ref ccdRelaxation, lane, contacts[lane].Data.CcdRelaxationFactor);
+            SetLane(ref ccdRelaxation, lane, contacts[lane]->CcdRelaxationFactor);
         }
 
         Vector3Wide inverseMassSum = inverseMass1 + inverseMass2;
@@ -110,7 +123,7 @@ internal sealed partial class ContactSolverWide
             for (int lane = 0; lane < Count; lane++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
-                ref ContactData.Contact contact = ref GetContact(ref contacts[lane].Data, slot);
+                ref ContactData.Contact contact = ref GetContact(ref *contacts[lane], slot);
                 point.Normal.SetLane(lane, contact.Normal);
                 point.Tangent1.SetLane(lane, contact.Tangent1);
                 point.Tangent2.SetLane(lane, contact.Tangent2);
@@ -206,7 +219,7 @@ internal sealed partial class ContactSolverWide
             for (int lane = 0; lane < Count; lane++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
-                ref ContactData.Contact contact = ref GetContact(ref contacts[lane].Data, slot);
+                ref ContactData.Contact contact = ref GetContact(ref *contacts[lane], slot);
                 contact.Bias = point.Bias[lane];
                 contact.PenaltyBias = penaltyBias[lane];
             }

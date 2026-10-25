@@ -27,13 +27,15 @@ namespace Jitter2.Dynamics;
 /// back before discarding or preparing the bundle again.
 /// Handles, rather than pointers into the movable body/contact buffers, are retained.
 /// </remarks>
-internal sealed partial class ContactSolverWide
+internal sealed unsafe partial class ContactSolverWide
 {
     internal static int Width => Wide.Count;
 
     internal int Count { get; private set; }
 
-    private readonly JHandle<ContactData>[] contacts = new JHandle<ContactData>[Width];
+    // Lanes point straight at the contact records. The buffer does not move while a
+    // substep is solved, and every preparation refreshes the pointers.
+    private readonly ContactData*[] contacts = new ContactData*[Width];
     private readonly JHandle<RigidBodyData>[] bodies1 = new JHandle<RigidBodyData>[Width];
     private readonly JHandle<RigidBodyData>[] bodies2 = new JHandle<RigidBodyData>[Width];
     private readonly ContactData.SolveMode[] modes = new ContactData.SolveMode[Width];
@@ -140,10 +142,24 @@ internal sealed partial class ContactSolverWide
         }
     }
 
-    private void InitializeBundle(ReadOnlySpan<JHandle<ContactData>> source)
+    private void SetLanes(ReadOnlySpan<JHandle<ContactData>> source)
     {
         if (source.Length > Width) throw new ArgumentOutOfRangeException(nameof(source));
         Count = source.Length;
+        for (int lane = 0; lane < Count; lane++)
+            contacts[lane] = (ContactData*)Unsafe.AsPointer(ref source[lane].Data);
+    }
+
+    private void SetLanes(Span<ContactData> source)
+    {
+        if (source.Length > Width) throw new ArgumentOutOfRangeException(nameof(source));
+        Count = source.Length;
+        for (int lane = 0; lane < Count; lane++)
+            contacts[lane] = (ContactData*)Unsafe.AsPointer(ref source[lane]);
+    }
+
+    private void InitializeBundle()
+    {
         occupiedSlots = 0;
         Array.Clear(points);
         inverseMass1 = inverseMass2 = default;
@@ -151,8 +167,7 @@ internal sealed partial class ContactSolverWide
 
         for (int lane = 0; lane < Count; lane++)
         {
-            contacts[lane] = source[lane];
-            ref ContactData data = ref source[lane].Data;
+            ref ContactData data = ref *contacts[lane];
             bodies1[lane] = data.Body1;
             bodies2[lane] = data.Body2;
             modes[lane] = data.Mode;
@@ -169,13 +184,14 @@ internal sealed partial class ContactSolverWide
     }
 
     /// <summary>Packs coefficients and derives transient masses after the regular preparation and warm-start pass.</summary>
-    internal unsafe void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
+    internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
     {
-        InitializeBundle(source);
+        SetLanes(source);
+        InitializeBundle();
         for (int lane = 0; lane < Count; lane++)
         {
-            ref ContactData data = ref source[lane].Data;
-            ContactData* dataPtr = (ContactData*)Unsafe.AsPointer(ref data);
+            ContactData* dataPtr = contacts[lane];
+            ref ContactData data = ref *dataPtr;
             for (int slot = 0; slot < 4; slot++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
@@ -217,7 +233,9 @@ internal sealed partial class ContactSolverWide
     }
 
     /// <summary>Runs an iteration with live velocities, without allocating or repacking coefficients.</summary>
-    internal void Iterate(bool applyBias)
+    /// <param name="applyBias">Whether to apply the penalty bias, as in the biased solver sweeps.</param>
+    /// <param name="writeBack">Whether to publish the accumulated impulses afterwards, as <see cref="WriteBack"/> does.</param>
+    internal void Iterate(bool applyBias, bool writeBack = false)
     {
         Vector3Wide velocity1 = default, angular1 = default, velocity2 = default, angular2 = default;
         for (int lane = 0; lane < Count; lane++)
@@ -254,6 +272,8 @@ internal sealed partial class ContactSolverWide
             if ((mode & ContactData.SolveMode.LinearBody2) != 0) body2.Velocity = velocity2.GetLane(lane);
             if ((mode & ContactData.SolveMode.AngularBody2) != 0) body2.AngularVelocity = angular2.GetLane(lane);
         }
+
+        if (writeBack) WriteBack();
     }
 
     // Keep lane-indexed packing outside this method. Exposing the working vectors to
@@ -322,7 +342,7 @@ internal sealed partial class ContactSolverWide
     {
         for (int lane = 0; lane < Count; lane++)
         {
-            ref ContactData data = ref contacts[lane].Data;
+            ref ContactData data = ref *contacts[lane];
             for (int slot = 0; slot < 4; slot++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
