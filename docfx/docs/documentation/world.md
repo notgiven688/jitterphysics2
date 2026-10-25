@@ -112,6 +112,10 @@ in the current storage order and regroups all records in one pass.
 
 Each SIMD lane solves an independent manifold. The manifold's contact points retain
 their sequential order, including friction, penetration bias, and accumulated impulses.
+All points of a manifold share one contact normal and friction basis, and a point's
+offset from the second body is derived from its offset from the first body, the
+manifold's center delta and its depth along the normal, so neither the bundle nor the
+contact record stores a second basis or a second offset per point.
 Full bundles prepare contacts and apply warm starts directly across SIMD lanes. Contact
 impulse offsets remain fixed throughout the world step; current transformed anchors
 are used to recompute separation bias for each substep. Preparation captures inverse

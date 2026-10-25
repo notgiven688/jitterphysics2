@@ -41,6 +41,7 @@ internal sealed unsafe partial class ContactSolverWide
     private readonly ContactData.SolveMode[] modes = new ContactData.SolveMode[Width];
     private readonly uint[] usageMasks = new uint[Width];
     private readonly ContactWide[] points = new ContactWide[4];
+    private Vector3Wide normal, tangent1, centerDelta;
     private Vector3Wide inverseMass1, inverseMass2;
     private SymmetricMatrixWide inverseInertia1, inverseInertia2;
     private Wide friction;
@@ -115,10 +116,12 @@ internal sealed unsafe partial class ContactSolverWide
         };
     }
 
+    // Per-point state. The basis, the center delta, masses and inertia are shared by the bundle;
+    // the second offset follows from the first, the center delta and the depth along the normal.
     private struct ContactWide
     {
-        internal Vector3Wide Normal, Tangent1, Tangent2;
-        internal Vector3Wide RelativePosition1, RelativePosition2;
+        internal Vector3Wide RelativePosition1;
+        internal Wide Depth;
         internal Wide MassNormal, MassTangent1, MassTangent2;
         internal Wide AccumulatedNormal, AccumulatedTangent1, AccumulatedTangent2;
         internal Wide Bias, BiasedTarget;
@@ -162,6 +165,7 @@ internal sealed unsafe partial class ContactSolverWide
     {
         occupiedSlots = 0;
         Array.Clear(points);
+        normal = tangent1 = centerDelta = default;
         inverseMass1 = inverseMass2 = default;
         friction = default;
 
@@ -183,29 +187,27 @@ internal sealed unsafe partial class ContactSolverWide
         RefreshInertia();
     }
 
-    /// <summary>Packs coefficients and derives transient masses after the regular preparation and warm-start pass.</summary>
+    /// <summary>Packs coefficients and masses after the regular preparation and warm-start pass.</summary>
     internal void Prepare(ReadOnlySpan<JHandle<ContactData>> source)
     {
         SetLanes(source);
         InitializeBundle();
         for (int lane = 0; lane < Count; lane++)
         {
-            ContactData* dataPtr = contacts[lane];
-            ref ContactData data = ref *dataPtr;
+            ref ContactData data = ref *contacts[lane];
+            normal.SetLane(lane, data.Normal);
+            tangent1.SetLane(lane, data.Tangent1);
+            centerDelta.SetLane(lane, data.CenterDelta);
             for (int slot = 0; slot < 4; slot++)
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
                 ref ContactData.Contact contact = ref GetContact(ref data, slot);
                 ref ContactWide point = ref points[slot];
-                point.Normal.SetLane(lane, contact.Normal);
-                point.Tangent1.SetLane(lane, contact.Tangent1);
-                point.Tangent2.SetLane(lane, contact.Tangent2);
                 point.RelativePosition1.SetLane(lane, contact.RelativePosition1);
-                point.RelativePosition2.SetLane(lane, contact.RelativePosition2);
-                VectorReal mass = contact.CalculateEffectiveMass(dataPtr);
-                SetLane(ref point.MassNormal, lane, mass.GetElement(0));
-                SetLane(ref point.MassTangent1, lane, mass.GetElement(1));
-                SetLane(ref point.MassTangent2, lane, mass.GetElement(2));
+                SetLane(ref point.Depth, lane, contact.Depth);
+                SetLane(ref point.MassNormal, lane, contact.MassNormal);
+                SetLane(ref point.MassTangent1, lane, contact.MassTangent1);
+                SetLane(ref point.MassTangent2, lane, contact.MassTangent2);
                 SetLane(ref point.AccumulatedNormal, lane, contact.Accumulated.GetElement(0));
                 SetLane(ref point.AccumulatedTangent1, lane, contact.Accumulated.GetElement(1));
                 SetLane(ref point.AccumulatedTangent2, lane, contact.Accumulated.GetElement(2));
@@ -300,40 +302,44 @@ internal sealed unsafe partial class ContactSolverWide
     private void IterateVelocitiesCore(bool applyBias, ref Vector3Wide velocity1, ref Vector3Wide angular1,
         ref Vector3Wide velocity2, ref Vector3Wide angular2)
     {
+        // The second tangent and each point's second offset are derived here instead of being
+        // streamed from memory: the sweep is bound by the bytes it reads, not by its arithmetic.
+        Vector3Wide tangent2 = Vector3Wide.Cross(tangent1, normal);
         for (int slot = 0; slot < 4; slot++)
         {
             if ((occupiedSlots & (1u << slot)) == 0) continue;
             ref ContactWide point = ref points[slot];
-            Vector3Wide relative = (velocity2 + Vector3Wide.Cross(angular2, point.RelativePosition2)) -
+            Vector3Wide relativePosition2 = (point.RelativePosition1 + centerDelta) - normal * point.Depth;
+            Vector3Wide relative = (velocity2 + Vector3Wide.Cross(angular2, relativePosition2)) -
                                    (velocity1 + Vector3Wide.Cross(angular1, point.RelativePosition1));
             Wide bias = applyBias ? point.BiasedTarget : point.Bias;
-            Wide normal = point.MassNormal * (bias - Vector3Wide.Dot(point.Normal, relative));
-            Wide tangent1 = point.MassTangent1 * -Vector3Wide.Dot(point.Tangent1, relative);
-            Wide tangent2 = point.MassTangent2 * -Vector3Wide.Dot(point.Tangent2, relative);
+            Wide normalImpulse = point.MassNormal * (bias - Vector3Wide.Dot(normal, relative));
+            Wide tangentImpulse1 = point.MassTangent1 * -Vector3Wide.Dot(tangent1, relative);
+            Wide tangentImpulse2 = point.MassTangent2 * -Vector3Wide.Dot(tangent2, relative);
 
             // Match Contact.Iterate: friction uses the normal impulse before this update.
             Wide maximumFriction = friction * point.AccumulatedNormal;
-            Wide accumulatedNormal = WideMath.Min(WideMath.Max(point.AccumulatedNormal + normal, Wide.Zero),
+            Wide accumulatedNormal = WideMath.Min(WideMath.Max(point.AccumulatedNormal + normalImpulse, Wide.Zero),
                 new Wide(Real.MaxValue));
-            Wide accumulatedTangent1 = WideMath.Min(WideMath.Max(point.AccumulatedTangent1 + tangent1,
+            Wide accumulatedTangent1 = WideMath.Min(WideMath.Max(point.AccumulatedTangent1 + tangentImpulse1,
                 -maximumFriction), maximumFriction);
-            Wide accumulatedTangent2 = WideMath.Min(WideMath.Max(point.AccumulatedTangent2 + tangent2,
+            Wide accumulatedTangent2 = WideMath.Min(WideMath.Max(point.AccumulatedTangent2 + tangentImpulse2,
                 -maximumFriction), maximumFriction);
-            normal = accumulatedNormal - point.AccumulatedNormal;
-            tangent1 = accumulatedTangent1 - point.AccumulatedTangent1;
-            tangent2 = accumulatedTangent2 - point.AccumulatedTangent2;
+            normalImpulse = accumulatedNormal - point.AccumulatedNormal;
+            tangentImpulse1 = accumulatedTangent1 - point.AccumulatedTangent1;
+            tangentImpulse2 = accumulatedTangent2 - point.AccumulatedTangent2;
             point.AccumulatedNormal = accumulatedNormal;
             point.AccumulatedTangent1 = accumulatedTangent1;
             point.AccumulatedTangent2 = accumulatedTangent2;
 
-            Vector3Wide impulse = (point.Normal * normal + point.Tangent1 * tangent1) + point.Tangent2 * tangent2;
+            Vector3Wide impulse = (normal * normalImpulse + tangent1 * tangentImpulse1) + tangent2 * tangentImpulse2;
             velocity1 -= Vector3Wide.Multiply(impulse, inverseMass1);
             velocity2 += Vector3Wide.Multiply(impulse, inverseMass2);
             // Recompute the angular response to the combined impulse rather than loading
             // six cached response vectors per point. Frozen anchors and inertia preserve
             // the same constraint through biased solving and velocity relaxation.
             angular1 -= inverseInertia1.Transform(Vector3Wide.Cross(point.RelativePosition1, impulse));
-            angular2 += inverseInertia2.Transform(Vector3Wide.Cross(point.RelativePosition2, impulse));
+            angular2 += inverseInertia2.Transform(Vector3Wide.Cross(relativePosition2, impulse));
         }
     }
 

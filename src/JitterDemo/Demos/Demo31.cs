@@ -389,7 +389,7 @@ public sealed class Demo31 : IDemo
             if ((mask & contactMask) == 0) return;
 
             JVector p1 = arbiter.Body1.Position + contact.RelativePosition1;
-            JVector p2 = arbiter.Body2.Position + contact.RelativePosition2;
+            JVector p2 = arbiter.Body2.Position + contact.GetRelativePosition2(arbiter.Handle.Data);
             sum += (p1 + p2) * 0.5f;
             count++;
         }

@@ -9,12 +9,13 @@ public class ContactLifecycleTests
 #endif
 
     [Test]
-    public void ContactPointStorage_HoldsBasisImpulsesAnchorsAndMasses()
+    public void ContactPointStorage_HoldsDepthMassesAnchorsAndImpulses()
     {
-        // Bias, penalty bias, normal, first tangent, accumulated impulses with flags, two local
-        // anchors, two world offsets, and the cached effective masses for the scalar solver.
+        // Bias, penalty bias, depth, the three cached effective masses, two local anchors, the
+        // first world offset, and the accumulated impulses with flags. The contact basis and the
+        // center delta live on the manifold.
         Assert.That(System.Runtime.CompilerServices.Unsafe.SizeOf<ContactData.Contact>(),
-            Is.EqualTo(28 * System.Runtime.CompilerServices.Unsafe.SizeOf<Real>()));
+            Is.EqualTo(20 * System.Runtime.CompilerServices.Unsafe.SizeOf<Real>()));
     }
 
     [Test]
@@ -197,8 +198,8 @@ public class ContactLifecycleTests
         {
             Assert.That(world.GetArbiter(wallShape.ShapeId, shape.ShapeId, out var arbiter), Is.True);
             var point = arbiter!.Handle.Data.Contact0;
-            normal = point.Normal;
-            offset = point.RelativePosition2;
+            normal = arbiter.Handle.Data.Normal;
+            offset = point.GetRelativePosition2(arbiter.Handle.Data);
             Real separation = JVector.Dot(body.Position + offset - wall.Position - point.RelativePosition1, normal);
             Assert.That(separation, Is.GreaterThan((Real)0.1), "The contact must be generated before overlap.");
             Assert.That((offset % normal).Length(), Is.GreaterThan((Real)0.1), "The impulse must act off-center.");

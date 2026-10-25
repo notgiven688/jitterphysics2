@@ -12,8 +12,8 @@ namespace JitterTests.Robustness;
 public class ReproducibilityTest
 {
     // Reference trajectories must remain bit-identical across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x0A20DBE13A671260;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x228AEFD15A061F4C;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x6A5FF442FE1CC599;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0xF088803CD77846B4;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -439,9 +439,9 @@ public class ReproducibilityTest
 
         if (simd.Bias != scalar.Bias ||
             simd.PenaltyBias != scalar.PenaltyBias ||
-            GetElement(simd.MassNormalTangent, 0) != GetElement(scalar.MassNormalTangent, 0) ||
-            GetElement(simd.MassNormalTangent, 1) != GetElement(scalar.MassNormalTangent, 1) ||
-            GetElement(simd.MassNormalTangent, 2) != GetElement(scalar.MassNormalTangent, 2) ||
+            simd.MassNormal != scalar.MassNormal ||
+            simd.MassTangent1 != scalar.MassTangent1 ||
+            simd.MassTangent2 != scalar.MassTangent2 ||
             simd.Impulse != scalar.Impulse ||
             simd.TangentImpulse1 != scalar.TangentImpulse1 ||
             simd.TangentImpulse2 != scalar.TangentImpulse2 ||
@@ -454,8 +454,8 @@ public class ReproducibilityTest
                 $"{phase} mismatch: " +
                 $"simd bias={Format(simd.Bias)}, scalar bias={Format(scalar.Bias)}, " +
                 $"simd penalty={Format(simd.PenaltyBias)}, scalar penalty={Format(scalar.PenaltyBias)}, " +
-                $"simd mass=[{Format(GetElement(simd.MassNormalTangent, 0))}, {Format(GetElement(simd.MassNormalTangent, 1))}, {Format(GetElement(simd.MassNormalTangent, 2))}], " +
-                $"scalar mass=[{Format(GetElement(scalar.MassNormalTangent, 0))}, {Format(GetElement(scalar.MassNormalTangent, 1))}, {Format(GetElement(scalar.MassNormalTangent, 2))}], " +
+                $"simd mass=[{Format(simd.MassNormal)}, {Format(simd.MassTangent1)}, {Format(simd.MassTangent2)}], " +
+                $"scalar mass=[{Format(scalar.MassNormal)}, {Format(scalar.MassTangent1)}, {Format(scalar.MassTangent2)}], " +
                 $"simd impulse=[{Format(simd.Impulse)}, {Format(simd.TangentImpulse1)}, {Format(simd.TangentImpulse2)}], " +
                 $"scalar impulse=[{Format(scalar.Impulse)}, {Format(scalar.TangentImpulse1)}, {Format(scalar.TangentImpulse2)}], " +
                 $"simd body1 vel={Format(simdBody1.Velocity)}, scalar body1 vel={Format(scalarBody1.Velocity)}, " +

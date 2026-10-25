@@ -34,7 +34,7 @@ public class ContactSubstepTests
             * (penetration - ContactData.Contact.AllowedPenetration);
 
         Assert.That(contact.Contact0.PenaltyBias, Is.EqualTo(expectedBias).Within(Tolerance));
-        Assert.That(JVector.MaxAbs(contact.Contact0.RelativePosition2 + (Real)0.5 * JVector.UnitY),
+        Assert.That(JVector.MaxAbs(contact.Contact0.GetRelativePosition2(contact) + (Real)0.5 * JVector.UnitY),
             Is.LessThan(Tolerance));
 
         if (accelerated) contact.IterateAccelerated(true);
@@ -73,22 +73,29 @@ public class ContactSubstepTests
 
         JVector expectedOffset = default;
         int substeps = 0;
-        world.PreStep += _ => expectedOffset = JVector.Transform(point, body.Orientation);
+        // The offsets fixed before the step stay in use through all of its substeps.
+        world.PreStep += _ => expectedOffset = arbiter!.Handle.Data.Contact0.GetRelativePosition2(arbiter.Handle.Data);
         world.PostSubStep += _ =>
         {
             substeps++;
             // The regular solver refreshes the offsets inside the final sweep of the last substep.
             if (solveMode == SolveMode.Regular && substeps % world.SubstepCount == 0) return;
-            Assert.That(JVector.MaxAbs(arbiter!.Handle.Data.Contact0.RelativePosition2 - expectedOffset),
+            Assert.That(JVector.MaxAbs(arbiter!.Handle.Data.Contact0.GetRelativePosition2(arbiter.Handle.Data) - expectedOffset),
                 Is.LessThan(Tolerance));
         };
 
         for (int i = 0; i < 2; i++)
         {
             world.Step((Real)0.01, multiThread);
+            // After solving the offsets are refreshed from the anchors. The second body's offset is
+            // derived along the manifold normal, so the sphere's tangential drift under the fixed
+            // floor point is not part of it; the normal component must be current.
             JVector currentOffset = JVector.Transform(point, body.Orientation);
-            Assert.That(JVector.MaxAbs(arbiter!.Handle.Data.Contact0.RelativePosition2 - currentOffset),
-                Is.LessThan(Tolerance), "After solving, cached offsets must be current for contact matching.");
+            JVector refreshed = arbiter!.Handle.Data.Contact0.GetRelativePosition2(arbiter.Handle.Data);
+            Assert.That(MathR.Abs(JVector.Dot(refreshed - currentOffset, JVector.UnitY)), Is.LessThan(Tolerance),
+                "After solving, cached offsets must be current along the normal.");
+            Assert.That(JVector.MaxAbs(refreshed - currentOffset), Is.LessThan((Real)0.02),
+                "Tangential drift stays within the break threshold.");
         }
 
         Assert.That(substeps, Is.EqualTo(6));

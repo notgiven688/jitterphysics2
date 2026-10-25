@@ -149,7 +149,8 @@ public class ContactSolverWideTests
             {
                 // A recycled manifold may contain unusable data outside its active slots.
                 contact.Bias = contact.PenaltyBias = Real.NaN;
-                contact.RelativePosition1 = contact.RelativePosition2 = new JVector(Real.NaN);
+                contact.RelativePosition1 = new JVector(Real.NaN);
+                contact.Depth = Real.NaN;
                 contact.Accumulated = Vector.Create(Real.NaN);
                 contact.Flag = ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart;
                 continue;
@@ -198,6 +199,9 @@ public class ContactSolverWideTests
     private static void AssertPreparedEquivalent(JHandle<ContactData> actual, JHandle<ContactData> expected)
     {
         Assert.That(actual.Data.UsageMask, Is.EqualTo(expected.Data.UsageMask));
+        AssertVector(actual.Data.Normal, expected.Data.Normal);
+        AssertVector(actual.Data.Tangent1, expected.Data.Tangent1);
+        AssertVector(actual.Data.CenterDelta, expected.Data.CenterDelta);
         for (int slot = 0; slot < 4; slot++)
         {
             ref var actualContact = ref GetContact(ref actual.Data, slot);
@@ -211,10 +215,8 @@ public class ContactSolverWideTests
             Assert.That(actualContact.Bias, Is.EqualTo(expectedContact.Bias).Within(Tolerance));
             Assert.That(actualContact.PenaltyBias, Is.EqualTo(expectedContact.PenaltyBias).Within(Tolerance));
             AssertVector(actualContact.RelativePosition1, expectedContact.RelativePosition1);
-            AssertVector(actualContact.RelativePosition2, expectedContact.RelativePosition2);
-            AssertVector(actualContact.Normal, expectedContact.Normal);
-            AssertVector(actualContact.Tangent1, expectedContact.Tangent1);
-            AssertVector(actualContact.Tangent2, expectedContact.Tangent2);
+            AssertVector(actualContact.GetRelativePosition2(actual.Data), expectedContact.GetRelativePosition2(expected.Data));
+            Assert.That(actualContact.Depth, Is.EqualTo(expectedContact.Depth).Within(Tolerance));
         }
         AssertEquivalent(actual, expected);
     }

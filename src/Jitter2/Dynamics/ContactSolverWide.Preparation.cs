@@ -42,21 +42,22 @@ internal sealed unsafe partial class ContactSolverWide
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void PrepareAngularSide(in SymmetricMatrixWide inertia, in Vector3Wide position,
-        in ContactWide point, Wide warmNormal, Wide warmTangent1, Wide warmTangent2,
+        in Vector3Wide normal, in Vector3Wide tangent1, in Vector3Wide tangent2,
+        Wide warmNormal, Wide warmTangent1, Wide warmTangent2,
         out Vector3Wide normalContribution, out Vector3Wide tangent1Contribution,
         out Vector3Wide tangent2Contribution, out Vector3Wide warmImpulse)
     {
         // Consume each response immediately so it need not stay live alongside the other
         // directions. These responses are temporary preparation data, never bundle state.
-        Vector3Wide response = inertia.Transform(Vector3Wide.Cross(position, point.Normal));
+        Vector3Wide response = inertia.Transform(Vector3Wide.Cross(position, normal));
         normalContribution = Vector3Wide.Cross(response, position);
         warmImpulse = response * warmNormal;
 
-        response = inertia.Transform(Vector3Wide.Cross(position, point.Tangent1));
+        response = inertia.Transform(Vector3Wide.Cross(position, tangent1));
         tangent1Contribution = Vector3Wide.Cross(response, position);
         warmImpulse += response * warmTangent1;
 
-        response = inertia.Transform(Vector3Wide.Cross(position, point.Tangent2));
+        response = inertia.Transform(Vector3Wide.Cross(position, tangent2));
         tangent2Contribution = Vector3Wide.Cross(response, position);
         warmImpulse += response * warmTangent2;
     }
@@ -91,6 +92,7 @@ internal sealed unsafe partial class ContactSolverWide
 
         for (int lane = 0; lane < Count; lane++)
         {
+            ref ContactData data = ref *contacts[lane];
             ref RigidBodyData body1 = ref bodies1[lane].Data;
             ref RigidBodyData body2 = ref bodies2[lane].Data;
             position1.SetLane(lane, body1.Position);
@@ -101,13 +103,17 @@ internal sealed unsafe partial class ContactSolverWide
             angular1.SetLane(lane, body1.AngularVelocity);
             velocity2.SetLane(lane, body2.Velocity);
             angular2.SetLane(lane, body2.AngularVelocity);
+            normal.SetLane(lane, data.Normal);
+            tangent1.SetLane(lane, data.Tangent1);
+            centerDelta.SetLane(lane, data.CenterDelta);
             bool hasLinearLocks = body1.HasLinearLocks || body2.HasLinearLocks;
             SetLane(ref linearLocks, lane, hasLinearLocks ? 1 : 0);
             anyLinearLocks |= hasLinearLocks;
             combinedMode |= modes[lane];
-            SetLane(ref ccdRelaxation, lane, contacts[lane]->CcdRelaxationFactor);
+            SetLane(ref ccdRelaxation, lane, data.CcdRelaxationFactor);
         }
 
+        Vector3Wide tangent2 = Vector3Wide.Cross(tangent1, normal);
         Vector3Wide inverseMassSum = inverseMass1 + inverseMass2;
         var lockedLanes = WideMath.GreaterThan(linearLocks, Wide.Zero);
         Wide inverseStepDt = new(timeStep.InverseStepDt);
@@ -124,37 +130,37 @@ internal sealed unsafe partial class ContactSolverWide
             {
                 if ((usageMasks[lane] & (1u << slot)) == 0) continue;
                 ref ContactData.Contact contact = ref GetContact(ref *contacts[lane], slot);
-                point.Normal.SetLane(lane, contact.Normal);
-                point.Tangent1.SetLane(lane, contact.Tangent1);
-                point.Tangent2.SetLane(lane, contact.Tangent2);
                 point.RelativePosition1.SetLane(lane, contact.RelativePosition1);
-                point.RelativePosition2.SetLane(lane, contact.RelativePosition2);
+                SetLane(ref point.Depth, lane, contact.Depth);
                 localPosition1.SetLane(lane, contact.Position1);
                 localPosition2.SetLane(lane, contact.Position2);
-                Real normal = contact.Accumulated.GetElement(0);
-                Real tangent1 = contact.Accumulated.GetElement(1);
-                Real tangent2 = contact.Accumulated.GetElement(2);
-                SetLane(ref point.AccumulatedNormal, lane, normal);
-                SetLane(ref point.AccumulatedTangent1, lane, tangent1);
-                SetLane(ref point.AccumulatedTangent2, lane, tangent2);
+                Real accumulatedNormal = contact.Accumulated.GetElement(0);
+                Real accumulatedTangent1 = contact.Accumulated.GetElement(1);
+                Real accumulatedTangent2 = contact.Accumulated.GetElement(2);
+                SetLane(ref point.AccumulatedNormal, lane, accumulatedNormal);
+                SetLane(ref point.AccumulatedTangent1, lane, accumulatedTangent1);
+                SetLane(ref point.AccumulatedTangent2, lane, accumulatedTangent2);
                 SetLane(ref active, lane, 1);
                 if ((contact.Flag & ContactData.Contact.Flags.NewContact) != 0)
                     SetLane(ref point.Bias, lane, contact.Bias);
                 if ((contact.Flag & ContactData.Contact.Flags.SkipWarmStart) == 0)
                 {
-                    SetLane(ref warmNormal, lane, normal);
-                    SetLane(ref warmTangent1, lane, tangent1);
-                    SetLane(ref warmTangent2, lane, tangent2);
+                    SetLane(ref warmNormal, lane, accumulatedNormal);
+                    SetLane(ref warmTangent1, lane, accumulatedTangent1);
+                    SetLane(ref warmTangent2, lane, accumulatedTangent2);
                 }
                 contact.Flag &= ~(ContactData.Contact.Flags.NewContact | ContactData.Contact.Flags.SkipWarmStart);
             }
+
+            // The second body's offset follows from the first offset, the center delta and the depth.
+            Vector3Wide relativePosition2 = (point.RelativePosition1 + centerDelta) - normal * point.Depth;
 
             // Impulse offsets stay fixed for the whole step. Only separation follows
             // the current poses during substeps, matching Contact.PrepareForIteration.
             Vector3Wide currentRelativePosition1 = orientation1.Transform(localPosition1);
             Vector3Wide currentRelativePosition2 = orientation2.Transform(localPosition2);
             Vector3Wide separation = (currentRelativePosition1 + position1) - (currentRelativePosition2 + position2);
-            Wide penetration = Vector3Wide.Dot(separation, point.Normal);
+            Wide penetration = Vector3Wide.Dot(separation, normal);
             point.Bias = WideMath.ConditionalSelect(
                 WideMath.LessThan(penetration, new Wide(-ContactData.Contact.BreakThreshold)),
                 (penetration * inverseStepDt) * ccdRelaxation, point.Bias);
@@ -170,11 +176,11 @@ internal sealed unsafe partial class ContactSolverWide
             if (anyLinearLocks)
             {
                 kNormal = WideMath.ConditionalSelect(lockedLanes,
-                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, point.Normal), point.Normal), inverseMassSum.X);
+                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, normal), normal), inverseMassSum.X);
                 kTangent1 = WideMath.ConditionalSelect(lockedLanes,
-                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, point.Tangent1), point.Tangent1), inverseMassSum.X);
+                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, tangent1), tangent1), inverseMassSum.X);
                 kTangent2 = WideMath.ConditionalSelect(lockedLanes,
-                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, point.Tangent2), point.Tangent2), inverseMassSum.X);
+                    Vector3Wide.Dot(Vector3Wide.Multiply(inverseMassSum, tangent2), tangent2), inverseMassSum.X);
             }
 
             Vector3Wide normalContribution = default, tangent1Contribution = default, tangent2Contribution = default;
@@ -183,13 +189,13 @@ internal sealed unsafe partial class ContactSolverWide
             // Skip its angular preparation altogether; mixed bundles retain masked inertia.
             if ((combinedMode & ContactData.SolveMode.AngularBody1) != 0)
             {
-                PrepareAngularSide(inverseInertia1, point.RelativePosition1, point,
+                PrepareAngularSide(inverseInertia1, point.RelativePosition1, normal, tangent1, tangent2,
                     warmNormal, warmTangent1, warmTangent2, out normalContribution,
                     out tangent1Contribution, out tangent2Contribution, out warmAngular1);
             }
             if ((combinedMode & ContactData.SolveMode.AngularBody2) != 0)
             {
-                PrepareAngularSide(inverseInertia2, point.RelativePosition2, point,
+                PrepareAngularSide(inverseInertia2, relativePosition2, normal, tangent1, tangent2,
                     warmNormal, warmTangent1, warmTangent2, out Vector3Wide normalContribution2,
                     out Vector3Wide tangent1Contribution2, out Vector3Wide tangent2Contribution2, out warmAngular2);
                 normalContribution += normalContribution2;
@@ -197,9 +203,9 @@ internal sealed unsafe partial class ContactSolverWide
                 tangent2Contribution += tangent2Contribution2;
             }
 
-            kNormal += Vector3Wide.Dot(point.Normal, normalContribution);
-            kTangent1 += Vector3Wide.Dot(point.Tangent1, tangent1Contribution);
-            kTangent2 += Vector3Wide.Dot(point.Tangent2, tangent2Contribution);
+            kNormal += Vector3Wide.Dot(normal, normalContribution);
+            kTangent1 += Vector3Wide.Dot(tangent1, tangent1Contribution);
+            kTangent2 += Vector3Wide.Dot(tangent2, tangent2Contribution);
 
             // An absent contact must remain a neutral lane even when its bodies are dynamic.
             var activeLanes = WideMath.GreaterThan(active, Wide.Zero);
@@ -210,7 +216,7 @@ internal sealed unsafe partial class ContactSolverWide
             point.MassTangent2 = WideMath.ConditionalSelect(activeLanes & WideMath.GreaterThan(kTangent2, Wide.Zero),
                 Wide.One / kTangent2, Wide.Zero);
 
-            Vector3Wide impulse = (point.Normal * warmNormal + point.Tangent1 * warmTangent1) + point.Tangent2 * warmTangent2;
+            Vector3Wide impulse = (normal * warmNormal + tangent1 * warmTangent1) + tangent2 * warmTangent2;
             velocity1 -= Vector3Wide.Multiply(impulse, inverseMass1);
             velocity2 += Vector3Wide.Multiply(impulse, inverseMass2);
             angular1 -= warmAngular1;

@@ -50,7 +50,7 @@ public class WideContactIntegrationTests
         for (int lane = 0; lane < handles.Length; lane++)
         {
             Assert.That(handles[lane].Data.Contact0.PenaltyBias, Is.EqualTo(expectedBias).Within(Tolerance));
-            Assert.That(JVector.MaxAbs(handles[lane].Data.Contact0.RelativePosition2 + (Real)0.5 * JVector.UnitY),
+            Assert.That(JVector.MaxAbs(handles[lane].Data.Contact0.GetRelativePosition2(handles[lane].Data) + (Real)0.5 * JVector.UnitY),
                 Is.LessThan(Tolerance));
             Assert.That(bodies[lane].Velocity.Y, Is.EqualTo(expectedBias).Within(Tolerance));
             Assert.That(bodies[lane].AngularVelocity.Length(), Is.LessThan(Tolerance));
@@ -110,19 +110,19 @@ public class WideContactIntegrationTests
         contact.Contact0.Accumulated = Vector.Create((Real)3, (Real)0.1, (Real)(-0.05), (Real)0);
         contact.Contact0.Flag = flags;
         contact.Contact0.Bias = (Real)0.75;
-        JVector previousImpulse = contact.Contact0.Impulse * contact.Contact0.Normal
-            + contact.Contact0.TangentImpulse1 * contact.Contact0.Tangent1
-            + contact.Contact0.TangentImpulse2 * contact.Contact0.Tangent2;
+        JVector previousImpulse = contact.Contact0.Impulse * contact.Normal
+            + contact.Contact0.TangentImpulse1 * contact.Tangent1
+            + contact.Contact0.TangentImpulse2 * contact.Tangent2;
         JVector normal = JVector.Normalize(new JVector((Real)0.05, 1, 0));
 
         contact.AddContact(JVector.Zero, JVector.Zero, normal);
 
-        JVector refreshedImpulse = contact.Contact0.Impulse * contact.Contact0.Normal
-            + contact.Contact0.TangentImpulse1 * contact.Contact0.Tangent1
-            + contact.Contact0.TangentImpulse2 * contact.Contact0.Tangent2;
+        JVector refreshedImpulse = contact.Contact0.Impulse * contact.Normal
+            + contact.Contact0.TangentImpulse1 * contact.Tangent1
+            + contact.Contact0.TangentImpulse2 * contact.Tangent2;
         Assert.That(contact.Contact0.Flag, Is.EqualTo(flags));
         Assert.That(contact.Contact0.Bias, Is.EqualTo((Real)0.75));
-        Assert.That((contact.Contact0.Normal - normal).Length(), Is.LessThan(Tolerance));
+        Assert.That((contact.Normal - normal).Length(), Is.LessThan(Tolerance));
         Assert.That((refreshedImpulse - previousImpulse).Length(), Is.LessThan(Tolerance));
     }
 }
