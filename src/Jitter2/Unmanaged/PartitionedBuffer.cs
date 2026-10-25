@@ -159,6 +159,11 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public int Count { get; private set; }
 
     /// <summary>
+    /// Gets the number of element slots currently allocated. Every stable element ID is smaller than this value.
+    /// </summary>
+    public int Capacity => size;
+
+    /// <summary>
     /// Indicates whether the allocated memory is aligned to a 64-byte boundary.
     /// </summary>
     public bool Aligned64 { get; }
@@ -377,6 +382,30 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
 
         *GetHandleSlot(Unsafe.Read<int>(&memory[i])) = &memory[i];
         *GetHandleSlot(Unsafe.Read<int>(&memory[j])) = &memory[j];
+    }
+
+    /// <summary>
+    /// Moves the element at each index to the preceding index of <paramref name="indices"/>, and
+    /// the element at the first index to the last one. Handles stay valid. O(n) in the number
+    /// of indices, with one copy per element instead of a swap per step.
+    /// </summary>
+    /// <param name="indices">Distinct element indices; nothing happens for fewer than two.</param>
+    public void Rotate(ReadOnlySpan<int> indices)
+    {
+        if (indices.Length < 2) return;
+
+        T first = memory[indices[0]];
+
+        for (int i = 1; i < indices.Length; i++)
+        {
+            int target = indices[i - 1];
+            memory[target] = memory[indices[i]];
+            *GetHandleSlot(Unsafe.Read<int>(&memory[target])) = &memory[target];
+        }
+
+        int last = indices[^1];
+        memory[last] = first;
+        *GetHandleSlot(Unsafe.Read<int>(&memory[last])) = &memory[last];
     }
 
     /// <summary>
