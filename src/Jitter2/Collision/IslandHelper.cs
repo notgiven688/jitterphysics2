@@ -23,13 +23,9 @@ namespace Jitter2.Collision;
 /// </remarks>
 internal static class IslandHelper
 {
-    [ThreadStatic] private static Queue<RigidBody>? leftSearchQueue;
-    [ThreadStatic] private static Queue<RigidBody>? rightSearchQueue;
     [ThreadStatic] private static List<RigidBody>? visitedBodiesLeft;
     [ThreadStatic] private static List<RigidBody>? visitedBodiesRight;
 
-    private static Queue<RigidBody> LeftSearchQueue => leftSearchQueue ??= new Queue<RigidBody>();
-    private static Queue<RigidBody> RightSearchQueue => rightSearchQueue ??= new Queue<RigidBody>();
     private static List<RigidBody> VisitedBodiesLeft => visitedBodiesLeft ??= [];
     private static List<RigidBody> VisitedBodiesRight => visitedBodiesRight ??= [];
 
@@ -123,8 +119,9 @@ internal static class IslandHelper
     {
         static void RemoveRef(List<RigidBody> list, RigidBody body)
         {
-            int index = list.IndexOf(body);
-            if (index < 0) return;
+            int index = 0;
+            while (index < list.Count && list[index] != body) index++;
+            if (index == list.Count) return;
 
             int last = list.Count - 1;
             list[index] = list[last];
@@ -145,13 +142,9 @@ internal static class IslandHelper
         Island sourceIsland = body1.InternalIsland;
         Debug.Assert(sourceIsland == body2.InternalIsland, "Islands not the same or null.");
 
-        Queue<RigidBody> leftSearchQueue = LeftSearchQueue;
-        Queue<RigidBody> rightSearchQueue = RightSearchQueue;
         List<RigidBody> visitedBodiesLeft = VisitedBodiesLeft;
         List<RigidBody> visitedBodiesRight = VisitedBodiesRight;
-
-        leftSearchQueue.Enqueue(body1);
-        rightSearchQueue.Enqueue(body2);
+        int leftHead = 0, rightHead = 0;
 
         visitedBodiesLeft.Add(body1);
         visitedBodiesRight.Add(body2);
@@ -164,7 +157,7 @@ internal static class IslandHelper
 
         try
         {
-            while (leftSearchQueue.Count > 0 && rightSearchQueue.Count > 0)
+            while (leftHead < visitedBodiesLeft.Count && rightHead < visitedBodiesRight.Count)
             {
                 // Expand the front that has done less work, so that both fronts grow at the same
                 // cost and meet in the middle, and a small component runs dry after a few
@@ -173,8 +166,8 @@ internal static class IslandHelper
                 // instead of having all of its connections enqueued: in a pile of ragdolls that
                 // hub was most of the cost of every removed contact.
                 bool met = leftWork <= rightWork
-                    ? Expand(leftSearchQueue, visitedBodiesLeft, ref leftWork, own: 1, other: 2)
-                    : Expand(rightSearchQueue, visitedBodiesRight, ref rightWork, own: 2, other: 1);
+                    ? Expand(visitedBodiesLeft, ref leftHead, ref leftWork, own: 1, other: 2)
+                    : Expand(visitedBodiesRight, ref rightHead, ref rightWork, own: 2, other: 1);
                 if (met) return;
             }
 
@@ -183,7 +176,7 @@ internal static class IslandHelper
             island.MarkedAsActive = sourceIsland.MarkedAsActive;
             islands.Add(island, islands.IsActive(sourceIsland));
 
-            List<RigidBody> splitBodies = leftSearchQueue.Count == 0 ? visitedBodiesLeft : visitedBodiesRight;
+            List<RigidBody> splitBodies = leftHead == visitedBodiesLeft.Count ? visitedBodiesLeft : visitedBodiesRight;
             for (int i = 0; i < splitBodies.Count; i++)
             {
                 RigidBody body = splitBodies[i];
@@ -204,8 +197,6 @@ internal static class IslandHelper
                 visitedBodiesRight[i].InternalIslandMarker = 0;
             }
 
-            leftSearchQueue.Clear();
-            rightSearchQueue.Clear();
             visitedBodiesLeft.Clear();
             visitedBodiesRight.Clear();
         }
@@ -213,9 +204,9 @@ internal static class IslandHelper
 
     // Expands the next body of a front, adding the connections of newly reached bodies to the
     // front's work; true when it reaches a body of the other front.
-    private static bool Expand(Queue<RigidBody> front, List<RigidBody> visited, ref int work, int own, int other)
+    private static bool Expand(List<RigidBody> visited, ref int head, ref int work, int own, int other)
     {
-        RigidBody node = front.Dequeue();
+        RigidBody node = visited[head++];
         if (node.Data.MotionType == MotionType.Static) return false;
 
         for (int i = 0; i < node.InternalConnections.Count; i++)
@@ -226,7 +217,6 @@ internal static class IslandHelper
 
             next.InternalIslandMarker = own;
             visited.Add(next);
-            front.Enqueue(next);
             work += next.InternalConnections.Count;
         }
 
