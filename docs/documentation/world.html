@@ -165,6 +165,19 @@ world.SolveMode = SolveMode.Deterministic; // reproducible, slower
 world.SolverIterations = (solver: 2, relaxation: 1);
 </code></pre>
 <p>This performs eight solver iterations and four relaxation iterations per call to <code>world.Step</code>. Substeps usually cost more than putting the same number of iterations into one step, but can give better results for joints, large stacks, and heavy objects resting on light ones.</p>
+<h2 id="contact-settings">Contact Settings</h2>
+<p><code>world.ContactSettings</code> holds the solver settings shared by all contacts of the world. They are stored once per world, and every contact reads them when it is prepared, so a change applies to existing contacts as well:</p>
+<pre><code class="lang-cs">world.ContactSettings.RestitutionThreshold = 0.05f;
+world.ContactSettings = ContactSettings.Default; // back to the defaults
+</code></pre>
+<ul>
+<li><code>MaximumBias</code>: cap on the position-correction velocity per iteration. Default is <code>100</code>.</li>
+<li><code>BiasFactor</code>: fraction of the penetration corrected per step. Default is <code>0.2</code>.</li>
+<li><code>AllowedPenetration</code>: penetration depth that is tolerated without correction. Default is <code>0.01</code>.</li>
+<li><code>BreakThreshold</code>: tangential drift at which a cached contact point is dropped. Default is <code>0.02</code>.</li>
+<li><code>RestitutionThreshold</code>: minimum approach speed at which restitution is applied; slower impacts are fully inelastic. Default is <code>1</code>.</li>
+<li><code>CcdRelaxationFactor</code>: fraction of the predicted gap that a CCD contact may close in one step. Default is <code>0.9</code>.</li>
+</ul>
 <h2 id="contact-manifold-persistence">Contact Manifold Persistence</h2>
 <p>By default, Jitter2 reuses contact points and impulses from the previous step (<code>world.PersistentContactManifold = true</code>). This gives the solver a useful starting point and helps resting objects stay stable. The set of contact points between two shapes is called a <strong>contact manifold</strong>.</p>
 <p>Set <code>world.PersistentContactManifold = false</code> to discard contacts after each step. Rebuilding them from scratch can require more solver iterations to achieve the same stability.</p>

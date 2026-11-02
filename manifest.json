@@ -1951,6 +1951,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Jitter2.Dynamics.ContactSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Jitter2.Dynamics.ContactSettings.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Jitter2.Dynamics.ContactSettings",
+      "Summary": "<p sourcefile=\"api/Jitter2.Dynamics.ContactSettings.yml\" sourcestartlinenumber=\"1\">Solver settings shared by all contacts of a world. Access and modify them through\n<xref href=\"Jitter2.World.ContactSettings\" data-throw-if-not-resolved=\"false\"></xref>; changes take effect for existing and new contacts alike.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Jitter2.Dynamics.MassInertiaUpdateMode.yml",
       "output": {
         ".html": {
@@ -2807,11 +2821,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "api/toc.html"
-        },
         ".json": {
           "relative_path": "api/toc.json"
+        },
+        ".html": {
+          "relative_path": "api/toc.html"
         }
       },
       "version": ""
@@ -2930,11 +2944,11 @@
       "type": "Toc",
       "source_relative_path": "docs/articles/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "docs/articles/toc.html"
-        },
         ".json": {
           "relative_path": "docs/articles/toc.json"
+        },
+        ".html": {
+          "relative_path": "docs/articles/toc.html"
         }
       },
       "version": ""
@@ -3063,11 +3077,11 @@
       "type": "Toc",
       "source_relative_path": "docs/toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "docs/toc.html"
-        },
         ".json": {
           "relative_path": "docs/toc.json"
+        },
+        ".html": {
+          "relative_path": "docs/toc.html"
         }
       },
       "version": ""
@@ -3286,11 +3300,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".html": {
-          "relative_path": "toc.html"
-        },
         ".json": {
           "relative_path": "toc.json"
+        },
+        ".html": {
+          "relative_path": "toc.html"
         }
       },
       "version": ""

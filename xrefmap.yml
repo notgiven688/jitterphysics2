@@ -12360,42 +12360,18 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Body2
   fullName: Jitter2.Dynamics.ContactData.Body2
   nameWithType: ContactData.Body2
-- uid: Jitter2.Dynamics.ContactData.CcdRelaxationFactor
-  name: CcdRelaxationFactor
-  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_CcdRelaxationFactor
-  commentId: F:Jitter2.Dynamics.ContactData.CcdRelaxationFactor
-  fullName: Jitter2.Dynamics.ContactData.CcdRelaxationFactor
-  nameWithType: ContactData.CcdRelaxationFactor
 - uid: Jitter2.Dynamics.ContactData.Contact
   name: ContactData.Contact
   href: api/Jitter2.Dynamics.ContactData.Contact.html
   commentId: T:Jitter2.Dynamics.ContactData.Contact
   fullName: Jitter2.Dynamics.ContactData.Contact
   nameWithType: ContactData.Contact
-- uid: Jitter2.Dynamics.ContactData.Contact.AllowedPenetration
-  name: AllowedPenetration
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_AllowedPenetration
-  commentId: F:Jitter2.Dynamics.ContactData.Contact.AllowedPenetration
-  fullName: Jitter2.Dynamics.ContactData.Contact.AllowedPenetration
-  nameWithType: ContactData.Contact.AllowedPenetration
 - uid: Jitter2.Dynamics.ContactData.Contact.Bias
   name: Bias
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Bias
   commentId: F:Jitter2.Dynamics.ContactData.Contact.Bias
   fullName: Jitter2.Dynamics.ContactData.Contact.Bias
   nameWithType: ContactData.Contact.Bias
-- uid: Jitter2.Dynamics.ContactData.Contact.BiasFactor
-  name: BiasFactor
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_BiasFactor
-  commentId: F:Jitter2.Dynamics.ContactData.Contact.BiasFactor
-  fullName: Jitter2.Dynamics.ContactData.Contact.BiasFactor
-  nameWithType: ContactData.Contact.BiasFactor
-- uid: Jitter2.Dynamics.ContactData.Contact.BreakThreshold
-  name: BreakThreshold
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_BreakThreshold
-  commentId: F:Jitter2.Dynamics.ContactData.Contact.BreakThreshold
-  fullName: Jitter2.Dynamics.ContactData.Contact.BreakThreshold
-  nameWithType: ContactData.Contact.BreakThreshold
 - uid: Jitter2.Dynamics.ContactData.Contact.Flag
   name: Flag
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Flag
@@ -12481,12 +12457,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated
   nameWithType: ContactData.Contact.IterateAccelerated
-- uid: Jitter2.Dynamics.ContactData.Contact.MaximumBias
-  name: MaximumBias
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_MaximumBias
-  commentId: F:Jitter2.Dynamics.ContactData.Contact.MaximumBias
-  fullName: Jitter2.Dynamics.ContactData.Contact.MaximumBias
-  nameWithType: ContactData.Contact.MaximumBias
 - uid: Jitter2.Dynamics.ContactData.Contact.Normal
   name: Normal
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Normal
@@ -12777,6 +12747,19 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Restitution
   fullName: Jitter2.Dynamics.ContactData.Restitution
   nameWithType: ContactData.Restitution
+- uid: Jitter2.Dynamics.ContactData.Settings
+  name: Settings
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Settings
+  commentId: P:Jitter2.Dynamics.ContactData.Settings
+  fullName: Jitter2.Dynamics.ContactData.Settings
+  nameWithType: ContactData.Settings
+- uid: Jitter2.Dynamics.ContactData.Settings*
+  name: Settings
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Settings_
+  commentId: Overload:Jitter2.Dynamics.ContactData.Settings
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactData.Settings
+  nameWithType: ContactData.Settings
 - uid: Jitter2.Dynamics.ContactData.SkipWarmStart
   name: SkipWarmStart()
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_SkipWarmStart
@@ -12875,6 +12858,61 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.UsageMask
   fullName: Jitter2.Dynamics.ContactData.UsageMask
   nameWithType: ContactData.UsageMask
+- uid: Jitter2.Dynamics.ContactSettings
+  name: ContactSettings
+  href: api/Jitter2.Dynamics.ContactSettings.html
+  commentId: T:Jitter2.Dynamics.ContactSettings
+  fullName: Jitter2.Dynamics.ContactSettings
+  nameWithType: ContactSettings
+- uid: Jitter2.Dynamics.ContactSettings.AllowedPenetration
+  name: AllowedPenetration
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_AllowedPenetration
+  commentId: F:Jitter2.Dynamics.ContactSettings.AllowedPenetration
+  fullName: Jitter2.Dynamics.ContactSettings.AllowedPenetration
+  nameWithType: ContactSettings.AllowedPenetration
+- uid: Jitter2.Dynamics.ContactSettings.BiasFactor
+  name: BiasFactor
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_BiasFactor
+  commentId: F:Jitter2.Dynamics.ContactSettings.BiasFactor
+  fullName: Jitter2.Dynamics.ContactSettings.BiasFactor
+  nameWithType: ContactSettings.BiasFactor
+- uid: Jitter2.Dynamics.ContactSettings.BreakThreshold
+  name: BreakThreshold
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_BreakThreshold
+  commentId: F:Jitter2.Dynamics.ContactSettings.BreakThreshold
+  fullName: Jitter2.Dynamics.ContactSettings.BreakThreshold
+  nameWithType: ContactSettings.BreakThreshold
+- uid: Jitter2.Dynamics.ContactSettings.CcdRelaxationFactor
+  name: CcdRelaxationFactor
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_CcdRelaxationFactor
+  commentId: F:Jitter2.Dynamics.ContactSettings.CcdRelaxationFactor
+  fullName: Jitter2.Dynamics.ContactSettings.CcdRelaxationFactor
+  nameWithType: ContactSettings.CcdRelaxationFactor
+- uid: Jitter2.Dynamics.ContactSettings.Default
+  name: Default
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_Default
+  commentId: P:Jitter2.Dynamics.ContactSettings.Default
+  fullName: Jitter2.Dynamics.ContactSettings.Default
+  nameWithType: ContactSettings.Default
+- uid: Jitter2.Dynamics.ContactSettings.Default*
+  name: Default
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_Default_
+  commentId: Overload:Jitter2.Dynamics.ContactSettings.Default
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactSettings.Default
+  nameWithType: ContactSettings.Default
+- uid: Jitter2.Dynamics.ContactSettings.MaximumBias
+  name: MaximumBias
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_MaximumBias
+  commentId: F:Jitter2.Dynamics.ContactSettings.MaximumBias
+  fullName: Jitter2.Dynamics.ContactSettings.MaximumBias
+  nameWithType: ContactSettings.MaximumBias
+- uid: Jitter2.Dynamics.ContactSettings.RestitutionThreshold
+  name: RestitutionThreshold
+  href: api/Jitter2.Dynamics.ContactSettings.html#Jitter2_Dynamics_ContactSettings_RestitutionThreshold
+  commentId: F:Jitter2.Dynamics.ContactSettings.RestitutionThreshold
+  fullName: Jitter2.Dynamics.ContactSettings.RestitutionThreshold
+  nameWithType: ContactSettings.RestitutionThreshold
 - uid: Jitter2.Dynamics.MassInertiaUpdateMode
   name: MassInertiaUpdateMode
   href: api/Jitter2.Dynamics.MassInertiaUpdateMode.html
@@ -20589,6 +20627,19 @@ references:
   commentId: E:Jitter2.World.ConstraintRemoved
   fullName: Jitter2.World.ConstraintRemoved
   nameWithType: World.ConstraintRemoved
+- uid: Jitter2.World.ContactSettings
+  name: ContactSettings
+  href: api/Jitter2.World.html#Jitter2_World_ContactSettings
+  commentId: P:Jitter2.World.ContactSettings
+  fullName: Jitter2.World.ContactSettings
+  nameWithType: World.ContactSettings
+- uid: Jitter2.World.ContactSettings*
+  name: ContactSettings
+  href: api/Jitter2.World.html#Jitter2_World_ContactSettings_
+  commentId: Overload:Jitter2.World.ContactSettings
+  isSpec: "True"
+  fullName: Jitter2.World.ContactSettings
+  nameWithType: World.ContactSettings
 - uid: Jitter2.World.CreateConstraint*
   name: CreateConstraint
   href: api/Jitter2.World.html#Jitter2_World_CreateConstraint_
