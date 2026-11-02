@@ -239,7 +239,7 @@ Three world settings control the cost and behavior:
 
 - `CcdIterations`: number of collision discovery passes. More passes can find additional collisions but cost more. Default is 4.
 - `CcdVelocityThreshold`: pairs below this estimated relative surface speed skip CCD checks. The estimate includes translation and rotation. Default is `0.1` world units per second.
-- `CcdRelaxationFactor`: fraction of the predicted gap that a contact allows to close during one step. Default is `0.9`, leaving a small separation margin. Also available as `world.ContactSettings.CcdRelaxationFactor`.
+- `ContactSettings.CcdRelaxationFactor`: fraction of the predicted gap that a contact allows to close during one step. Default is `0.9`, leaving a small separation margin.
 
 A fixed number of passes cannot guarantee that every collision is found. Joints are solved afterward and can change motion again. Smaller time steps may still be needed.
 

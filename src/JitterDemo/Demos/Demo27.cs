@@ -39,6 +39,6 @@ public class Demo27 : IDemo
             body.EnableCcd = true;
         });
 
-        world.CcdRelaxationFactor = 0.5f;
+        world.ContactSettings.CcdRelaxationFactor = 0.5f;
     }
 }

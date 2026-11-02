@@ -150,7 +150,7 @@ public class ContactLifecycleTests
             Real separation = JVector.Dot(body.Position + offset - wall.Position - point.RelativePosition1, normal);
             Assert.That(separation, Is.GreaterThan((Real)0.1), "The contact must be generated before overlap.");
             Assert.That((offset % normal).Length(), Is.GreaterThan((Real)0.1), "The impulse must act off-center.");
-            target = -separation * step.InverseStepDt * world.CcdRelaxationFactor;
+            target = -separation * step.InverseStepDt * world.ContactSettings.CcdRelaxationFactor;
             generated = true;
         };
 
@@ -289,11 +289,11 @@ public class ContactLifecycleTests
         Assert.That(world.ContactSettings.RestitutionThreshold, Is.EqualTo(defaults.RestitutionThreshold));
         Assert.That(world.ContactSettings.CcdRelaxationFactor, Is.EqualTo(defaults.CcdRelaxationFactor));
 
-        world.CcdRelaxationFactor = (Real)0.5;
+        world.ContactSettings.CcdRelaxationFactor = (Real)0.5;
         Assert.That(world.ContactSettings.CcdRelaxationFactor, Is.EqualTo((Real)0.5));
 
         world.ContactSettings = ContactSettings.Default;
-        Assert.That(world.CcdRelaxationFactor, Is.EqualTo(defaults.CcdRelaxationFactor));
+        Assert.That(world.ContactSettings.CcdRelaxationFactor, Is.EqualTo(defaults.CcdRelaxationFactor));
     }
 
     [Test]

@@ -228,7 +228,7 @@ public sealed partial class World
             if (hit.Time > firstTime || (hit.Time == firstTime && hit.Candidate.ShapeId >= firstCandidateId)) continue;
 
             JVector pointA = hit.PointA, pointB = hit.PointB, normal = hit.Normal;
-            Real penetration = JVector.Dot(normal, pointA - pointB) * CcdRelaxationFactor;
+            Real penetration = JVector.Dot(normal, pointA - pointB) * ContactSettings.CcdRelaxationFactor;
             if (NarrowPhaseFilter != null &&
                 !NarrowPhaseFilter.Filter(a, b, ref pointA, ref pointB, ref normal, ref penetration)) continue;
             if (knownPair != null && !IsNewCcdPoint(knownPair, pointA)) continue;
