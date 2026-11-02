@@ -269,7 +269,8 @@ public sealed partial class World
     {
         ref ContactData data = ref arbiter.Handle.Data;
         JVector relative = point - arbiter.Body1.Position;
-        const Real thresholdSquared = ContactData.Contact.BreakThreshold * ContactData.Contact.BreakThreshold;
+        Real breakThreshold = data.Settings.BreakThreshold;
+        Real thresholdSquared = breakThreshold * breakThreshold;
         return ((data.UsageMask & ContactData.MaskContact0) == 0 ||
                 (data.Contact0.RelativePosition1 - relative).LengthSquared() >= thresholdSquared)
             && ((data.UsageMask & ContactData.MaskContact1) == 0 ||

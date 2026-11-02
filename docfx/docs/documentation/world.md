@@ -122,6 +122,22 @@ world.SolverIterations = (solver: 2, relaxation: 1);
 
 This performs eight solver iterations and four relaxation iterations per call to `world.Step`. Substeps usually cost more than putting the same number of iterations into one step, but can give better results for joints, large stacks, and heavy objects resting on light ones.
 
+## Contact Settings
+
+`world.ContactSettings` holds the solver settings shared by all contacts of the world. They are stored once per world, and every contact reads them when it is prepared, so a change applies to existing contacts as well:
+
+```cs
+world.ContactSettings.RestitutionThreshold = 0.05f;
+world.ContactSettings = ContactSettings.Default; // back to the defaults
+```
+
+- `MaximumBias`: cap on the position-correction velocity per iteration. Default is `100`.
+- `BiasFactor`: fraction of the penetration corrected per step. Default is `0.2`.
+- `AllowedPenetration`: penetration depth that is tolerated without correction. Default is `0.01`.
+- `BreakThreshold`: tangential drift at which a cached contact point is dropped. Default is `0.02`.
+- `RestitutionThreshold`: minimum approach speed at which restitution is applied; slower impacts are fully inelastic. Default is `1`.
+- `CcdRelaxationFactor`: fraction of the predicted gap that a CCD contact may close in one step. Default is `0.9`.
+
 ## Contact Manifold Persistence
 
 By default, Jitter2 reuses contact points and impulses from the previous step (`world.PersistentContactManifold = true`). This gives the solver a useful starting point and helps resting objects stay stable. The set of contact points between two shapes is called a **contact manifold**.

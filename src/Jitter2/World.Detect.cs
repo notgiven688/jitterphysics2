@@ -92,12 +92,17 @@ public sealed partial class World
 
     /// <summary>
     /// Fraction of the predicted gap that CCD contacts allow to close during one step. Default is 0.9.
+    /// Same as <see cref="ContactSettings.CcdRelaxationFactor"/> in <see cref="ContactSettings"/>.
     /// </summary>
     /// <remarks>
     /// Use values from 0 (no closing motion) to 1 (allow the full gap to close).
     /// Values below 1 leave a small separation margin.
     /// </remarks>
-    public Real CcdRelaxationFactor { get; set; } = (Real)0.9;
+    public Real CcdRelaxationFactor
+    {
+        get => ContactSettings.CcdRelaxationFactor;
+        set => ContactSettings.CcdRelaxationFactor = value;
+    }
 
     /// <summary>
     /// Minimum relative surface speed for continuous collision detection, in world units per second.

@@ -96,8 +96,10 @@ public struct ContactData
     public Real Restitution;
     /// <summary>Combined friction coefficient for this contact pair.</summary>
     public Real Friction;
-    /// <summary>Relaxation factor for predicted contact separation.</summary>
-    public Real CcdRelaxationFactor;
+    internal unsafe ContactSettings* settings;
+
+    /// <summary>The settings of the world this contact belongs to.</summary>
+    public unsafe ref ContactSettings Settings => ref *settings;
 
     /// <summary>Determines which velocity components are updated by the solver.</summary>
     public SolveMode Mode;
@@ -263,14 +265,14 @@ public struct ContactData
     /// </summary>
     /// <param name="body1">The first rigid body.</param>
     /// <param name="body2">The second rigid body.</param>
-    public void Init(RigidBody body1, RigidBody body2)
+    public unsafe void Init(RigidBody body1, RigidBody body2)
     {
         Body1 = body1.Handle;
         Body2 = body2.Handle;
 
         Friction = MathR.Max(body1.Friction, body2.Friction);
         Restitution = MathR.Max(body1.Restitution, body2.Restitution);
-        CcdRelaxationFactor = body1.World.CcdRelaxationFactor;
+        settings = body1.World.ContactSettingsPointer;
 
         Debug.Assert(body1.World == body2.World);
 
@@ -380,7 +382,7 @@ public struct ContactData
             }
         }
 
-        if (distanceSq < Contact.BreakThreshold * Contact.BreakThreshold)
+        if (distanceSq < settings->BreakThreshold * settings->BreakThreshold)
         {
             closest->Initialize(ptr, point1, point2, normal, false);
             return;
@@ -591,15 +593,6 @@ public struct ContactData
     [StructLayout(LayoutKind.Explicit)]
     public struct Contact
     {
-        /// <summary>Maximum position-correction bias applied per iteration.</summary>
-        public const Real MaximumBias = (Real)100.0;
-        /// <summary>Fraction of penetration corrected per step (Baumgarte stabilization).</summary>
-        public const Real BiasFactor = (Real)0.2;
-        /// <summary>Penetration depth below which no position correction is applied.</summary>
-        public const Real AllowedPenetration = (Real)0.01;
-        /// <summary>Maximum tangential drift before a contact breaks; normal separation is limited to one tenth of this value.</summary>
-        public const Real BreakThreshold = (Real)0.02;
-
         /// <summary>
         /// Flags indicating contact state.
         /// </summary>
@@ -729,7 +722,7 @@ public struct ContactData
                 Bias = 0;
 
                 // Fake restitution
-                if (relNormalVel < (Real)(-1.0))
+                if (relNormalVel < -cd->settings->RestitutionThreshold)
                 {
                     Bias = -cd->Restitution * relNormalVel;
                 }
@@ -800,8 +793,10 @@ public struct ContactData
 
             Real penetration = JVector.Dot(dist, n);
 
+            Real breakThreshold = cd->settings->BreakThreshold;
+
             // use a tenth of the actual threshold value here.
-            if (penetration < -BreakThreshold * (Real)0.1)
+            if (penetration < -breakThreshold * (Real)0.1)
             {
                 return false;
             }
@@ -809,7 +804,7 @@ public struct ContactData
             dist -= penetration * n;
             Real tangentialOffsetSq = dist.LengthSquared();
 
-            if (tangentialOffsetSq > BreakThreshold * BreakThreshold)
+            if (tangentialOffsetSq > breakThreshold * breakThreshold)
             {
                 return false;
             }
@@ -861,10 +856,10 @@ public struct ContactData
             JVector.Subtract(p1, p2, out JVector dist);
             Real penetration = JVector.Dot(dist, normal);
 
-            if (penetration < -BreakThreshold)
+            if (penetration < -cd->settings->BreakThreshold)
             {
                 // The contact points are still separated.
-                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
+                Bias = penetration * timeStep.InverseStepDt * cd->settings->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -940,8 +935,9 @@ public struct ContactData
             JVector mass = new(massNormal, massTangent1, massTangent2);
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mass), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * timeStep.InverseStepDt * Math.Max((Real)0.0, penetration - AllowedPenetration);
-            PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
+            PenaltyBias = cd->settings->BiasFactor * timeStep.InverseStepDt
+                          * Math.Max((Real)0.0, penetration - cd->settings->AllowedPenetration);
+            PenaltyBias = Math.Min(PenaltyBias, cd->settings->MaximumBias);
         }
 
         #endregion
@@ -1093,10 +1089,10 @@ public struct ContactData
             JVector n = new JVector(NormalTangentX.GetElement(0), NormalTangentY.GetElement(0), NormalTangentZ.GetElement(0));
             Real penetration = JVector.Dot(dist, n);
 
-            if (penetration < -BreakThreshold)
+            if (penetration < -cd->settings->BreakThreshold)
             {
                 // The contact points are still separated.
-                Bias = penetration * timeStep.InverseStepDt * cd->CcdRelaxationFactor;
+                Bias = penetration * timeStep.InverseStepDt * cd->settings->CcdRelaxationFactor;
             }
 
             Flag &= ~Flags.NewContact;
@@ -1196,8 +1192,9 @@ public struct ContactData
                 Vector.Divide(Vector.Create((Real)1.0), kNormalTangent), Vector.Create((Real)0.0));
             Unsafe.CopyBlock(Unsafe.AsPointer(ref MassNormalTangent), Unsafe.AsPointer(ref mnt), 3 * sizeof(Real));
 
-            PenaltyBias = BiasFactor * timeStep.InverseStepDt * Math.Max((Real)0.0, penetration - AllowedPenetration);
-            PenaltyBias = Math.Min(PenaltyBias, MaximumBias);
+            PenaltyBias = cd->settings->BiasFactor * timeStep.InverseStepDt
+                          * Math.Max((Real)0.0, penetration - cd->settings->AllowedPenetration);
+            PenaltyBias = Math.Min(PenaltyBias, cd->settings->MaximumBias);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

@@ -319,6 +319,28 @@ public sealed partial class World : IDisposable
     /// </summary>
     public bool AllowDeactivation { get; set; } = true;
 
+    private unsafe ContactSettings* contactSettings;
+
+    /// <summary>
+    /// Solver settings shared by all contacts of this world, such as the penetration correction and the
+    /// restitution threshold. Modify the fields in place; every contact reads them when it is prepared.
+    /// </summary>
+    /// <remarks>
+    /// The settings live in unmanaged memory owned by the world. Do not keep the reference across a
+    /// <see cref="Dispose"/> call.
+    /// </remarks>
+    /// <exception cref="ObjectDisposedException">Thrown if this world has been disposed.</exception>
+    public unsafe ref ContactSettings ContactSettings
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return ref *contactSettings;
+        }
+    }
+
+    internal unsafe ContactSettings* ContactSettingsPointer => contactSettings;
+
     /// <summary>
     /// Gets or sets the number of iterations per substep for the constraint solver and velocity relaxation.
     /// </summary>
@@ -407,7 +429,7 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Creates an instance of the World class.
     /// </summary>
-    public World()
+    public unsafe World()
     {
         Debug.Assert(Unsafe.SizeOf<RigidBodyData>() == SolverPrefetchCacheLineSize * (Precision.IsDoublePrecision ? 4 : 2),
             "RigidBodyData size should match the cache lines prefetched by the solver.");
@@ -418,6 +440,9 @@ public sealed partial class World : IDisposable
         memContacts = new PartitionedBuffer<ContactData>();
         memConstraints = new PartitionedBuffer<ConstraintData>();
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>();
+
+        contactSettings = MemoryHelper.AllocateHeap<ContactSettings>(1);
+        *contactSettings = ContactSettings.Default;
 
         NullBody = CreateRigidBody();
         NullBody.MotionType = MotionType.Static;
@@ -958,7 +983,7 @@ public sealed partial class World : IDisposable
     /// After disposal, the world instance is unusable. All bodies, constraints, and contacts
     /// become invalid. Calling <see cref="Dispose"/> multiple times is safe.
     /// </remarks>
-    public void Dispose()
+    public unsafe void Dispose()
     {
         if (disposed) return;
         disposed = true;
@@ -975,5 +1000,8 @@ public sealed partial class World : IDisposable
         deferredContacts.Dispose();
         deferredConstraints.Dispose();
         deferredSmallConstraints.Dispose();
+
+        MemoryHelper.Free(contactSettings);
+        contactSettings = null;
     }
 }

@@ -242,6 +242,68 @@ public class ContactLifecycleTests
         Assert.That(body.Velocity.X, Is.EqualTo((Real)(2 * restitution)).Within(Tolerance));
     }
 
+    [TestCase(false, 1.0, 0.0)]
+    [TestCase(true, 1.0, 0.0)]
+    [TestCase(false, 0.1, 0.4)]
+    [TestCase(true, 0.1, 0.4)]
+    public void RestitutionThreshold_DecidesWhetherSlowImpactsBounce(bool accelerated, double threshold, double bounce)
+    {
+        using var world = new World();
+        var body = world.CreateRigidBody();
+        body.AddShape(new SphereShape(0.25f));
+        body.SetMassInertia(1);
+        body.Position = new JVector(-0.25f, 0, 0);
+        body.Velocity = new JVector(-0.5f, 0, 0);
+
+        ContactData contact = default;
+        contact.Init(world.NullBody, body);
+        contact.Friction = 0;
+        contact.Restitution = (Real)0.8;
+
+        // The contact reads the world settings when it is prepared, so a change after Init is seen.
+        world.ContactSettings.RestitutionThreshold = (Real)threshold;
+        Assert.That(contact.Settings.RestitutionThreshold, Is.EqualTo((Real)threshold));
+
+        contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
+        contact.ResetMode();
+
+        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
+        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
+
+        if (accelerated) contact.IterateAccelerated(false);
+        else contact.IterateScalar(false);
+
+        Assert.That(body.Velocity.X, Is.EqualTo((Real)bounce).Within(Tolerance));
+    }
+
+    [Test]
+    public void ContactSettings_StartAtDefaults_AndCanBeReset()
+    {
+        using var world = new World();
+        ContactSettings defaults = ContactSettings.Default;
+
+        Assert.That(world.ContactSettings.MaximumBias, Is.EqualTo(defaults.MaximumBias));
+        Assert.That(world.ContactSettings.BiasFactor, Is.EqualTo(defaults.BiasFactor));
+        Assert.That(world.ContactSettings.AllowedPenetration, Is.EqualTo(defaults.AllowedPenetration));
+        Assert.That(world.ContactSettings.BreakThreshold, Is.EqualTo(defaults.BreakThreshold));
+        Assert.That(world.ContactSettings.RestitutionThreshold, Is.EqualTo(defaults.RestitutionThreshold));
+        Assert.That(world.ContactSettings.CcdRelaxationFactor, Is.EqualTo(defaults.CcdRelaxationFactor));
+
+        world.CcdRelaxationFactor = (Real)0.5;
+        Assert.That(world.ContactSettings.CcdRelaxationFactor, Is.EqualTo((Real)0.5));
+
+        world.ContactSettings = ContactSettings.Default;
+        Assert.That(world.CcdRelaxationFactor, Is.EqualTo(defaults.CcdRelaxationFactor));
+    }
+
+    [Test]
+    public void ContactSettings_ThrowAfterDispose()
+    {
+        var world = new World();
+        world.Dispose();
+        Assert.That(() => world.ContactSettings.BiasFactor, Throws.TypeOf<ObjectDisposedException>());
+    }
+
     [TestCase(false)]
     [TestCase(true)]
     public void SkipWarmStart_AffectsOnlyTheNextPreparation(bool accelerated)

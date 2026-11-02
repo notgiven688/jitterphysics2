@@ -30,8 +30,8 @@ public class ContactSubstepTests
         else contact.PrepareForIterationScalar(timeStep);
 
         Real penetration = (Real)0.5 * MathR.Cos((Real)0.3) - body.Position.Y;
-        Real expectedBias = ContactData.Contact.BiasFactor * timeStep.InverseStepDt
-            * (penetration - ContactData.Contact.AllowedPenetration);
+        Real expectedBias = world.ContactSettings.BiasFactor * timeStep.InverseStepDt
+            * (penetration - world.ContactSettings.AllowedPenetration);
 
         Assert.That(contact.Contact0.PenaltyBias, Is.EqualTo(expectedBias).Within(Tolerance));
         Assert.That(JVector.MaxAbs(contact.Contact0.RelativePosition2 + (Real)0.5 * JVector.UnitY),
