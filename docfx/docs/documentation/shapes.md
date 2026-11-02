@@ -2,7 +2,7 @@
 
 Shapes define the convex geometry used for collisions. Attach them to a rigid body with `body.AddShape`; the body supplies their position and rotation.
 
-Each shape implements `ISupportMappable`, so it can also be used directly in `NarrowPhase` collision queries. Shapes implement `IDynamicTreeProxy` as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in `world.DynamicTree` automatically.
+Each shape implements `ISupportFeature`, which extends `ISupportMappable`, so it can also be used directly in `NarrowPhase` collision queries and in `CollisionManifold`. Shapes implement `IDynamicTreeProxy` as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in `world.DynamicTree` automatically.
 
 > [!NOTE]
 > **Concave Shapes**
@@ -158,6 +158,14 @@ public class HalfSphereShape : RigidBodyShape
     }
 }
 ```
+
+The contact manifold asks a shape for the whole feature it touches with in a direction: a point, a segment or a convex polygon. The default implementation samples the support function around the direction and recognizes curved sides. Shapes that know their features can override it, which is faster and exact:
+
+```cs
+public override int SupportFeature(in JVector direction, float tolerance, Span<JVector> vertices)
+```
+
+`tolerance` is the sine of the angle within which directions share the feature. Write the vertices in local space and in winding order, at most `ISupportFeature.MaxVertices` of them, and return their number. Every vertex must lie on the surface of the shape. `BoxShape`, `CapsuleShape`, `CylinderShape`, `ConeShape`, `SphereShape`, `TriangleShape` and `TransformedShape` override it; `ConvexHullShape` and `PointCloudShape` use the sampled default.
 
 The default implementation calculates bounding boxes and approximates mass properties from the support function. Override these methods if you can provide faster or more accurate calculations, or a custom ray test:
 
