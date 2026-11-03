@@ -71,8 +71,7 @@ Jitter2 uses the convex hull of the supplied points: imagine stretching a tight 
 
 > [!WARNING]
 > **Number of vertices**
-> `PointCloudShape`s should only be used for a small to moderate number of vertices ($\approx{}300$). Larger numbers of vertices can negatively impact performance.
-> `ConvexHullShape`s are the better choice for more complex hulls.
+> A `PointCloudShape` tests every vertex for each support query. Up to a few dozen vertices that is faster than the `ConvexHullShape`'s walk over neighbouring vertices; beyond that the `ConvexHullShape` is the better choice, by a wide margin for hundreds of vertices. The [teapot tutorial](../tutorials/teapots/aftermath.md) has measurements.
 
 ### TransformedShape
 
