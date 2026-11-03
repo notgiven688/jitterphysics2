@@ -394,4 +394,41 @@ public class CollisionManifoldTests
             Assert.That(MathR.Abs(mfB.Z), Is.LessThan(epsilon));
         }
     }
+
+    // Two octagon caps yawed against each other intersect in sixteen points, the most two features
+    // of eight vertices can produce. A lower cap on the collected points dropped the intersections
+    // on the last edges of the first cap, so the reduced contacts covered only part of the rim and
+    // the upper cylinder tipped over the uncovered side.
+    [TestCase]
+    public void YawedCylinderCaps_ContactsCoverTheWholeRim()
+    {
+        CylinderShape lower = new(2, 1);
+        CylinderShape upper = new(2, 1);
+        JQuaternion yaw = JQuaternion.CreateRotationY(MathR.PI / 8);
+
+        CollisionManifold manifold = BuildManifold(lower, upper,
+            JQuaternion.Identity, yaw,
+            JVector.Zero, new JVector(0, (Real)1.995, 0),
+            out _, out _, out _, out _);
+
+        Assert.That(manifold.Count, Is.EqualTo(4));
+        AssertUniqueContacts(manifold, (Real)1e-6);
+
+        // Sorted by angle around the axis, no gap between neighbouring contacts may exceed a
+        // quarter turn by much.
+        Real[] angles = new Real[4];
+
+        for (int i = 0; i < 4; i++)
+        {
+            JVector p = manifold.ManifoldA[i];
+            Assert.That(MathR.Abs(p.Y - (Real)1.0), Is.LessThan((Real)1e-3));
+            angles[i] = (Real)Math.Atan2(p.Z, p.X);
+        }
+
+        Array.Sort(angles);
+        Real maxGap = angles[0] + (Real)2.0 * MathR.PI - angles[3];
+        for (int i = 1; i < 4; i++) maxGap = MathR.Max(maxGap, angles[i] - angles[i - 1]);
+
+        Assert.That(maxGap, Is.LessThan(MathR.PI / 2 + (Real)0.1));
+    }
 }
