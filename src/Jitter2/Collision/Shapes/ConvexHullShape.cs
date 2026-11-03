@@ -55,6 +55,8 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     private CHullVector[] vertices = null!;
     private CHullTriangle[] indices = null!;
     private ushort[] neighborList = null!;
+    // The vertices farthest along +X, -X, +Y, -Y, +Z and -Z; see CalcExtremesAndInitBox.
+    private ushort[] extremes = null!;
 
     private JVector shifted;
 
@@ -214,6 +216,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             neighborList = neighborList,
             vertices = vertices,
             indices = indices,
+            extremes = extremes,
             cachedBoundingBox = cachedBoundingBox,
             cachedCenter = cachedCenter,
             cachedInertia = cachedInertia,
@@ -246,7 +249,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     public void UpdateShape()
     {
         CalculateMassInertia();
-        CalcInitBox();
+        CalcExtremesAndInitBox();
         UpdateWorldBoundingBox();
     }
 
@@ -345,59 +348,63 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         JVector.Add(box.Max, position + temp2, out box.Max);
     }
 
-    private void CalcInitBox()
+    // Finds the vertices farthest along the six axis directions by brute force. They give the local
+    // bounding box, and the support climb starts from the one farthest along its direction. The six
+    // cannot all lie in one plane, so for any direction at least one of them sits a real distance
+    // above the face of the hull that is turned away from it. A climb that starts there never
+    // visits that face, where roundoff in the vertices of a flat tessellated region could stop it
+    // before it has climbed anywhere, since it only ever moves to vertices farther along the
+    // direction. The climb itself is not used here for the same reason.
+    private void CalcExtremesAndInitBox()
     {
-        JVector vec = JVector.UnitX;
-        InternalSupportMap(vec, out JVector res);
-        cachedBoundingBox.Max.X = res.X;
+        ushort[] found = new ushort[6];
+        JVector min = vertices[0].Vertex;
+        JVector max = vertices[0].Vertex;
 
-        vec = JVector.UnitY;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Max.Y = res.Y;
+        for (ushort i = 1; i < vertices.Length; i++)
+        {
+            JVector v = vertices[i].Vertex;
+            if (v.X > max.X) { max.X = v.X; found[0] = i; }
+            if (v.X < min.X) { min.X = v.X; found[1] = i; }
+            if (v.Y > max.Y) { max.Y = v.Y; found[2] = i; }
+            if (v.Y < min.Y) { min.Y = v.Y; found[3] = i; }
+            if (v.Z > max.Z) { max.Z = v.Z; found[4] = i; }
+            if (v.Z < min.Z) { min.Z = v.Z; found[5] = i; }
+        }
 
-        vec = JVector.UnitZ;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Max.Z = res.Z;
-
-        vec = -JVector.UnitX;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.X = res.X;
-
-        vec = -JVector.UnitY;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.Y = res.Y;
-
-        vec = -JVector.UnitZ;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.Z = res.Z;
+        extremes = found;
+        cachedBoundingBox.Min = min + shifted;
+        cachedBoundingBox.Max = max + shifted;
     }
 
     private ushort InternalSupportMap(in JVector direction, out JVector result)
     {
-        ushort current = 0;
+        // Start from the axis extreme farthest along the direction; see CalcExtremesAndInitBox.
+        ushort current = extremes[0];
         Real dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
-    main:
-        bool needsVerify = false;
-        JVector verifyDir = JVector.Arbitrary;
+        for (int e = 1; e < 6; e++)
+        {
+            ushort candidate = extremes[e];
+            Real candidateProduct = JVector.Dot(vertices[candidate].Vertex, direction);
 
+            if (candidateProduct > dotProduct)
+            {
+                dotProduct = candidateProduct;
+                current = candidate;
+            }
+        }
+
+    main:
         var min = vertices[current].NeighborMinIndex;
         var max = vertices[current].NeighborMaxIndex;
-
-        const Real epsilonIncrement = (Real)1e-12;
 
         for (int i = min; i < max; i++)
         {
             ushort nb = neighborList[i];
             Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
-            if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
-            {
-                verifyDir = vertices[nb].Vertex - vertices[current].Vertex;
-                needsVerify = true;
-            }
-
-            if (nbProduct > dotProduct + epsilonIncrement)
+            if (nbProduct > dotProduct)
             {
                 // no need to find the "best" neighbor - as soon as we found a better
                 // candidate we move there.
@@ -407,41 +414,10 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             }
         }
 
-        // A secondary hill climbing algorithm in case of a plateau.
-        if (needsVerify)
-        {
-            Real d0 = JVector.Dot(verifyDir, vertices[current].Vertex);
-
-        secondary:
-            min = vertices[current].NeighborMinIndex;
-            max = vertices[current].NeighborMaxIndex;
-
-            for (int i = min; i < max; i++)
-            {
-                ushort nb = neighborList[i];
-                Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
-
-                if (nbProduct > dotProduct + epsilonIncrement)
-                {
-                    dotProduct = nbProduct;
-                    current = nb;
-                    goto main;
-                }
-
-                if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
-                {
-                    Real d1 = JVector.Dot(verifyDir, vertices[nb].Vertex);
-
-                    if (d1 > d0 + epsilonIncrement)
-                    {
-                        d0 = d1;
-                        current = nb;
-                        goto secondary;
-                    }
-                }
-            }
-        }
-
+        // A vertex with no neighbour farther along the direction is a support vertex. The one
+        // exception would be an interior vertex of a flat tessellated region facing away from
+        // the direction, where every neighbour ties; the start above never reaches such a
+        // region, so no walk across tied vertices is needed.
         result = vertices[current].Vertex + shifted;
         return current;
     }
