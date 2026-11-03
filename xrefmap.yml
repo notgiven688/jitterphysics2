@@ -1409,6 +1409,34 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.IRayCastable.RayCast
   nameWithType: IRayCastable.RayCast
+- uid: Jitter2.Collision.ISupportFeature
+  name: ISupportFeature
+  href: api/Jitter2.Collision.ISupportFeature.html
+  commentId: T:Jitter2.Collision.ISupportFeature
+  fullName: Jitter2.Collision.ISupportFeature
+  nameWithType: ISupportFeature
+- uid: Jitter2.Collision.ISupportFeature.MaxVertices
+  name: MaxVertices
+  href: api/Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_MaxVertices
+  commentId: F:Jitter2.Collision.ISupportFeature.MaxVertices
+  fullName: Jitter2.Collision.ISupportFeature.MaxVertices
+  nameWithType: ISupportFeature.MaxVertices
+- uid: Jitter2.Collision.ISupportFeature.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.ISupportFeature.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.ISupportFeature.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.ISupportFeature.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: ISupportFeature.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: ISupportFeature.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.ISupportFeature.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_SupportFeature_
+  commentId: Overload:Jitter2.Collision.ISupportFeature.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.ISupportFeature.SupportFeature
+  nameWithType: ISupportFeature.SupportFeature
 - uid: Jitter2.Collision.ISupportMappable
   name: ISupportMappable
   href: api/Jitter2.Collision.ISupportMappable.html
@@ -1975,6 +2003,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.BoxShape.Size
   nameWithType: BoxShape.Size
+- uid: Jitter2.Collision.Shapes.BoxShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.BoxShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.BoxShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.BoxShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: BoxShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: BoxShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.BoxShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.BoxShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.BoxShape.SupportFeature
+  nameWithType: BoxShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.BoxShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.BoxShape.html#Jitter2_Collision_Shapes_BoxShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -2106,6 +2150,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CapsuleShape.Radius
   nameWithType: CapsuleShape.Radius
+- uid: Jitter2.Collision.Shapes.CapsuleShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.CapsuleShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.CapsuleShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.CapsuleShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: CapsuleShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: CapsuleShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.CapsuleShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.CapsuleShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.CapsuleShape.SupportFeature
+  nameWithType: CapsuleShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.CapsuleShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.CapsuleShape.html#Jitter2_Collision_Shapes_CapsuleShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -2237,6 +2297,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ConeShape.Radius
   nameWithType: ConeShape.Radius
+- uid: Jitter2.Collision.Shapes.ConeShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.ConeShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.ConeShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.ConeShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: ConeShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: ConeShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.ConeShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.ConeShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.ConeShape.SupportFeature
+  nameWithType: ConeShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.ConeShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.ConeShape.html#Jitter2_Collision_Shapes_ConeShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -2527,6 +2603,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.CylinderShape.Radius
   nameWithType: CylinderShape.Radius
+- uid: Jitter2.Collision.Shapes.CylinderShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.CylinderShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.CylinderShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.CylinderShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: CylinderShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: CylinderShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.CylinderShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.CylinderShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.CylinderShape.SupportFeature
+  nameWithType: CylinderShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.CylinderShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.CylinderShape.html#Jitter2_Collision_Shapes_CylinderShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -2988,6 +3080,22 @@ references:
   commentId: F:Jitter2.Collision.Shapes.Shape.ShapeId
   fullName: Jitter2.Collision.Shapes.Shape.ShapeId
   nameWithType: Shape.ShapeId
+- uid: Jitter2.Collision.Shapes.Shape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.Shape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.Shape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.Shape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: Shape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: Shape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.Shape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.Shape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.Shape.SupportFeature
+  nameWithType: Shape.SupportFeature
 - uid: Jitter2.Collision.Shapes.Shape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -3356,6 +3464,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.SphereShape.Radius
   nameWithType: SphereShape.Radius
+- uid: Jitter2.Collision.Shapes.SphereShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.SphereShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.SphereShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.SphereShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SphereShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SphereShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.SphereShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.SphereShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.SphereShape.SupportFeature
+  nameWithType: SphereShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.SphereShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.SphereShape.html#Jitter2_Collision_Shapes_SphereShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -3492,6 +3616,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.TransformedShape.OriginalShape
   nameWithType: TransformedShape.OriginalShape
+- uid: Jitter2.Collision.Shapes.TransformedShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.TransformedShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.TransformedShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.TransformedShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: TransformedShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: TransformedShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.TransformedShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.TransformedShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.TransformedShape.SupportFeature
+  nameWithType: TransformedShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.TransformedShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.TransformedShape.html#Jitter2_Collision_Shapes_TransformedShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -3933,6 +4073,22 @@ references:
   commentId: F:Jitter2.Collision.Shapes.TriangleShape.Mesh
   fullName: Jitter2.Collision.Shapes.TriangleShape.Mesh
   nameWithType: TriangleShape.Mesh
+- uid: Jitter2.Collision.Shapes.TriangleShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.TriangleShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.TriangleShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.TriangleShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: TriangleShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: TriangleShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.TriangleShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.TriangleShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.TriangleShape.SupportFeature
+  nameWithType: TriangleShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.TriangleShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.TriangleShape.html#Jitter2_Collision_Shapes_TriangleShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4034,6 +4190,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.VertexSupportMap.GetHashCode
   nameWithType: VertexSupportMap.GetHashCode
+- uid: Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.VertexSupportMap.html#Jitter2_Collision_Shapes_VertexSupportMap_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: VertexSupportMap.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: VertexSupportMap.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.VertexSupportMap.html#Jitter2_Collision_Shapes_VertexSupportMap_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature
+  nameWithType: VertexSupportMap.SupportFeature
 - uid: Jitter2.Collision.Shapes.VertexSupportMap.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.VertexSupportMap.html#Jitter2_Collision_Shapes_VertexSupportMap_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4174,6 +4346,28 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SimplexSolverAB.Reset
   nameWithType: SimplexSolverAB.Reset
+- uid: Jitter2.Collision.SupportFeatureSampler
+  name: SupportFeatureSampler
+  href: api/Jitter2.Collision.SupportFeatureSampler.html
+  commentId: T:Jitter2.Collision.SupportFeatureSampler
+  fullName: Jitter2.Collision.SupportFeatureSampler
+  nameWithType: SupportFeatureSampler
+- uid: Jitter2.Collision.SupportFeatureSampler.Sample*
+  name: Sample
+  href: api/Jitter2.Collision.SupportFeatureSampler.html#Jitter2_Collision_SupportFeatureSampler_Sample_
+  commentId: Overload:Jitter2.Collision.SupportFeatureSampler.Sample
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportFeatureSampler.Sample
+  nameWithType: SupportFeatureSampler.Sample
+- uid: Jitter2.Collision.SupportFeatureSampler.Sample``1(``0,Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: Sample<T>(T, in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportFeatureSampler.html#Jitter2_Collision_SupportFeatureSampler_Sample__1___0_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportFeatureSampler.Sample``1(``0,Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: Sample(Of T)(T, JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportFeatureSampler.Sample<T>(T, in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportFeatureSampler.Sample(Of T)(T, Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportFeatureSampler.Sample<T>(T, in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportFeatureSampler.Sample(Of T)(T, JVector, Single, Span(Of JVector))
 - uid: Jitter2.Collision.SupportPrimitives
   name: SupportPrimitives
   href: api/Jitter2.Collision.SupportPrimitives.html
@@ -4221,6 +4415,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Box.GetCenter
   nameWithType: SupportPrimitives.Box.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Box.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Box.html#Jitter2_Collision_SupportPrimitives_Box_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Box.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Box.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Box.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Box.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Box.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Box.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Box.html#Jitter2_Collision_SupportPrimitives_Box_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Box.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Box.SupportFeature
+  nameWithType: SupportPrimitives.Box.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Box.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Box.html#Jitter2_Collision_SupportPrimitives_Box_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4278,6 +4488,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Capsule.GetCenter
   nameWithType: SupportPrimitives.Capsule.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Capsule.html#Jitter2_Collision_SupportPrimitives_Capsule_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Capsule.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Capsule.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Capsule.html#Jitter2_Collision_SupportPrimitives_Capsule_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Capsule.SupportFeature
+  nameWithType: SupportPrimitives.Capsule.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Capsule.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Capsule.html#Jitter2_Collision_SupportPrimitives_Capsule_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4335,6 +4561,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Cone.GetCenter
   nameWithType: SupportPrimitives.Cone.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Cone.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Cone.html#Jitter2_Collision_SupportPrimitives_Cone_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Cone.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Cone.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Cone.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Cone.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Cone.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Cone.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Cone.html#Jitter2_Collision_SupportPrimitives_Cone_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Cone.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Cone.SupportFeature
+  nameWithType: SupportPrimitives.Cone.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Cone.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Cone.html#Jitter2_Collision_SupportPrimitives_Cone_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4482,6 +4724,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Cylinder.GetCenter
   nameWithType: SupportPrimitives.Cylinder.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Cylinder.html#Jitter2_Collision_SupportPrimitives_Cylinder_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Cylinder.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Cylinder.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Cylinder.html#Jitter2_Collision_SupportPrimitives_Cylinder_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Cylinder.SupportFeature
+  nameWithType: SupportPrimitives.Cylinder.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Cylinder.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Cylinder.html#Jitter2_Collision_SupportPrimitives_Cylinder_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4520,6 +4778,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Point.GetCenter
   nameWithType: SupportPrimitives.Point.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Point.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Point.html#Jitter2_Collision_SupportPrimitives_Point_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Point.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Point.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Point.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Point.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Point.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Point.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Point.html#Jitter2_Collision_SupportPrimitives_Point_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Point.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Point.SupportFeature
+  nameWithType: SupportPrimitives.Point.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Point.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Point.html#Jitter2_Collision_SupportPrimitives_Point_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
@@ -4577,6 +4851,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.SupportPrimitives.Sphere.GetCenter
   nameWithType: SupportPrimitives.Sphere.GetCenter
+- uid: Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.SupportPrimitives.Sphere.html#Jitter2_Collision_SupportPrimitives_Sphere_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: SupportPrimitives.Sphere.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: SupportPrimitives.Sphere.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.SupportPrimitives.Sphere.html#Jitter2_Collision_SupportPrimitives_Sphere_SupportFeature_
+  commentId: Overload:Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.SupportPrimitives.Sphere.SupportFeature
+  nameWithType: SupportPrimitives.Sphere.SupportFeature
 - uid: Jitter2.Collision.SupportPrimitives.Sphere.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.SupportPrimitives.Sphere.html#Jitter2_Collision_SupportPrimitives_Sphere_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__

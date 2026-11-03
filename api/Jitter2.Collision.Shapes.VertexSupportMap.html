@@ -102,7 +102,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct VertexSupportMap : ISupportMappable, IEquatable&lt;VertexSupportMap&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public struct VertexSupportMap : ISupportFeature, ISupportMappable, IEquatable&lt;VertexSupportMap&gt;</code></pre>
   </div>
 
 
@@ -112,6 +112,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><a class="xref" href="Jitter2.Collision.ISupportFeature.html">ISupportFeature</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
       <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Jitter2.Collision.Shapes.VertexSupportMap.html">VertexSupportMap</a>&gt;</div>
     </dd>
@@ -230,7 +231,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_Equals_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.Equals(Jitter2.Collision.Shapes.VertexSupportMap)">
   Equals(VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
@@ -269,7 +270,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_Equals_System_Object_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.Equals(System.Object)">
   Equals(object?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L155"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L159"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether this instance and a specified object are equal.</p>
@@ -341,7 +342,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_GetHashCode" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.GetHashCode">
   GetHashCode()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L157"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L161"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the hash code for this instance.</p>
@@ -357,6 +358,52 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
   <dl class="parameters">
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
     <dd><p>A 32-bit signed integer that is the hash code for this instance.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_VertexSupportMap_SupportFeature_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})">
+  SupportFeature(in JVector, float, Span&lt;JVector&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Writes the feature of the shape that supports it in the given direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly int SupportFeature(in JVector direction, float tolerance, Span&lt;JVector&gt; vertices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction in local space. Does not need to be normalized.</p>
+</dd>
+    <dt><code>tolerance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The sine of the angle within which directions share the feature.</p>
+</dd>
+    <dt><code>vertices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
+    <dd><p>Receives the vertices in local space: one for a point, two for a segment, three or more for a
+convex polygon in winding order. At least <a class="xref" href="Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_MaxVertices">MaxVertices</a> entries long.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of vertices written, at least one.</p>
 </dd>
   </dl>
 
@@ -414,7 +461,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_op_Equality_Jitter2_Collision_Shapes_VertexSupportMap_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.op_Equality(Jitter2.Collision.Shapes.VertexSupportMap,Jitter2.Collision.Shapes.VertexSupportMap)">
   operator ==(VertexSupportMap, VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L163"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -452,7 +499,7 @@ Struct VertexSupportMap  <a class="header-action link-secondary" title="View sou
 
   <h3 id="Jitter2_Collision_Shapes_VertexSupportMap_op_Inequality_Jitter2_Collision_Shapes_VertexSupportMap_Jitter2_Collision_Shapes_VertexSupportMap_" data-uid="Jitter2.Collision.Shapes.VertexSupportMap.op_Inequality(Jitter2.Collision.Shapes.VertexSupportMap,Jitter2.Collision.Shapes.VertexSupportMap)">
   operator !=(VertexSupportMap, VertexSupportMap)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/VertexSupportMap.cs/#L168"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>

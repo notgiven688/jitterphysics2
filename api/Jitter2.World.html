@@ -308,7 +308,7 @@ cost. No finite number guarantees that every collision is found. Applies to bodi
 
   <h3 id="Jitter2_World_CcdRelaxationFactor" data-uid="Jitter2.World.CcdRelaxationFactor">
   CcdRelaxationFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L106"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fraction of the predicted gap that CCD contacts allow to close during one step. Default is 0.9.</p>
@@ -344,7 +344,7 @@ public float CcdRelaxationFactor { get; set; }</code></pre>
 
   <h3 id="Jitter2_World_CcdVelocityThreshold" data-uid="Jitter2.World.CcdVelocityThreshold">
   CcdVelocityThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L121"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Minimum relative surface speed for continuous collision detection, in world units per second.
@@ -490,11 +490,11 @@ update shapes after changing their geometry. Jitter manages proxies for attached
 
   <h3 id="Jitter2_World_EnableAuxiliaryContactPoints" data-uid="Jitter2.World.EnableAuxiliaryContactPoints">
   EnableAuxiliaryContactPoints
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L91"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Generates extra contact points between touching flat surfaces to improve stability,
-especially when objects first come to rest. Default is true.</p>
+  <div class="markdown level1 summary"><p>Builds a full contact manifold for each touching pair instead of registering only the single
+deepest point. Default is true.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -515,6 +515,13 @@ especially when objects first come to rest. Default is true.</p>
 
 
 
+  <h4 class="section" id="Jitter2_World_EnableAuxiliaryContactPoints_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The manifold covers the whole contact feature: the corners of touching faces, the two ends of
+the line on which a capsule or cylinder rests, the point below a sphere. This keeps stacks
+stable and is required for rolling: the single point reported by the narrow phase lies off
+along a curved surface, so a rolling sphere, capsule or cylinder on a single contact does not
+keep its speed. See <a class="xref" href="Jitter2.Collision.CollisionManifold.html">CollisionManifold</a>.</p>
+</div>
 
 
 
@@ -689,7 +696,7 @@ concurrently, so the filter must be thread-safe.</p>
 
   <h3 id="Jitter2_World_PersistentContactManifold" data-uid="Jitter2.World.PersistentContactManifold">
   PersistentContactManifold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L98"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Reuses contact points and impulses from previous steps to improve resting stability.
@@ -1205,7 +1212,7 @@ forces and torques on the island's dynamic and kinematic bodies.</p>
 
   <h3 id="Jitter2_World_GetArbiter_System_UInt64_System_UInt64_Jitter2_Dynamics_Arbiter__" data-uid="Jitter2.World.GetArbiter(System.UInt64,System.UInt64,Jitter2.Dynamics.Arbiter@)">
   GetArbiter(ulong, ulong, out Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L329"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L336"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> instance for the given pair of IDs.</p>
@@ -1259,7 +1266,7 @@ stepping or modifying the world, including removing arbiters, bodies, or shapes.
 
   <h3 id="Jitter2_World_GetOrCreateArbiter_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_Arbiter__" data-uid="Jitter2.World.GetOrCreateArbiter(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.Arbiter@)">
   GetOrCreateArbiter(ulong, ulong, RigidBody, RigidBody, out Arbiter)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L360"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L367"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> instance for the given pair of IDs,
@@ -1352,7 +1359,7 @@ by memory address to prevent deadlocks.</p>
 
   <h3 id="Jitter2_World_RegisterContact_Jitter2_Dynamics_Arbiter_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(Jitter2.Dynamics.Arbiter,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(Arbiter, in JVector, in JVector, in JVector, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L212"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers a single contact point into an existing <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a>.</p>
@@ -1409,7 +1416,7 @@ Do not pass an arbiter after it has been removed from the world; removed arbiter
 
   <h3 id="Jitter2_World_RegisterContact_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector__Jitter2_Collision_CollisionManifold__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector@,Jitter2.Collision.CollisionManifold@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(ulong, ulong, RigidBody, RigidBody, in JVector, ref CollisionManifold, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L248"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L255"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers one or more contact points between two rigid bodies using a <a class="xref" href="Jitter2.Collision.CollisionManifold.html">CollisionManifold</a>,
@@ -1470,7 +1477,7 @@ or changing simulation objects. Do not overlap them with <a class="xref" href="J
 
   <h3 id="Jitter2_World_RegisterContact_System_UInt64_System_UInt64_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.World.RegisterContact(System.UInt64,System.UInt64,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.Dynamics.ContactData.SolveMode)">
   RegisterContact(ulong, ulong, RigidBody, RigidBody, in JVector, in JVector, in JVector, SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L304"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Detect.cs/#L311"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Registers a contact point between two rigid bodies, creating an <a class="xref" href="Jitter2.Dynamics.Arbiter.html">Arbiter</a> if one does not already exist.</p>

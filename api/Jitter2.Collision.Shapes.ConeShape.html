@@ -102,7 +102,7 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ConeShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
+    <pre><code class="lang-csharp hljs">public class ConeShape : RigidBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportFeature, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
   </div>
 
 
@@ -124,6 +124,7 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
       <div><a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a></div>
       <div><a class="xref" href="Jitter2.DataStructures.IPartitionedSetIndex.html">IPartitionedSetIndex</a></div>
       <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISupportFeature.html">ISupportFeature</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
       <div><a class="xref" href="Jitter2.Collision.IAngularSweepTestable.html">IAngularSweepTestable</a></div>
@@ -335,7 +336,7 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Collision_Shapes_ConeShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__" data-uid="Jitter2.Collision.Shapes.ConeShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)">
   CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L103"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L152"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -370,7 +371,7 @@ Class ConeShape  <a class="header-action link-secondary" title="View source" hre
 
   <h3 id="Jitter2_Collision_Shapes_ConeShape_CalculateMassInertia_Jitter2_LinearMath_JSymmetricMatrix__Jitter2_LinearMath_JVector__System_Single__" data-uid="Jitter2.Collision.Shapes.ConeShape.CalculateMassInertia(Jitter2.LinearMath.JSymmetricMatrix@,Jitter2.LinearMath.JVector@,System.Single@)">
   CalculateMassInertia(out JSymmetricMatrix, out JVector, out float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L128"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Calculates the shape's mass, center of mass, and inertia at unit density.
@@ -456,7 +457,7 @@ Use outward-facing triangles for closed surfaces. Body and shape transforms are 
 
   <h3 id="Jitter2_Collision_Shapes_ConeShape_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.ConeShape.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
@@ -481,6 +482,56 @@ Use outward-facing triangles for closed surfaces. Body and shape transforms are 
 
 
 
+
+
+
+
+  <a id="Jitter2_Collision_Shapes_ConeShape_SupportFeature_" data-uid="Jitter2.Collision.Shapes.ConeShape.SupportFeature*"></a>
+
+  <h3 id="Jitter2_Collision_Shapes_ConeShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.Shapes.ConeShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})">
+  SupportFeature(in JVector, float, Span&lt;JVector&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/ConeShape.cs/#L104"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Writes the feature of the shape that supports it in the given direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int SupportFeature(in JVector direction, float tolerance, Span&lt;JVector&gt; vertices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction in local space. Does not need to be normalized.</p>
+</dd>
+    <dt><code>tolerance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The sine of the angle within which directions share the feature.</p>
+</dd>
+    <dt><code>vertices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
+    <dd><p>Receives the vertices in local space: one for a point, two for a segment, three or more for a
+convex polygon in winding order. At least <a class="xref" href="Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_MaxVertices">MaxVertices</a> entries long.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of vertices written, at least one.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="Jitter2_Collision_Shapes_ConeShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>The default samples the support mapping with <a class="xref" href="Jitter2.Collision.SupportFeatureSampler.html">SupportFeatureSampler</a>. Shapes that
+know their features analytically should override it.</p>
+</div>
 
 
 

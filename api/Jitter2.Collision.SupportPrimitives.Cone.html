@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Collision_SupportPrimitives_Cone" data-uid="Jitter2.Collision.SupportPrimitives.Cone" class="text-break">
-Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L162"><i class="bi bi-code-slash"></i></a>
+Struct SupportPrimitives.Cone  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L188"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -103,7 +103,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public readonly struct SupportPrimitives.Cone : ISupportMappable</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly struct SupportPrimitives.Cone : ISupportFeature, ISupportMappable</code></pre>
   </div>
 
 
@@ -113,6 +113,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><a class="xref" href="Jitter2.Collision.ISupportFeature.html">ISupportFeature</a></div>
       <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
     </dd>
   </dl>
@@ -154,7 +155,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone__ctor_System_Single_System_Single_" data-uid="Jitter2.Collision.SupportPrimitives.Cone.#ctor(System.Single,System.Single)">
   Cone(float, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L188"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
@@ -193,7 +194,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SupportPrimitives.Cone.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L185"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L215"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
@@ -222,11 +223,57 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
 
 
 
+  <a id="Jitter2_Collision_SupportPrimitives_Cone_SupportFeature_" data-uid="Jitter2.Collision.SupportPrimitives.Cone.SupportFeature*"></a>
+
+  <h3 id="Jitter2_Collision_SupportPrimitives_Cone_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SupportPrimitives.Cone.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})">
+  SupportFeature(in JVector, float, Span&lt;JVector&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L212"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Writes the feature of the shape that supports it in the given direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SupportFeature(in JVector direction, float tolerance, Span&lt;JVector&gt; vertices)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The direction in local space. Does not need to be normalized.</p>
+</dd>
+    <dt><code>tolerance</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The sine of the angle within which directions share the feature.</p>
+</dd>
+    <dt><code>vertices</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a>&gt;</dt>
+    <dd><p>Receives the vertices in local space: one for a point, two for a segment, three or more for a
+convex polygon in winding order. At least <a class="xref" href="Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_MaxVertices">MaxVertices</a> entries long.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of vertices written, at least one.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Jitter2_Collision_SupportPrimitives_Cone_SupportMap_" data-uid="Jitter2.Collision.SupportPrimitives.Cone.SupportMap*"></a>
 
   <h3 id="Jitter2_Collision_SupportPrimitives_Cone_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.SupportPrimitives.Cone.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L193"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -262,7 +309,7 @@ The cone is centered at its centroid: the base sits at Y = -height/4 and the ape
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L162" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/SupportPrimitives.cs/#L188" class="edit-link">Edit this page</a>
         </div>
 
 
