@@ -110,6 +110,7 @@ public partial class Playground : RenderWindow
         new Demo33(),
         new Demo34(),
         // new Demo35(), // rolling
+        // new Demo36(), // trigger volumes
     };
 
     private IDemo? currentDemo;
