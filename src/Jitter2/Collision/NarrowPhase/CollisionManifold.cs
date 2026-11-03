@@ -16,17 +16,25 @@ namespace Jitter2.Collision;
 /// Represents a contact manifold between two convex shapes.
 /// </summary>
 /// <remarks>
-/// The manifold is constructed from support points sampled around the collision normal,
-/// then reduced to a small contact set suitable for the solver.
+/// <para>
+/// Each shape reports the feature it touches with along the collision normal through
+/// <see cref="ISupportFeature.SupportFeature"/>: a point, a segment or a polygon. The features
+/// are clipped against each other in the contact plane and reduced to a small contact set
+/// suitable for the solver. The narrow phase contributes the normal; its contact pair is kept
+/// for a contact between faces and serves as the fallback when the features do not overlap.
+/// </para>
+/// <para>
+/// Shapes that do not override the feature query are sampled through their support mapping by
+/// <see cref="SupportFeatureSampler"/>.
+/// </para>
 /// </remarks>
 public unsafe struct CollisionManifold
 {
-    // We sample each shape with six perturbed support directions, but the sampled polygons can
-    // intersect in up to twelve vertices before the solver-facing reduction step.
-    private const int MaxSupportPoints = 6;
+    // Two features can intersect in up to twelve vertices before the solver-facing reduction step.
+    private const int MaxFeaturePoints = ISupportFeature.MaxVertices;
     private const int MaxManifoldPoints = 12;
     private const int SolverContactLimit = 4;
-    private const Real DuplicatePointDistanceSq = (Real)0.001;
+    private const Real DuplicatePointDistanceSq = SupportFeatureSampler.DuplicatePointDistanceSq;
 
     // Layout: MaxManifoldPoints on shape A followed by the matching points on shape B.
     private fixed Real manifoldData[MaxManifoldPoints * 2 * 3];
@@ -37,13 +45,8 @@ public unsafe struct CollisionManifold
     // Number of actual contact pairs written into manifoldData.
     private int manifoldCount;
 
-    private const Real Sqrt3Over2 = (Real)0.86602540378;
-    // Small perturbation used to sample support points around the contact normal.
+    // Angle (its sine) within which directions share the feature a shape reports.
     private const Real Perturbation = (Real)0.01;
-
-    // Unit hexagon around the normal. These offsets generate the six support directions.
-    private static readonly Real[] hexagonVertices = [(Real)1.0, (Real)0.0, (Real)0.5, Sqrt3Over2, -(Real)0.5, Sqrt3Over2,
-        -(Real)1.0, (Real)0.0, -(Real)0.5, -Sqrt3Over2, (Real)0.5, -Sqrt3Over2];
 
     /// <summary>
     /// Gets the contact points on shape A.
@@ -60,36 +63,49 @@ public unsafe struct CollisionManifold
     /// </summary>
     public readonly int Count => manifoldCount;
 
-    // Add a support sample for shape A unless it is effectively identical to one we already kept.
-    private void PushLeft(Span<JVector> left, in JVector v)
+    // Ask a shape for the feature it touches with in the given world direction, and store its
+    // vertices rotated into world orientation and shifted by the offset.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void GetFeature<T>(T shape, in JQuaternion orientation, in JVector offset,
+        in JVector direction, Span<JVector> points, ref int count) where T : ISupportFeature
     {
-        if (leftCount > 0)
-        {
-            if ((left[0] - v).LengthSquared() < DuplicatePointDistanceSq) return;
-        }
+        JVector.ConjugatedTransform(direction, orientation, out JVector localDirection);
 
-        if (leftCount > 1)
-        {
-            if ((left[leftCount - 1] - v).LengthSquared() < DuplicatePointDistanceSq) return;
-        }
+        Span<JVector> vertices = stackalloc JVector[ISupportFeature.MaxVertices];
+        int vertexCount = shape.SupportFeature(localDirection, Perturbation, vertices);
 
-        left[leftCount++] = v;
+        for (int i = 0; i < vertexCount; i++)
+        {
+            JVector.Transform(vertices[i], orientation, out JVector point);
+            SupportFeatureSampler.Push(points, ref count, point + offset);
+        }
     }
 
-    // Add a support sample for shape B unless it is effectively identical to one we already kept.
-    private void PushRight(Span<JVector> right, in JVector v)
+    // A degenerate polygon is a segment: keep the two points farthest apart.
+    private static void ReduceToSegment(Span<JVector> points, ref int count)
     {
-        if (rightCount > 0)
+        int first = 0;
+        int second = 1;
+        Real longest = (points[1] - points[0]).LengthSquared();
+
+        for (int i = 0; i < count; i++)
         {
-            if ((right[0] - v).LengthSquared() < DuplicatePointDistanceSq) return;
+            for (int j = i + 1; j < count; j++)
+            {
+                Real lengthSq = (points[j] - points[i]).LengthSquared();
+                if (lengthSq <= longest) continue;
+
+                longest = lengthSq;
+                first = i;
+                second = j;
+            }
         }
 
-        if (rightCount > 1)
-        {
-            if ((right[rightCount - 1] - v).LengthSquared() < DuplicatePointDistanceSq) return;
-        }
-
-        right[rightCount++] = v;
+        JVector start = points[first];
+        JVector end = points[second];
+        points[0] = start;
+        points[1] = end;
+        count = longest < DuplicatePointDistanceSq ? 1 : 2;
     }
 
     // Determine the winding sign of a sampled polygon relative to the contact normal.
@@ -392,16 +408,12 @@ public unsafe struct CollisionManifold
     [SkipLocalsInit]
     public void BuildManifold<Ta, Tb>(Ta shapeA, Tb shapeB, in JQuaternion quaternionA, in JQuaternion quaternionB,
         in JVector positionA, in JVector positionB, in JVector pA, in JVector pB, in JVector normal)
-        where Ta : ISupportMappable where Tb : ISupportMappable
+        where Ta : ISupportFeature where Tb : ISupportFeature
     {
         // Reset
         leftCount = 0;
         rightCount = 0;
         manifoldCount = 0;
-
-        // Build a local tangent frame around the collision normal.
-        JVector crossVector1 = MathHelper.CreateOrthonormal(normal);
-        JVector crossVector2 = normal % crossVector1;
 
         // Operate in a frame translated by -positionA so intermediates stay near the origin.
         // Absolute epsilons in the clipping helpers are scaled to shape size, not world offset.
@@ -409,39 +421,32 @@ public unsafe struct CollisionManifold
         JVector pAloc = pA - positionA;
         JVector pBloc = pB - positionA;
 
-        Span<JVector> left = stackalloc JVector[MaxSupportPoints];
-        Span<JVector> right = stackalloc JVector[MaxSupportPoints];
+        Span<JVector> left = stackalloc JVector[MaxFeaturePoints];
+        Span<JVector> right = stackalloc JVector[MaxFeaturePoints];
 
-        // Sample support points for both shapes around the normal in a hexagonal pattern.
-        // This approximates the active contact feature without a full clipping pipeline.
-        for (int e = 0; e < MaxSupportPoints; e++)
-        {
-            JVector ptNormal = normal + hexagonVertices[2 * e + 0] * Perturbation * crossVector1 +
-                               hexagonVertices[2 * e + 1] * Perturbation * crossVector2;
+        // Each shape contributes the feature it touches with: a point, a segment or a polygon.
+        // Shape B is looked at along the negated normal.
+        JVector.Negate(normal, out JVector negatedNormal);
 
-            JVector.ConjugatedTransform(ptNormal, quaternionA, out JVector tmp);
-            shapeA.SupportMap(tmp, out JVector np1);
-            JVector.Transform(np1, quaternionA, out np1);
-            PushLeft(left, np1);
+        GetFeature(shapeA, quaternionA, JVector.Zero, normal, left, ref leftCount);
+        GetFeature(shapeB, quaternionB, relPosB, negatedNormal, right, ref rightCount);
 
-            JVector.NegateInPlace(ref ptNormal);
-
-            JVector.ConjugatedTransform(ptNormal, quaternionB, out tmp);
-            shapeB.SupportMap(tmp, out JVector np2);
-            JVector.Transform(np2, quaternionB, out np2);
-            JVector.Add(np2, relPosB, out np2);
-            PushRight(right, np2);
-        }
+        // A side resting on a point or a line (a vertex, an edge, a sphere, a lying capsule)
+        // spans the contact with its feature alone.
+        bool restsOnPointOrLine = leftCount <= 2 || rightCount <= 2;
 
         Span<JVector> mA = MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[0]), MaxManifoldPoints);
         Span<JVector> mB = MemoryMarshal.CreateSpan(ref Unsafe.As<Real, JVector>(ref manifoldData[MaxManifoldPoints * 3]), MaxManifoldPoints);
 
-        // If a sampled loop has non-zero signed area, treat it as a polygon; otherwise it is
+        // If a feature loop has non-zero signed area, treat it as a polygon; otherwise it is
         // effectively a line or point and handled by the dedicated fallback cases below.
         Real leftSign = (Real)0.0;
         Real rightSign = (Real)0.0;
         bool leftPolygon = leftCount > 2 && TryGetPolygonSign(left, leftCount, normal, out leftSign);
         bool rightPolygon = rightCount > 2 && TryGetPolygonSign(right, rightCount, normal, out rightSign);
+
+        if (leftCount > 2 && !leftPolygon) ReduceToSegment(left, ref leftCount);
+        if (rightCount > 2 && !rightPolygon) ReduceToSegment(right, ref rightCount);
 
         // Polygon/point and polygon/segment cases with shape A contributing the polygon.
         if (leftPolygon)
@@ -534,20 +539,39 @@ public unsafe struct CollisionManifold
             }
         }
 
-        // Sampling support points around the normal can leave a single point offset from the
-        // original contact, especially on curved surfaces. This offset is an artifact of the
-        // manifold algorithm and can make a resting sphere start rolling. If we found at most
-        // one point, use the original deepest contact pair instead.
-        if (manifoldCount <= 1)
+        // A side that touches at a single point touches there; the point/segment and point/point
+        // cases have no clipping path above, so add it here.
+        if (manifoldCount == 0)
+        {
+            if (leftCount == 1 && rightCount == 1)
+            {
+                AddPointPair(mA, mB, ref manifoldCount, left[0], right[0], normal);
+            }
+            else if (leftCount == 1)
+            {
+                AddPointOnA(mA, mB, ref manifoldCount, left[0], pBloc, normal);
+            }
+            else if (rightCount == 1)
+            {
+                AddPointOnB(mA, mB, ref manifoldCount, right[0], pAloc, normal);
+            }
+        }
+
+        // Features that do not overlap within the contact plane leave the narrow phase's pair.
+        if (manifoldCount == 0)
         {
             mA[0] = pAloc;
             mB[0] = pBloc;
             manifoldCount = 1;
         }
-        else if (manifoldCount < SolverContactLimit)
+        else if (manifoldCount < SolverContactLimit && !restsOnPointOrLine)
         {
             // Support sampling can also offset a small contact patch. If a solver slot is
             // free, keep the original pair last without dropping any sampled contacts.
+            // Not when a side rests on a point or a line: its points already span the contact,
+            // and the deepest point of MPR is off along a curved surface and wanders along a
+            // resting line from step to step, which would leave a cached contact behind a
+            // rolling body.
             mA[manifoldCount] = pAloc;
             mB[manifoldCount] = pBloc;
             manifoldCount++;

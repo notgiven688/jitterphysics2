@@ -57,6 +57,14 @@ public class SphereShape : RigidBodyShape
         JVector.Multiply(result, radius, out result);
     }
 
+    /// <inheritdoc/>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        // A sphere touches at a single point.
+        SupportMap(direction, out vertices[0]);
+        return 1;
+    }
+
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;

@@ -90,6 +90,71 @@ public class BoxShape : RigidBodyShape
         result.Z = MathHelper.SignBit(direction.Z) * halfSize.Z;
     }
 
+    /// <inheritdoc/>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        // A component close to zero leaves the box free along that axis: one such axis makes the
+        // feature an edge, two make it a face.
+        Real toleranceSq = tolerance * tolerance * direction.LengthSquared();
+        bool freeX = direction.X * direction.X < toleranceSq;
+        bool freeY = direction.Y * direction.Y < toleranceSq;
+        bool freeZ = direction.Z * direction.Z < toleranceSq;
+
+        SupportMap(direction, out JVector v);
+        JVector h = halfSize;
+
+        if (freeX && freeY && !freeZ)
+        {
+            vertices[0] = new JVector(h.X, h.Y, v.Z);
+            vertices[1] = new JVector(-h.X, h.Y, v.Z);
+            vertices[2] = new JVector(-h.X, -h.Y, v.Z);
+            vertices[3] = new JVector(h.X, -h.Y, v.Z);
+            return 4;
+        }
+
+        if (freeX && freeZ && !freeY)
+        {
+            vertices[0] = new JVector(h.X, v.Y, h.Z);
+            vertices[1] = new JVector(-h.X, v.Y, h.Z);
+            vertices[2] = new JVector(-h.X, v.Y, -h.Z);
+            vertices[3] = new JVector(h.X, v.Y, -h.Z);
+            return 4;
+        }
+
+        if (freeY && freeZ && !freeX)
+        {
+            vertices[0] = new JVector(v.X, h.Y, h.Z);
+            vertices[1] = new JVector(v.X, -h.Y, h.Z);
+            vertices[2] = new JVector(v.X, -h.Y, -h.Z);
+            vertices[3] = new JVector(v.X, h.Y, -h.Z);
+            return 4;
+        }
+
+        if (freeX && !freeY && !freeZ)
+        {
+            vertices[0] = new JVector(h.X, v.Y, v.Z);
+            vertices[1] = new JVector(-h.X, v.Y, v.Z);
+            return 2;
+        }
+
+        if (freeY && !freeX && !freeZ)
+        {
+            vertices[0] = new JVector(v.X, h.Y, v.Z);
+            vertices[1] = new JVector(v.X, -h.Y, v.Z);
+            return 2;
+        }
+
+        if (freeZ && !freeX && !freeY)
+        {
+            vertices[0] = new JVector(v.X, v.Y, h.Z);
+            vertices[1] = new JVector(v.X, v.Y, -h.Z);
+            return 2;
+        }
+
+        vertices[0] = v;
+        return 1;
+    }
+
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
     {
         Real epsilon = (Real)1e-22;

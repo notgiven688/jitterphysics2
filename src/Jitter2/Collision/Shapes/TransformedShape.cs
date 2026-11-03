@@ -155,6 +155,32 @@ public class TransformedShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
+    /// <remarks>
+    /// Forwards to the original shape. Under a scaling transformation the tolerance applies to the
+    /// angle in the original shape's frame.
+    /// </remarks>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        if (type == TransformationType.Identity)
+        {
+            int identityCount = OriginalShape.SupportFeature(direction, tolerance, vertices);
+            for (int i = 0; i < identityCount; i++) vertices[i] += translation;
+            return identityCount;
+        }
+
+        JVector.TransposedTransform(direction, transformation, out JVector dir);
+        int count = OriginalShape.SupportFeature(dir, tolerance, vertices);
+
+        for (int i = 0; i < count; i++)
+        {
+            JVector.Transform(vertices[i], transformation, out JVector transformed);
+            vertices[i] = transformed + translation;
+        }
+
+        return count;
+    }
+
+    /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
         if (type == TransformationType.General)

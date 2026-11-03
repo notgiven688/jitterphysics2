@@ -73,9 +73,16 @@ public static class SupportPrimitives
     /// <summary>
     /// Represents a point as a lightweight support-mapped query primitive.
     /// </summary>
-    public readonly struct Point : ISupportMappable
+    public readonly struct Point : ISupportFeature
     {
         public readonly void SupportMap(in JVector direction, out JVector result) => result = JVector.Zero;
+
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+        {
+            SupportMap(direction, out vertices[0]);
+            return 1;
+        }
 
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }
@@ -83,11 +90,18 @@ public static class SupportPrimitives
     /// <summary>
     /// Represents a sphere as a lightweight support-mapped query primitive.
     /// </summary>
-    public readonly struct Sphere(Real radius) : ISupportMappable
+    public readonly struct Sphere(Real radius) : ISupportFeature
     {
         private readonly Real radius = ArgumentCheck.Positive(radius, nameof(radius));
 
         public readonly void SupportMap(in JVector direction, out JVector result) => result = JVector.Normalize(direction) * radius;
+
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+        {
+            SupportMap(direction, out vertices[0]);
+            return 1;
+        }
 
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }
@@ -95,7 +109,7 @@ public static class SupportPrimitives
     /// <summary>
     /// Represents a box as a lightweight support-mapped query primitive.
     /// </summary>
-    public readonly struct Box(JVector halfExtents) : ISupportMappable
+    public readonly struct Box(JVector halfExtents) : ISupportFeature
     {
         private readonly JVector halfExtents = ArgumentCheck.PositiveComponents(halfExtents, nameof(halfExtents));
 
@@ -106,13 +120,17 @@ public static class SupportPrimitives
             result.Z = MathHelper.SignBit(direction.Z) * halfExtents.Z;
         }
 
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices) =>
+            SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
+
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }
 
     /// <summary>
     /// Represents a capsule as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
     /// </summary>
-    public readonly struct Capsule(Real radius, Real halfLength) : ISupportMappable
+    public readonly struct Capsule(Real radius, Real halfLength) : ISupportFeature
     {
         private readonly Real radius = ArgumentCheck.Positive(radius, nameof(radius));
         private readonly Real halfLength = ArgumentCheck.NonNegative(halfLength, nameof(halfLength));
@@ -123,13 +141,17 @@ public static class SupportPrimitives
             result.Y += MathR.Sign(direction.Y) * halfLength;
         }
 
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices) =>
+            SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
+
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }
 
     /// <summary>
     /// Represents a cylinder as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
     /// </summary>
-    public readonly struct Cylinder(Real radius, Real halfHeight) : ISupportMappable
+    public readonly struct Cylinder(Real radius, Real halfHeight) : ISupportFeature
     {
         private readonly Real radius = ArgumentCheck.Positive(radius, nameof(radius));
         private readonly Real halfHeight = ArgumentCheck.Positive(halfHeight, nameof(halfHeight));
@@ -152,6 +174,10 @@ public static class SupportPrimitives
             }
         }
 
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices) =>
+            SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
+
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }
 
@@ -159,7 +185,7 @@ public static class SupportPrimitives
     /// Represents a cone as a lightweight support-mapped query primitive. The symmetry axis is the Y-axis.
     /// The cone is centered at its centroid: the base sits at Y = -height/4 and the apex at Y = 3*height/4.
     /// </summary>
-    public readonly struct Cone(Real radius, Real height) : ISupportMappable
+    public readonly struct Cone(Real radius, Real height) : ISupportFeature
     {
         private readonly Real radius = ArgumentCheck.Positive(radius, nameof(radius));
         private readonly Real height = ArgumentCheck.Positive(height, nameof(height));
@@ -181,6 +207,10 @@ public static class SupportPrimitives
                 result = new JVector((Real)0.0, (Real)0.75 * height, (Real)0.0);
             }
         }
+
+        /// <inheritdoc/>
+        public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices) =>
+            SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
 
         public readonly void GetCenter(out JVector point) => point = JVector.Zero;
     }

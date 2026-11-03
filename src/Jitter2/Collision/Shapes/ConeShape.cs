@@ -93,6 +93,55 @@ public class ConeShape : RigidBodyShape
         }
     }
 
+    private const Real Sqrt1Over2 = (Real)0.70710678118654752;
+
+    // Unit circle in the XZ plane, eight points in winding order.
+    private static readonly Real[] rim = [(Real)1.0, (Real)0.0, Sqrt1Over2, Sqrt1Over2, (Real)0.0, (Real)1.0,
+        -Sqrt1Over2, Sqrt1Over2, -(Real)1.0, (Real)0.0, -Sqrt1Over2, -Sqrt1Over2, (Real)0.0, -(Real)1.0,
+        Sqrt1Over2, -Sqrt1Over2];
+
+    /// <inheritdoc/>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        Real sideSq = direction.X * direction.X + direction.Z * direction.Z;
+        Real toleranceSq = tolerance * tolerance * direction.LengthSquared();
+        Real baseY = -(Real)0.25 * height;
+
+        // Almost along the axis below the cone, it stands on its base, approximated by an octagon
+        // on the rim.
+        if (direction.Y < (Real)0.0 && sideSq < toleranceSq)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                vertices[i] = new JVector(rim[2 * i] * radius, baseY, rim[2 * i + 1] * radius);
+            }
+
+            return 8;
+        }
+
+        // The line from the apex to the rim facing the direction has the outward normal
+        // (height, radius) in the plane of the axis and the direction. Almost along that normal,
+        // the cone rests on this line.
+        if (sideSq > (Real)0.0)
+        {
+            Real side = MathR.Sqrt(sideSq);
+            Real cross = side * radius - direction.Y * height;
+            Real dot = side * height + direction.Y * radius;
+
+            if (dot > (Real)0.0 && cross * cross < toleranceSq * (height * height + radius * radius))
+            {
+                Real scale = radius / side;
+                vertices[0] = new JVector(0, (Real)0.75 * height, 0);
+                vertices[1] = new JVector(direction.X * scale, baseY, direction.Z * scale);
+                return 2;
+            }
+        }
+
+        // Otherwise it touches at its apex or at a single point of the rim.
+        SupportMap(direction, out vertices[0]);
+        return 1;
+    }
+
     /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {

@@ -95,6 +95,48 @@ public class CylinderShape : RigidBodyShape
         }
     }
 
+    private const Real Sqrt1Over2 = (Real)0.70710678118654752;
+
+    // Unit circle in the XZ plane, eight points in winding order.
+    private static readonly Real[] rim = [(Real)1.0, (Real)0.0, Sqrt1Over2, Sqrt1Over2, (Real)0.0, (Real)1.0,
+        -Sqrt1Over2, Sqrt1Over2, -(Real)1.0, (Real)0.0, -Sqrt1Over2, -Sqrt1Over2, (Real)0.0, -(Real)1.0,
+        Sqrt1Over2, -Sqrt1Over2];
+
+    /// <inheritdoc/>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        Real sideSq = direction.X * direction.X + direction.Z * direction.Z;
+        Real toleranceSq = tolerance * tolerance * direction.LengthSquared();
+        Real halfHeight = height * (Real)0.5;
+
+        // Almost perpendicular to the axis, the cylinder rests on the line of its side that faces
+        // the direction.
+        if (sideSq > (Real)0.0 && direction.Y * direction.Y < toleranceSq)
+        {
+            Real scale = radius / MathR.Sqrt(sideSq);
+            vertices[0] = new JVector(direction.X * scale, halfHeight, direction.Z * scale);
+            vertices[1] = new JVector(direction.X * scale, -halfHeight, direction.Z * scale);
+            return 2;
+        }
+
+        // Almost along the axis, it stands on a cap, approximated by an octagon on its rim.
+        if (sideSq < toleranceSq)
+        {
+            Real capY = Math.Sign(direction.Y) * halfHeight;
+
+            for (int i = 0; i < 8; i++)
+            {
+                vertices[i] = new JVector(rim[2 * i] * radius, capY, rim[2 * i + 1] * radius);
+            }
+
+            return 8;
+        }
+
+        // Otherwise it touches at a single point of a rim.
+        SupportMap(direction, out vertices[0]);
+        return 1;
+    }
+
     /// <inheritdoc/>
     public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
     {
