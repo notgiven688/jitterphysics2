@@ -331,7 +331,7 @@ public partial class Playground : RenderWindow
                         World.AllowDeactivation = allowDeactivation;
 
                     bool auxiliaryContacts = World.EnableAuxiliaryContactPoints;
-                    if (options.Checkbox("Auxiliary Flat Surface", ref auxiliaryContacts).Changed)
+                    if (options.Checkbox("Auxiliary Contact Points", ref auxiliaryContacts).Changed)
                         World.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
                     options.Checkbox("Multithreading", ref multiThread);

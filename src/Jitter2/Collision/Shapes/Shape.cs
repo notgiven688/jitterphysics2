@@ -18,7 +18,7 @@ namespace Jitter2.Collision.Shapes;
 /// A shape has no position or orientation of its own. Shapes attached to a <see cref="RigidBody"/>
 /// use that body's transform.
 /// </remarks>
-public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportMappable, IRayCastable, IAngularSweepTestable, IDistanceTestable, IDebugDrawable
+public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupportFeature, IRayCastable, IAngularSweepTestable, IDistanceTestable, IDebugDrawable
 {
     int IPartitionedSetIndex.SetIndex { get; set; } = -1;
 
@@ -78,6 +78,17 @@ public abstract class Shape : IDynamicTreeProxy, IUpdatableBoundingBox, ISupport
     /// <inheritdoc/>
     [ReferenceFrame(ReferenceFrame.Local)]
     public abstract void GetCenter(out JVector point);
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// The default samples the support mapping with <see cref="SupportFeatureSampler"/>. Shapes that
+    /// know their features analytically should override it.
+    /// </remarks>
+    [ReferenceFrame(ReferenceFrame.Local)]
+    public virtual int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        return SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
+    }
 
     /// <summary>Draws the shape using the default visualization settings.</summary>
     public void DebugDraw(IDebugDrawer drawer) => DebugDraw(drawer, DebugDrawSettings.Default);

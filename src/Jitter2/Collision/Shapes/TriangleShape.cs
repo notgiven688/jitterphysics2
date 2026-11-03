@@ -163,6 +163,35 @@ public class TriangleShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
+    /// <remarks>
+    /// A vertex belongs to the feature if tilting the direction by the tolerance angle can raise it
+    /// to the highest vertex: the whole triangle near its normal, an edge near the normals of the
+    /// edge, otherwise a single vertex.
+    /// </remarks>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        ref readonly var triangle = ref Mesh.Indices[Index];
+
+        JVector a = Mesh.Vertices[triangle.IndexA];
+        JVector b = Mesh.Vertices[triangle.IndexB];
+        JVector c = Mesh.Vertices[triangle.IndexC];
+
+        Real da = JVector.Dot(a, direction);
+        Real db = JVector.Dot(b, direction);
+        Real dc = JVector.Dot(c, direction);
+
+        Real max = MathR.Max(da, MathR.Max(db, dc));
+        JVector top = da == max ? a : db == max ? b : c;
+        Real slack = tolerance * direction.Length();
+
+        int count = 0;
+        if (max - da <= slack * (a - top).Length()) vertices[count++] = a;
+        if (max - db <= slack * (b - top).Length()) vertices[count++] = b;
+        if (max - dc <= slack * (c - top).Length()) vertices[count++] = c;
+        return count;
+    }
+
+    /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         ref readonly var triangle = ref Mesh.Indices[Index];

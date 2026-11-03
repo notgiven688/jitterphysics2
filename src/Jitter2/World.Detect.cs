@@ -78,9 +78,16 @@ public sealed partial class World
     public IBroadPhaseFilter? BroadPhaseFilter { get; set; }
 
     /// <summary>
-    /// Generates extra contact points between touching flat surfaces to improve stability,
-    /// especially when objects first come to rest. Default is true.
+    /// Builds a full contact manifold for each touching pair instead of registering only the single
+    /// deepest point. Default is true.
     /// </summary>
+    /// <remarks>
+    /// The manifold covers the whole contact feature: the corners of touching faces, the two ends of
+    /// the line on which a capsule or cylinder rests, the point below a sphere. This keeps stacks
+    /// stable and is required for rolling: the single point reported by the narrow phase lies off
+    /// along a curved surface, so a rolling sphere, capsule or cylinder on a single contact does not
+    /// keep its speed. See <see cref="CollisionManifold"/>.
+    /// </remarks>
     public bool EnableAuxiliaryContactPoints { set; get; } = true;
 
     /// <summary>

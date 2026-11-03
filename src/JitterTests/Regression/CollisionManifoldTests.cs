@@ -18,7 +18,7 @@ public class CollisionManifoldTests
         in JQuaternion orientationA, in JQuaternion orientationB,
         in JVector positionA, in JVector positionB,
         out JVector pointA, out JVector pointB, out JVector normal, out Real penetration)
-        where Ta : ISupportMappable where Tb : ISupportMappable
+        where Ta : ISupportFeature where Tb : ISupportFeature
     {
         bool hit = NarrowPhase.Collision(shapeA, shapeB, orientationA, orientationB, positionA, positionB,
             out pointA, out pointB, out normal, out penetration);
@@ -126,9 +126,12 @@ public class CollisionManifoldTests
             Is.LessThan(epsilon));
     }
 
+    // The resting line of a curved side is spanned exactly by its two ends. The original contact
+    // is not kept as a third point: it wanders along the line from step to step and would leave a
+    // cached contact behind a rolling cylinder.
     [TestCase(0.5)]
     [TestCase(1.0)]
-    public void CylinderAgainstFloor_PreservesEndpointsAndOriginalContact(double radius)
+    public void CylinderAgainstFloor_ContactsAreTheEndsOfTheRestingLine(double radius)
     {
         BoxShape floor = new(200);
         CylinderShape cylinder = new(2, (Real)radius);
@@ -147,12 +150,19 @@ public class CollisionManifoldTests
             pointA, pointB, normal);
 
         const Real epsilon = (Real)1e-5;
-        Assert.That(manifold.Count, Is.EqualTo(3));
-        Assert.That(MathR.Abs(manifold.ManifoldA[0].X - cylinderPosition.X), Is.EqualTo((Real)1).Within(epsilon));
-        Assert.That(MathR.Abs(manifold.ManifoldA[1].X - cylinderPosition.X), Is.EqualTo((Real)1).Within(epsilon));
+        Assert.That(manifold.Count, Is.EqualTo(2));
         Assert.That(manifold.ManifoldA[0].X, Is.Not.EqualTo(manifold.ManifoldA[1].X).Within(epsilon));
-        Assert.That(JVector.MaxAbs(manifold.ManifoldA[2] - pointA), Is.LessThan(epsilon));
-        Assert.That(JVector.MaxAbs(manifold.ManifoldB[2] - pointB), Is.LessThan(epsilon));
+
+        for (int i = 0; i < 2; i++)
+        {
+            // On the floor plane, directly below the resting line, at the ends of the cylinder.
+            Assert.That(MathR.Abs(manifold.ManifoldA[i].X - cylinderPosition.X), Is.EqualTo((Real)1).Within(epsilon));
+            Assert.That(manifold.ManifoldA[i].Y, Is.EqualTo((Real)0).Within(epsilon));
+            Assert.That(manifold.ManifoldA[i].Z, Is.EqualTo((Real)0).Within(epsilon));
+            Assert.That(manifold.ManifoldB[i].X, Is.EqualTo(manifold.ManifoldA[i].X).Within(epsilon));
+            Assert.That(manifold.ManifoldB[i].Y, Is.EqualTo(-(Real)0.005).Within(epsilon));
+            Assert.That(manifold.ManifoldB[i].Z, Is.EqualTo((Real)0).Within(epsilon));
+        }
     }
 
     [TestCase]
@@ -199,7 +209,7 @@ public class CollisionManifoldTests
         JVector prismPoint = new(0, -(Real)0.005, 0);
 
         CollisionManifold manifold = default;
-        manifold.BuildManifold<ISupportMappable, ISupportMappable>(prismFirst ? prism : floor, prismFirst ? floor : prism,
+        manifold.BuildManifold<ISupportFeature, ISupportFeature>(prismFirst ? prism : floor, prismFirst ? floor : prism,
             JQuaternion.Identity, JQuaternion.Identity,
             prismFirst ? prismPosition : floorPosition, prismFirst ? floorPosition : prismPosition,
             prismFirst ? prismPoint : floorPoint, prismFirst ? floorPoint : prismPoint,
@@ -322,8 +332,10 @@ public class CollisionManifoldTests
         AssertSamePointSet(expectedB, actualB, epsilon * epsilon);
     }
 
+    // A ridge rests on the face along a line, which its two endpoints span; the narrow phase's
+    // point somewhere on that line is not added.
     [TestCase]
-    public void BoxFaceAndRidge_PreserveLineSegmentEndpointsAndOriginalContact()
+    public void BoxFaceAndRidge_PreserveLineSegmentEndpoints()
     {
         SupportPrimitives.Box shapeA = SupportPrimitives.CreateBox(new JVector(2, 2, 2));
         VertexSupportMap shapeB = CreateRidgeSupport();
@@ -336,7 +348,7 @@ public class CollisionManifoldTests
 
         const Real epsilon = (Real)1e-4;
 
-        Assert.That(manifold.Count, Is.EqualTo(3));
+        Assert.That(manifold.Count, Is.EqualTo(2));
         AssertUniqueContacts(manifold, epsilon * epsilon);
 
         for (int i = 0; i < 2; i++)
@@ -350,13 +362,10 @@ public class CollisionManifoldTests
             Assert.That(MathR.Abs(mfA.Z), Is.LessThan(epsilon));
             Assert.That(MathR.Abs(mfB.Z), Is.LessThan(epsilon));
         }
-
-        Assert.That(manifold.ManifoldA[2], Is.EqualTo(new JVector(0, (Real)2.0, 0)));
-        Assert.That(manifold.ManifoldB[2], Is.EqualTo(new JVector(0, (Real)1.9, 0)));
     }
 
     [TestCase]
-    public void RidgeAndBoxFace_PreserveLineSegmentEndpointsAndOriginalContact()
+    public void RidgeAndBoxFace_PreserveLineSegmentEndpoints()
     {
         VertexSupportMap shapeA = CreateRidgeSupport();
         SupportPrimitives.Box shapeB = SupportPrimitives.CreateBox(new JVector(2, 2, 2));
@@ -369,7 +378,7 @@ public class CollisionManifoldTests
 
         const Real epsilon = (Real)1e-4;
 
-        Assert.That(manifold.Count, Is.EqualTo(3));
+        Assert.That(manifold.Count, Is.EqualTo(2));
         AssertUniqueContacts(manifold, epsilon * epsilon);
 
         for (int i = 0; i < 2; i++)
@@ -384,8 +393,5 @@ public class CollisionManifoldTests
             Assert.That(MathR.Abs(mfA.Z), Is.LessThan(epsilon));
             Assert.That(MathR.Abs(mfB.Z), Is.LessThan(epsilon));
         }
-
-        Assert.That(manifold.ManifoldA[2], Is.EqualTo(new JVector(0, (Real)1.9, 0)));
-        Assert.That(manifold.ManifoldB[2], Is.EqualTo(new JVector(0, (Real)2.0, 0)));
     }
 }

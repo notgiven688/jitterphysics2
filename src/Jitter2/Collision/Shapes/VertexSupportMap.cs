@@ -15,7 +15,7 @@ namespace Jitter2.Collision.Shapes;
 /// <summary>
 /// Describes the convex hull of a set of vertices through its support points.
 /// </summary>
-public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
+public struct VertexSupportMap : ISupportFeature, IEquatable<VertexSupportMap>
 {
     private readonly Real[] xvalues, yvalues, zvalues;
     private JVector center;
@@ -147,6 +147,10 @@ public struct VertexSupportMap : ISupportMappable, IEquatable<VertexSupportMap>
     }
 
     public readonly void GetCenter(out JVector point) => point = center;
+
+    /// <inheritdoc/>
+    public readonly int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices) =>
+        SupportFeatureSampler.Sample(this, direction, tolerance, vertices);
 
     public readonly bool Equals(VertexSupportMap other) => xvalues.Equals(other.xvalues) &&
                                                   yvalues.Equals(other.yvalues) &&

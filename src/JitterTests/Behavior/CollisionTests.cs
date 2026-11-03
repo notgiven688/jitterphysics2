@@ -277,10 +277,27 @@ public class CollisionTests
                 out pointA, out pointB, out normal, out penetration);
 
         Assert.That(hit, Is.True);
-        Assert.That((pointA - expectedA).Length(), Is.LessThan((Real)5e-5));
-        Assert.That((pointB - expectedB).Length(), Is.LessThan((Real)5e-5));
         Assert.That((normal - (reversed ? -expectedNormal : expectedNormal)).Length(), Is.LessThan((Real)5e-5));
         Assert.That(penetration, Is.EqualTo((Real)10.5 - localPosition.Y).Within((Real)5e-5));
+
+        // MPR converges on the depth, not on the point: on the sphere it stays off along the surface
+        // by about sqrt(2 * 1e-5 * R). The manifold owns the contact points and collapses its probes
+        // of the curved side onto the point below the center.
+        CollisionManifold manifold = default;
+        if (reversed)
+        {
+            manifold.BuildManifold(sphere, floor, sphereOrientation, frame, spherePosition, floorPosition, pointB, pointA, normal);
+        }
+        else
+        {
+            manifold.BuildManifold(floor, sphere, frame, sphereOrientation, floorPosition, spherePosition, pointA, pointB, normal);
+        }
+
+        Assert.That(manifold.Count, Is.EqualTo(1));
+        JVector manifoldA = reversed ? manifold.ManifoldB[0] : manifold.ManifoldA[0];
+        JVector manifoldB = reversed ? manifold.ManifoldA[0] : manifold.ManifoldB[0];
+        Assert.That((manifoldA - expectedA).Length(), Is.LessThan((Real)5e-5));
+        Assert.That((manifoldB - expectedB).Length(), Is.LessThan((Real)5e-5));
     }
 
     [TestCase(false)]

@@ -88,6 +88,26 @@ public class CapsuleShape : RigidBodyShape
     }
 
     /// <inheritdoc/>
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        // Almost perpendicular to the axis, the capsule rests on the line of its cylindrical part
+        // that faces the direction. Otherwise it touches at a single point of one of its caps.
+        Real sideSq = direction.X * direction.X + direction.Z * direction.Z;
+
+        if (halfLength > (Real)0.0 && sideSq > (Real)0.0 &&
+            direction.Y * direction.Y < tolerance * tolerance * direction.LengthSquared())
+        {
+            Real scale = radius / MathR.Sqrt(sideSq);
+            vertices[0] = new JVector(direction.X * scale, halfLength, direction.Z * scale);
+            vertices[1] = new JVector(direction.X * scale, -halfLength, direction.Z * scale);
+            return 2;
+        }
+
+        SupportMap(direction, out vertices[0]);
+        return 1;
+    }
+
+    /// <inheritdoc/>
     public override void GetCenter(out JVector point)
     {
         point = JVector.Zero;
