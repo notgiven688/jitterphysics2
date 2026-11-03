@@ -99,7 +99,7 @@ The mesh records which triangles share edges. `TriangleEdgeCollisionFilter`, ena
 
 ### SoftBodyShape
 
-A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a `SoftBody`, rather than attaching it to one rigid body.
+A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a `SoftBody`, rather than attaching it to one rigid body. See [Soft Bodies](softbodies.md).
 
 ## Debug drawing
 

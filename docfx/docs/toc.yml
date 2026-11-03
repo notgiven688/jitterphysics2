@@ -53,5 +53,7 @@
       href: documentation/dynamictree.md
     - name: Collision Filters
       href: documentation/filters.md
+    - name: Soft Bodies
+      href: documentation/softbodies.md
 - name: Changelog
   href: changelog.md

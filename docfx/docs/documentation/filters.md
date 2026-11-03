@@ -34,7 +34,7 @@ public static bool DefaultDynamicTreeFilter(IDynamicTreeProxy proxyA, IDynamicTr
 
 Pairs rejected here are not passed to either of the later filters.
 
-For soft bodies, another collision filter is typically used (defined in `SoftBodies.DynamicTreeCollisionFilter.Filter`), which also filters out collisions between shapes belonging to the same soft body.
+For [soft bodies](softbodies.md), `SoftBodies.DynamicTreeCollisionFilter.Filter` is used instead. It also rejects pairs of shapes that belong to the same soft body.
 
 ## Broad phase filter
 
