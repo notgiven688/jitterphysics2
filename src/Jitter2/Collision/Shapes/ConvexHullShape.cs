@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.DataStructures;
 using Jitter2.LinearMath;
@@ -426,6 +427,129 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         InternalSupportMap(direction, out result);
+    }
+
+    // Vertices collected for one feature. A face with more vertices is reported by the part of it
+    // around the support vertex.
+    private const int MaxFeatureVertices = 64;
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Climbs to the support vertex and walks from it over the connected vertices that tilting the
+    /// direction by the tolerance angle can raise to its height: the whole face near its normal, an
+    /// edge near the normals of the edge, otherwise a single vertex. A face is reported as its
+    /// convex outline in winding order; an outline of more than <see cref="ISupportFeature.MaxVertices"/>
+    /// vertices is thinned to that many, spread evenly around it.
+    /// </remarks>
+    [SkipLocalsInit]
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        Span<ushort> feature = stackalloc ushort[MaxFeatureVertices];
+        int count = CollectFeature(direction, tolerance, feature);
+
+        if (count > 2) count = OutlineFeature(direction, feature, count);
+
+        int written = Math.Min(count, ISupportFeature.MaxVertices);
+
+        for (int i = 0; i < written; i++)
+        {
+            // Every vertex of a small outline, evenly spaced ones of a larger outline.
+            int selected = (2 * i + 1) * count / (2 * written);
+            vertices[i] = this.vertices[feature[selected]].Vertex + shifted;
+        }
+
+        return written;
+    }
+
+    // Collects the support vertex and, walking over neighbours, every vertex connected to it that
+    // tilting the direction by the tolerance angle can raise to its height. Stops when the span is
+    // full, which then holds the vertices reached first.
+    private int CollectFeature(in JVector direction, Real tolerance, Span<ushort> feature)
+    {
+        ushort top = InternalSupportMap(direction, out _);
+        JVector topVertex = vertices[top].Vertex;
+        Real slackSq = tolerance * tolerance * direction.LengthSquared();
+
+        feature[0] = top;
+        int count = 1;
+
+        for (int next = 0; next < count && count < feature.Length; next++)
+        {
+            int min = vertices[feature[next]].NeighborMinIndex;
+            int max = vertices[feature[next]].NeighborMaxIndex;
+
+            for (int i = min; i < max && count < feature.Length; i++)
+            {
+                ushort candidate = neighborList[i];
+                JVector offset = topVertex - vertices[candidate].Vertex;
+
+                // Below the support vertex by more than the sine of the tolerance angle times the
+                // distance to it, no tilt within the angle raises the candidate to its height.
+                Real gap = JVector.Dot(offset, direction);
+                if (gap > (Real)0.0 && gap * gap > slackSq * offset.LengthSquared()) continue;
+
+                if (feature[..count].Contains(candidate)) continue;
+                feature[count++] = candidate;
+            }
+        }
+
+        return count;
+    }
+
+    // Reorders the collected vertices of a face to their convex outline in the plane of the face, in
+    // winding order around the direction, and returns its length. Vertices inside the outline or on
+    // its edges are dropped.
+    [SkipLocalsInit]
+    private int OutlineFeature(in JVector direction, Span<ushort> feature, int count)
+    {
+        JVector normal = JVector.Normalize(direction);
+        JVector tangent1 = MathHelper.CreateOrthonormal(normal);
+        JVector tangent2 = normal % tangent1;
+
+        Span<Real> xs = stackalloc Real[MaxFeatureVertices];
+        Span<Real> ys = stackalloc Real[MaxFeatureVertices];
+        int start = 0;
+
+        for (int i = 0; i < count; i++)
+        {
+            JVector vertex = vertices[feature[i]].Vertex;
+            xs[i] = JVector.Dot(vertex, tangent1);
+            ys[i] = JVector.Dot(vertex, tangent2);
+            if (xs[i] < xs[start] || (xs[i] == xs[start] && ys[i] < ys[start])) start = i;
+        }
+
+        // Gift wrapping from the leftmost vertex: the outline continues with the vertex that has all
+        // others on its left, the farthest one when some are in line.
+        Span<ushort> outline = stackalloc ushort[MaxFeatureVertices];
+        int outlineCount = 0;
+        int current = start;
+
+        do
+        {
+            outline[outlineCount++] = feature[current];
+            int next = current == 0 ? 1 : 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (i == current) continue;
+
+                Real nextX = xs[next] - xs[current];
+                Real nextY = ys[next] - ys[current];
+                Real x = xs[i] - xs[current];
+                Real y = ys[i] - ys[current];
+                Real cross = nextX * y - nextY * x;
+
+                if (cross < (Real)0.0 || (cross == (Real)0.0 && x * x + y * y > nextX * nextX + nextY * nextY))
+                {
+                    next = i;
+                }
+            }
+
+            current = next;
+        } while (current != start && outlineCount < count);
+
+        outline[..outlineCount].CopyTo(feature);
+        return outlineCount;
     }
 
     /// <inheritdoc/>

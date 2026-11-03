@@ -165,7 +165,7 @@ The contact manifold asks a shape for the whole feature it touches with in a dir
 public override int SupportFeature(in JVector direction, float tolerance, Span<JVector> vertices)
 ```
 
-`tolerance` is the sine of the angle within which directions share the feature. Write the vertices in local space and in winding order, at most `ISupportFeature.MaxVertices` of them, and return their number. Every vertex must lie on the surface of the shape. `BoxShape`, `CapsuleShape`, `CylinderShape`, `ConeShape`, `SphereShape`, `TriangleShape` and `TransformedShape` override it; `ConvexHullShape` and `PointCloudShape` use the sampled default.
+`tolerance` is the sine of the angle within which directions share the feature. Write the vertices in local space and in winding order, at most `ISupportFeature.MaxVertices` of them, and return their number. Every vertex must lie on the surface of the shape. `BoxShape`, `CapsuleShape`, `ConvexHullShape`, `CylinderShape`, `ConeShape`, `SphereShape`, `TriangleShape` and `TransformedShape` override it; `PointCloudShape` uses the sampled default.
 
 The default implementation calculates bounding boxes and approximates mass properties from the support function. Override these methods if you can provide faster or more accurate calculations, or a custom ray test:
 
