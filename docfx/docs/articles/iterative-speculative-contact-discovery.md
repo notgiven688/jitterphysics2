@@ -101,6 +101,8 @@ Earlier contacts remain active as new ones are added. Their contact points and n
 
 ISCD is iterative and approximate. Its result can depend on discovery order, pass count, solver convergence, sweep accuracy, and whether the contact geometry is refreshed. The final world solve can change the velocities again, so a fixed discovery budget cannot guarantee that every required contact has been found.
 
+Predicted contacts do not apply restitution.
+
 ISCD is implemented in [Jitter's continuous collision detection](../documentation/bodies.md#continuous-collision-detection).
 
 *Disclosure: This article was written with the help of AI. The ISCD idea itself came from the author, not the AI; no claim is made that similar methods have not appeared elsewhere.*

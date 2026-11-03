@@ -34,7 +34,7 @@ public struct ContactSettings
     /// Minimum approach speed, in world units per second, at which a contact applies restitution.
     /// Slower impacts are resolved as fully inelastic, which keeps resting and stacked bodies calm.
     /// Lower it for scenes where slow bodies must still bounce, such as billiard balls that have
-    /// nearly rolled out. Default is 1.
+    /// nearly rolled out. CCD contacts do not apply restitution. Default is 1.
     /// </summary>
     public Real RestitutionThreshold;
 
