@@ -54,7 +54,7 @@ public class MathTests
     [TestCase(true)]
     public static void PseudoInverseSymmetric_FallbackAppliesEigenvalueCutoff(bool retained)
     {
-        Real cutoff = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        const Real cutoff = (Real)1e-6;
         Real eigenvalue = cutoff * (retained ? (Real)10 : (Real)0.1);
         JMatrix matrix = JMatrix.CreateScale(1, eigenvalue, 0);
         JMatrix inverse = MathHelper.PseudoInverseSymmetric(matrix);

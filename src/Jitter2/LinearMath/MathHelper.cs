@@ -271,8 +271,8 @@ public static class MathHelper
     /// <param name="matrix">A finite, symmetric, positive-semidefinite matrix.</param>
     /// <returns>The approximate inverse, with singular directions left at zero.</returns>
     /// <remarks>
-    /// Uses a relative tolerance of 1e-6 in single precision or 1e-12 in double precision
-    /// to identify nearly singular matrices and discard small eigenvalues. The tolerance is
+    /// Uses a relative tolerance of 1e-6 in both precisions to identify nearly singular
+    /// matrices and discard small eigenvalues. The tolerance is
     /// relative to the largest absolute diagonal entry. A zero matrix returns a zero matrix.
     /// The input must be symmetric and positive semidefinite; these conditions are not checked.
     /// </remarks>
@@ -284,7 +284,10 @@ public static class MathHelper
 
         JSymmetricMatrix normalized = new(matrix.M11 / scale, matrix.M12 / scale, matrix.M13 / scale,
             matrix.M22 / scale, matrix.M23 / scale, matrix.M33 / scale);
-        Real tolerance = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        const Real tolerance = (Real)1e-6;
+        // Off-diagonal entries below this count as converged. It is far below single-precision
+        // roundoff, so single precision runs all sweeps, and double precision keeps its accuracy.
+        const Real rotationTolerance = (Real)1e-12;
         if (MathR.Abs(normalized.Determinant()) > tolerance && JMatrix.Inverse(matrix, out JMatrix inverse))
         {
             return inverse;
@@ -301,9 +304,9 @@ public static class MathHelper
         // Jacobi rotations diagonalize the symmetric matrix without trigonometric functions.
         for (int sweep = 0; sweep < 8; sweep++)
         {
-            bool changed = JacobiRotate(a, basis, 0, 1, tolerance);
-            changed |= JacobiRotate(a, basis, 0, 2, tolerance);
-            changed |= JacobiRotate(a, basis, 1, 2, tolerance);
+            bool changed = JacobiRotate(a, basis, 0, 1, rotationTolerance);
+            changed |= JacobiRotate(a, basis, 0, 2, rotationTolerance);
+            changed |= JacobiRotate(a, basis, 1, 2, rotationTolerance);
             if (!changed) break;
         }
 
@@ -324,7 +327,7 @@ public static class MathHelper
     /// <summary>Inverts a constraint response block, retaining independent rows at different scales.</summary>
     internal static JMatrix InverseSymmetric(in JMatrix matrix)
     {
-        Real tolerance = Precision.IsDoublePrecision ? (Real)1e-12 : (Real)1e-6;
+        const Real tolerance = (Real)1e-6;
         Real diagonalProduct = matrix.M11 * matrix.M22 * matrix.M33;
         if (matrix.Determinant() / diagonalProduct > tolerance &&
             JMatrix.Inverse(matrix, out JMatrix inverse)) return inverse;
