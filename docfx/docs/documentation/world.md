@@ -167,9 +167,11 @@ foreach (var constraint in body.Constraints)
 
 ## Auxiliary Contacts
 
-When flat surfaces touch, one contact point may not be enough to keep them stable. Auxiliary contacts add more points during the same collision test, so the solver can support the touching surfaces without waiting several steps to collect more contacts.
+The narrow phase reports a single pair of deepest points for each touching pair of shapes. With auxiliary contacts enabled, the world builds a full contact manifold from it during the same collision test: each shape reports the feature it touches with (see [`ISupportFeature`](shapes.md#custom-shapes)), the two features are clipped against each other, and the result is reduced to up to four contact points.
 
-This is enabled by default. Set `world.EnableAuxiliaryContactPoints = false` to disable it.
+The manifold covers the whole contact: the corners of touching faces, the two ends of the line on which a lying capsule or cylinder rests, the point below a sphere. This keeps stacks stable from the first step. It is also required for rolling: the single point of the narrow phase lies slightly off along a curved surface, so a sphere, capsule or cylinder rolling on it alone does not keep its speed.
+
+This is enabled by default. Set `world.EnableAuxiliaryContactPoints = false` to register only the deepest point.
 
 ## Rigid Bodies
 

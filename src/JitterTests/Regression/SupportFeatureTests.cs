@@ -111,6 +111,71 @@ public class SupportFeatureTests
         return JQuaternion.CreateFromToRotation(sideNormal, -JVector.UnitY);
     }
 
+    // A box as a convex hull, with the extents of the box cases.
+    private static ConvexHullShape CreateBoxHull()
+    {
+        JVector h = new((Real)0.5, (Real)0.3, (Real)0.4);
+        var corners = new JVector[8];
+
+        for (int i = 0; i < corners.Length; i++)
+        {
+            corners[i] = new JVector((i & 1) == 0 ? -h.X : h.X, (i & 2) == 0 ? -h.Y : h.Y, (i & 4) == 0 ? -h.Z : h.Z);
+        }
+
+        // The six faces as quads, each split into two triangles.
+        int[] quads = [0, 2, 6, 4, 1, 3, 7, 5, 0, 1, 5, 4, 2, 3, 7, 6, 0, 1, 3, 2, 4, 5, 7, 6];
+        var triangles = new List<JTriangle>();
+
+        for (int q = 0; q < quads.Length; q += 4)
+        {
+            triangles.Add(new JTriangle(corners[quads[q]], corners[quads[q + 1]], corners[quads[q + 2]]));
+            triangles.Add(new JTriangle(corners[quads[q]], corners[quads[q + 2]], corners[quads[q + 3]]));
+        }
+
+        return new ConvexHullShape(triangles);
+    }
+
+    // A hexagonal prism with its hexagons in the XZ plane, each fanned around its first vertex.
+    private static ConvexHullShape CreateHexagonalPrismHull()
+    {
+        const Real radius = (Real)0.5;
+        const Real halfHeight = (Real)0.3;
+
+        var top = new JVector[6];
+        var bottom = new JVector[6];
+
+        for (int i = 0; i < 6; i++)
+        {
+            Real angle = (Real)(i * Math.PI / 3.0);
+            top[i] = new JVector(radius * MathR.Cos(angle), halfHeight, radius * MathR.Sin(angle));
+            bottom[i] = new JVector(top[i].X, -halfHeight, top[i].Z);
+        }
+
+        var triangles = new List<JTriangle>();
+
+        for (int i = 1; i < 5; i++)
+        {
+            triangles.Add(new JTriangle(top[0], top[i], top[i + 1]));
+            triangles.Add(new JTriangle(bottom[0], bottom[i], bottom[i + 1]));
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            int j = (i + 1) % 6;
+            triangles.Add(new JTriangle(bottom[i], bottom[j], top[j]));
+            triangles.Add(new JTriangle(bottom[i], top[j], top[i]));
+        }
+
+        return new ConvexHullShape(triangles);
+    }
+
+    // Turns the hexagonal prism onto the side between its first two hexagon vertices.
+    private static JQuaternion PrismOnSide()
+    {
+        JVector sideNormal = new(MathR.Cos(MathR.PI / 6), 0, MathR.Sin(MathR.PI / 6));
+        return JQuaternion.CreateFromToRotation(sideNormal, -JVector.UnitY);
+    }
+
     private static IEnumerable<TestCaseData> RestingPoses()
     {
         var random = new Random(1234);
@@ -136,6 +201,13 @@ public class SupportFeatureTests
             yield return new TestCaseData(CreateTriangle(), Yaw(yaw), 4).SetName($"TriangleFace_{i}");
             yield return new TestCaseData(CreateTriangle(), Yaw(yaw) * JQuaternion.CreateRotationX(-MathR.PI / 2), 2).SetName($"TriangleEdge_{i}");
             yield return new TestCaseData(CreateTriangle(), generic, 1).SetName($"TriangleVertex_{i}");
+            yield return new TestCaseData(CreateBoxHull(), Yaw(yaw), 4).SetName($"HullFace_{i}");
+            yield return new TestCaseData(CreateBoxHull(), Yaw(yaw) * OnEdge, 2).SetName($"HullEdge_{i}");
+            yield return new TestCaseData(CreateBoxHull(), generic, 1).SetName($"HullVertex_{i}");
+            // On a hexagon, the six vertices of the feature and the six probes of the sampling are
+            // both reduced to four contacts.
+            yield return new TestCaseData(CreateHexagonalPrismHull(), Yaw(yaw), 4).SetName($"HullHexagon_{i}");
+            yield return new TestCaseData(CreateHexagonalPrismHull(), Yaw(yaw) * PrismOnSide(), 4).SetName($"HullRectangle_{i}");
         }
     }
 
@@ -185,7 +257,8 @@ public class SupportFeatureTests
             new BoxShape((Real)1.0, (Real)0.6, (Real)0.8),
             new ConeShape(), CreateTriangle(),
             new TransformedShape(new BoxShape(1), new JVector(1, 2, 3), JMatrix.CreateRotationY((Real)0.4)),
-            new TransformedShape(new CapsuleShape((Real)0.25, 1), JVector.Zero, JMatrix.CreateScale((Real)0.5, 1, 2))
+            new TransformedShape(new CapsuleShape((Real)0.25, 1), JVector.Zero, JMatrix.CreateScale((Real)0.5, 1, 2)),
+            CreateBoxHull(), CreateHexagonalPrismHull()
         ];
 
         const Real tolerance = (Real)0.01;
@@ -218,6 +291,40 @@ public class SupportFeatureTests
                         $"{shape.GetType().Name}, direction {direction}");
                 }
             }
+        }
+    }
+
+    // A hull reports a face as its convex outline in winding order around the direction, also when
+    // the face is triangulated around one of its vertices. Tilted further than the tolerance off
+    // the face, it reports the edge or vertex that stays highest.
+    [TestCase(0.0, 0.0, 6)]
+    [TestCase(0.005, 0.0, 6)]
+    [TestCase(0.03, 0.0, 1)]
+    [TestCase(0.03, 30.0, 2)]
+    public void HullFeature_IsTheOutlineOfTheHexagon(double tilt, double tiltDegrees, int expectedCount)
+    {
+        ConvexHullShape prism = CreateHexagonalPrismHull();
+        Real angle = (Real)(tiltDegrees * Math.PI / 180.0);
+        JVector direction = new((Real)tilt * MathR.Cos(angle), -1, (Real)tilt * MathR.Sin(angle));
+
+        Span<JVector> vertices = stackalloc JVector[ISupportFeature.MaxVertices];
+        int count = prism.SupportFeature(direction, (Real)0.01, vertices);
+
+        Assert.That(count, Is.EqualTo(expectedCount));
+
+        for (int i = 0; i < count; i++)
+        {
+            Assert.That(vertices[i].Y, Is.EqualTo(-(Real)0.3).Within((Real)1e-6));
+            Assert.That(new JVector(vertices[i].X, 0, vertices[i].Z).Length(), Is.EqualTo((Real)0.5).Within((Real)1e-6));
+        }
+
+        if (count < 3) return;
+
+        for (int i = 0; i < count; i++)
+        {
+            JVector edge = vertices[(i + 1) % count] - vertices[i];
+            JVector nextEdge = vertices[(i + 2) % count] - vertices[(i + 1) % count];
+            Assert.That(JVector.Dot(edge % nextEdge, direction), Is.GreaterThan((Real)0.0));
         }
     }
 }

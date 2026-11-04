@@ -442,7 +442,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Gets or sets the restitution (bounciness) of this object.
     /// </summary>
     /// <remarks>
-    /// Ranges from 0 (no bounce, the default) to 1 (fully elastic bounce).
+    /// Ranges from 0 (no bounce, the default) to 1 (fully elastic bounce). Not applied to contacts
+    /// predicted by CCD (<see cref="EnableCcd"/>).
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the value is not between 0 and 1.</exception>
     public Real Restitution
@@ -882,6 +883,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// <see cref="World.CcdIterations"/> controls the number of collision discovery passes.
     /// A finite number of passes cannot guarantee that every collision is found.
     /// </para>
+    /// <para>CCD contacts do not apply restitution.</para>
     /// </remarks>
     public bool EnableCcd
     {

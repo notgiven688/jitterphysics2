@@ -30,9 +30,10 @@ namespace Jitter2.Collision;
 /// </remarks>
 public unsafe struct CollisionManifold
 {
-    // Two features can intersect in up to twelve vertices before the solver-facing reduction step.
+    // Two convex features intersect in at most as many points as they have vertices together,
+    // before the solver-facing reduction step.
     private const int MaxFeaturePoints = ISupportFeature.MaxVertices;
-    private const int MaxManifoldPoints = 12;
+    private const int MaxManifoldPoints = 2 * MaxFeaturePoints;
     private const int SolverContactLimit = 4;
     private const Real DuplicatePointDistanceSq = SupportFeatureSampler.DuplicatePointDistanceSq;
 

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Jitter2.DataStructures;
 using Jitter2.LinearMath;
@@ -55,6 +56,8 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     private CHullVector[] vertices = null!;
     private CHullTriangle[] indices = null!;
     private ushort[] neighborList = null!;
+    // The vertices farthest along +X, -X, +Y, -Y, +Z and -Z; see CalcExtremesAndInitBox.
+    private ushort[] extremes = null!;
 
     private JVector shifted;
 
@@ -214,6 +217,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             neighborList = neighborList,
             vertices = vertices,
             indices = indices,
+            extremes = extremes,
             cachedBoundingBox = cachedBoundingBox,
             cachedCenter = cachedCenter,
             cachedInertia = cachedInertia,
@@ -246,7 +250,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     public void UpdateShape()
     {
         CalculateMassInertia();
-        CalcInitBox();
+        CalcExtremesAndInitBox();
         UpdateWorldBoundingBox();
     }
 
@@ -345,59 +349,63 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
         JVector.Add(box.Max, position + temp2, out box.Max);
     }
 
-    private void CalcInitBox()
+    // Finds the vertices farthest along the six axis directions by brute force. They give the local
+    // bounding box, and the support climb starts from the one farthest along its direction. The six
+    // cannot all lie in one plane, so for any direction at least one of them sits a real distance
+    // above the face of the hull that is turned away from it. A climb that starts there never
+    // visits that face, where roundoff in the vertices of a flat tessellated region could stop it
+    // before it has climbed anywhere, since it only ever moves to vertices farther along the
+    // direction. The climb itself is not used here for the same reason.
+    private void CalcExtremesAndInitBox()
     {
-        JVector vec = JVector.UnitX;
-        InternalSupportMap(vec, out JVector res);
-        cachedBoundingBox.Max.X = res.X;
+        ushort[] found = new ushort[6];
+        JVector min = vertices[0].Vertex;
+        JVector max = vertices[0].Vertex;
 
-        vec = JVector.UnitY;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Max.Y = res.Y;
+        for (ushort i = 1; i < vertices.Length; i++)
+        {
+            JVector v = vertices[i].Vertex;
+            if (v.X > max.X) { max.X = v.X; found[0] = i; }
+            if (v.X < min.X) { min.X = v.X; found[1] = i; }
+            if (v.Y > max.Y) { max.Y = v.Y; found[2] = i; }
+            if (v.Y < min.Y) { min.Y = v.Y; found[3] = i; }
+            if (v.Z > max.Z) { max.Z = v.Z; found[4] = i; }
+            if (v.Z < min.Z) { min.Z = v.Z; found[5] = i; }
+        }
 
-        vec = JVector.UnitZ;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Max.Z = res.Z;
-
-        vec = -JVector.UnitX;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.X = res.X;
-
-        vec = -JVector.UnitY;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.Y = res.Y;
-
-        vec = -JVector.UnitZ;
-        InternalSupportMap(vec, out res);
-        cachedBoundingBox.Min.Z = res.Z;
+        extremes = found;
+        cachedBoundingBox.Min = min + shifted;
+        cachedBoundingBox.Max = max + shifted;
     }
 
     private ushort InternalSupportMap(in JVector direction, out JVector result)
     {
-        ushort current = 0;
+        // Start from the axis extreme farthest along the direction; see CalcExtremesAndInitBox.
+        ushort current = extremes[0];
         Real dotProduct = JVector.Dot(vertices[current].Vertex, direction);
 
-    main:
-        bool needsVerify = false;
-        JVector verifyDir = JVector.Arbitrary;
+        for (int e = 1; e < 6; e++)
+        {
+            ushort candidate = extremes[e];
+            Real candidateProduct = JVector.Dot(vertices[candidate].Vertex, direction);
 
+            if (candidateProduct > dotProduct)
+            {
+                dotProduct = candidateProduct;
+                current = candidate;
+            }
+        }
+
+    main:
         var min = vertices[current].NeighborMinIndex;
         var max = vertices[current].NeighborMaxIndex;
-
-        const Real epsilonIncrement = (Real)1e-12;
 
         for (int i = min; i < max; i++)
         {
             ushort nb = neighborList[i];
             Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
 
-            if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
-            {
-                verifyDir = vertices[nb].Vertex - vertices[current].Vertex;
-                needsVerify = true;
-            }
-
-            if (nbProduct > dotProduct + epsilonIncrement)
+            if (nbProduct > dotProduct)
             {
                 // no need to find the "best" neighbor - as soon as we found a better
                 // candidate we move there.
@@ -407,41 +415,10 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
             }
         }
 
-        // A secondary hill climbing algorithm in case of a plateau.
-        if (needsVerify)
-        {
-            Real d0 = JVector.Dot(verifyDir, vertices[current].Vertex);
-
-        secondary:
-            min = vertices[current].NeighborMinIndex;
-            max = vertices[current].NeighborMaxIndex;
-
-            for (int i = min; i < max; i++)
-            {
-                ushort nb = neighborList[i];
-                Real nbProduct = JVector.Dot(vertices[nb].Vertex, direction);
-
-                if (nbProduct > dotProduct + epsilonIncrement)
-                {
-                    dotProduct = nbProduct;
-                    current = nb;
-                    goto main;
-                }
-
-                if (MathR.Abs(nbProduct - dotProduct) < epsilonIncrement)
-                {
-                    Real d1 = JVector.Dot(verifyDir, vertices[nb].Vertex);
-
-                    if (d1 > d0 + epsilonIncrement)
-                    {
-                        d0 = d1;
-                        current = nb;
-                        goto secondary;
-                    }
-                }
-            }
-        }
-
+        // A vertex with no neighbour farther along the direction is a support vertex. The one
+        // exception would be an interior vertex of a flat tessellated region facing away from
+        // the direction, where every neighbour ties; the start above never reaches such a
+        // region, so no walk across tied vertices is needed.
         result = vertices[current].Vertex + shifted;
         return current;
     }
@@ -450,6 +427,129 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
     public override void SupportMap(in JVector direction, out JVector result)
     {
         InternalSupportMap(direction, out result);
+    }
+
+    // Vertices collected for one feature. A face with more vertices is reported by the part of it
+    // around the support vertex.
+    private const int MaxFeatureVertices = 64;
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Climbs to the support vertex and walks from it over the connected vertices that tilting the
+    /// direction by the tolerance angle can raise to its height: the whole face near its normal, an
+    /// edge near the normals of the edge, otherwise a single vertex. A face is reported as its
+    /// convex outline in winding order; an outline of more than <see cref="ISupportFeature.MaxVertices"/>
+    /// vertices is thinned to that many, spread evenly around it.
+    /// </remarks>
+    [SkipLocalsInit]
+    public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
+    {
+        Span<ushort> feature = stackalloc ushort[MaxFeatureVertices];
+        int count = CollectFeature(direction, tolerance, feature);
+
+        if (count > 2) count = OutlineFeature(direction, feature, count);
+
+        int written = Math.Min(count, ISupportFeature.MaxVertices);
+
+        for (int i = 0; i < written; i++)
+        {
+            // Every vertex of a small outline, evenly spaced ones of a larger outline.
+            int selected = (2 * i + 1) * count / (2 * written);
+            vertices[i] = this.vertices[feature[selected]].Vertex + shifted;
+        }
+
+        return written;
+    }
+
+    // Collects the support vertex and, walking over neighbours, every vertex connected to it that
+    // tilting the direction by the tolerance angle can raise to its height. Stops when the span is
+    // full, which then holds the vertices reached first.
+    private int CollectFeature(in JVector direction, Real tolerance, Span<ushort> feature)
+    {
+        ushort top = InternalSupportMap(direction, out _);
+        JVector topVertex = vertices[top].Vertex;
+        Real slackSq = tolerance * tolerance * direction.LengthSquared();
+
+        feature[0] = top;
+        int count = 1;
+
+        for (int next = 0; next < count && count < feature.Length; next++)
+        {
+            int min = vertices[feature[next]].NeighborMinIndex;
+            int max = vertices[feature[next]].NeighborMaxIndex;
+
+            for (int i = min; i < max && count < feature.Length; i++)
+            {
+                ushort candidate = neighborList[i];
+                JVector offset = topVertex - vertices[candidate].Vertex;
+
+                // Below the support vertex by more than the sine of the tolerance angle times the
+                // distance to it, no tilt within the angle raises the candidate to its height.
+                Real gap = JVector.Dot(offset, direction);
+                if (gap > (Real)0.0 && gap * gap > slackSq * offset.LengthSquared()) continue;
+
+                if (feature[..count].Contains(candidate)) continue;
+                feature[count++] = candidate;
+            }
+        }
+
+        return count;
+    }
+
+    // Reorders the collected vertices of a face to their convex outline in the plane of the face, in
+    // winding order around the direction, and returns its length. Vertices inside the outline or on
+    // its edges are dropped.
+    [SkipLocalsInit]
+    private int OutlineFeature(in JVector direction, Span<ushort> feature, int count)
+    {
+        JVector normal = JVector.Normalize(direction);
+        JVector tangent1 = MathHelper.CreateOrthonormal(normal);
+        JVector tangent2 = normal % tangent1;
+
+        Span<Real> xs = stackalloc Real[MaxFeatureVertices];
+        Span<Real> ys = stackalloc Real[MaxFeatureVertices];
+        int start = 0;
+
+        for (int i = 0; i < count; i++)
+        {
+            JVector vertex = vertices[feature[i]].Vertex;
+            xs[i] = JVector.Dot(vertex, tangent1);
+            ys[i] = JVector.Dot(vertex, tangent2);
+            if (xs[i] < xs[start] || (xs[i] == xs[start] && ys[i] < ys[start])) start = i;
+        }
+
+        // Gift wrapping from the leftmost vertex: the outline continues with the vertex that has all
+        // others on its left, the farthest one when some are in line.
+        Span<ushort> outline = stackalloc ushort[MaxFeatureVertices];
+        int outlineCount = 0;
+        int current = start;
+
+        do
+        {
+            outline[outlineCount++] = feature[current];
+            int next = current == 0 ? 1 : 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (i == current) continue;
+
+                Real nextX = xs[next] - xs[current];
+                Real nextY = ys[next] - ys[current];
+                Real x = xs[i] - xs[current];
+                Real y = ys[i] - ys[current];
+                Real cross = nextX * y - nextY * x;
+
+                if (cross < (Real)0.0 || (cross == (Real)0.0 && x * x + y * y > nextX * nextX + nextY * nextY))
+                {
+                    next = i;
+                }
+            }
+
+            current = next;
+        } while (current != start && outlineCount < count);
+
+        outline[..outlineCount].CopyTo(feature);
+        return outlineCount;
     }
 
     /// <inheritdoc/>

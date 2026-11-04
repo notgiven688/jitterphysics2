@@ -243,12 +243,14 @@ Three world settings control the cost and behavior:
 
 A fixed number of passes cannot guarantee that every collision is found. Joints are solved afterward and can change motion again. Smaller time steps may still be needed.
 
+CCD contacts do not apply restitution.
+
 ## Friction and Restitution
 
 Friction and restitution coefficients may be set through `body.Friction` and `body.Restitution`.
 For a collision of two bodies with different coefficients the maximum value of each body is taken.
 
-Restitution is only applied when the bodies approach each other faster than `world.ContactSettings.RestitutionThreshold` (default `1` unit per second). Slower impacts are resolved as fully inelastic, which keeps resting and stacked bodies calm. Lower the threshold in scenes where slow bodies must keep bouncing.
+Restitution is only applied when the bodies approach each other faster than `world.ContactSettings.RestitutionThreshold` (default `1` unit per second). Slower impacts are resolved as fully inelastic, which keeps resting and stacked bodies calm. Lower the threshold in scenes where slow bodies must keep bouncing. Contacts predicted by [CCD](#continuous-collision-detection) never apply restitution.
 
 ## Collide events
 

@@ -2,7 +2,7 @@
 
 Shapes define the convex geometry used for collisions. Attach them to a rigid body with `body.AddShape`; the body supplies their position and rotation.
 
-Each shape implements `ISupportMappable`, so it can also be used directly in `NarrowPhase` collision queries. Shapes implement `IDynamicTreeProxy` as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in `world.DynamicTree` automatically.
+Each shape implements `ISupportFeature`, which extends `ISupportMappable`, so it can also be used directly in `NarrowPhase` collision queries and in `CollisionManifold`. Shapes implement `IDynamicTreeProxy` as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in `world.DynamicTree` automatically.
 
 > [!NOTE]
 > **Concave Shapes**
@@ -71,8 +71,7 @@ Jitter2 uses the convex hull of the supplied points: imagine stretching a tight 
 
 > [!WARNING]
 > **Number of vertices**
-> `PointCloudShape`s should only be used for a small to moderate number of vertices ($\approx{}300$). Larger numbers of vertices can negatively impact performance.
-> `ConvexHullShape`s are the better choice for more complex hulls.
+> A `PointCloudShape` tests every vertex for each support query. Up to a few dozen vertices that is faster than the `ConvexHullShape`'s walk over neighbouring vertices; beyond that the `ConvexHullShape` is the better choice, by a wide margin for hundreds of vertices. The [teapot tutorial](../tutorials/teapots/aftermath.md) has measurements.
 
 ### TransformedShape
 
@@ -100,7 +99,7 @@ The mesh records which triangles share edges. `TriangleEdgeCollisionFilter`, ena
 
 ### SoftBodyShape
 
-A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a `SoftBody`, rather than attaching it to one rigid body.
+A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a `SoftBody`, rather than attaching it to one rigid body. See [Soft Bodies](softbodies.md).
 
 ## Debug drawing
 
@@ -158,6 +157,14 @@ public class HalfSphereShape : RigidBodyShape
     }
 }
 ```
+
+The contact manifold asks a shape for the whole feature it touches with in a direction: a point, a segment or a convex polygon. The default implementation samples the support function around the direction and recognizes curved sides. Shapes that know their features can override it, which is faster and exact:
+
+```cs
+public override int SupportFeature(in JVector direction, float tolerance, Span<JVector> vertices)
+```
+
+`tolerance` is the sine of the angle within which directions share the feature. Write the vertices in local space and in winding order, at most `ISupportFeature.MaxVertices` of them, and return their number. Every vertex must lie on the surface of the shape. `BoxShape`, `CapsuleShape`, `ConvexHullShape`, `CylinderShape`, `ConeShape`, `SphereShape`, `TriangleShape` and `TransformedShape` override it; `PointCloudShape` uses the sampled default.
 
 The default implementation calculates bounding boxes and approximates mass properties from the support function. Override these methods if you can provide faster or more accurate calculations, or a custom ray test:
 
