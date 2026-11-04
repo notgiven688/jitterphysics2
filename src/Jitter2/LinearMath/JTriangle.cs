@@ -73,9 +73,11 @@ public struct JTriangle(in JVector v0, in JVector v1, in JVector v2) : IEquatabl
 
         Real denominator = JVector.Dot(direction, normal);
 
-        if (Math.Abs(denominator) < (Real)1e-06)
+        // Triangle and ray are parallel: the cosine of the angle between direction and normal is
+        // below 1e-6. Comparing the cosine keeps the test independent of the lengths of the
+        // direction and of the triangle's edges. A degenerate triangle (zero normal) also ends here.
+        if (denominator * denominator <= (Real)1e-12 * direction.LengthSquared() * normal.LengthSquared())
         {
-            // Triangle and ray are parallel.
             goto return_false;
         }
 
