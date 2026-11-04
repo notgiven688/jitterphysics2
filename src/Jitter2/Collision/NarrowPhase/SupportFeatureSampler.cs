@@ -38,21 +38,14 @@ public static class SupportFeatureSampler
 
     // Support points of a flat feature do not move when the tilt is doubled, except for roundoff,
     // which grows with the distance of the point from the shape's origin.
-#if USE_DOUBLE_PRECISION
-    private const Real ProbeNoise = (Real)1e-12;
-#else
     private const Real ProbeNoise = (Real)1e-6;
-#endif
     // On a curved surface doubling the tilt again moves the support point twice as far.
     // Relative deviation from that accepted before the samples are treated as a vertex jump.
     private const Real CurvedTolerance = (Real)0.5;
-    // Components of a probe direction below this are treated as exactly zero. Roundoff level only:
-    // snapping a real component moves the probe of a sphere along its surface by R times this.
-#if USE_DOUBLE_PRECISION
-    private const Real DirectionSnap = (Real)1e-12;
-#else
+    // Components of a probe direction below this are treated as exactly zero. Single-precision
+    // roundoff level: snapping a real component moves the probe of a sphere along its surface by
+    // R times this.
     private const Real DirectionSnap = (Real)1e-6;
-#endif
     // Sampled points within this fraction of their extent of a line are a segment, not a polygon.
     private const Real ThinRatio = (Real)1e-4;
 

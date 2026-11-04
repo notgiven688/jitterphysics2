@@ -233,11 +233,7 @@ public static partial class NarrowPhase
             return firstProjection = lastProjection = JVector.Dot(localAxis, support);
         }
 
-#if USE_DOUBLE_PRECISION
-        const Real roundoff = (Real)1e-12;
-#else
         const Real roundoff = (Real)2e-6;
-#endif
         // Account for rounding in the unit direction, rotations, and support projections.
         Real sphereBound = extent * ((Real)1.0 + roundoff);
         Real angle = angularSpeed * (end - start);
