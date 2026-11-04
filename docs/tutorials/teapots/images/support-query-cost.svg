@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="436" viewBox="0 0 680 436" role="img" aria-labelledby="title desc">
+  <title id="title">Support query cost of PointCloudShape and ConvexHullShape against vertex count</title>
+  <desc id="desc">Log-log chart of nanoseconds per support query against the number of vertices of geodesic spheres from 8 to 2562 vertices. The point cloud line rises in proportion to the vertex count, from 7 to over 1000 nanoseconds; the convex hull line rises much more slowly, from 16 to 140. They cross near 40 vertices.</desc>
+  <rect width="680" height="436" rx="16" fill="#f3f6fa"/>
+  <g font-family="system-ui, sans-serif" fill="#25364b">
+    <text x="28" y="34" font-size="22" font-weight="650">Support query cost</text>
+    <text x="28" y="56" font-size="15" fill="#53677e">Nanoseconds per call on geodesic spheres, random directions, one core.</text>
+    <g stroke="#d4dee9" stroke-width="1">
+      <line x1="123.4" y1="70" x2="123.4" y2="374"/>
+      <line x1="328.1" y1="70" x2="328.1" y2="374"/>
+      <line x1="532.8" y1="70" x2="532.8" y2="374"/>
+      <line x1="78" y1="338.8" x2="656" y2="338.8"/>
+      <line x1="78" y1="222.0" x2="656" y2="222.0"/>
+      <line x1="78" y1="105.2" x2="656" y2="105.2"/>
+    </g>
+    <rect x="78" y="70" width="578" height="304" fill="none" stroke="#8090a3" stroke-width="1.5"/>
+    <g font-size="13" fill="#53677e" text-anchor="middle">
+      <text x="123.4" y="392">10</text>
+      <text x="328.1" y="392">100</text>
+      <text x="532.8" y="392">1000</text>
+      <text x="367.0" y="414" font-size="14">vertices</text>
+    </g>
+    <g font-size="13" fill="#53677e" text-anchor="end">
+      <text x="70" y="343.3">10 ns</text>
+      <text x="70" y="226.5">100 ns</text>
+      <text x="70" y="109.7">1000 ns</text>
+    </g>
+    <polyline points="103.6,357.7 139.6,350.8 251.0,306.3 371.0,223.7 493.4,166.4 616.4,103.9" fill="none" stroke="#2a64a9" stroke-width="3" stroke-linejoin="round"/>
+    <polyline points="103.6,315.6 139.6,315.9 251.0,301.4 371.0,268.7 493.4,235.3 616.4,204.7" fill="none" stroke="#21745e" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="103.6" cy="357.7" r="4.5" fill="#2a64a9"/>
+    <circle cx="139.6" cy="350.8" r="4.5" fill="#2a64a9"/>
+    <circle cx="251.0" cy="306.3" r="4.5" fill="#2a64a9"/>
+    <circle cx="371.0" cy="223.7" r="4.5" fill="#2a64a9"/>
+    <circle cx="493.4" cy="166.4" r="4.5" fill="#2a64a9"/>
+    <circle cx="616.4" cy="103.9" r="4.5" fill="#2a64a9"/>
+    <circle cx="103.6" cy="315.6" r="4.5" fill="#21745e"/>
+    <circle cx="139.6" cy="315.9" r="4.5" fill="#21745e"/>
+    <circle cx="251.0" cy="301.4" r="4.5" fill="#21745e"/>
+    <circle cx="371.0" cy="268.7" r="4.5" fill="#21745e"/>
+    <circle cx="493.4" cy="235.3" r="4.5" fill="#21745e"/>
+    <circle cx="616.4" cy="204.7" r="4.5" fill="#21745e"/>
+    <text x="604.4" y="91.9" font-size="15" font-weight="650" fill="#2a64a9" text-anchor="end">PointCloudShape</text>
+    <text x="604.4" y="190.7" font-size="15" font-weight="650" fill="#21745e" text-anchor="end">ConvexHullShape</text>
+    <line x1="246.6" y1="318.9" x2="246.6" y2="370" stroke="#8090a3" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <text x="252.6" y="364" font-size="13" fill="#53677e">crossover, about 40 vertices</text>
+  </g>
+</svg>

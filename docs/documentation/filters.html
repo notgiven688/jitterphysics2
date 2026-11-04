@@ -131,7 +131,7 @@
 }
 </code></pre>
 <p>Pairs rejected here are not passed to either of the later filters.</p>
-<p>For soft bodies, another collision filter is typically used (defined in <code>SoftBodies.DynamicTreeCollisionFilter.Filter</code>), which also filters out collisions between shapes belonging to the same soft body.</p>
+<p>For <a href="softbodies.html">soft bodies</a>, <code>SoftBodies.DynamicTreeCollisionFilter.Filter</code> is used instead. It also rejects pairs of shapes that belong to the same soft body.</p>
 <h2 id="broad-phase-filter">Broad phase filter</h2>
 <p><code>world.BroadPhaseFilter</code> is optional:</p>
 <pre><code class="lang-cs">public IBroadPhaseFilter? BroadPhaseFilter { get; set; }

@@ -152,6 +152,7 @@ v_p = v + \omega \times r,
 <p>Every additional pass costs another set of sweeps. Discovery can begin with selected fast-moving bodies, but it must also follow bodies whose velocities change through discovered contacts. The panel in the demo begins at rest, for example, but has to be swept after the first sphere makes it rotate.</p>
 <p>Earlier contacts remain active as new ones are added. Their contact points and normals stay fixed during discovery so the solver can keep using the impulses it has already applied. Additional sweeps can still reveal distinct contact points between the same pair of shapes.</p>
 <p>ISCD is iterative and approximate. Its result can depend on discovery order, pass count, solver convergence, sweep accuracy, and whether the contact geometry is refreshed. The final world solve can change the velocities again, so a fixed discovery budget cannot guarantee that every required contact has been found.</p>
+<p>Predicted contacts do not apply restitution.</p>
 <p>ISCD is implemented in <a href="../documentation/bodies.html#continuous-collision-detection">Jitter's continuous collision detection</a>.</p>
 <p><em>Disclosure: This article was written with the help of AI. The ISCD idea itself came from the author, not the AI; no claim is made that similar methods have not appeared elsewhere.</em></p>
 <style>

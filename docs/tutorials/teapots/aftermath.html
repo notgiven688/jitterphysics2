@@ -89,8 +89,53 @@
 
 <h3 id="pointcloudshape-vs-convexhullshape"><code>PointCloudShape</code> vs <code>ConvexHullShape</code></h3>
 <p>The example uses <code>PointCloudShape</code>, which builds a convex collision shape from a set of points. Interior points are allowed, but do not change the shape.</p>
-<p><code>PointCloudShape</code> is a good starting point for simple convex geometry. For more detailed models, <code>ConvexHullShape</code> can be faster. It requires triangles forming a valid, closed convex hull, which you must prepare with a tool such as Blender or a convex hull library. Jitter does not generate that mesh for you.</p>
-<p>As a rough guide, consider <code>ConvexHullShape</code> when the geometry has around 300 vertices or more. The crossover depends on the model, so measure your scene if collision performance matters.</p>
+<p>Both shapes answer the same support queries, in different ways. <code>PointCloudShape</code> tests every point, so a query costs more the more points there are. <code>ConvexHullShape</code> walks from vertex to neighbouring vertex towards the query direction, which costs about the same however many vertices the hull has, but it needs the triangles of the hull. Those must form the exact, closed convex hull of the points, from a tool such as Blender or a convex hull library such as <a href="https://www.nuget.org/packages/ExactHull">ExactHull</a>. Jitter does not generate that mesh: <code>ShapeHelper.Tessellate</code> only approximates a surface for display, and its triangles can fold and overlap, which breaks the vertex walk.</p>
+<p>Measured with the teapot of this tutorial on a desktop CPU, as support queries in random directions and as a scene of 1000 teapots dropped into a box on four threads. The hulls are the exact hulls of the sampled points:</p>
+<table>
+<thead>
+<tr>
+<th>shape</th>
+<th>vertices</th>
+<th>support query</th>
+<th>1000 teapots, per step</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PointCloudShape</code> from <code>SampleHull(vertices, 3)</code></td>
+<td>131</td>
+<td>79 ns</td>
+<td>4.1 ms</td>
+</tr>
+<tr>
+<td><code>ConvexHullShape</code>, hull of those points</td>
+<td>131</td>
+<td>27 ns</td>
+<td>2.9 ms</td>
+</tr>
+<tr>
+<td><code>PointCloudShape</code> from <code>SampleHull(vertices, 4)</code></td>
+<td>403</td>
+<td>186 ns</td>
+<td>8.1 ms</td>
+</tr>
+<tr>
+<td><code>ConvexHullShape</code>, hull of those points</td>
+<td>403</td>
+<td>51 ns</td>
+<td>3.9 ms</td>
+</tr>
+<tr>
+<td><code>PointCloudShape</code> from all 7850 mesh vertices</td>
+<td>7850</td>
+<td>2800 ns</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For small hulls the point cloud is the faster one. The chart follows both shapes over geodesic spheres from 8 to 2562 vertices: the point cloud's cost grows with the vertex count, from 7 ns to over 1000 ns, while the hull's walk grows from 16 ns to 140 ns. They cross at around 40 vertices.</p>
+<p><img src="images/support-query-cost.svg" alt="Support query cost of both shapes against the number of vertices"></p>
+<p>As a guide, use <code>PointCloudShape</code> for hulls of up to a few dozen points and <code>ConvexHullShape</code> beyond that, and never hand a whole render mesh to a point cloud: sample it first. The numbers shift with the model and the machine, so measure your scene if collision performance matters.</p>
 
 </article>
 

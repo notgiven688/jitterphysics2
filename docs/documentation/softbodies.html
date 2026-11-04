@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Soft Bodies | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Soft Bodies | Jitter2 ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/softbodies.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="soft-bodies">Soft Bodies</h1>
+
+<p>A soft body in Jitter2 is built from the rigid-body machinery. Each vertex is a rigid body that acts as a point mass, springs are constraints between those vertices, and the soft body's collision shapes follow the vertices as they move. <code>SoftBody</code> groups these parts, keeps their activation state in sync, and removes them together.</p>
+<h2 id="setting-up-the-world">Setting up the world</h2>
+<p>The world's built-in collision detection handles pairs of <code>RigidBodyShape</code> only. Soft bodies need two filters:</p>
+<pre><code class="lang-cs">world.DynamicTree.Filter = Jitter2.SoftBodies.DynamicTreeCollisionFilter.Filter;
+world.BroadPhaseFilter = new Jitter2.SoftBodies.BroadPhaseCollisionFilter(world);
+</code></pre>
+<p><code>DynamicTreeCollisionFilter.Filter</code> rejects pairs of shapes that belong to the same rigid body, like the default filter, and also pairs of shapes that belong to the same soft body, so a soft body does not collide with itself.</p>
+<p><code>BroadPhaseCollisionFilter</code> handles every pair that involves a soft-body shape. It runs the narrow phase itself and registers the contact with the vertex closest to the contact point, then returns <code>false</code> so the world does not test the pair again. Pairs of rigid-body shapes pass through untouched. If you already use a broad phase filter, call these two from it. See <a href="filters.html">Collision Filters</a>.</p>
+<h2 id="building-a-soft-body">Building a soft body</h2>
+<p>Create a <code>SoftBody</code> for the world, then add vertices, springs and shapes.</p>
+<p><strong>Vertices</strong> are rigid bodies without shapes. Give them a mass and an inverse inertia of zero, so they never rotate:</p>
+<pre><code class="lang-cs">var vertex = world.CreateRigidBody();
+vertex.Position = position;
+vertex.SetMassInertia(JSymmetricMatrix.Zero, 100.0f, setAsInverse: true);
+softBody.Vertices.Add(vertex);
+</code></pre>
+<p>With <code>setAsInverse</code> both values are inverses, so the line above gives the vertex a mass of 0.01.</p>
+<p><strong>Springs</strong> hold the body together. <code>SpringConstraint</code> keeps the distance between two vertices and ignores their rotation, which makes it cheaper than the general constraints. Any other constraint works too, for example <code>BallSocket</code> constraints from the corners of a cube to a body at its centre.</p>
+<pre><code class="lang-cs">var spring = world.CreateConstraint&lt;SpringConstraint&gt;(a, b);
+spring.Initialize(a.Position, b.Position);
+spring.Softness = 0.2f;
+softBody.AddSpring(spring);
+</code></pre>
+<p><code>Softness</code> and <code>Bias</code> control how the spring responds. <code>SetSpringParameters(frequency, damping, dt)</code> computes both from a frequency in Hz and a damping ratio for the given time step; call it again when the masses or the time step change. <code>TargetDistance</code> is the rest length, set to the initial distance by <code>Initialize</code>.</p>
+<p><strong>Shapes</strong> give the body a surface to collide with. They do not hold it together. A <code>SoftBodyTriangle</code> spans three vertices and has a <code>Thickness</code> (default 0.1) so that the sheet has volume. A <code>SoftBodyTetrahedron</code> spans four vertices and has volume by itself. The shape is added to the soft body, not to a rigid body:</p>
+<pre><code class="lang-cs">softBody.AddShape(new SoftBodyTriangle(softBody, a, b, c));
+softBody.AddShape(new SoftBodyTetrahedron(softBody, a, b, c, d));
+</code></pre>
+<p>A cloth, for example, is a grid of vertices with springs along the grid lines and across the cells, and two triangles per cell. To pin a vertex, make it static:</p>
+<pre><code class="lang-cs">corner.MotionType = MotionType.Static;
+</code></pre>
+<h2 id="collisions">Collisions</h2>
+<p>A soft-body shape computes its support points from the current vertex positions, so no transform is needed; the narrow phase sees the shape as it is deformed. Contacts are registered with the vertex closest to the contact point. Against a rigid body, the vertex only takes linear impulses while the rigid body responds fully. Between two soft bodies, both sides are vertices.</p>
+<p>Shapes of the same soft body never collide with each other, so a cloth does not stop itself from passing through its own folds. For self-collision, replace the dynamic tree filter with one that lets pairs of the same soft body through when they share no vertex. The broad phase filter then handles them like shapes of two different soft bodies.</p>
+<p>A vertex is light compared to a typical rigid body, so a heavy body on a cloth stretches the springs considerably. Substeps help.</p>
+<h2 id="activation-and-removal">Activation and removal</h2>
+<p><code>SoftBody.IsActive</code> follows the first vertex. After each step the soft body activates or deactivates its shapes in the dynamic tree together with its vertices, so a soft body that has come to rest falls asleep like a rigid body. The springs put all vertices into one island.</p>
+<p><code>softBody.Destroy()</code> removes the shapes, springs and vertices from the world. It is safe to call more than once. After <code>world.Clear()</code> the soft body cleans itself up on the next step.</p>
+<h2 id="custom-behaviour">Custom behaviour</h2>
+<p>Derive from <code>SoftBody</code> and override <code>WorldOnPostStep</code> to apply forces every step. A pressurized body, for example, computes the enclosed volume of its triangles there and pushes each triangle's vertices along its normal with <code>AddForce</code>. Call the base method first; it keeps the activation state in sync.</p>
+<p><code>SpringConstraint.DebugDraw</code> draws a spring as a coil between its anchors; see <a href="constraints.html#debug-drawing">Debug drawing</a>.</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/docfx/docs/documentation/softbodies.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

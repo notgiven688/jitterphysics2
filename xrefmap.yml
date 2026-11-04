@@ -2459,6 +2459,22 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.ConvexHullShape.Shift
   nameWithType: ConvexHullShape.Shift
+- uid: Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: ConvexHullShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: ConvexHullShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.ConvexHullShape.SupportFeature
+  nameWithType: ConvexHullShape.SupportFeature
 - uid: Jitter2.Collision.Shapes.ConvexHullShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
   name: SupportMap(in JVector, out JVector)
   href: api/Jitter2.Collision.Shapes.ConvexHullShape.html#Jitter2_Collision_Shapes_ConvexHullShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__

@@ -251,10 +251,11 @@ for the precision-dependent tolerance.</p>
 <li><code>ContactSettings.CcdRelaxationFactor</code>: fraction of the predicted gap that a contact allows to close during one step. Default is <code>0.9</code>, leaving a small separation margin.</li>
 </ul>
 <p>A fixed number of passes cannot guarantee that every collision is found. Joints are solved afterward and can change motion again. Smaller time steps may still be needed.</p>
+<p>CCD contacts do not apply restitution.</p>
 <h2 id="friction-and-restitution">Friction and Restitution</h2>
 <p>Friction and restitution coefficients may be set through <code>body.Friction</code> and <code>body.Restitution</code>.
 For a collision of two bodies with different coefficients the maximum value of each body is taken.</p>
-<p>Restitution is only applied when the bodies approach each other faster than <code>world.ContactSettings.RestitutionThreshold</code> (default <code>1</code> unit per second). Slower impacts are resolved as fully inelastic, which keeps resting and stacked bodies calm. Lower the threshold in scenes where slow bodies must keep bouncing.</p>
+<p>Restitution is only applied when the bodies approach each other faster than <code>world.ContactSettings.RestitutionThreshold</code> (default <code>1</code> unit per second). Slower impacts are resolved as fully inelastic, which keeps resting and stacked bodies calm. Lower the threshold in scenes where slow bodies must keep bouncing. Contacts predicted by <a href="#continuous-collision-detection">CCD</a> never apply restitution.</p>
 <h2 id="collide-events">Collide events</h2>
 <p><code>RigidBody</code> provides two events: <code>BeginCollide</code> and <code>EndCollide</code>.
 <code>BeginCollide</code> is raised when a contact pair begins, including a predicted CCD contact. <code>EndCollide</code> is raised when that pair expires during a simulation step; explicit removal does not raise it.

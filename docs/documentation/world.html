@@ -194,8 +194,9 @@ world.ContactSettings = ContactSettings.Default; // back to the defaults
 </code></pre>
 <p><code>World.Stabilize</code> can then adjust velocities to satisfy the restored contacts and constraints before simulation resumes. It does not advance body positions or orientations, and it uses the selected solver mode.</p>
 <h2 id="auxiliary-contacts">Auxiliary Contacts</h2>
-<p>When flat surfaces touch, one contact point may not be enough to keep them stable. Auxiliary contacts add more points during the same collision test, so the solver can support the touching surfaces without waiting several steps to collect more contacts.</p>
-<p>This is enabled by default. Set <code>world.EnableAuxiliaryContactPoints = false</code> to disable it.</p>
+<p>The narrow phase reports a single pair of deepest points for each touching pair of shapes. With auxiliary contacts enabled, the world builds a full contact manifold from it during the same collision test: each shape reports the feature it touches with (see <a href="shapes.html#custom-shapes"><code>ISupportFeature</code></a>), the two features are clipped against each other, and the result is reduced to up to four contact points.</p>
+<p>The manifold covers the whole contact: the corners of touching faces, the two ends of the line on which a lying capsule or cylinder rests, the point below a sphere. This keeps stacks stable from the first step. It is also required for rolling: the single point of the narrow phase lies slightly off along a curved surface, so a sphere, capsule or cylinder rolling on it alone does not keep its speed.</p>
+<p>This is enabled by default. Set <code>world.EnableAuxiliaryContactPoints = false</code> to register only the deepest point.</p>
 <h2 id="rigid-bodies">Rigid Bodies</h2>
 <p>All rigid bodies registered with the world can be accessed using</p>
 <pre><code class="lang-cs">world.RigidBodies

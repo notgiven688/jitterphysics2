@@ -88,7 +88,7 @@
 <h1 id="shapes">Shapes</h1>
 
 <p>Shapes define the convex geometry used for collisions. Attach them to a rigid body with <code>body.AddShape</code>; the body supplies their position and rotation.</p>
-<p>Each shape implements <code>ISupportMappable</code>, so it can also be used directly in <code>NarrowPhase</code> collision queries. Shapes implement <code>IDynamicTreeProxy</code> as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in <code>world.DynamicTree</code> automatically.</p>
+<p>Each shape implements <code>ISupportFeature</code>, which extends <code>ISupportMappable</code>, so it can also be used directly in <code>NarrowPhase</code> collision queries and in <code>CollisionManifold</code>. Shapes implement <code>IDynamicTreeProxy</code> as well, allowing the dynamic tree to track them. Adding a shape to a body registers it in <code>world.DynamicTree</code> automatically.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p><strong>Concave Shapes</strong>
@@ -136,8 +136,7 @@ The constructor takes a list of vertices.</p>
 <div class="WARNING">
 <h5>Warning</h5>
 <p><strong>Number of vertices</strong>
-<code>PointCloudShape</code>s should only be used for a small to moderate number of vertices (<span class="math">\(\approx{}300\)</span>). Larger numbers of vertices can negatively impact performance.
-<code>ConvexHullShape</code>s are the better choice for more complex hulls.</p>
+A <code>PointCloudShape</code> tests every vertex for each support query. Up to a few dozen vertices that is faster than the <code>ConvexHullShape</code>'s walk over neighbouring vertices; beyond that the <code>ConvexHullShape</code> is the better choice, by a wide margin for hundreds of vertices. The <a href="../tutorials/teapots/aftermath.html">teapot tutorial</a> has measurements.</p>
 </div>
 <h3 id="transformedshape">TransformedShape</h3>
 <p>The <code>TransformedShape</code> takes another shape as input and transforms it.</p>
@@ -154,7 +153,7 @@ The <code>TriangleShape</code> is constructed with a <code>TriangleMesh</code> a
 </code></pre>
 <p>The mesh records which triangles share edges. <code>TriangleEdgeCollisionFilter</code>, enabled by default, uses this information to reduce snagging when bodies slide across those edges.</p>
 <h3 id="softbodyshape">SoftBodyShape</h3>
-<p>A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a <code>SoftBody</code>, rather than attaching it to one rigid body.</p>
+<p>A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a <code>SoftBody</code>, rather than attaching it to one rigid body. See <a href="softbodies.html">Soft Bodies</a>.</p>
 <h2 id="debug-drawing">Debug drawing</h2>
 <p>Shapes can be drawn individually:</p>
 <pre><code class="lang-cs">var shape = new SphereShape(radius: 1);
@@ -202,6 +201,10 @@ faces. Higher detail settings increase the cost and do not guarantee a more accu
     }
 }
 </code></pre>
+<p>The contact manifold asks a shape for the whole feature it touches with in a direction: a point, a segment or a convex polygon. The default implementation samples the support function around the direction and recognizes curved sides. Shapes that know their features can override it, which is faster and exact:</p>
+<pre><code class="lang-cs">public override int SupportFeature(in JVector direction, float tolerance, Span&lt;JVector&gt; vertices)
+</code></pre>
+<p><code>tolerance</code> is the sine of the angle within which directions share the feature. Write the vertices in local space and in winding order, at most <code>ISupportFeature.MaxVertices</code> of them, and return their number. Every vertex must lie on the surface of the shape. <code>BoxShape</code>, <code>CapsuleShape</code>, <code>ConvexHullShape</code>, <code>CylinderShape</code>, <code>ConeShape</code>, <code>SphereShape</code>, <code>TriangleShape</code> and <code>TransformedShape</code> override it; <code>PointCloudShape</code> uses the sampled default.</p>
 <p>The default implementation calculates bounding boxes and approximates mass properties from the support function. Override these methods if you can provide faster or more accurate calculations, or a custom ray test:</p>
 <pre><code class="lang-cs">public override void CalculateBoundingBox(in JQuaternion orientation, in JVector position, out JBoundingBox box)
 
