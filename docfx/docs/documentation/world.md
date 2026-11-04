@@ -131,7 +131,7 @@ world.ContactSettings.RestitutionThreshold = 0.05f;
 world.ContactSettings = ContactSettings.Default; // back to the defaults
 ```
 
-- `MaximumBias`: cap on the position-correction velocity per iteration. Default is `100`.
+- `MaximumBias`: cap on the separation velocity that penetration correction adds to a contact. Default is `100`.
 - `BiasFactor`: fraction of the penetration corrected per step. Default is `0.2`.
 - `AllowedPenetration`: penetration depth that is tolerated without correction. Default is `0.01`.
 - `BreakThreshold`: tangential drift at which a cached contact point is dropped. Default is `0.02`.

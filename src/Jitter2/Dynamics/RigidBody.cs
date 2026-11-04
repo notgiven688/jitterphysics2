@@ -1041,9 +1041,14 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Activation and deactivation are applied through the body's simulation island.
     /// Static bodies cannot be activated by this method, although moving a static body can wake connected
     /// non-static bodies.
+    /// Deactivation is only a request: the island falls asleep once all of its bodies are below their
+    /// <see cref="DeactivationThreshold"/> and <see cref="World.AllowDeactivation"/> is true. Motion above the
+    /// threshold cancels the request. Use <see cref="World.ForceSleepIsland"/> to put an island to sleep
+    /// immediately.
     /// </remarks>
     /// <param name="active">
-    /// If <see langword="true"/>, the body will be activated; if <see langword="false"/>, deactivated.
+    /// If <see langword="true"/>, the body will be activated; if <see langword="false"/>, it is marked for
+    /// deactivation.
     /// </param>
     public void SetActivationState(bool active)
     {

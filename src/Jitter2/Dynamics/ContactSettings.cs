@@ -15,7 +15,10 @@ namespace Jitter2.Dynamics;
 [StructLayout(LayoutKind.Sequential)]
 public struct ContactSettings
 {
-    /// <summary>Maximum position-correction bias applied per iteration. Default is 100.</summary>
+    /// <summary>
+    /// Maximum separation velocity, in world units per second, that penetration correction adds to a
+    /// contact. Default is 100.
+    /// </summary>
     public Real MaximumBias;
 
     /// <summary>Fraction of the penetration corrected per step (Baumgarte stabilization). Default is 0.2.</summary>
