@@ -67,6 +67,7 @@ public unsafe struct CollisionManifold
     // Ask a shape for the feature it touches with in the given world direction, and store its
     // vertices rotated into world orientation and shifted by the offset.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [SkipLocalsInit]
     private static void GetFeature<T>(T shape, in JQuaternion orientation, in JVector offset,
         in JVector direction, Span<JVector> points, ref int count) where T : ISupportFeature
     {
@@ -335,6 +336,7 @@ public unsafe struct CollisionManifold
 
     // The solver only wants four contacts. We sort the points around the centroid and
     // keep four evenly distributed samples so the retained set covers the contact patch.
+    [SkipLocalsInit]
     private static void ReduceManifold(Span<JVector> manifoldA, Span<JVector> manifoldB, ref int manifoldCount, in JVector normal)
     {
         if (manifoldCount <= SolverContactLimit) return;
