@@ -256,4 +256,34 @@ public class MathTests
 
         Assert.That((resMatrix2 - resQuaternion).Length(), Is.LessThan((Real)1e-06));
     }
+
+    [TestCase(1e-3)]
+    [TestCase(1e-5)]
+    [TestCase(1.0)]
+    [TestCase(3.0)]
+    public static void ToAxisAngle_RecoversAxisAndAngle(double angleValue)
+    {
+        Real angle = (Real)angleValue;
+        JVector axis = JVector.Normalize(new JVector(1, 2, 3));
+
+        JQuaternion q = JQuaternion.CreateFromAxisAngle(axis, angle);
+        JQuaternion.ToAxisAngle(q, out JVector resultAxis, out Real resultAngle);
+
+        // Small angles were derived from 1 - W * W before, which cancels to a few percent error in single precision.
+        Assert.That(resultAngle, Is.EqualTo(angle).Within(angle * (Real)1e-5));
+        Assert.That((resultAxis - axis).Length(), Is.LessThan((Real)1e-5));
+
+        // -q is the same rotation; the decomposition stays on the shortest arc.
+        JQuaternion.ToAxisAngle((Real)(-1.0) * q, out resultAxis, out resultAngle);
+        Assert.That(resultAngle, Is.EqualTo(angle).Within(angle * (Real)1e-5));
+        Assert.That((resultAxis - axis).Length(), Is.LessThan((Real)1e-5));
+    }
+
+    [TestCase]
+    public static void ToAxisAngle_IdentityReturnsZeroAngle()
+    {
+        JQuaternion.ToAxisAngle(JQuaternion.Identity, out JVector axis, out Real angle);
+        Assert.That(angle, Is.Zero);
+        Assert.That(axis, Is.EqualTo(JVector.UnitX));
+    }
 }

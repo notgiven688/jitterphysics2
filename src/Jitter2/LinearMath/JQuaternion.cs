@@ -200,7 +200,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// Multiplies two quaternions (Hamilton Product).
     /// </summary>
     /// <remarks>
-    /// Non-commutative. <c>Q1 * Q2</c> represents the rotation Q2 followed by Q1 (local frame) or Q1 followed by Q2 (global frame).
+    /// Non-commutative. <c>Q1 * Q2</c> applies Q2 first, then Q1.
     /// </remarks>
     /// <param name="quaternion1">The first quaternion.</param>
     /// <param name="quaternion2">The second quaternion.</param>
@@ -327,27 +327,21 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     /// <param name="angle">Output: The rotation angle (radians).</param>
     public static void ToAxisAngle(JQuaternion quaternion, out JVector axis, out Real angle)
     {
-        Real s = MathR.Sqrt(MathR.Max((Real)0.0, (Real)1.0 - quaternion.W * quaternion.W));
+        // q and -q are the same rotation; W >= 0 selects the shortest arc (angle between 0 and PI).
+        if (quaternion.W < (Real)0.0) quaternion *= -1;
 
-        const Real epsilonSingularity = (Real)1e-6;
+        // Taking the sine from the vector part keeps small angles accurate, where 1 - W * W cancels.
+        Real s = quaternion.Vector.Length();
 
-        if (s < epsilonSingularity)
+        if (!(s > (Real)0.0))
         {
             angle = (Real)0.0;
             axis = JVector.UnitX;
             return;
         }
 
-        Real invS = (Real)1.0 / s;
-        axis = new JVector(quaternion.X * invS, quaternion.Y * invS, quaternion.Z * invS);
-        angle = (Real)2.0 * StableMath.Acos(quaternion.W);
-
-        // Enforce the shortest-arc representation (angle between 0 and PI)
-        if (angle > MathR.PI)
-        {
-            angle = (Real)2.0 * MathR.PI - angle;
-            axis = -axis;
-        }
+        axis = quaternion.Vector * ((Real)1.0 / s);
+        angle = (Real)2.0 * StableMath.Atan2(s, quaternion.W);
     }
 
     /// <summary>
