@@ -470,7 +470,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Real Length()
     {
-        return (Real)Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
+        return MathR.Sqrt(X * X + Y * Y + Z * Z + W * W);
     }
 
     /// <summary>
@@ -585,7 +585,7 @@ public partial struct JQuaternion(Real x, Real y, Real z, Real w) : IEquatable<J
             }
         }
 
-        t = (Real)(0.5d / Math.Sqrt(t));
+        t = (Real)0.5 / MathR.Sqrt(t);
         result.X *= t;
         result.Y *= t;
         result.Z *= t;
