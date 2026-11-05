@@ -119,6 +119,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
     /// <summary>
     /// Gets or sets the target linear velocity in units per second.
     /// </summary>
+    /// <remarks>Changing the value wakes the connected bodies.</remarks>
     /// <value>Default is 0.</value>
     public Real TargetVelocity
     {
@@ -126,23 +127,29 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
         set
         {
             DebugCheck.IsFinite(value, nameof(value));
+            if (value == Data.Velocity) return;
             Data.Velocity = value;
+            ServoMath.WakeBodies(this);
         }
     }
 
     /// <summary>
     /// Gets or sets the maximum force the motor can apply.
     /// </summary>
-    /// <value>Default is 0. Must be non-negative.</value>
+    /// <remarks>Changing the value wakes the connected bodies.</remarks>
+    /// <value>Default is 0. Must be non-negative. Positive infinity allows unlimited force.</value>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when <paramref name="value"/> is negative.
+    /// Thrown when <paramref name="value"/> is negative or NaN.
     /// </exception>
     public Real MaximumForce
     {
         get => Data.MaxForce;
         set
         {
-            Data.MaxForce = ArgumentCheck.NonNegative(value, nameof(value));
+            value = ServoMath.CheckMaximum(value);
+            if (value == Data.MaxForce) return;
+            Data.MaxForce = value;
+            ServoMath.WakeBodies(this);
         }
     }
 
@@ -165,7 +172,7 @@ public unsafe class LinearMotor : Constraint<LinearMotor.LinearMotorData>
                              JVector.Multiply(j2, body2.InverseMassVector) * j2;
         data.EffectiveMass = data.EffectiveMass > 0 ? (Real)1.0 / data.EffectiveMass : 0;
         if (data.EffectiveMass == 0) data.AccumulatedImpulse = 0;
-        data.MaxLambda = timeStep.SubstepDt * data.MaxForce;
+        data.MaxLambda = ServoMath.MaximumImpulse(data.MaxForce, timeStep.SubstepDt);
 
         if (body1.MotionType == MotionType.Dynamic)
         {
