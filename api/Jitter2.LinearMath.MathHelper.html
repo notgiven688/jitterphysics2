@@ -199,7 +199,7 @@ Class MathHelper  <a class="header-action link-secondary" title="View source" hr
 
   <h3 id="Jitter2_LinearMath_MathHelper_CloseToZero_Jitter2_LinearMath_JVector__System_Single_" data-uid="Jitter2.LinearMath.MathHelper.CloseToZero(Jitter2.LinearMath.JVector@,System.Single)">
   CloseToZero(in JVector, float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L411"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/LinearMath/MathHelper.cs/#L414"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines whether the length of the given vector is zero or close to zero.</p>
@@ -485,8 +485,8 @@ positive-semidefinite 3x3 matrix.</p>
 
 
   <h4 class="section" id="Jitter2_LinearMath_MathHelper_PseudoInverseSymmetric_Jitter2_LinearMath_JMatrix___remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Uses a relative tolerance of 1e-6 in single precision or 1e-12 in double precision
-to identify nearly singular matrices and discard small eigenvalues. The tolerance is
+  <div class="markdown level1 remarks"><p>Uses a relative tolerance of 1e-6 in both precisions to identify nearly singular
+matrices and discard small eigenvalues. The tolerance is
 relative to the largest absolute diagonal entry. A zero matrix returns a zero matrix.
 The input must be symmetric and positive semidefinite; these conditions are not checked.</p>
 </div>

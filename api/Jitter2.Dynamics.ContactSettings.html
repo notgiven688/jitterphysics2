@@ -147,7 +147,7 @@ Struct ContactSettings  <a class="header-action link-secondary" title="View sour
 
   <h3 id="Jitter2_Dynamics_ContactSettings_AllowedPenetration" data-uid="Jitter2.Dynamics.ContactSettings.AllowedPenetration">
   AllowedPenetration
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L25"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L28"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Penetration depth below which no position correction is applied. Default is 0.01.</p>
@@ -178,7 +178,7 @@ Struct ContactSettings  <a class="header-action link-secondary" title="View sour
 
   <h3 id="Jitter2_Dynamics_ContactSettings_BiasFactor" data-uid="Jitter2.Dynamics.ContactSettings.BiasFactor">
   BiasFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L22"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L25"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fraction of the penetration corrected per step (Baumgarte stabilization). Default is 0.2.</p>
@@ -209,7 +209,7 @@ Struct ContactSettings  <a class="header-action link-secondary" title="View sour
 
   <h3 id="Jitter2_Dynamics_ContactSettings_BreakThreshold" data-uid="Jitter2.Dynamics.ContactSettings.BreakThreshold">
   BreakThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L34"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Maximum tangential drift before a cached contact point is dropped; normal separation is limited
@@ -241,7 +241,7 @@ to one tenth of this value. Default is 0.02.</p>
 
   <h3 id="Jitter2_Dynamics_ContactSettings_CcdRelaxationFactor" data-uid="Jitter2.Dynamics.ContactSettings.CcdRelaxationFactor">
   CcdRelaxationFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fraction of the predicted gap that CCD contacts allow to close during one step, from 0 (no closing
@@ -273,10 +273,11 @@ motion) to 1 (allow the full gap to close). Values below 1 leave a small separat
 
   <h3 id="Jitter2_Dynamics_ContactSettings_MaximumBias" data-uid="Jitter2.Dynamics.ContactSettings.MaximumBias">
   MaximumBias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L19"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L22"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Maximum position-correction bias applied per iteration. Default is 100.</p>
+  <div class="markdown level1 summary"><p>Maximum separation velocity, in world units per second, that penetration correction adds to a
+contact. Default is 100.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 
@@ -304,7 +305,7 @@ motion) to 1 (allow the full gap to close). Values below 1 leave a small separat
 
   <h3 id="Jitter2_Dynamics_ContactSettings_RestitutionThreshold" data-uid="Jitter2.Dynamics.ContactSettings.RestitutionThreshold">
   RestitutionThreshold
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L42"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Minimum approach speed, in world units per second, at which a contact applies restitution.
@@ -343,7 +344,7 @@ nearly rolled out. CCD contacts do not apply restitution. Default is 1.</p>
 
   <h3 id="Jitter2_Dynamics_ContactSettings_Default" data-uid="Jitter2.Dynamics.ContactSettings.Default">
   Default
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L48"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/ContactSettings.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The default settings of a new world.</p>

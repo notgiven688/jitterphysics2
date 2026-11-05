@@ -171,7 +171,7 @@ world.SolverIterations = (solver: 2, relaxation: 1);
 world.ContactSettings = ContactSettings.Default; // back to the defaults
 </code></pre>
 <ul>
-<li><code>MaximumBias</code>: cap on the position-correction velocity per iteration. Default is <code>100</code>.</li>
+<li><code>MaximumBias</code>: cap on the separation velocity that penetration correction adds to a contact. Default is <code>100</code>.</li>
 <li><code>BiasFactor</code>: fraction of the penetration corrected per step. Default is <code>0.2</code>.</li>
 <li><code>AllowedPenetration</code>: penetration depth that is tolerated without correction. Default is <code>0.01</code>.</li>
 <li><code>BreakThreshold</code>: tangential drift at which a cached contact point is dropped. Default is <code>0.02</code>.</li>
