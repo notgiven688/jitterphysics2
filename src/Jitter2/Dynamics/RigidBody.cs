@@ -1142,7 +1142,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// It is only applied when <see cref="AllowedMotion"/> is <see cref="MotionAxes.All"/>.
     /// </remarks>
     /// <value>
-    /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
+    /// <see langword="true"/> to integrate gyroscopic torque each substep; otherwise
     /// <see langword="false"/> (default).
     /// </value>
     public bool EnableGyroscopicForces

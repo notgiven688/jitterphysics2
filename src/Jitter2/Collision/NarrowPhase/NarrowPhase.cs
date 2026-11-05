@@ -383,11 +383,11 @@ public static partial class NarrowPhase
 
                 // Can we further "extend" the convex hull by adding the new vertex?
                 //
-                // v = Vertices[vPointer] (support point)
-                // c = Triangles[Head].ClosestToOrigin
+                // v = vertex.V (the new support point)
+                // c = ctri.ClosestToOrigin
                 // s = searchDir
                 //
-                // abs(dot(c - v, s)) / len(s) < e <=> [dot(c - v, s)]^2 = e*e*s^2
+                // abs(dot(c - v, s)) / len(s) <= e <=> [dot(c - v, s)]^2 <= e*e*s^2
                 Real deltaDist = JVector.Dot(ctri.ClosestToOrigin - vertex.V, searchDir);
 
                 if (deltaDist * deltaDist <= collideEpsilon * collideEpsilon * searchDirSq)
