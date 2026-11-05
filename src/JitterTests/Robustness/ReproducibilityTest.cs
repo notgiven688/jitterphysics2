@@ -391,7 +391,7 @@ public class ReproducibilityTest
     {
         foreach (var island in world.Islands)
         {
-            if (island.NeedsUpdate) continue;
+            if (island.WakePending) continue;
 
             bool shouldBeActive = world.Islands.IsActive(island);
 
@@ -488,7 +488,7 @@ public class ReproducibilityTest
     {
         return $"active={body.IsActive}, pos={Format(body.Position)}, orient={Format(body.Orientation)}, " +
                $"vel={Format(body.Velocity)}, angVel={Format(body.AngularVelocity)}, " +
-               $"needsUpdate={body.Island.NeedsUpdate}, markedAsActive={body.Island.MarkedAsActive}";
+               $"wakePending={body.Island.WakePending}, keepAwake={body.Island.KeepAwake}";
     }
 
     private static string Format(Real value)

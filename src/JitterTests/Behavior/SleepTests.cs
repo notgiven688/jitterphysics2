@@ -3,6 +3,45 @@ namespace JitterTests.Behavior;
 public class SleepTests
 {
     [TestCase]
+    public void ImpulseOnTheStepBeforeSleepKeepsBodyAwake()
+    {
+        const Real dt = (Real)(1.0 / 100.0);
+
+        static (World World, RigidBody Body) Build()
+        {
+            var world = new World { Gravity = JVector.Zero };
+            var body = world.CreateRigidBody();
+            body.AddShape(new SphereShape(1));
+            body.DeactivationTime = TimeSpan.FromSeconds((Real)0.5);
+            return (world, body);
+        }
+
+        // Find the step on which the resting body falls asleep.
+        var (probeWorld, probe) = Build();
+        int sleepStep = 0;
+        while (probe.IsActive)
+        {
+            probeWorld.Step(dt, false);
+            sleepStep++;
+            Assert.That(sleepStep, Is.LessThan(1000));
+        }
+        probeWorld.Dispose();
+
+        // Apply an impulse right before that step: the island must stay awake and carry it.
+        var (world, body) = Build();
+        for (int i = 0; i < sleepStep - 1; i++) world.Step(dt, false);
+        Assert.That(body.IsActive);
+
+        body.ApplyImpulse(new JVector(1, 0, 0));
+        world.Step(dt, false);
+
+        Assert.That(body.IsActive);
+        Assert.That(body.Position.X, Is.GreaterThan((Real)0));
+
+        world.Dispose();
+    }
+
+    [TestCase]
     public void StaticBodySleepingAndWake()
     {
         var world = new World();

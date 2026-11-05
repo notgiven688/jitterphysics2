@@ -740,7 +740,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
 
         if ((isKinematic && !resting) || InternalSleepTime < deactivationTimeThreshold)
         {
-            InternalIsland.MarkedAsActive = true;
+            InternalIsland.KeepAwake = true;
         }
 
         if (rigidBody.MotionType == MotionType.Dynamic)

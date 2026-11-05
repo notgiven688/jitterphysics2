@@ -715,35 +715,32 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Marks a body to be activated at the start of the next step.
+    /// Restarts the body's sleep timer and wakes its island at the next deactivation check.
     /// </summary>
     /// <param name="body">The body to activate.</param>
-    /// <param name="wakeUpStatic">Set to true when the intention is to move a static
-    /// body or to switch from another MotionType to static. This then activates all connected bodies.</param>
+    /// <param name="wakeUpStatic">A static body has no island to wake. Set to true when it moved,
+    /// to wake the bodies connected to it instead.</param>
     internal void ActivateBodyNextStep(RigidBody body, bool wakeUpStatic = false)
     {
         body.InternalSleepTime = 0;
 
-        if (body.IsActive) return;
-
-        if (body.MotionType == MotionType.Static && !wakeUpStatic) return;
-
-        AddToActiveList(body.InternalIsland);
-
-        if (body.MotionType == MotionType.Static)
+        if (body.MotionType != MotionType.Static)
         {
-            foreach (var c in body.Constraints)
-            {
-                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
-            }
-
-            foreach (var c in body.Contacts)
-            {
-                ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
-            }
+            WakeIslandNextStep(body.InternalIsland);
+            return;
         }
 
-        body.Island.NeedsUpdate = true;
+        if (!wakeUpStatic) return;
+
+        foreach (var c in body.InternalConstraints)
+        {
+            ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+        }
+
+        foreach (var c in body.InternalContacts)
+        {
+            ActivateBodyNextStep(c.Body1 == body ? c.Body2 : c.Body1);
+        }
     }
 
     /// <summary>
@@ -818,7 +815,8 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Marks a body to be deactivated at the start of the next step.
+    /// Lets the body count as resting long enough to sleep. It stops voting to keep its island
+    /// awake until it moves again.
     /// </summary>
     /// <param name="body">The body to deactivate.</param>
     internal void DeactivateBodyNextStep(RigidBody body)
@@ -851,24 +849,9 @@ public sealed partial class World : IDisposable
             ClearMotionForSleep(body);
         }
 
-        island.MarkedAsActive = false;
-        island.NeedsUpdate = false;
+        island.KeepAwake = false;
 
-        if (!islands.IsActive(island)) return;
-
-        bool deactivatedBody = false;
-
-        foreach (RigidBody body in island.InternalBodies)
-        {
-            deactivatedBody |= DeactivateBodyForSleep(body);
-        }
-
-        islands.MoveToInactive(island);
-
-        if (deactivatedBody)
-        {
-            IslandDeactivated?.Invoke(island);
-        }
+        if (islands.IsActive(island)) SleepIsland(island);
     }
 
     /// <summary>
@@ -915,8 +898,8 @@ public sealed partial class World : IDisposable
 
         IslandHelper.ConstraintCreated(islands, islandPool, constraint);
 
-        AddToActiveList(body1.InternalIsland);
-        AddToActiveList(body2.InternalIsland);
+        WakeIslandNextStep(body1.InternalIsland);
+        WakeIslandNextStep(body2.InternalIsland);
 
         UpdateConstraintActivation(constraint);
 
@@ -924,24 +907,29 @@ public sealed partial class World : IDisposable
     }
 
     /// <summary>
-    /// Marks an island as active and moves it to the active partition.
+    /// Keeps an awake island awake through the next deactivation check, or wakes a sleeping one there.
     /// </summary>
-    /// <param name="island">The island to activate.</param>
-    private void AddToActiveList(Island island)
+    /// <remarks>
+    /// The island moves to the active partition at once; its bodies, contacts, constraints and proxies
+    /// follow at the check, so that a call during a step does not change what the step is solving.
+    /// </remarks>
+    /// <param name="island">The island to wake.</param>
+    private void WakeIslandNextStep(Island island)
     {
-        bool wasActive = islands.IsActive(island);
-        island.MarkedAsActive = true;
-        if (!wasActive) island.NeedsUpdate = true;
+        island.KeepAwake = true;
+        if (islands.IsActive(island)) return;
 
+        island.WakePending = true;
         islands.MoveToActive(island);
     }
 
     [Conditional("DEBUG")]
     private void AssertIslandActivationInvariant(Island island)
     {
-        if (island.NeedsUpdate) return;
-
         bool shouldBeActive = islands.IsActive(island);
+
+        Debug.Assert(shouldBeActive || !island.WakePending, "Only awake islands can have a wake pending.");
+        if (island.WakePending) return;
 
         foreach (RigidBody body in island.InternalBodies)
         {
@@ -976,7 +964,7 @@ public sealed partial class World : IDisposable
 
         IslandHelper.BodyAdded(islands, islandPool, body);
 
-        AddToActiveList(body.InternalIsland);
+        WakeIslandNextStep(body.InternalIsland);
 
         return body;
     }

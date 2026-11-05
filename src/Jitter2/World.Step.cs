@@ -851,8 +851,8 @@ public sealed partial class World
             if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
             var arb = arbiters[handle.Data.Key];
 
-            AddToActiveList(arb.Body1.InternalIsland);
-            AddToActiveList(arb.Body2.InternalIsland);
+            WakeIslandNextStep(arb.Body1.InternalIsland);
+            WakeIslandNextStep(arb.Body2.InternalIsland);
 
             IslandHelper.ArbiterRemoved(islands, islandPool, arb);
             arbiters.Remove(handle.Data.Key);
@@ -895,8 +895,8 @@ public sealed partial class World
                 {
                     IslandHelper.ArbiterCreated(islands, islandPool, arb);
 
-                    AddToActiveList(arb.Body1.InternalIsland);
-                    AddToActiveList(arb.Body2.InternalIsland);
+                    WakeIslandNextStep(arb.Body1.InternalIsland);
+                    WakeIslandNextStep(arb.Body2.InternalIsland);
 
                     dispatchArbiters.Add(arb);
                 }
@@ -1253,7 +1253,7 @@ public sealed partial class World
         }
     }
 
-    private readonly Stack<(Island Island, bool RaiseEvent)> inactivateIslands = new();
+    private readonly List<Island> islandsToSleep = [];
 
     private static void ClearMotionForSleep(RigidBody body)
     {
@@ -1269,17 +1269,41 @@ public sealed partial class World
         body.InternalSleepTime = Real.PositiveInfinity;
     }
 
-    private bool DeactivateBodyForSleep(RigidBody body)
-    {
-        ref RigidBodyData rigidBody = ref body.Data;
-        bool wasActive = rigidBody.IsActive;
+    // The two functions below are the only places that change whether a body, its contacts,
+    // constraints and proxies are awake. Static bodies never wake.
 
-        rigidBody.IsActive = false;
+    private void WakeBody(RigidBody body)
+    {
+        Debug.Assert(body.MotionType != MotionType.Static);
+
+        body.Data.IsActive = true;
+        body.InternalSleepTime = 0;
+
+        memRigidBodies.MoveToActive(body.Handle);
+        bodies.MoveToActive(body);
+
+        foreach (var c in body.InternalContacts)
+        {
+            memContacts.MoveToActive(c.Handle);
+        }
+
+        foreach (var c in body.InternalConstraints)
+        {
+            UpdateConstraintActivation(c);
+        }
+
+        foreach (var s in body.InternalShapes)
+        {
+            DynamicTree.ActivateProxy(s);
+        }
+    }
+
+    private void SleepBody(RigidBody body)
+    {
+        body.Data.IsActive = false;
 
         memRigidBodies.MoveToInactive(body.Handle);
         bodies.MoveToInactive(body);
-
-        bool deactivatedBody = wasActive && body.MotionType != MotionType.Static;
 
         // Static bodies have contacts and constraints, but they do not form
         // collision islands. Do not deactivate their contacts or constraints
@@ -1308,8 +1332,22 @@ public sealed partial class World
         {
             DynamicTree.DeactivateProxy(s);
         }
+    }
 
-        return deactivatedBody;
+    private void SleepIsland(Island island)
+    {
+        bool deactivatedBody = false;
+
+        foreach (RigidBody body in island.InternalBodies)
+        {
+            deactivatedBody |= body.Data.IsActive && body.MotionType != MotionType.Static;
+            SleepBody(body);
+        }
+
+        island.WakePending = false;
+        islands.MoveToInactive(island);
+
+        if (deactivatedBody) IslandDeactivated?.Invoke(island);
     }
 
     private void CheckDeactivation()
@@ -1318,81 +1356,37 @@ public sealed partial class World
         {
             Island island = islands[i];
 
-            bool deactivateIsland = !island.MarkedAsActive;
-            if (!AllowDeactivation) deactivateIsland = false;
+            // Votes are collected again until the next check.
+            bool keepAwake = island.KeepAwake || !AllowDeactivation;
+            island.KeepAwake = false;
 
-            // Mark the island as inactive
-            // Next frame one active body will be enough to set
-            // MarkedAsActive back to true;
-            island.MarkedAsActive = false;
+            if (!keepAwake)
+            {
+                // Moving the island out of the active partition here would reorder the loop.
+                islandsToSleep.Add(island);
+                continue;
+            }
 
-            bool needsUpdate = island.NeedsUpdate;
-            island.NeedsUpdate = false;
-
-            if (!deactivateIsland && !needsUpdate) continue;
+            if (!island.WakePending) continue;
+            island.WakePending = false;
 
             bool activatedBody = false;
-            bool deactivatedBody = false;
 
             foreach (RigidBody body in island.InternalBodies)
             {
-                ref RigidBodyData rigidBody = ref body.Data;
-
-                if (rigidBody.IsActive != deactivateIsland)
-                {
-                    if (!needsUpdate) break;
-                    continue;
-                }
-
-                if (deactivateIsland)
-                {
-                    deactivatedBody |= DeactivateBodyForSleep(body);
-                }
-                else
-                {
-                    // Don't activate static bodies at all.
-                    if (rigidBody.MotionType == MotionType.Static) continue;
-
-                    rigidBody.IsActive = true;
-                    activatedBody = true;
-
-                    body.InternalSleepTime = 0;
-
-                    memRigidBodies.MoveToActive(body.Handle);
-                    bodies.MoveToActive(body);
-
-                    foreach (var c in body.InternalContacts)
-                    {
-                        memContacts.MoveToActive(c.Handle);
-                    }
-
-                    foreach (var c in body.InternalConstraints)
-                    {
-                        UpdateConstraintActivation(c);
-                    }
-
-                    foreach (var s in body.InternalShapes)
-                    {
-                        DynamicTree.ActivateProxy(s);
-                    }
-                }
+                if (body.Data.IsActive || body.MotionType == MotionType.Static) continue;
+                WakeBody(body);
+                activatedBody = true;
             }
 
-            if (deactivateIsland)
-            {
-                inactivateIslands.Push((island, deactivatedBody));
-            }
-            else if (activatedBody)
-            {
-                IslandActivated?.Invoke(island);
-            }
+            if (activatedBody) IslandActivated?.Invoke(island);
         }
 
-        while (inactivateIslands.Count > 0)
+        for (int i = islandsToSleep.Count - 1; i >= 0; i--)
         {
-            var (island, raiseEvent) = inactivateIslands.Pop();
-            islands.MoveToInactive(island);
-            if (raiseEvent) IslandDeactivated?.Invoke(island);
+            SleepIsland(islandsToSleep[i]);
         }
+
+        islandsToSleep.Clear();
     }
 }
