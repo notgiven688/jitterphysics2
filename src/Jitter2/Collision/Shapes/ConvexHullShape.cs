@@ -175,7 +175,7 @@ public class ConvexHullShape : RigidBodyShape, ICloneableShape<ConvexHullShape>
 
     /// <inheritdoc cref="ConvexHullShape(ReadOnlySpan{JTriangle})"/>
     public ConvexHullShape(IEnumerable<JTriangle> triangles) :
-        this(SpanHelper.AsReadOnlySpan(triangles, out _))
+        this(SpanHelper.AsReadOnlySpan(triangles))
     {
     }
 

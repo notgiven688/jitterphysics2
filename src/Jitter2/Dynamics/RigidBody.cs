@@ -981,13 +981,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
                     {
                         ClearQueuedForces();
                         // Switch to kinematic
-                        if (Data.MotionType == MotionType.Static)
-                        {
-                            Data.MotionType = MotionType.Kinematic;
-                            World.BuildConnectionsFromExistingContacts(this);
-                        }
-
+                        bool wasStatic = Data.MotionType == MotionType.Static;
                         Data.MotionType = MotionType.Kinematic;
+                        if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
+
                         World.RemoveStaticStaticContacts(this);
                         World.ActivateBodyNextStep(this, true);
                         UpdateWorldInertia();
@@ -997,13 +994,10 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
                     {
                         ClearQueuedForces();
                         // Switch to dynamic
-                        if (Data.MotionType == MotionType.Static)
-                        {
-                            Data.MotionType = MotionType.Dynamic;
-                            World.BuildConnectionsFromExistingContacts(this);
-                        }
-
+                        bool wasStatic = Data.MotionType == MotionType.Static;
                         Data.MotionType = MotionType.Dynamic;
+                        if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
+
                         World.ActivateBodyNextStep(this, true);
                         UpdateWorldInertia();
                         break;
@@ -1540,8 +1534,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         }
 
         if (updateMassInertia) SetMassInertia();
-
-        sids.Clear();
     }
 
     [Obsolete($"Use {nameof(RemoveShape)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
@@ -1674,7 +1666,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
 
         if (setAsInverse)
         {
-            if (Real.IsInfinity(mass) || mass < (Real)0.0)
+            if (mass < (Real)0.0)
             {
                 throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
             }

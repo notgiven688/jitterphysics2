@@ -175,7 +175,7 @@ public static class ShapeHelper
     /// <inheritdoc cref="Tessellate(System.ReadOnlySpan{Jitter2.LinearMath.JVector}, int)"/>
     public static List<JTriangle> Tessellate(IEnumerable<JVector> vertices, int subdivisions = 3)
     {
-        return Tessellate(new VertexSupportMap(SpanHelper.AsReadOnlySpan(vertices, out _)), subdivisions);
+        return Tessellate(new VertexSupportMap(SpanHelper.AsReadOnlySpan(vertices)), subdivisions);
     }
 
     #region Obsolete MakeHull - Use Tessellate instead

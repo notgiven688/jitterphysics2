@@ -91,7 +91,7 @@ public class TriangleMesh
 
     /// <inheritdoc cref="TriangleMesh(ReadOnlySpan{JTriangle}, bool)"/>
     public TriangleMesh(IEnumerable<JTriangle> soup, bool ignoreDegenerated = false) :
-        this(SpanHelper.AsReadOnlySpan(soup, out _), ignoreDegenerated)
+        this(SpanHelper.AsReadOnlySpan(soup), ignoreDegenerated)
     {
     }
 

@@ -64,7 +64,6 @@ internal class SlimBag<T> : IEnumerable<T>
     private T[] array;
     private int counter;
     private int nullOut;
-    private readonly EqualityComparer<T> comparer = EqualityComparer<T>.Default;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SlimBag{T}"/> class with a specified initial size.
@@ -197,16 +196,7 @@ internal class SlimBag<T> : IEnumerable<T>
     /// <param name="item">The element to remove.</param>
     public void Remove(T item)
     {
-        int index = -1;
-        for (int i = 0; i < counter; i++)
-        {
-            if (comparer.Equals(item, array[i]))
-            {
-                index = i;
-                break;
-            }
-        }
-
+        int index = Array.IndexOf(array, item, 0, counter);
         if (index != -1) RemoveAt(index);
     }
 

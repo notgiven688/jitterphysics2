@@ -30,7 +30,7 @@ public class PointCloudShape : RigidBodyShape, ICloneableShape<PointCloudShape>
 
     /// <inheritdoc cref="PointCloudShape(ReadOnlySpan{JVector})"/>
     public PointCloudShape(IEnumerable<JVector> vertices) :
-        this(SpanHelper.AsReadOnlySpan(vertices, out _))
+        this(SpanHelper.AsReadOnlySpan(vertices))
     {
     }
 
