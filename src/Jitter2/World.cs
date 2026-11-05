@@ -290,7 +290,24 @@ public sealed partial class World : IDisposable
     /// <summary>
     /// Gets or sets the threading model used between calls to <see cref="Step(Real, bool)"/>.
     /// </summary>
-    public ThreadModelType ThreadModel { get; set; } = ThreadModelType.Regular;
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when an undefined <see cref="ThreadModelType"/>
+    /// value is assigned.</exception>
+    public ThreadModelType ThreadModel
+    {
+        get => threadModel;
+        set
+        {
+            if (!Enum.IsDefined(value))
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value,
+                    "The thread model must be a defined enum value.");
+            }
+
+            threadModel = value;
+        }
+    }
+
+    private ThreadModelType threadModel = ThreadModelType.Regular;
 
     /// <summary>
     /// All collision islands in this world.
