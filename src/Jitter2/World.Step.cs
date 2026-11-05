@@ -1043,16 +1043,9 @@ public sealed partial class World
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void UnlockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
     {
-        if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
-        {
-            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
-            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
-        }
-        else
-        {
-            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
-            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
-        }
+        // The locks were taken with a compare-exchange from 0 to 1; a release store frees them.
+        if (b1.MotionType == MotionType.Dynamic) Volatile.Write(ref b1._lockFlag, 0);
+        if (b2.MotionType == MotionType.Dynamic) Volatile.Write(ref b2._lockFlag, 0);
     }
 
     private void IntegrateForces(Parallel.Batch batch)
