@@ -147,27 +147,26 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>,
         return true;
     }
 
+    // Slab test shared with TreeBox: the line origin + t * direction for t in [0, exit] against the
+    // box [min, max]. On a hit, enter is the first t inside the box.
+    internal static bool IntersectSlabs(in JVector min, in JVector max, in JVector origin, in JVector direction,
+        Real exit, out Real enter)
+    {
+        enter = (Real)0.0;
+
+        return Intersect1D(origin.X, direction.X, min.X, max.X, ref enter, ref exit) &&
+               Intersect1D(origin.Y, direction.Y, min.Y, max.Y, ref enter, ref exit) &&
+               Intersect1D(origin.Z, direction.Z, min.Z, max.Z, ref enter, ref exit);
+    }
+
     /// <summary>
     /// Checks if a finite line segment intersects this bounding box.
     /// </summary>
     /// <param name="origin">The start point of the segment.</param>
     /// <param name="direction">The vector from start to end (End = Origin + Direction).</param>
     /// <returns><c>true</c> if the segment passes through the box; otherwise, <c>false</c>.</returns>
-    public readonly bool SegmentIntersect(in JVector origin, in JVector direction)
-    {
-        Real enter = (Real)0.0, exit = (Real)1.0;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool SegmentIntersect(in JVector origin, in JVector direction) =>
+        IntersectSlabs(Min, Max, origin, direction, (Real)1.0, out _);
 
     /// <summary>
     /// Checks if an infinite ray intersects this bounding box.
@@ -175,21 +174,8 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>,
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
     /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
-    public readonly bool RayIntersect(in JVector origin, in JVector direction)
-    {
-        Real enter = (Real)0.0, exit = Real.MaxValue;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool RayIntersect(in JVector origin, in JVector direction) =>
+        IntersectSlabs(Min, Max, origin, direction, Real.MaxValue, out _);
 
     /// <summary>
     /// Checks if a ray intersects this bounding box and calculates the entry parameter.
@@ -199,22 +185,8 @@ public struct JBoundingBox(JVector min, JVector max) : IEquatable<JBoundingBox>,
     /// <param name="enter">Outputs the parameter in <c>origin + enter * direction</c> where the ray enters
     /// the box. Returns 0 if the origin is inside; this is a distance only for a unit direction.</param>
     /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
-    public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
-    {
-        enter = (Real)0.0;
-        Real exit = Real.MaxValue;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter) =>
+        IntersectSlabs(Min, Max, origin, direction, Real.MaxValue, out enter);
 
     /// <summary>
     /// Determines whether the bounding box contains the specified point.

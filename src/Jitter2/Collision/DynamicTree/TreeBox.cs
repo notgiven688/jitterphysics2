@@ -138,47 +138,14 @@ public struct TreeBox : IEquatable<TreeBox>
                Min.Z <= box.Min.Z && Max.Z >= box.Max.Z;
     }
 
-    private static bool Intersect1D(Real start, Real dir, Real min, Real max,
-        ref Real enter, ref Real exit)
-    {
-        if (dir * dir < Epsilon * Epsilon) return start >= min && start <= max;
-
-        Real t0 = (min - start) / dir;
-        Real t1 = (max - start) / dir;
-
-        if (t0 > t1)
-        {
-            (t0, t1) = (t1, t0);
-        }
-
-        if (t0 > exit || t1 < enter) return false;
-
-        if (t0 > enter) enter = t0;
-        if (t1 < exit) exit = t1;
-        return true;
-    }
-
     /// <summary>
     /// Checks if a finite line segment intersects this bounding box.
     /// </summary>
     /// <param name="origin">The start point of the segment.</param>
     /// <param name="direction">The vector defining the direction and length of the segment (End Point = Origin + Direction).</param>
     /// <returns><c>true</c> if the segment passes through the box; otherwise, <c>false</c>.</returns>
-    public readonly bool SegmentIntersect(in JVector origin, in JVector direction)
-    {
-        Real enter = (Real)0.0, exit = (Real)1.0;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool SegmentIntersect(in JVector origin, in JVector direction) =>
+        JBoundingBox.IntersectSlabs(Min, Max, origin, direction, (Real)1.0, out _);
 
     /// <summary>
     /// Checks if an infinite ray intersects this bounding box.
@@ -186,21 +153,8 @@ public struct TreeBox : IEquatable<TreeBox>
     /// <param name="origin">The origin of the ray.</param>
     /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
     /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
-    public readonly bool RayIntersect(in JVector origin, in JVector direction)
-    {
-        Real enter = (Real)0.0, exit = Real.MaxValue;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool RayIntersect(in JVector origin, in JVector direction) =>
+        JBoundingBox.IntersectSlabs(Min, Max, origin, direction, Real.MaxValue, out _);
 
     /// <summary>
     /// Checks if an infinite ray intersects this bounding box and calculates the entry distance.
@@ -209,22 +163,8 @@ public struct TreeBox : IEquatable<TreeBox>
     /// <param name="direction">The direction of the ray (not necessarily normalized).</param>
     /// <param name="enter">Outputs the scalar distance along the direction vector where the ray enters the box. If inside, this is 0.</param>
     /// <returns><c>true</c> if the ray intersects the box; otherwise, <c>false</c>.</returns>
-    public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter)
-    {
-        enter = (Real)0.0;
-        Real exit = Real.MaxValue;
-
-        if (!Intersect1D(origin.X, direction.X, Min.X, Max.X, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Y, direction.Y, Min.Y, Max.Y, ref enter, ref exit))
-            return false;
-
-        if (!Intersect1D(origin.Z, direction.Z, Min.Z, Max.Z, ref enter, ref exit))
-            return false;
-
-        return true;
-    }
+    public readonly bool RayIntersect(in JVector origin, in JVector direction, out Real enter) =>
+        JBoundingBox.IntersectSlabs(Min, Max, origin, direction, Real.MaxValue, out enter);
 
     public readonly override string ToString()
     {

@@ -117,24 +117,10 @@ public struct ContactData
     /// Prepares all active contacts for solver iterations by computing effective masses and warm-starting impulses.
     /// </summary>
     /// <param name="timeStep">The full step and substep timing information.</param>
-    public unsafe void PrepareForIteration(in TimeStep timeStep)
+    public void PrepareForIteration(in TimeStep timeStep)
     {
-        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
-
-        if (Vector.IsHardwareAccelerated)
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIterationAccelerated(ptr, timeStep);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIterationAccelerated(ptr, timeStep);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIterationAccelerated(ptr, timeStep);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, timeStep);
-        }
-        else
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.PrepareForIteration(ptr, timeStep);
-            if ((UsageMask & MaskContact1) != 0) Contact1.PrepareForIteration(ptr, timeStep);
-            if ((UsageMask & MaskContact2) != 0) Contact2.PrepareForIteration(ptr, timeStep);
-            if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, timeStep);
-        }
+        if (Vector.IsHardwareAccelerated) PrepareForIterationAccelerated(timeStep);
+        else PrepareForIterationScalar(timeStep);
     }
 
     /// <summary>Clears the accumulated normal and friction impulses of all active contacts.</summary>
@@ -163,26 +149,13 @@ public struct ContactData
     /// Performs one solver iteration over all active contacts, applying corrective impulses.
     /// </summary>
     /// <param name="applyBias">If <see langword="true"/>, applies position-correction bias.</param>
-    public unsafe void Iterate(bool applyBias)
+    public void Iterate(bool applyBias)
     {
-        var ptr = (ContactData*)Unsafe.AsPointer(ref this);
-
-        if (Vector.IsHardwareAccelerated)
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.IterateAccelerated(ptr, applyBias);
-            if ((UsageMask & MaskContact1) != 0) Contact1.IterateAccelerated(ptr, applyBias);
-            if ((UsageMask & MaskContact2) != 0) Contact2.IterateAccelerated(ptr, applyBias);
-            if ((UsageMask & MaskContact3) != 0) Contact3.IterateAccelerated(ptr, applyBias);
-        }
-        else
-        {
-            if ((UsageMask & MaskContact0) != 0) Contact0.Iterate(ptr, applyBias);
-            if ((UsageMask & MaskContact1) != 0) Contact1.Iterate(ptr, applyBias);
-            if ((UsageMask & MaskContact2) != 0) Contact2.Iterate(ptr, applyBias);
-            if ((UsageMask & MaskContact3) != 0) Contact3.Iterate(ptr, applyBias);
-        }
+        if (Vector.IsHardwareAccelerated) IterateAccelerated(applyBias);
+        else IterateScalar(applyBias);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal unsafe void PrepareForIterationAccelerated(in TimeStep timeStep)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -193,6 +166,7 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIterationAccelerated(ptr, timeStep);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal unsafe void PrepareForIterationScalar(in TimeStep timeStep)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -203,6 +177,7 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.PrepareForIteration(ptr, timeStep);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal unsafe void IterateAccelerated(bool applyBias)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -213,6 +188,7 @@ public struct ContactData
         if ((UsageMask & MaskContact3) != 0) Contact3.IterateAccelerated(ptr, applyBias);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal unsafe void IterateScalar(bool applyBias)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
