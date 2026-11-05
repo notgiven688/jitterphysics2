@@ -422,7 +422,9 @@ public sealed partial class World
         }
     }
 
-    private void PrepareContacts(Parallel.Batch batch)
+    private void PrepareContacts(Parallel.Batch batch) => PrepareContacts<BodyLock>(batch);
+
+    private void PrepareContacts<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memContacts.Active[batch.Start..batch.End];
         var localQueue = deferredContacts.Value!;
@@ -439,14 +441,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref contact.Body1.Data;
             ref RigidBodyData b2 = ref contact.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeBegin();
@@ -457,24 +459,24 @@ public sealed partial class World
             ref RigidBodyData b1 = ref contact.Body1.Data;
             ref RigidBodyData b2 = ref contact.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
-    private void IterateContacts(Parallel.Batch batch) => IterateContacts(batch, applyBias: true);
+    private void IterateContacts(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: true);
 
-    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts(batch, applyBias: false);
+    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: false);
 
-    private void IterateContacts(Parallel.Batch batch, bool applyBias)
+    private void IterateContacts<TLock>(Parallel.Batch batch, bool applyBias) where TLock : struct, IBodyLock
     {
         var span = memContacts.Active[batch.Start..batch.End];
         var localQueue = deferredContacts.Value!;
@@ -491,14 +493,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeBegin();
@@ -509,20 +511,22 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
-    private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
+    private void PrepareSmallConstraints(Parallel.Batch batch) => PrepareSmallConstraints<BodyLock>(batch);
+
+    private unsafe void PrepareSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredSmallConstraints.Value!;
@@ -541,14 +545,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -557,18 +561,20 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateSmallConstraints(Parallel.Batch batch)
+    private void IterateSmallConstraints(Parallel.Batch batch) => IterateSmallConstraints<BodyLock>(batch);
+
+    private unsafe void IterateSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredSmallConstraints.Value!;
@@ -587,14 +593,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -603,19 +609,21 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
 
-    private unsafe void PrepareConstraints(Parallel.Batch batch)
+    private void PrepareConstraints(Parallel.Batch batch) => PrepareConstraints<BodyLock>(batch);
+
+    private unsafe void PrepareConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredConstraints.Value!;
@@ -637,14 +645,14 @@ public sealed partial class World
             Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
                 "Invalid constraint: both bodies are non-dynamic.");
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -653,18 +661,20 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateConstraints(Parallel.Batch batch)
+    private void IterateConstraints(Parallel.Batch batch) => IterateConstraints<BodyLock>(batch);
+
+    private unsafe void IterateConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredConstraints.Value!;
@@ -683,14 +693,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -699,14 +709,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
@@ -1034,6 +1044,30 @@ public sealed partial class World
         }
     }
 
+    // Lock policies for the solver loops. The struct type parameter gives each loop a separate,
+    // specialized copy, so the single-threaded copy contains no atomics.
+    private interface IBodyLock
+    {
+        static abstract bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2);
+        static abstract void Unlock(ref RigidBodyData b1, ref RigidBodyData b2);
+    }
+
+    private struct BodyLock : IBodyLock
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => TryLockTwoBody(ref b1, ref b2);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) => UnlockTwoBody(ref b1, ref b2);
+    }
+
+    private struct NoBodyLock : IBodyLock
+    {
+        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => true;
+
+        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) { }
+    }
+
     /// <summary>
     /// Releases locks on two rigid bodies previously acquired by <see cref="LockTwoBody"/>
     /// or <see cref="TryLockTwoBody"/>.
@@ -1138,7 +1172,7 @@ public sealed partial class World
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                RelaxVelocities(batchContacts);
+                IterateContacts<NoBodyLock>(batchContacts, applyBias: false);
             }
         }
     }
@@ -1168,15 +1202,16 @@ public sealed partial class World
             Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
             Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
 
-            PrepareContacts(batchContacts);
-            PrepareConstraints(batchConstraints);
-            PrepareSmallConstraints(batchSmallConstraints);
+            // A single thread owns every body, so the body locks are skipped.
+            PrepareContacts<NoBodyLock>(batchContacts);
+            PrepareConstraints<NoBodyLock>(batchConstraints);
+            PrepareSmallConstraints<NoBodyLock>(batchSmallConstraints);
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                IterateContacts(batchContacts);
-                IterateConstraints(batchConstraints);
-                IterateSmallConstraints(batchSmallConstraints);
+                IterateContacts<NoBodyLock>(batchContacts, applyBias: true);
+                IterateConstraints<NoBodyLock>(batchConstraints);
+                IterateSmallConstraints<NoBodyLock>(batchSmallConstraints);
             }
         }
     }
