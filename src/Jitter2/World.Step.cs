@@ -235,20 +235,9 @@ public sealed partial class World
             {
                 PreSubStep?.Invoke(timeStep);
                 IntegrateForces(multiThread); // FAST SWEEP
-
-                if (SolveMode == Jitter2.SolveMode.Deterministic)
-                {
-                    SolveIslands(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxIslands(multiThread, velocityRelaxations); // FAST SWEEP
-                }
-                else
-                {
-                    SolveVelocities(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
-                }
-
+                Solve(multiThread, solverIterations); // FAST SWEEP
+                IntegrateVelocities(multiThread); // FAST SWEEP
+                Relax(multiThread, velocityRelaxations); // FAST SWEEP
                 PostSubStep?.Invoke(timeStep);
             }
 
@@ -284,15 +273,31 @@ public sealed partial class World
         }
         finally
         {
-            if ((ThreadModel == ThreadModelType.Regular || !multiThread)
-                && ThreadPool.InstanceInitialized)
-            {
-                // Signal the thread pool that threads can go into a wait state.
-                ThreadPool.Instance.PauseWorkers();
-            }
-
+            PauseWorkers(multiThread);
             Tracer.ProfileEnd(TraceName.Step);
         }
+    }
+
+    private void PauseWorkers(bool multiThread)
+    {
+        if ((ThreadModel == ThreadModelType.Regular || !multiThread)
+            && ThreadPool.InstanceInitialized)
+        {
+            // Signal the thread pool that threads can go into a wait state.
+            ThreadPool.Instance.PauseWorkers();
+        }
+    }
+
+    private void Solve(bool multiThread, int iterations)
+    {
+        if (SolveMode == Jitter2.SolveMode.Deterministic) SolveIslands(multiThread, iterations);
+        else SolveVelocities(multiThread, iterations);
+    }
+
+    private void Relax(bool multiThread, int iterations)
+    {
+        if (SolveMode == Jitter2.SolveMode.Deterministic) RelaxIslands(multiThread, iterations);
+        else RelaxVelocities(multiThread, iterations);
     }
 
     /// <summary>
@@ -358,33 +363,17 @@ public sealed partial class World
 
             CheckDeactivation();
 
-            if (SolveMode == Jitter2.SolveMode.Deterministic)
-            {
-                PrepareIslandSolveOrder();
+            if (SolveMode == Jitter2.SolveMode.Deterministic) PrepareIslandSolveOrder();
 
-                for (int i = 0; i < timeStep.SubstepCount; i++)
-                {
-                    SolveIslands(multiThread, solverIterations);
-                    RelaxIslands(multiThread, relaxationIterations);
-                }
-            }
-            else
+            for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                for (int i = 0; i < timeStep.SubstepCount; i++)
-                {
-                    SolveVelocities(multiThread, solverIterations);
-                    RelaxVelocities(multiThread, relaxationIterations);
-                }
+                Solve(multiThread, solverIterations);
+                Relax(multiThread, relaxationIterations);
             }
-
         }
         finally
         {
-            if ((ThreadModel == ThreadModelType.Regular || !multiThread)
-                && ThreadPool.InstanceInitialized)
-            {
-                ThreadPool.Instance.PauseWorkers();
-            }
+            PauseWorkers(multiThread);
         }
     }
 
