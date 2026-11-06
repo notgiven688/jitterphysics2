@@ -87,6 +87,20 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-2140-2026-11-06">Jitter 2.14.0 (2026-11-06)</h3>
+<ul>
+<li>Contact manifolds are now built from the support features of both shapes (<code>ISupportFeature</code>), fixing contact point errors and rolling drift on curved shapes.</li>
+<li>Faster and more robust <code>ConvexHullShape</code> support queries.</li>
+<li>Faster arbiter removal through cheaper island connectivity checks.</li>
+<li>Faster solver: the single-threaded solve no longer takes body locks, and the multithreaded solve releases them more cheaply.</li>
+<li>Fixed wake requests, such as impulses, being lost when the body's island fell asleep in the same step.</li>
+<li><code>LinearMotor</code> and <code>AngularMotor</code> accept unlimited maximum force or torque, and changing a motor wakes its bodies.</li>
+<li>Fixed large impulses from nearly redundant constraint rows in double precision.</li>
+<li>Fixed inaccurate <code>JQuaternion.ToAxisAngle</code> results at small angles.</li>
+<li>Fixed <code>JTriangle.RayIntersect</code> reporting short ray directions and small triangles as parallel.</li>
+<li><code>RigidBody.DeactivationThreshold</code> is obsolete. Use <code>RigidBody.DeactivationVelocity</code>, which takes the linear value first.</li>
+<li><strong>Breaking Change:</strong> The contact constants on <code>ContactData.Contact</code> and <code>ContactData.CcdRelaxationFactor</code> moved into the per-world <code>World.ContactSettings</code>, which also makes the restitution threshold configurable. <code>World.CcdRelaxationFactor</code> is obsolete.</li>
+</ul>
 <h3 id="jitter-2130-2026-10-22">Jitter 2.13.0 (2026-10-22)</h3>
 <ul>
 <li><strong>Breaking Change:</strong> Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use <code>RigidBody.EnableCcd</code> and the <code>Ccd*</code> settings; the old speculative contact API has been removed.</li>
