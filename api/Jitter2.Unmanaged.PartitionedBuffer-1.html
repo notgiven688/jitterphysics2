@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Unmanaged_PartitionedBuffer_1" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1" class="text-break">
-Class PartitionedBuffer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L123"><i class="bi bi-code-slash"></i></a>
+Class PartitionedBuffer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -166,12 +166,13 @@ Class PartitionedBuffer&lt;T&gt;  <a class="header-action link-secondary" title=
   <h2 id="Jitter2_Unmanaged_PartitionedBuffer_1_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
 Reserve the first 4 bytes of <code class="typeparamref">T</code> for the buffer's element ID.
-Do not overwrite these bytes. Use sequential layout with an integer as the first field:
+Do not overwrite these bytes. Place an integer at offset zero, for example as the first field
+of a sequential layout:
 </p>
 <pre><code class="lang-csharp">[StructLayout(LayoutKind.Sequential)]
-public struct RigidBodyData
+public struct MyData
 {
-    private readonly int _internalIndex; // Reserved by PartitionedBuffer
+    private readonly int _index; // Reserved by PartitionedBuffer
 
     public JVector Position;
     public JQuaternion Orientation;
@@ -196,7 +197,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1__ctor_System_Int32_System_Boolean_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.#ctor(System.Int32,System.Boolean)">
   PartitionedBuffer(int, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L178"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the class.</p>
@@ -244,7 +245,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_ResizeLock" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.ResizeLock">
   ResizeLock
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L155"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Protects data access while an allocation may resize the buffer.</p>
@@ -283,7 +284,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Active" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Active">
   Active
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L297"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L298"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A span for all elements marked as active.</p>
@@ -318,7 +319,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Aligned64" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Aligned64">
   Aligned64
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L164"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L165"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Indicates whether the allocated memory is aligned to a 64-byte boundary.</p>
@@ -350,7 +351,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Count" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Count">
   Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L160"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of allocated elements in the buffer.</p>
@@ -382,7 +383,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Elements" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Elements">
   Elements
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L313"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L314"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A span for all elements.</p>
@@ -417,7 +418,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Inactive" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Inactive">
   Inactive
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L305"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L306"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>A span for all elements marked as inactive.</p>
@@ -452,7 +453,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_TotalBytesAllocated" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.TotalBytesAllocated">
   TotalBytesAllocated
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L221"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L222"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the total number of bytes of unmanaged memory owned by the buffer, including handle storage.</p>
@@ -488,7 +489,7 @@ Dispose the buffer when it is no longer needed to release its unmanaged memory.
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Allocate_System_Boolean_System_Boolean_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Allocate(System.Boolean,System.Boolean)">
   Allocate(bool, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L406"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L407"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds an element, growing the buffer if needed.</p>
@@ -541,7 +542,7 @@ against resizing.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Dispose" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Dispose">
   Dispose()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L521"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L522"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</p>
@@ -568,7 +569,7 @@ against resizing.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Finalize" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Finalize">
   ~PartitionedBuffer()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L519"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L520"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -594,7 +595,7 @@ against resizing.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Free_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Free(Jitter2.Unmanaged.JHandle{`0})">
   Free(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L249"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L250"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes the associated unmanaged element from the buffer and invalidates the handle.</p>
@@ -631,7 +632,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_GetHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetHandle(`0@)">
   GetHandle(ref T)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L320"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L321"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns the handle of the object. O(1) operation.</p>
@@ -670,7 +671,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_GetIndex_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.GetIndex(Jitter2.Unmanaged.JHandle{`0})">
   GetIndex(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L387"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L388"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the index of the element referred to by the handle.</p>
@@ -709,7 +710,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_IsActive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.IsActive(Jitter2.Unmanaged.JHandle{`0})">
   IsActive(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L331"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Checks if the element is stored as an active element. O(1).</p>
@@ -748,7 +749,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToActive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToActive(Jitter2.Unmanaged.JHandle{`0})">
   MoveToActive(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L340"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L341"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Moves an object from inactive to active.</p>
@@ -781,7 +782,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_MoveToInactive_Jitter2_Unmanaged_JHandle__0__" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.MoveToInactive(Jitter2.Unmanaged.JHandle{`0})">
   MoveToInactive(JHandle&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L358"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L359"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Moves an object from active to inactive.</p>
@@ -814,7 +815,7 @@ Do not use the handle or any cached references to its data.</p>
 
   <h3 id="Jitter2_Unmanaged_PartitionedBuffer_1_Swap_System_Int32_System_Int32_" data-uid="Jitter2.Unmanaged.PartitionedBuffer`1.Swap(System.Int32,System.Int32)">
   Swap(int, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L374"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L375"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Swap two entries based on their index. Adjusts handles accordingly.</p>
@@ -850,7 +851,7 @@ Do not use the handle or any cached references to its data.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L123" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Unmanaged/PartitionedBuffer.cs/#L124" class="edit-link">Edit this page</a>
         </div>
 
 

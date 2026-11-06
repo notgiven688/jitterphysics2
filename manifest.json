@@ -575,7 +575,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.ISupportFeature",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ISupportFeature.yml\" sourcestartlinenumber=\"1\">Extension of <xref href=\"Jitter2.Collision.ISupportMappable\" data-throw-if-not-resolved=\"false\"></xref> for shapes that report the whole feature they touch\nwith in a given direction: a point, a segment or a convex polygon.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.ISupportFeature.yml\" sourcestartlinenumber=\"1\">Extension of <xref href=\"Jitter2.Collision.ISupportMappable\" data-throw-if-not-resolved=\"false\"></xref> for shapes that report their whole outermost feature\nin a given direction: a point, a segment or a convex polygon.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -981,7 +981,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.Collision.SupportFeatureSampler",
-      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportFeatureSampler.yml\" sourcestartlinenumber=\"1\">Finds the feature a shape touches with in a given direction by sampling its support mapping.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.Collision.SupportFeatureSampler.yml\" sourcestartlinenumber=\"1\">Finds the outermost feature of a shape in a given direction by sampling its support mapping.</p>\n"
     },
     {
       "type": "ManagedReference",

@@ -13665,6 +13665,19 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.RigidBody.DeactivationTime
   nameWithType: RigidBody.DeactivationTime
+- uid: Jitter2.Dynamics.RigidBody.DeactivationVelocity
+  name: DeactivationVelocity
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_DeactivationVelocity
+  commentId: P:Jitter2.Dynamics.RigidBody.DeactivationVelocity
+  fullName: Jitter2.Dynamics.RigidBody.DeactivationVelocity
+  nameWithType: RigidBody.DeactivationVelocity
+- uid: Jitter2.Dynamics.RigidBody.DeactivationVelocity*
+  name: DeactivationVelocity
+  href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_DeactivationVelocity_
+  commentId: Overload:Jitter2.Dynamics.RigidBody.DeactivationVelocity
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.RigidBody.DeactivationVelocity
+  nameWithType: RigidBody.DeactivationVelocity
 - uid: Jitter2.Dynamics.RigidBody.DebugDraw(Jitter2.IDebugDrawer)
   name: DebugDraw(IDebugDrawer)
   href: api/Jitter2.Dynamics.RigidBody.html#Jitter2_Dynamics_RigidBody_DebugDraw_Jitter2_IDebugDrawer_

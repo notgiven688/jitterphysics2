@@ -376,8 +376,8 @@ the shapes overlap. Do not use this to test whether a result was found.</p>
 is inside the object. Use the return value, not this parameter, to test whether a hit occurred.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The distance along the ray to the intersection: <code>hitPoint = origin + lambda * direction</code>.
-Zero when the ray origin is inside the object.</p>
+    <dd><p>The ray parameter of the intersection: <code>hitPoint = origin + lambda * direction</code>. It is a
+distance only if <code class="paramref">direction</code> is normalized. Zero when the ray origin is inside the object.</p>
 </dd>
   </dl>
 

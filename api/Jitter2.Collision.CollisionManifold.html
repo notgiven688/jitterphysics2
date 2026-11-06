@@ -139,7 +139,7 @@ Struct CollisionManifold  <a class="header-action link-secondary" title="View so
 
   <h2 id="Jitter2_Collision_CollisionManifold_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-Each shape reports the feature it touches with along the collision normal through
+Each shape reports its outermost feature along the collision normal through
 <a class="xref" href="Jitter2.Collision.ISupportFeature.html#Jitter2_Collision_ISupportFeature_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__">SupportFeature(in JVector, float, Span&lt;JVector&gt;)</a>: a point, a segment or a polygon. The features
 are clipped against each other in the contact plane and reduced to a small contact set
 suitable for the solver. The narrow phase contributes the normal; its contact pair is kept
@@ -160,7 +160,7 @@ Shapes that do not override the feature query are sampled through their support 
 
   <h3 id="Jitter2_Collision_CollisionManifold_Count" data-uid="Jitter2.Collision.CollisionManifold.Count">
   Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L65"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L62"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the number of contact points in the manifold.</p>
@@ -192,7 +192,7 @@ Shapes that do not override the feature query are sampled through their support 
 
   <h3 id="Jitter2_Collision_CollisionManifold_ManifoldA" data-uid="Jitter2.Collision.CollisionManifold.ManifoldA">
   ManifoldA
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the contact points on shape A.</p>
@@ -224,7 +224,7 @@ Shapes that do not override the feature query are sampled through their support 
 
   <h3 id="Jitter2_Collision_CollisionManifold_ManifoldB" data-uid="Jitter2.Collision.CollisionManifold.ManifoldB">
   ManifoldB
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the contact points on shape B.</p>
@@ -260,7 +260,7 @@ Shapes that do not override the feature query are sampled through their support 
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JQuaternion, in JQuaternion, in JVector, in JVector, in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L410"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L407"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the contact manifold between two shapes given their transforms and initial contact.</p>
@@ -326,7 +326,7 @@ Shapes that do not override the feature query are sampled through their support 
 
   <h3 id="Jitter2_Collision_CollisionManifold_BuildManifold__2___0___1_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Collision.CollisionManifold.BuildManifold``2(``0,``1,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   BuildManifold&lt;Ta, Tb&gt;(Ta, Tb, in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L605"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/NarrowPhase/CollisionManifold.cs/#L602"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Builds the contact manifold between two rigid body shapes using their current transforms.</p>

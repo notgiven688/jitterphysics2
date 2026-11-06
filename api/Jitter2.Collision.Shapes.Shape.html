@@ -528,8 +528,8 @@ public abstract bool RayCast(in JVector origin, in JVector direction, out JVecto
 is inside the object. Use the return value, not this parameter, to test whether a hit occurred.</p>
 </dd>
     <dt><code>lambda</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd><p>The distance along the ray to the intersection: <code>hitPoint = origin + lambda * direction</code>.
-Zero when the ray origin is inside the object.</p>
+    <dd><p>The ray parameter of the intersection: <code>hitPoint = origin + lambda * direction</code>. It is a
+distance only if <code class="paramref">direction</code> is normalized. Zero when the ray origin is inside the object.</p>
 </dd>
   </dl>
 
@@ -559,7 +559,7 @@ set to zero and <code class="paramref">normal</code> set to <a class="xref" href
   <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Collision/Shapes/Shape.cs/#L87"><i class="bi bi-code-slash"></i></a>
   </h3>
 
-  <div class="markdown level1 summary"><p>Writes the feature of the shape that supports it in the given direction.</p>
+  <div class="markdown level1 summary"><p>Writes the outermost feature of the shape in the given direction.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
 

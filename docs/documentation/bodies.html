@@ -262,7 +262,7 @@ For a collision of two bodies with different coefficients the maximum value of e
 See <a href="arbiters.html#collision-events">Arbiters</a> for details and examples.</p>
 <h2 id="activationdeactivation">Activation/Deactivation</h2>
 <p>Bodies connected through contacts or constraints form an <strong>island</strong>. These groups go to sleep and wake together.</p>
-<p>A body is ready to sleep once its linear and angular speeds stay below <code>body.DeactivationThreshold</code> for <code>body.DeactivationTime</code> seconds. When all non-static bodies in an island are ready, the island sleeps. Sleeping bodies have very little simulation cost and can wake when they collide with an active body.</p>
+<p>A body is ready to sleep once its linear and angular speeds stay below <code>body.DeactivationVelocity</code> for <code>body.DeactivationTime</code> seconds. When all non-static bodies in an island are ready, the island sleeps. Sleeping bodies have very little simulation cost and can wake when they collide with an active body.</p>
 <p><code>body.SetActivationState(true)</code> requests a wake-up on the next step. Passing <code>false</code> requests sleep, but a body that is still moving too fast, or is connected to an active body, can stay awake. The call does not immediately change <code>body.IsActive</code>.</p>
 <p>For explicit immediate deactivation, use <code>world.ForceSleepIsland(island)</code>.
 This deactivates the whole island at once, ignores the normal deactivation thresholds, and clears linear velocity, angular velocity, queued forces, and queued torques for all bodies in the island.</p>
