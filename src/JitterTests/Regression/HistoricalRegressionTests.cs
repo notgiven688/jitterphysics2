@@ -15,7 +15,7 @@ public class HistoricalRegressionTests
         var body = world.CreateRigidBody();
         body.AddShape(new SphereShape(1));
         body.DeactivationTime = TimeSpan.FromSeconds(1);
-        body.DeactivationThreshold = ((Real)10.0, (Real)10.0);
+        body.DeactivationVelocity = ((Real)10.0, (Real)10.0);
         body.Velocity = new JVector(1, 0, 0);
 
         Helper.AdvanceWorld(world, 2, 1f / 100f, false);
@@ -39,7 +39,7 @@ public class HistoricalRegressionTests
         var body = world.CreateRigidBody();
         body.AddShape(new SphereShape(1));
         body.DeactivationTime = TimeSpan.FromSeconds(1);
-        body.DeactivationThreshold = ((Real)10.0, (Real)10.0);
+        body.DeactivationVelocity = ((Real)10.0, (Real)10.0);
         body.AngularVelocity = new JVector(0, 1, 0);
 
         Helper.AdvanceWorld(world, 2, 1f / 100f, false);

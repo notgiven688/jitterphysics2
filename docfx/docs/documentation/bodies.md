@@ -262,7 +262,7 @@ See [Arbiters](arbiters.md#collision-events) for details and examples.
 
 Bodies connected through contacts or constraints form an **island**. These groups go to sleep and wake together.
 
-A body is ready to sleep once its linear and angular speeds stay below `body.DeactivationThreshold` for `body.DeactivationTime` seconds. When all non-static bodies in an island are ready, the island sleeps. Sleeping bodies have very little simulation cost and can wake when they collide with an active body.
+A body is ready to sleep once its linear and angular speeds stay below `body.DeactivationVelocity` for `body.DeactivationTime` seconds. When all non-static bodies in an island are ready, the island sleeps. Sleeping bodies have very little simulation cost and can wake when they collide with an active body.
 
 `body.SetActivationState(true)` requests a wake-up on the next step. Passing `false` requests sleep, but a body that is still moving too fast, or is connected to an active body, can stay awake. The call does not immediately change `body.IsActive`.
 
