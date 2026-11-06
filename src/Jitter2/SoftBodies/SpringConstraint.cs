@@ -103,13 +103,14 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// Sets <see cref="Softness"/> and <see cref="Bias"/> from a frequency and damping ratio.
     /// </summary>
     /// <remarks>
-    /// Call again if the bodies' masses, translation locks, anchor direction, or timestep change.
+    /// Call again if the bodies' masses, translation locks, anchor direction, timestep, or
+    /// <see cref="World.SubstepCount"/> change.
     /// When the anchors coincide, the calculation uses the translation direction in which
     /// the bodies respond most easily to a force.
     /// </remarks>
     /// <param name="frequency">The frequency in Hz.</param>
     /// <param name="damping">The damping ratio (0 = no damping, 1 = critical damping).</param>
-    /// <param name="dt">The timestep of the simulation.</param>
+    /// <param name="dt">The timestep passed to <see cref="World.Step(Real, bool)"/>.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="frequency"/> or <paramref name="dt"/> is less than or equal to zero,
     /// when <paramref name="damping"/> is negative, or when any value is not finite.

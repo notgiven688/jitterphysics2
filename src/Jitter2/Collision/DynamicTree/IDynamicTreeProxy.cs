@@ -60,8 +60,8 @@ public interface IRayCastable
     /// is inside the object. Use the return value, not this parameter, to test whether a hit occurred.
     /// </param>
     /// <param name="lambda">
-    /// The distance along the ray to the intersection: <c>hitPoint = origin + lambda * direction</c>.
-    /// Zero when the ray origin is inside the object.
+    /// The ray parameter of the intersection: <c>hitPoint = origin + lambda * direction</c>. It is a
+    /// distance only if <paramref name="direction"/> is normalized. Zero when the ray origin is inside the object.
     /// </param>
     /// <returns>
     /// <c>true</c> if the ray intersects with the object; otherwise, <c>false</c>.

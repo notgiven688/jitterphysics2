@@ -475,7 +475,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
 
     /// <summary>
     /// Gets or sets the deactivation time. Dynamic bodies must remain below the
-    /// <see cref="DeactivationThreshold"/> for this time before their island can be deactivated.
+    /// <see cref="DeactivationVelocity"/> for this time before their island can be deactivated.
     /// Kinematic bodies must have zero linear and angular velocity for this time.
     /// Default value: 1 second.
     /// </summary>
@@ -492,21 +492,21 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Gets or sets the deactivation threshold for dynamic bodies. If the magnitudes of both the angular and linear velocity
-    /// remain below the specified values for the duration of <see cref="DeactivationTime"/>, its island can be deactivated.
-    /// The threshold values are given in rad/s and length units/s, respectively.
+    /// Gets or sets the deactivation velocity for dynamic bodies. If the magnitudes of both the linear and angular
+    /// velocity remain below the specified values for the duration of <see cref="DeactivationTime"/>, its island can be
+    /// deactivated. The values are given in length units/s and rad/s, respectively.
     /// </summary>
     /// <remarks>
     /// Values must be non-negative.
-    /// Default values: angular and linear are both approximately 0.316.
-    /// Kinematic bodies ignore these thresholds and only rest when both velocities are exactly zero.
+    /// Default values: linear and angular are both approximately 0.316.
+    /// Kinematic bodies ignore these values and only rest when both velocities are exactly zero.
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown if either the linear or angular threshold is negative.
+    /// Thrown if either the linear or angular value is negative.
     /// </exception>
-    public (Real angular, Real linear) DeactivationThreshold
+    public (Real linear, Real angular) DeactivationVelocity
     {
-        get => (MathR.Sqrt(inactiveThresholdAngularSq), MathR.Sqrt(inactiveThresholdLinearSq));
+        get => (MathR.Sqrt(inactiveThresholdLinearSq), MathR.Sqrt(inactiveThresholdAngularSq));
         set
         {
             ArgumentCheck.NonNegative(value.linear, nameof(value.linear));
@@ -515,6 +515,16 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
             inactiveThresholdLinearSq = value.linear * value.linear;
             inactiveThresholdAngularSq = value.angular * value.angular;
         }
+    }
+
+    /// <summary>
+    /// Obsolete: use <see cref="DeactivationVelocity"/>, which takes the linear value first.
+    /// </summary>
+    [Obsolete($"Use {nameof(DeactivationVelocity)} instead. Note that it takes the linear value first.", true)]
+    public (Real angular, Real linear) DeactivationThreshold
+    {
+        get => (DeactivationVelocity.angular, DeactivationVelocity.linear);
+        set => DeactivationVelocity = (value.linear, value.angular);
     }
 
     /// <summary>
@@ -740,7 +750,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
 
         if ((isKinematic && !resting) || InternalSleepTime < deactivationTimeThreshold)
         {
-            InternalIsland.MarkedAsActive = true;
+            InternalIsland.KeepAwake = true;
         }
 
         if (rigidBody.MotionType == MotionType.Dynamic)
@@ -768,9 +778,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Gets or sets the linear velocity of the rigid body in world space.
     /// </summary>
     /// <remarks>
-    /// Measured in units per second. Setting a non-zero kinematic velocity schedules the body
-    /// for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
-    /// Locked translation components are cleared.
+    /// Measured in units per second. Setting a velocity wakes the body on the next step, unless it is
+    /// zero, or nearly zero for a dynamic body. Locked translation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -814,9 +823,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// </summary>
     /// <remarks>
     /// Measured in radians per second. The vector direction is the rotation axis,
-    /// and its magnitude is the rotation speed. Setting a non-zero kinematic velocity schedules
-    /// the body for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
-    /// Locked rotation components are cleared.
+    /// and its magnitude is the rotation speed. Setting a velocity wakes the body on the next step,
+    /// unless it is zero, or nearly zero for a dynamic body. Locked rotation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -964,53 +972,35 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         {
             if (Data.MotionType == value) return;
 
-            switch (value)
+            if (value is not (MotionType.Static or MotionType.Kinematic or MotionType.Dynamic))
             {
-                case MotionType.Static:
-                    ClearQueuedForces();
-                    // Switch to static
-                    World.RemoveConnections(this);
-                    Data.MotionType = MotionType.Static;
-                    World.RemoveStaticStaticContacts(this);
-                    World.DeactivateBodyNextStep(this);
-                    Data.Velocity = JVector.Zero;
-                    Data.AngularVelocity = JVector.Zero;
-                    UpdateWorldInertia();
-                    break;
-                case MotionType.Kinematic:
-                    {
-                        ClearQueuedForces();
-                        // Switch to kinematic
-                        if (Data.MotionType == MotionType.Static)
-                        {
-                            Data.MotionType = MotionType.Kinematic;
-                            World.BuildConnectionsFromExistingContacts(this);
-                        }
-
-                        Data.MotionType = MotionType.Kinematic;
-                        World.RemoveStaticStaticContacts(this);
-                        World.ActivateBodyNextStep(this, true);
-                        UpdateWorldInertia();
-                        break;
-                    }
-                case MotionType.Dynamic:
-                    {
-                        ClearQueuedForces();
-                        // Switch to dynamic
-                        if (Data.MotionType == MotionType.Static)
-                        {
-                            Data.MotionType = MotionType.Dynamic;
-                            World.BuildConnectionsFromExistingContacts(this);
-                        }
-
-                        Data.MotionType = MotionType.Dynamic;
-                        World.ActivateBodyNextStep(this, true);
-                        UpdateWorldInertia();
-                        break;
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
+
+            ClearQueuedForces();
+
+            // Static bodies have no island connections. Remove them while the body is still
+            // non-static, since island splitting does not walk through static bodies.
+            bool wasStatic = Data.MotionType == MotionType.Static;
+            if (value == MotionType.Static) World.RemoveConnections(this);
+
+            Data.MotionType = value;
+
+            if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
+            if (value != MotionType.Dynamic) World.RemoveStaticStaticContacts(this);
+
+            if (value == MotionType.Static)
+            {
+                World.DeactivateBodyNextStep(this);
+                Data.Velocity = JVector.Zero;
+                Data.AngularVelocity = JVector.Zero;
+            }
+            else
+            {
+                World.ActivateBodyNextStep(this, true);
+            }
+
+            UpdateWorldInertia();
 
             foreach (Constraint constraint in InternalConstraints)
             {
@@ -1042,8 +1032,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Static bodies cannot be activated by this method, although moving a static body can wake connected
     /// non-static bodies.
     /// Deactivation is only a request: the island falls asleep once all of its bodies are below their
-    /// <see cref="DeactivationThreshold"/> and <see cref="World.AllowDeactivation"/> is true. Motion above the
-    /// threshold cancels the request. Use <see cref="World.ForceSleepIsland"/> to put an island to sleep
+    /// <see cref="DeactivationVelocity"/> and <see cref="World.AllowDeactivation"/> is true. Motion above these
+    /// values cancels the request. Use <see cref="World.ForceSleepIsland"/> to put an island to sleep
     /// immediately.
     /// </remarks>
     /// <param name="active">
@@ -1148,7 +1138,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// It is only applied when <see cref="AllowedMotion"/> is <see cref="MotionAxes.All"/>.
     /// </remarks>
     /// <value>
-    /// <see langword="true"/> to integrate gyroscopic torque each step; otherwise
+    /// <see langword="true"/> to integrate gyroscopic torque each substep; otherwise
     /// <see langword="false"/> (default).
     /// </value>
     public bool EnableGyroscopicForces
@@ -1228,9 +1218,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
-    /// Accumulated force converted to a velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
-    /// and this value is reset to zero after conversion.
+    /// The force accumulated for the body. It acts one step late: the end of the next
+    /// <see cref="World.Step(Real, bool)"/> turns it into a velocity change and resets it to zero,
+    /// and the step after that applies the change.
     /// </summary>
     public JVector Force
     {
@@ -1243,9 +1233,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Accumulated torque converted to an angular velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
-    /// and this value is reset to zero after conversion.
+    /// The torque accumulated for the body. Like <see cref="Force"/>, it acts one step late.
     /// </summary>
     public JVector Torque
     {
@@ -1258,12 +1246,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Applies a force to the rigid body, thereby altering its velocity.
+    /// Adds a force at the center of mass to <see cref="Force"/>. It acts one step late.
     /// </summary>
-    /// <param name="force">
-    /// The force to accumulate. It is converted to a velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call and applied during the following step.
-    /// </param>
+    /// <param name="force">The force to add.</param>
     /// <param name="wakeup">
     /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
     /// If <c>false</c>, the force is only applied if the body is already active; sleeping
@@ -1282,9 +1267,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Applies a force to the rigid body at a world-space position. The force and resulting torque are
-    /// converted to velocity changes at the end of the next <see cref="World.Step(Real, bool)"/> call
-    /// and applied during the following step.
+    /// Adds a force at a world-space position to <see cref="Force"/> and the resulting torque to
+    /// <see cref="Torque"/>. Both act one step late.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>
@@ -1540,8 +1524,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         }
 
         if (updateMassInertia) SetMassInertia();
-
-        sids.Clear();
     }
 
     [Obsolete($"Use {nameof(RemoveShape)} with {nameof(MassInertiaUpdateMode)} instead.", true)]
@@ -1674,7 +1656,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
 
         if (setAsInverse)
         {
-            if (Real.IsInfinity(mass) || mass < (Real)0.0)
+            if (mass < (Real)0.0)
             {
                 throw new ArgumentException("Inverse mass must be finite and not negative.", nameof(mass));
             }

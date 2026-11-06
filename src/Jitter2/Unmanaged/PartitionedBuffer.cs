@@ -98,13 +98,14 @@ public readonly unsafe struct JHandle<T> : IEquatable<JHandle<T>> where T : unma
 /// <remarks>
 /// <para>
 /// Reserve the first 4 bytes of <typeparamref name="T"/> for the buffer's element ID.
-/// Do not overwrite these bytes. Use sequential layout with an integer as the first field:
+/// Do not overwrite these bytes. Place an integer at offset zero, for example as the first field
+/// of a sequential layout:
 /// </para>
 /// <code>
 /// [StructLayout(LayoutKind.Sequential)]
-/// public struct RigidBodyData
+/// public struct MyData
 /// {
-///     private readonly int _internalIndex; // Reserved by PartitionedBuffer
+///     private readonly int _index; // Reserved by PartitionedBuffer
 ///
 ///     public JVector Position;
 ///     public JQuaternion Orientation;

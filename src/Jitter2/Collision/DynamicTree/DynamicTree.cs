@@ -68,7 +68,7 @@ public partial class DynamicTree
     public const Real ExpandFactor = (Real)0.1;
 
     /// <summary>
-    /// Specifies a small additional expansion of the bounding box which is constant.
+    /// Constant margin added on every side of a proxy's bounding box in the tree.
     /// </summary>
     public const Real ExpandEps = (Real)0.1;
 

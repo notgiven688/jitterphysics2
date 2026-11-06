@@ -15,7 +15,7 @@ public class DraggedCapsuleTests
     [TestCase(0.1, 0.5)]    // lift slightly and drag sideways
     public void ContactsStayOnTheBody(double lift, double side)
     {
-        using World world = new() { AllowDeactivation = false, SolverIterations = (6, 4), CcdRelaxationFactor = (Real)0.9, NarrowPhaseFilter = new TriangleEdgeCollisionFilter() };
+        using World world = new() { AllowDeactivation = false, SolverIterations = (6, 4), NarrowPhaseFilter = new TriangleEdgeCollisionFilter() };
 
         RigidBody floor = world.CreateRigidBody();
         floor.AddShape(new BoxShape(200, 200, 200));

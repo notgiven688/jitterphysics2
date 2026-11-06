@@ -383,10 +383,10 @@ public class CollisionTests
         Assert.That(pointA.X, Is.GreaterThan((Real)0.0));
         Assert.That(pointB.X, Is.LessThan((Real)0.0));
 
-        // the collision normal points from s2 to s1
+        // the collision normal points from s1 toward s2
         Assert.That(normal.X, Is.GreaterThan(0));
 
-        // the separation is negative
+        // the penetration is positive
         Assert.That(penetration, Is.GreaterThan(0));
 
         // -----------------------------------------------
@@ -398,7 +398,7 @@ public class CollisionTests
         Assert.That(pointA.X, Is.GreaterThan(0));
         Assert.That(pointB.X, Is.LessThan(0));
 
-        // the collision normal points from s2 to s1
+        // the collision normal points from s1 toward s2
         Assert.That(normal.X, Is.GreaterThan(0));
 
         // the separation is negative
@@ -416,7 +416,7 @@ public class CollisionTests
         Assert.That(pointA.X, Is.GreaterThan(0));
         Assert.That(pointB.X, Is.LessThan(0));
 
-        // the collision normal points from s2 to s1
+        // the collision normal points from s1 toward s2
         Assert.That(normal.X, Is.GreaterThan(0));
 
         // the penetration is positive
@@ -427,7 +427,7 @@ public class CollisionTests
         Assert.That(NarrowPhase.Collision(b1, b2, JQuaternion.Identity, JQuaternion.Identity, new JVector(-(Real)2.25, 0, 0), new JVector(+(Real)2.25, 0, 0),
             out pointA, out pointB, out normal, out penetration), Is.True);
 
-        // the collision normal points from s2 to s1
+        // the collision normal points from s1 toward s2
         Assert.That(normal.X, Is.GreaterThan(0));
 
         // the penetration is negative

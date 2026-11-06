@@ -56,7 +56,7 @@ public struct VertexSupportMap : ISupportFeature, IEquatable<VertexSupportMap>
 
     /// <inheritdoc cref="VertexSupportMap(ReadOnlySpan{JVector})"/>
     public VertexSupportMap(IEnumerable<JVector> vertices) :
-        this(SpanHelper.AsReadOnlySpan(vertices, out _))
+        this(SpanHelper.AsReadOnlySpan(vertices))
     {
 
     }

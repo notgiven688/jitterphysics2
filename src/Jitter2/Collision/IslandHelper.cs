@@ -36,8 +36,8 @@ internal static class IslandHelper
             island = new Island();
         }
 
-        island.MarkedAsActive = true;
-        island.NeedsUpdate = false;
+        island.KeepAwake = true;
+        island.WakePending = false;
 
         return island;
     }
@@ -98,21 +98,12 @@ internal static class IslandHelper
 
     public static void AddConnection(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
-        bool needsUpdate = (!islands.IsActive(body1.Island) || !islands.IsActive(body2.Island));
-        bool bothNotStatic = body1.Data.MotionType != MotionType.Static && body2.Data.MotionType != MotionType.Static;
+        // Static bodies connect to others but never join their islands.
+        if (body1.Data.MotionType == MotionType.Static || body2.Data.MotionType == MotionType.Static) return;
 
-        if (bothNotStatic)
-        {
-            MergeIslands(islands, islandPool, body1, body2);
-            body1.InternalConnections.Add(body2);
-            body2.InternalConnections.Add(body1);
-        }
-
-        if (needsUpdate)
-        {
-            if (body1.Data.MotionType != MotionType.Static) body1.Island.NeedsUpdate = true;
-            if (body2.Data.MotionType != MotionType.Static) body2.Island.NeedsUpdate = true;
-        }
+        MergeIslands(islands, islandPool, body1, body2);
+        body1.InternalConnections.Add(body2);
+        body2.InternalConnections.Add(body1);
     }
 
     public static void RemoveConnection(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
@@ -172,8 +163,8 @@ internal static class IslandHelper
             }
 
             Island island = GetFromPool(islandPool);
-            island.NeedsUpdate = sourceIsland.NeedsUpdate;
-            island.MarkedAsActive = sourceIsland.MarkedAsActive;
+            island.WakePending = sourceIsland.WakePending;
+            island.KeepAwake = sourceIsland.KeepAwake;
             islands.Add(island, islands.IsActive(sourceIsland));
 
             List<RigidBody> splitBodies = leftHead == visitedBodiesLeft.Count ? visitedBodiesLeft : visitedBodiesRight;
@@ -223,13 +214,16 @@ internal static class IslandHelper
         return false;
     }
 
-    // Both bodies must be !static
+    // Both bodies must be !static. Merging an awake with a sleeping island gives an awake island
+    // whose sleeping bodies wake at the next deactivation check.
     private static void MergeIslands(IslandSet islands, Stack<Island> islandPool, RigidBody body1, RigidBody body2)
     {
         if (body1.InternalIsland == body2.InternalIsland) return;
 
-        bool needsUpdate = body1.InternalIsland.NeedsUpdate || body2.InternalIsland.NeedsUpdate;
-        bool markedAsActive = body1.InternalIsland.MarkedAsActive || body2.InternalIsland.MarkedAsActive;
+        bool active1 = islands.IsActive(body1.InternalIsland);
+        bool active2 = islands.IsActive(body2.InternalIsland);
+        bool wakePending = body1.InternalIsland.WakePending || body2.InternalIsland.WakePending || active1 != active2;
+        bool keepAwake = body1.InternalIsland.KeepAwake || body2.InternalIsland.KeepAwake;
 
         // merge smaller into larger
         RigidBody smallIslandOwner, largeIslandOwner;
@@ -256,8 +250,10 @@ internal static class IslandHelper
             largeIslandOwner.InternalIsland.InternalBodies.Add(b);
         }
 
-        largeIslandOwner.InternalIsland.NeedsUpdate |= needsUpdate;
-        largeIslandOwner.InternalIsland.MarkedAsActive |= markedAsActive;
+        Island island = largeIslandOwner.InternalIsland;
+        island.WakePending = wakePending;
+        island.KeepAwake = keepAwake;
+        if (active1 || active2) islands.MoveToActive(island);
 
         giveBackIsland.ClearLists();
     }

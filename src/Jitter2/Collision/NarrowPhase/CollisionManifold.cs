@@ -17,7 +17,7 @@ namespace Jitter2.Collision;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Each shape reports the feature it touches with along the collision normal through
+/// Each shape reports its outermost feature along the collision normal through
 /// <see cref="ISupportFeature.SupportFeature"/>: a point, a segment or a polygon. The features
 /// are clipped against each other in the contact plane and reduced to a small contact set
 /// suitable for the solver. The narrow phase contributes the normal; its contact pair is kept
@@ -40,9 +40,6 @@ public unsafe struct CollisionManifold
     // Layout: MaxManifoldPoints on shape A followed by the matching points on shape B.
     private fixed Real manifoldData[MaxManifoldPoints * 2 * 3];
 
-    // Number of sampled support points collected for each shape.
-    private int leftCount;
-    private int rightCount;
     // Number of actual contact pairs written into manifoldData.
     private int manifoldCount;
 
@@ -414,9 +411,9 @@ public unsafe struct CollisionManifold
         where Ta : ISupportFeature where Tb : ISupportFeature
     {
         // Reset
-        leftCount = 0;
-        rightCount = 0;
         manifoldCount = 0;
+        // Number of feature vertices collected for each shape.
+        int leftCount = 0, rightCount = 0;
 
         // Operate in a frame translated by -positionA so intermediates stay near the origin.
         // Absolute epsilons in the clipping helpers are scaled to shape size, not world offset.

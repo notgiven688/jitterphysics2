@@ -10,8 +10,8 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Extension of <see cref="ISupportMappable"/> for shapes that report the whole feature they touch
-/// with in a given direction: a point, a segment or a convex polygon.
+/// Extension of <see cref="ISupportMappable"/> for shapes that report their whole outermost feature
+/// in a given direction: a point, a segment or a convex polygon.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -31,7 +31,7 @@ namespace Jitter2.Collision;
 public interface ISupportFeature : ISupportMappable
 {
     /// <summary>
-    /// Writes the feature of the shape that supports it in the given direction.
+    /// Writes the outermost feature of the shape in the given direction.
     /// </summary>
     /// <param name="direction">The direction in local space. Does not need to be normalized.</param>
     /// <param name="tolerance">The sine of the angle within which directions share the feature.</param>

@@ -11,7 +11,7 @@ using Jitter2.LinearMath;
 namespace Jitter2.Collision;
 
 /// <summary>
-/// Finds the feature a shape touches with in a given direction by sampling its support mapping.
+/// Finds the outermost feature of a shape in a given direction by sampling its support mapping.
 /// </summary>
 /// <remarks>
 /// <para>

@@ -235,20 +235,9 @@ public sealed partial class World
             {
                 PreSubStep?.Invoke(timeStep);
                 IntegrateForces(multiThread); // FAST SWEEP
-
-                if (SolveMode == Jitter2.SolveMode.Deterministic)
-                {
-                    SolveIslands(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxIslands(multiThread, velocityRelaxations); // FAST SWEEP
-                }
-                else
-                {
-                    SolveVelocities(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
-                }
-
+                Solve(multiThread, solverIterations); // FAST SWEEP
+                IntegrateVelocities(multiThread); // FAST SWEEP
+                Relax(multiThread, velocityRelaxations); // FAST SWEEP
                 PostSubStep?.Invoke(timeStep);
             }
 
@@ -284,15 +273,31 @@ public sealed partial class World
         }
         finally
         {
-            if ((ThreadModel == ThreadModelType.Regular || !multiThread)
-                && ThreadPool.InstanceInitialized)
-            {
-                // Signal the thread pool that threads can go into a wait state.
-                ThreadPool.Instance.PauseWorkers();
-            }
-
+            PauseWorkers(multiThread);
             Tracer.ProfileEnd(TraceName.Step);
         }
+    }
+
+    private void PauseWorkers(bool multiThread)
+    {
+        if ((ThreadModel == ThreadModelType.Regular || !multiThread)
+            && ThreadPool.InstanceInitialized)
+        {
+            // Signal the thread pool that threads can go into a wait state.
+            ThreadPool.Instance.PauseWorkers();
+        }
+    }
+
+    private void Solve(bool multiThread, int iterations)
+    {
+        if (SolveMode == Jitter2.SolveMode.Deterministic) SolveIslands(multiThread, iterations);
+        else SolveVelocities(multiThread, iterations);
+    }
+
+    private void Relax(bool multiThread, int iterations)
+    {
+        if (SolveMode == Jitter2.SolveMode.Deterministic) RelaxIslands(multiThread, iterations);
+        else RelaxVelocities(multiThread, iterations);
     }
 
     /// <summary>
@@ -358,33 +363,17 @@ public sealed partial class World
 
             CheckDeactivation();
 
-            if (SolveMode == Jitter2.SolveMode.Deterministic)
-            {
-                PrepareIslandSolveOrder();
+            if (SolveMode == Jitter2.SolveMode.Deterministic) PrepareIslandSolveOrder();
 
-                for (int i = 0; i < timeStep.SubstepCount; i++)
-                {
-                    SolveIslands(multiThread, solverIterations);
-                    RelaxIslands(multiThread, relaxationIterations);
-                }
-            }
-            else
+            for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                for (int i = 0; i < timeStep.SubstepCount; i++)
-                {
-                    SolveVelocities(multiThread, solverIterations);
-                    RelaxVelocities(multiThread, relaxationIterations);
-                }
+                Solve(multiThread, solverIterations);
+                Relax(multiThread, relaxationIterations);
             }
-
         }
         finally
         {
-            if ((ThreadModel == ThreadModelType.Regular || !multiThread)
-                && ThreadPool.InstanceInitialized)
-            {
-                ThreadPool.Instance.PauseWorkers();
-            }
+            PauseWorkers(multiThread);
         }
     }
 
@@ -422,7 +411,9 @@ public sealed partial class World
         }
     }
 
-    private void PrepareContacts(Parallel.Batch batch)
+    private void PrepareContacts(Parallel.Batch batch) => PrepareContacts<BodyLock>(batch);
+
+    private void PrepareContacts<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memContacts.Active[batch.Start..batch.End];
         var localQueue = deferredContacts.Value!;
@@ -439,14 +430,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref contact.Body1.Data;
             ref RigidBodyData b2 = ref contact.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeBegin();
@@ -457,24 +448,24 @@ public sealed partial class World
             ref RigidBodyData b1 = ref contact.Body1.Data;
             ref RigidBodyData b2 = ref contact.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             contact.PrepareForIteration(timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
-    private void IterateContacts(Parallel.Batch batch) => IterateContacts(batch, applyBias: true);
+    private void IterateContacts(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: true);
 
-    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts(batch, applyBias: false);
+    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: false);
 
-    private void IterateContacts(Parallel.Batch batch, bool applyBias)
+    private void IterateContacts<TLock>(Parallel.Batch batch, bool applyBias) where TLock : struct, IBodyLock
     {
         var span = memContacts.Active[batch.Start..batch.End];
         var localQueue = deferredContacts.Value!;
@@ -491,14 +482,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeBegin();
@@ -509,20 +500,22 @@ public sealed partial class World
             ref RigidBodyData b1 = ref c.Body1.Data;
             ref RigidBodyData b2 = ref c.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             c.Iterate(applyBias);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
     }
 
-    private unsafe void PrepareSmallConstraints(Parallel.Batch batch)
+    private void PrepareSmallConstraints(Parallel.Batch batch) => PrepareSmallConstraints<BodyLock>(batch);
+
+    private unsafe void PrepareSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredSmallConstraints.Value!;
@@ -541,14 +534,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -557,18 +550,20 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateSmallConstraints(Parallel.Batch batch)
+    private void IterateSmallConstraints(Parallel.Batch batch) => IterateSmallConstraints<BodyLock>(batch);
+
+    private unsafe void IterateSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memSmallConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredSmallConstraints.Value!;
@@ -587,14 +582,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -603,19 +598,21 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
 
-    private unsafe void PrepareConstraints(Parallel.Batch batch)
+    private void PrepareConstraints(Parallel.Batch batch) => PrepareConstraints<BodyLock>(batch);
+
+    private unsafe void PrepareConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredConstraints.Value!;
@@ -637,14 +634,14 @@ public sealed partial class World
             Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
                 "Invalid constraint: both bodies are non-dynamic.");
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -653,18 +650,20 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.PrepareForIteration(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
-    private unsafe void IterateConstraints(Parallel.Batch batch)
+    private void IterateConstraints(Parallel.Batch batch) => IterateConstraints<BodyLock>(batch);
+
+    private unsafe void IterateConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
     {
         var span = memConstraints.Active[batch.Start..batch.End];
         var localQueue = deferredConstraints.Value!;
@@ -683,14 +682,14 @@ public sealed partial class World
 
             if (!constraint.IsEnabled) continue;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
 
         while (localQueue.TryDequeue(out int i))
@@ -699,14 +698,14 @@ public sealed partial class World
             ref RigidBodyData b1 = ref constraint.Body1.Data;
             ref RigidBodyData b2 = ref constraint.Body2.Data;
 
-            if (!TryLockTwoBody(ref b1, ref b2))
+            if (!TLock.TryLock(ref b1, ref b2))
             {
                 localQueue.Enqueue(i);
                 continue;
             }
 
             constraint.Iterate(ref constraint, timeStep);
-            UnlockTwoBody(ref b1, ref b2);
+            TLock.Unlock(ref b1, ref b2);
         }
     }
 
@@ -841,8 +840,8 @@ public sealed partial class World
             if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
             var arb = arbiters[handle.Data.Key];
 
-            AddToActiveList(arb.Body1.InternalIsland);
-            AddToActiveList(arb.Body2.InternalIsland);
+            WakeIslandNextStep(arb.Body1.InternalIsland);
+            WakeIslandNextStep(arb.Body2.InternalIsland);
 
             IslandHelper.ArbiterRemoved(islands, islandPool, arb);
             arbiters.Remove(handle.Data.Key);
@@ -885,8 +884,8 @@ public sealed partial class World
                 {
                     IslandHelper.ArbiterCreated(islands, islandPool, arb);
 
-                    AddToActiveList(arb.Body1.InternalIsland);
-                    AddToActiveList(arb.Body2.InternalIsland);
+                    WakeIslandNextStep(arb.Body1.InternalIsland);
+                    WakeIslandNextStep(arb.Body2.InternalIsland);
 
                     dispatchArbiters.Add(arb);
                 }
@@ -1034,6 +1033,30 @@ public sealed partial class World
         }
     }
 
+    // Lock policies for the solver loops. The struct type parameter gives each loop a separate,
+    // specialized copy, so the single-threaded copy contains no atomics.
+    private interface IBodyLock
+    {
+        static abstract bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2);
+        static abstract void Unlock(ref RigidBodyData b1, ref RigidBodyData b2);
+    }
+
+    private struct BodyLock : IBodyLock
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => TryLockTwoBody(ref b1, ref b2);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) => UnlockTwoBody(ref b1, ref b2);
+    }
+
+    private struct NoBodyLock : IBodyLock
+    {
+        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => true;
+
+        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) { }
+    }
+
     /// <summary>
     /// Releases locks on two rigid bodies previously acquired by <see cref="LockTwoBody"/>
     /// or <see cref="TryLockTwoBody"/>.
@@ -1043,16 +1066,9 @@ public sealed partial class World
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void UnlockTwoBody(ref RigidBodyData b1, ref RigidBodyData b2)
     {
-        if (Unsafe.IsAddressGreaterThan(ref b1, ref b2))
-        {
-            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
-            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
-        }
-        else
-        {
-            if (b1.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b1._lockFlag);
-            if (b2.MotionType == MotionType.Dynamic) Interlocked.Decrement(ref b2._lockFlag);
-        }
+        // The locks were taken with a compare-exchange from 0 to 1; a release store frees them.
+        if (b1.MotionType == MotionType.Dynamic) Volatile.Write(ref b1._lockFlag, 0);
+        if (b2.MotionType == MotionType.Dynamic) Volatile.Write(ref b2._lockFlag, 0);
     }
 
     private void IntegrateForces(Parallel.Batch batch)
@@ -1145,7 +1161,7 @@ public sealed partial class World
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                RelaxVelocities(batchContacts);
+                IterateContacts<NoBodyLock>(batchContacts, applyBias: false);
             }
         }
     }
@@ -1175,15 +1191,16 @@ public sealed partial class World
             Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
             Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
 
-            PrepareContacts(batchContacts);
-            PrepareConstraints(batchConstraints);
-            PrepareSmallConstraints(batchSmallConstraints);
+            // A single thread owns every body, so the body locks are skipped.
+            PrepareContacts<NoBodyLock>(batchContacts);
+            PrepareConstraints<NoBodyLock>(batchConstraints);
+            PrepareSmallConstraints<NoBodyLock>(batchSmallConstraints);
 
             for (int iter = 0; iter < iterations; iter++)
             {
-                IterateContacts(batchContacts);
-                IterateConstraints(batchConstraints);
-                IterateSmallConstraints(batchSmallConstraints);
+                IterateContacts<NoBodyLock>(batchContacts, applyBias: true);
+                IterateConstraints<NoBodyLock>(batchConstraints);
+                IterateSmallConstraints<NoBodyLock>(batchSmallConstraints);
             }
         }
     }
@@ -1225,7 +1242,7 @@ public sealed partial class World
         }
     }
 
-    private readonly Stack<(Island Island, bool RaiseEvent)> inactivateIslands = new();
+    private readonly List<Island> islandsToSleep = [];
 
     private static void ClearMotionForSleep(RigidBody body)
     {
@@ -1241,17 +1258,41 @@ public sealed partial class World
         body.InternalSleepTime = Real.PositiveInfinity;
     }
 
-    private bool DeactivateBodyForSleep(RigidBody body)
-    {
-        ref RigidBodyData rigidBody = ref body.Data;
-        bool wasActive = rigidBody.IsActive;
+    // The two functions below are the only places that change whether a body, its contacts,
+    // constraints and proxies are awake. Static bodies never wake.
 
-        rigidBody.IsActive = false;
+    private void WakeBody(RigidBody body)
+    {
+        Debug.Assert(body.MotionType != MotionType.Static);
+
+        body.Data.IsActive = true;
+        body.InternalSleepTime = 0;
+
+        memRigidBodies.MoveToActive(body.Handle);
+        bodies.MoveToActive(body);
+
+        foreach (var c in body.InternalContacts)
+        {
+            memContacts.MoveToActive(c.Handle);
+        }
+
+        foreach (var c in body.InternalConstraints)
+        {
+            UpdateConstraintActivation(c);
+        }
+
+        foreach (var s in body.InternalShapes)
+        {
+            DynamicTree.ActivateProxy(s);
+        }
+    }
+
+    private void SleepBody(RigidBody body)
+    {
+        body.Data.IsActive = false;
 
         memRigidBodies.MoveToInactive(body.Handle);
         bodies.MoveToInactive(body);
-
-        bool deactivatedBody = wasActive && body.MotionType != MotionType.Static;
 
         // Static bodies have contacts and constraints, but they do not form
         // collision islands. Do not deactivate their contacts or constraints
@@ -1280,8 +1321,22 @@ public sealed partial class World
         {
             DynamicTree.DeactivateProxy(s);
         }
+    }
 
-        return deactivatedBody;
+    private void SleepIsland(Island island)
+    {
+        bool deactivatedBody = false;
+
+        foreach (RigidBody body in island.InternalBodies)
+        {
+            deactivatedBody |= body.Data.IsActive && body.MotionType != MotionType.Static;
+            SleepBody(body);
+        }
+
+        island.WakePending = false;
+        islands.MoveToInactive(island);
+
+        if (deactivatedBody) IslandDeactivated?.Invoke(island);
     }
 
     private void CheckDeactivation()
@@ -1290,81 +1345,37 @@ public sealed partial class World
         {
             Island island = islands[i];
 
-            bool deactivateIsland = !island.MarkedAsActive;
-            if (!AllowDeactivation) deactivateIsland = false;
+            // Votes are collected again until the next check.
+            bool keepAwake = island.KeepAwake || !AllowDeactivation;
+            island.KeepAwake = false;
 
-            // Mark the island as inactive
-            // Next frame one active body will be enough to set
-            // MarkedAsActive back to true;
-            island.MarkedAsActive = false;
+            if (!keepAwake)
+            {
+                // Moving the island out of the active partition here would reorder the loop.
+                islandsToSleep.Add(island);
+                continue;
+            }
 
-            bool needsUpdate = island.NeedsUpdate;
-            island.NeedsUpdate = false;
-
-            if (!deactivateIsland && !needsUpdate) continue;
+            if (!island.WakePending) continue;
+            island.WakePending = false;
 
             bool activatedBody = false;
-            bool deactivatedBody = false;
 
             foreach (RigidBody body in island.InternalBodies)
             {
-                ref RigidBodyData rigidBody = ref body.Data;
-
-                if (rigidBody.IsActive != deactivateIsland)
-                {
-                    if (!needsUpdate) break;
-                    continue;
-                }
-
-                if (deactivateIsland)
-                {
-                    deactivatedBody |= DeactivateBodyForSleep(body);
-                }
-                else
-                {
-                    // Don't activate static bodies at all.
-                    if (rigidBody.MotionType == MotionType.Static) continue;
-
-                    rigidBody.IsActive = true;
-                    activatedBody = true;
-
-                    body.InternalSleepTime = 0;
-
-                    memRigidBodies.MoveToActive(body.Handle);
-                    bodies.MoveToActive(body);
-
-                    foreach (var c in body.InternalContacts)
-                    {
-                        memContacts.MoveToActive(c.Handle);
-                    }
-
-                    foreach (var c in body.InternalConstraints)
-                    {
-                        UpdateConstraintActivation(c);
-                    }
-
-                    foreach (var s in body.InternalShapes)
-                    {
-                        DynamicTree.ActivateProxy(s);
-                    }
-                }
+                if (body.Data.IsActive || body.MotionType == MotionType.Static) continue;
+                WakeBody(body);
+                activatedBody = true;
             }
 
-            if (deactivateIsland)
-            {
-                inactivateIslands.Push((island, deactivatedBody));
-            }
-            else if (activatedBody)
-            {
-                IslandActivated?.Invoke(island);
-            }
+            if (activatedBody) IslandActivated?.Invoke(island);
         }
 
-        while (inactivateIslands.Count > 0)
+        for (int i = islandsToSleep.Count - 1; i >= 0; i--)
         {
-            var (island, raiseEvent) = inactivateIslands.Pop();
-            islands.MoveToInactive(island);
-            if (raiseEvent) IslandDeactivated?.Invoke(island);
+            SleepIsland(islandsToSleep[i]);
         }
+
+        islandsToSleep.Clear();
     }
 }

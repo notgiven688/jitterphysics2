@@ -349,31 +349,31 @@ public class RigidBodyPropertyTests
     }
 
     [TestCase]
-    public void DeactivationThreshold_RoundTrip()
+    public void DeactivationVelocity_RoundTrip()
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        body.DeactivationThreshold = (0.3f, 0.4f);
-        Assert.That(body.DeactivationThreshold.angular, Is.EqualTo(0.3f).Within(1e-6f));
-        Assert.That(body.DeactivationThreshold.linear, Is.EqualTo(0.4f).Within(1e-6f));
+        body.DeactivationVelocity = (0.4f, 0.3f);
+        Assert.That(body.DeactivationVelocity.linear, Is.EqualTo(0.4f).Within(1e-6f));
+        Assert.That(body.DeactivationVelocity.angular, Is.EqualTo(0.3f).Within(1e-6f));
         world.Dispose();
     }
 
     [TestCase]
-    public void DeactivationThreshold_AngularNegative_Throws()
+    public void DeactivationVelocity_AngularNegative_Throws()
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.Throws<ArgumentOutOfRangeException>(() => body.DeactivationThreshold = (-0.3f, 0.4f));
+        Assert.Throws<ArgumentOutOfRangeException>(() => body.DeactivationVelocity = (0.4f, -0.3f));
         world.Dispose();
     }
 
     [TestCase]
-    public void DeactivationThreshold_LinearNegative_Throws()
+    public void DeactivationVelocity_LinearNegative_Throws()
     {
         var world = new World();
         var body = world.CreateRigidBody();
-        Assert.Throws<ArgumentOutOfRangeException>(() => body.DeactivationThreshold = (0.3f, -0.4f));
+        Assert.Throws<ArgumentOutOfRangeException>(() => body.DeactivationVelocity = (-0.4f, 0.3f));
         world.Dispose();
     }
 

@@ -79,7 +79,7 @@ public class CylinderShape : RigidBodyShape
     /// <inheritdoc/>
     public override void SupportMap(in JVector direction, out JVector result)
     {
-        Real sigma = (Real)Math.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
+        Real sigma = MathR.Sqrt(direction.X * direction.X + direction.Z * direction.Z);
 
         if (sigma > (Real)0.0)
         {

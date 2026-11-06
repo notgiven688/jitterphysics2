@@ -16,13 +16,18 @@ namespace Jitter2.Collision;
 public sealed class Island : IPartitionedSetIndex
 {
     internal readonly HashSet<RigidBody> InternalBodies = [];
-    internal bool MarkedAsActive;
 
     /// <summary>
-    /// Has to be set if an island is active but might contain inactive bodies.
-    /// This happens, for example, if an inactive and an active island are merged.
+    /// Vote to keep the island awake through the next deactivation check, which clears it.
+    /// Set by moving bodies and by wake requests.
     /// </summary>
-    internal bool NeedsUpdate;
+    internal bool KeepAwake;
+
+    /// <summary>
+    /// The island is awake but may still contain sleeping bodies, which the next deactivation
+    /// check wakes. Only an awake island can have this set.
+    /// </summary>
+    internal bool WakePending;
 
     /// <summary>
     /// Gets a collection of all the bodies present in this island.

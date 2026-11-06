@@ -94,65 +94,52 @@ public class BoxShape : RigidBodyShape
     public override int SupportFeature(in JVector direction, Real tolerance, Span<JVector> vertices)
     {
         // A component close to zero leaves the box free along that axis: one such axis makes the
-        // feature an edge, two make it a face.
+        // feature an edge, two make it a face. Bits 0, 1 and 2 mark free X, Y and Z.
         Real toleranceSq = tolerance * tolerance * direction.LengthSquared();
-        bool freeX = direction.X * direction.X < toleranceSq;
-        bool freeY = direction.Y * direction.Y < toleranceSq;
-        bool freeZ = direction.Z * direction.Z < toleranceSq;
+        int free = (direction.X * direction.X < toleranceSq ? 1 : 0)
+                   | (direction.Y * direction.Y < toleranceSq ? 2 : 0)
+                   | (direction.Z * direction.Z < toleranceSq ? 4 : 0);
 
         SupportMap(direction, out JVector v);
         JVector h = halfSize;
 
-        if (freeX && freeY && !freeZ)
+        switch (free)
         {
-            vertices[0] = new JVector(h.X, h.Y, v.Z);
-            vertices[1] = new JVector(-h.X, h.Y, v.Z);
-            vertices[2] = new JVector(-h.X, -h.Y, v.Z);
-            vertices[3] = new JVector(h.X, -h.Y, v.Z);
-            return 4;
+            case 0b011:
+                vertices[0] = new JVector(h.X, h.Y, v.Z);
+                vertices[1] = new JVector(-h.X, h.Y, v.Z);
+                vertices[2] = new JVector(-h.X, -h.Y, v.Z);
+                vertices[3] = new JVector(h.X, -h.Y, v.Z);
+                return 4;
+            case 0b101:
+                vertices[0] = new JVector(h.X, v.Y, h.Z);
+                vertices[1] = new JVector(-h.X, v.Y, h.Z);
+                vertices[2] = new JVector(-h.X, v.Y, -h.Z);
+                vertices[3] = new JVector(h.X, v.Y, -h.Z);
+                return 4;
+            case 0b110:
+                vertices[0] = new JVector(v.X, h.Y, h.Z);
+                vertices[1] = new JVector(v.X, -h.Y, h.Z);
+                vertices[2] = new JVector(v.X, -h.Y, -h.Z);
+                vertices[3] = new JVector(v.X, h.Y, -h.Z);
+                return 4;
+            case 0b001:
+                vertices[0] = new JVector(h.X, v.Y, v.Z);
+                vertices[1] = new JVector(-h.X, v.Y, v.Z);
+                return 2;
+            case 0b010:
+                vertices[0] = new JVector(v.X, h.Y, v.Z);
+                vertices[1] = new JVector(v.X, -h.Y, v.Z);
+                return 2;
+            case 0b100:
+                vertices[0] = new JVector(v.X, v.Y, h.Z);
+                vertices[1] = new JVector(v.X, v.Y, -h.Z);
+                return 2;
+            default:
+                // No free axis, or a direction too short to decide one.
+                vertices[0] = v;
+                return 1;
         }
-
-        if (freeX && freeZ && !freeY)
-        {
-            vertices[0] = new JVector(h.X, v.Y, h.Z);
-            vertices[1] = new JVector(-h.X, v.Y, h.Z);
-            vertices[2] = new JVector(-h.X, v.Y, -h.Z);
-            vertices[3] = new JVector(h.X, v.Y, -h.Z);
-            return 4;
-        }
-
-        if (freeY && freeZ && !freeX)
-        {
-            vertices[0] = new JVector(v.X, h.Y, h.Z);
-            vertices[1] = new JVector(v.X, -h.Y, h.Z);
-            vertices[2] = new JVector(v.X, -h.Y, -h.Z);
-            vertices[3] = new JVector(v.X, h.Y, -h.Z);
-            return 4;
-        }
-
-        if (freeX && !freeY && !freeZ)
-        {
-            vertices[0] = new JVector(h.X, v.Y, v.Z);
-            vertices[1] = new JVector(-h.X, v.Y, v.Z);
-            return 2;
-        }
-
-        if (freeY && !freeX && !freeZ)
-        {
-            vertices[0] = new JVector(v.X, h.Y, v.Z);
-            vertices[1] = new JVector(v.X, -h.Y, v.Z);
-            return 2;
-        }
-
-        if (freeZ && !freeX && !freeY)
-        {
-            vertices[0] = new JVector(v.X, v.Y, h.Z);
-            vertices[1] = new JVector(v.X, v.Y, -h.Z);
-            return 2;
-        }
-
-        vertices[0] = v;
-        return 1;
     }
 
     public override bool LocalRayCast(in JVector origin, in JVector direction, out JVector normal, out Real lambda)
