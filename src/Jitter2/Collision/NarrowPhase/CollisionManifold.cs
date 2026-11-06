@@ -17,7 +17,7 @@ namespace Jitter2.Collision;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Each shape reports the feature it touches with along the collision normal through
+/// Each shape reports its outermost feature along the collision normal through
 /// <see cref="ISupportFeature.SupportFeature"/>: a point, a segment or a polygon. The features
 /// are clipped against each other in the contact plane and reduced to a small contact set
 /// suitable for the solver. The narrow phase contributes the normal; its contact pair is kept

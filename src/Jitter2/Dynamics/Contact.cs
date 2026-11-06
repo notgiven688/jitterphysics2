@@ -297,8 +297,7 @@ public struct ContactData
     /// </summary>
     /// <param name="point1">Contact point on the first body in world space.</param>
     /// <param name="point2">Contact point on the second body in world space.</param>
-    /// <param name="normal">Contact normal in the direction of the solver's positive impulse on body 2.
-    /// For overlapping contact points, it points from <paramref name="point2"/> toward <paramref name="point1"/>.</param>
+    /// <param name="normal">Unit contact normal pointing from the first body toward the second.</param>
     public unsafe void AddContact(in JVector point1, in JVector point2, in JVector normal)
     {
         var ptr = (ContactData*)Unsafe.AsPointer(ref this);
@@ -625,10 +624,8 @@ public struct ContactData
         [ReferenceFrame(ReferenceFrame.World)] public JVector RelativePosition2;
 
         /// <summary>
-        /// Normalized contact direction. A positive normal impulse pushes <see cref="ContactData.Body2"/>
-        /// along this direction and <see cref="ContactData.Body1"/> against it. For overlapping contact points,
-        /// the normal points from the point on body 2 toward the point on body 1. Updated when collision
-        /// detection refreshes the contact.
+        /// Unit contact normal pointing from <see cref="ContactData.Body1"/> toward <see cref="ContactData.Body2"/>.
+        /// The solver pushes the bodies apart along it. Updated when collision detection refreshes the contact.
         /// </summary>
         [ReferenceFrame(ReferenceFrame.World)]
         public readonly JVector Normal => new(NormalTangentX.GetElement(0),

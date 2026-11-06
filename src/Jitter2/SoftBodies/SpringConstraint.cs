@@ -104,9 +104,7 @@ public unsafe class SpringConstraint : Constraint<SpringConstraint.SpringData>
     /// </summary>
     /// <remarks>
     /// Call again if the bodies' masses, translation locks, anchor direction, timestep, or
-    /// <see cref="World.SubstepCount"/> change. The solver scales <see cref="Softness"/> by the
-    /// substep length and <see cref="Bias"/> by the full step length; with one substep both are
-    /// <paramref name="dt"/>.
+    /// <see cref="World.SubstepCount"/> change.
     /// When the anchors coincide, the calculation uses the translation direction in which
     /// the bodies respond most easily to a force.
     /// </remarks>

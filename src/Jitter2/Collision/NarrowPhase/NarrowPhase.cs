@@ -619,8 +619,8 @@ public static partial class NarrowPhase
     /// closest point on shape B to shape A.
     /// </param>
     /// <param name="normal">
-    /// The normalized collision normal. Its dot product with pointA - pointB gives the signed penetration:
-    /// positive for overlap and negative for separation. It remains defined when the points coincide.
+    /// The unit collision normal, pointing from shape A toward shape B. The signed penetration is its
+    /// dot product with pointA - pointB. It remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
@@ -659,8 +659,8 @@ public static partial class NarrowPhase
     /// closest point on shape B to shape A.
     /// </param>
     /// <param name="normal">
-    /// The normalized collision normal. Its dot product with pointA - pointB gives the signed penetration:
-    /// positive for overlap and negative for separation. It remains defined when the points coincide.
+    /// The unit collision normal, pointing from shape A toward shape B. The signed penetration is its
+    /// dot product with pointA - pointB. It remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
@@ -882,8 +882,8 @@ public static partial class NarrowPhase
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
-    /// Unit normal from <paramref name="pointB"/> toward <paramref name="pointA"/>.
-    /// Moving shape B along this normal separates the shapes. Remains defined when the points coincide.
+    /// Unit normal pointing from shape A toward shape B. Moving shape B along it separates the shapes.
+    /// Remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>
@@ -928,8 +928,8 @@ public static partial class NarrowPhase
     /// <param name="pointA">The deepest point on shape A that is inside shape B.</param>
     /// <param name="pointB">The deepest point on shape B that is inside shape A.</param>
     /// <param name="normal">
-    /// Unit normal from <paramref name="pointB"/> toward <paramref name="pointA"/>.
-    /// Moving shape B along this normal separates the shapes. Remains defined when the points coincide.
+    /// Unit normal pointing from shape A toward shape B. Moving shape B along it separates the shapes.
+    /// Remains defined when the points coincide.
     /// </param>
     /// <param name="penetration">The penetration depth.</param>
     /// <param name="epaThreshold">Penetration depth threshold above which MPR results are refined with EPA.</param>

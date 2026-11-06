@@ -320,8 +320,8 @@ public sealed partial class World : IDisposable
     public ReadOnlyPartitionedSet<RigidBody> RigidBodies => new(bodies);
 
     /// <summary>
-    /// Access to the <see cref="DynamicTree"/> instance. Callers may manage their own proxies and
-    /// update shapes after changing their geometry. Jitter manages proxies for attached rigid body shapes.
+    /// The broad phase of this world. It holds a proxy for every shape attached to a body, and can also
+    /// hold proxies added by the application. Update a shape's proxy after changing its geometry.
     /// </summary>
     public DynamicTree DynamicTree { get; }
 
@@ -363,7 +363,8 @@ public sealed partial class World : IDisposable
     /// </summary>
     /// <remarks>
     /// Higher solver iterations improve constraint accuracy at the cost of performance.
-    /// Relaxation iterations help reduce velocity errors after solving.
+    /// Relaxation iterations solve the contacts again after the bodies have moved, this time without
+    /// pushing overlapping bodies apart, so that the push does not remain as extra velocity.
     /// Default value: (solver: 6, relaxation: 4).
     /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">

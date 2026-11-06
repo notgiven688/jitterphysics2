@@ -778,9 +778,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// Gets or sets the linear velocity of the rigid body in world space.
     /// </summary>
     /// <remarks>
-    /// Measured in units per second. Setting a non-zero kinematic velocity schedules the body
-    /// for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
-    /// Locked translation components are cleared.
+    /// Measured in units per second. Setting a velocity wakes the body on the next step, unless it is
+    /// zero, or nearly zero for a dynamic body. Locked translation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -824,9 +823,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// </summary>
     /// <remarks>
     /// Measured in radians per second. The vector direction is the rotation axis,
-    /// and its magnitude is the rotation speed. Setting a non-zero kinematic velocity schedules
-    /// the body for activation on the next step. For dynamic bodies, a small tolerance is applied to the activation check.
-    /// Locked rotation components are cleared.
+    /// and its magnitude is the rotation speed. Setting a velocity wakes the body on the next step,
+    /// unless it is zero, or nearly zero for a dynamic body. Locked rotation components are cleared.
     /// </remarks>
     /// <exception cref="InvalidOperationException">
     /// Thrown if the body's <see cref="MotionType"/> is <see cref="MotionType.Static"/>.
@@ -1232,9 +1230,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         => AddShape(shape, setMassInertia ? MassInertiaUpdateMode.Update : MassInertiaUpdateMode.Preserve);
 
     /// <summary>
-    /// Accumulated force converted to a velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
-    /// and this value is reset to zero after conversion.
+    /// The force accumulated for the body. It acts one step late: the end of the next
+    /// <see cref="World.Step(Real, bool)"/> turns it into a velocity change and resets it to zero,
+    /// and the step after that applies the change.
     /// </summary>
     public JVector Force
     {
@@ -1247,9 +1245,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Accumulated torque converted to an angular velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call. The change is applied during the following step,
-    /// and this value is reset to zero after conversion.
+    /// The torque accumulated for the body. Like <see cref="Force"/>, it acts one step late.
     /// </summary>
     public JVector Torque
     {
@@ -1262,12 +1258,9 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Applies a force to the rigid body, thereby altering its velocity.
+    /// Adds a force at the center of mass to <see cref="Force"/>. It acts one step late.
     /// </summary>
-    /// <param name="force">
-    /// The force to accumulate. It is converted to a velocity change at the end of the next
-    /// <see cref="World.Step(Real, bool)"/> call and applied during the following step.
-    /// </param>
+    /// <param name="force">The force to add.</param>
     /// <param name="wakeup">
     /// If <c>true</c> (default), the body will be activated if it is currently sleeping.
     /// If <c>false</c>, the force is only applied if the body is already active; sleeping
@@ -1286,9 +1279,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     }
 
     /// <summary>
-    /// Applies a force to the rigid body at a world-space position. The force and resulting torque are
-    /// converted to velocity changes at the end of the next <see cref="World.Step(Real, bool)"/> call
-    /// and applied during the following step.
+    /// Adds a force at a world-space position to <see cref="Force"/> and the resulting torque to
+    /// <see cref="Torque"/>. Both act one step late.
     /// </summary>
     /// <param name="force">The force to be applied.</param>
     /// <param name="position">The position where the force will be applied.</param>

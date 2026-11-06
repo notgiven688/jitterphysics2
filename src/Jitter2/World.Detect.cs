@@ -82,11 +82,10 @@ public sealed partial class World
     /// deepest point. Default is true.
     /// </summary>
     /// <remarks>
-    /// The manifold covers the whole contact feature: the corners of touching faces, the two ends of
+    /// The manifold covers the whole touching area: the corners of touching faces, the two ends of
     /// the line on which a capsule or cylinder rests, the point below a sphere. This keeps stacks
-    /// stable and is required for rolling: the single point reported by the narrow phase lies off
-    /// along a curved surface, so a rolling sphere, capsule or cylinder on a single contact does not
-    /// keep its speed. See <see cref="CollisionManifold"/>.
+    /// stable. Rolling also needs it: the narrow phase point is slightly off on curved surfaces, so a
+    /// sphere, capsule or cylinder rolling on that point alone slows down. See <see cref="CollisionManifold"/>.
     /// </remarks>
     public bool EnableAuxiliaryContactPoints { set; get; } = true;
 
@@ -205,8 +204,8 @@ public sealed partial class World
     /// <param name="arbiter">The existing <see cref="Arbiter"/> instance to which the contact will be added.</param>
     /// <param name="point1">The contact point on the first body, in world space.</param>
     /// <param name="point2">The contact point on the second body, in world space.</param>
-    /// <param name="normal">The contact normal, in world space. Must be normalized; a positive normal
-    /// impulse pushes the arbiter's second body along this direction and its first body against it.</param>
+    /// <param name="normal">The contact normal, in world space. Must be a unit vector pointing from the
+    /// arbiter's first body toward its second body.</param>
     /// <param name="removeFlags">A bitmask of <see cref="ContactData.SolveMode"/> flags to be removed from the full
     /// contact solution (see <see cref="ContactData.SolveMode.Full"/>).</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
