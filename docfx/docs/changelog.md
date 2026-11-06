@@ -1,5 +1,19 @@
 # Changelog
 
+### Jitter 2.14.0 (2026-11-06)
+
+- Contact manifolds are now built from the support features of both shapes (`ISupportFeature`), fixing contact point errors and rolling drift on curved shapes.
+- Faster and more robust `ConvexHullShape` support queries.
+- Faster arbiter removal through cheaper island connectivity checks.
+- Faster solver: the single-threaded solve no longer takes body locks, and the multithreaded solve releases them more cheaply.
+- Fixed wake requests, such as impulses, being lost when the body's island fell asleep in the same step.
+- `LinearMotor` and `AngularMotor` accept unlimited maximum force or torque, and changing a motor wakes its bodies.
+- Fixed large impulses from nearly redundant constraint rows in double precision.
+- Fixed inaccurate `JQuaternion.ToAxisAngle` results at small angles.
+- Fixed `JTriangle.RayIntersect` reporting short ray directions and small triangles as parallel.
+- `RigidBody.DeactivationThreshold` is obsolete. Use `RigidBody.DeactivationVelocity`, which takes the linear value first.
+- **Breaking Change:** The contact constants on `ContactData.Contact` and `ContactData.CcdRelaxationFactor` moved into the per-world `World.ContactSettings`, which also makes the restitution threshold configurable. `World.CcdRelaxationFactor` is obsolete.
+
 ### Jitter 2.13.0 (2026-10-22)
 
 - **Breaking Change:** Removed the previous speculative contact system and replaced it with continuous collision detection (CCD), supporting both translation and rotation with iterative contact discovery. Use `RigidBody.EnableCcd` and the `Ccd*` settings; the old speculative contact API has been removed.
