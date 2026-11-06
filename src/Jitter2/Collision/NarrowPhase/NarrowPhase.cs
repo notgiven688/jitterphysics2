@@ -620,7 +620,9 @@ public static partial class NarrowPhase
     /// </param>
     /// <param name="normal">
     /// The unit collision normal, pointing from shape A toward shape B. The signed penetration is its
-    /// dot product with pointA - pointB. It remains defined when the points coincide.
+    /// dot product with pointA - pointB. Moving shape B by penetration times the normal makes the
+    /// shapes touch, both when they overlap and when they are separated. It remains defined when the
+    /// points coincide.
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
@@ -660,7 +662,9 @@ public static partial class NarrowPhase
     /// </param>
     /// <param name="normal">
     /// The unit collision normal, pointing from shape A toward shape B. The signed penetration is its
-    /// dot product with pointA - pointB. It remains defined when the points coincide.
+    /// dot product with pointA - pointB. Moving shape B by penetration times the normal makes the
+    /// shapes touch, both when they overlap and when they are separated. It remains defined when the
+    /// points coincide.
     /// </param>
     /// <param name="penetration">Signed penetration depth: positive for overlap, negative for separation.</param>
     /// <returns>
