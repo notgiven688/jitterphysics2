@@ -972,47 +972,35 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         {
             if (Data.MotionType == value) return;
 
-            switch (value)
+            if (value is not (MotionType.Static or MotionType.Kinematic or MotionType.Dynamic))
             {
-                case MotionType.Static:
-                    ClearQueuedForces();
-                    // Switch to static
-                    World.RemoveConnections(this);
-                    Data.MotionType = MotionType.Static;
-                    World.RemoveStaticStaticContacts(this);
-                    World.DeactivateBodyNextStep(this);
-                    Data.Velocity = JVector.Zero;
-                    Data.AngularVelocity = JVector.Zero;
-                    UpdateWorldInertia();
-                    break;
-                case MotionType.Kinematic:
-                    {
-                        ClearQueuedForces();
-                        // Switch to kinematic
-                        bool wasStatic = Data.MotionType == MotionType.Static;
-                        Data.MotionType = MotionType.Kinematic;
-                        if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
-
-                        World.RemoveStaticStaticContacts(this);
-                        World.ActivateBodyNextStep(this, true);
-                        UpdateWorldInertia();
-                        break;
-                    }
-                case MotionType.Dynamic:
-                    {
-                        ClearQueuedForces();
-                        // Switch to dynamic
-                        bool wasStatic = Data.MotionType == MotionType.Static;
-                        Data.MotionType = MotionType.Dynamic;
-                        if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
-
-                        World.ActivateBodyNextStep(this, true);
-                        UpdateWorldInertia();
-                        break;
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
+
+            ClearQueuedForces();
+
+            // Static bodies have no island connections. Remove them while the body is still
+            // non-static, since island splitting does not walk through static bodies.
+            bool wasStatic = Data.MotionType == MotionType.Static;
+            if (value == MotionType.Static) World.RemoveConnections(this);
+
+            Data.MotionType = value;
+
+            if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
+            if (value != MotionType.Dynamic) World.RemoveStaticStaticContacts(this);
+
+            if (value == MotionType.Static)
+            {
+                World.DeactivateBodyNextStep(this);
+                Data.Velocity = JVector.Zero;
+                Data.AngularVelocity = JVector.Zero;
+            }
+            else
+            {
+                World.ActivateBodyNextStep(this, true);
+            }
+
+            UpdateWorldInertia();
 
             foreach (Constraint constraint in InternalConstraints)
             {
