@@ -19374,6 +19374,186 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SoftBody.WorldOnPostStep
   nameWithType: SoftBody.WorldOnPostStep
+- uid: Jitter2.SoftBodies.SoftBodySegment
+  name: SoftBodySegment
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html
+  commentId: T:Jitter2.SoftBodies.SoftBodySegment
+  fullName: Jitter2.SoftBodies.SoftBodySegment
+  nameWithType: SoftBodySegment
+- uid: Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,System.Int32,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
+  name: SoftBodySegment(SoftBody, int, RigidBody, RigidBody)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment__ctor_Jitter2_SoftBodies_SoftBody_System_Int32_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,System.Int32,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
+  name.vb: New(SoftBody, Integer, RigidBody, RigidBody)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SoftBodySegment(Jitter2.SoftBodies.SoftBody, int, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.New(Jitter2.SoftBodies.SoftBody, Integer, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
+  nameWithType: SoftBodySegment.SoftBodySegment(SoftBody, int, RigidBody, RigidBody)
+  nameWithType.vb: SoftBodySegment.New(SoftBody, Integer, RigidBody, RigidBody)
+- uid: Jitter2.SoftBodies.SoftBodySegment.#ctor*
+  name: SoftBodySegment
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment__ctor_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SoftBodySegment
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.New
+  nameWithType: SoftBodySegment.SoftBodySegment
+  nameWithType.vb: SoftBodySegment.New
+- uid: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
+  name: ContactMargin
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_ContactMargin
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.ContactMargin
+  fullName: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
+  nameWithType: SoftBodySegment.ContactMargin
+- uid: Jitter2.SoftBodies.SoftBodySegment.ContactMargin*
+  name: ContactMargin
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_ContactMargin_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.ContactMargin
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
+  nameWithType: SoftBodySegment.ContactMargin
+- uid: Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector@)
+  name: GetCenter(out JVector)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetCenter_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector@)
+  name.vb: GetCenter(JVector)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.GetCenter(out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector)
+  nameWithType: SoftBodySegment.GetCenter(out JVector)
+  nameWithType.vb: SoftBodySegment.GetCenter(JVector)
+- uid: Jitter2.SoftBodies.SoftBodySegment.GetCenter*
+  name: GetCenter
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetCenter_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.GetCenter
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.GetCenter
+  nameWithType: SoftBodySegment.GetCenter
+- uid: Jitter2.SoftBodies.SoftBodySegment.GetClosest(Jitter2.LinearMath.JVector@)
+  name: GetClosest(in JVector)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetClosest_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.GetClosest(Jitter2.LinearMath.JVector@)
+  name.vb: GetClosest(JVector)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.GetClosest(in Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.GetClosest(Jitter2.LinearMath.JVector)
+  nameWithType: SoftBodySegment.GetClosest(in JVector)
+  nameWithType.vb: SoftBodySegment.GetClosest(JVector)
+- uid: Jitter2.SoftBodies.SoftBodySegment.GetClosest*
+  name: GetClosest
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetClosest_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.GetClosest
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.GetClosest
+  nameWithType: SoftBodySegment.GetClosest
+- uid: Jitter2.SoftBodies.SoftBodySegment.Index
+  name: Index
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Index
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Index
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Index
+  nameWithType: SoftBodySegment.Index
+- uid: Jitter2.SoftBodies.SoftBodySegment.Index*
+  name: Index
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Index_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Index
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Index
+  nameWithType: SoftBodySegment.Index
+- uid: Jitter2.SoftBodies.SoftBodySegment.Radius
+  name: Radius
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Radius
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Radius
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Radius
+  nameWithType: SoftBodySegment.Radius
+- uid: Jitter2.SoftBodies.SoftBodySegment.Radius*
+  name: Radius
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Radius_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Radius
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Radius
+  nameWithType: SoftBodySegment.Radius
+- uid: Jitter2.SoftBodies.SoftBodySegment.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: SupportMap(in JVector, out JVector)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name.vb: SupportMap(JVector, JVector)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SupportMap(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.SupportMap(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: SoftBodySegment.SupportMap(in JVector, out JVector)
+  nameWithType.vb: SoftBodySegment.SupportMap(JVector, JVector)
+- uid: Jitter2.SoftBodies.SoftBodySegment.SupportMap*
+  name: SupportMap
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SupportMap_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.SupportMap
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SupportMap
+  nameWithType: SoftBodySegment.SupportMap
+- uid: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
+  name: SweepFactor
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SweepFactor
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.SweepFactor
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
+  nameWithType: SoftBodySegment.SweepFactor
+- uid: Jitter2.SoftBodies.SoftBodySegment.SweepFactor*
+  name: SweepFactor
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SweepFactor_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.SweepFactor
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
+  nameWithType: SoftBodySegment.SweepFactor
+- uid: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(System.Single)
+  name: UpdateWorldBoundingBox(float)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_System_Single_
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(System.Single)
+  name.vb: UpdateWorldBoundingBox(Single)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(float)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(Single)
+  nameWithType: SoftBodySegment.UpdateWorldBoundingBox(float)
+  nameWithType.vb: SoftBodySegment.UpdateWorldBoundingBox(Single)
+- uid: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox*
+  name: UpdateWorldBoundingBox
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox
+  nameWithType: SoftBodySegment.UpdateWorldBoundingBox
+- uid: Jitter2.SoftBodies.SoftBodySegment.Velocity
+  name: Velocity
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Velocity
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Velocity
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Velocity
+  nameWithType: SoftBodySegment.Velocity
+- uid: Jitter2.SoftBodies.SoftBodySegment.Velocity*
+  name: Velocity
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Velocity_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Velocity
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Velocity
+  nameWithType: SoftBodySegment.Velocity
+- uid: Jitter2.SoftBodies.SoftBodySegment.Vertex1
+  name: Vertex1
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Vertex1
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Vertex1
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Vertex1
+  nameWithType: SoftBodySegment.Vertex1
+- uid: Jitter2.SoftBodies.SoftBodySegment.Vertex1*
+  name: Vertex1
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Vertex1_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Vertex1
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Vertex1
+  nameWithType: SoftBodySegment.Vertex1
+- uid: Jitter2.SoftBodies.SoftBodySegment.Vertex2
+  name: Vertex2
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Vertex2
+  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Vertex2
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Vertex2
+  nameWithType: SoftBodySegment.Vertex2
+- uid: Jitter2.SoftBodies.SoftBodySegment.Vertex2*
+  name: Vertex2
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Vertex2_
+  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Vertex2
+  isSpec: "True"
+  fullName: Jitter2.SoftBodies.SoftBodySegment.Vertex2
+  nameWithType: SoftBodySegment.Vertex2
 - uid: Jitter2.SoftBodies.SoftBodyShape
   name: SoftBodyShape
   href: api/Jitter2.SoftBodies.SoftBodyShape.html

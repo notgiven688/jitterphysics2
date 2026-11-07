@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class SoftBodySegment | Jitter2 </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class SoftBodySegment | Jitter2 ">
+      
+      <meta name="description" content="A capsule-shaped collision segment spanning two soft-body vertices. Chains of segments can be used to build ropes and cables.">
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/notgiven688/jitterphysics2/new/main/apiSpec/new?filename=Jitter2_SoftBodies_SoftBodySegment.md&amp;value=---%0Auid%3A%20Jitter2.SoftBodies.SoftBodySegment%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.png" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Jitter2.SoftBodies.SoftBodySegment">
+
+
+
+  <h1 id="Jitter2_SoftBodies_SoftBodySegment" data-uid="Jitter2.SoftBodies.SoftBodySegment" class="text-break">
+Class SoftBodySegment  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L20"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Jitter2.html">Jitter2</a>.<a class="xref" href="Jitter2.SoftBodies.html">SoftBodies</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>A capsule-shaped collision segment spanning two soft-body vertices. Chains of segments can be
+used to build ropes and cables.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class SoftBodySegment : SoftBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportFeature, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="Jitter2.Collision.Shapes.Shape.html">Shape</a></div>
+      <div><a class="xref" href="Jitter2.SoftBodies.SoftBodyShape.html">SoftBodyShape</a></div>
+      <div><span class="xref">SoftBodySegment</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="Jitter2.Collision.IDynamicTreeProxy.html">IDynamicTreeProxy</a></div>
+      <div><a class="xref" href="Jitter2.DataStructures.IPartitionedSetIndex.html">IPartitionedSetIndex</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IUpdatableBoundingBox.html">IUpdatableBoundingBox</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISupportFeature.html">ISupportFeature</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISupportMappable.html">ISupportMappable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IRayCastable.html">IRayCastable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IAngularSweepTestable.html">IAngularSweepTestable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.ISweepTestable.html">ISweepTestable</a></div>
+      <div><a class="xref" href="Jitter2.Collision.IDistanceTestable.html">IDistanceTestable</a></div>
+      <div><a class="xref" href="Jitter2.IDebugDrawable.html">IDebugDrawable</a></div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="Jitter2.SoftBodies.SoftBodyShape.html#Jitter2_SoftBodies_SoftBodyShape_SoftBody">SoftBodyShape.SoftBody</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.SoftBodies.SoftBodyShape.html#Jitter2_SoftBodies_SoftBodyShape_RayCast_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SoftBodyShape.RayCast(in JVector, in JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.SoftBodies.SoftBodyShape.html#Jitter2_SoftBodies_SoftBodyShape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SoftBodyShape.Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, out JVector, out JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.SoftBodies.SoftBodyShape.html#Jitter2_SoftBodies_SoftBodyShape_Distance__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">SoftBodyShape.Distance&lt;T&gt;(in T, in JQuaternion, in JVector, out JVector, out JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_ShapeId">Shape.ShapeId</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_WorldBoundingBox">Shape.WorldBoundingBox</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_Sweep__1___0__Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single_System_Single_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Single__">Shape.Sweep&lt;T&gt;(in T, in JQuaternion, in JVector, in JVector, in JVector, float, float, out JVector, out JVector, out JVector, out float)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__">Shape.SupportFeature(in JVector, float, Span&lt;JVector&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_">Shape.DebugDraw(IDebugDrawer)</a>
+    </div>
+    <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__">Shape.DebugDraw(IDebugDrawer, in DebugDrawSettings)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Jitter2_SoftBodies_SoftBodySegment_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>Contacts are applied to the vertex closest to the contact point (see <a class="xref" href="Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetClosest_Jitter2_LinearMath_JVector__">GetClosest(in JVector)</a>),
+so segments should be kept short, about twice the <a class="xref" href="Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Radius">Radius</a>.</p>
+</div>
+
+
+  <h2 class="section" id="constructors">Constructors
+</h2>
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment__ctor_" data-uid="Jitter2.SoftBodies.SoftBodySegment.#ctor*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment__ctor_Jitter2_SoftBodies_SoftBody_System_Int32_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,System.Int32,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)">
+  SoftBodySegment(SoftBody, int, RigidBody, RigidBody)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new segment between two vertices.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SoftBodySegment(SoftBody body, int index, RigidBody v1, RigidBody v2)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>body</code> <a class="xref" href="Jitter2.SoftBodies.SoftBody.html">SoftBody</a></dt>
+    <dd><p>The soft body owning this segment.</p>
+</dd>
+    <dt><code>index</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The position of the segment within its chain.</p>
+</dd>
+    <dt><code>v1</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd><p>The first vertex.</p>
+</dd>
+    <dt><code>v2</code> <a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd><p>The second vertex.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_ContactMargin_" data-uid="Jitter2.SoftBodies.SoftBodySegment.ContactMargin*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_ContactMargin" data-uid="Jitter2.SoftBodies.SoftBodySegment.ContactMargin">
+  ContactMargin
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets an extra distance by which the bounding box is enlarged, so that broad-phase
+filters also see pairs that are this close but not yet touching. Default is zero.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float ContactMargin { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_Index_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Index*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_Index" data-uid="Jitter2.SoftBodies.SoftBodySegment.Index">
+  Index
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the position of this segment within its chain. Used by collision filters to
+skip neighbouring segments of the same soft body.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Index { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_Radius_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Radius*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_Radius" data-uid="Jitter2.SoftBodies.SoftBodySegment.Radius">
+  Radius
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L46"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets the radius of the capsule.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Radius { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_SweepFactor_" data-uid="Jitter2.SoftBodies.SoftBodySegment.SweepFactor*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_SweepFactor" data-uid="Jitter2.SoftBodies.SoftBodySegment.SweepFactor">
+  SweepFactor
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets or sets how many steps of motion the bounding box covers ahead of the segment, based on
+the vertex velocities. Broad-phase filters that create contacts before shapes touch
+(speculative contacts) can only find pairs within this reach. Default is 1.5.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float SweepFactor { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_Velocity_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Velocity*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_Velocity" data-uid="Jitter2.SoftBodies.SoftBodySegment.Velocity">
+  Velocity
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the velocity of the entity, used for bounding box expansion.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override JVector Velocity { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_Vertex1_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Vertex1*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_Vertex1" data-uid="Jitter2.SoftBodies.SoftBodySegment.Vertex1">
+  Vertex1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the first vertex of the segment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RigidBody Vertex1 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_Vertex2_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Vertex2*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_Vertex2" data-uid="Jitter2.SoftBodies.SoftBodySegment.Vertex2">
+  Vertex2
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the second vertex of the segment.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RigidBody Vertex2 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_GetCenter_" data-uid="Jitter2.SoftBodies.SoftBodySegment.GetCenter*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector@)">
+  GetCenter(out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void GetCenter(out JVector point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>point</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>An interior point in local space.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_GetClosest_" data-uid="Jitter2.SoftBodies.SoftBodySegment.GetClosest*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_GetClosest_Jitter2_LinearMath_JVector__" data-uid="Jitter2.SoftBodies.SoftBodySegment.GetClosest(Jitter2.LinearMath.JVector@)">
+  GetClosest(in JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L77"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets the rigid body closest to the specified position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override RigidBody GetClosest(in JVector pos)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pos</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The position in world coordinates.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.Dynamics.RigidBody.html">RigidBody</a></dt>
+    <dd><p>The closest rigid body (vertex) of this shape.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_SupportMap_" data-uid="Jitter2.SoftBodies.SoftBodySegment.SupportMap*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.SoftBodies.SoftBodySegment.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
+  SupportMap(in JVector, out JVector)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void SupportMap(in JVector direction, out JVector result)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>direction</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The search direction in local space. Does not need to be normalized.</p>
+</dd>
+    <dt><code>result</code> <a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd><p>The point on the shape's surface furthest along <code class="paramref">direction</code>.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_" data-uid="Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox*"></a>
+
+  <h3 id="Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_System_Single_" data-uid="Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(System.Single)">
+  UpdateWorldBoundingBox(float)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Recomputes the world-space bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void UpdateWorldBoundingBox(float dt = 0)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>dt</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd><p>The timestep for velocity-based expansion. Default is zero.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L20" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
