@@ -113,8 +113,8 @@ public class TaperedCapsuleShape : RigidBodyShape
 
 /// <summary>
 /// A wooden artist's mannequin: fifteen tapered segments held together by ball and hinge joints.
-/// Every joint carries a torque-limited servo that pulls it towards a relaxed standing pose, so a
-/// dropped mannequin collapses but keeps trying to straighten its limbs.
+/// Every joint carries a torque-limited servo that pulls it towards a relaxed posture, so a
+/// dropped mannequin collapses but keeps trying to return to it.
 /// </summary>
 public class Mannequin
 {
@@ -209,6 +209,75 @@ public class Mannequin
         return new TaperedCapsuleShape(segment.RadiusA, segment.RadiusB, halfLength, segment.ScaleX, segment.ScaleZ);
     }
 
+    // Hinge angles of the relaxed pose. Positive angles swing the lower end backwards.
+    private static float RelaxedHingeDegrees(Bone bone) => bone switch
+    {
+        Bone.ForearmLeft or Bone.ForearmRight => -55,
+        Bone.ShinLeft or Bone.ShinRight => 30,
+        Bone.FootLeft or Bone.FootRight => 12, // toes pointing slightly down
+        _ => 0
+    };
+
+    /// <summary>
+    /// Rotation of a bone relative to its parent that takes the standing pose to the relaxed pose, expressed
+    /// in standing-pose world axes (x: left, y: up, z: forward). The relaxed pose is a toned-down version of
+    /// the neutral posture a body takes when no muscle is working: back and neck slightly bent, arms a little
+    /// forward and out with elbows half bent, hips and knees flexed, feet pointing down.
+    /// </summary>
+    private static JQuaternion RelaxedRotation(Bone bone)
+    {
+        float s = SideOf(bone);
+        const float deg = MathF.PI / 180;
+
+        return bone switch
+        {
+            Bone.Chest => JQuaternion.CreateRotationX(8 * deg),
+            Bone.Head => JQuaternion.CreateRotationX(12 * deg),
+            // Turn inwards about the arm axis, lift it sideways, then forwards.
+            Bone.UpperArmLeft or Bone.UpperArmRight => JQuaternion.CreateRotationX(-25 * deg) *
+                                                       JQuaternion.CreateRotationZ(s * 18 * deg) *
+                                                       JQuaternion.CreateRotationY(-s * 25 * deg),
+            // Fingers curl slightly towards the palm, which faces the body.
+            Bone.HandLeft or Bone.HandRight => JQuaternion.CreateRotationZ(-s * 12 * deg),
+            // Turn outwards, spread a little, then flex forwards.
+            Bone.ThighLeft or Bone.ThighRight => JQuaternion.CreateRotationX(-22 * deg) *
+                                                 JQuaternion.CreateRotationZ(s * 6 * deg) *
+                                                 JQuaternion.CreateRotationY(s * 8 * deg),
+            _ => JQuaternion.CreateRotationX(RelaxedHingeDegrees(bone) * deg)
+        };
+    }
+
+    // Body frames of the relaxed pose, built outwards from the pelvis.
+    private static readonly (JVector Position, JQuaternion Orientation)[] RelaxedPose = BuildRelaxedPose();
+
+    private static (JVector, JQuaternion)[] BuildRelaxedPose()
+    {
+        var pose = new (JVector Position, JQuaternion Orientation)[BoneCount];
+        SegmentFrame(Segments[0], out pose[0].Position, out pose[0].Orientation);
+
+        // Segments are ordered parents first.
+        for (int i = 1; i < BoneCount; i++)
+        {
+            Bone bone = (Bone)i;
+            int parent = (int)Segments[i].Parent;
+            SegmentFrame(Segments[parent], out JVector parentPosition, out JQuaternion parentOrientation);
+            SegmentFrame(Segments[i], out JVector position, out JQuaternion orientation);
+            JVector center = JointCenter(bone, SideOf(bone));
+
+            JQuaternion relative = parentOrientation.Conjugate() * RelaxedRotation(bone) * orientation;
+            JQuaternion relaxedOrientation = pose[parent].Orientation * relative;
+
+            JVector relaxedCenter = pose[parent].Position + JVector.Transform(
+                JVector.ConjugatedTransform(center - parentPosition, parentOrientation), pose[parent].Orientation);
+
+            pose[i].Orientation = relaxedOrientation;
+            pose[i].Position = relaxedCenter + JVector.Transform(
+                JVector.ConjugatedTransform(position - center, orientation), relaxedOrientation);
+        }
+
+        return pose;
+    }
+
     /// <summary>Builds the bind mesh in bone-local coordinates: one segment per bone, plus joint balls and a neck.</summary>
     public static Mesh BuildMesh(out int[] vertexBone)
     {
@@ -294,7 +363,8 @@ public class Mannequin
             Bodies[i] = body;
         }
 
-        // Joints are created in the standing pose; every limit and servo target is relative to it.
+        // Joints are created in the standing pose, so every limit is relative to it.
+        // The servos pull towards the relaxed pose instead.
         for (int i = 1; i < BoneCount; i++)
         {
             Bone bone = (Bone)i;
@@ -308,32 +378,32 @@ public class Mannequin
             switch (bone)
             {
                 case Bone.Chest:
-                    BallJoint(world, parent, child, center, JVector.UnitY, JVector.UnitY, 30, 35, 0.6f);
+                    BallJoint(world, bone, parent, child, center, JVector.UnitY, JVector.UnitY, 30, 35, 0.6f);
                     break;
                 case Bone.Head:
-                    BallJoint(world, parent, child, center, JVector.UnitY, JVector.UnitY, 45, 70, 1.2f);
+                    BallJoint(world, bone, parent, child, center, JVector.UnitY, JVector.UnitY, 45, 70, 1.2f);
                     break;
                 case Bone.UpperArmLeft or Bone.UpperArmRight:
-                    BallJoint(world, parent, child, center, JVector.Normalize(new JVector(s, -1, 0.5f)),
+                    BallJoint(world, bone, parent, child, center, JVector.Normalize(new JVector(s, -1, 0.5f)),
                         -JVector.UnitY, 100, 60, 0.6f);
                     break;
                 case Bone.HandLeft or Bone.HandRight:
-                    BallJoint(world, parent, child, center, -JVector.UnitY, -JVector.UnitY, 60, 50, 0.8f);
+                    BallJoint(world, bone, parent, child, center, -JVector.UnitY, -JVector.UnitY, 60, 50, 0.8f);
                     break;
                 case Bone.ThighLeft or Bone.ThighRight:
                     // Cone tilted forwards: lots of flexion, little extension.
-                    BallJoint(world, parent, child, center, JVector.Normalize(new JVector(0, -1, 1)),
+                    BallJoint(world, bone, parent, child, center, JVector.Normalize(new JVector(0, -1, 1)),
                         -JVector.UnitY, 70, 35, 0.6f);
                     break;
                 case Bone.ForearmLeft or Bone.ForearmRight:
                     // Positive hinge angles rotate the lower end backwards, so elbows flex negatively.
-                    HingeJoint(world, parent, child, center, -145, 5, -20, 0.8f);
+                    HingeJoint(world, parent, child, center, -145, 5, RelaxedHingeDegrees(bone), 0.8f);
                     break;
                 case Bone.ShinLeft or Bone.ShinRight:
-                    HingeJoint(world, parent, child, center, -5, 140, 4, 0.7f);
+                    HingeJoint(world, parent, child, center, -5, 140, RelaxedHingeDegrees(bone), 0.7f);
                     break;
                 case Bone.FootLeft or Bone.FootRight:
-                    HingeJoint(world, parent, child, center, -35, 40, 0, 1.0f);
+                    HingeJoint(world, parent, child, center, -35, 40, RelaxedHingeDegrees(bone), 1.0f);
                     break;
             }
         }
@@ -349,7 +419,7 @@ public class Mannequin
         Place(position, orientation);
     }
 
-    private void BallJoint(World world, RigidBody parent, RigidBody child, JVector center,
+    private void BallJoint(World world, Bone bone, RigidBody parent, RigidBody child, JVector center,
         JVector coneAxisParent, JVector coneAxisChild, float coneDegrees, float twistDegrees, float strength)
     {
         var socket = world.CreateConstraint<BallSocket>(parent, child);
@@ -362,7 +432,7 @@ public class Mannequin
         twist.Initialize(coneAxisChild, coneAxisChild, AngularLimit.FromDegree(-twistDegrees, twistDegrees));
 
         var servo = world.CreateConstraint<AngularServo>(parent, child);
-        servo.Initialize();
+        servo.Initialize(parent.Orientation.Conjugate() * RelaxedRotation(bone) * child.Orientation);
         drives.Add(new Drive { Angular = servo, BaseTorque = strength * GravityTorque(child, center) });
     }
 
@@ -405,12 +475,12 @@ public class Mannequin
         }
     }
 
-    /// Puts the mannequin into its standing pose, transformed rigidly, and stops it.
+    /// Puts the mannequin into its relaxed pose, transformed rigidly, and stops it.
     public void Place(JVector position, JQuaternion orientation)
     {
         for (int i = 0; i < BoneCount; i++)
         {
-            SegmentFrame(Segments[i], out JVector p, out JQuaternion q);
+            (JVector p, JQuaternion q) = RelaxedPose[i];
             var body = Bodies[i];
             body.Position = position + JVector.Transform(p, orientation);
             body.Orientation = orientation * q;
@@ -430,7 +500,7 @@ public class Demo37 : IDemo
     public string Name => "Wooden Mannequins";
 
     public string Description =>
-        "Artist's mannequins whose joints carry torque-limited servos pulling them towards a relaxed standing pose.";
+        "Artist's mannequins whose joints carry torque-limited servos pulling them towards a relaxed posture.";
 
     public string Controls => "Use the slider to change muscle strength; Drop throws them in again.";
 
