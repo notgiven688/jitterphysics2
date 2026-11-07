@@ -100,7 +100,7 @@ public partial class Playground : RenderWindow
         new Demo23(),
         new Demo24(),
         new Demo25(),
-        new Demo26(), // angular sweep
+        // new Demo26(), // angular sweep
         new Demo27(),
         new Demo28(),
         new Demo29(),
@@ -112,6 +112,7 @@ public partial class Playground : RenderWindow
         // new Demo35(), // rolling
         // new Demo36(), // trigger volumes
         new Demo37(),
+        new Demo38(),
     };
 
     private IDemo? currentDemo;
