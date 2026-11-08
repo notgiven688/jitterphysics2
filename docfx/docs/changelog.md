@@ -1,5 +1,10 @@
 # Changelog
 
+### Jitter 2.14.1 (2026-11-08)
+
+- Added `SoftBodySegment`, a capsule-shaped soft-body shape between two vertices for ropes and cables.
+- `SoftBodyTriangle` and `SoftBodyTetrahedron` are no longer sealed and can be subclassed.
+
 ### Jitter 2.14.0 (2026-11-06)
 
 - Contact manifolds are now built from the support features of both shapes (`ISupportFeature`), fixing contact point errors and rolling drift on curved shapes.
