@@ -19380,15 +19380,15 @@ references:
   commentId: T:Jitter2.SoftBodies.SoftBodySegment
   fullName: Jitter2.SoftBodies.SoftBodySegment
   nameWithType: SoftBodySegment
-- uid: Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,System.Int32,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
-  name: SoftBodySegment(SoftBody, int, RigidBody, RigidBody)
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment__ctor_Jitter2_SoftBodies_SoftBody_System_Int32_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_
-  commentId: M:Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,System.Int32,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
-  name.vb: New(SoftBody, Integer, RigidBody, RigidBody)
-  fullName: Jitter2.SoftBodies.SoftBodySegment.SoftBodySegment(Jitter2.SoftBodies.SoftBody, int, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
-  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.New(Jitter2.SoftBodies.SoftBody, Integer, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
-  nameWithType: SoftBodySegment.SoftBodySegment(SoftBody, int, RigidBody, RigidBody)
-  nameWithType.vb: SoftBodySegment.New(SoftBody, Integer, RigidBody, RigidBody)
+- uid: Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
+  name: SoftBodySegment(SoftBody, RigidBody, RigidBody)
+  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment__ctor_Jitter2_SoftBodies_SoftBody_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_
+  commentId: M:Jitter2.SoftBodies.SoftBodySegment.#ctor(Jitter2.SoftBodies.SoftBody,Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)
+  name.vb: New(SoftBody, RigidBody, RigidBody)
+  fullName: Jitter2.SoftBodies.SoftBodySegment.SoftBodySegment(Jitter2.SoftBodies.SoftBody, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
+  fullName.vb: Jitter2.SoftBodies.SoftBodySegment.New(Jitter2.SoftBodies.SoftBody, Jitter2.Dynamics.RigidBody, Jitter2.Dynamics.RigidBody)
+  nameWithType: SoftBodySegment.SoftBodySegment(SoftBody, RigidBody, RigidBody)
+  nameWithType.vb: SoftBodySegment.New(SoftBody, RigidBody, RigidBody)
 - uid: Jitter2.SoftBodies.SoftBodySegment.#ctor*
   name: SoftBodySegment
   href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment__ctor_
@@ -19431,19 +19431,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SoftBodySegment.GetClosest
   nameWithType: SoftBodySegment.GetClosest
-- uid: Jitter2.SoftBodies.SoftBodySegment.Index
-  name: Index
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Index
-  commentId: P:Jitter2.SoftBodies.SoftBodySegment.Index
-  fullName: Jitter2.SoftBodies.SoftBodySegment.Index
-  nameWithType: SoftBodySegment.Index
-- uid: Jitter2.SoftBodies.SoftBodySegment.Index*
-  name: Index
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Index_
-  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.Index
-  isSpec: "True"
-  fullName: Jitter2.SoftBodies.SoftBodySegment.Index
-  nameWithType: SoftBodySegment.Index
 - uid: Jitter2.SoftBodies.SoftBodySegment.Radius
   name: Radius
   href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_Radius

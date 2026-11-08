@@ -117,6 +117,7 @@ body.SetMassInertia();          // Only if the body uses mass properties derived
 │   ├── TransformedShape
 │   └── TriangleShape
 └── SoftBodyShape
+    ├── SoftBodySegment
     ├── SoftBodyTetrahedron
     └── SoftBodyTriangle
 </code></pre>
@@ -153,7 +154,7 @@ The <code>TriangleShape</code> is constructed with a <code>TriangleMesh</code> a
 </code></pre>
 <p>The mesh records which triangles share edges. <code>TriangleEdgeCollisionFilter</code>, enabled by default, uses this information to reduce snagging when bodies slide across those edges.</p>
 <h3 id="softbodyshape">SoftBodyShape</h3>
-<p>A soft-body triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a <code>SoftBody</code>, rather than attaching it to one rigid body. See <a href="softbodies.html">Soft Bodies</a>.</p>
+<p>A soft-body segment, triangle or tetrahedron uses a separate rigid body for each vertex. Its geometry changes as those bodies move. Add it to a <code>SoftBody</code>, rather than attaching it to one rigid body. See <a href="softbodies.html">Soft Bodies</a>.</p>
 <h2 id="debug-drawing">Debug drawing</h2>
 <p>Shapes can be drawn individually:</p>
 <pre><code class="lang-cs">var shape = new SphereShape(radius: 1);
