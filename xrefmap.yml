@@ -19399,19 +19399,6 @@ references:
   fullName.vb: Jitter2.SoftBodies.SoftBodySegment.New
   nameWithType: SoftBodySegment.SoftBodySegment
   nameWithType.vb: SoftBodySegment.New
-- uid: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
-  name: ContactMargin
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_ContactMargin
-  commentId: P:Jitter2.SoftBodies.SoftBodySegment.ContactMargin
-  fullName: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
-  nameWithType: SoftBodySegment.ContactMargin
-- uid: Jitter2.SoftBodies.SoftBodySegment.ContactMargin*
-  name: ContactMargin
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_ContactMargin_
-  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.ContactMargin
-  isSpec: "True"
-  fullName: Jitter2.SoftBodies.SoftBodySegment.ContactMargin
-  nameWithType: SoftBodySegment.ContactMargin
 - uid: Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector@)
   name: GetCenter(out JVector)
   href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_GetCenter_Jitter2_LinearMath_JVector__
@@ -19486,19 +19473,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.SoftBodies.SoftBodySegment.SupportMap
   nameWithType: SoftBodySegment.SupportMap
-- uid: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
-  name: SweepFactor
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SweepFactor
-  commentId: P:Jitter2.SoftBodies.SoftBodySegment.SweepFactor
-  fullName: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
-  nameWithType: SoftBodySegment.SweepFactor
-- uid: Jitter2.SoftBodies.SoftBodySegment.SweepFactor*
-  name: SweepFactor
-  href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_SweepFactor_
-  commentId: Overload:Jitter2.SoftBodies.SoftBodySegment.SweepFactor
-  isSpec: "True"
-  fullName: Jitter2.SoftBodies.SoftBodySegment.SweepFactor
-  nameWithType: SoftBodySegment.SweepFactor
 - uid: Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(System.Single)
   name: UpdateWorldBoundingBox(float)
   href: api/Jitter2.SoftBodies.SoftBodySegment.html#Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_System_Single_

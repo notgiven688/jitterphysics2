@@ -103,7 +103,7 @@ used to build ropes and cables.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SoftBodySegment : SoftBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportFeature, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
+    <pre><code class="lang-csharp hljs">public class SoftBodySegment : SoftBodyShape, IDynamicTreeProxy, IPartitionedSetIndex, IUpdatableBoundingBox, ISupportFeature, ISupportMappable, IRayCastable, IAngularSweepTestable, ISweepTestable, IDistanceTestable, IDebugDrawable</code></pre>
   </div>
 
 
@@ -170,6 +170,9 @@ used to build ropes and cables.</p>
       <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDraw_Jitter2_IDebugDrawer_Jitter2_DebugDrawSettings__">Shape.DebugDraw(IDebugDrawer, in DebugDrawSettings)</a>
     </div>
     <div>
+      <a class="xref" href="Jitter2.Collision.Shapes.Shape.html#Jitter2_Collision_Shapes_Shape_DebugDrawLocal__1___0__Jitter2_DebugDrawSettings__">Shape.DebugDrawLocal&lt;TSink&gt;(ref TSink, in DebugDrawSettings)</a>
+    </div>
+    <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
     </div>
     <div>
@@ -180,6 +183,9 @@ used to build ropes and cables.</p>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
     </div>
     <div>
       <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
@@ -248,39 +254,6 @@ so segments should be kept short, about twice the <a class="xref" href="Jitter2.
 </h2>
 
 
-  <a id="Jitter2_SoftBodies_SoftBodySegment_ContactMargin_" data-uid="Jitter2.SoftBodies.SoftBodySegment.ContactMargin*"></a>
-
-  <h3 id="Jitter2_SoftBodies_SoftBodySegment_ContactMargin" data-uid="Jitter2.SoftBodies.SoftBodySegment.ContactMargin">
-  ContactMargin
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L96"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets an extra distance by which the bounding box is enlarged, so that broad-phase
-filters also see pairs that are this close but not yet touching. Default is zero.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float ContactMargin { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="Jitter2_SoftBodies_SoftBodySegment_Index_" data-uid="Jitter2.SoftBodies.SoftBodySegment.Index*"></a>
 
   <h3 id="Jitter2_SoftBodies_SoftBodySegment_Index" data-uid="Jitter2.SoftBodies.SoftBodySegment.Index">
@@ -327,40 +300,6 @@ skip neighbouring segments of the same soft body.</p>
 
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public float Radius { get; set; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Jitter2_SoftBodies_SoftBodySegment_SweepFactor_" data-uid="Jitter2.SoftBodies.SoftBodySegment.SweepFactor*"></a>
-
-  <h3 id="Jitter2_SoftBodies_SoftBodySegment_SweepFactor" data-uid="Jitter2.SoftBodies.SoftBodySegment.SweepFactor">
-  SweepFactor
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L90"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Gets or sets how many steps of motion the bounding box covers ahead of the segment, based on
-the vertex velocities. Broad-phase filters that create contacts before shapes touch
-(speculative contacts) can only find pairs within this reach. Default is 1.5.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public float SweepFactor { get; set; }</code></pre>
   </div>
 
 
@@ -484,7 +423,7 @@ the vertex velocities. Broad-phase filters that create contacts before shapes to
 
   <h3 id="Jitter2_SoftBodies_SoftBodySegment_GetCenter_Jitter2_LinearMath_JVector__" data-uid="Jitter2.SoftBodies.SoftBodySegment.GetCenter(Jitter2.LinearMath.JVector@)">
   GetCenter(out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L140"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L113"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Returns a point inside the shape. It does not need to be the center of mass.</p>
@@ -556,7 +495,7 @@ the vertex velocities. Broad-phase filters that create contacts before shapes to
 
   <h3 id="Jitter2_SoftBodies_SoftBodySegment_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.SoftBodies.SoftBodySegment.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   SupportMap(in JVector, out JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Computes the point on the shape that is furthest in the specified direction.</p>
@@ -592,7 +531,7 @@ the vertex velocities. Broad-phase filters that create contacts before shapes to
 
   <h3 id="Jitter2_SoftBodies_SoftBodySegment_UpdateWorldBoundingBox_System_Single_" data-uid="Jitter2.SoftBodies.SoftBodySegment.UpdateWorldBoundingBox(System.Single)">
   UpdateWorldBoundingBox(float)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SoftBodies/SoftBodySegment.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Recomputes the world-space bounding box.</p>
