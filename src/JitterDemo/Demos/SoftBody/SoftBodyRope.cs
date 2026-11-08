@@ -42,7 +42,7 @@ public class SoftBodyRope : SoftBody
     /// <param name="bendSoftness">Softness of springs across every second vertex, which resist bending
     /// (cable). Negative leaves them out (rope). They use the constraint default bias.</param>
     public SoftBodyRope(World world, IReadOnlyList<JVector> points, float radius, float inverseMass = 10,
-        float stretchSoftness = 0.001f, float stretchBias = DefaultStretchBias, float bendSoftness = -1) : base(world)
+        float stretchSoftness = 0.004f, float stretchBias = DefaultStretchBias, float bendSoftness = -1) : base(world)
     {
         Radius = radius;
 
