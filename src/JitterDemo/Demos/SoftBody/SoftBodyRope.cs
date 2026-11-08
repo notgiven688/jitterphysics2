@@ -73,7 +73,7 @@ public class SoftBodyRope : SoftBody
 
         for (int i = 0; i < Vertices.Count - 1; i++)
         {
-            AddShape(new SoftBodySegment(this, i, Vertices[i], Vertices[i + 1]) { Radius = radius });
+            AddShape(new RopeSegment(this, i, Vertices[i], Vertices[i + 1]) { Radius = radius });
         }
     }
 

@@ -8,7 +8,7 @@ using Jitter2.SoftBodies;
 namespace JitterDemo;
 
 /// <summary>
-/// Broad-phase filter for ropes built from <see cref="SoftBodySegment"/>s. Works like
+/// Broad-phase filter for ropes built from <see cref="RopeSegment"/>s. Works like
 /// <see cref="BroadPhaseCollisionFilter"/>, but also creates speculative contacts: contacts for
 /// segments that are not touching yet but could within the next step. This keeps thin, fast ropes
 /// from passing through each other and through rigid bodies.
@@ -17,15 +17,15 @@ namespace JitterDemo;
 /// <para>
 /// A separated pair gets a contact when its gap is smaller than the distance the two shapes could
 /// cover relative to each other within a step (<see cref="SpeculativeFactor"/> times the full relative
-/// speed times the step length), plus both segments' <see cref="SoftBodySegment.ContactMargin"/>.
+/// speed times the step length), plus both segments' <see cref="RopeSegment.ContactMargin"/>.
 /// The full relative speed is used, not only its component along the current normal, because ropes
 /// wrap around each other within a step and the separating direction turns. The margin covers ropes
 /// that move together and then stop abruptly within a step, for example when one snaps taut.
 /// </para>
 /// <para>
 /// The solver lets a speculative contact close the gap but not overshoot it. Segment bounding boxes
-/// must reach as far as this test does (<see cref="SoftBodySegment.SweepFactor"/>,
-/// <see cref="SoftBodySegment.ContactMargin"/>), or the pairs are never seen.
+/// must reach as far as this test does (<see cref="RopeSegment.SweepFactor"/>,
+/// <see cref="RopeSegment.ContactMargin"/>), or the pairs are never seen.
 /// </para>
 /// </remarks>
 public class RopeCollisionFilter : IBroadPhaseFilter
@@ -36,7 +36,7 @@ public class RopeCollisionFilter : IBroadPhaseFilter
 
     /// <summary>
     /// Gets or sets how many steps of relative motion the speculative test looks ahead. Should not
-    /// exceed <see cref="SoftBodySegment.SweepFactor"/>. Default is 1.5.
+    /// exceed <see cref="RopeSegment.SweepFactor"/>. Default is 1.5.
     /// </summary>
     public float SpeculativeFactor { get; set; } = 1.5f;
 
@@ -112,7 +112,7 @@ public class RopeCollisionFilter : IBroadPhaseFilter
         return false;
     }
 
-    private static float Margin(Shape shape) => shape is SoftBodySegment segment ? segment.ContactMargin : 0.0f;
+    private static float Margin(Shape shape) => shape is RopeSegment segment ? segment.ContactMargin : 0.0f;
 
     /// <summary>
     /// For separated shapes, checks whether they could touch within the next step. Shape A is given
@@ -124,7 +124,7 @@ public class RopeCollisionFilter : IBroadPhaseFilter
     {
         // Only ropes get speculative contacts; other soft bodies behave as with BroadPhaseCollisionFilter.
         pA = pB = normal = JVector.Zero;
-        if (shapeA is not SoftBodySegment && shapeB is not SoftBodySegment) return false;
+        if (shapeA is not RopeSegment && shapeB is not RopeSegment) return false;
 
         if (!NarrowPhase.Distance(shapeA, shapeB, orientationB, positionB,
                 out pA, out pB, out normal, out float distance)) return false;

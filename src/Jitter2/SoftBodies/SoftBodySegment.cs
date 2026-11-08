@@ -17,7 +17,7 @@ namespace Jitter2.SoftBodies;
 /// Contacts are applied to the vertex closest to the contact point (see <see cref="GetClosest"/>),
 /// so segments should be kept short, about twice the <see cref="Radius"/>.
 /// </remarks>
-public sealed class SoftBodySegment : SoftBodyShape
+public class SoftBodySegment : SoftBodyShape
 {
     private readonly RigidBody v1;
     private readonly RigidBody v2;
@@ -82,42 +82,15 @@ public sealed class SoftBodySegment : SoftBodyShape
         return distance1Squared < distance2Squared ? v1 : v2;
     }
 
-    /// <summary>
-    /// Gets or sets how many steps of motion the bounding box covers ahead of the segment, based on
-    /// the vertex velocities. Broad-phase filters that create contacts before shapes touch
-    /// (speculative contacts) can only find pairs within this reach. Default is 1.5.
-    /// </summary>
-    public Real SweepFactor { get; set; } = (Real)1.5;
-
-    /// <summary>
-    /// Gets or sets an extra distance by which the bounding box is enlarged, so that broad-phase
-    /// filters also see pairs that are this close but not yet touching. Default is zero.
-    /// </summary>
-    public Real ContactMargin
-    {
-        get => contactMargin;
-        set => contactMargin = ArgumentCheck.NonNegative(value, nameof(ContactMargin));
-    }
-
-    private Real contactMargin;
-
     /// <inheritdoc/>
     public override void UpdateWorldBoundingBox(Real dt = (Real)0.0)
     {
-        Real extraMargin = MathR.Max(radius, (Real)0.01) + contactMargin;
+        Real extraMargin = MathR.Max(radius, (Real)0.01);
 
         JBoundingBox box = JBoundingBox.SmallBox;
 
         JBoundingBox.AddPointInPlace(ref box, v1.Position);
         JBoundingBox.AddPointInPlace(ref box, v2.Position);
-
-        // Cover the motion of the next step(s), so that approaching pairs can be found before they touch.
-        if (dt > (Real)0.0)
-        {
-            Real sweep = dt * SweepFactor;
-            JBoundingBox.AddPointInPlace(ref box, v1.Position + v1.Data.Velocity * sweep);
-            JBoundingBox.AddPointInPlace(ref box, v2.Position + v2.Data.Velocity * sweep);
-        }
 
         JVector extra = new(extraMargin);
         box.Min -= extra;

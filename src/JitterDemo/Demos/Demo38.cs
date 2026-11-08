@@ -108,7 +108,7 @@ public class Demo38 : IDemo
 
             // Always create contacts within a small margin, so strands that move together and then
             // stop abruptly (a rope snapping taut) still have contacts in place.
-            foreach (var shape in rope.Shapes) ((SoftBodySegment)shape).ContactMargin = 0.25f * Radius;
+            foreach (var shape in rope.Shapes) ((RopeSegment)shape).ContactMargin = 0.25f * Radius;
 
             AttachEnd(world, rope, rope.Vertices[0], leftCube);
             AttachEnd(world, rope, rope.Vertices[^1], rightCube);

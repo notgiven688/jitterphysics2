@@ -12,7 +12,7 @@ namespace Jitter2.SoftBodies;
 /// <summary>
 /// Represents a triangular shape in a soft body simulation.
 /// </summary>
-public sealed class SoftBodyTriangle : SoftBodyShape
+public class SoftBodyTriangle : SoftBodyShape
 {
     private readonly RigidBody v1;
     private readonly RigidBody v2;

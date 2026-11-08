@@ -12,7 +12,7 @@ namespace Jitter2.SoftBodies;
 /// <summary>
 /// Represents a tetrahedral shape in a soft body simulation.
 /// </summary>
-public sealed class SoftBodyTetrahedron : SoftBodyShape
+public class SoftBodyTetrahedron : SoftBodyShape
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SoftBodyTetrahedron"/> class.
