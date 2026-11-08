@@ -6,11 +6,17 @@ using Jitter2.SoftBodies;
 namespace JitterDemo;
 
 /// <summary>
-/// A <see cref="SoftBodySegment"/> whose bounding box reaches ahead of its motion, so that
-/// <see cref="RopeCollisionFilter"/> can find pairs before they touch.
+/// A <see cref="SoftBodySegment"/> that knows its position along the rope, for self-collision, and
+/// whose bounding box reaches ahead of its motion, so that <see cref="RopeCollisionFilter"/> can find
+/// pairs before they touch.
 /// </summary>
 public class RopeSegment : SoftBodySegment
 {
+    /// <summary>
+    /// Gets the position of this segment along its rope.
+    /// </summary>
+    public int Index { get; }
+
     /// <summary>
     /// Gets or sets how many steps of motion the bounding box covers ahead of the segment, based on
     /// the vertex velocities. Default is 1.5, matching <see cref="RopeCollisionFilter.SpeculativeFactor"/>.
@@ -23,8 +29,9 @@ public class RopeSegment : SoftBodySegment
     /// </summary>
     public float ContactMargin { get; set; }
 
-    public RopeSegment(SoftBody body, int index, RigidBody v1, RigidBody v2) : base(body, index, v1, v2)
+    public RopeSegment(SoftBody body, int index, RigidBody v1, RigidBody v2) : base(body, v1, v2)
     {
+        Index = index;
     }
 
     /// <inheritdoc/>

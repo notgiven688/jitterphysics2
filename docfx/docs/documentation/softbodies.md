@@ -41,14 +41,15 @@ softBody.AddSpring(spring);
 
 `Softness` and `Bias` control how the spring responds. `SetSpringParameters(frequency, damping, dt)` computes both from a frequency in Hz and a damping ratio for the given time step; call it again when the masses or the time step change. `TargetDistance` is the rest length, set to the initial distance by `Initialize`.
 
-**Shapes** give the body a surface to collide with. They do not hold it together. A `SoftBodyTriangle` spans three vertices and has a `Thickness` (default 0.1) so that the sheet has volume. A `SoftBodyTetrahedron` spans four vertices and has volume by itself. The shape is added to the soft body, not to a rigid body:
+**Shapes** give the body a surface to collide with. They do not hold it together. A `SoftBodySegment` is a capsule between two vertices, with a `Radius` (default 0.05). A `SoftBodyTriangle` spans three vertices and has a `Thickness` (default 0.1) so that the sheet has volume. A `SoftBodyTetrahedron` spans four vertices and has volume by itself. The shape is added to the soft body, not to a rigid body:
 
 ```cs
+softBody.AddShape(new SoftBodySegment(softBody, a, b));
 softBody.AddShape(new SoftBodyTriangle(softBody, a, b, c));
 softBody.AddShape(new SoftBodyTetrahedron(softBody, a, b, c, d));
 ```
 
-A cloth, for example, is a grid of vertices with springs along the grid lines and across the cells, and two triangles per cell. To pin a vertex, make it static:
+A cloth, for example, is a grid of vertices with springs along the grid lines and across the cells, and two triangles per cell. A rope is a chain of vertices with a spring and a segment between each pair of neighbours. Contacts go to the nearer vertex, so keep segments no longer than about twice their radius. To pin a vertex, make it static:
 
 ```cs
 corner.MotionType = MotionType.Static;
@@ -59,6 +60,8 @@ corner.MotionType = MotionType.Static;
 A soft-body shape computes its support points from the current vertex positions, so no transform is needed; the narrow phase sees the shape as it is deformed. Contacts are registered with the vertex closest to the contact point. Against a rigid body, the vertex only takes linear impulses while the rigid body responds fully. Between two soft bodies, both sides are vertices.
 
 Shapes of the same soft body never collide with each other, so a cloth does not stop itself from passing through its own folds. For self-collision, replace the dynamic tree filter with one that lets pairs of the same soft body through when they share no vertex. The broad phase filter then handles them like shapes of two different soft bodies.
+
+For a chain of `SoftBodySegment` shapes that test is not enough. Segments a few places apart share no vertex but still overlap where the rope bends, which pushes the rope apart. Let a pair through only if the segments are far enough apart along the chain, for example two diameters. A segment does not know its position in the chain, so store it yourself, for example in a subclass.
 
 A vertex is light compared to a typical rigid body, so a heavy body on a cloth stretches the springs considerably. Substeps help.
 
@@ -71,5 +74,7 @@ A vertex is light compared to a typical rigid body, so a heavy body on a cloth s
 ## Custom behaviour
 
 Derive from `SoftBody` and override `WorldOnPostStep` to apply forces every step. A pressurized body, for example, computes the enclosed volume of its triangles there and pushes each triangle's vertices along its normal with `AddForce`. Call the base method first; it keeps the activation state in sync.
+
+The soft-body shapes can be subclassed as well, for example to override `UpdateWorldBoundingBox` so that a custom broad phase filter can find pairs before they touch. The base constructors call `UpdateWorldBoundingBox`, so an override runs before the constructor body of the subclass. `RopeSegment` and `RopeCollisionFilter` in JitterDemo do this to keep thin, fast ropes from passing through each other.
 
 `SpringConstraint.DebugDraw` draws a spring as a coil between its anchors; see [Debug drawing](constraints.md#debug-drawing).

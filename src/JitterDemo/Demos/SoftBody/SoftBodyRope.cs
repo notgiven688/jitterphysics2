@@ -92,7 +92,7 @@ public class SoftBodyRope : SoftBody
     /// </summary>
     public static bool SelfCollisionFilter(IDynamicTreeProxy proxyA, IDynamicTreeProxy proxyB)
     {
-        if (proxyA is SoftBodySegment sa && proxyB is SoftBodySegment sb && sa.SoftBody == sb.SoftBody &&
+        if (proxyA is RopeSegment sa && proxyB is RopeSegment sb && sa.SoftBody == sb.SoftBody &&
             sa.SoftBody is SoftBodyRope)
         {
             return Math.Abs(sa.Index - sb.Index) > ((SoftBodyRope)sa.SoftBody).SelfCollisionIndexGap;

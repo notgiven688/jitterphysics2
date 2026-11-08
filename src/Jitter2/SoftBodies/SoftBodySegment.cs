@@ -35,12 +35,6 @@ public class SoftBodySegment : SoftBodyShape
     public RigidBody Vertex2 => v2;
 
     /// <summary>
-    /// Gets the position of this segment within its chain. Used by collision filters to
-    /// skip neighbouring segments of the same soft body.
-    /// </summary>
-    public int Index { get; }
-
-    /// <summary>
     /// Gets or sets the radius of the capsule.
     /// </summary>
     public Real Radius
@@ -57,15 +51,13 @@ public class SoftBodySegment : SoftBodyShape
     /// Initializes a new segment between two vertices.
     /// </summary>
     /// <param name="body">The soft body owning this segment.</param>
-    /// <param name="index">The position of the segment within its chain.</param>
     /// <param name="v1">The first vertex.</param>
     /// <param name="v2">The second vertex.</param>
-    public SoftBodySegment(SoftBody body, int index, RigidBody v1, RigidBody v2)
+    public SoftBodySegment(SoftBody body, RigidBody v1, RigidBody v2)
     {
         this.v1 = v1;
         this.v2 = v2;
 
-        Index = index;
         SoftBody = body;
         UpdateWorldBoundingBox();
     }
