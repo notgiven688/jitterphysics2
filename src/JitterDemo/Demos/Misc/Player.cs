@@ -73,10 +73,10 @@ public class Player
             bool isBody1 = contact.Body1 == Body;
             floor = isBody1 ? contact.Body2 : contact.Body1;
 
-            if ((mask & ContactData.MaskContact0) != 0) { hitPoint += isBody1 ? cd.Contact0.RelativePosition1 : cd.Contact0.RelativePosition2; numContacts++; }
-            if ((mask & ContactData.MaskContact1) != 0) { hitPoint += isBody1 ? cd.Contact1.RelativePosition1 : cd.Contact1.RelativePosition2; numContacts++; }
-            if ((mask & ContactData.MaskContact2) != 0) { hitPoint += isBody1 ? cd.Contact2.RelativePosition1 : cd.Contact2.RelativePosition2; numContacts++; }
-            if ((mask & ContactData.MaskContact3) != 0) { hitPoint += isBody1 ? cd.Contact3.RelativePosition1 : cd.Contact3.RelativePosition2; numContacts++; }
+            if ((mask & ContactData.MaskContact0) != 0) { hitPoint += isBody1 ? cd.Contact0.RelativePosition1 : cd.Contact0.GetRelativePosition2(cd); numContacts++; }
+            if ((mask & ContactData.MaskContact1) != 0) { hitPoint += isBody1 ? cd.Contact1.RelativePosition1 : cd.Contact1.GetRelativePosition2(cd); numContacts++; }
+            if ((mask & ContactData.MaskContact2) != 0) { hitPoint += isBody1 ? cd.Contact2.RelativePosition1 : cd.Contact2.GetRelativePosition2(cd); numContacts++; }
+            if ((mask & ContactData.MaskContact3) != 0) { hitPoint += isBody1 ? cd.Contact3.RelativePosition1 : cd.Contact3.GetRelativePosition2(cd); numContacts++; }
 
             if (numContacts == 0) continue;
 

@@ -61,7 +61,7 @@ public class DraggedCapsuleTests
                     if ((cd.UsageMask & (1u << slot)) == 0) continue;
                     ref ContactData.Contact c = ref (slot == 0 ? ref cd.Contact0 : ref slot == 1 ? ref cd.Contact1 : ref slot == 2 ? ref cd.Contact2 : ref cd.Contact3);
                     JVector w1 = c.RelativePosition1 + cd.Body1.Data.Position;
-                    JVector w2 = c.RelativePosition2 + cd.Body2.Data.Position;
+                    JVector w2 = c.GetRelativePosition2(cd) + cd.Body2.Data.Position;
                     farthest = MathR.Max(farthest, (w1 - capsule.Position).Length());
                     farthest = MathR.Max(farthest, (w2 - capsule.Position).Length());
                 }

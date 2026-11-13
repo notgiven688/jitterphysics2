@@ -144,9 +144,10 @@ public class ContactLifecycleTests
         world.PreSubStep += step =>
         {
             Assert.That(world.GetArbiter(wallShape.ShapeId, shape.ShapeId, out var arbiter), Is.True);
-            var point = arbiter!.Handle.Data.Contact0;
-            normal = point.Normal;
-            offset = point.RelativePosition2;
+            ref ContactData manifold = ref arbiter!.Handle.Data;
+            var point = manifold.Contact0;
+            normal = manifold.Normal;
+            offset = point.GetRelativePosition2(manifold);
             Real separation = JVector.Dot(body.Position + offset - wall.Position - point.RelativePosition1, normal);
             Assert.That(separation, Is.GreaterThan((Real)0.1), "The contact must be generated before overlap.");
             Assert.That((offset % normal).Length(), Is.GreaterThan((Real)0.1), "The impulse must act off-center.");
