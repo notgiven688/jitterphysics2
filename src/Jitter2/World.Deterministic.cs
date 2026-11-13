@@ -30,7 +30,15 @@ public enum SolveMode
     /// Solves contacts and constraints in a repeatable order. Groups of connected bodies can
     /// still be solved in parallel. Can be significantly slower than <see cref="Regular"/>.
     /// </summary>
-    Deterministic
+    Deterministic,
+
+    /// <summary>
+    /// Groups contacts that share no dynamic body and solves each group without locks, several
+    /// contacts at once with SIMD. Faster than <see cref="Regular"/> for scenes dominated by
+    /// contacts, such as piles and stacks; joints are solved as in <see cref="Regular"/>.
+    /// Multithreaded results may vary between runs.
+    /// </summary>
+    GraphColored
 }
 
 public sealed partial class World

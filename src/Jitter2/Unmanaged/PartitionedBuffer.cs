@@ -160,6 +160,12 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public int Count { get; private set; }
 
     /// <summary>
+    /// Changes whenever an element is added, removed or moved. Indices into <see cref="Active"/>
+    /// and <see cref="Elements"/> taken at one version are valid while the version is unchanged.
+    /// </summary>
+    internal int Version { get; private set; }
+
+    /// <summary>
     /// Indicates whether the allocated memory is aligned to a 64-byte boundary.
     /// </summary>
     public bool Aligned64 { get; }
@@ -250,6 +256,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public void Free(JHandle<T> handle)
     {
         Debug.Assert(!disposed);
+        Version++;
 
         T* element = *handle.Pointer;
         int index = (int)(element - memory);
@@ -343,6 +350,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
         Debug.Assert(*handle.Pointer - memory < Count);
 
         if ((nint)(*handle.Pointer) - (nint)memory < activeCount * sizeof(T)) return;
+        Version++;
 
         (**handle.Pointer, memory[activeCount]) = (memory[activeCount], **handle.Pointer);
 
@@ -359,6 +367,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public void MoveToInactive(JHandle<T> handle)
     {
         if ((nint)(*handle.Pointer) - (nint)memory >= activeCount * sizeof(T)) return;
+        Version++;
 
         activeCount -= 1;
         (**handle.Pointer, memory[activeCount]) = (memory[activeCount], **handle.Pointer);
@@ -374,6 +383,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     /// <param name="j">The index of the second element.</param>
     public void Swap(int i, int j)
     {
+        Version++;
         (memory[i], memory[j]) = (memory[j], memory[i]);
 
         *GetHandleSlot(Unsafe.Read<int>(&memory[i])) = &memory[i];
@@ -407,6 +417,7 @@ public sealed unsafe class PartitionedBuffer<T> : IDisposable where T : unmanage
     public JHandle<T> Allocate(bool active = false, bool clear = false)
     {
         Debug.Assert(!disposed);
+        Version++;
 
         if (Count == size)
         {

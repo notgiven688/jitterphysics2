@@ -35,6 +35,7 @@ public sealed partial class World
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
+    private readonly SlimBag<JHandle<ContactData>> pendingBrokenArbiters = [];
     private readonly List<Arbiter> dispatchArbiters = [];
     private readonly List<Arbiter> retiredArbiters = [];
 
@@ -234,26 +235,45 @@ public sealed partial class World
             for (int i = 0; i < timeStep.SubstepCount; i++)
             {
                 PreSubStep?.Invoke(timeStep);
-                IntegrateForces(multiThread); // FAST SWEEP
-                Solve(multiThread, solverIterations); // FAST SWEEP
-                IntegrateVelocities(multiThread); // FAST SWEEP
-                Relax(multiThread, velocityRelaxations); // FAST SWEEP
+
+                if (SolveMode == Jitter2.SolveMode.GraphColored)
+                {
+                    // Without substep callbacks nothing can change the contacts between substeps.
+                    bool recolor = i == 0 || PreSubStep != null || PostSubStep != null;
+                    SolveColored(multiThread, solverIterations, velocityRelaxations, integrate: true, recolor,
+                        updateContacts: i == timeStep.SubstepCount - 1);
+                }
+                else
+                {
+                    IntegrateForces(multiThread); // FAST SWEEP
+                    Solve(multiThread, solverIterations); // FAST SWEEP
+                    IntegrateVelocities(multiThread); // FAST SWEEP
+                    Relax(multiThread, velocityRelaxations); // FAST SWEEP
+                }
+
                 PostSubStep?.Invoke(timeStep);
             }
 
             Tracer.ProfileEnd(TraceName.Solve);
             SetTime(Timings.Solve);
 
+            // The graph-colored solver has already refreshed the contacts in its last sweep.
+            bool contactsUpdated = SolveMode == Jitter2.SolveMode.GraphColored;
+            debugTimings[(int)Timings.UpdateContacts] = 0;
+
             Tracer.ProfileBegin(TraceName.RemoveArbiter);
-            RemoveBrokenArbiters();
+            RemoveBrokenArbiters(contactsUpdated);
             Tracer.ProfileEnd(TraceName.RemoveArbiter);
             SetTime(Timings.RemoveArbiter);
             AssertIslandActivationInvariants();
 
-            Tracer.ProfileBegin(TraceName.UpdateContacts);
-            UpdateContacts(multiThread); // FAST SWEEP
-            Tracer.ProfileEnd(TraceName.UpdateContacts);
-            SetTime(Timings.UpdateContacts);
+            if (!contactsUpdated)
+            {
+                Tracer.ProfileBegin(TraceName.UpdateContacts);
+                UpdateContacts(multiThread); // FAST SWEEP
+                Tracer.ProfileEnd(TraceName.UpdateContacts);
+                SetTime(Timings.UpdateContacts);
+            }
 
             Tracer.ProfileBegin(TraceName.UpdateBodies);
             ForeachActiveBody(multiThread);
@@ -367,6 +387,12 @@ public sealed partial class World
 
             for (int i = 0; i < timeStep.SubstepCount; i++)
             {
+                if (SolveMode == Jitter2.SolveMode.GraphColored)
+                {
+                    SolveColored(multiThread, solverIterations, relaxationIterations, integrate: false);
+                    continue;
+                }
+
                 Solve(multiThread, solverIterations);
                 Relax(multiThread, relaxationIterations);
             }
@@ -833,11 +859,15 @@ public sealed partial class World
         }
     }
 
-    private void RemoveBrokenArbiters()
+    // Removes the arbiters that broke in the previous step and were not refilled in this one.
+    // With contactsUpdated the contact update of this step has already run: it flagged those
+    // arbiters beforehand and collected the ones that broke now in pendingBrokenArbiters.
+    private void RemoveBrokenArbiters(bool contactsUpdated)
     {
         foreach (var handle in brokenArbiters)
         {
-            if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
+            uint mask = handle.Data.UsageMask;
+            if (contactsUpdated ? (mask & ContactData.MaskRetiring) == 0 : (mask & ContactData.MaskContactAll) != 0) continue;
             var arb = arbiters[handle.Data.Key];
 
             WakeIslandNextStep(arb.Body1.InternalIsland);
@@ -854,6 +884,9 @@ public sealed partial class World
         }
 
         brokenArbiters.Clear();
+
+        foreach (var handle in pendingBrokenArbiters) brokenArbiters.Add(handle);
+        pendingBrokenArbiters.Clear();
     }
 
     private void UpdateContacts(Parallel.Batch batch)

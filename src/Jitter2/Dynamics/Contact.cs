@@ -70,6 +70,10 @@ public struct ContactData
     /// <summary>Bit mask indicating all four contact slots are in use.</summary>
     public const uint MaskContactAll = MaskContact0 | MaskContact1 | MaskContact2 | MaskContact3;
 
+    // Set on an empty manifold whose arbiter is about to be removed, so that a contact update
+    // running before the removal does not report it as broken again.
+    internal const uint MaskRetiring = 1u << 8;
+
     // Accessed in unsafe code.
 #pragma warning disable CS0649
     internal int _internal;

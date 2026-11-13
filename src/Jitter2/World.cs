@@ -455,7 +455,7 @@ public sealed partial class World : IDisposable
         Logger.Information($"Creating new world.");
 
         memRigidBodies = new PartitionedBuffer<RigidBodyData>(aligned64: true);
-        memContacts = new PartitionedBuffer<ContactData>();
+        memContacts = new PartitionedBuffer<ContactData>(aligned64: true);
         memConstraints = new PartitionedBuffer<ConstraintData>();
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>();
 
