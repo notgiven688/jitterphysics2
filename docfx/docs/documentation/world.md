@@ -82,20 +82,13 @@ Multithreaded calls to `Step` and `Stabilize` share one worker pool. If differen
 
 Any callbacks shared by worlds running concurrently must be thread-safe. This includes logging, collision filters, and event handlers. The same applies if your application draws debug geometry from multiple threads.
 
-## Solver Mode
+## Solver
 
-Jitter2 offers two solvers through <xref:Jitter2.SolveMode>:
+Jitter2 has a single solver. It groups contacts and constraints so that no two of a group share a dynamic body, and solves each group without locks; contacts are solved several at once with SIMD. The grouping depends only on which contacts and constraints exist, so the result of a step does not depend on the number of threads or on their timing. It supports both single-threaded and multithreaded stepping.
 
-```cs
-world.SolveMode = SolveMode.Regular;      // default
-world.SolveMode = SolveMode.GraphColored; // lock-free, SIMD, reproducible
-```
+Use this for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
 
-`SolveMode.Regular` solves contacts and constraints one at a time and protects the bodies with locks. With multithreading, the order in which they are solved can vary between runs.
-
-`SolveMode.GraphColored` groups contacts and constraints that share no dynamic body and solves each group without locks, contacts several at once with SIMD. It is faster for scenes dominated by contacts, such as piles and stacks, and its result does not depend on the number of threads. `SolveMode.Deterministic` selects the same solver. It supports both single-threaded and multithreaded stepping.
-
-Use it for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
+`World.SolveMode` and the <xref:Jitter2.SolveMode> enum are obsolete. Earlier versions offered a faster solver whose multithreaded results could vary and a slower repeatable one; both values now select the same solver.
 
 ## Solver Iterations
 

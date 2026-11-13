@@ -4,7 +4,7 @@ using Jitter2.Dynamics.Constraints;
 namespace JitterTests.Behavior;
 
 [TestFixture, NonParallelizable]
-public class GraphColoredSolverTests
+public class SolverTests
 {
     private const Real Dt = (Real)0.01;
     private const int Threads = 4;
@@ -26,9 +26,9 @@ public class GraphColoredSolverTests
         pool.PauseWorkers();
     }
 
-    private static World NewWorld(SolveMode mode, int substeps = 1)
+    private static World NewWorld(int substeps = 1)
     {
-        var world = new World { SolveMode = mode, AllowDeactivation = false, SubstepCount = substeps };
+        var world = new World { AllowDeactivation = false, SubstepCount = substeps };
         var floor = world.CreateRigidBody();
         floor.AddShape(new BoxShape(200, 2, 200));
         floor.Position = new JVector(0, -1, 0);
@@ -72,36 +72,12 @@ public class GraphColoredSolverTests
         return bodies;
     }
 
-    [Test]
-    public void IndependentContacts_MatchTheRegularSolver()
-    {
-        using var regular = NewWorld(SolveMode.Regular);
-        using var colored = NewWorld(SolveMode.GraphColored);
-        var expected = AddSeparateBoxes(regular, 37);
-        var actual = AddSeparateBoxes(colored, 37);
-
-        for (int step = 0; step < 120; step++)
-        {
-            regular.Step(Dt, multiThread: false);
-            colored.Step(Dt, multiThread: false);
-        }
-
-        const double tolerance = 1e-3;
-        for (int i = 0; i < expected.Count; i++)
-        {
-            Assert.That((actual[i].Position - expected[i].Position).Length(), Is.LessThan(tolerance), $"position {i}");
-            Assert.That((actual[i].Velocity - expected[i].Velocity).Length(), Is.LessThan(tolerance), $"velocity {i}");
-            Assert.That((actual[i].AngularVelocity - expected[i].AngularVelocity).Length(), Is.LessThan(tolerance),
-                $"angular velocity {i}");
-        }
-    }
-
     [TestCase(false, 1)]
     [TestCase(true, 1)]
     [TestCase(true, 3)]
     public void Pyramid_StaysStanding(bool multiThread, int substeps)
     {
-        using var world = NewWorld(SolveMode.GraphColored, substeps);
+        using var world = NewWorld(substeps);
         var bodies = AddPyramid(world, 12);
         var start = bodies.ConvertAll(b => b.Position);
 
@@ -117,7 +93,7 @@ public class GraphColoredSolverTests
     [Test]
     public void SubstepCallbacks_KeepTheSolveValid()
     {
-        using var world = NewWorld(SolveMode.GraphColored, substeps: 2);
+        using var world = NewWorld(substeps: 2);
         var bodies = AddPyramid(world, 6);
         var start = bodies.ConvertAll(b => b.Position);
         int calls = 0;
@@ -130,40 +106,12 @@ public class GraphColoredSolverTests
             Assert.That((bodies[i].Position - start[i]).Length(), Is.LessThan((Real)0.1), $"box {i} moved");
     }
 
-    // Arbiters must be created and retired in the same steps as with the regular solver, although
-    // the graph-colored solver refreshes the contacts before the broken arbiters are removed.
-    [TestCase(false)]
-    [TestCase(true)]
-    public void ArbiterLifetime_MatchesTheRegularSolver(bool multiThread)
-    {
-        using var regular = NewWorld(SolveMode.Regular);
-        using var colored = NewWorld(SolveMode.GraphColored);
-
-        foreach (var world in new[] { regular, colored })
-        {
-            // Boxes dropped from different heights bounce, so contacts break and form again.
-            for (int i = 0; i < 20; i++)
-            {
-                var body = AddBox(world, new JVector(3 * i, 1 + (Real)0.3 * i, 0));
-                body.Restitution = (Real)0.8;
-            }
-        }
-
-        for (int step = 0; step < 400; step++)
-        {
-            regular.Step(Dt, multiThread);
-            colored.Step(Dt, multiThread);
-            Assert.That(colored.RawData.ActiveContacts.Length, Is.EqualTo(regular.RawData.ActiveContacts.Length),
-                $"arbiter count at step {step}");
-        }
-    }
-
     // Whatever the engine did to the contact buffer between solves, after a solve every color
     // is one run of records, and no two records of a color share a dynamic body.
     [Test]
     public void ContactRecords_AreGroupedByColor()
     {
-        using var world = NewWorld(SolveMode.GraphColored);
+        using var world = NewWorld();
         world.AllowDeactivation = true;
         AddPyramid(world, 10);
         for (int i = 0; i < 40; i++)
@@ -203,7 +151,7 @@ public class GraphColoredSolverTests
     [Test]
     public void JointsAndContacts_AreSolvedTogether()
     {
-        using var world = NewWorld(SolveMode.GraphColored);
+        using var world = NewWorld();
         // Hanging chains that end on the floor: joints, body-body contacts and floor contacts.
         var last = new List<RigidBody>();
         for (int chain = 0; chain < 30; chain++)
@@ -267,13 +215,12 @@ public class GraphColoredSolverTests
         return bodies;
     }
 
-    [TestCase(SolveMode.GraphColored)]
-    [TestCase(SolveMode.Deterministic)]
-    public void Result_IsIndependentOfThreads(SolveMode mode)
+    [Test]
+    public void Result_IsIndependentOfThreads()
     {
         var pool = Jitter2.Parallelization.ThreadPool.Instance;
-        using var serial = NewWorld(mode, substeps: 2);
-        using var parallel = NewWorld(mode, substeps: 2);
+        using var serial = NewWorld(substeps: 2);
+        using var parallel = NewWorld(substeps: 2);
         var expected = BuildMixedScene(serial);
         var actual = BuildMixedScene(parallel);
 
@@ -305,8 +252,8 @@ public class GraphColoredSolverTests
     [Test]
     public void Result_IsIndependentOfUnrelatedBodies()
     {
-        using var alone = NewWorld(SolveMode.GraphColored);
-        using var crowded = NewWorld(SolveMode.GraphColored);
+        using var alone = NewWorld();
+        using var crowded = NewWorld();
         var expected = AddPyramid(alone, 9);
         var actual = AddPyramid(crowded, 9);
 
@@ -346,7 +293,7 @@ public class GraphColoredSolverTests
     [Test]
     public void SleepingBodies_AreLeftAlone()
     {
-        using var world = NewWorld(SolveMode.GraphColored);
+        using var world = NewWorld();
         world.AllowDeactivation = true;
         var bodies = AddPyramid(world, 5);
 
@@ -363,7 +310,7 @@ public class GraphColoredSolverTests
     [Test]
     public void Stabilize_RemovesApproachVelocity()
     {
-        using var world = NewWorld(SolveMode.GraphColored);
+        using var world = NewWorld();
         var bodies = new List<RigidBody>();
         for (int i = 0; i < 12; i++) bodies.Add(AddBox(world, new JVector(3 * i, (Real)0.5, 0)));
         for (int step = 0; step < 20; step++) world.Step(Dt, multiThread: false);
@@ -373,25 +320,5 @@ public class GraphColoredSolverTests
         world.Stabilize(Dt, 8, 0, multiThread: true);
 
         foreach (var body in bodies) Assert.That(body.Velocity.Y, Is.GreaterThan((Real)(-0.5)));
-    }
-
-    [Test]
-    public void SolveMode_CanChangeBetweenSteps()
-    {
-        using var world = NewWorld(SolveMode.Regular);
-        var bodies = AddPyramid(world, 8);
-        var start = bodies.ConvertAll(b => b.Position);
-
-        for (int step = 0; step < 300; step++)
-        {
-            world.SolveMode = (step / 10 % 3) switch
-            {
-                0 => SolveMode.Regular, 1 => SolveMode.GraphColored, _ => SolveMode.Deterministic
-            };
-            world.Step(Dt, multiThread: true);
-        }
-
-        for (int i = 0; i < bodies.Count; i++)
-            Assert.That((bodies[i].Position - start[i]).Length(), Is.LessThan((Real)0.1), $"box {i} moved");
     }
 }

@@ -81,32 +81,12 @@ public sealed partial class World
         Last
     }
 
-    private Action<Parallel.Batch> integrateVelocities;
-    private Action<Parallel.Batch> integrateForces;
-    private Action<Parallel.Batch> prepareContacts;
-    private Action<Parallel.Batch> iterateContacts;
-    private Action<Parallel.Batch> relaxVelocities;
-    private Action<Parallel.Batch> updateContacts;
-    private Action<Parallel.Batch> prepareConstraints;
-    private Action<Parallel.Batch> iterateConstraints;
-    private Action<Parallel.Batch> prepareSmallConstraints;
-    private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
     private Action<Parallel.Batch> findCcdHits;
 
     private void InitParallelCallbacks()
     {
-        integrateVelocities = IntegrateVelocities;
-        integrateForces = IntegrateForces;
-        prepareContacts = PrepareContacts;
-        iterateContacts = IterateContacts;
-        relaxVelocities = RelaxVelocities;
-        prepareConstraints = PrepareConstraints;
-        iterateConstraints = IterateConstraints;
-        prepareSmallConstraints = PrepareSmallConstraints;
-        iterateSmallConstraints = IterateSmallConstraints;
-        updateContacts = UpdateContacts;
         updateBodies = UpdateBodies;
         detect = Detect;
         findCcdHits = FindCcdHits;
@@ -210,18 +190,6 @@ public sealed partial class World
             SetTime(Timings.CheckDeactivation);
             AssertIslandActivationInvariants();
 
-            Tracer.ProfileBegin(TraceName.ReorderContacts);
-
-            switch (SolveMode)
-            {
-                case SolveMode.Regular:
-                    ReorderContacts();
-                    break;
-            }
-
-            Tracer.ProfileEnd(TraceName.ReorderContacts);
-            SetTime(Timings.ReorderContacts);
-
             Tracer.ProfileBegin(TraceName.Solve);
 
             // Sub-stepping
@@ -229,20 +197,11 @@ public sealed partial class World
             {
                 PreSubStep?.Invoke(timeStep);
 
-                if (SolveMode != Jitter2.SolveMode.Regular)
-                {
-                    // Without substep callbacks nothing can change the contacts between substeps.
-                    bool recolor = i == 0 || PreSubStep != null || PostSubStep != null;
-                    SolveColored(multiThread, solverIterations, velocityRelaxations, integrate: true, recolor,
-                        updateContacts: i == timeStep.SubstepCount - 1);
-                }
-                else
-                {
-                    IntegrateForces(multiThread); // FAST SWEEP
-                    SolveVelocities(multiThread, solverIterations); // FAST SWEEP
-                    IntegrateVelocities(multiThread); // FAST SWEEP
-                    RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
-                }
+                // Without substep callbacks nothing can change contacts or joints between substeps.
+                // The last substep ends with the contact update of the step.
+                bool recolor = i == 0 || PreSubStep != null || PostSubStep != null;
+                SolveColored(multiThread, solverIterations, velocityRelaxations, integrate: true, recolor,
+                    updateContacts: i == timeStep.SubstepCount - 1);
 
                 PostSubStep?.Invoke(timeStep);
             }
@@ -250,23 +209,11 @@ public sealed partial class World
             Tracer.ProfileEnd(TraceName.Solve);
             SetTime(Timings.Solve);
 
-            // The graph-colored solver has already refreshed the contacts in its last sweep.
-            bool contactsUpdated = SolveMode != Jitter2.SolveMode.Regular;
-            debugTimings[(int)Timings.UpdateContacts] = 0;
-
             Tracer.ProfileBegin(TraceName.RemoveArbiter);
-            RemoveBrokenArbiters(contactsUpdated);
+            RemoveBrokenArbiters();
             Tracer.ProfileEnd(TraceName.RemoveArbiter);
             SetTime(Timings.RemoveArbiter);
             AssertIslandActivationInvariants();
-
-            if (!contactsUpdated)
-            {
-                Tracer.ProfileBegin(TraceName.UpdateContacts);
-                UpdateContacts(multiThread); // FAST SWEEP
-                Tracer.ProfileEnd(TraceName.UpdateContacts);
-                SetTime(Timings.UpdateContacts);
-            }
 
             Tracer.ProfileBegin(TraceName.UpdateBodies);
             ForeachActiveBody(multiThread);
@@ -367,14 +314,7 @@ public sealed partial class World
 
             for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                if (SolveMode != Jitter2.SolveMode.Regular)
-                {
-                    SolveColored(multiThread, solverIterations, relaxationIterations, integrate: false);
-                    continue;
-                }
-
-                SolveVelocities(multiThread, solverIterations);
-                RelaxVelocities(multiThread, relaxationIterations);
+                SolveColored(multiThread, solverIterations, relaxationIterations, integrate: false);
             }
         }
         finally
@@ -383,426 +323,11 @@ public sealed partial class World
         }
     }
 
-    #region Prepare and Solve Contacts and Constraints
-
-    private readonly ThreadLocal<Queue<int>> deferredContacts = new(() => new Queue<int>());
-    private readonly ThreadLocal<Queue<int>> deferredConstraints = new(() => new Queue<int>());
-    private readonly ThreadLocal<Queue<int>> deferredSmallConstraints = new(() => new Queue<int>());
-
-    private const int SolverPrefetchDistance = 4;
-    private const int SolverPrefetchCacheLineSize = 64;
-
-    // Ask the CPU to fetch the bodies for an upcoming contact or constraint while it solves
-    // the current one. Their addresses come through handles and are harder for the CPU to predict
-    // than the sequential contact and constraint data. These hints give the fetches a head start;
-    // they do not lock the bodies or read their values into the solver.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static unsafe void PrefetchBodies(JHandle<RigidBodyData> handle1, JHandle<RigidBodyData> handle2)
-    {
-        byte* body1 = (byte*)*handle1.Pointer;
-        byte* body2 = (byte*)*handle2.Pointer;
-
-        // Cover each body's 64-byte cache lines, including velocities, inertia and motion flags.
-        Sse.Prefetch0(body1);
-        Sse.Prefetch0(body2);
-        Sse.Prefetch0(body1 + SolverPrefetchCacheLineSize);
-        Sse.Prefetch0(body2 + SolverPrefetchCacheLineSize);
-
-        if (Precision.IsDoublePrecision)
-        {
-            Sse.Prefetch0(body1 + 2 * SolverPrefetchCacheLineSize);
-            Sse.Prefetch0(body2 + 2 * SolverPrefetchCacheLineSize);
-            Sse.Prefetch0(body1 + 3 * SolverPrefetchCacheLineSize);
-            Sse.Prefetch0(body2 + 3 * SolverPrefetchCacheLineSize);
-        }
-    }
-
-    private void PrepareContacts(Parallel.Batch batch) => PrepareContacts<BodyLock>(batch);
-
-    private void PrepareContacts<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-        var localQueue = deferredContacts.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ContactData next = ref span[i + SolverPrefetchDistance];
-                PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ContactData contact = ref span[i];
-            ref RigidBodyData b1 = ref contact.Body1.Data;
-            ref RigidBodyData b2 = ref contact.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            contact.PrepareForIteration(timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeBegin();
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ContactData contact = ref span[i];
-            ref RigidBodyData b1 = ref contact.Body1.Data;
-            ref RigidBodyData b2 = ref contact.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            contact.PrepareForIteration(timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
-    }
-
-    private void IterateContacts(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: true);
-
-    private void RelaxVelocities(Parallel.Batch batch) => IterateContacts<BodyLock>(batch, applyBias: false);
-
-    private void IterateContacts<TLock>(Parallel.Batch batch, bool applyBias) where TLock : struct, IBodyLock
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-        var localQueue = deferredContacts.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ContactData next = ref span[i + SolverPrefetchDistance];
-                PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(applyBias);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeBegin();
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ContactData c = ref span[i];
-            ref RigidBodyData b1 = ref c.Body1.Data;
-            ref RigidBodyData b2 = ref c.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            c.Iterate(applyBias);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        Tracer.ProfileScopeEnd(TraceName.Queue, TraceCategory.General, 10);
-    }
-
-    private void PrepareSmallConstraints(Parallel.Batch batch) => PrepareSmallConstraints<BodyLock>(batch);
-
-    private unsafe void PrepareSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
-    {
-        var span = memSmallConstraints.Active[batch.Start..batch.End];
-        var localQueue = deferredSmallConstraints.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref SmallConstraintData next = ref span[i + SolverPrefetchDistance];
-                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref SmallConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!constraint.IsEnabled) continue;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.PrepareForIteration(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref SmallConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.PrepareForIteration(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-    }
-
-    private void IterateSmallConstraints(Parallel.Batch batch) => IterateSmallConstraints<BodyLock>(batch);
-
-    private unsafe void IterateSmallConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
-    {
-        var span = memSmallConstraints.Active[batch.Start..batch.End];
-        var localQueue = deferredSmallConstraints.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref SmallConstraintData next = ref span[i + SolverPrefetchDistance];
-                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref SmallConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!constraint.IsEnabled) continue;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.Iterate(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref SmallConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.Iterate(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-    }
-
-
-    private void PrepareConstraints(Parallel.Batch batch) => PrepareConstraints<BodyLock>(batch);
-
-    private unsafe void PrepareConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
-    {
-        var span = memConstraints.Active[batch.Start..batch.End];
-        var localQueue = deferredConstraints.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ConstraintData next = ref span[i + SolverPrefetchDistance];
-                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!constraint.IsEnabled) continue;
-
-            Debug.Assert(b1.MotionType == MotionType.Dynamic || b2.MotionType == MotionType.Dynamic,
-                "Invalid constraint: both bodies are non-dynamic.");
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.PrepareForIteration(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.PrepareForIteration(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-    }
-
-    private void IterateConstraints(Parallel.Batch batch) => IterateConstraints<BodyLock>(batch);
-
-    private unsafe void IterateConstraints<TLock>(Parallel.Batch batch) where TLock : struct, IBodyLock
-    {
-        var span = memConstraints.Active[batch.Start..batch.End];
-        var localQueue = deferredConstraints.Value!;
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            if (Sse.IsSupported && i + SolverPrefetchDistance < span.Length)
-            {
-                ref ConstraintData next = ref span[i + SolverPrefetchDistance];
-                if (next.IsEnabled) PrefetchBodies(next.Body1, next.Body2);
-            }
-
-            ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!constraint.IsEnabled) continue;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.Iterate(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-
-        while (localQueue.TryDequeue(out int i))
-        {
-            ref ConstraintData constraint = ref span[i];
-            ref RigidBodyData b1 = ref constraint.Body1.Data;
-            ref RigidBodyData b2 = ref constraint.Body2.Data;
-
-            if (!TLock.TryLock(ref b1, ref b2))
-            {
-                localQueue.Enqueue(i);
-                continue;
-            }
-
-            constraint.Iterate(ref constraint, timeStep);
-            TLock.Unlock(ref b1, ref b2);
-        }
-    }
-
-    #endregion
-
     private void UpdateBodies(Parallel.Batch batch)
     {
         for (int i = batch.Start; i < batch.End; i++)
         {
             bodies[i].Update(timeStep);
-        }
-    }
-
-    private JHandle<RigidBodyData> lastVisited = JHandle<RigidBodyData>.Zero;
-    private int sortCounter;
-
-    /// <summary>
-    /// This method gradually improves the memory layout of <see cref="memContacts"/>, moving connected contacts
-    /// next to each other. This improves cache coherence.
-    /// </summary>
-    private void ReorderContacts()
-    {
-        int activeCount = memContacts.Active.Length;
-
-        // Don't even bother with sorting contacts when the set is small.
-        if (activeCount < 1024) return;
-
-        const int fraction = 1024;
-
-        // The basic idea here is to gradually improve the spatial locality of the contact array.
-        // Each frame, only a small fraction of contacts (1/1024th of the total) are visited.
-        // For each visited contact, the algorithm checks whether it is already adjacent to another
-        // contact that shares one of its bodies. If not, it attempts to move contacts that
-        // involve the same bodies forward in memory, grouping connected contacts together.
-
-        int iterations = activeCount / fraction;
-
-        for (int iter = 0; iter < iterations; iter++)
-        {
-            if (sortCounter > activeCount - 2) sortCounter = 0;
-
-            ref var current = ref memContacts.Active[sortCounter];
-            ref var next = ref memContacts.Active[sortCounter + 1];
-
-            if (current.Body1 == next.Body1 || current.Body1 == next.Body2)
-            {
-                lastVisited = current.Body1;
-                sortCounter += 1;
-                continue;
-            }
-
-            if (current.Body2 == next.Body1 || current.Body2 == next.Body2)
-            {
-                lastVisited = current.Body2;
-                sortCounter += 1;
-                continue;
-            }
-
-            int swaps = 0;
-
-            if (arbiters.TryGetValue(current.Key, out var arbiter))
-            {
-                if (lastVisited != arbiter.Body1.Handle)
-                {
-                    foreach (var arb in arbiter.Body1.Contacts)
-                    {
-                        int index = memContacts.GetIndex(arb.Handle);
-                        if (index <= sortCounter || index >= activeCount) continue;
-
-                        swaps++;
-                        memContacts.Swap(sortCounter + swaps, index);
-                    }
-
-                    lastVisited = arbiter.Body1.Handle;
-                }
-                else
-                {
-                    foreach (var arb in arbiter.Body2.Contacts)
-                    {
-                        int index = memContacts.GetIndex(arb.Handle);
-                        if (index <= sortCounter || index >= activeCount) continue;
-
-                        swaps++;
-                        memContacts.Swap(sortCounter + swaps, index);
-                    }
-
-                    lastVisited = arbiter.Body2.Handle;
-                }
-            }
-
-            sortCounter += Math.Max(1, swaps);
         }
     }
 
@@ -840,14 +365,13 @@ public sealed partial class World
     }
 
     // Removes the arbiters that broke in the previous step and were not refilled in this one.
-    // With contactsUpdated the contact update of this step has already run: it flagged those
+    // The contact update of this step has already run inside the solver: it flagged those
     // arbiters beforehand and collected the ones that broke now in pendingBrokenArbiters.
-    private void RemoveBrokenArbiters(bool contactsUpdated)
+    private void RemoveBrokenArbiters()
     {
         foreach (var handle in brokenArbiters)
         {
-            uint mask = handle.Data.UsageMask;
-            if (contactsUpdated ? (mask & ContactData.MaskRetiring) == 0 : (mask & ContactData.MaskContactAll) != 0) continue;
+            if ((handle.Data.UsageMask & ContactData.MaskRetiring) == 0) continue;
             var arb = arbiters[handle.Data.Key];
 
             WakeIslandNextStep(arb.Body1.InternalIsland);
@@ -867,24 +391,6 @@ public sealed partial class World
 
         foreach (var handle in pendingBrokenArbiters) brokenArbiters.Add(handle);
         pendingBrokenArbiters.Clear();
-    }
-
-    private void UpdateContacts(Parallel.Batch batch)
-    {
-        var span = memContacts.Active[batch.Start..batch.End];
-
-        for (int i = 0; i < span.Length; i++)
-        {
-            // get rid of broken contacts
-            ref ContactData cq = ref span[i];
-            cq.UpdatePosition();
-
-            if ((cq.UsageMask & ContactData.MaskContactAll) == 0)
-            {
-                var h = memContacts.GetHandle(ref cq);
-                brokenArbiters.ConcurrentAdd(h);
-            }
-        }
     }
 
     private void HandleDeferredArbiters()
@@ -1046,30 +552,6 @@ public sealed partial class World
         }
     }
 
-    // Lock policies for the solver loops. The struct type parameter gives each loop a separate,
-    // specialized copy, so the single-threaded copy contains no atomics.
-    private interface IBodyLock
-    {
-        static abstract bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2);
-        static abstract void Unlock(ref RigidBodyData b1, ref RigidBodyData b2);
-    }
-
-    private struct BodyLock : IBodyLock
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => TryLockTwoBody(ref b1, ref b2);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) => UnlockTwoBody(ref b1, ref b2);
-    }
-
-    private struct NoBodyLock : IBodyLock
-    {
-        public static bool TryLock(ref RigidBodyData b1, ref RigidBodyData b2) => true;
-
-        public static void Unlock(ref RigidBodyData b1, ref RigidBodyData b2) { }
-    }
-
     /// <summary>
     /// Releases locks on two rigid bodies previously acquired by <see cref="LockTwoBody"/>
     /// or <see cref="TryLockTwoBody"/>.
@@ -1156,102 +638,6 @@ public sealed partial class World
             // We handle the gyroscopic term with implicit Euler. This is known as the symplectic splitting method.
             JSymmetricMatrix.Inverse(rigidBody.InverseInertiaWorld, out var inertiaWorld);
             rigidBody.AngularVelocity = SolveGyroscopic(inertiaWorld, angularVelocity, timeStep.SubstepDt);
-        }
-    }
-
-    private void RelaxVelocities(bool multiThread, int iterations)
-    {
-        if (multiThread)
-        {
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                memContacts.ParallelForBatch(64, relaxVelocities);
-            }
-        }
-        else
-        {
-            var batchContacts = new Parallel.Batch(0, memContacts.Active.Length);
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                IterateContacts<NoBodyLock>(batchContacts, applyBias: false);
-            }
-        }
-    }
-
-    private void SolveVelocities(bool multiThread, int iterations)
-    {
-        if (multiThread)
-        {
-            memContacts.ParallelForBatch(64, prepareContacts, false);
-            memConstraints.ParallelForBatch(64, prepareConstraints, false);
-            memSmallConstraints.ParallelForBatch(64, prepareSmallConstraints, false);
-
-            ThreadPool.Instance.Execute();
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                memContacts.ParallelForBatch(64, iterateContacts, false);
-                memConstraints.ParallelForBatch(64, iterateConstraints, false);
-                memSmallConstraints.ParallelForBatch(64, iterateSmallConstraints, false);
-
-                ThreadPool.Instance.Execute();
-            }
-        }
-        else
-        {
-            Parallel.Batch batchContacts = new(0, memContacts.Active.Length);
-            Parallel.Batch batchConstraints = new(0, memConstraints.Active.Length);
-            Parallel.Batch batchSmallConstraints = new(0, memSmallConstraints.Active.Length);
-
-            // A single thread owns every body, so the body locks are skipped.
-            PrepareContacts<NoBodyLock>(batchContacts);
-            PrepareConstraints<NoBodyLock>(batchConstraints);
-            PrepareSmallConstraints<NoBodyLock>(batchSmallConstraints);
-
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                IterateContacts<NoBodyLock>(batchContacts, applyBias: true);
-                IterateConstraints<NoBodyLock>(batchConstraints);
-                IterateSmallConstraints<NoBodyLock>(batchSmallConstraints);
-            }
-        }
-    }
-
-    private void UpdateContacts(bool multiThread)
-    {
-        if (multiThread)
-        {
-            memContacts.ParallelForBatch(256, updateContacts);
-        }
-        else
-        {
-            Parallel.Batch batch = new(0, memContacts.Active.Length);
-            UpdateContacts(batch);
-        }
-    }
-
-    private void IntegrateForces(bool multiThread)
-    {
-        if (multiThread)
-        {
-            memRigidBodies.ParallelForBatch(256, integrateForces);
-        }
-        else
-        {
-            IntegrateForces(new Parallel.Batch(0, memRigidBodies.Active.Length));
-        }
-    }
-
-    private void IntegrateVelocities(bool multiThread)
-    {
-        if (multiThread)
-        {
-            memRigidBodies.ParallelForBatch(256, integrateVelocities);
-        }
-        else
-        {
-            IntegrateVelocities(new Parallel.Batch(0, memRigidBodies.Active.Length));
         }
     }
 

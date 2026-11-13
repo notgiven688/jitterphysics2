@@ -309,17 +309,24 @@ internal sealed unsafe class ContactSolverWide
 
             Vector3Wide warmAngular1 = default, warmAngular2 = default;
             // Ground contacts often share a read-only side across the whole bundle: skip it.
+            // The contributions of both bodies are summed before they are projected on the
+            // basis, in the order of the scalar code, so that both round alike.
+            Vector3Wide contributionNormal = default, contributionTangent1 = default, contributionTangent2 = default;
             if ((combinedMode & ContactData.SolveMode.AngularBody1) != 0)
             {
                 PrepareAngularSide(inverseInertia1, point.RelativePosition1, normal, tangent1, tangent2, warmNormal, warmTangent1,
-                    warmTangent2, ref kNormal, ref kTangent1, ref kTangent2, out warmAngular1);
+                    warmTangent2, ref contributionNormal, ref contributionTangent1, ref contributionTangent2, out warmAngular1);
             }
 
             if ((combinedMode & ContactData.SolveMode.AngularBody2) != 0)
             {
                 PrepareAngularSide(inverseInertia2, relativePosition2, normal, tangent1, tangent2, warmNormal, warmTangent1,
-                    warmTangent2, ref kNormal, ref kTangent1, ref kTangent2, out warmAngular2);
+                    warmTangent2, ref contributionNormal, ref contributionTangent1, ref contributionTangent2, out warmAngular2);
             }
+
+            kNormal += Vector3Wide.Dot(normal, contributionNormal);
+            kTangent1 += Vector3Wide.Dot(tangent1, contributionTangent1);
+            kTangent2 += Vector3Wide.Dot(tangent2, contributionTangent2);
 
             // An absent contact must stay a neutral lane even when its bodies are dynamic.
             var activeLanes = WideMath.GreaterThan(active, Wide.Zero);
@@ -348,23 +355,24 @@ internal sealed unsafe class ContactSolverWide
         StoreVelocities(velocity1, angular1, velocity2, angular2);
     }
 
-    // Adds one body's angular share to the effective masses and returns its warm-start change.
+    // Adds one body's angular share of the effective masses and returns its warm-start change.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void PrepareAngularSide(in SymmetricMatrixWide inertia, in Vector3Wide position,
         in Vector3Wide normal, in Vector3Wide tangent1, in Vector3Wide tangent2,
         Wide warmNormal, Wide warmTangent1, Wide warmTangent2,
-        ref Wide kNormal, ref Wide kTangent1, ref Wide kTangent2, out Vector3Wide warmAngular)
+        ref Vector3Wide contributionNormal, ref Vector3Wide contributionTangent1, ref Vector3Wide contributionTangent2,
+        out Vector3Wide warmAngular)
     {
         Vector3Wide response = inertia.Transform(Vector3Wide.Cross(position, normal));
-        kNormal += Vector3Wide.Dot(normal, Vector3Wide.Cross(response, position));
+        contributionNormal += Vector3Wide.Cross(response, position);
         warmAngular = response * warmNormal;
 
         response = inertia.Transform(Vector3Wide.Cross(position, tangent1));
-        kTangent1 += Vector3Wide.Dot(tangent1, Vector3Wide.Cross(response, position));
+        contributionTangent1 += Vector3Wide.Cross(response, position);
         warmAngular += response * warmTangent1;
 
         response = inertia.Transform(Vector3Wide.Cross(position, tangent2));
-        kTangent2 += Vector3Wide.Dot(tangent2, Vector3Wide.Cross(response, position));
+        contributionTangent2 += Vector3Wide.Cross(response, position);
         warmAngular += response * warmTangent2;
     }
 

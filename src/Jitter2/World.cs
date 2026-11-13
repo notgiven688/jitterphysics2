@@ -449,9 +449,6 @@ public sealed partial class World : IDisposable
     /// </summary>
     public unsafe World()
     {
-        Debug.Assert(Unsafe.SizeOf<RigidBodyData>() == SolverPrefetchCacheLineSize * (Precision.IsDoublePrecision ? 4 : 2),
-            "RigidBodyData size should match the cache lines prefetched by the solver.");
-
         Logger.Information($"Creating new world.");
 
         memRigidBodies = new PartitionedBuffer<RigidBodyData>(aligned64: true);
@@ -998,10 +995,6 @@ public sealed partial class World : IDisposable
         memRigidBodies.Dispose();
         memConstraints.Dispose();
         memSmallConstraints.Dispose();
-
-        deferredContacts.Dispose();
-        deferredConstraints.Dispose();
-        deferredSmallConstraints.Dispose();
 
         MemoryHelper.Free(contactSettings);
         contactSettings = null;

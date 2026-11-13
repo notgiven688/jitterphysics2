@@ -1090,28 +1090,45 @@ public sealed partial class World
         return true;
     }
 
+    // Without hardware vectors the lanes of a bundle are solved one by one with the scalar
+    // contact code, which rounds exactly like the bundle. The result is the same either way.
+    private static readonly bool UseBundles = Vector.IsHardwareAccelerated;
+
     private void SolveContactColor(in SolverPass pass, int color, int start, int end)
     {
         var lanes = memContacts.Active.Slice(segmentStart[color], colorLength[color]);
         int first = colorBundleStart[color];
         for (int i = start; i < end; i++)
         {
-            ContactSolverWide bundle = contactBundles[first + i];
             int from = i * ContactSolverWide.Width;
-            switch (pass.Kind)
+            var records = lanes.Slice(from, Math.Min(ContactSolverWide.Width, lanes.Length - from));
+
+            if (UseBundles)
             {
-                case SolverPassKind.PrepareContacts:
-                    bundle.Prepare(lanes.Slice(from, Math.Min(ContactSolverWide.Width, lanes.Length - from)), timeStep);
-                    break;
-                case SolverPassKind.IterateContacts:
-                    bundle.Iterate(pass.ApplyBias, pass.WriteBack);
-                    break;
-                default:
-                    bundle.WriteBack();
-                    break;
+                ContactSolverWide bundle = contactBundles[first + i];
+                switch (pass.Kind)
+                {
+                    case SolverPassKind.PrepareContacts:
+                        bundle.Prepare(records, timeStep);
+                        break;
+                    case SolverPassKind.IterateContacts:
+                        bundle.Iterate(pass.ApplyBias, pass.WriteBack);
+                        break;
+                    default:
+                        bundle.WriteBack();
+                        break;
+                }
+            }
+            else if (pass.Kind == SolverPassKind.PrepareContacts)
+            {
+                foreach (ref ContactData contact in records) contact.PrepareForIteration(timeStep);
+            }
+            else if (pass.Kind == SolverPassKind.IterateContacts)
+            {
+                foreach (ref ContactData contact in records) contact.Iterate(pass.ApplyBias);
             }
 
-            if (pass.UpdateContacts) UpdateSolvedContacts(lanes.Slice(from, bundle.Count));
+            if (pass.UpdateContacts) UpdateSolvedContacts(records);
         }
     }
 

@@ -17,43 +17,36 @@ using Jitter2.Unmanaged;
 namespace Jitter2;
 
 /// <summary>
-/// Controls which solver strategy is used during <see cref="World.Step"/>.
+/// Formerly selected between two solvers. Jitter now has a single solver, whose results do not
+/// depend on the number of threads, and both values select it.
 /// </summary>
+[Obsolete("Jitter has a single, deterministic solver. The solve mode no longer has an effect.")]
 public enum SolveMode
 {
     /// <summary>
-    /// The default solver, optimized for speed. Multithreaded results may vary between runs.
+    /// The solver. Formerly the default solver, whose multithreaded results could vary between runs.
     /// </summary>
     Regular,
 
     /// <summary>
-    /// The graph-colored solver, see <see cref="GraphColored"/>. Its results are repeatable: the
-    /// same inputs give the same result for any number of threads.
+    /// The solver. Formerly a separate, slower solver with repeatable results.
     /// </summary>
-    Deterministic,
-
-    /// <summary>
-    /// Groups contacts and joints that share no dynamic body and solves each group without locks,
-    /// contacts several at once with SIMD. Faster than <see cref="Regular"/> for scenes dominated
-    /// by contacts, such as piles and stacks. The result does not depend on the number of threads
-    /// or on their timing.
-    /// </summary>
-    GraphColored
+    Deterministic
 }
 
 public sealed partial class World
 {
+#pragma warning disable CS0618 // The property keeps the obsolete enum for source compatibility.
     private SolveMode solveMode = Jitter2.SolveMode.Regular;
 
     /// <summary>
-    /// The solver strategy used during <see cref="Step"/>. Defaults to <see cref="Jitter2.SolveMode.Regular"/>.
+    /// Has no effect. Jitter has a single solver; contacts and constraints are grouped so that no
+    /// two of a group share a dynamic body, and each group is solved without locks. Its results
+    /// do not depend on the number of threads.
     /// </summary>
-    /// <remarks>
-    /// <see cref="Jitter2.SolveMode.Deterministic"/> and <see cref="Jitter2.SolveMode.GraphColored"/>
-    /// select the same solver.
-    /// </remarks>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when an undefined <see cref="Jitter2.SolveMode"/>
     /// value is assigned.</exception>
+    [Obsolete("Jitter has a single, deterministic solver. The solve mode no longer has an effect.")]
     public SolveMode SolveMode
     {
         get => solveMode;
@@ -68,4 +61,5 @@ public sealed partial class World
             solveMode = value;
         }
     }
+#pragma warning restore CS0618
 }

@@ -14,14 +14,6 @@ namespace JitterDemo;
 
 public partial class Playground : RenderWindow
 {
-    private static string SolveModeTooltip(SolveMode mode) => mode switch
-    {
-        SolveMode.Regular => "Default solver. Contacts and joints are solved with body locks.",
-        SolveMode.Deterministic => "The graph-colored solver under its other name. Repeatable results.",
-        SolveMode.GraphColored => "Contacts and joints that share no body are solved together, without locks. Repeatable results.",
-        _ => mode.ToString()
-    };
-
     private const string GlobalControls =
         "[Controls]\n" +
         "WASD - Move camera\n" +
@@ -344,18 +336,6 @@ public partial class Playground : RenderWindow
 
                     options.Checkbox("Multithreading", ref multiThread);
 
-                    options.Menu($"{MaterialSymbols.Tune} Solver: {World.SolveMode}", popup =>
-                    {
-                        popup.ItemSpacing(0);
-
-                        foreach (SolveMode mode in Enum.GetValues<SolveMode>())
-                        {
-                            var item = popup.MenuItem(mode.ToString(), selected: mode == World.SolveMode,
-                                closeOnActivate: true, id: (int)mode);
-                            if (item.Activated) World.SolveMode = mode;
-                            popup.Tooltip(item, SolveModeTooltip(mode), maxWidth: 320f);
-                        }
-                    }, width: options.AvailableWidth, id: "solve-mode-menu");
                 });
             }
 

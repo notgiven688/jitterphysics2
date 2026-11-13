@@ -12,8 +12,8 @@ namespace JitterTests.Robustness;
 public class ReproducibilityTest
 {
     // Reference trajectories must remain bit-identical across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x37BFA919467A3F9C;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x20C07918A39CED85;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x116E45DC1656D62A;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x75DF958573106B8A;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -102,6 +102,79 @@ public class ReproducibilityTest
         }
 
         AssertSolverStateEqual(simdContact, scalarContact, simdBody1, scalarBody1, simdBody2, scalarBody2, "solve");
+    }
+
+    // The solver gathers contacts into bundles, one manifold per SIMD lane. A bundle must give
+    // exactly what the scalar contact code gives for each of its lanes.
+    [TestCase(false, false)]
+    [TestCase(true, false)]
+    [TestCase(false, true)]
+    [TestCase(true, true)]
+    public static void SingleContactMatchesWithAndWithoutBundle(bool linearLocks, bool angularLocks)
+    {
+        using var bundleWorld = new World();
+        using var scalarWorld = new World();
+
+        var (bundleBody1, bundleBody2, bundleContact) = CreateSingleContactCase(bundleWorld);
+        var (scalarBody1, scalarBody2, scalarContact) = CreateSingleContactCase(scalarWorld);
+
+        if (linearLocks)
+        {
+            bundleBody1.AllowedMotion = scalarBody1.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearY;
+            bundleBody2.AllowedMotion = scalarBody2.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearX;
+        }
+
+        if (angularLocks)
+        {
+            bundleBody1.AllowedMotion &= ~MotionAxes.AngularX;
+            scalarBody1.AllowedMotion &= ~MotionAxes.AngularX;
+            bundleBody2.AllowedMotion &= ~MotionAxes.AngularY;
+            scalarBody2.AllowedMotion &= ~MotionAxes.AngularY;
+        }
+
+        TimeStep timeStep = new((Real)(1.0 / 100.0));
+        Span<ContactData> lanes = stackalloc ContactData[1];
+        lanes[0] = bundleContact;
+        var bundle = new ContactSolverWide();
+
+        bundle.Prepare(lanes, timeStep);
+        scalarContact.PrepareForIterationScalar(timeStep);
+        bundle.WriteBack();
+        AssertBundleStateEqual(lanes[0], scalarContact, bundleBody1, scalarBody1, bundleBody2, scalarBody2, "prepare");
+
+        for (int i = 0; i < 8; i++)
+        {
+            bundle.Iterate(true);
+            scalarContact.IterateScalar(true);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            bundle.Iterate(false, writeBack: i == 3);
+            scalarContact.IterateScalar(false);
+        }
+
+        AssertBundleStateEqual(lanes[0], scalarContact, bundleBody1, scalarBody1, bundleBody2, scalarBody2, "solve");
+    }
+
+    private static void AssertBundleStateEqual(ContactData bundleContact, ContactData scalarContact,
+        RigidBody bundleBody1, RigidBody scalarBody1, RigidBody bundleBody2, RigidBody scalarBody2, string phase)
+    {
+        ContactData.Contact bundle = bundleContact.Contact0;
+        ContactData.Contact scalar = scalarContact.Contact0;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bundle.Bias, Is.EqualTo(scalar.Bias), $"{phase}: bias");
+            Assert.That(bundle.PenaltyBias, Is.EqualTo(scalar.PenaltyBias), $"{phase}: penalty bias");
+            Assert.That(bundle.Impulse, Is.EqualTo(scalar.Impulse), $"{phase}: normal impulse");
+            Assert.That(bundle.TangentImpulse1, Is.EqualTo(scalar.TangentImpulse1), $"{phase}: tangent impulse 1");
+            Assert.That(bundle.TangentImpulse2, Is.EqualTo(scalar.TangentImpulse2), $"{phase}: tangent impulse 2");
+            Assert.That(bundleBody1.Velocity, Is.EqualTo(scalarBody1.Velocity), $"{phase}: velocity 1");
+            Assert.That(bundleBody1.AngularVelocity, Is.EqualTo(scalarBody1.AngularVelocity), $"{phase}: angular velocity 1");
+            Assert.That(bundleBody2.Velocity, Is.EqualTo(scalarBody2.Velocity), $"{phase}: velocity 2");
+            Assert.That(bundleBody2.AngularVelocity, Is.EqualTo(scalarBody2.AngularVelocity), $"{phase}: angular velocity 2");
+        });
     }
 
     [Test]
