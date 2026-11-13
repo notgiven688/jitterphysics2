@@ -110,12 +110,6 @@ public struct RigidBodyData
     public int _index;
 
     /// <summary>
-    /// Internal synchronization flag used by the engine. Do not modify.
-    /// </summary>
-    [FieldOffset(4)]
-    public int _lockFlag;
-
-    /// <summary>
     /// World-space position of the rigid body (center of mass).
     /// </summary>
     [FieldOffset(8 + 0 * sizeof(Real))]
@@ -469,8 +463,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         SetDefaultMassInertia();
 
         RigidBodyId = World.RequestId();
-
-        Data._lockFlag = 0;
     }
 
     /// <summary>
