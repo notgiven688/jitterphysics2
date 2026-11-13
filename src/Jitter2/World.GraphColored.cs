@@ -73,31 +73,36 @@ public sealed partial class World
     private ulong[] bodyColors = [];
     private int[] bodyBucket = [];
 
-    // The active contact records are stored in segments: one per color, then the contacts that
-    // found no color, then the empty manifolds, which are left out of the solve. Segment s is
-    // [segmentStart[s], segmentStart[s + 1]).
-    private const int OverflowSegment = MaximumContactColors;
+    // The active contact records are stored in segments: one for each color that is solved
+    // lock-free, then one for all contacts solved with locks, then the empty manifolds, which
+    // are left out of the solve. Segment s is [segmentStart[s], segmentStart[s + 1]); the
+    // segment of a color solved with locks is empty. Only the lock-free colors need their
+    // records side by side, and a contact that moves between the others stays where it is.
+    private const int LockedSegment = MaximumContactColors;
     private const int UnsolvedSegment = MaximumContactColors + 1;
     private const int SegmentCount = MaximumContactColors + 2;
 
     private readonly int[] segmentStart = new int[SegmentCount + 1];
+    private readonly int[] colorLength = new int[MaximumContactColors];
     private readonly int[] colorBundleStart = new int[MaximumContactColors];
-    private int contactColorCount;
+    private int contactColorCount, coloredContactCount, solvedContactCount;
     private readonly List<ContactSolverWide> contactBundles = [];
     private readonly List<int> wideColors = [];
-    private readonly List<int> lockedContacts = [];
 
     // The segments are valid for this state of the contact buffer.
     private int coloredVersion, coloredCount = -1;
 
     // Within a segment the records are kept in the order in which they were colored, so that a
     // worker's share of every color covers the same bodies. Moving single records into their
-    // segment disturbs that order; it is restored once this fraction of the records has moved.
+    // segment disturbs that order; it is restored once this fraction of the records has moved,
+    // but not more often than every few solves: a scene whose contacts come and go all the time
+    // would otherwise reorder its whole buffer on every other step.
     private const int ResortMovedFraction = 8;
-    private int contactsMovedSinceSort = int.MaxValue;
+    private const int ResortInterval = 16;
+    private int contactsMovedSinceSort = int.MaxValue, solvesSinceSort = ResortInterval;
 
-    // Assigns every active contact the first color that none of its dynamic bodies uses yet and
-    // groups the records by color. The contacts are visited ordered by the body they write, the
+    // Assigns every active contact the first color that none of its dynamic bodies uses yet.
+    // The contacts are visited ordered by the body they write, the
     // lower one when they write both, then by their handle. That order depends only on which
     // contacts exist, not on where their records are, so a contact keeps its color from step to
     // step unless its neighborhood changes, and few records have to move.
@@ -183,9 +188,9 @@ public sealed partial class World
             start = end;
         }
 
-        Span<int> segmentCount = stackalloc int[SegmentCount];
-        segmentCount.Clear();
-        segmentCount[UnsolvedSegment] = count - solved;
+        Array.Clear(colorLength);
+        contactColorCount = coloredContactCount = 0;
+        solvedContactCount = solved;
 
         for (int k = 0; k < solved; k++)
         {
@@ -197,32 +202,19 @@ public sealed partial class World
             {
                 if (id1 >= 0) bodyColors[id1] |= 1UL << color;
                 if (id2 >= 0) bodyColors[id2] |= 1UL << color;
+                colorLength[color]++;
+                coloredContactCount++;
+                contactColorCount = Math.Max(contactColorCount, color + 1);
             }
 
-            // Sixty-four set bits count as the overflow segment.
+            // A contact that finds all sixty-four colors taken is solved with locks.
             contactSegment[i] = (byte)color;
-            segmentCount[color]++;
         }
-
-        contactColorCount = 0;
-        int offset = 0;
-        for (int s = 0; s < SegmentCount; s++)
-        {
-            segmentStart[s] = offset;
-            offset += segmentCount[s];
-            if (s < MaximumContactColors && segmentCount[s] != 0) contactColorCount = s + 1;
-        }
-
-        segmentStart[SegmentCount] = offset;
 
         for (int i = 0; i < count; i++)
         {
             if (endpoints[i].Body1 == ContactEndpoints.Unsolved) contactSegment[i] = UnsolvedSegment;
         }
-
-        GroupContactsBySegment(count, solved);
-        coloredVersion = memContacts.Version;
-        coloredCount = count;
     }
 
     private readonly struct ContactHandleOrder(ContactEndpoints[] endpoints) : IComparer<int>
@@ -231,15 +223,35 @@ public sealed partial class World
     }
 
     // Moves the records into their segments. Usually only a few are out of place: those that
-    // changed color, and one per segment boundary that shifted. Then a record takes any free
-    // slot of its segment. When too many have moved since the order within the segments was
-    // last restored, every record is put in its exact place instead.
-    private void GroupContactsBySegment(int count, int solved)
+    // changed segment, and the ones a shifted segment boundary ran over. Then a record takes any
+    // free slot of its segment. When too many have moved since the order within the segments
+    // was last restored, every record is put in its exact place instead.
+    private void GroupContactsBySegment()
     {
+        int count = memContacts.Active.Length, solved = solvedContactCount;
+
+        // The colors solved with locks share one segment.
+        Span<byte> segmentOfColor = stackalloc byte[SegmentCount];
+        segmentOfColor.Fill(LockedSegment);
+        segmentOfColor[UnsolvedSegment] = UnsolvedSegment;
+        foreach (int c in wideColors) segmentOfColor[c] = (byte)c;
+        for (int i = 0; i < count; i++) contactSegment[i] = segmentOfColor[contactSegment[i]];
+
+        int offset = 0;
+        for (int c = 0; c < MaximumContactColors; c++)
+        {
+            segmentStart[c] = offset;
+            if (segmentOfColor[c] == c) offset += colorLength[c];
+        }
+
+        segmentStart[LockedSegment] = offset;
+        segmentStart[UnsolvedSegment] = solved;
+        segmentStart[SegmentCount] = count;
+
         Span<int> next = stackalloc int[SegmentCount];
         segmentStart.AsSpan(0, SegmentCount).CopyTo(next);
 
-        if (contactsMovedSinceSort >= count / ResortMovedFraction)
+        if (++solvesSinceSort >= ResortInterval && contactsMovedSinceSort >= count / ResortMovedFraction)
         {
             // The exact slot of a record is its rank among the records of its segment.
             for (int k = 0; k < solved; k++)
@@ -263,7 +275,9 @@ public sealed partial class World
                 }
             }
 
-            contactsMovedSinceSort = 0;
+            contactsMovedSinceSort = solvesSinceSort = 0;
+            coloredVersion = memContacts.Version;
+            coloredCount = count;
             return;
         }
 
@@ -288,6 +302,9 @@ public sealed partial class World
                 contactsMovedSinceSort++;
             }
         }
+
+        coloredVersion = memContacts.Version;
+        coloredCount = count;
     }
 
     // A body is a node of the graph only if the solver writes it. Static and kinematic bodies
@@ -327,26 +344,16 @@ public sealed partial class World
         int threshold = multiThread ? WideColorBarrierFactor * solverWorkerLimit * solverWorkerLimit : 0;
 
         wideColors.Clear();
-        lockedContacts.Clear();
         int bundles = 0;
         for (int c = 0; c < contactColorCount; c++)
         {
-            int length = SegmentLength(c);
-            if (length == 0) continue;
+            int length = colorLength[c];
+            if (length == 0 || !Vector.IsHardwareAccelerated || length < threshold) continue;
 
-            if (Vector.IsHardwareAccelerated && length >= threshold)
-            {
-                wideColors.Add(c);
-                colorBundleStart[c] = bundles;
-                bundles += (length + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
-            }
-            else
-            {
-                for (int i = segmentStart[c]; i < segmentStart[c + 1]; i++) lockedContacts.Add(i);
-            }
+            wideColors.Add(c);
+            colorBundleStart[c] = bundles;
+            bundles += (length + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
         }
-
-        for (int i = segmentStart[OverflowSegment]; i < segmentStart[UnsolvedSegment]; i++) lockedContacts.Add(i);
 
         while (contactBundles.Count < bundles) contactBundles.Add(new ContactSolverWide());
     }
@@ -355,7 +362,7 @@ public sealed partial class World
     {
         if (!Vector.IsHardwareAccelerated) return threadCount;
 
-        int colored = segmentStart[OverflowSegment];
+        int colored = coloredContactCount;
         int previous = solverWorkerLimit > 0 ? Math.Min(solverWorkerLimit, threadCount) : threadCount;
         int workers = previous;
 
@@ -381,7 +388,7 @@ public sealed partial class World
         int threshold = WideColorBarrierFactor * workers * workers, locked = 0;
         for (int c = 0; c < contactColorCount; c++)
         {
-            int length = SegmentLength(c);
+            int length = colorLength[c];
             if (length < threshold) locked += length;
         }
 
@@ -450,6 +457,7 @@ public sealed partial class World
         {
             ColorContacts(multiThread);
             PlanColoredSolve(multiThread);
+            GroupContactsBySegment();
         }
 
         int joints = memConstraints.Active.Length + memSmallConstraints.Active.Length;
@@ -457,9 +465,9 @@ public sealed partial class World
         if (multiThread)
         {
             // Let the largest pass decide how many workers are worth synchronizing.
-            int demand = (lockedContacts.Count + joints) / LockedItemsPerWorker;
+            int demand = (SegmentLength(LockedSegment) + joints) / LockedItemsPerWorker;
             foreach (int c in wideColors)
-                demand = Math.Max(demand, SegmentLength(c) / (ContactSolverWide.Width * MinimumBundlesPerWorker));
+                demand = Math.Max(demand, colorLength[c] / (ContactSolverWide.Width * MinimumBundlesPerWorker));
             if (integrate) demand = Math.Max(demand, memRigidBodies.Active.Length / BodiesPerWorker);
             workers = Math.Clamp(demand, 1, solverWorkerLimit);
         }
@@ -471,7 +479,7 @@ public sealed partial class World
         for (int w = 0; w < workers; w++)
         {
             lockedSliceStart[w] = offset;
-            offset += SliceLength(lockedContacts.Count, workers, w) +
+            offset += SliceLength(SegmentLength(LockedSegment), workers, w) +
                       SliceLength(memConstraints.Active.Length, workers, w) +
                       SliceLength(memSmallConstraints.Active.Length, workers, w);
         }
@@ -558,7 +566,7 @@ public sealed partial class World
             bool last = iter == relaxations - 1;
             foreach (int c in wideColors)
                 AddColorPass(SolverPassKind.IterateColor, c, writeBack: last, updateContacts: last && updateContacts);
-            if (lockedContacts.Count != 0) AddPass(SolverPassKind.IterateLocked, lockedContacts.Count);
+            if (SegmentLength(LockedSegment) != 0) AddPass(SolverPassKind.IterateLocked, SegmentLength(LockedSegment));
         }
 
         if (relaxations == 0)
@@ -566,14 +574,14 @@ public sealed partial class World
             foreach (int c in wideColors) AddColorPass(SolverPassKind.WriteBackColor, c, updateContacts: updateContacts);
         }
 
-        if (updateContacts && lockedContacts.Count + SegmentLength(UnsolvedSegment) != 0)
+        if (updateContacts && SegmentLength(LockedSegment) + SegmentLength(UnsolvedSegment) != 0)
             AddPass(SolverPassKind.UpdateRemainingContacts, solverWorkerCount);
     }
 
     private void AddColorPass(SolverPassKind kind, int color, bool applyBias = false, bool writeBack = false,
         bool updateContacts = false)
     {
-        int bundles = (SegmentLength(color) + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
+        int bundles = (colorLength[color] + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
         solverPasses.Add(new SolverPass
         {
             Kind = kind, Color = color, Total = bundles, ApplyBias = applyBias, WriteBack = writeBack,
@@ -658,7 +666,7 @@ public sealed partial class World
                 break;
             case SolverPassKind.PrepareColor:
             {
-                var lanes = memContacts.Active.Slice(segmentStart[pass.Color], SegmentLength(pass.Color));
+                var lanes = memContacts.Active.Slice(segmentStart[pass.Color], colorLength[pass.Color]);
                 int first = colorBundleStart[pass.Color];
                 for (int i = start; i < end; i++)
                 {
@@ -672,7 +680,7 @@ public sealed partial class World
             case SolverPassKind.IterateColor:
             case SolverPassKind.WriteBackColor:
             {
-                var lanes = memContacts.Active.Slice(segmentStart[pass.Color], SegmentLength(pass.Color));
+                var lanes = memContacts.Active.Slice(segmentStart[pass.Color], colorLength[pass.Color]);
                 int first = colorBundleStart[pass.Color];
                 for (int i = start; i < end; i++)
                 {
@@ -686,12 +694,10 @@ public sealed partial class World
             }
             case SolverPassKind.UpdateRemainingContacts:
             {
-                var records = memContacts.Active;
-                Parallel.GetBounds(lockedContacts.Count, solverWorkerCount, worker, out int first, out int last);
-                var locked = CollectionsMarshal.AsSpan(lockedContacts)[first..last];
-                for (int i = 0; i < locked.Length; i++) UpdateSolvedContacts(records.Slice(locked[i], 1));
-                Parallel.GetBounds(SegmentLength(UnsolvedSegment), solverWorkerCount, worker, out first, out last);
-                UpdateSolvedContacts(records.Slice(segmentStart[UnsolvedSegment] + first, last - first));
+                // The locked and the unsolved segment are adjacent.
+                int remaining = SegmentLength(LockedSegment) + SegmentLength(UnsolvedSegment);
+                Parallel.GetBounds(remaining, solverWorkerCount, worker, out int first, out int last);
+                UpdateSolvedContacts(memContacts.Active.Slice(segmentStart[LockedSegment] + first, last - first));
                 break;
             }
             case SolverPassKind.PrepareLocked:
@@ -718,7 +724,7 @@ public sealed partial class World
         }
 
         int workers = solverWorkerCount;
-        Parallel.GetBounds(lockedContacts.Count, workers, worker, out int first, out int last);
+        Parallel.GetBounds(SegmentLength(LockedSegment), workers, worker, out int first, out int last);
         if (first < last) SolveLockedContacts<TLock>(first, last, prepare, applyBias);
 
         Parallel.GetBounds(memConstraints.Active.Length, workers, worker, out first, out last);
@@ -739,18 +745,17 @@ public sealed partial class World
     private void SolveLockedContacts<TLock>(int start, int end, bool prepare, bool applyBias)
         where TLock : struct, IBodyLock
     {
-        var active = memContacts.Active;
-        var indices = CollectionsMarshal.AsSpan(lockedContacts)[start..end];
+        var locked = memContacts.Active.Slice(segmentStart[LockedSegment] + start, end - start);
         var localQueue = deferredContacts.Value!;
 
-        for (int i = 0; i < indices.Length; i++)
+        for (int i = 0; i < locked.Length; i++)
         {
-            if (!TrySolveLockedContact<TLock>(ref active[indices[i]], prepare, applyBias)) localQueue.Enqueue(i);
+            if (!TrySolveLockedContact<TLock>(ref locked[i], prepare, applyBias)) localQueue.Enqueue(i);
         }
 
         while (localQueue.TryDequeue(out int i))
         {
-            if (!TrySolveLockedContact<TLock>(ref active[indices[i]], prepare, applyBias)) localQueue.Enqueue(i);
+            if (!TrySolveLockedContact<TLock>(ref locked[i], prepare, applyBias)) localQueue.Enqueue(i);
         }
     }
 
