@@ -93,8 +93,6 @@ public sealed partial class World
     private Action<Parallel.Batch> iterateSmallConstraints;
     private Action<Parallel.Batch> updateBodies;
     private Action<IDynamicTreeProxy, IDynamicTreeProxy> detect;
-    private Action<Parallel.Batch> solveIsland;
-    private Action<Parallel.Batch> relaxIsland;
     private Action<Parallel.Batch> findCcdHits;
 
     private void InitParallelCallbacks()
@@ -111,8 +109,6 @@ public sealed partial class World
         updateContacts = UpdateContacts;
         updateBodies = UpdateBodies;
         detect = Detect;
-        solveIsland = SolveIslandBatch;
-        relaxIsland = RelaxIslandBatch;
         findCcdHits = FindCcdHits;
     }
 
@@ -221,9 +217,6 @@ public sealed partial class World
                 case SolveMode.Regular:
                     ReorderContacts();
                     break;
-                case SolveMode.Deterministic:
-                    PrepareIslandSolveOrder();
-                    break;
             }
 
             Tracer.ProfileEnd(TraceName.ReorderContacts);
@@ -236,7 +229,7 @@ public sealed partial class World
             {
                 PreSubStep?.Invoke(timeStep);
 
-                if (SolveMode == Jitter2.SolveMode.GraphColored)
+                if (SolveMode != Jitter2.SolveMode.Regular)
                 {
                     // Without substep callbacks nothing can change the contacts between substeps.
                     bool recolor = i == 0 || PreSubStep != null || PostSubStep != null;
@@ -246,9 +239,9 @@ public sealed partial class World
                 else
                 {
                     IntegrateForces(multiThread); // FAST SWEEP
-                    Solve(multiThread, solverIterations); // FAST SWEEP
+                    SolveVelocities(multiThread, solverIterations); // FAST SWEEP
                     IntegrateVelocities(multiThread); // FAST SWEEP
-                    Relax(multiThread, velocityRelaxations); // FAST SWEEP
+                    RelaxVelocities(multiThread, velocityRelaxations); // FAST SWEEP
                 }
 
                 PostSubStep?.Invoke(timeStep);
@@ -258,7 +251,7 @@ public sealed partial class World
             SetTime(Timings.Solve);
 
             // The graph-colored solver has already refreshed the contacts in its last sweep.
-            bool contactsUpdated = SolveMode == Jitter2.SolveMode.GraphColored;
+            bool contactsUpdated = SolveMode != Jitter2.SolveMode.Regular;
             debugTimings[(int)Timings.UpdateContacts] = 0;
 
             Tracer.ProfileBegin(TraceName.RemoveArbiter);
@@ -306,18 +299,6 @@ public sealed partial class World
             // Signal the thread pool that threads can go into a wait state.
             ThreadPool.Instance.PauseWorkers();
         }
-    }
-
-    private void Solve(bool multiThread, int iterations)
-    {
-        if (SolveMode == Jitter2.SolveMode.Deterministic) SolveIslands(multiThread, iterations);
-        else SolveVelocities(multiThread, iterations);
-    }
-
-    private void Relax(bool multiThread, int iterations)
-    {
-        if (SolveMode == Jitter2.SolveMode.Deterministic) RelaxIslands(multiThread, iterations);
-        else RelaxVelocities(multiThread, iterations);
     }
 
     /// <summary>
@@ -383,18 +364,17 @@ public sealed partial class World
 
             CheckDeactivation();
 
-            if (SolveMode == Jitter2.SolveMode.Deterministic) PrepareIslandSolveOrder();
 
             for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                if (SolveMode == Jitter2.SolveMode.GraphColored)
+                if (SolveMode != Jitter2.SolveMode.Regular)
                 {
                     SolveColored(multiThread, solverIterations, relaxationIterations, integrate: false);
                     continue;
                 }
 
-                Solve(multiThread, solverIterations);
-                Relax(multiThread, relaxationIterations);
+                SolveVelocities(multiThread, solverIterations);
+                RelaxVelocities(multiThread, relaxationIterations);
             }
         }
         finally

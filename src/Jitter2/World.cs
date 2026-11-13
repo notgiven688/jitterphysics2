@@ -542,14 +542,10 @@ public sealed partial class World : IDisposable
         }
 
         islandPool.TrimExcess();
+        TrimSolverScratch();
 
         DynamicTree.Trim();
 
-        handleToIsland.TrimExcess();
-        islandRanges.TrimExcess();
-        sortedContacts.TrimExcess();
-        sortedSmallConstraints.TrimExcess();
-        sortedConstraints.TrimExcess();
 
         foreach (RigidBody body in bodies)
         {

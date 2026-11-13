@@ -77,9 +77,11 @@ public class ContactSubstepTests
         world.PreStep += _ => expectedOffset = arbiter!.Handle.Data.Contact0.GetRelativePosition2(arbiter.Handle.Data);
         world.PostSubStep += _ =>
         {
+            substeps++;
+            // The colored solver refreshes the offsets inside the final sweep of the last substep.
+            if (solveMode != SolveMode.Regular && substeps % world.SubstepCount == 0) return;
             Assert.That(JVector.MaxAbs(arbiter!.Handle.Data.Contact0.GetRelativePosition2(arbiter.Handle.Data) - expectedOffset),
                 Is.LessThan(Tolerance));
-            substeps++;
         };
 
         for (int i = 0; i < 2; i++)

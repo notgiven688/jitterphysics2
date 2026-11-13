@@ -17,8 +17,8 @@ public partial class Playground : RenderWindow
     private static string SolveModeTooltip(SolveMode mode) => mode switch
     {
         SolveMode.Regular => "Default solver. Contacts and joints are solved with body locks.",
-        SolveMode.Deterministic => "Repeatable results. Connected groups of bodies are solved one after another.",
-        SolveMode.GraphColored => "Contacts that share no body are solved together, without locks and with SIMD.",
+        SolveMode.Deterministic => "The graph-colored solver under its other name. Repeatable results.",
+        SolveMode.GraphColored => "Contacts and joints that share no body are solved together, without locks. Repeatable results.",
         _ => mode.ToString()
     };
 

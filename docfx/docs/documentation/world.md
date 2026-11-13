@@ -84,18 +84,18 @@ Any callbacks shared by worlds running concurrently must be thread-safe. This in
 
 ## Solver Mode
 
-Jitter2 offers two solver strategies through <xref:Jitter2.SolveMode>:
+Jitter2 offers two solvers through <xref:Jitter2.SolveMode>:
 
 ```cs
-world.SolveMode = SolveMode.Regular;       // default
-world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+world.SolveMode = SolveMode.Regular;      // default
+world.SolveMode = SolveMode.GraphColored; // lock-free, SIMD, reproducible
 ```
 
-`SolveMode.Regular` favors speed. With multithreading, the order in which contacts and constraints are solved can vary between runs.
+`SolveMode.Regular` solves contacts and constraints one at a time and protects the bodies with locks. With multithreading, the order in which they are solved can vary between runs.
 
-`SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
+`SolveMode.GraphColored` groups contacts and constraints that share no dynamic body and solves each group without locks, contacts several at once with SIMD. It is faster for scenes dominated by contacts, such as piles and stacks, and its result does not depend on the number of threads. `SolveMode.Deterministic` selects the same solver. It supports both single-threaded and multithreaded stepping.
 
-Use deterministic mode for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
+Use it for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
 
 ## Solver Iterations
 

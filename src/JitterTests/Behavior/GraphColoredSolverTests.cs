@@ -233,6 +233,116 @@ public class GraphColoredSolverTests
         }
     }
 
+    // Contacts, joints and a body with more contacts than there are colors: the result must not
+    // depend on whether the pool is used, nor on how many workers it has.
+    private static List<RigidBody> BuildMixedScene(World world)
+    {
+        var bodies = AddPyramid(world, 8);
+
+        // A wide plate carrying a hundred boxes has more contacts than colors.
+        var plate = world.CreateRigidBody();
+        plate.AddShape(new BoxShape(30, 1, 6));
+        plate.Position = new JVector(0, (Real)0.5, 12);
+        bodies.Add(plate);
+        for (int i = 0; i < 100; i++)
+            bodies.Add(AddBox(world, new JVector((Real)(-12.5) + (Real)1.25 * (i % 20), (Real)1.5, (Real)10.4 + (Real)0.8 * (i / 20))));
+
+        for (int chain = 0; chain < 12; chain++)
+        {
+            RigidBody? previous = null;
+            for (int link = 0; link < 5; link++)
+            {
+                var body = AddBox(world, new JVector(3 * chain - 16, (Real)0.5 + (Real)1.2 * link, -8));
+                if (previous != null)
+                {
+                    world.CreateConstraint<BallSocket>(previous, body)
+                        .Initialize(body.Position - new JVector(0, (Real)0.6, 0));
+                }
+
+                bodies.Add(body);
+                previous = body;
+            }
+        }
+
+        return bodies;
+    }
+
+    [TestCase(SolveMode.GraphColored)]
+    [TestCase(SolveMode.Deterministic)]
+    public void Result_IsIndependentOfThreads(SolveMode mode)
+    {
+        var pool = Jitter2.Parallelization.ThreadPool.Instance;
+        using var serial = NewWorld(mode, substeps: 2);
+        using var parallel = NewWorld(mode, substeps: 2);
+        var expected = BuildMixedScene(serial);
+        var actual = BuildMixedScene(parallel);
+
+        try
+        {
+            for (int step = 0; step < 300; step++)
+            {
+                // Change the worker count as the scene runs.
+                if (step % 50 == 0) pool.ChangeThreadCount(2 + step / 50 % 3 * 3);
+                serial.Step(Dt, multiThread: false);
+                parallel.Step(Dt, multiThread: true);
+
+                for (int i = 0; i < expected.Count; i++)
+                {
+                    Assert.That(actual[i].Position, Is.EqualTo(expected[i].Position), $"position of body {i} at step {step}");
+                    Assert.That(actual[i].Orientation, Is.EqualTo(expected[i].Orientation), $"orientation of body {i} at step {step}");
+                    Assert.That(actual[i].Velocity, Is.EqualTo(expected[i].Velocity), $"velocity of body {i} at step {step}");
+                }
+            }
+        }
+        finally
+        {
+            pool.ChangeThreadCount(Threads);
+        }
+    }
+
+    // Bodies that never touch must not influence each other: how many contacts the rest of the
+    // world has changes the sizes of the colors, but not the order in which a pile is solved.
+    [Test]
+    public void Result_IsIndependentOfUnrelatedBodies()
+    {
+        using var alone = NewWorld(SolveMode.GraphColored);
+        using var crowded = NewWorld(SolveMode.GraphColored);
+        var expected = AddPyramid(alone, 9);
+        var actual = AddPyramid(crowded, 9);
+
+        // A second, much larger pile far away, with joints of its own.
+        for (int x = 0; x < 12; x++)
+        {
+            for (int z = 0; z < 12; z++)
+            {
+                RigidBody? below = null;
+                for (int y = 0; y < 4; y++)
+                {
+                    var body = AddBox(crowded, new JVector(60 + (Real)1.02 * x, (Real)0.5 + y, (Real)1.02 * z));
+                    if (below != null && (x + z) % 5 == 0)
+                    {
+                        crowded.CreateConstraint<BallSocket>(below, body)
+                            .Initialize(body.Position - new JVector(0, (Real)0.5, 0));
+                    }
+
+                    below = body;
+                }
+            }
+        }
+
+        for (int step = 0; step < 200; step++)
+        {
+            alone.Step(Dt, multiThread: true);
+            crowded.Step(Dt, multiThread: true);
+
+            for (int i = 0; i < expected.Count; i++)
+            {
+                Assert.That(actual[i].Position, Is.EqualTo(expected[i].Position), $"position of body {i} at step {step}");
+                Assert.That(actual[i].Velocity, Is.EqualTo(expected[i].Velocity), $"velocity of body {i} at step {step}");
+            }
+        }
+    }
+
     [Test]
     public void SleepingBodies_AreLeftAlone()
     {

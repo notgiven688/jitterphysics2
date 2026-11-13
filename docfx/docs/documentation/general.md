@@ -30,10 +30,10 @@ NuGet packages use Release builds. To get the extra Debug checks, build Jitter2 
 
 ## Deterministic Simulation
 
-Jitter2 provides an optional cross-platform deterministic solver mode via <xref:Jitter2.SolveMode>:
+Jitter2 provides an optional cross-platform deterministic solver via <xref:Jitter2.SolveMode>:
 
 ```cs
-world.SolveMode = SolveMode.Deterministic;
+world.SolveMode = SolveMode.Deterministic; // or SolveMode.GraphColored, the same solver
 ```
 
 Deterministic mode produces repeatable results across platforms when you use the same Jitter2 version, precision, time steps, and inputs. This is useful for tests, replays, and debugging.
@@ -42,7 +42,7 @@ The creation order matters within each **island**, a group of bodies connected t
 
 | Solver configuration | Repeatability |
 | --- | --- |
-| `SolveMode.Deterministic` | Designed to give the same results across platforms and thread counts when the setup and inputs above match. |
+| `SolveMode.Deterministic`, `SolveMode.GraphColored` | Designed to give the same results across platforms and thread counts when the setup and inputs above match. |
 | `SolveMode.Regular` with `multiThread: false` | Repeating the exact same setup within one .NET process may give the same results. This is not a cross-platform guarantee. |
 | `SolveMode.Regular` with `multiThread: true` | Results may vary between runs because the processing order can change. |
 
@@ -51,7 +51,7 @@ Float and double builds do not produce identical results, and results may change
 > [!NOTE]
 > Cross-platform determinism is tested in CI on Linux x64, Windows x64, and macOS arm64. These tests support the claim for the configurations they cover; they cannot establish it for every possible scene or platform.
 
-Deterministic mode can be significantly slower. `SolveMode.Regular` remains the default for applications that do not need repeatable results.
+The deterministic solver is the graph-colored one. It needs no locks and is usually the faster solver for scenes dominated by contacts; `SolveMode.Regular` remains the default.
 
 ## Coordinate System
 
