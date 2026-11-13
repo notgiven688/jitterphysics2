@@ -1,3 +1,4 @@
+using Jitter2.Unmanaged;
 using Jitter2.Dynamics.Constraints;
 
 namespace JitterTests.Behavior;
@@ -154,6 +155,48 @@ public class GraphColoredSolverTests
             colored.Step(Dt, multiThread);
             Assert.That(colored.RawData.ActiveContacts.Length, Is.EqualTo(regular.RawData.ActiveContacts.Length),
                 $"arbiter count at step {step}");
+        }
+    }
+
+    // Whatever the engine did to the contact buffer between solves, after a solve every color
+    // is one run of records, and no two records of a color share a dynamic body.
+    [Test]
+    public void ContactRecords_AreGroupedByColor()
+    {
+        using var world = NewWorld(SolveMode.GraphColored);
+        world.AllowDeactivation = true;
+        AddPyramid(world, 10);
+        for (int i = 0; i < 40; i++)
+        {
+            var body = AddBox(world, new JVector(3 * (i % 8) - 4, 12 + 2 * (i / 8), (Real)0.2 * (i % 3)));
+            body.Restitution = (Real)0.6;
+        }
+
+        var segmentStart = (int[])typeof(World).GetField("segmentStart",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(world)!;
+        var bodies = new HashSet<JHandle<RigidBodyData>>();
+
+        for (int step = 0; step < 400; step++)
+        {
+            world.Step(Dt, multiThread: true);
+
+            // The contact update of the step has run, so points may have broken since the solve;
+            // endpoints and positions of the records are still those of the solve.
+            var records = world.RawData.ActiveContacts;
+            if (segmentStart[^1] != records.Length) continue; // arbiters were removed after the solve
+
+            for (int color = 0; color < 64; color++)
+            {
+                bodies.Clear();
+                for (int i = segmentStart[color]; i < segmentStart[color + 1]; i++)
+                {
+                    ref ContactData contact = ref records[i];
+                    if (contact.Body1.Data.MotionType == MotionType.Dynamic)
+                        Assert.That(bodies.Add(contact.Body1), Is.True, $"step {step}, color {color}");
+                    if (contact.Body2.Data.MotionType == MotionType.Dynamic)
+                        Assert.That(bodies.Add(contact.Body2), Is.True, $"step {step}, color {color}");
+                }
+            }
         }
     }
 

@@ -167,13 +167,12 @@ internal sealed unsafe class ContactSolverWide
     /// masses and biases, and replays the accumulated impulses into the body velocities.
     /// Matches <see cref="ContactData.PrepareForIteration"/> for each lane.
     /// </summary>
-    /// <param name="records">The active contact records.</param>
-    /// <param name="indices">Up to <see cref="Width"/> indices into <paramref name="records"/>.</param>
+    /// <param name="records">Up to <see cref="Width"/> consecutive contact records.</param>
     /// <param name="timeStep">The full step and substep timing information.</param>
-    internal void Prepare(Span<ContactData> records, ReadOnlySpan<int> indices, in TimeStep timeStep)
+    internal void Prepare(Span<ContactData> records, in TimeStep timeStep)
     {
-        if (indices.Length > Width) throw new ArgumentOutOfRangeException(nameof(indices));
-        Count = indices.Length;
+        if (records.Length > Width) throw new ArgumentOutOfRangeException(nameof(records));
+        Count = records.Length;
 
         occupiedSlots = 0;
         Array.Clear(points);
@@ -191,7 +190,7 @@ internal sealed unsafe class ContactSolverWide
 
         for (int lane = 0; lane < Count; lane++)
         {
-            ContactData* data = (ContactData*)Unsafe.AsPointer(ref records[indices[lane]]);
+            ContactData* data = (ContactData*)Unsafe.AsPointer(ref records[lane]);
             RigidBodyData* body1 = (RigidBodyData*)Unsafe.AsPointer(ref data->Body1.Data);
             RigidBodyData* body2 = (RigidBodyData*)Unsafe.AsPointer(ref data->Body2.Data);
             ContactData.SolveMode mode = data->Mode;
