@@ -120,7 +120,7 @@ public class SolverTests
             body.Restitution = (Real)0.6;
         }
 
-        var segmentStart = (int[])typeof(World).GetField("segmentStart",
+        var coloring = (Jitter2.Dynamics.Solver.ContactColoring)typeof(World).GetField("contactColoring",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(world)!;
         var bodies = new HashSet<JHandle<RigidBodyData>>();
 
@@ -128,15 +128,16 @@ public class SolverTests
         {
             world.Step(Dt, multiThread: true);
 
-            // The contact update of the step has run, so points may have broken since the solve;
-            // endpoints and positions of the records are still those of the solve.
+            // Nothing moves a record between the solve and the end of the step. The contact update
+            // may have broken points since, but the endpoints of the records are those of the solve.
             var records = world.RawData.ActiveContacts;
-            if (segmentStart[^1] != records.Length) continue; // arbiters were removed after the solve
+            const int last = Jitter2.Dynamics.Solver.ContactColoring.UnsolvedSegment;
+            Assert.That(coloring.Start(last) + coloring.Length(last), Is.EqualTo(records.Length));
 
             for (int color = 0; color < 64; color++)
             {
                 bodies.Clear();
-                for (int i = segmentStart[color]; i < segmentStart[color + 1]; i++)
+                for (int i = coloring.Start(color); i < coloring.Start(color) + coloring.Length(color); i++)
                 {
                     ref ContactData contact = ref records[i];
                     if (contact.Body1.Data.MotionType == MotionType.Dynamic)

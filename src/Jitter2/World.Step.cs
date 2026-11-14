@@ -52,20 +52,17 @@ public sealed partial class World
         /// <summary>Time spent creating deferred arbiters.</summary>
         AddArbiter,
 
-        /// <summary>Time spent reordering contacts (for cache optimization or deterministic results)</summary>
-        ReorderContacts,
-
         /// <summary>Time spent evaluating body deactivation (sleeping).</summary>
         CheckDeactivation,
 
-        /// <summary>Time spent in substeps: force integration, constraint solving, and velocity integration.</summary>
-        Solve,
-
-        /// <summary>Time spent removing broken arbiters.</summary>
+        /// <summary>Time spent removing arbiters whose contacts broke in the previous step.</summary>
         RemoveArbiter,
 
-        /// <summary>Time spent updating contact state after solving.</summary>
-        UpdateContacts,
+        /// <summary>
+        /// Time spent in substeps: force integration, constraint solving, velocity integration, and
+        /// the update of the contacts that follows the last substep.
+        /// </summary>
+        Solve,
 
         /// <summary>Time spent finalizing body state and broadphase proxy updates.</summary>
         UpdateBodies,
@@ -207,8 +204,8 @@ public sealed partial class World
 
                 // Without substep callbacks nothing can change contacts or joints between substeps.
                 // The last substep ends with the contact update of the step.
-                bool recolor = i == 0 || PreSubStep != null || PostSubStep != null;
-                SolveColored(multiThread, solverIterations, velocityRelaxations, integrate: true, recolor,
+                bool regroup = i == 0 || PreSubStep != null || PostSubStep != null;
+                Solve(multiThread, solverIterations, velocityRelaxations, integrate: true, regroup,
                     updateContacts: i == timeStep.SubstepCount - 1);
 
                 PostSubStep?.Invoke(timeStep);
@@ -316,7 +313,7 @@ public sealed partial class World
 
             for (int i = 0; i < timeStep.SubstepCount; i++)
             {
-                SolveColored(multiThread, solverIterations, relaxationIterations, integrate: false);
+                Solve(multiThread, solverIterations, relaxationIterations, integrate: false);
             }
         }
         finally

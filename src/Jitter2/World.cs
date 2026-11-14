@@ -13,6 +13,7 @@ using Jitter2.Collision;
 using Jitter2.Collision.Shapes;
 using Jitter2.DataStructures;
 using Jitter2.Dynamics;
+using Jitter2.Dynamics.Solver;
 using Jitter2.Dynamics.Constraints;
 using Jitter2.LinearMath;
 using Jitter2.Unmanaged;
@@ -455,6 +456,8 @@ public sealed partial class World : IDisposable
         memContacts = new PartitionedBuffer<ContactData>();
         memConstraints = new PartitionedBuffer<ConstraintData>();
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>();
+        contactColoring = new ContactColoring(memContacts);
+        jointGrouping = new JointGrouping(memConstraints, memSmallConstraints);
 
         contactSettings = MemoryHelper.AllocateHeap<ContactSettings>(1);
         *contactSettings = ContactSettings.Default;
