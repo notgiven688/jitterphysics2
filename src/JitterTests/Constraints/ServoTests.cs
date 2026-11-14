@@ -65,7 +65,7 @@ public class ServoTests
 
     [Test]
     public void CappedAccelerationUsesElapsedTime([Values] ServoKind kind,
-        [Values] SolveMode mode, [Values] bool multiThread)
+        [Values] bool multiThread)
     {
         foreach (int steps in new[] { 30, 120 })
             foreach (int substeps in new[] { 1, 4 })
@@ -75,7 +75,6 @@ public class ServoTests
                     {
                         Gravity = JVector.Zero,
                         AllowDeactivation = false,
-                        SolveMode = mode,
                         SubstepCount = substeps,
                         SolverIterations = (iterations, 0)
                     };
@@ -113,9 +112,9 @@ public class ServoTests
     }
 
     [Test]
-    public void AngularServoTracksTargetsInBody1Frame([Values] SolveMode mode)
+    public void AngularServoTracksTargetsInBody1Frame()
     {
-        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SubstepCount = 4 };
         var reference = CreateBody(world);
         reference.MotionType = MotionType.Kinematic;
         reference.Orientation = JQuaternion.CreateRotationY((Real)0.7) * JQuaternion.CreateRotationX((Real)0.3);
@@ -138,9 +137,9 @@ public class ServoTests
     }
 
     [Test]
-    public void LinearServoTracksOffsetsInBody1Frame([Values] SolveMode mode)
+    public void LinearServoTracksOffsetsInBody1Frame()
     {
-        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SubstepCount = 4 };
         var reference = CreateBody(world);
         reference.MotionType = MotionType.Kinematic;
         reference.Position = new JVector(4, 3, 2);
@@ -163,9 +162,9 @@ public class ServoTests
     }
 
     [Test]
-    public void TwistServoCoexistsWithHingeLimits([Values] SolveMode mode)
+    public void TwistServoCoexistsWithHingeLimits()
     {
-        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SubstepCount = 4 };
         var body = CreateBody(world);
         var hinge = world.CreateConstraint<HingeAngle>(world.NullBody, body);
         hinge.Initialize(JVector.UnitX, new AngularLimit((JAngle)(Real)(-0.5), (JAngle)(Real)0.5));
@@ -241,9 +240,9 @@ public class ServoTests
         Solve(servo, new TimeStep((Real)0.01));
     }
     [Test]
-    public void TargetChangesWakeSleepingBodies([Values] ServoKind kind, [Values] SolveMode mode)
+    public void TargetChangesWakeSleepingBodies([Values] ServoKind kind)
     {
-        using var world = new World { Gravity = JVector.Zero, SolveMode = mode };
+        using var world = new World { Gravity = JVector.Zero };
         var body = CreateBody(world);
         var servo = CreateServo(world, world.NullBody, body, kind, 0);
         world.Step((Real)0.01, false);

@@ -6,8 +6,6 @@
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <IsPackable>false</IsPackable>
-        <!-- Many tests still run for both values of the obsolete SolveMode. -->
-        <NoWarn>$(NoWarn);CS0618</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(DoublePrecision)' == 'true'">

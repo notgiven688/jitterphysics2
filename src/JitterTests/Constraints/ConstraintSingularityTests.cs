@@ -71,9 +71,9 @@ public class ConstraintSingularityTests
         Assert.That(spring.Softness, Is.Zero);
     }
 
-    private static World CreateWorld(SolveMode mode) => new()
+    private static World CreateWorld() => new()
     {
-        SolveMode = mode, Gravity = JVector.Zero, AllowDeactivation = false,
+        Gravity = JVector.Zero, AllowDeactivation = false,
         SubstepCount = 1, SolverIterations = (8, 0)
     };
 
@@ -91,10 +91,9 @@ public class ConstraintSingularityTests
         [Values(0, 1e-5, 0.005)] double offset,
         [Values(-1, 1)] int sign,
         [Values(0, 0.001)] double softness,
-        [Values(MotionAxes.All, MotionAxes.AngularZ)] MotionAxes axes,
-        [Values(SolveMode.Regular, SolveMode.Deterministic)] SolveMode mode)
+        [Values(MotionAxes.All, MotionAxes.AngularZ)] MotionAxes axes)
     {
-        using World world = CreateWorld(mode);
+        using World world = CreateWorld();
         RigidBody body = CreateBody(world, axes);
         var twist = world.CreateConstraint<TwistAngle>(world.NullBody, body);
         twist.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.Fixed);
@@ -116,10 +115,9 @@ public class ConstraintSingularityTests
         [Values(0, 1e-5, 0.002, 0.1)] double offset,
         [Values] bool antiparallel,
         [Values(0, 0.001)] double softness,
-        [Values(MotionAxes.All, MotionAxes.AngularX)] MotionAxes axes,
-        [Values(SolveMode.Regular, SolveMode.Deterministic)] SolveMode mode)
+        [Values(MotionAxes.All, MotionAxes.AngularX)] MotionAxes axes)
     {
-        using World world = CreateWorld(mode);
+        using World world = CreateWorld();
         RigidBody body = CreateBody(world, axes);
         var cone = world.CreateConstraint<ConeLimit>(world.NullBody, body);
         cone.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.FromDegree(30, 60));
@@ -174,7 +172,7 @@ public class ConstraintSingularityTests
     [TestCase(1)]
     public void Twist_HalfTurnHonorsRangeLimits(int sign)
     {
-        using World world = CreateWorld(SolveMode.Regular);
+        using World world = CreateWorld();
         RigidBody body = CreateBody(world, MotionAxes.AngularZ);
         var twist = world.CreateConstraint<TwistAngle>(world.NullBody, body);
         twist.Initialize(JVector.UnitZ, JVector.UnitZ, AngularLimit.FromDegree(-30, 30));

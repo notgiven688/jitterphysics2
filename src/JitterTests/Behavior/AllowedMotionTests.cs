@@ -140,14 +140,11 @@ public class AllowedMotionTests
         Assert.That(body.AngularVelocity, Is.EqualTo(new JVector(0, 0, 6)));
     }
 
-    [TestCase(false, SolveMode.Regular)]
-    [TestCase(true, SolveMode.Regular)]
-    [TestCase(false, SolveMode.Deterministic)]
-    [TestCase(true, SolveMode.Deterministic)]
-    public void ForcesAndGravity_RespectWorldAxesAcrossSubsteps(bool multiThread, SolveMode mode)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void ForcesAndGravity_RespectWorldAxesAcrossSubsteps(bool multiThread)
     {
         using World world = CreateWorld();
-        world.SolveMode = mode;
         world.SubstepCount = 4;
         world.Gravity = new JVector(3, 4, 5);
         RigidBody body = CreateBody(world);
@@ -212,46 +209,34 @@ public class AllowedMotionTests
         return contact;
     }
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void ObliqueContact_UsesDirectionalMassInOneIteration(bool accelerated)
+    [Test]
+    public void ObliqueContact_UsesDirectionalMassInOneIteration()
     {
         using World world = CreateWorld();
         RigidBody body = CreateBody(world);
         body.AllowedMotion = MotionAxes.LinearY | MotionAxes.Angular;
         body.Velocity = new JVector(0, -3, 0);
         ContactData contact = CreateContact(world, body, JVector.Normalize(new JVector(1, 1, 0)));
-        if (accelerated)
-        {
-            contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
-            contact.IterateAccelerated(false);
-        }
-        else
-        {
-            contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
-            contact.IterateScalar(false);
-        }
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 100));
+        contact.Iterate(false);
 
         Assert.That(JVector.MaxAbs(body.Velocity), Is.LessThan(Tolerance));
-        Assert.That(contact.Contact0.MassNormalTangent.GetElement(0), Is.EqualTo((Real)4).Within(Tolerance));
-        Assert.That(contact.Contact0.MassNormalTangent.GetElement(2), Is.Zero);
+        Assert.That(contact.Contact0.MassNormal, Is.EqualTo((Real)4).Within(Tolerance));
+        Assert.That(contact.Contact0.MassTangent2, Is.Zero);
     }
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void CompletelyBlockedContact_RemainsFinite(bool accelerated)
+    [Test]
+    public void CompletelyBlockedContact_RemainsFinite()
     {
         using World world = CreateWorld();
         RigidBody body = CreateBody(world);
         body.AllowedMotion = MotionAxes.None;
         ContactData contact = CreateContact(world, body, JVector.UnitY);
         contact.Contact0.PenaltyBias = 1;
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 100));
         for (int i = 0; i < 3; i++)
         {
-            if (accelerated) contact.IterateAccelerated(true);
-            else contact.IterateScalar(true);
+            contact.Iterate(true);
         }
 
         Assert.That(body.Velocity, Is.EqualTo(JVector.Zero));
@@ -261,11 +246,9 @@ public class AllowedMotionTests
         Assert.That(contact.Contact0.TangentImpulse2, Is.Zero);
     }
 
-    [TestCase(false, false)]
-    [TestCase(true, false)]
-    [TestCase(false, true)]
-    [TestCase(true, true)]
-    public unsafe void ContactModes_UseOnlyParticipatingLinearMass(bool accelerated, bool linearLocks)
+    [TestCase(false)]
+    [TestCase(true)]
+    public unsafe void ContactModes_UseOnlyParticipatingLinearMass(bool linearLocks)
     {
         using World world = CreateWorld();
         RigidBody body1 = CreateBody(world);
@@ -289,16 +272,8 @@ public class AllowedMotionTests
             contact.Contact0.Initialize((ContactData*)Unsafe.AsPointer(ref contact),
                 JVector.Zero, JVector.Zero, normal, true);
             contact.UsageMask = ContactData.MaskContact0;
-            if (accelerated)
-            {
-                contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
-                contact.IterateAccelerated(false);
-            }
-            else
-            {
-                contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
-                contact.IterateScalar(false);
-            }
+            contact.PrepareForIteration(new TimeStep((Real)1.0 / 100));
+        contact.Iterate(false);
 
             bool linear1 = (contact.Mode & ContactData.SolveMode.LinearBody1) != 0;
             bool linear2 = (contact.Mode & ContactData.SolveMode.LinearBody2) != 0;
@@ -517,15 +492,12 @@ public class AllowedMotionTests
         Assert.That(JVector.MaxAbs(body.AngularVelocity - (JVector.UnitZ + expected)), Is.LessThan(Tolerance));
     }
 
-    [TestCase(false, SolveMode.Regular)]
-    [TestCase(true, SolveMode.Regular)]
-    [TestCase(false, SolveMode.Deterministic)]
-    [TestCase(true, SolveMode.Deterministic)]
-    public void Torque_RespectsWorldAngularLocksAcrossSubsteps(bool multiThread, SolveMode mode)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Torque_RespectsWorldAngularLocksAcrossSubsteps(bool multiThread)
     {
         using World world = CreateWorld();
         world.SubstepCount = 4;
-        world.SolveMode = mode;
         RigidBody body = CreateBody(world);
         body.SetMassInertia(JSymmetricMatrix.CreateScale(2, 3, 4), 1, true);
         body.Orientation = JQuaternion.Normalize(new JQuaternion(1, 2, 3, 4));
@@ -609,9 +581,8 @@ public class AllowedMotionTests
         Assert.That(Real.IsFinite(body.Orientation.LengthSquared()), Is.True);
     }
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void OffCenterContact_StopsUnlockedRotationWithTranslationBlocked(bool accelerated)
+    [Test]
+    public void OffCenterContact_StopsUnlockedRotationWithTranslationBlocked()
     {
         using World world = CreateWorld();
         RigidBody body = CreateBody(world);
@@ -619,16 +590,8 @@ public class AllowedMotionTests
         body.AllowedMotion = MotionAxes.AngularY;
         body.AngularVelocity = new JVector(0, 3, 0);
         ContactData contact = CreateContact(world, body, JVector.UnitZ, JVector.UnitX);
-        if (accelerated)
-        {
-            contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
-            contact.IterateAccelerated(false);
-        }
-        else
-        {
-            contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
-            contact.IterateScalar(false);
-        }
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 100));
+        contact.Iterate(false);
         Assert.That(JVector.MaxAbs(body.AngularVelocity), Is.LessThan(Tolerance));
         Assert.That(body.Velocity, Is.EqualTo(JVector.Zero));
     }

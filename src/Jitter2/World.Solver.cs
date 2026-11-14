@@ -66,17 +66,28 @@ public sealed partial class World
     private const int InsertionSortLimit = 24;
     private const int RadixBits = 11;
 
-    // The dynamic bodies of an edge by RigidBodyData._index, -1 for a body the solver only reads.
-    private struct ContactEndpoints
+    // The dynamic bodies of a contact or joint by RigidBodyData._index, -1 for a body the solver
+    // only reads: static and kinematic bodies are read by any number of edges at once.
+    private struct Endpoints
     {
         internal int Body1, Body2;
 
-        // An empty manifold is left out of the solve.
+        // An empty manifold or a disabled joint is left out of the solve.
         internal const int Unsolved = int.MinValue;
+
+        internal readonly bool IsSolved => Body1 != Unsolved;
+
+        internal static Endpoints Of(ref RigidBodyData body1, ref RigidBodyData body2) => new()
+        {
+            Body1 = body1.MotionType == MotionType.Dynamic ? body1._index : -1,
+            Body2 = body2.MotionType == MotionType.Dynamic ? body2._index : -1
+        };
+
+        internal static readonly Endpoints None = new() { Body1 = Unsolved, Body2 = Unsolved };
     }
 
     // Per-solve scratch, indexed by the position of a contact in the active contact span.
-    private ContactEndpoints[] contactEndpoints = [];
+    private Endpoints[] contactEndpoints = [];
     private ulong[] contactKey1 = [], contactKey2 = [];
     private int[] contactOrder = [], contactTarget = [];
     private byte[] contactSegment = [];
@@ -91,15 +102,11 @@ public sealed partial class World
     private const int SegmentCount = MaximumContactColors + 2;
 
     private readonly int[] segmentStart = new int[SegmentCount + 1];
-    private readonly int[] colorLength = new int[MaximumContactColors];
     private readonly int[] colorBundleStart = new int[MaximumContactColors];
-    private int contactColorCount, coloredContactCount, solvedContactCount;
+    private int contactColorCount;
     private readonly List<ContactSolverWide> contactBundles = [];
     // The contacts without a color, in the order in which they are solved.
     private readonly List<JHandle<ContactData>> overflowContacts = [];
-
-    // The segments are valid for this state of the buffers.
-    private int coloredVersion, coloredCount = -1, coloredJointVersion, coloredSmallJointVersion;
 
     // Within a segment the records are kept in the order in which they were colored, so that a
     // worker's share of every color covers the same bodies. Moving single records into their
@@ -113,17 +120,16 @@ public sealed partial class World
     // Releases the scratch memory of the solver. The next solve allocates what it needs.
     private void TrimSolverScratch()
     {
-        contactEndpoints = [];
+        contactEndpoints = jointEndpoints = knownJointEndpoints = [];
         contactKey1 = contactKey2 = bodyColors = jointKey = jointBodyColors = knownJointKey = [];
         contactOrder = contactTarget = [];
         contactSegment = jointColor = [];
-        jointBody1 = jointBody2 = jointOrder = jointScratch = groupedJoints = coloredJoints = [];
-        jointBodyGroup = jointGroupSize = knownJointBody1 = knownJointBody2 = [];
+        jointOrder = jointScratch = groupedJoints = coloredJoints = [];
+        jointBodyGroup = jointGroupSize = [];
         jointGroupStart = new int[1];
         jointGroupCount = jointColorCount = solvedJointCount = 0;
         Array.Clear(jointColorStart);
         knownJointCount = -1;
-        coloredCount = -1;
         contactsMovedSinceSort = int.MaxValue;
         contactBundles.Clear();
         contactBundles.TrimExcess();
@@ -186,7 +192,7 @@ public sealed partial class World
         if (contactSegment.Length < count)
         {
             int capacity = Math.Max(count, contactSegment.Length * 2);
-            contactEndpoints = new ContactEndpoints[capacity];
+            contactEndpoints = new Endpoints[capacity];
             contactKey1 = new ulong[capacity];
             contactKey2 = new ulong[capacity];
             contactOrder = new int[capacity];
@@ -194,32 +200,14 @@ public sealed partial class World
             contactSegment = new byte[capacity];
         }
 
-        // Reading the endpoints touches every contact record and its bodies, which is most of
-        // the cost of coloring. The workers of the last solve share it; the rest works on the
-        // compact arrays filled here.
-        int readers = multiThread && count >= ParallelColoringThreshold
-            ? Math.Min(solverWorkerCount, ThreadPool.Instance.ThreadCount) : 1;
-        if (readers > 1)
-        {
-            endpointReaders = readers;
-            readContactEndpoints ??= worker =>
-            {
-                Parallel.GetBounds(memContacts.Active.Length, endpointReaders, worker, out int start, out int end);
-                ReadContactEndpoints(start, end);
-            };
-            ThreadPool.Instance.ExecuteWorkerLoop(readContactEndpoints, readers);
-        }
-        else
-        {
-            ReadContactEndpoints(0, count);
-        }
+        ReadEndpoints(multiThread, count, readContactEndpoints ??= ReadContactEndpoints);
 
         var endpoints = contactEndpoints.AsSpan(0, count);
         int bodyLimit = 0, solved = 0;
         for (int i = 0; i < count; i++)
         {
-            ref readonly ContactEndpoints e = ref endpoints[i];
-            if (e.Body1 == ContactEndpoints.Unsolved)
+            ref readonly Endpoints e = ref endpoints[i];
+            if (!e.IsSolved)
             {
                 contactSegment[i] = UnsolvedSegment;
                 continue;
@@ -243,11 +231,11 @@ public sealed partial class World
 
         if (bodyColors.Length < bodyLimit) bodyColors = new ulong[Math.Max(bodyLimit, bodyColors.Length * 2)];
         Array.Clear(bodyColors, 0, bodyLimit);
-        Array.Clear(colorLength);
         overflowContacts.Clear();
-        contactColorCount = coloredContactCount = 0;
-        solvedContactCount = solved;
+        contactColorCount = 0;
 
+        Span<int> colorLength = stackalloc int[MaximumContactColors];
+        colorLength.Clear();
         var active = memContacts.Active;
         for (int k = 0; k < solved; k++)
         {
@@ -256,7 +244,6 @@ public sealed partial class World
             if (color < MaximumContactColors)
             {
                 colorLength[color]++;
-                coloredContactCount++;
                 contactColorCount = Math.Max(contactColorCount, color + 1);
             }
             else
@@ -268,26 +255,23 @@ public sealed partial class World
             contactSegment[i] = (byte)color;
         }
 
-        int offset = 0;
+        int offset = 0, bundles = 0;
         for (int c = 0; c < MaximumContactColors; c++)
         {
             segmentStart[c] = offset;
+            colorBundleStart[c] = bundles;
             offset += colorLength[c];
+            bundles += BundleCount(colorLength[c]);
         }
 
         segmentStart[OverflowSegment] = offset;
         segmentStart[UnsolvedSegment] = solved;
         segmentStart[SegmentCount] = count;
 
-        int bundles = 0;
-        for (int c = 0; c < contactColorCount; c++)
-        {
-            colorBundleStart[c] = bundles;
-            bundles += (colorLength[c] + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
-        }
-
-        while (contactBundles.Count < bundles) contactBundles.Add(new ContactSolverWide());
+        while (UseBundles && contactBundles.Count < bundles) contactBundles.Add(new ContactSolverWide());
     }
+
+    private static int BundleCount(int contacts) => (contacts + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
 
     // Returns the first color free on both bodies and takes it, or the color count if none is.
     private static int TakeColor(ulong[] colors, int body1, int body2)
@@ -333,7 +317,7 @@ public sealed partial class World
     // was last restored, every record is put in its exact place instead.
     private void GroupContactsBySegment()
     {
-        int count = memContacts.Active.Length, solved = solvedContactCount;
+        int count = memContacts.Active.Length, solved = segmentStart[UnsolvedSegment];
 
         Span<int> next = stackalloc int[SegmentCount];
         segmentStart.AsSpan(0, SegmentCount).CopyTo(next);
@@ -363,7 +347,6 @@ public sealed partial class World
             }
 
             contactsMovedSinceSort = solvesSinceSort = 0;
-            StampColors();
             return;
         }
 
@@ -388,12 +371,8 @@ public sealed partial class World
                 contactsMovedSinceSort++;
             }
         }
-
-        StampColors();
     }
 
-    // A body is a node of the graph only if the solver writes it. Static and kinematic bodies
-    // are read by any number of edges at once and are recorded as -1.
     private void ReadContactEndpoints(int start, int end)
     {
         var active = memContacts.Active;
@@ -402,21 +381,41 @@ public sealed partial class World
             ref ContactData contact = ref active[i];
             if ((contact.UsageMask & ContactData.MaskContactAll) == 0)
             {
-                contactEndpoints[i].Body1 = contactEndpoints[i].Body2 = ContactEndpoints.Unsolved;
+                contactEndpoints[i] = Endpoints.None;
                 continue;
             }
 
             contactKey1[i] = contact.Key.Key1;
             contactKey2[i] = contact.Key.Key2;
-            ref RigidBodyData b1 = ref contact.Body1.Data;
-            ref RigidBodyData b2 = ref contact.Body2.Data;
-            contactEndpoints[i].Body1 = b1.MotionType == MotionType.Dynamic ? b1._index : -1;
-            contactEndpoints[i].Body2 = b2.MotionType == MotionType.Dynamic ? b2._index : -1;
+            contactEndpoints[i] = Endpoints.Of(ref contact.Body1.Data, ref contact.Body2.Data);
         }
     }
 
-    private int endpointReaders;
-    private Action<int>? readContactEndpoints;
+    // Reading the endpoints touches every record and its bodies, which is most of the cost of
+    // coloring. The workers of the last solve share it; the rest works on the compact arrays
+    // filled here.
+    private void ReadEndpoints(bool multiThread, int count, Action<int, int> read)
+    {
+        int readers = multiThread && count >= ParallelColoringThreshold
+            ? Math.Min(solverWorkerCount, ThreadPool.Instance.ThreadCount) : 1;
+        if (readers <= 1)
+        {
+            read(0, count);
+            return;
+        }
+
+        (endpointRead, endpointCount, endpointReaders) = (read, count, readers);
+        readEndpointShare ??= worker =>
+        {
+            Parallel.GetBounds(endpointCount, endpointReaders, worker, out int start, out int end);
+            endpointRead!(start, end);
+        };
+        ThreadPool.Instance.ExecuteWorkerLoop(readEndpointShare, readers);
+    }
+
+    private Action<int, int>? endpointRead, readContactEndpoints, readJointEndpoints;
+    private Action<int>? readEndpointShare;
+    private int endpointCount, endpointReaders;
 
     private int SegmentLength(int segment) => segmentStart[segment + 1] - segmentStart[segment];
 
@@ -432,7 +431,8 @@ public sealed partial class World
     // A joint is referenced by its position in the active constraints, or by the complement of
     // its position in the active small constraints. The scratch arrays are indexed by that
     // position, the small constraints following the others.
-    private int[] jointBody1 = [], jointBody2 = [], jointOrder = [], jointScratch = [];
+    private Endpoints[] jointEndpoints = [];
+    private int[] jointOrder = [], jointScratch = [];
     private int[] groupedJoints = [], coloredJoints = [];
     private ulong[] jointKey = [], jointBodyColors = [];
     private byte[] jointColor = [];
@@ -449,7 +449,7 @@ public sealed partial class World
     private const byte GroupedJoint = byte.MaxValue;
 
     // The joints the current groups and colors were built from.
-    private int[] knownJointBody1 = [], knownJointBody2 = [];
+    private Endpoints[] knownJointEndpoints = [];
     private ulong[] knownJointKey = [];
     private int knownJointCount = -1;
 
@@ -457,71 +457,50 @@ public sealed partial class World
     {
         int constraintCount = memConstraints.Active.Length;
         int total = constraintCount + memSmallConstraints.Active.Length;
-        if (jointBody1.Length < total)
+        if (jointEndpoints.Length < total)
         {
-            int capacity = Math.Max(total, jointBody1.Length * 2);
-            jointBody1 = new int[capacity];
-            jointBody2 = new int[capacity];
+            int capacity = Math.Max(total, jointEndpoints.Length * 2);
+            jointEndpoints = new Endpoints[capacity];
+            knownJointEndpoints = new Endpoints[capacity];
             jointOrder = new int[capacity];
             jointScratch = new int[capacity];
             groupedJoints = new int[capacity];
             coloredJoints = new int[capacity];
             jointGroupStart = new int[capacity + 1];
             jointKey = new ulong[capacity];
+            knownJointKey = new ulong[capacity];
             jointColor = new byte[capacity];
+            knownJointCount = -1;
         }
 
-        // As for the contacts, reading the joint records and their bodies is most of the work.
-        int readers = multiThread && total >= ParallelColoringThreshold
-            ? Math.Min(solverWorkerCount, ThreadPool.Instance.ThreadCount) : 1;
-        if (readers > 1)
-        {
-            endpointReaders = readers;
-            readJointEndpoints ??= worker =>
-            {
-                int joints = memConstraints.Active.Length + memSmallConstraints.Active.Length;
-                Parallel.GetBounds(joints, endpointReaders, worker, out int start, out int end);
-                ReadJointEndpoints(start, end);
-            };
-            ThreadPool.Instance.ExecuteWorkerLoop(readJointEndpoints, readers);
-        }
-        else
-        {
-            ReadJointEndpoints(0, total);
-        }
+        ReadEndpoints(multiThread, total, readJointEndpoints ??= ReadJointEndpoints);
 
         // Joints rarely change. When every joint still connects the same bodies as in the last
         // solve, its groups and colors still hold.
+        var endpoints = MemoryMarshal.AsBytes(jointEndpoints.AsSpan(0, total));
+        var keys = jointKey.AsSpan(0, total);
         if (total == knownJointCount &&
-            jointBody1.AsSpan(0, total).SequenceEqual(knownJointBody1.AsSpan(0, total)) &&
-            jointBody2.AsSpan(0, total).SequenceEqual(knownJointBody2.AsSpan(0, total)) &&
-            jointKey.AsSpan(0, total).SequenceEqual(knownJointKey.AsSpan(0, total)))
+            endpoints.SequenceEqual(MemoryMarshal.AsBytes(knownJointEndpoints.AsSpan(0, total))) &&
+            keys.SequenceEqual(knownJointKey.AsSpan(0, total)))
         {
             return;
         }
 
-        if (knownJointKey.Length < total)
-        {
-            knownJointBody1 = new int[jointBody1.Length];
-            knownJointBody2 = new int[jointBody1.Length];
-            knownJointKey = new ulong[jointBody1.Length];
-        }
-
-        jointBody1.AsSpan(0, total).CopyTo(knownJointBody1);
-        jointBody2.AsSpan(0, total).CopyTo(knownJointBody2);
-        jointKey.AsSpan(0, total).CopyTo(knownJointKey);
+        jointEndpoints.AsSpan(0, total).CopyTo(knownJointEndpoints);
+        keys.CopyTo(knownJointKey);
         knownJointCount = total;
 
         int count = 0, bodyLimit = 0;
         for (int j = 0; j < total; j++)
         {
-            if (jointBody1[j] == ContactEndpoints.Unsolved) continue;
-            bodyLimit = Math.Max(bodyLimit, Math.Max(jointBody1[j], jointBody2[j]) + 1);
+            ref readonly Endpoints e = ref jointEndpoints[j];
+            if (!e.IsSolved) continue;
+            bodyLimit = Math.Max(bodyLimit, Math.Max(e.Body1, e.Body2) + 1);
             jointOrder[count++] = j;
         }
 
         solvedJointCount = count;
-        SortJoints(count);
+        SortByKey(ref jointOrder, ref jointScratch, count, jointKey);
 
         if (jointBodyColors.Length < bodyLimit)
         {
@@ -535,8 +514,8 @@ public sealed partial class World
         for (int b = 0; b < bodyLimit; b++) jointBodyGroup[b] = b;
         for (int k = 0; k < count; k++)
         {
-            int j = jointOrder[k];
-            if (jointBody1[j] >= 0 && jointBody2[j] >= 0) JoinJointGroups(jointBody1[j], jointBody2[j]);
+            Endpoints e = jointEndpoints[jointOrder[k]];
+            if (e.Body1 >= 0 && e.Body2 >= 0) JoinJointGroups(e.Body1, e.Body2);
         }
 
         // Point every body straight at its root, so that the passes below need no search.
@@ -573,7 +552,7 @@ public sealed partial class World
             int size = jointGroupSize[root];
             if (size > MaximumJointGroupSize)
             {
-                int color = TakeColor(jointBodyColors, jointBody1[j], jointBody2[j]);
+                int color = TakeColor(jointBodyColors, jointEndpoints[j].Body1, jointEndpoints[j].Body2);
                 jointColor[j] = (byte)color;
                 if (color < MaximumContactColors)
                 {
@@ -632,38 +611,10 @@ public sealed partial class World
         jointGroupStart[0] = 0;
     }
 
-    // Constraint ids grow as joints are created, and each of the two buffers mostly keeps that
-    // order, so the joints usually arrive as two sorted runs that only need merging.
-    private void SortJoints(int count)
-    {
-        int breaks = 0, split = count;
-        for (int k = 1; k < count; k++)
-        {
-            if (jointKey[jointOrder[k - 1]] <= jointKey[jointOrder[k]]) continue;
-            if (++breaks > 1) break;
-            split = k;
-        }
-
-        if (breaks == 0) return;
-        if (breaks > 1)
-        {
-            SortByKey(ref jointOrder, ref jointScratch, count, jointKey);
-            return;
-        }
-
-        int a = 0, b = split;
-        for (int k = 0; k < count; k++)
-        {
-            bool first = b >= count || (a < split && jointKey[jointOrder[a]] <= jointKey[jointOrder[b]]);
-            jointScratch[k] = first ? jointOrder[a++] : jointOrder[b++];
-        }
-
-        (jointOrder, jointScratch) = (jointScratch, jointOrder);
-    }
-
     private int JointGroupOf(int joint)
     {
-        int body = jointBody1[joint] >= 0 ? jointBody1[joint] : jointBody2[joint];
+        Endpoints e = jointEndpoints[joint];
+        int body = e.Body1 >= 0 ? e.Body1 : e.Body2;
         return body >= 0 ? jointBodyGroup[body] : -1;
     }
 
@@ -689,7 +640,6 @@ public sealed partial class World
     private static int JointReference(int joint, int constraintCount) =>
         joint < constraintCount ? joint : ~(joint - constraintCount);
 
-    // Disabled joints are left out; the bodies of the others are recorded like those of contacts.
     private void ReadJointEndpoints(int start, int end)
     {
         var constraints = memConstraints.Active;
@@ -709,20 +659,9 @@ public sealed partial class World
                 (enabled, body1, body2, jointKey[j]) = (joint.IsEnabled, joint.Body1, joint.Body2, joint.ConstraintId);
             }
 
-            if (!enabled)
-            {
-                jointBody1[j] = jointBody2[j] = ContactEndpoints.Unsolved;
-                continue;
-            }
-
-            ref RigidBodyData b1 = ref body1.Data;
-            ref RigidBodyData b2 = ref body2.Data;
-            jointBody1[j] = b1.MotionType == MotionType.Dynamic ? b1._index : -1;
-            jointBody2[j] = b2.MotionType == MotionType.Dynamic ? b2._index : -1;
+            jointEndpoints[j] = enabled ? Endpoints.Of(ref body1.Data, ref body2.Data) : Endpoints.None;
         }
     }
-
-    private Action<int>? readJointEndpoints;
 
     private void SolveJoint(int reference, bool prepare)
     {
@@ -755,7 +694,7 @@ public sealed partial class World
     // The number of workers changes how fast a solve is, never its result.
     private int ChooseSolverWorkerLimit(int threadCount)
     {
-        int colored = coloredContactCount;
+        int colored = segmentStart[OverflowSegment];
         int previous = solverWorkerLimit > 0 ? Math.Min(solverWorkerLimit, threadCount) : threadCount;
         int workers = previous;
 
@@ -780,7 +719,7 @@ public sealed partial class World
         int threshold = WideColorBarrierFactor * workers * workers, small = 0;
         for (int c = 0; c < contactColorCount; c++)
         {
-            if (colorLength[c] < threshold) small += colorLength[c];
+            if (SegmentLength(c) < threshold) small += SegmentLength(c);
         }
 
         return small;
@@ -838,15 +777,13 @@ public sealed partial class World
     /// <param name="relaxations">The number of relaxation sweeps.</param>
     /// <param name="integrate">Whether this is a full substep rather than a velocity-only solve.</param>
     /// <param name="recolor">Whether contacts or joints may have changed since the previous solve.</param>
-    /// <param name="updateContacts">
-    /// Whether to finish with the contact update of the step, see <see cref="RemoveBrokenArbiters"/>.
-    /// </param>
+    /// <param name="updateContacts">Whether to finish with the contact update of the step.</param>
     private void SolveColored(bool multiThread, int iterations, int relaxations, bool integrate,
         bool recolor = true, bool updateContacts = false)
     {
-        // The colors of the previous substep are reused only when the caller knows that nothing
+        // The colors of the previous solve are reused only when the caller knows that nothing
         // could have added, removed or edited a contact or joint since.
-        if (recolor || !ColorsAreCurrent)
+        if (recolor)
         {
             ColorContacts(multiThread);
             ColorJoints(multiThread);
@@ -861,7 +798,7 @@ public sealed partial class World
             // Let the largest pass decide how many workers are worth synchronizing.
             int demand = 0;
             for (int c = 0; c < contactColorCount; c++)
-                demand = Math.Max(demand, colorLength[c] / (ContactSolverWide.Width * MinimumBundlesPerWorker));
+                demand = Math.Max(demand, BundleCount(SegmentLength(c)) / MinimumBundlesPerWorker);
             demand = Math.Max(demand, jointGroupStart[jointGroupCount] / JointsPerWorkerInPass);
             for (int c = 0; c < jointColorCount; c++)
                 demand = Math.Max(demand, (jointColorStart[c + 1] - jointColorStart[c]) / JointsPerWorkerInPass);
@@ -873,7 +810,6 @@ public sealed partial class World
 
         BuildSolverPasses(iterations, relaxations, integrate, updateContacts);
         if (solverPasses.Count == 0) return;
-        if (updateContacts) FlagRetiringArbiters();
 
         solverArrivals = workers;
         solverEpoch = 0;
@@ -892,41 +828,16 @@ public sealed partial class World
         solverFailure?.Throw();
     }
 
-    private bool ColorsAreCurrent =>
-        coloredVersion == memContacts.Version && coloredCount == memContacts.Active.Length &&
-        coloredJointVersion == memConstraints.Version && coloredSmallJointVersion == memSmallConstraints.Version;
-
-    private void StampColors()
-    {
-        coloredVersion = memContacts.Version;
-        coloredCount = memContacts.Active.Length;
-        coloredJointVersion = memConstraints.Version;
-        coloredSmallJointVersion = memSmallConstraints.Version;
-    }
-
     // The contact update of the step, run by the solver on the records it has just written while
-    // they and their bodies are still in the worker's cache. It runs before the arbiters that
-    // broke in the previous step are removed, so those are flagged first: their empty manifolds
-    // must not be reported as broken a second time.
-    private void FlagRetiringArbiters()
-    {
-        foreach (var handle in brokenArbiters)
-        {
-            ref ContactData contact = ref handle.Data;
-            if ((contact.UsageMask & ContactData.MaskContactAll) == 0) contact.UsageMask = ContactData.MaskRetiring;
-        }
-    }
-
+    // they and their bodies are still in the worker's cache.
     private void UpdateSolvedContacts(Span<ContactData> records)
     {
-        for (int i = 0; i < records.Length; i++)
+        foreach (ref ContactData contact in records)
         {
-            ref ContactData contact = ref records[i];
-            if (contact.UsageMask == ContactData.MaskRetiring) continue;
             contact.UpdatePosition();
 
             if ((contact.UsageMask & ContactData.MaskContactAll) == 0)
-                pendingBrokenArbiters.ConcurrentAdd(memContacts.GetHandle(ref contact));
+                brokenArbiters.ConcurrentAdd(memContacts.GetHandle(ref contact));
         }
     }
 
@@ -971,14 +882,14 @@ public sealed partial class World
     {
         for (int c = 0; c < contactColorCount;)
         {
-            if (colorLength[c] >= SmallColorLength)
+            if (SegmentLength(c) >= SmallColorLength)
             {
                 AddColorPass(kind, c++, applyBias, writeBack, updateContacts);
                 continue;
             }
 
             int first = c;
-            while (c < contactColorCount && colorLength[c] < SmallColorLength) c++;
+            while (c < contactColorCount && SegmentLength(c) < SmallColorLength) c++;
             solverPasses.Add(new SolverPass
             {
                 Kind = kind, Color = first, ColorEnd = c, Total = 1, ApplyBias = applyBias, WriteBack = writeBack,
@@ -1024,10 +935,9 @@ public sealed partial class World
     private void AddColorPass(SolverPassKind kind, int color, bool applyBias = false, bool writeBack = false,
         bool updateContacts = false)
     {
-        int bundles = (colorLength[color] + ContactSolverWide.Width - 1) / ContactSolverWide.Width;
         solverPasses.Add(new SolverPass
         {
-            Kind = kind, Color = color, Total = bundles, ApplyBias = applyBias, WriteBack = writeBack,
+            Kind = kind, Color = color, Total = BundleCount(SegmentLength(color)), ApplyBias = applyBias, WriteBack = writeBack,
             UpdateContacts = updateContacts
         });
     }
@@ -1096,7 +1006,7 @@ public sealed partial class World
 
     private void SolveContactColor(in SolverPass pass, int color, int start, int end)
     {
-        var lanes = memContacts.Active.Slice(segmentStart[color], colorLength[color]);
+        var lanes = memContacts.Active.Slice(segmentStart[color], SegmentLength(color));
         int first = colorBundleStart[color];
         for (int i = start; i < end; i++)
         {
@@ -1153,7 +1063,7 @@ public sealed partial class World
                 }
 
                 for (int c = pass.Color; c < pass.ColorEnd; c++)
-                    SolveContactColor(in pass, c, 0, (colorLength[c] + ContactSolverWide.Width - 1) / ContactSolverWide.Width);
+                    SolveContactColor(in pass, c, 0, BundleCount(SegmentLength(c)));
 
                 break;
             }

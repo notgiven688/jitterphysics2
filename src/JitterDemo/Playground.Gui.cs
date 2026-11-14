@@ -335,7 +335,6 @@ public partial class Playground : RenderWindow
                         World.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
                     options.Checkbox("Multithreading", ref multiThread);
-
                 });
             }
 

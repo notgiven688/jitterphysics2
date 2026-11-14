@@ -94,9 +94,9 @@ public class JointDriveTests
     }
 
     [Test]
-    public void ServoTargetUsesJointCoordinateAndRespectsLimits([Values] bool prismatic, [Values] SolveMode mode)
+    public void ServoTargetUsesJointCoordinateAndRespectsLimits([Values] bool prismatic)
     {
-        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SubstepCount = 4 };
         var body = CreateBody(world);
         Func<Real> coordinate;
         Action<Real> setTarget;
@@ -126,14 +126,13 @@ public class JointDriveTests
 
     [Test]
     public void HingeServoTravelsThroughItsAllowedAngularInterval(
-        [Values(-1, 1)] int direction, [Values(1, 4)] int substeps, [Values] SolveMode mode)
+        [Values(-1, 1)] int direction, [Values(1, 4)] int substeps)
     {
         using var world = new World
         {
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = substeps,
-            SolveMode = mode
         };
         var reference = CreateBody(world);
         reference.MotionType = MotionType.Kinematic;
@@ -300,9 +299,9 @@ public class JointDriveTests
     }
 
     [Test]
-    public void UniversalServoDrivesBothFreeRotationsAndPreservesTwistLock([Values] SolveMode mode, [Values] bool multiThread)
+    public void UniversalServoDrivesBothFreeRotationsAndPreservesTwistLock([Values] bool multiThread)
     {
-        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SolveMode = mode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, AllowDeactivation = false, SubstepCount = 4 };
         var first = CreateBody(world);
         first.MotionType = MotionType.Kinematic;
         first.Position = new JVector(3, 2, 1);

@@ -135,36 +135,32 @@ public class EllipticalConeLimitTests
     [TestCase(3.14158, 0.6, "Band")]
     public void SimulationRecoversIntoAllowedRegion(double angle, double azimuth, string kind)
     {
-        foreach (SolveMode mode in new[] { SolveMode.Regular, SolveMode.Deterministic })
+        using World world = new()
         {
-            using World world = new()
-            {
-                Gravity = JVector.Zero,
-                AllowDeactivation = false,
-                SolveMode = mode,
-                SubstepCount = 1,
-                SolverIterations = (8, 0)
-            };
-            var cone = CreateCone(world);
-            if (kind == "Band") cone.SetLimits(AngularLimit.FromDegree(20, 60), AngularLimit.FromDegree(10, 25));
-            if (kind == "Fixed") cone.SetLimits(AngularLimit.FromDegree(60, 60), AngularLimit.FromDegree(25, 25));
-            cone.Softness = 0;
-            RigidBody body = cone.Body2;
-            body.Damping = (0, (Real)0.01);
-            body.EnableGyroscopicForces = false;
-            JVector rotationAxis = new(-(Real)Math.Sin(azimuth), (Real)Math.Cos(azimuth), 0);
-            body.Orientation = angle == Math.PI ? new JQuaternion(0, rotationAxis) :
-                JQuaternion.CreateFromAxisAngle(rotationAxis, (Real)angle);
-            for (int i = 0; i < 400; i++)
-            {
-                world.Step((Real)0.01, false);
-                Assert.That(Real.IsFinite(body.Orientation.LengthSquared()), Is.True);
-                Assert.That(body.AngularVelocity.Length(), Is.LessThan((Real)100));
-            }
-            Assert.That(EllipseValue(cone, 60, 25), Is.LessThanOrEqualTo((Real)1.003));
-            if (kind == "Band") Assert.That(EllipseValue(cone, 20, 10), Is.GreaterThanOrEqualTo((Real)0.997));
-            if (kind == "Fixed") Assert.That(EllipseValue(cone, 60, 25), Is.EqualTo(1).Within((Real)0.003));
+            Gravity = JVector.Zero,
+            AllowDeactivation = false,
+            SubstepCount = 1,
+            SolverIterations = (8, 0)
+        };
+        var cone = CreateCone(world);
+        if (kind == "Band") cone.SetLimits(AngularLimit.FromDegree(20, 60), AngularLimit.FromDegree(10, 25));
+        if (kind == "Fixed") cone.SetLimits(AngularLimit.FromDegree(60, 60), AngularLimit.FromDegree(25, 25));
+        cone.Softness = 0;
+        RigidBody body = cone.Body2;
+        body.Damping = (0, (Real)0.01);
+        body.EnableGyroscopicForces = false;
+        JVector rotationAxis = new(-(Real)Math.Sin(azimuth), (Real)Math.Cos(azimuth), 0);
+        body.Orientation = angle == Math.PI ? new JQuaternion(0, rotationAxis) :
+            JQuaternion.CreateFromAxisAngle(rotationAxis, (Real)angle);
+        for (int i = 0; i < 400; i++)
+        {
+            world.Step((Real)0.01, false);
+            Assert.That(Real.IsFinite(body.Orientation.LengthSquared()), Is.True);
+            Assert.That(body.AngularVelocity.Length(), Is.LessThan((Real)100));
         }
+        Assert.That(EllipseValue(cone, 60, 25), Is.LessThanOrEqualTo((Real)1.003));
+        if (kind == "Band") Assert.That(EllipseValue(cone, 20, 10), Is.GreaterThanOrEqualTo((Real)0.997));
+        if (kind == "Fixed") Assert.That(EllipseValue(cone, 60, 25), Is.EqualTo(1).Within((Real)0.003));
     }
 
     [Test]

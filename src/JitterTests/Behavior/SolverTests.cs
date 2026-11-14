@@ -321,4 +321,14 @@ public class SolverTests
 
         foreach (var body in bodies) Assert.That(body.Velocity.Y, Is.GreaterThan((Real)(-0.5)));
     }
+
+#pragma warning disable CS0618 // The obsolete property must keep working for existing code.
+    [Test]
+    public void ObsoleteSolveMode_IsStoredAndValidated()
+    {
+        using var world = new World { SolveMode = SolveMode.Deterministic };
+        Assert.That(world.SolveMode, Is.EqualTo(SolveMode.Deterministic));
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.SolveMode = (SolveMode)42);
+    }
+#pragma warning restore CS0618
 }

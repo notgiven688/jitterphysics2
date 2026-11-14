@@ -14,9 +14,8 @@ public class ContactBasisTests
     private const Real Tolerance = 1e-5f;
 #endif
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void RefreshedContact_PreservesWarmStartImpulseInNewBasis(bool accelerated)
+    [Test]
+    public void RefreshedContact_PreservesWarmStartImpulseInNewBasis()
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -40,8 +39,7 @@ public class ContactBasisTests
         Assert.That(contact.Contact0.Flag, Is.EqualTo((ContactData.Contact.Flags)0),
             "Refreshing a contact must not create a new impact.");
         body.Velocity = JVector.Zero;
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.01));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)0.01));
+        contact.PrepareForIteration(new TimeStep((Real)0.01));
         Assert.That((body.Velocity - expectedImpulse).Length(), Is.LessThan(Tolerance));
     }
 

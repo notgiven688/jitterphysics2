@@ -4,9 +4,9 @@ public class MotionTypeTests
 {
     [Test]
     public void BecomingStatic_RemovesDuplicateConnectionsAndSplitsIslands(
-        [Values] SolveMode mode, [Values] bool multiThread)
+        [Values] bool multiThread)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var center = world.CreateRigidBody();
         var left = world.CreateRigidBody();
         var right = world.CreateRigidBody();
@@ -46,10 +46,10 @@ public class MotionTypeTests
 
     [Test]
     public void JointToTheWorld_SurvivesASwitchAwayFromDynamicAndBack(
-        [Values] SolveMode mode, [Values] bool multiThread,
+        [Values] bool multiThread,
         [Values(MotionType.Kinematic, MotionType.Static)] MotionType temporary)
     {
-        using var world = new World { SolveMode = mode };
+        using var world = new World { };
         var body = world.CreateRigidBody();
         body.AddShape(new SphereShape((Real)0.5));
         body.Position = new JVector(0, -2, 0);
@@ -74,9 +74,9 @@ public class MotionTypeTests
 
     [Test]
     public void JointBetweenTwoBodies_SurvivesBothBecomingKinematicAndBack(
-        [Values] SolveMode mode, [Values] bool multiThread)
+        [Values] bool multiThread)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var bodyA = world.CreateRigidBody();
         bodyA.AddShape(new SphereShape((Real)0.5));
         var bodyB = world.CreateRigidBody();
@@ -102,9 +102,9 @@ public class MotionTypeTests
 
     [Test]
     public void MovingKinematicBodyJointedToTheWorld_IsNotDisturbedByTheJoint(
-        [Values] SolveMode mode, [Values] bool multiThread)
+        [Values] bool multiThread)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var body = world.CreateRigidBody();
         body.AddShape(new SphereShape((Real)0.5));
         body.Position = new JVector(0, -2, 0);

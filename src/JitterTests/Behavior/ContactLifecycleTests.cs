@@ -8,11 +8,9 @@ public class ContactLifecycleTests
     private const Real Tolerance = 1e-5f;
 #endif
 
-    [TestCase(false, false)]
-    [TestCase(true, false)]
-    [TestCase(false, true)]
-    [TestCase(true, true)]
-    public void ContactIteration_ConservesLinearAndAngularMomentum(bool accelerated, bool applyBias)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void ContactIteration_ConservesLinearAndAngularMomentum(bool applyBias)
     {
         using var world = new World();
         var body1 = world.CreateRigidBody();
@@ -36,8 +34,7 @@ public class ContactLifecycleTests
         JVector point = new(0.1f, 0.4f, 0.5f);
         contact.AddContact(point, point, JVector.Normalize(new JVector(0.3f, 1, -0.4f)));
 
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.01));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)0.01));
+        contact.PrepareForIteration(new TimeStep((Real)0.01));
         contact.Contact0.PenaltyBias = 1;
 
         JSymmetricMatrix.Inverse(body1.Data.InverseInertiaWorld, out var inertia1);
@@ -55,8 +52,7 @@ public class ContactLifecycleTests
 
         for (int i = 0; i < 8; i++)
         {
-            if (accelerated) contact.IterateAccelerated(applyBias);
-            else contact.IterateScalar(applyBias);
+            contact.Iterate(applyBias);
 
             Assert.That(JVector.MaxAbs(LinearMomentum() - linearMomentum), Is.LessThan(10 * Tolerance));
             Assert.That(JVector.MaxAbs(AngularMomentum() - angularMomentum), Is.LessThan(10 * Tolerance));
@@ -68,11 +64,9 @@ public class ContactLifecycleTests
         Assert.That(JVector.MaxAbs(body1.AngularVelocity - initialAngularVelocity), Is.GreaterThan(Tolerance));
     }
 
-    [TestCase(false, 0.005, 2.0)]
-    [TestCase(true, 0.005, 2.0)]
-    [TestCase(false, 0.1, -0.9)]
-    [TestCase(true, 0.1, -0.9)]
-    public void ExplicitLinearOnlyContact_IgnoresAngularSurfaceVelocity(bool accelerated, double gap, double target)
+    [TestCase(0.005, 2.0)]
+    [TestCase(0.1, -0.9)]
+    public void ExplicitLinearOnlyContact_IgnoresAngularSurfaceVelocity(double gap, double target)
     {
         using var world = new World();
         var wall = world.CreateRigidBody();
@@ -96,26 +90,21 @@ public class ContactLifecycleTests
 
         Assert.That(contact.Contact0.Bias, Is.EqualTo(2).Within(Tolerance));
 
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.1));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)0.1));
+        contact.PrepareForIteration(new TimeStep((Real)0.1));
 
-        if (accelerated) contact.IterateAccelerated(true);
-        else contact.IterateScalar(true);
+        contact.Iterate(true);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
         Assert.That(body.AngularVelocity, Is.EqualTo(new JVector(0, 0, 10)));
     }
 
-    [TestCase(SolveMode.Regular, 0)]
-    [TestCase(SolveMode.Regular, 8)]
-    [TestCase(SolveMode.Deterministic, 0)]
-    [TestCase(SolveMode.Deterministic, 8)]
-    public void GeneratedCcdContactRespondsToRotation(SolveMode solveMode, double initialSpin)
+    [TestCase(0)]
+    [TestCase(8)]
+    public void GeneratedCcdContactRespondsToRotation(double initialSpin)
     {
         using var world = new World
         {
             Gravity = JVector.Zero,
-            SolveMode = solveMode,
             SubstepCount = 1,
             SolverIterations = (4, 2)
         };
@@ -164,12 +153,10 @@ public class ContactLifecycleTests
         Assert.That(closingVelocity, Is.EqualTo(target).Within(100 * Tolerance));
     }
 
-    [TestCase(false, 0.1, -0.9)]
-    [TestCase(true, 0.1, -0.9)]
-    [TestCase(false, 0.005, 10.0)]
-    [TestCase(true, 0.005, 10.0)]
+    [TestCase(0.1, -0.9)]
+    [TestCase(0.005, 10.0)]
     public void SeparatedContact_UsesCcdBiasThreshold(
-        bool accelerated, double gap, double target)
+        double gap, double target)
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -187,31 +174,25 @@ public class ContactLifecycleTests
 
         Assert.That(contact.Contact0.Bias, Is.EqualTo(10));
 
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 10));
 
         Assert.That(contact.Contact0.Bias, Is.EqualTo((Real)target).Within(Tolerance));
         Assert.That(contact.Contact0.PenaltyBias, Is.Zero);
 
-        if (accelerated) contact.IterateAccelerated(true);
-        else contact.IterateScalar(true);
+        contact.Iterate(true);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
 
-        if (accelerated) contact.IterateAccelerated(false);
-        else contact.IterateScalar(false);
+        contact.Iterate(false);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)target).Within(Tolerance));
     }
 
-    [TestCase(false, 0.11, 0.5, 1.0)]
-    [TestCase(true, 0.11, 0.5, 1.0)]
-    [TestCase(false, 0.61, 0.5, 1.2)]
-    [TestCase(true, 0.61, 0.5, 1.2)]
-    [TestCase(false, 0.11, 0.0, 0.2)]
-    [TestCase(true, 0.11, 0.0, 0.2)]
+    [TestCase(0.11, 0.5, 1.0)]
+    [TestCase(0.61, 0.5, 1.2)]
+    [TestCase(0.11, 0.0, 0.2)]
     public void ContactTargets_PreserveRestitutionAndRemoveOnlyPositionBias(
-        bool accelerated, double penetration, double restitution, double solveTarget)
+        double penetration, double restitution, double solveTarget)
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -227,27 +208,22 @@ public class ContactLifecycleTests
         contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
         contact.ResetMode();
 
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 10));
 
         Assert.That(contact.Contact0.PenaltyBias, Is.GreaterThan(0));
 
-        if (accelerated) contact.IterateAccelerated(true);
-        else contact.IterateScalar(true);
+        contact.Iterate(true);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)solveTarget).Within(Tolerance));
 
-        if (accelerated) contact.IterateAccelerated(false);
-        else contact.IterateScalar(false);
+        contact.Iterate(false);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)(2 * restitution)).Within(Tolerance));
     }
 
-    [TestCase(false, 1.0, 0.0)]
-    [TestCase(true, 1.0, 0.0)]
-    [TestCase(false, 0.1, 0.4)]
-    [TestCase(true, 0.1, 0.4)]
-    public void RestitutionThreshold_DecidesWhetherSlowImpactsBounce(bool accelerated, double threshold, double bounce)
+    [TestCase(1.0, 0.0)]
+    [TestCase(0.1, 0.4)]
+    public void RestitutionThreshold_DecidesWhetherSlowImpactsBounce(double threshold, double bounce)
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -268,11 +244,9 @@ public class ContactLifecycleTests
         contact.AddContact(JVector.Zero, body.Position, JVector.UnitX);
         contact.ResetMode();
 
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 10));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 10));
+        contact.PrepareForIteration(new TimeStep((Real)1.0 / 10));
 
-        if (accelerated) contact.IterateAccelerated(false);
-        else contact.IterateScalar(false);
+        contact.Iterate(false);
 
         Assert.That(body.Velocity.X, Is.EqualTo((Real)bounce).Within(Tolerance));
     }
@@ -305,9 +279,8 @@ public class ContactLifecycleTests
         Assert.That(() => world.ContactSettings.BiasFactor, Throws.TypeOf<ObjectDisposedException>());
     }
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void SkipWarmStart_AffectsOnlyTheNextPreparation(bool accelerated)
+    [Test]
+    public void SkipWarmStart_AffectsOnlyTheNextPreparation()
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -324,8 +297,7 @@ public class ContactLifecycleTests
 
         void Prepare()
         {
-            if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)1.0 / 100));
-            else contact.PrepareForIterationScalar(new TimeStep((Real)1.0 / 100));
+            contact.PrepareForIteration(new TimeStep((Real)1.0 / 100));
         }
 
         Prepare();

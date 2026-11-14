@@ -8,9 +8,8 @@ public class ContactSubstepTests
     private const Real Tolerance = 1e-5f;
 #endif
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void RotationWithinStep_UpdatesPenetrationWithoutAddingNormalTorque(bool accelerated)
+    [Test]
+    public void RotationWithinStep_UpdatesPenetrationWithoutAddingNormalTorque()
     {
         using World world = new();
         RigidBody body = world.CreateRigidBody();
@@ -26,8 +25,7 @@ public class ContactSubstepTests
 
         body.Orientation = JQuaternion.CreateRotationZ((Real)0.3);
         TimeStep timeStep = new((Real)0.01, 3);
-        if (accelerated) contact.PrepareForIterationAccelerated(timeStep);
-        else contact.PrepareForIterationScalar(timeStep);
+        contact.PrepareForIteration(timeStep);
 
         Real penetration = (Real)0.5 * MathR.Cos((Real)0.3) - body.Position.Y;
         Real expectedBias = world.ContactSettings.BiasFactor * timeStep.InverseStepDt
@@ -37,23 +35,19 @@ public class ContactSubstepTests
         Assert.That(JVector.MaxAbs(contact.Contact0.GetRelativePosition2(contact) + (Real)0.5 * JVector.UnitY),
             Is.LessThan(Tolerance));
 
-        if (accelerated) contact.IterateAccelerated(true);
-        else contact.IterateScalar(true);
+        contact.Iterate(true);
 
         Assert.That(body.Velocity.Y, Is.EqualTo(expectedBias).Within(Tolerance));
         Assert.That(body.AngularVelocity.Length(), Is.LessThan(Tolerance));
     }
 
-    [TestCase(SolveMode.Regular, false)]
-    [TestCase(SolveMode.Regular, true)]
-    [TestCase(SolveMode.Deterministic, false)]
-    [TestCase(SolveMode.Deterministic, true)]
-    public void CachedContact_KeepsOffsetsFixedUntilSolvingFinishes(SolveMode solveMode, bool multiThread)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void CachedContact_KeepsOffsetsFixedUntilSolvingFinishes(bool multiThread)
     {
         using World world = new();
         world.Gravity = JVector.Zero;
         world.SubstepCount = 3;
-        world.SolveMode = solveMode;
         world.NarrowPhaseFilter = new RejectContacts();
 
         RigidBody floor = world.CreateRigidBody();
@@ -102,25 +96,18 @@ public class ContactSubstepTests
         Assert.That(body.Contacts, Has.Count.EqualTo(1));
     }
 
-    [TestCase(SolveMode.Regular, 1, false)]
-    [TestCase(SolveMode.Regular, 3, false)]
-    [TestCase(SolveMode.Regular, 10, false)]
-    [TestCase(SolveMode.Deterministic, 1, false)]
-    [TestCase(SolveMode.Deterministic, 3, false)]
-    [TestCase(SolveMode.Deterministic, 10, false)]
-    [TestCase(SolveMode.Regular, 1, true)]
-    [TestCase(SolveMode.Regular, 3, true)]
-    [TestCase(SolveMode.Regular, 10, true)]
-    [TestCase(SolveMode.Deterministic, 1, true)]
-    [TestCase(SolveMode.Deterministic, 3, true)]
-    [TestCase(SolveMode.Deterministic, 10, true)]
+    [TestCase(1, false)]
+    [TestCase(3, false)]
+    [TestCase(10, false)]
+    [TestCase(1, true)]
+    [TestCase(3, true)]
+    [TestCase(10, true)]
     public void RollingSphere_DoesNotAccelerateWithSolverSubsteps(
-        SolveMode solveMode, int substeps, bool auxiliaryContacts)
+        int substeps, bool auxiliaryContacts)
     {
         using World world = new();
         world.SubstepCount = substeps;
         world.SolverIterations = (4, 2);
-        world.SolveMode = solveMode;
         world.AllowDeactivation = false;
         world.EnableAuxiliaryContactPoints = auxiliaryContacts;
 
@@ -205,16 +192,13 @@ public class ContactSubstepTests
         Assert.That((sphere.AngularVelocity - new JVector(0, 0, (Real)(-0.2))).Length(), Is.LessThan((Real)2e-4));
     }
 
-    [TestCase(SolveMode.Regular, 1)]
-    [TestCase(SolveMode.Regular, 3)]
-    [TestCase(SolveMode.Deterministic, 1)]
-    [TestCase(SolveMode.Deterministic, 3)]
-    public void RestingCylinder_DoesNotStartRollingWithAuxiliaryContacts(SolveMode solveMode, int substeps)
+    [TestCase(1)]
+    [TestCase(3)]
+    public void RestingCylinder_DoesNotStartRollingWithAuxiliaryContacts(int substeps)
     {
         using World world = new();
         world.SubstepCount = substeps;
         world.SolverIterations = (4, 2);
-        world.SolveMode = solveMode;
         world.AllowDeactivation = false;
         world.EnableAuxiliaryContactPoints = true;
 

@@ -35,7 +35,6 @@ public sealed partial class World
     // all elements to null when clearing) since the references for Arbiters are pooled anyway.
     private readonly SlimBag<Arbiter> deferredArbiters = [];
     private readonly SlimBag<JHandle<ContactData>> brokenArbiters = [];
-    private readonly SlimBag<JHandle<ContactData>> pendingBrokenArbiters = [];
     private readonly List<Arbiter> dispatchArbiters = [];
     private readonly List<Arbiter> retiredArbiters = [];
 
@@ -190,6 +189,15 @@ public sealed partial class World
             SetTime(Timings.CheckDeactivation);
             AssertIslandActivationInvariants();
 
+            // An arbiter whose manifold emptied in the previous step is removed only now, after
+            // collision detection had its chance to refill it: bodies that stop touching for a
+            // single step keep their arbiter and its impulses.
+            Tracer.ProfileBegin(TraceName.RemoveArbiter);
+            RemoveBrokenArbiters();
+            Tracer.ProfileEnd(TraceName.RemoveArbiter);
+            SetTime(Timings.RemoveArbiter);
+            AssertIslandActivationInvariants();
+
             Tracer.ProfileBegin(TraceName.Solve);
 
             // Sub-stepping
@@ -208,12 +216,6 @@ public sealed partial class World
 
             Tracer.ProfileEnd(TraceName.Solve);
             SetTime(Timings.Solve);
-
-            Tracer.ProfileBegin(TraceName.RemoveArbiter);
-            RemoveBrokenArbiters();
-            Tracer.ProfileEnd(TraceName.RemoveArbiter);
-            SetTime(Timings.RemoveArbiter);
-            AssertIslandActivationInvariants();
 
             Tracer.ProfileBegin(TraceName.UpdateBodies);
             ForeachActiveBody(multiThread);
@@ -364,14 +366,12 @@ public sealed partial class World
         }
     }
 
-    // Removes the arbiters that broke in the previous step and were not refilled in this one.
-    // The contact update of this step has already run inside the solver: it flagged those
-    // arbiters beforehand and collected the ones that broke now in pendingBrokenArbiters.
+    // Removes the arbiters whose manifold emptied in the previous step and was not refilled in this one.
     private void RemoveBrokenArbiters()
     {
         foreach (var handle in brokenArbiters)
         {
-            if ((handle.Data.UsageMask & ContactData.MaskRetiring) == 0) continue;
+            if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
             var arb = arbiters[handle.Data.Key];
 
             WakeIslandNextStep(arb.Body1.InternalIsland);
@@ -388,9 +388,6 @@ public sealed partial class World
         }
 
         brokenArbiters.Clear();
-
-        foreach (var handle in pendingBrokenArbiters) brokenArbiters.Add(handle);
-        pendingBrokenArbiters.Clear();
     }
 
     private void HandleDeferredArbiters()

@@ -2,9 +2,8 @@ namespace JitterTests.Constraints;
 
 public class ConstraintTimeStepTests
 {
-    [TestCase(SolveMode.Regular)]
-    [TestCase(SolveMode.Deterministic)]
-    public void SoftConstraint_DeflectionUnderConstantForceDoesNotDependOnSubsteps(SolveMode solveMode)
+    [Test]
+    public void SoftConstraint_DeflectionUnderConstantForceDoesNotDependOnSubsteps()
     {
         foreach (int substeps in new[] { 1, 2, 4, 8 })
         {
@@ -13,7 +12,6 @@ public class ConstraintTimeStepTests
                 Gravity = new JVector(0, -10, 0),
                 AllowDeactivation = false,
                 SubstepCount = substeps,
-                SolveMode = solveMode
             };
             var body = world.CreateRigidBody();
             body.SetMassInertia(JSymmetricMatrix.Identity, 1);

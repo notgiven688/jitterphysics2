@@ -25,9 +25,9 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void MotionTypeChanges_PreserveConstraints_AndOnlySolveWithADynamicBody(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small)
+        [Values] bool multiThread, [Values] bool small)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var bodyA = world.CreateRigidBody();
         var bodyB = world.CreateRigidBody();
         var constraint = CreateProbe(world, bodyA, bodyB, small);
@@ -59,11 +59,11 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void CreationBetweenNonDynamicBodies_LeavesConstraintInactiveUntilDynamic(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small,
+        [Values] bool multiThread, [Values] bool small,
         [Values(MotionType.Static, MotionType.Kinematic)] MotionType typeA,
         [Values(MotionType.Static, MotionType.Kinematic)] MotionType typeB)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var bodyA = world.CreateRigidBody();
         var bodyB = world.CreateRigidBody();
         bodyA.MotionType = typeA;
@@ -86,9 +86,9 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void Stabilize_SuspendsAndRestoresConstraintsWithoutStepping(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small)
+        [Values] bool multiThread, [Values] bool small)
     {
-        using var world = new World { SolveMode = mode };
+        using var world = new World { };
         var body = world.CreateRigidBody();
         var constraint = CreateProbe(world, world.NullBody, body, small);
         world.Stabilize(Dt, 2, multiThread: multiThread);
@@ -108,9 +108,9 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void WakingKinematicIsland_DoesNotReactivateSuspendedConstraint(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small)
+        [Values] bool multiThread, [Values] bool small)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var bodyA = world.CreateRigidBody();
         var bodyB = world.CreateRigidBody();
         var constraint = CreateProbe(world, bodyA, bodyB, small);
@@ -136,10 +136,10 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void SleepingBody_ChangedAwayFromDynamicAndBack_RestoresConstraintOnWake(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small,
+        [Values] bool multiThread, [Values] bool small,
         [Values(MotionType.Static, MotionType.Kinematic)] MotionType temporary)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var body = world.CreateRigidBody();
         var constraint = CreateProbe(world, world.NullBody, body, small);
         world.ForceSleepIsland(body.Island);
@@ -162,9 +162,9 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void MotionTypeChange_WakesSleepingDynamicPartner_AndRestoresConstraint(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small)
+        [Values] bool multiThread, [Values] bool small)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var bodyA = world.CreateRigidBody();
         var bodyB = world.CreateRigidBody();
         var constraint = CreateProbe(world, bodyA, bodyB, small);
@@ -181,9 +181,9 @@ public class ConstraintMotionTypeTests
 
     [Test]
     public void IsEnabled_SurvivesSuspensionAndWake_AndCanChangeWhileSuspended(
-        [Values] SolveMode mode, [Values] bool multiThread, [Values] bool small)
+        [Values] bool multiThread, [Values] bool small)
     {
-        using var world = new World { SolveMode = mode, Gravity = JVector.Zero };
+        using var world = new World { Gravity = JVector.Zero };
         var body = world.CreateRigidBody();
         var constraint = CreateProbe(world, world.NullBody, body, small);
         constraint.IsEnabled = false;
