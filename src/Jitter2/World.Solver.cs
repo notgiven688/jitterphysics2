@@ -402,17 +402,20 @@ public sealed partial class World
         else if (pass.Kind == SolverPassKind.IterateContacts) contact.Iterate(pass.ApplyBias);
     }
 
+    // A substep callback may have disabled the joint since the passes were built.
     private void SolveJoint(int reference, bool prepare)
     {
         if (reference >= 0)
         {
             ref ConstraintData joint = ref memConstraints.Active[reference];
+            if (!joint.IsEnabled) return;
             if (prepare) joint.PrepareForIteration(ref joint, timeStep);
             else joint.Iterate(ref joint, timeStep);
         }
         else
         {
             ref SmallConstraintData joint = ref memSmallConstraints.Active[~reference];
+            if (!joint.IsEnabled) return;
             if (prepare) joint.PrepareForIteration(ref joint, timeStep);
             else joint.Iterate(ref joint, timeStep);
         }

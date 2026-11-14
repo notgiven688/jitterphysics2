@@ -202,10 +202,9 @@ public sealed partial class World
             {
                 PreSubStep?.Invoke(timeStep);
 
-                // Without substep callbacks nothing can change contacts or joints between substeps.
-                // The last substep ends with the contact update of the step.
-                bool regroup = i == 0 || PreSubStep != null || PostSubStep != null;
-                Solve(multiThread, solverIterations, velocityRelaxations, integrate: true, regroup,
+                // Contacts and joints stay as they are between substeps: the substep callbacks
+                // must not change them. The last substep ends with the contact update of the step.
+                Solve(multiThread, solverIterations, velocityRelaxations, integrate: true, regroup: i == 0,
                     updateContacts: i == timeStep.SubstepCount - 1);
 
                 PostSubStep?.Invoke(timeStep);

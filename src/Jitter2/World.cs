@@ -180,7 +180,8 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Runs on the calling thread, before forces are applied and constraints are solved.
     /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
-    /// in this callback.
+    /// in this callback. A constraint disabled here is left out of the remaining substeps; one
+    /// enabled here is solved from the next step on.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreSubStep;
@@ -191,7 +192,8 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Runs on the calling thread, after bodies have moved and constraints have been solved.
     /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
-    /// in this callback.
+    /// in this callback. A constraint disabled here is left out of the remaining substeps; one
+    /// enabled here is solved from the next step on.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;

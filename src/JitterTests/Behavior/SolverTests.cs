@@ -106,6 +106,35 @@ public class SolverTests
             Assert.That((bodies[i].Position - start[i]).Length(), Is.LessThan((Real)0.1), $"box {i} moved");
     }
 
+    // The joints are grouped once per step. A joint disabled between two substeps must still
+    // drop out of the solve at once.
+    [Test]
+    public void ConstraintDisabledInSubstepCallback_IsNoLongerSolved()
+    {
+        using var world = NewWorld(substeps: 4);
+        var body = world.CreateRigidBody();
+        body.AddShape(new BoxShape(1));
+        body.Position = new JVector(0, 5, 0);
+        var joint = world.CreateConstraint<BallSocket>(world.NullBody, body);
+        joint.Initialize(body.Position);
+
+        for (int step = 0; step < 10; step++) world.Step(Dt, multiThread: true);
+        Assert.That((body.Position - new JVector(0, 5, 0)).Length(), Is.LessThan((Real)0.01));
+
+        int substep = 0;
+        world.PostSubStep += _ =>
+        {
+            if (++substep == 1) joint.IsEnabled = false;
+        };
+
+        world.Step(Dt, multiThread: true);
+        Real fallen = 5 - body.Position.Y;
+        for (int step = 0; step < 20; step++) world.Step(Dt, multiThread: true);
+
+        Assert.That(fallen, Is.GreaterThan(0), "the joint held the body after it was disabled");
+        Assert.That(5 - body.Position.Y, Is.GreaterThan((Real)0.1));
+    }
+
     // Whatever the engine did to the contact buffer between solves, after a solve every color
     // is one run of records, and no two records of a color share a dynamic body.
     [Test]
