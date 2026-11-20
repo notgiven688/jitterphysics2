@@ -6,7 +6,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics;
 using Jitter2.Unmanaged;
 using Jitter2.LinearMath;
 using WideMath = System.Numerics.Vector;

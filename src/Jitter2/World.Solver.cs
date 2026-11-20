@@ -21,7 +21,7 @@ namespace Jitter2;
 
 // The solver. Contacts and constraints are grouped so that no two of a group share a dynamic
 // body, see ContactColoring and ConstraintColoring, and each group is solved in a pass of its own,
-// without locks. Contacts are solved eight at once as the lanes of a SIMD bundle.
+// without locks. Contacts are solved several at once as the lanes of a SIMD bundle.
 //
 // For given groups the result does not depend on the number of threads or on their timing: the
 // passes run in a fixed order, and what is solved within a pass cannot influence each other.
