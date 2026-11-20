@@ -327,14 +327,28 @@ public partial class Playground : RenderWindow
                     options.ItemSpacing(4f);
 
                     bool allowDeactivation = World.AllowDeactivation;
-                    if (options.Checkbox("Allow Deactivation", ref allowDeactivation).Changed)
-                        World.AllowDeactivation = allowDeactivation;
+                    var deactivationBox = options.Checkbox("Allow Deactivation", ref allowDeactivation);
+                    if (deactivationBox.Changed) World.AllowDeactivation = allowDeactivation;
+                    options.Tooltip(deactivationBox,
+                        "Bodies at rest go to sleep and cost no time until something wakes them.", maxWidth: 320f);
 
                     bool auxiliaryContacts = World.EnableAuxiliaryContactPoints;
-                    if (options.Checkbox("Auxiliary Contact Points", ref auxiliaryContacts).Changed)
-                        World.EnableAuxiliaryContactPoints = auxiliaryContacts;
+                    var auxiliaryBox = options.Checkbox("Auxiliary Contact Points", ref auxiliaryContacts);
+                    if (auxiliaryBox.Changed) World.EnableAuxiliaryContactPoints = auxiliaryContacts;
+                    options.Tooltip(auxiliaryBox,
+                        "Each collision test gives up to four contact points instead of only the deepest one.",
+                        maxWidth: 320f);
 
-                    options.Checkbox("Multithreading", ref multiThread);
+                    var multiThreadBox = options.Checkbox("Multithreading", ref multiThread);
+                    options.Tooltip(multiThreadBox,
+                        "The step runs on all worker threads instead of on one.", maxWidth: 320f);
+
+                    bool deterministic = World.SolveMode == SolveMode.Deterministic;
+                    var deterministicBox = options.Checkbox("Deterministic Solver", ref deterministic);
+                    if (deterministicBox.Changed)
+                        World.SolveMode = deterministic ? SolveMode.Deterministic : SolveMode.Regular;
+                    options.Tooltip(deterministicBox,
+                        "Slower. The same state always gives the same result.", maxWidth: 320f);
                 });
             }
 

@@ -147,6 +147,25 @@ public sealed class ThreadPool
     private int threadCount;
     private ExceptionDispatchInfo? capturedException;
 
+    // A worker loop bypasses the queues and work stealing: each participating thread runs the
+    // published callback exactly once, so a participant that waits for the others at a barrier
+    // cannot be left behind in another thread's queue. Only the stepping thread publishes.
+    //
+    // The ticket packs the loop's sequence number (upper half) and its participant count (lower
+    // half), so a worker reads both consistently. Workers outside the participants are not needed
+    // until the next task batch or a larger loop: they block instead of spinning, which would
+    // steal from the hyperthread siblings of the participants. They stay blocked across
+    // consecutive loops and are woken together.
+    private Action<int>? workerLoop;
+    private long workerLoopTicket = 1L << 32;
+    private MemoryHelper.IsolatedInt workerLoopsLeft;
+    private readonly object pauseWorkersLock = new();
+    private readonly object parkLock = new();
+    // The ticket whose non-participants are asked to stay parked, zero when nobody should be.
+    private long parkTicket;
+    // The lowest worker index that may currently be parked.
+    private int parkedFrom = int.MaxValue;
+
     private static ThreadPool? _instance;
 
     /// <summary>
@@ -210,6 +229,7 @@ public sealed class ThreadPool
 
         running = false;
         mainResetEvent.Set();
+        UnparkWorkers();
 
         for (int i = 0; i < threadCount - 1; i++)
         {
@@ -230,11 +250,12 @@ public sealed class ThreadPool
         for (int i = 0; i < threadCount - 1; i++)
         {
             int index = i;
+            long seenWorkerLoopTicket = Volatile.Read(ref workerLoopTicket);
 
             threads[i] = new Thread(() =>
             {
                 initWaitHandle.Set();
-                ThreadProc(index + 1);
+                ThreadProc(index + 1, seenWorkerLoopTicket);
             });
 
             threads[i].IsBackground = true;
@@ -306,15 +327,33 @@ public sealed class ThreadPool
     /// </remarks>
     public void PauseWorkers()
     {
-        mainResetEvent.Reset();
+        // A single-threaded step of another world may request a pause while this pool runs a
+        // worker loop. A participant that parks before it has seen the loop would never join it,
+        // so keep the event set while a loop is outstanding. Requests are serialized so that an
+        // earlier request's restoring Set cannot outlive the pause that follows the loop.
+        lock (pauseWorkersLock)
+        {
+            mainResetEvent.Reset();
+            if (Volatile.Read(ref workerLoopsLeft.Value) != 0) mainResetEvent.Set();
+        }
     }
 
-    private void ThreadProc(int index)
+    private void ThreadProc(int index, long seenWorkerLoopTicket)
     {
         var myQueue = queues[index];
 
         while (running)
         {
+            long ticket = Volatile.Read(ref workerLoopTicket);
+            if (ticket != seenWorkerLoopTicket)
+            {
+                seenWorkerLoopTicket = ticket;
+                // The publisher waits for every participant, so a participant always reads the
+                // ticket of the loop it has to run. Only the others can fall behind.
+                if (index < (int)ticket) PerformWorkerLoop(index);
+                else Park(ticket);
+            }
+
             int performedTasks = 0;
 
             while (myQueue.TryDequeue(out var task))
@@ -364,6 +403,82 @@ public sealed class ThreadPool
     }
 
     /// <summary>
+    /// Runs a cooperating loop once on the first <paramref name="participants"/> threads of the
+    /// pool, with the calling thread as worker zero, and waits for all of them to finish. The
+    /// remaining workers block until the next call to <see cref="Execute"/> or a loop that
+    /// includes them.
+    /// </summary>
+    /// <remarks>
+    /// No tasks may be staged or executing. Like <see cref="Execute"/>, this is called only from
+    /// the stepping thread. The callback must release its own barriers when a participant fails;
+    /// capturing an exception here cannot release the others. Worker indices are stable until
+    /// <see cref="ChangeThreadCount"/>.
+    /// </remarks>
+    internal void ExecuteWorkerLoop(Action<int> action, int participants)
+    {
+        if (taskList.Count != 0 || Volatile.Read(ref tasksLeft.Value) != 0)
+            throw new InvalidOperationException("Worker loops require an empty task queue.");
+
+        participants = Math.Clamp(participants, 1, threadCount);
+        if (participants > parkedFrom) UnparkWorkers();
+
+        Interlocked.Exchange(ref capturedException, null);
+        workerLoop = action;
+        Volatile.Write(ref workerLoopsLeft.Value, participants);
+        long ticket = (((workerLoopTicket >> 32) + 1) << 32) | (uint)participants;
+        if (participants < threadCount)
+        {
+            parkedFrom = Math.Min(parkedFrom, participants);
+            lock (parkLock) parkTicket = ticket;
+        }
+
+        // Publish the callback and count before announcing the work to the workers.
+        Volatile.Write(ref workerLoopTicket, ticket);
+        ResumeWorkers();
+
+        PerformWorkerLoop(0);
+        while (Volatile.Read(ref workerLoopsLeft.Value) > 0) Thread.SpinWait(1);
+        workerLoop = null;
+        Volatile.Read(ref capturedException)?.Throw();
+    }
+
+    private void Park(long ticket)
+    {
+        lock (parkLock)
+        {
+            while (parkTicket == ticket && running) Monitor.Wait(parkLock);
+        }
+    }
+
+    private void UnparkWorkers()
+    {
+        if (parkedFrom == int.MaxValue) return;
+        parkedFrom = int.MaxValue;
+        lock (parkLock)
+        {
+            parkTicket = 0;
+            Monitor.PulseAll(parkLock);
+        }
+    }
+
+    private void PerformWorkerLoop(int index)
+    {
+        try
+        {
+            workerLoop!(index);
+        }
+        catch (Exception exception)
+        {
+            Interlocked.CompareExchange(ref capturedException,
+                ExceptionDispatchInfo.Capture(exception), null);
+        }
+        finally
+        {
+            Interlocked.Decrement(ref workerLoopsLeft.Value);
+        }
+    }
+
+    /// <summary>
     /// Executes all queued tasks and blocks until completion.
     /// </summary>
     /// <remarks>
@@ -373,6 +488,7 @@ public sealed class ThreadPool
     public void Execute()
     {
         ResumeWorkers();
+        UnparkWorkers();
 
         Interlocked.Exchange(ref capturedException, null);
 

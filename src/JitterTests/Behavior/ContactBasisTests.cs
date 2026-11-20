@@ -14,9 +14,8 @@ public class ContactBasisTests
     private const Real Tolerance = 1e-5f;
 #endif
 
-    [TestCase(false)]
-    [TestCase(true)]
-    public void RefreshedContact_PreservesWarmStartImpulseInNewBasis(bool accelerated)
+    [Test]
+    public void RefreshedContact_PreservesWarmStartImpulseInNewBasis()
     {
         using var world = new World();
         var body = world.CreateRigidBody();
@@ -29,19 +28,20 @@ public class ContactBasisTests
         contact.Friction = (Real)0.5;
         contact.AddContact(JVector.Zero, JVector.Zero, JVector.UnitY);
         contact.Contact0.Flag = 0;
-        contact.Contact0.Accumulated = Vector.Create((Real)8, (Real)0.5, (Real)(-0.25), (Real)0);
-        JVector expectedImpulse = WorldImpulse(contact.Contact0);
+        contact.Contact0.AccumulatedNormal = (Real)8;
+        contact.Contact0.AccumulatedTangent1 = (Real)0.5;
+        contact.Contact0.AccumulatedTangent2 = (Real)(-0.25);
+        JVector expectedImpulse = WorldImpulse(contact, contact.Contact0);
         var normal = JVector.Normalize(new JVector((Real)0.2, 1, (Real)0.1));
 
         contact.AddContact(JVector.Zero, JVector.Zero, normal);
 
-        AssertBasis(contact.Contact0, normal);
-        Assert.That((WorldImpulse(contact.Contact0) - expectedImpulse).Length(), Is.LessThan(Tolerance));
+        AssertBasis(contact, normal);
+        Assert.That((WorldImpulse(contact, contact.Contact0) - expectedImpulse).Length(), Is.LessThan(Tolerance));
         Assert.That(contact.Contact0.Flag, Is.EqualTo((ContactData.Contact.Flags)0),
             "Refreshing a contact must not create a new impact.");
         body.Velocity = JVector.Zero;
-        if (accelerated) contact.PrepareForIterationAccelerated(new TimeStep((Real)0.01));
-        else contact.PrepareForIterationScalar(new TimeStep((Real)0.01));
+        contact.PrepareForIteration(new TimeStep((Real)0.01));
         Assert.That((body.Velocity - expectedImpulse).Length(), Is.LessThan(Tolerance));
     }
 
@@ -54,11 +54,13 @@ public class ContactBasisTests
         contact.Init(world.NullBody, body);
         contact.AddContact(JVector.Zero, JVector.Zero, JVector.UnitY);
         contact.Contact0.Flag = 0;
-        contact.Contact0.Accumulated = Vector.Create((Real)2, (Real)0, (Real)0, (Real)0);
+        contact.Contact0.AccumulatedNormal = (Real)2;
+        contact.Contact0.AccumulatedTangent1 = (Real)0;
+        contact.Contact0.AccumulatedTangent2 = (Real)0;
 
         contact.AddContact(JVector.Zero, JVector.Zero, -JVector.UnitY);
 
-        AssertBasis(contact.Contact0, -JVector.UnitY);
+        AssertBasis(contact, -JVector.UnitY);
         Assert.That(contact.Contact0.Impulse, Is.Zero);
         Assert.That(contact.Contact0.TangentImpulse1, Is.Zero);
         Assert.That(contact.Contact0.TangentImpulse2, Is.Zero);
@@ -75,12 +77,14 @@ public class ContactBasisTests
         contact.Init(world.NullBody, body);
         contact.Friction = (Real)0.5;
         contact.AddContact(JVector.Zero, JVector.Zero, JVector.UnitY);
-        contact.Contact0.Accumulated = Vector.Create((Real)2, (Real)0.5, (Real)0.25, (Real)0);
-        JVector normal = contact.Contact0.Tangent1;
+        contact.Contact0.AccumulatedNormal = (Real)2;
+        contact.Contact0.AccumulatedTangent1 = (Real)0.5;
+        contact.Contact0.AccumulatedTangent2 = (Real)0.25;
+        JVector normal = contact.Tangent1;
 
         contact.AddContact(JVector.Zero, JVector.Zero, normal);
 
-        AssertBasis(contact.Contact0, normal);
+        AssertBasis(contact, normal);
         Assert.That(contact.Contact0.Impulse, Is.EqualTo((Real)0.5).Within(Tolerance));
         Real limit = contact.Friction * contact.Contact0.Impulse;
         Assert.That(MathR.Abs(contact.Contact0.TangentImpulse1), Is.LessThanOrEqualTo(limit + Tolerance));
@@ -96,21 +100,26 @@ public class ContactBasisTests
         ContactData contact = default;
         contact.Init(world.NullBody, body);
         contact.AddContact(JVector.Zero, JVector.Zero, JVector.UnitY);
-        contact.Contact0.Accumulated = Vector.Create((Real)2, (Real)0.5, (Real)(-0.25), (Real)0);
+        contact.Contact0.AccumulatedNormal = (Real)2;
+        contact.Contact0.AccumulatedTangent1 = (Real)0.5;
+        contact.Contact0.AccumulatedTangent2 = (Real)(-0.25);
         contact.Contact0.Flag = ContactData.Contact.Flags.SkipWarmStart;
         contact.Contact0.Bias = (Real)0.75;
         ContactData.Contact previous = contact.Contact0;
+        JVector previousTangent1 = contact.Tangent1, previousTangent2 = contact.Tangent2;
         body.Velocity = JVector.UnitZ;
         var point = new JVector((Real)0.001, 0, 0);
 
         contact.AddContact(point, point, JVector.UnitY);
 
-        Assert.That(contact.Contact0.Tangent1, Is.EqualTo(previous.Tangent1));
-        Assert.That(contact.Contact0.Tangent2, Is.EqualTo(previous.Tangent2));
-        Assert.That(contact.Contact0.Accumulated, Is.EqualTo(previous.Accumulated));
+        Assert.That(contact.Tangent1, Is.EqualTo(previousTangent1));
+        Assert.That(contact.Tangent2, Is.EqualTo(previousTangent2));
+        Assert.That(contact.Contact0.Impulse, Is.EqualTo(previous.Impulse));
+        Assert.That(contact.Contact0.TangentImpulse1, Is.EqualTo(previous.TangentImpulse1));
+        Assert.That(contact.Contact0.TangentImpulse2, Is.EqualTo(previous.TangentImpulse2));
         Assert.That(contact.Contact0.Flag, Is.EqualTo(previous.Flag));
         Assert.That(contact.Contact0.Bias, Is.EqualTo(previous.Bias));
-        Assert.That(contact.Contact0.RelativePosition2, Is.EqualTo(point));
+        Assert.That(contact.Contact0.GetRelativePosition2(contact), Is.EqualTo(point));
     }
 
     [TestCase(1)]
@@ -142,7 +151,7 @@ public class ContactBasisTests
         {
             Assert.That(world.GetArbiter(floorShape.ShapeId, sphereShape.ShapeId, out var arbiter), Is.True);
             JVector expected = arbiter!.Body1 == floor ? filter.Normal : -filter.Normal;
-            AssertBasis(arbiter.Handle.Data.Contact0, expected);
+            AssertBasis(arbiter.Handle.Data, expected);
             checks++;
         };
 
@@ -153,10 +162,11 @@ public class ContactBasisTests
         Assert.That((filter.Normal - JVector.UnitY).Length(), Is.GreaterThan((Real)0.01));
     }
 
-    private static JVector WorldImpulse(in ContactData.Contact contact) => contact.Impulse * contact.Normal
-        + contact.TangentImpulse1 * contact.Tangent1 + contact.TangentImpulse2 * contact.Tangent2;
+    private static JVector WorldImpulse(in ContactData manifold, in ContactData.Contact contact) =>
+        contact.Impulse * manifold.Normal + contact.TangentImpulse1 * manifold.Tangent1 +
+        contact.TangentImpulse2 * manifold.Tangent2;
 
-    private static void AssertBasis(in ContactData.Contact contact, in JVector normal)
+    private static void AssertBasis(in ContactData contact, in JVector normal)
     {
         Assert.That((contact.Normal - normal).Length(), Is.LessThan(Tolerance));
         Assert.That(contact.Tangent1.LengthSquared(), Is.EqualTo((Real)1).Within(Tolerance));

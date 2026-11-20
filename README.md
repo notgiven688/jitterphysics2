@@ -91,7 +91,7 @@ Explore the [documentation and interactive demo](https://jitterphysics.com/) for
 
 ## Credits
 
-Grateful acknowledgment to Erin Catto, Dirk Gregorius, Erwin Coumans, Gino van den Bergen, Daniel Chappuis, Marijn Tamis, Danny Chapman, Gary Snethen, and Christer Ericson for sharing their knowledge through forum posts, talks, code, papers, and books.
+Grateful acknowledgment to Erin Catto, Dirk Gregorius, Erwin Coumans, Gino van den Bergen, Daniel Chappuis, Marijn Tamis, Danny Chapman, Gary Snethen, Ross Nordby, and Christer Ericson for sharing their knowledge through forum posts, talks, code, papers, and books.
 
 Special thanks also to the contributors of the predecessor projects JigLibX and Jitter.
 

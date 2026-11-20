@@ -61,6 +61,9 @@ public partial class DynamicTree
     /// </summary>
     public const int PruningFraction = 128;
 
+    // The fewest slots a thread gets when the pruning runs on several threads.
+    private const int MinimumPruneBatch = 256;
+
     /// <summary>
     /// Specifies the factor by which the bounding box in the dynamic tree structure is expanded. The expansion is calculated as
     /// <see cref="IDynamicTreeProxy.Velocity"/> * ExpandFactor * (1 + alpha), where alpha is a pseudo-random number in the range [0, 1).
@@ -187,6 +190,7 @@ public partial class DynamicTree
     private readonly Action<Parallel.Batch> updateBoundingBoxes;
     private readonly Action<Parallel.Batch> scanForMovedProxies;
     private readonly Action<Parallel.Batch> scanForOverlaps;
+    private readonly Action<Parallel.Batch> pruneInvalidPairs;
 
     private readonly Random random = new(1234);
     private readonly Func<double> rndFunc;
@@ -207,6 +211,7 @@ public partial class DynamicTree
         updateBoundingBoxes = UpdateBoundingBoxesCallback;
         scanForMovedProxies = ScanForMovedProxies;
         scanForOverlaps = ScanForOverlapsCallback;
+        pruneInvalidPairs = PruneInvalidPairsCallback;
 
         rndFunc = () => random.NextDouble();
 
@@ -340,7 +345,7 @@ public partial class DynamicTree
         this.stepDt = dt;
 
         Tracer.ProfileBegin(TraceName.PruneInvalidPairs);
-        PruneInvalidPairs();
+        PruneInvalidPairs(multiThread);
         Tracer.ProfileEnd(TraceName.PruneInvalidPairs);
         SetTime(Timings.PruneInvalidPairs);
 
@@ -573,36 +578,62 @@ public partial class DynamicTree
         EnumerateTreeBoxes(ref nodes[node.Right], action, depth + 1);
     }
 
-    private uint stepper;
+    private int pruneCursor;
 
     /// <summary>
     /// Removes entries from the internal bookkeeping when both proxies are inactive or
     /// their expanded bounding boxes no longer overlap.
     /// Only searches a small subset of all elements per call to reduce overhead.
     /// </summary>
-    private void PruneInvalidPairs()
+    private void PruneInvalidPairs(bool multiThread)
     {
-        stepper += 1;
+        int length = potentialPairs.Slots.Length;
 
-        for (int i = 0; i < potentialPairs.Slots.Length / PruningFraction; i++)
+        // One slot more than the fraction, so the batch boundaries move from pass to pass
+        // and a pair skipped at a boundary gets its turn.
+        int count = length / PruningFraction + 1;
+        int start = pruneCursor & (length - 1);
+        pruneCursor = start + count;
+
+        // A single-threaded update must not create the thread pool.
+        int tasks = multiThread ? Math.Min(ThreadPool.Instance.ThreadCount, count / MinimumPruneBatch) : 1;
+
+        if (tasks > 1) Parallel.ForBatch(start, start + count, tasks, pruneInvalidPairs);
+        else PruneInvalidPairsCallback(new Parallel.Batch(start, start + count));
+
+        potentialPairs.Trim();
+    }
+
+    // The batch is a block of consecutive slots, wrapping around at the end of the table.
+    // A pair is only removed if the removal stays within the block, so the batches do not
+    // touch each other's slots. A pair left behind is removed in a later pass.
+    private void PruneInvalidPairsCallback(Parallel.Batch batch)
+    {
+        var slots = potentialPairs.Slots;
+        int mask = slots.Length - 1;
+
+        for (int i = batch.Start; i < batch.End; i++)
         {
-            int t = (int)((i * PruningFraction + stepper) % potentialPairs.Slots.Length);
+            int slot = i & mask;
 
-            var n = potentialPairs.Slots[t];
-            if (n.ID == 0) continue;
-
-            var proxyA = nodes[n.ID1].Proxy;
-            var proxyB = nodes[n.ID2].Proxy;
-
-            if (proxyA != null && proxyB != null &&
-                !TreeBox.Disjoint(nodes[proxyA.NodePtr].ExpandedBox, nodes[proxyB.NodePtr].ExpandedBox) &&
-                (proxies.IsActive(proxyA) || proxies.IsActive(proxyB)))
+            // Removing a pair moves the pairs behind it forward, so the slot is checked again.
+            while (true)
             {
-                continue;
-            }
+                var pair = slots[slot];
+                if (pair.ID == 0) break;
 
-            potentialPairs.Remove(t);
-            i -= 1;
+                var proxyA = nodes[pair.ID1].Proxy;
+                var proxyB = nodes[pair.ID2].Proxy;
+
+                if (proxyA != null && proxyB != null &&
+                    !TreeBox.Disjoint(nodes[proxyA.NodePtr].ExpandedBox, nodes[proxyB.NodePtr].ExpandedBox) &&
+                    (proxies.IsActive(proxyA) || proxies.IsActive(proxyB)))
+                {
+                    break;
+                }
+
+                if (!potentialPairs.RemoveWithin(slot, batch.End - i)) break;
+            }
         }
     }
 

@@ -82,20 +82,22 @@ Multithreaded calls to `Step` and `Stabilize` share one worker pool. If differen
 
 Any callbacks shared by worlds running concurrently must be thread-safe. This includes logging, collision filters, and event handlers. The same applies if your application draws debug geometry from multiple threads.
 
-## Solver Mode
+## Solver
 
-Jitter2 offers two solver strategies through <xref:Jitter2.SolveMode>:
+Jitter2 has a single solver. It groups contacts and constraints so that no two of a group share a dynamic body, and solves each group without locks; contacts are solved several at once with SIMD. It supports both single-threaded and multithreaded stepping, and for given groups the result does not depend on the number of threads or on their timing.
+
+`World.SolveMode` selects how the contacts get their groups:
 
 ```cs
-world.SolveMode = SolveMode.Regular;       // default
-world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+world.SolveMode = SolveMode.Deterministic;
 ```
 
-`SolveMode.Regular` favors speed. With multithreading, the order in which contacts and constraints are solved can vary between runs.
+- <xref:Jitter2.SolveMode.Regular> is the default and the fastest mode. A contact keeps its group for as long as it exists, so a step only has to group the contacts that are new. The groups, and with them the result, depend on which contacts existed earlier and, with several threads, on the order in which the threads found them.
+- <xref:Jitter2.SolveMode.Deterministic> groups all contacts anew in every step, in an order that depends only on which contacts exist. The same world state then gives the same result on every run, for any number of threads and after restoring an earlier state. The regrouping costs time in every step.
 
-`SolveMode.Deterministic` favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.
+Both modes produce equally valid results, and the mode can be changed between steps.
 
-Use deterministic mode for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
+Use `SolveMode.Deterministic` for rollback, replays that start from a saved state, or tests that compare against stored results. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See [Deterministic Simulation](general.md#deterministic-simulation) for the full requirements and test coverage.
 
 ## Solver Iterations
 

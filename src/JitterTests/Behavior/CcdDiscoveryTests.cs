@@ -21,20 +21,16 @@ public class CcdDiscoveryTests
         return world.GetArbiter(idA, idB, out _);
     }
 
-    [TestCase(1, SolveMode.Regular, false)]
-    [TestCase(4, SolveMode.Regular, false)]
-    [TestCase(4, SolveMode.Regular, true)]
-    [TestCase(1, SolveMode.Deterministic, false)]
-    [TestCase(4, SolveMode.Deterministic, false)]
-    [TestCase(4, SolveMode.Deterministic, true)]
-    public void FollowsMotionCreatedByContact(int passes, SolveMode mode, bool multiThread)
+    [TestCase(1, false)]
+    [TestCase(4, false)]
+    [TestCase(4, true)]
+    public void FollowsMotionCreatedByContact(int passes, bool multiThread)
     {
         using var world = new World
         {
             Gravity = JVector.Zero,
             CcdVelocityThreshold = 0,
             CcdIterations = passes,
-            SolveMode = mode
         };
         RigidBody a = Sphere(world, 0, 100);
         RigidBody b = Sphere(world, 1);
@@ -537,7 +533,6 @@ public class CcdDiscoveryTests
             using var world = new World
             {
                 Gravity = JVector.Zero,
-                SolveMode = SolveMode.Deterministic,
                 CcdVelocityThreshold = 0
             };
             RigidBody[] chain = [Sphere(world, 0, 100), Sphere(world, 1), Sphere(world, 2), Sphere(world, 3)];
@@ -561,7 +556,6 @@ public class CcdDiscoveryTests
             {
                 Gravity = JVector.Zero,
                 AllowDeactivation = false,
-                SolveMode = SolveMode.Deterministic,
                 CcdVelocityThreshold = 0,
                 CcdIterations = passes,
                 PersistentContactManifold = persistent

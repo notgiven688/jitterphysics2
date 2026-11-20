@@ -19,7 +19,6 @@ public class DeterministicConstraintSolverTests
         {
             Gravity = JVector.Zero,
             AllowDeactivation = false,
-            SolveMode = SolveMode.Deterministic,
             SubstepCount = 2,
             SolverIterations = (solverIterations, 0)
         };
@@ -63,7 +62,6 @@ public class DeterministicConstraintSolverTests
         {
             Gravity = JVector.Zero,
             AllowDeactivation = false,
-            SolveMode = SolveMode.Deterministic,
             SubstepCount = 3
         };
 
@@ -93,7 +91,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var bodyA = world.CreateRigidBody();
@@ -122,7 +119,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var bodyA = world.CreateRigidBody();
@@ -154,7 +150,6 @@ public class DeterministicConstraintSolverTests
                 Gravity = JVector.Zero,
                 AllowDeactivation = false,
                 SubstepCount = 4,
-                SolveMode = SolveMode.Deterministic
             };
 
             var bodyA = world.CreateRigidBody();
@@ -192,7 +187,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var body = world.CreateRigidBody();
@@ -217,7 +211,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var body = world.CreateRigidBody();
@@ -242,7 +235,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var planeBody = world.CreateRigidBody();
@@ -273,7 +265,6 @@ public class DeterministicConstraintSolverTests
             Gravity = JVector.Zero,
             AllowDeactivation = false,
             SubstepCount = 4,
-            SolveMode = SolveMode.Deterministic
         };
 
         var lineBody = world.CreateRigidBody();
@@ -307,7 +298,6 @@ public class DeterministicConstraintSolverTests
                 Gravity = JVector.Zero,
                 AllowDeactivation = false,
                 SubstepCount = 4,
-                SolveMode = SolveMode.Deterministic
             };
 
             var body = world.CreateRigidBody();

@@ -12,8 +12,8 @@ namespace JitterTests.Robustness;
 public class ReproducibilityTest
 {
     // Reference trajectories must remain bit-identical across single/multithreaded solves.
-    private const ulong ExpectedDeterministicSceneHashSingle = 0x00AB0D6F03F1AE00;
-    private const ulong ExpectedDeterministicSceneHashDouble = 0x29AAE42DAE9025B5;
+    private const ulong ExpectedDeterministicSceneHashSingle = 0x1A3031A82E536151;
+    private const ulong ExpectedDeterministicSceneHashDouble = 0x9C3DB6192F733A02;
 
     [TestCase]
     public static void BasicReproducibilityTest()
@@ -55,65 +55,95 @@ public class ReproducibilityTest
         worldB.Dispose();
     }
 
+    // The solver gathers contacts into bundles, one manifold per SIMD lane. A bundle must give
+    // exactly what the scalar contact code gives for each of its lanes.
     [TestCase(false, false)]
     [TestCase(true, false)]
     [TestCase(false, true)]
     [TestCase(true, true)]
-    public static void SingleContactMatchesWithAndWithoutContactSimd(bool linearLocks, bool angularLocks)
+    public static unsafe void SingleContactMatchesWithAndWithoutBundle(bool linearLocks, bool angularLocks)
     {
-        using var simdWorld = new World();
+        using var bundleWorld = new World();
         using var scalarWorld = new World();
 
-        var (simdBody1, simdBody2, simdContact) = CreateSingleContactCase(simdWorld);
+        var (bundleBody1, bundleBody2, bundleContact) = CreateSingleContactCase(bundleWorld);
         var (scalarBody1, scalarBody2, scalarContact) = CreateSingleContactCase(scalarWorld);
 
         if (linearLocks)
         {
-            simdBody1.AllowedMotion = scalarBody1.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearY;
-            simdBody2.AllowedMotion = scalarBody2.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearX;
+            bundleBody1.AllowedMotion = scalarBody1.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearY;
+            bundleBody2.AllowedMotion = scalarBody2.AllowedMotion = MotionAxes.All & ~MotionAxes.LinearX;
         }
 
         if (angularLocks)
         {
-            simdBody1.AllowedMotion &= ~MotionAxes.AngularX;
+            bundleBody1.AllowedMotion &= ~MotionAxes.AngularX;
             scalarBody1.AllowedMotion &= ~MotionAxes.AngularX;
-            simdBody2.AllowedMotion &= ~MotionAxes.AngularY;
+            bundleBody2.AllowedMotion &= ~MotionAxes.AngularY;
             scalarBody2.AllowedMotion &= ~MotionAxes.AngularY;
         }
 
-        const Real dt = (Real)(1.0 / 100.0);
-        TimeStep timeStep = new(dt);
+        TimeStep timeStep = new((Real)(1.0 / 100.0));
+        Span<ContactData> lanes = stackalloc ContactData[1];
+        lanes[0] = bundleContact;
+        var bundle = new ContactSolverWide();
 
-        simdContact.PrepareForIterationAccelerated(timeStep);
-        scalarContact.PrepareForIterationScalar(timeStep);
+        // The bundle reaches its records through handles; this one points at the copy on the stack.
+        ContactData* record = (ContactData*)Unsafe.AsPointer(ref lanes[0]);
+        var handle = new Jitter2.Unmanaged.JHandle<ContactData>(&record);
 
-        AssertSolverStateEqual(simdContact, scalarContact, simdBody1, scalarBody1, simdBody2, scalarBody2, "prepare");
+        bundle.Prepare(new ReadOnlySpan<Jitter2.Unmanaged.JHandle<ContactData>>(in handle), timeStep);
+        scalarContact.PrepareForIteration(timeStep);
+        bundle.WriteBack();
+        AssertBundleStateEqual(lanes[0], scalarContact, bundleBody1, scalarBody1, bundleBody2, scalarBody2, "prepare");
 
         for (int i = 0; i < 8; i++)
         {
-            simdContact.IterateAccelerated(true);
-            scalarContact.IterateScalar(true);
+            bundle.Iterate(true);
+            scalarContact.Iterate(true);
         }
 
         for (int i = 0; i < 4; i++)
         {
-            simdContact.IterateAccelerated(false);
-            scalarContact.IterateScalar(false);
+            bundle.Iterate(false, writeBack: i == 3);
+            scalarContact.Iterate(false);
         }
 
-        AssertSolverStateEqual(simdContact, scalarContact, simdBody1, scalarBody1, simdBody2, scalarBody2, "solve");
+        AssertBundleStateEqual(lanes[0], scalarContact, bundleBody1, scalarBody1, bundleBody2, scalarBody2, "solve");
     }
 
-    [Test]
-    public static void DeterministicScene_MatchesAcrossThreadingForTwentySeconds()
+    private static void AssertBundleStateEqual(ContactData bundleContact, ContactData scalarContact,
+        RigidBody bundleBody1, RigidBody scalarBody1, RigidBody bundleBody2, RigidBody scalarBody2, string phase)
+    {
+        ContactData.Contact bundle = bundleContact.Contact0;
+        ContactData.Contact scalar = scalarContact.Contact0;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(bundle.Bias, Is.EqualTo(scalar.Bias), $"{phase}: bias");
+            Assert.That(bundle.PenaltyBias, Is.EqualTo(scalar.PenaltyBias), $"{phase}: penalty bias");
+            Assert.That(bundle.Impulse, Is.EqualTo(scalar.Impulse), $"{phase}: normal impulse");
+            Assert.That(bundle.TangentImpulse1, Is.EqualTo(scalar.TangentImpulse1), $"{phase}: tangent impulse 1");
+            Assert.That(bundle.TangentImpulse2, Is.EqualTo(scalar.TangentImpulse2), $"{phase}: tangent impulse 2");
+            Assert.That(bundleBody1.Velocity, Is.EqualTo(scalarBody1.Velocity), $"{phase}: velocity 1");
+            Assert.That(bundleBody1.AngularVelocity, Is.EqualTo(scalarBody1.AngularVelocity), $"{phase}: angular velocity 1");
+            Assert.That(bundleBody2.Velocity, Is.EqualTo(scalarBody2.Velocity), $"{phase}: velocity 2");
+            Assert.That(bundleBody2.AngularVelocity, Is.EqualTo(scalarBody2.AngularVelocity), $"{phase}: angular velocity 2");
+        });
+    }
+
+    // Coloring from scratch gives the reference trajectory. Keeping the colors between steps
+    // makes no such promise: they depend on the order in which the threads report new contacts.
+    [TestCase(SolveMode.Deterministic)]
+    public static void DeterministicScene_MatchesAcrossThreadingForTwentySeconds(SolveMode mode)
     {
         const Real dt = (Real)(1.0 / 100.0);
         const int totalSteps = 2000;
 
-        using var singleThreadWorld = CreateDeterministicSleepingWorld();
+        using var singleThreadWorld = CreateDeterministicSleepingWorld(mode);
         var singleThreadBodies = BuildDeterministicScene(singleThreadWorld);
 
-        using var multiThreadWorld = CreateDeterministicSleepingWorld();
+        using var multiThreadWorld = CreateDeterministicSleepingWorld(mode);
         var multiThreadBodies = BuildDeterministicScene(multiThreadWorld);
 
         bool sawSleepingBodies = false;
@@ -137,6 +167,8 @@ public class ReproducibilityTest
 
         Assert.That(singleThreadHash, Is.EqualTo(multiThreadHash),
             $"Position hash mismatch: single-thread=0x{singleThreadHash:X16}, multi-thread=0x{multiThreadHash:X16}.");
+
+        if (mode != SolveMode.Deterministic) return;
 
         ulong expectedHash = Precision.IsDoublePrecision
             ? ExpectedDeterministicSceneHashDouble
@@ -339,12 +371,12 @@ public class ReproducibilityTest
         }
     }
 
-    private static World CreateDeterministicSleepingWorld()
+    private static World CreateDeterministicSleepingWorld(SolveMode mode)
     {
         return new World
         {
             AllowDeactivation = true,
-            SolveMode = SolveMode.Deterministic
+            SolveMode = mode
         };
     }
 
@@ -429,49 +461,6 @@ public class ReproducibilityTest
                     $"single={FormatBodyState(single)}, multi={FormatBodyState(multi)}.");
             }
         }
-    }
-
-    private static void AssertSolverStateEqual(ContactData simdContact, ContactData scalarContact,
-        RigidBody simdBody1, RigidBody scalarBody1, RigidBody simdBody2, RigidBody scalarBody2, string phase)
-    {
-        ContactData.Contact simd = simdContact.Contact0;
-        ContactData.Contact scalar = scalarContact.Contact0;
-
-        if (simd.Bias != scalar.Bias ||
-            simd.PenaltyBias != scalar.PenaltyBias ||
-            GetElement(simd.MassNormalTangent, 0) != GetElement(scalar.MassNormalTangent, 0) ||
-            GetElement(simd.MassNormalTangent, 1) != GetElement(scalar.MassNormalTangent, 1) ||
-            GetElement(simd.MassNormalTangent, 2) != GetElement(scalar.MassNormalTangent, 2) ||
-            simd.Impulse != scalar.Impulse ||
-            simd.TangentImpulse1 != scalar.TangentImpulse1 ||
-            simd.TangentImpulse2 != scalar.TangentImpulse2 ||
-            simdBody1.Velocity != scalarBody1.Velocity ||
-            simdBody1.AngularVelocity != scalarBody1.AngularVelocity ||
-            simdBody2.Velocity != scalarBody2.Velocity ||
-            simdBody2.AngularVelocity != scalarBody2.AngularVelocity)
-        {
-            Assert.Fail(
-                $"{phase} mismatch: " +
-                $"simd bias={Format(simd.Bias)}, scalar bias={Format(scalar.Bias)}, " +
-                $"simd penalty={Format(simd.PenaltyBias)}, scalar penalty={Format(scalar.PenaltyBias)}, " +
-                $"simd mass=[{Format(GetElement(simd.MassNormalTangent, 0))}, {Format(GetElement(simd.MassNormalTangent, 1))}, {Format(GetElement(simd.MassNormalTangent, 2))}], " +
-                $"scalar mass=[{Format(GetElement(scalar.MassNormalTangent, 0))}, {Format(GetElement(scalar.MassNormalTangent, 1))}, {Format(GetElement(scalar.MassNormalTangent, 2))}], " +
-                $"simd impulse=[{Format(simd.Impulse)}, {Format(simd.TangentImpulse1)}, {Format(simd.TangentImpulse2)}], " +
-                $"scalar impulse=[{Format(scalar.Impulse)}, {Format(scalar.TangentImpulse1)}, {Format(scalar.TangentImpulse2)}], " +
-                $"simd body1 vel={Format(simdBody1.Velocity)}, scalar body1 vel={Format(scalarBody1.Velocity)}, " +
-                $"simd body1 angVel={Format(simdBody1.AngularVelocity)}, scalar body1 angVel={Format(scalarBody1.AngularVelocity)}, " +
-                $"simd body2 vel={Format(simdBody2.Velocity)}, scalar body2 vel={Format(scalarBody2.Velocity)}, " +
-                $"simd body2 angVel={Format(simdBody2.AngularVelocity)}, scalar body2 angVel={Format(scalarBody2.AngularVelocity)}.");
-        }
-    }
-
-    private static Real GetElement(VectorReal vector, int index)
-    {
-#if USE_DOUBLE_PRECISION
-        return Vector256.GetElement(vector, index);
-#else
-        return Vector128.GetElement(vector, index);
-#endif
     }
 
     private static string Format(JVector vector)

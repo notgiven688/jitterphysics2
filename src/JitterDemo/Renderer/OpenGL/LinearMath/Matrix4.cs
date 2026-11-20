@@ -81,6 +81,16 @@ public struct Matrix4
         return Subtract(value1, value2);
     }
 
+    /// Returns this matrix times a scale matrix: the scale multiplies the columns.
+    public readonly Matrix4 Scale(float x, float y, float z)
+    {
+        Matrix4 result = this;
+        result.M11 *= x; result.M21 *= x; result.M31 *= x;
+        result.M12 *= y; result.M22 *= y; result.M32 *= y;
+        result.M13 *= z; result.M23 *= z; result.M33 *= z;
+        return result;
+    }
+
     public static Matrix4 Transpose(Matrix4 matrix)
     {
         Matrix4 result;

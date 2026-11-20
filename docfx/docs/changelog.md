@@ -1,5 +1,13 @@
 # Changelog
 
+### Jitter 2.15.0 (unreleased)
+
+- New lock-free solver: contacts and constraints use graph coloring for solving, and contacts are solved with SIMD. Stepping is faster in contact-heavy scenes.
+- `SolveMode.Deterministic` uses the same solver and is several times faster.
+- **Breaking Change:** `Normal`, `Tangent1`, and `Tangent2` moved from `ContactData.Contact` to `ContactData`. `Contact.RelativePosition2` is now `Contact.GetRelativePosition2(in ContactData)`. `PrepareForIterationAccelerated` and `IterateAccelerated` are removed.
+- **Breaking Change:** Removed the body locks: `World.LockTwoBody`, `TryLockTwoBody`, `UnlockTwoBody`, and `RigidBodyData._lockFlag`.
+- **Breaking Change:** Removed `World.Timings.ReorderContacts` and `UpdateContacts`; both are part of `Solve`.
+
 ### Jitter 2.14.1 (2026-11-08)
 
 - Added `SoftBodySegment`, a capsule-shaped soft-body shape between two vertices for ropes and cables.

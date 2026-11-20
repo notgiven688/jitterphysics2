@@ -417,6 +417,7 @@ public sealed partial class World
                 arbiter.Handle = handle;
                 handle.Data.Init(body1, body2);
                 handle.Data.Key = arbiterKey;
+                contactColoring.Add(handle);
                 arbiter.Body1 = body1;
                 arbiter.Body2 = body2;
 
@@ -444,6 +445,7 @@ public sealed partial class World
                         memContacts.ResizeLock.EnterWriteLock();
                         try
                         {
+                            contactColoring.Remove(arbiter.Handle);
                             memContacts.Free(arbiter.Handle);
                         }
                         finally
