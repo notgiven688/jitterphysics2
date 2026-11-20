@@ -156,7 +156,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Body1" data-uid="Jitter2.Dynamics.ContactData.Body1">
   Body1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L88"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L95"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handle to the first body's simulation data.</p>
@@ -187,7 +187,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Body2" data-uid="Jitter2.Dynamics.ContactData.Body2">
   Body2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Handle to the second body's simulation data.</p>
@@ -216,9 +216,44 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
 
 
+  <h3 id="Jitter2_Dynamics_ContactData_CenterDelta" data-uid="Jitter2.Dynamics.ContactData.CenterDelta">
+  CenterDelta
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L141"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Offset from the second body's center of mass to the first body's when the point offsets
+were last fixed. Together with a point's <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_RelativePosition1">RelativePosition1</a> and
+<a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Depth">Depth</a> it yields the point's offset from the second body, see
+<a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_GetRelativePosition2_Jitter2_Dynamics_ContactData__">GetRelativePosition2(in ContactData)</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public JVector CenterDelta</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Jitter2_Dynamics_ContactData_Contact0" data-uid="Jitter2.Dynamics.ContactData.Contact0">
   Contact0
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L144"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>First contact point.</p>
@@ -249,7 +284,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact1" data-uid="Jitter2.Dynamics.ContactData.Contact1">
   Contact1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L110"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L146"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Second contact point.</p>
@@ -280,7 +315,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact2" data-uid="Jitter2.Dynamics.ContactData.Contact2">
   Contact2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L112"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L148"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Third contact point.</p>
@@ -311,7 +346,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact3" data-uid="Jitter2.Dynamics.ContactData.Contact3">
   Contact3
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L150"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fourth contact point.</p>
@@ -342,7 +377,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Friction" data-uid="Jitter2.Dynamics.ContactData.Friction">
   Friction
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L105"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Combined friction coefficient for this contact pair.</p>
@@ -373,7 +408,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Key" data-uid="Jitter2.Dynamics.ContactData.Key">
   Key
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L93"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Unique key identifying this arbiter's shape pair.</p>
@@ -559,7 +594,7 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
   <h3 id="Jitter2_Dynamics_ContactData_Mode" data-uid="Jitter2.Dynamics.ContactData.Mode">
   Mode
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L112"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Determines which velocity components are updated by the solver.</p>
@@ -588,9 +623,43 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
 
 
+  <h3 id="Jitter2_Dynamics_ContactData_Normal" data-uid="Jitter2.Dynamics.ContactData.Normal">
+  Normal
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L119"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Unit contact normal shared by all points of the manifold, pointing from <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Body1">Body1</a>
+toward <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Body2">Body2</a>. The solver pushes the bodies apart along it. Collision detection
+refreshes it together with the points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public JVector Normal</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Jitter2_Dynamics_ContactData_Restitution" data-uid="Jitter2.Dynamics.ContactData.Restitution">
   Restitution
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L96"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Combined restitution coefficient for this contact pair.</p>
@@ -619,9 +688,43 @@ concurrently with <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_Sy
 
 
 
+  <h3 id="Jitter2_Dynamics_ContactData_Tangent1" data-uid="Jitter2.Dynamics.ContactData.Tangent1">
+  Tangent1
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L126"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>First friction direction shared by all points, orthonormal to <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Normal">Normal</a>. The first
+point of a manifold aligns it with its tangential relative velocity when that is nonzero;
+afterwards it turns with the normal as far as the contact plane allows.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public JVector Tangent1</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Jitter2_Dynamics_ContactData_UsageMask" data-uid="Jitter2.Dynamics.ContactData.UsageMask">
   UsageMask
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Bits 0–3 mark contacts that are currently valid; bits 4–7 mark contacts used in the last solve.</p>
@@ -661,7 +764,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_IsHardwareAccelerated" data-uid="Jitter2.Dynamics.ContactData.IsHardwareAccelerated">
   IsHardwareAccelerated
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L205"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L204"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets whether the contact solver can use hardware-accelerated vector operations.</p>
@@ -693,7 +796,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_Settings" data-uid="Jitter2.Dynamics.ContactData.Settings">
   Settings
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L109"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The settings of the world this contact belongs to.</p>
@@ -721,6 +824,40 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
 
 
+  <a id="Jitter2_Dynamics_ContactData_Tangent2_" data-uid="Jitter2.Dynamics.ContactData.Tangent2*"></a>
+
+  <h3 id="Jitter2_Dynamics_ContactData_Tangent2" data-uid="Jitter2.Dynamics.ContactData.Tangent2">
+  Tangent2
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>A second friction direction forming an orthonormal basis with <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Normal">Normal</a> and
+<a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Tangent1">Tangent1</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
+public readonly JVector Tangent2 { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -729,7 +866,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_AddContact_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__" data-uid="Jitter2.Dynamics.ContactData.AddContact(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)">
   AddContact(in JVector, in JVector, in JVector)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L301"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L336"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Adds a new collision result to the contact manifold. Keeps at most four points.</p>
@@ -768,7 +905,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_Init_Jitter2_Dynamics_RigidBody_Jitter2_Dynamics_RigidBody_" data-uid="Jitter2.Dynamics.ContactData.Init(Jitter2.Dynamics.RigidBody,Jitter2.Dynamics.RigidBody)">
   Init(RigidBody, RigidBody)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L244"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L246"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes this contact data for a pair of rigid bodies.</p>
@@ -804,7 +941,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_Iterate_System_Boolean_" data-uid="Jitter2.Dynamics.ContactData.Iterate(System.Boolean)">
   Iterate(bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L152"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L191"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Performs one solver iteration over all active contacts, applying corrective impulses.</p>
@@ -837,7 +974,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_PrepareForIteration_Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep@)">
   PrepareForIteration(in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L120"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L156"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Prepares all active contacts for solver iterations by computing effective masses and warm-starting impulses.</p>
@@ -870,7 +1007,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_ResetImpulses" data-uid="Jitter2.Dynamics.ContactData.ResetImpulses">
   ResetImpulses()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L167"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Clears the accumulated normal and friction impulses of all active contacts.</p>
@@ -897,7 +1034,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_ResetMode_Jitter2_Dynamics_ContactData_SolveMode_" data-uid="Jitter2.Dynamics.ContactData.ResetMode(Jitter2.Dynamics.ContactData.SolveMode)">
   ResetMode(SolveMode)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L263"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L298"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Resets the solve mode based on the current motion types of the bodies, then removes the specified flags.</p>
@@ -930,7 +1067,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_SkipWarmStart" data-uid="Jitter2.Dynamics.ContactData.SkipWarmStart">
   SkipWarmStart()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L138"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Skips replaying accumulated impulses on the next preparation of each active contact.</p>
@@ -957,7 +1094,7 @@ Its solver bit remains set even though its current-validity bit has been cleared
 
   <h3 id="Jitter2_Dynamics_ContactData_UpdatePosition" data-uid="Jitter2.Dynamics.ContactData.UpdatePosition">
   UpdatePosition()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L211"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L210"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Updates contact positions after integration and removes contacts whose normal separation exceeds

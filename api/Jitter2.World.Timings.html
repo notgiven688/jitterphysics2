@@ -121,15 +121,15 @@ Enum World.Timings  <a class="header-action link-secondary" title="View source" 
   
   <dd><p>Time spent creating deferred arbiters.</p>
 </dd>
-    <dt id="Jitter2_World_Timings_BroadPhase"><code>BroadPhase = 9</code></dt>
+    <dt id="Jitter2_World_Timings_BroadPhase"><code>BroadPhase = 7</code></dt>
   
   <dd><p>Time spent updating the dynamic tree (broadphase).</p>
 </dd>
-    <dt id="Jitter2_World_Timings_CheckDeactivation"><code>CheckDeactivation = 4</code></dt>
+    <dt id="Jitter2_World_Timings_CheckDeactivation"><code>CheckDeactivation = 3</code></dt>
   
   <dd><p>Time spent evaluating body deactivation (sleeping).</p>
 </dd>
-    <dt id="Jitter2_World_Timings_Last"><code>Last = 11</code></dt>
+    <dt id="Jitter2_World_Timings_Last"><code>Last = 9</code></dt>
   
   <dd><p>Sentinel value for array sizing. Not a real timing bucket.</p>
 </dd>
@@ -137,7 +137,7 @@ Enum World.Timings  <a class="header-action link-secondary" title="View source" 
   
   <dd><p>Time spent in narrow phase collision detection and contact generation.</p>
 </dd>
-    <dt id="Jitter2_World_Timings_PostStep"><code>PostStep = 10</code></dt>
+    <dt id="Jitter2_World_Timings_PostStep"><code>PostStep = 8</code></dt>
   
   <dd><p>Time spent in <a class="xref" href="Jitter2.World.Timings.html#Jitter2_World_Timings_PostStep">PostStep</a> callbacks.</p>
 </dd>
@@ -145,25 +145,18 @@ Enum World.Timings  <a class="header-action link-secondary" title="View source" 
   
   <dd><p>Time spent in <a class="xref" href="Jitter2.World.Timings.html#Jitter2_World_Timings_PreStep">PreStep</a> callbacks.</p>
 </dd>
-    <dt id="Jitter2_World_Timings_RemoveArbiter"><code>RemoveArbiter = 6</code></dt>
+    <dt id="Jitter2_World_Timings_RemoveArbiter"><code>RemoveArbiter = 4</code></dt>
   
-  <dd><p>Time spent removing broken arbiters.</p>
-</dd>
-    <dt id="Jitter2_World_Timings_ReorderContacts"><code>ReorderContacts = 3</code></dt>
-  
-  <dd><p>Time spent reordering contacts (for cache optimization or deterministic results)</p>
+  <dd><p>Time spent removing arbiters whose contacts broke in the previous step.</p>
 </dd>
     <dt id="Jitter2_World_Timings_Solve"><code>Solve = 5</code></dt>
   
-  <dd><p>Time spent in substeps: force integration, constraint solving, and velocity integration.</p>
+  <dd><p>Time spent in substeps: force integration, constraint solving, velocity integration, and
+the update of the contacts that follows the last substep.</p>
 </dd>
-    <dt id="Jitter2_World_Timings_UpdateBodies"><code>UpdateBodies = 8</code></dt>
+    <dt id="Jitter2_World_Timings_UpdateBodies"><code>UpdateBodies = 6</code></dt>
   
   <dd><p>Time spent finalizing body state and broadphase proxy updates.</p>
-</dd>
-    <dt id="Jitter2_World_Timings_UpdateContacts"><code>UpdateContacts = 7</code></dt>
-  
-  <dd><p>Time spent updating contact state after solving.</p>
 </dd>
   </dl>
 

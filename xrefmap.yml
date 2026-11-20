@@ -12666,6 +12666,12 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Body2
   fullName: Jitter2.Dynamics.ContactData.Body2
   nameWithType: ContactData.Body2
+- uid: Jitter2.Dynamics.ContactData.CenterDelta
+  name: CenterDelta
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_CenterDelta
+  commentId: F:Jitter2.Dynamics.ContactData.CenterDelta
+  fullName: Jitter2.Dynamics.ContactData.CenterDelta
+  nameWithType: ContactData.CenterDelta
 - uid: Jitter2.Dynamics.ContactData.Contact
   name: ContactData.Contact
   href: api/Jitter2.Dynamics.ContactData.Contact.html
@@ -12678,6 +12684,12 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Contact.Bias
   fullName: Jitter2.Dynamics.ContactData.Contact.Bias
   nameWithType: ContactData.Contact.Bias
+- uid: Jitter2.Dynamics.ContactData.Contact.Depth
+  name: Depth
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Depth
+  commentId: F:Jitter2.Dynamics.ContactData.Contact.Depth
+  fullName: Jitter2.Dynamics.ContactData.Contact.Depth
+  nameWithType: ContactData.Contact.Depth
 - uid: Jitter2.Dynamics.ContactData.Contact.Flag
   name: Flag
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Flag
@@ -12702,6 +12714,22 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Contact.Flags.SkipWarmStart
   fullName: Jitter2.Dynamics.ContactData.Contact.Flags.SkipWarmStart
   nameWithType: ContactData.Contact.Flags.SkipWarmStart
+- uid: Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2(Jitter2.Dynamics.ContactData@)
+  name: GetRelativePosition2(in ContactData)
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_GetRelativePosition2_Jitter2_Dynamics_ContactData__
+  commentId: M:Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2(Jitter2.Dynamics.ContactData@)
+  name.vb: GetRelativePosition2(ContactData)
+  fullName: Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2(in Jitter2.Dynamics.ContactData)
+  fullName.vb: Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2(Jitter2.Dynamics.ContactData)
+  nameWithType: ContactData.Contact.GetRelativePosition2(in ContactData)
+  nameWithType.vb: ContactData.Contact.GetRelativePosition2(ContactData)
+- uid: Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2*
+  name: GetRelativePosition2
+  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_GetRelativePosition2_
+  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2
+  nameWithType: ContactData.Contact.GetRelativePosition2
 - uid: Jitter2.Dynamics.ContactData.Contact.Impulse
   name: Impulse
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Impulse
@@ -12747,35 +12775,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.Contact.Iterate
   nameWithType: ContactData.Contact.Iterate
-- uid: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated(Jitter2.Dynamics.ContactData*,System.Boolean)
-  name: IterateAccelerated(ContactData*, bool)
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_IterateAccelerated_Jitter2_Dynamics_ContactData__System_Boolean_
-  commentId: M:Jitter2.Dynamics.ContactData.Contact.IterateAccelerated(Jitter2.Dynamics.ContactData*,System.Boolean)
-  name.vb: IterateAccelerated(ContactData*, Boolean)
-  fullName: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated(Jitter2.Dynamics.ContactData*, bool)
-  fullName.vb: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated(Jitter2.Dynamics.ContactData*, Boolean)
-  nameWithType: ContactData.Contact.IterateAccelerated(ContactData*, bool)
-  nameWithType.vb: ContactData.Contact.IterateAccelerated(ContactData*, Boolean)
-- uid: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated*
-  name: IterateAccelerated
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_IterateAccelerated_
-  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.IterateAccelerated
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.ContactData.Contact.IterateAccelerated
-  nameWithType: ContactData.Contact.IterateAccelerated
-- uid: Jitter2.Dynamics.ContactData.Contact.Normal
-  name: Normal
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Normal
-  commentId: P:Jitter2.Dynamics.ContactData.Contact.Normal
-  fullName: Jitter2.Dynamics.ContactData.Contact.Normal
-  nameWithType: ContactData.Contact.Normal
-- uid: Jitter2.Dynamics.ContactData.Contact.Normal*
-  name: Normal
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Normal_
-  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.Normal
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.ContactData.Contact.Normal
-  nameWithType: ContactData.Contact.Normal
 - uid: Jitter2.Dynamics.ContactData.Contact.PenaltyBias
   name: PenaltyBias
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PenaltyBias
@@ -12798,60 +12797,12 @@ references:
   isSpec: "True"
   fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIteration
   nameWithType: ContactData.Contact.PrepareForIteration
-- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
-  name: PrepareForIterationAccelerated(ContactData*, in TimeStep)
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__
-  commentId: M:Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)
-  name.vb: PrepareForIterationAccelerated(ContactData*, TimeStep)
-  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, in Jitter2.TimeStep)
-  fullName.vb: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*, Jitter2.TimeStep)
-  nameWithType: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, in TimeStep)
-  nameWithType.vb: ContactData.Contact.PrepareForIterationAccelerated(ContactData*, TimeStep)
-- uid: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated*
-  name: PrepareForIterationAccelerated
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_
-  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated
-  nameWithType: ContactData.Contact.PrepareForIterationAccelerated
 - uid: Jitter2.Dynamics.ContactData.Contact.RelativePosition1
   name: RelativePosition1
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_RelativePosition1
   commentId: F:Jitter2.Dynamics.ContactData.Contact.RelativePosition1
   fullName: Jitter2.Dynamics.ContactData.Contact.RelativePosition1
   nameWithType: ContactData.Contact.RelativePosition1
-- uid: Jitter2.Dynamics.ContactData.Contact.RelativePosition2
-  name: RelativePosition2
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_RelativePosition2
-  commentId: F:Jitter2.Dynamics.ContactData.Contact.RelativePosition2
-  fullName: Jitter2.Dynamics.ContactData.Contact.RelativePosition2
-  nameWithType: ContactData.Contact.RelativePosition2
-- uid: Jitter2.Dynamics.ContactData.Contact.Tangent1
-  name: Tangent1
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Tangent1
-  commentId: P:Jitter2.Dynamics.ContactData.Contact.Tangent1
-  fullName: Jitter2.Dynamics.ContactData.Contact.Tangent1
-  nameWithType: ContactData.Contact.Tangent1
-- uid: Jitter2.Dynamics.ContactData.Contact.Tangent1*
-  name: Tangent1
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Tangent1_
-  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.Tangent1
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.ContactData.Contact.Tangent1
-  nameWithType: ContactData.Contact.Tangent1
-- uid: Jitter2.Dynamics.ContactData.Contact.Tangent2
-  name: Tangent2
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Tangent2
-  commentId: P:Jitter2.Dynamics.ContactData.Contact.Tangent2
-  fullName: Jitter2.Dynamics.ContactData.Contact.Tangent2
-  nameWithType: ContactData.Contact.Tangent2
-- uid: Jitter2.Dynamics.ContactData.Contact.Tangent2*
-  name: Tangent2
-  href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Tangent2_
-  commentId: Overload:Jitter2.Dynamics.ContactData.Contact.Tangent2
-  isSpec: "True"
-  fullName: Jitter2.Dynamics.ContactData.Contact.Tangent2
-  nameWithType: ContactData.Contact.Tangent2
 - uid: Jitter2.Dynamics.ContactData.Contact.TangentImpulse1
   name: TangentImpulse1
   href: api/Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_TangentImpulse1
@@ -13005,6 +12956,12 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.Mode
   fullName: Jitter2.Dynamics.ContactData.Mode
   nameWithType: ContactData.Mode
+- uid: Jitter2.Dynamics.ContactData.Normal
+  name: Normal
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Normal
+  commentId: F:Jitter2.Dynamics.ContactData.Normal
+  fullName: Jitter2.Dynamics.ContactData.Normal
+  nameWithType: ContactData.Normal
 - uid: Jitter2.Dynamics.ContactData.PrepareForIteration(Jitter2.TimeStep@)
   name: PrepareForIteration(in TimeStep)
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_PrepareForIteration_Jitter2_TimeStep__
@@ -13145,6 +13102,25 @@ references:
   commentId: F:Jitter2.Dynamics.ContactData.SolveMode.None
   fullName: Jitter2.Dynamics.ContactData.SolveMode.None
   nameWithType: ContactData.SolveMode.None
+- uid: Jitter2.Dynamics.ContactData.Tangent1
+  name: Tangent1
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Tangent1
+  commentId: F:Jitter2.Dynamics.ContactData.Tangent1
+  fullName: Jitter2.Dynamics.ContactData.Tangent1
+  nameWithType: ContactData.Tangent1
+- uid: Jitter2.Dynamics.ContactData.Tangent2
+  name: Tangent2
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Tangent2
+  commentId: P:Jitter2.Dynamics.ContactData.Tangent2
+  fullName: Jitter2.Dynamics.ContactData.Tangent2
+  nameWithType: ContactData.Tangent2
+- uid: Jitter2.Dynamics.ContactData.Tangent2*
+  name: Tangent2
+  href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Tangent2_
+  commentId: Overload:Jitter2.Dynamics.ContactData.Tangent2
+  isSpec: "True"
+  fullName: Jitter2.Dynamics.ContactData.Tangent2
+  nameWithType: ContactData.Tangent2
 - uid: Jitter2.Dynamics.ContactData.UpdatePosition
   name: UpdatePosition()
   href: api/Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_UpdatePosition
@@ -14291,12 +14267,6 @@ references:
   commentId: F:Jitter2.Dynamics.RigidBodyData._index
   fullName: Jitter2.Dynamics.RigidBodyData._index
   nameWithType: RigidBodyData._index
-- uid: Jitter2.Dynamics.RigidBodyData._lockFlag
-  name: _lockFlag
-  href: api/Jitter2.Dynamics.RigidBodyData.html#Jitter2_Dynamics_RigidBodyData__lockFlag
-  commentId: F:Jitter2.Dynamics.RigidBodyData._lockFlag
-  fullName: Jitter2.Dynamics.RigidBodyData._lockFlag
-  nameWithType: RigidBodyData._lockFlag
 - uid: Jitter2.IDebugDrawable
   name: IDebugDrawable
   href: api/Jitter2.IDebugDrawable.html
@@ -21368,22 +21338,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.Islands
   nameWithType: World.Islands
-- uid: Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name: LockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  href: api/Jitter2.World.html#Jitter2_World_LockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__
-  commentId: M:Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name.vb: LockTwoBody(RigidBodyData, RigidBodyData)
-  fullName: Jitter2.World.LockTwoBody(ref Jitter2.Dynamics.RigidBodyData, ref Jitter2.Dynamics.RigidBodyData)
-  fullName.vb: Jitter2.World.LockTwoBody(Jitter2.Dynamics.RigidBodyData, Jitter2.Dynamics.RigidBodyData)
-  nameWithType: World.LockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  nameWithType.vb: World.LockTwoBody(RigidBodyData, RigidBodyData)
-- uid: Jitter2.World.LockTwoBody*
-  name: LockTwoBody
-  href: api/Jitter2.World.html#Jitter2_World_LockTwoBody_
-  commentId: Overload:Jitter2.World.LockTwoBody
-  isSpec: "True"
-  fullName: Jitter2.World.LockTwoBody
-  nameWithType: World.LockTwoBody
 - uid: Jitter2.World.NarrowPhaseFilter
   name: NarrowPhaseFilter
   href: api/Jitter2.World.html#Jitter2_World_NarrowPhaseFilter
@@ -21904,12 +21858,6 @@ references:
   commentId: F:Jitter2.World.Timings.RemoveArbiter
   fullName: Jitter2.World.Timings.RemoveArbiter
   nameWithType: World.Timings.RemoveArbiter
-- uid: Jitter2.World.Timings.ReorderContacts
-  name: ReorderContacts
-  href: api/Jitter2.World.Timings.html#Jitter2_World_Timings_ReorderContacts
-  commentId: F:Jitter2.World.Timings.ReorderContacts
-  fullName: Jitter2.World.Timings.ReorderContacts
-  nameWithType: World.Timings.ReorderContacts
 - uid: Jitter2.World.Timings.Solve
   name: Solve
   href: api/Jitter2.World.Timings.html#Jitter2_World_Timings_Solve
@@ -21922,12 +21870,6 @@ references:
   commentId: F:Jitter2.World.Timings.UpdateBodies
   fullName: Jitter2.World.Timings.UpdateBodies
   nameWithType: World.Timings.UpdateBodies
-- uid: Jitter2.World.Timings.UpdateContacts
-  name: UpdateContacts
-  href: api/Jitter2.World.Timings.html#Jitter2_World_Timings_UpdateContacts
-  commentId: F:Jitter2.World.Timings.UpdateContacts
-  fullName: Jitter2.World.Timings.UpdateContacts
-  nameWithType: World.Timings.UpdateContacts
 - uid: Jitter2.World.Trim
   name: Trim()
   href: api/Jitter2.World.html#Jitter2_World_Trim
@@ -21941,38 +21883,6 @@ references:
   isSpec: "True"
   fullName: Jitter2.World.Trim
   nameWithType: World.Trim
-- uid: Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name: TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  href: api/Jitter2.World.html#Jitter2_World_TryLockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__
-  commentId: M:Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name.vb: TryLockTwoBody(RigidBodyData, RigidBodyData)
-  fullName: Jitter2.World.TryLockTwoBody(ref Jitter2.Dynamics.RigidBodyData, ref Jitter2.Dynamics.RigidBodyData)
-  fullName.vb: Jitter2.World.TryLockTwoBody(Jitter2.Dynamics.RigidBodyData, Jitter2.Dynamics.RigidBodyData)
-  nameWithType: World.TryLockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  nameWithType.vb: World.TryLockTwoBody(RigidBodyData, RigidBodyData)
-- uid: Jitter2.World.TryLockTwoBody*
-  name: TryLockTwoBody
-  href: api/Jitter2.World.html#Jitter2_World_TryLockTwoBody_
-  commentId: Overload:Jitter2.World.TryLockTwoBody
-  isSpec: "True"
-  fullName: Jitter2.World.TryLockTwoBody
-  nameWithType: World.TryLockTwoBody
-- uid: Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name: UnlockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  href: api/Jitter2.World.html#Jitter2_World_UnlockTwoBody_Jitter2_Dynamics_RigidBodyData__Jitter2_Dynamics_RigidBodyData__
-  commentId: M:Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData@,Jitter2.Dynamics.RigidBodyData@)
-  name.vb: UnlockTwoBody(RigidBodyData, RigidBodyData)
-  fullName: Jitter2.World.UnlockTwoBody(ref Jitter2.Dynamics.RigidBodyData, ref Jitter2.Dynamics.RigidBodyData)
-  fullName.vb: Jitter2.World.UnlockTwoBody(Jitter2.Dynamics.RigidBodyData, Jitter2.Dynamics.RigidBodyData)
-  nameWithType: World.UnlockTwoBody(ref RigidBodyData, ref RigidBodyData)
-  nameWithType.vb: World.UnlockTwoBody(RigidBodyData, RigidBodyData)
-- uid: Jitter2.World.UnlockTwoBody*
-  name: UnlockTwoBody
-  href: api/Jitter2.World.html#Jitter2_World_UnlockTwoBody_
-  commentId: Overload:Jitter2.World.UnlockTwoBody
-  isSpec: "True"
-  fullName: Jitter2.World.UnlockTwoBody
-  nameWithType: World.UnlockTwoBody
 - uid: Jitter2.World.WorldStep
   name: World.WorldStep
   href: api/Jitter2.World.WorldStep.html

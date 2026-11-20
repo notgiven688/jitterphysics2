@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Enum SolveMode | Jitter2 ">
       
-      <meta name="description" content="Controls which solver strategy is used during .">
+      <meta name="description" content="Selects how the solver groups the contacts that it solves at the same time. Both modes use the same solver and produce equally valid results.">
       <link rel="icon" href="../favicon.ico">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -90,7 +90,7 @@
 
 
   <h1 id="Jitter2_SolveMode" data-uid="Jitter2.SolveMode" class="text-break">
-Enum SolveMode  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Deterministic.cs/#L22"><i class="bi bi-code-slash"></i></a>
+Enum SolveMode  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SolveMode.cs/#L23"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -98,7 +98,8 @@ Enum SolveMode  <a class="header-action link-secondary" title="View source" href
   <dl><dt>Assembly</dt><dd>Jitter2.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>Controls which solver strategy is used during <a class="xref" href="Jitter2.World.html#Jitter2_World_Step_System_Single_System_Boolean_">Step(float, bool)</a>.</p>
+  <div class="markdown summary"><p>Selects how the solver groups the contacts that it solves at the same time. Both modes use the
+same solver and produce equally valid results.</p>
 </div>
   <div class="markdown conceptual"></div>
 
@@ -119,12 +120,16 @@ Enum SolveMode  <a class="header-action link-secondary" title="View source" href
   <dl class="parameters">
     <dt id="Jitter2_SolveMode_Deterministic"><code>Deterministic = 1</code></dt>
   
-  <dd><p>Solves contacts and constraints in a repeatable order. Groups of connected bodies can
-still be solved in parallel. Can be significantly slower than <a class="xref" href="Jitter2.SolveMode.html#Jitter2_SolveMode_Regular">Regular</a>.</p>
+  <dd><p>The contacts are grouped anew in every step, in an order that depends only on which
+contacts exist. The same world state then gives the same result on every run, for any
+number of threads and after restoring an earlier state.</p>
 </dd>
     <dt id="Jitter2_SolveMode_Regular"><code>Regular = 0</code></dt>
   
-  <dd><p>The default solver, optimized for speed. Multithreaded results may vary between runs.</p>
+  <dd><p>A contact keeps its group for as long as it exists, so only new contacts have to be
+grouped in a step. This is the fastest mode. The result depends on the order in which the
+contacts appeared, and therefore on the history of the world, not only on its current state.
+With several threads that order depends on timing, so two runs may differ.</p>
 </dd>
   </dl>
 
@@ -133,7 +138,7 @@ still be solved in parallel. Can be significantly slower than <a class="xref" hr
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/World.Deterministic.cs/#L22" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/SolveMode.cs/#L23" class="edit-link">Edit this page</a>
         </div>
 
 

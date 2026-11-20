@@ -87,6 +87,14 @@
         <article data-uid="">
 <h1 id="changelog">Changelog</h1>
 
+<h3 id="jitter-2150-unreleased">Jitter 2.15.0 (unreleased)</h3>
+<ul>
+<li>New lock-free solver: contacts and constraints use graph coloring for solving, and contacts are solved with SIMD. Stepping is faster in contact-heavy scenes.</li>
+<li><code>SolveMode.Deterministic</code> uses the same solver and is several times faster.</li>
+<li><strong>Breaking Change:</strong> <code>Normal</code>, <code>Tangent1</code>, and <code>Tangent2</code> moved from <code>ContactData.Contact</code> to <code>ContactData</code>. <code>Contact.RelativePosition2</code> is now <code>Contact.GetRelativePosition2(in ContactData)</code>. <code>PrepareForIterationAccelerated</code> and <code>IterateAccelerated</code> are removed.</li>
+<li><strong>Breaking Change:</strong> Removed the body locks: <code>World.LockTwoBody</code>, <code>TryLockTwoBody</code>, <code>UnlockTwoBody</code>, and <code>RigidBodyData._lockFlag</code>.</li>
+<li><strong>Breaking Change:</strong> Removed <code>World.Timings.ReorderContacts</code> and <code>UpdateContacts</code>; both are part of <code>Solve</code>.</li>
+</ul>
 <h3 id="jitter-2141-2026-11-08">Jitter 2.14.1 (2026-11-08)</h3>
 <ul>
 <li>Added <code>SoftBodySegment</code>, a capsule-shaped soft-body shape between two vertices for ropes and cables.</li>

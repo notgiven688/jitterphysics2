@@ -102,39 +102,15 @@
 <p>Debug builds also check changes to positions, velocities, forces, and orientations. These extra checks catch values such as infinity, NaN, or a quaternion that is not normalized.</p>
 <p>NuGet packages use Release builds. To get the extra Debug checks, build Jitter2 from source in the Debug configuration.</p>
 <h2 id="deterministic-simulation">Deterministic Simulation</h2>
-<p>Jitter2 provides an optional cross-platform deterministic solver mode via <a class="xref" href="../../api/Jitter2.SolveMode.html">SolveMode</a>:</p>
-<pre><code class="lang-cs">world.SolveMode = SolveMode.Deterministic;
-</code></pre>
-<p>Deterministic mode produces repeatable results across platforms when you use the same Jitter2 version, precision, time steps, and inputs. This is useful for tests, replays, and debugging.</p>
+<p>With <code>world.SolveMode = SolveMode.Deterministic</code>, Jitter2 produces repeatable results across platforms and thread counts when you use the same Jitter2 version, precision, time steps, and inputs. This is useful for tests, replays, rollback, and debugging. The result of a step then depends only on the state of the world, not on how it got there. <code>BeginCollide</code> and <code>EndCollide</code> are raised in a fixed order, so code that reacts to them, for example by creating bodies, is repeatable as well.</p>
+<p>The default, <code>SolveMode.Regular</code>, is faster because it reuses solver bookkeeping from the previous step. Its result depends on the history of the world, and with several threads on the order in which the threads find new contacts. Two runs from the same start can therefore differ. See <a href="world.html#solver">the solver</a> for how the two modes work.</p>
 <p>The creation order matters within each <strong>island</strong>, a group of bodies connected through contacts or constraints. Add the participating bodies, shapes, and constraints in the same order on every run. Unrelated parts of the world can be created in a different order.</p>
-<table>
-<thead>
-<tr>
-<th>Solver configuration</th>
-<th>Repeatability</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>SolveMode.Deterministic</code></td>
-<td>Designed to give the same results across platforms and thread counts when the setup and inputs above match.</td>
-</tr>
-<tr>
-<td><code>SolveMode.Regular</code> with <code>multiThread: false</code></td>
-<td>Repeating the exact same setup within one .NET process may give the same results. This is not a cross-platform guarantee.</td>
-</tr>
-<tr>
-<td><code>SolveMode.Regular</code> with <code>multiThread: true</code></td>
-<td>Results may vary between runs because the processing order can change.</td>
-</tr>
-</tbody>
-</table>
 <p>Float and double builds do not produce identical results, and results may change between Jitter2 versions.</p>
+<p>Soft bodies are not deterministic. Several of their shapes add contacts to the same arbiter, in an order that differs from run to run.</p>
 <div class="NOTE">
 <h5>Note</h5>
 <p>Cross-platform determinism is tested in CI on Linux x64, Windows x64, and macOS arm64. These tests support the claim for the configurations they cover; they cannot establish it for every possible scene or platform.</p>
 </div>
-<p>Deterministic mode can be significantly slower. <code>SolveMode.Regular</code> remains the default for applications that do not need repeatable results.</p>
 <h2 id="coordinate-system">Coordinate System</h2>
 <p>Jitter2's vector and rotation math uses a right-handed coordinate system. You can choose which axis points up.</p>
 <p>Gravity defaults to <code>(0, -9.81, 0)</code>, so the default is Y-up. For a Z-up scene, change it to:</p>

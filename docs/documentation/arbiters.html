@@ -140,6 +140,7 @@ body.EndCollide += (Arbiter arb) =&gt;
 };
 </code></pre>
 <p>Since arbiters are per shape pair, a body with multiple shapes may trigger <code>BeginCollide</code> multiple times for the same opposing body—once for each shape pair.</p>
+<p>The order of the events within a step is not defined. With <code>SolveMode.Deterministic</code> they are raised in the order of the arbiter keys, which is the same on every run.</p>
 <h2 id="custom-arbiters">Custom arbiters</h2>
 <p>Arbiters are not limited to the engine's built-in collision detection.
 Custom arbiters can be created and managed using <code>world.GetOrCreateArbiter</code> and <code>world.RegisterContact</code>.</p>

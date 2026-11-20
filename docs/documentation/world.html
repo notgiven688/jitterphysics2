@@ -144,14 +144,17 @@ world.Stabilize(dt, iterations, multiThread: false);
 </code></pre>
 <p>Multithreaded calls to <code>Step</code> and <code>Stabilize</code> share one worker pool. If different worlds make these calls at the same time, one runs while the others wait.</p>
 <p>Any callbacks shared by worlds running concurrently must be thread-safe. This includes logging, collision filters, and event handlers. The same applies if your application draws debug geometry from multiple threads.</p>
-<h2 id="solver-mode">Solver Mode</h2>
-<p>Jitter2 offers two solver strategies through <a class="xref" href="../../api/Jitter2.SolveMode.html">SolveMode</a>:</p>
-<pre><code class="lang-cs">world.SolveMode = SolveMode.Regular;       // default
-world.SolveMode = SolveMode.Deterministic; // reproducible, slower
+<h2 id="solver">Solver</h2>
+<p>Jitter2 has a single solver. It groups contacts and constraints so that no two of a group share a dynamic body, and solves each group without locks; contacts are solved several at once with SIMD. It supports both single-threaded and multithreaded stepping, and for given groups the result does not depend on the number of threads or on their timing.</p>
+<p><code>World.SolveMode</code> selects how the contacts get their groups:</p>
+<pre><code class="lang-cs">world.SolveMode = SolveMode.Deterministic;
 </code></pre>
-<p><code>SolveMode.Regular</code> favors speed. With multithreading, the order in which contacts and constraints are solved can vary between runs.</p>
-<p><code>SolveMode.Deterministic</code> favors repeatable results and can be significantly slower. It supports both single-threaded and multithreaded stepping.</p>
-<p>Use deterministic mode for tests, replays, or applications that need the same inputs to produce the same result. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See <a href="general.html#deterministic-simulation">Deterministic Simulation</a> for the full requirements and test coverage.</p>
+<ul>
+<li><a class="xref" href="../../api/Jitter2.SolveMode.html#Jitter2_SolveMode_Regular">Regular</a> is the default and the fastest mode. A contact keeps its group for as long as it exists, so a step only has to group the contacts that are new. The groups, and with them the result, depend on which contacts existed earlier and, with several threads, on the order in which the threads found them.</li>
+<li><a class="xref" href="../../api/Jitter2.SolveMode.html#Jitter2_SolveMode_Deterministic">Deterministic</a> groups all contacts anew in every step, in an order that depends only on which contacts exist. The same world state then gives the same result on every run, for any number of threads and after restoring an earlier state. The regrouping costs time in every step.</li>
+</ul>
+<p>Both modes produce equally valid results, and the mode can be changed between steps.</p>
+<p>Use <code>SolveMode.Deterministic</code> for rollback, replays that start from a saved state, or tests that compare against stored results. The engine version, precision, time steps, inputs, and creation order of interacting bodies must match. See <a href="general.html#deterministic-simulation">Deterministic Simulation</a> for the full requirements and test coverage.</p>
 <h2 id="solver-iterations">Solver Iterations</h2>
 <p>Jitter2 solves contacts and constraints through repeated adjustments to body velocities. More iterations generally make contacts and joints more accurate, at a higher cost:</p>
 <pre><code class="lang-cs">world.SolverIterations = (solver: 6, relaxation: 4);

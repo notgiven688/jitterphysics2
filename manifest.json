@@ -2577,7 +2577,7 @@
       "Uid": null,
       "IsMRef": true,
       "Title": "Jitter2.SolveMode",
-      "Summary": "<p sourcefile=\"api/Jitter2.SolveMode.yml\" sourcestartlinenumber=\"1\">Controls which solver strategy is used during <xref href=\"Jitter2.World.Step(System.Single%2cSystem.Boolean)\" data-throw-if-not-resolved=\"false\"></xref>.</p>\n"
+      "Summary": "<p sourcefile=\"api/Jitter2.SolveMode.yml\" sourcestartlinenumber=\"1\">Selects how the solver groups the contacts that it solves at the same time. Both modes use the\nsame solver and produce equally valid results.</p>\n"
     },
     {
       "type": "ManagedReference",
@@ -2863,11 +2863,11 @@
       "type": "Toc",
       "source_relative_path": "api/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "api/toc.json"
-        },
         ".html": {
           "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
         }
       },
       "version": ""
@@ -2986,11 +2986,11 @@
       "type": "Toc",
       "source_relative_path": "docs/articles/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "docs/articles/toc.json"
-        },
         ".html": {
           "relative_path": "docs/articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/articles/toc.json"
         }
       },
       "version": ""
@@ -3129,11 +3129,11 @@
       "type": "Toc",
       "source_relative_path": "docs/toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "docs/toc.json"
-        },
         ".html": {
           "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
         }
       },
       "version": ""
@@ -3362,11 +3362,11 @@
       "type": "Toc",
       "source_relative_path": "toc.yml",
       "output": {
-        ".json": {
-          "relative_path": "toc.json"
-        },
         ".html": {
           "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
         }
       },
       "version": ""

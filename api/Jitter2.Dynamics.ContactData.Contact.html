@@ -89,7 +89,7 @@
 
 
   <h1 id="Jitter2_Dynamics_ContactData_Contact" data-uid="Jitter2.Dynamics.ContactData.Contact" class="text-break">
-Struct ContactData.Contact  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L568"><i class="bi bi-code-slash"></i></a>
+Struct ContactData.Contact  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L603"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -155,7 +155,7 @@ Do not cache or store references to this structure across simulation steps.
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_Bias" data-uid="Jitter2.Dynamics.ContactData.Contact.Bias">
   Bias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L587"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L619"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Velocity bias for restitution or predicted separation.</p>
@@ -184,9 +184,41 @@ Do not cache or store references to this structure across simulation steps.
 
 
 
+  <h3 id="Jitter2_Dynamics_ContactData_Contact_Depth" data-uid="Jitter2.Dynamics.ContactData.Contact.Depth">
+  Depth
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L628"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Separation of the two anchor points along the manifold normal when the offsets were
+fixed; positive when the bodies overlap. The offset from the second body is derived from it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Depth</code></pre>
+  </div>
+
+
+
+
+  <h4 class="section">Field Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
   <h3 id="Jitter2_Dynamics_ContactData_Contact_Flag" data-uid="Jitter2.Dynamics.ContactData.Contact.Flag">
   Flag
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L584"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L652"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Current contact state flags.</p>
@@ -217,7 +249,7 @@ Do not cache or store references to this structure across simulation steps.
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_PenaltyBias" data-uid="Jitter2.Dynamics.ContactData.Contact.PenaltyBias">
   PenaltyBias
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L590"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L622"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Position-correction bias computed from penetration depth.</p>
@@ -248,7 +280,7 @@ Do not cache or store references to this structure across simulation steps.
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_RelativePosition1" data-uid="Jitter2.Dynamics.ContactData.Contact.RelativePosition1">
   RelativePosition1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L617"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L649"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>World-space contact offset from the first body's center of mass used to apply impulses.
@@ -278,39 +310,6 @@ public JVector RelativePosition1</code></pre>
 
 
 
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_RelativePosition2" data-uid="Jitter2.Dynamics.ContactData.Contact.RelativePosition2">
-  RelativePosition2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L624"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>World-space contact offset from the second body's center of mass used to apply impulses.
-Held fixed during the substeps of a full simulation step.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
-public JVector RelativePosition2</code></pre>
-  </div>
-
-
-
-
-  <h4 class="section">Field Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -319,7 +318,7 @@ public JVector RelativePosition2</code></pre>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_Impulse" data-uid="Jitter2.Dynamics.ContactData.Contact.Impulse">
   Impulse
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L653"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L692"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated normal solver impulse from the last solved substep.</p>
@@ -347,113 +346,11 @@ public JVector RelativePosition2</code></pre>
 
 
 
-  <a id="Jitter2_Dynamics_ContactData_Contact_Normal_" data-uid="Jitter2.Dynamics.ContactData.Contact.Normal*"></a>
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_Normal" data-uid="Jitter2.Dynamics.ContactData.Contact.Normal">
-  Normal
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L630"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Unit contact normal pointing from <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Body1">Body1</a> toward <a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_Body2">Body2</a>.
-The solver pushes the bodies apart along it. Updated when collision detection refreshes the contact.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
-public readonly JVector Normal { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Jitter2_Dynamics_ContactData_Contact_Tangent1_" data-uid="Jitter2.Dynamics.ContactData.Contact.Tangent1*"></a>
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_Tangent1" data-uid="Jitter2.Dynamics.ContactData.Contact.Tangent1">
-  Tangent1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L639"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>Tangent (normalized) to the contact <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Normal">Normal</a>. At creation it follows tangential
-relative velocity when nonzero; otherwise it is an arbitrary tangent. Cached contacts adjust
-their tangent directions when the normal changes.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
-public readonly JVector Tangent1 { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-  <a id="Jitter2_Dynamics_ContactData_Contact_Tangent2_" data-uid="Jitter2.Dynamics.ContactData.Contact.Tangent2*"></a>
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_Tangent2" data-uid="Jitter2.Dynamics.ContactData.Contact.Tangent2">
-  Tangent2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L646"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"><p>A second tangent forming an orthonormal basis with <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Normal">Normal</a> and <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Tangent1">Tangent1</a>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[ReferenceFrame(ReferenceFrame.World)]
-public readonly JVector Tangent2 { get; }</code></pre>
-  </div>
-
-
-
-
-
-  <h4 class="section">Property Value</h4>
-  <dl class="parameters">
-    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
   <a id="Jitter2_Dynamics_ContactData_Contact_TangentImpulse1_" data-uid="Jitter2.Dynamics.ContactData.Contact.TangentImpulse1*"></a>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_TangentImpulse1" data-uid="Jitter2.Dynamics.ContactData.Contact.TangentImpulse1">
   TangentImpulse1
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L658"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L697"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated solver impulse in the first tangent direction from the last solved substep.</p>
@@ -485,7 +382,7 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_TangentImpulse2" data-uid="Jitter2.Dynamics.ContactData.Contact.TangentImpulse2">
   TangentImpulse2
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L663"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L702"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Gets the accumulated solver impulse in the second tangent direction from the last solved substep.</p>
@@ -517,11 +414,52 @@ public readonly JVector Tangent2 { get; }</code></pre>
 </h2>
 
 
+  <a id="Jitter2_Dynamics_ContactData_Contact_GetRelativePosition2_" data-uid="Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2*"></a>
+
+  <h3 id="Jitter2_Dynamics_ContactData_Contact_GetRelativePosition2_Jitter2_Dynamics_ContactData__" data-uid="Jitter2.Dynamics.ContactData.Contact.GetRelativePosition2(Jitter2.Dynamics.ContactData@)">
+  GetRelativePosition2(in ContactData)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L668"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>World-space contact offset from the second body's center of mass used to apply impulses.
+It is derived from <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_RelativePosition1">RelativePosition1</a>, the manifold's
+<a class="xref" href="Jitter2.Dynamics.ContactData.html#Jitter2_Dynamics_ContactData_CenterDelta">CenterDelta</a> and <a class="xref" href="Jitter2.Dynamics.ContactData.Contact.html#Jitter2_Dynamics_ContactData_Contact_Depth">Depth</a> along the manifold normal,
+and held fixed during the substeps of a full simulation step.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public readonly JVector GetRelativePosition2(in ContactData manifold)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>manifold</code> <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a></dt>
+    <dd><p>The manifold this point belongs to.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="Jitter2.LinearMath.JVector.html">JVector</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
   <a id="Jitter2_Dynamics_ContactData_Contact_Initialize_" data-uid="Jitter2.Dynamics.ContactData.Contact.Initialize*"></a>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_Initialize_Jitter2_Dynamics_ContactData__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__System_Boolean_" data-uid="Jitter2.Dynamics.ContactData.Contact.Initialize(Jitter2.Dynamics.ContactData*,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@,System.Boolean)">
   Initialize(ContactData*, in JVector, in JVector, in JVector, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L665"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L704"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -560,7 +498,7 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_Iterate_Jitter2_Dynamics_ContactData__System_Boolean_" data-uid="Jitter2.Dynamics.ContactData.Contact.Iterate(Jitter2.Dynamics.ContactData*,System.Boolean)">
   Iterate(ContactData*, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L921"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L929"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -589,44 +527,11 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
 
 
-  <a id="Jitter2_Dynamics_ContactData_Contact_IterateAccelerated_" data-uid="Jitter2.Dynamics.ContactData.Contact.IterateAccelerated*"></a>
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_IterateAccelerated_Jitter2_Dynamics_ContactData__System_Boolean_" data-uid="Jitter2.Dynamics.ContactData.Contact.IterateAccelerated(Jitter2.Dynamics.ContactData*,System.Boolean)">
-  IterateAccelerated(ContactData*, bool)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L1173"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void IterateAccelerated(ContactData* cd, bool applyBias)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>cd</code> <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>*</dt>
-    <dd></dd>
-    <dt><code>applyBias</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <a id="Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIteration*"></a>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIteration_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIteration(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)">
   PrepareForIteration(ContactData*, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L791"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L803"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -655,44 +560,11 @@ public readonly JVector Tangent2 { get; }</code></pre>
 
 
 
-  <a id="Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated*"></a>
-
-  <h3 id="Jitter2_Dynamics_ContactData_Contact_PrepareForIterationAccelerated_Jitter2_Dynamics_ContactData__Jitter2_TimeStep__" data-uid="Jitter2.Dynamics.ContactData.Contact.PrepareForIterationAccelerated(Jitter2.Dynamics.ContactData*,Jitter2.TimeStep@)">
-  PrepareForIterationAccelerated(ContactData*, in TimeStep)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L1028"><i class="bi bi-code-slash"></i></a>
-  </h3>
-
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void PrepareForIterationAccelerated(ContactData* cd, in TimeStep timeStep)</code></pre>
-  </div>
-
-  <h4 class="section">Parameters</h4>
-  <dl class="parameters">
-    <dt><code>cd</code> <a class="xref" href="Jitter2.Dynamics.ContactData.html">ContactData</a>*</dt>
-    <dd></dd>
-    <dt><code>timeStep</code> <a class="xref" href="Jitter2.TimeStep.html">TimeStep</a></dt>
-    <dd></dd>
-  </dl>
-
-
-
-
-
-
-
-
-
-
-
-
   <a id="Jitter2_Dynamics_ContactData_Contact_UpdatePosition_" data-uid="Jitter2.Dynamics.ContactData.Contact.UpdatePosition*"></a>
 
   <h3 id="Jitter2_Dynamics_ContactData_Contact_UpdatePosition_Jitter2_Dynamics_ContactData__" data-uid="Jitter2.Dynamics.ContactData.Contact.UpdatePosition(Jitter2.Dynamics.ContactData*)">
   UpdatePosition(ContactData*)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L748"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L762"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"></div>
@@ -728,7 +600,7 @@ public readonly JVector Tangent2 { get; }</code></pre>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L568" class="edit-link">Edit this page</a>
+          <a href="https://github.com/notgiven688/jitterphysics2/blob/main/src/Jitter2/Dynamics/Contact.cs/#L603" class="edit-link">Edit this page</a>
         </div>
 
 
