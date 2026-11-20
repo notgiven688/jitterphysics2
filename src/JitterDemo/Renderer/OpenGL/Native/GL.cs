@@ -252,6 +252,10 @@ public static class GL
 
     private static glViewportDelegate glViewport;
 
+    private delegate void glFlushDelegate();
+
+    private static glFlushDelegate glFlush;
+
     private delegate void glTexImage2DDelegate(uint target, int level, int internalformat, int width, int height,
         int border, uint format, uint type, IntPtr data);
 
@@ -362,6 +366,7 @@ public static class GL
         glCullFace = GetDelegate<glCullFaceDelegate>();
         glClear = GetDelegate<glClearDelegate>();
         glViewport = GetDelegate<glViewportDelegate>();
+        glFlush = GetDelegate<glFlushDelegate>();
         glTexImage2D = GetDelegate<glTexImage2DDelegate>();
         glBindTexture = GetDelegate<glBindTextureDelegate>();
         glDeleteProgram = GetDelegate<glDeleteProgramDelegate>();
@@ -442,6 +447,11 @@ public static class GL
     public static void Viewport(int x, int y, int width, int height)
     {
         glViewport(x, y, width, height);
+    }
+
+    public static void Flush()
+    {
+        glFlush();
     }
 
     public static void TexImage2D(uint target, int level, int internalformat, int width, int height, int border,

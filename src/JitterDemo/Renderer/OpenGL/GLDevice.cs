@@ -59,6 +59,9 @@ public static class GLDevice
 
     public static void CullFace(CullMode mode) => GL.CullFace((uint)mode);
     public static void Viewport(int x, int y, int w, int h) => GL.Viewport(x, y, w, h);
+
+    /// Sends all queued commands to the GPU without waiting for them.
+    public static void Flush() => GL.Flush();
     public static void Blend(BlendFunc src, BlendFunc dst) => GL.BlendFunc((uint)src, (uint)dst);
 
     public static void DepthMask(bool write) => GL.DepthMask(write);

@@ -195,32 +195,25 @@ public partial class Playground : RenderWindow
 
     private void DrawShape(Shape shape, in Matrix4 mat, in Vector3 color)
     {
-        Matrix4 ms;
-
         switch (shape)
         {
             case BoxShape s:
-                ms = MatrixHelper.CreateScale(s.Size.X, s.Size.Y, s.Size.Z);
-                cubes.Push(mat * ms, color);
+                cubes.Push(mat.Scale(s.Size.X, s.Size.Y, s.Size.Z), color);
                 break;
             case SphereShape s:
-                ms = MatrixHelper.CreateScale(s.Radius * 2);
-                spheres.Push(mat * ms, color);
+                spheres.Push(mat.Scale(s.Radius * 2, s.Radius * 2, s.Radius * 2), color);
                 break;
             case CylinderShape s:
-                ms = MatrixHelper.CreateScale(s.Radius, s.Height, s.Radius);
-                cylinders.Push(mat * ms, color);
+                cylinders.Push(mat.Scale(s.Radius, s.Height, s.Radius), color);
                 break;
             case CapsuleShape s:
-                ms = MatrixHelper.CreateScale(s.Radius, s.Length, s.Radius);
-                cylinders.Push(mat * ms, color);
-                ms = MatrixHelper.CreateTranslation(0, 0.5f * s.Length, 0) * MatrixHelper.CreateScale(s.Radius * 2);
+                cylinders.Push(mat.Scale(s.Radius, s.Length, s.Radius), color);
+                Matrix4 ms = MatrixHelper.CreateTranslation(0, 0.5f * s.Length, 0) * MatrixHelper.CreateScale(s.Radius * 2);
                 halfSpheres.Push(mat * ms, color);
                 halfSpheres.Push(mat * MatrixHelper.CreateRotationX(MathF.PI) * ms, color);
                 break;
             case ConeShape s:
-                ms = MatrixHelper.CreateScale(s.Radius * 2, s.Height, s.Radius * 2);
-                cones.Push(mat * ms, color);
+                cones.Push(mat.Scale(s.Radius * 2, s.Height, s.Radius * 2), color);
                 break;
         }
     }
@@ -240,8 +233,6 @@ public partial class Playground : RenderWindow
 
     public override void Draw()
     {
-        world.Step(PhysicsTimestep, multiThread);
-
         UpdateDisplayText();
         (int framebufferWidth, int framebufferHeight) = FramebufferSize;
         PrepareCustomOverlayFrame(Width, Math.Max(1, Height), framebufferWidth, framebufferHeight);
@@ -302,5 +293,9 @@ public partial class Playground : RenderWindow
         }
 
         base.Draw();
+
+        // The step runs after the draw calls are sent, so the GPU renders the frame meanwhile.
+        GLDevice.Flush();
+        world.Step(PhysicsTimestep, multiThread);
     }
 }
