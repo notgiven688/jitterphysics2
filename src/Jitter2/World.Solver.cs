@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -316,9 +317,40 @@ public sealed partial class World
             if (pass.Serial) end = worker == 0 ? end : 0;
             else Parallel.GetBounds(pass.Total, solverWorkerCount, worker, out start, out end);
 
-            if (start < end) RunPass(in pass, start, end);
-            if (!SolverBarrier()) return;
+            TraceBegin(passes, k);
+            if (start < end)
+            {
+                Tracer.ProfileBegin(TraceName.Pass);
+                RunPass(in pass, start, end);
+                Tracer.ProfileEnd(TraceName.Pass);
+            }
+
+            bool proceed = SolverBarrier();
+            TraceEnd(passes, k, !proceed);
+            if (!proceed) return;
         }
+    }
+
+    // The trace shows one slice for the consecutive passes of a name, with their barriers, and
+    // inside it one slice for each pass the worker has a share of.
+    private static TraceName TraceNameOf(in SolverPass pass)
+    {
+        if (pass.Kind != SolverPassKind.IterateContacts || pass.ApplyBias) return TraceName.IntegrateForces + (int)pass.Kind;
+        return pass.WriteBack ? TraceName.RelaxAndWriteBack : TraceName.RelaxContacts;
+    }
+
+    [Conditional("PROFILE")]
+    private static void TraceBegin(ReadOnlySpan<SolverPass> passes, int k)
+    {
+        TraceName name = TraceNameOf(passes[k]);
+        if (k == 0 || TraceNameOf(passes[k - 1]) != name) Tracer.ProfileBegin(name);
+    }
+
+    [Conditional("PROFILE")]
+    private static void TraceEnd(ReadOnlySpan<SolverPass> passes, int k, bool stopped)
+    {
+        TraceName name = TraceNameOf(passes[k]);
+        if (stopped || k == passes.Length - 1 || TraceNameOf(passes[k + 1]) != name) Tracer.ProfileEnd(name);
     }
 
     private bool SolverBarrier()

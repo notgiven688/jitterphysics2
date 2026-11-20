@@ -58,6 +58,24 @@ internal enum TraceName : long
     PreStep,
     PostStep,
     OptimizeBroadPhase,
+
+    // The solver passes, in the order of World.SolverPassKind.
+    IntegrateForces,
+    PrepareContacts,
+    IterateContacts,
+    WriteBackContacts,
+    PrepareConstraints,
+    IterateConstraints,
+    IntegrateVelocities,
+    UpdateRemainingContacts,
+
+    // The relaxation sweeps over the contacts, and the last of them, which also writes the
+    // impulses back and updates the contacts.
+    RelaxContacts,
+    RelaxAndWriteBack,
+
+    // The work of one worker in one pass, without the wait at the barrier.
+    Pass,
 }
 
 internal enum TracePhase : byte
