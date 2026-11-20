@@ -343,13 +343,54 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
     /// <returns><c>true</c> if a pair was removed; <c>false</c> if the slot was empty.</returns>
     public bool Remove(int slot)
     {
+        if (Slots[slot].ID == 0) return false;
+
+        RemoveSlot(slot);
+        Trim();
+        return true;
+    }
+
+    /// <summary>
+    /// Removes the pair at the specified slot index if the removal stays within the next
+    /// <paramref name="limit"/> slots, and never resizes the hash set.
+    /// </summary>
+    /// <remarks>
+    /// A removal reads and writes the slots from the removed one up to the next empty one. Threads
+    /// which each own a block of slots may therefore call this concurrently, with
+    /// <paramref name="limit"/> being the number of slots from <paramref name="slot"/> to the end of
+    /// the caller's block. No other method may run at the same time. Call <see cref="Trim"/> afterwards.
+    /// </remarks>
+    /// <param name="slot">The index of an occupied slot.</param>
+    /// <param name="limit">The number of slots, starting at <paramref name="slot"/>, the removal may touch.</param>
+    /// <returns><c>true</c> if the pair was removed; <c>false</c> if the next empty slot is out of reach.</returns>
+    public bool RemoveWithin(int slot, int limit)
+    {
         int modder = Slots.Length - 1;
 
-        if (Slots[slot].ID == 0)
+        for (int i = 1; ; i++)
         {
-            return false;
+            if (i >= limit) return false;
+            if (Slots[(slot + i) & modder].ID == 0) break;
         }
 
+        RemoveSlot(slot);
+        return true;
+    }
+
+    /// <summary>
+    /// Shrinks the hash set if it holds only few pairs for its size.
+    /// </summary>
+    public void Trim()
+    {
+        if (Slots.Length > MinimumSize && count * TrimFactor < Slots.Length)
+        {
+            Resize(PickSize(count * TrimTargetFactor));
+        }
+    }
+
+    private void RemoveSlot(int slot)
+    {
+        int modder = Slots.Length - 1;
         int hashJ = slot;
 
         while (true)
@@ -374,13 +415,6 @@ internal unsafe class PairHashSet : IEnumerable<PairHashSet.Pair>
 
         Slots[slot] = Pair.Zero;
         Interlocked.Decrement(ref count);
-
-        if (Slots.Length > MinimumSize && count * TrimFactor < Slots.Length)
-        {
-            Resize(PickSize(count * TrimTargetFactor));
-        }
-
-        return true;
     }
 
     /// <summary>

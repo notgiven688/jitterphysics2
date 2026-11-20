@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Jitter2.Collision;
 
@@ -176,5 +177,85 @@ public class PairHashSetTests
         }
 
         return result;
+    }
+
+    [Test]
+    public void RemoveWithin_LeavesThePairWhenTheRunLeavesTheBlock()
+    {
+        PairHashSet hashSet = new();
+        for (int i = 0; i < 64; i++) hashSet.Add(new PairHashSet.Pair(i + 1, i + 1000));
+
+        int slot = Array.FindIndex(hashSet.Slots, pair => pair.ID != 0);
+        int mask = hashSet.Slots.Length - 1;
+        int run = 1;
+        while (hashSet.Slots[(slot + run) & mask].ID != 0) run++;
+        PairHashSet.Pair pair = hashSet.Slots[slot];
+
+        Assert.Multiple(() =>
+        {
+            // The empty slot behind the run is 'run' slots away and has to be within reach as well.
+            Assert.That(hashSet.RemoveWithin(slot, run), Is.False);
+            Assert.That(hashSet.Contains(pair), Is.True);
+            Assert.That(hashSet.Count, Is.EqualTo(64));
+            Assert.That(hashSet.RemoveWithin(slot, run + 1), Is.True);
+            Assert.That(hashSet.Contains(pair), Is.False);
+            Assert.That(hashSet.Count, Is.EqualTo(63));
+        });
+    }
+
+    [Test]
+    public void RemoveWithin_FromBlocksOnSeveralThreads_RemovesExactlyTheChosenPairs()
+    {
+        const int pairCount = 200_000;
+        const int blocks = 16;
+
+        PairHashSet hashSet = new();
+        PairHashSet.Pair[] pairs = new PairHashSet.Pair[pairCount];
+        for (int i = 0; i < pairCount; i++)
+        {
+            // Every third pair is to be removed; the second ID marks it.
+            pairs[i] = new PairHashSet.Pair(i + 1, pairCount + 1 + i * 3 + (i % 3 == 0 ? 1 : 0));
+            hashSet.Add(pairs[i]);
+        }
+
+        static bool Chosen(PairHashSet.Pair pair) => pair.ID2 % 3 == 2;
+
+        int length = hashSet.Slots.Length;
+        int mask = length - 1;
+
+        // The block boundaries move with every pass, as in the tree's pruning.
+        for (int pass = 0; pass < 8; pass++)
+        {
+            int offset = pass * 37;
+            System.Threading.Tasks.Parallel.For(0, blocks, block =>
+            {
+                int start = offset + block * (length / blocks);
+                int end = start + length / blocks;
+
+                for (int i = start; i < end; i++)
+                {
+                    int slot = i & mask;
+                    while (hashSet.Slots[slot].ID != 0 && Chosen(hashSet.Slots[slot]))
+                    {
+                        if (!hashSet.RemoveWithin(slot, end - i)) break;
+                    }
+                }
+            });
+        }
+
+        int wrong = 0, kept = 0;
+        foreach (PairHashSet.Pair pair in pairs)
+        {
+            bool chosen = Chosen(pair);
+            if (hashSet.Contains(pair) == chosen) wrong++;
+            if (!chosen) kept++;
+        }
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(wrong, Is.Zero);
+            Assert.That(hashSet.Count, Is.EqualTo(kept));
+            Assert.That(hashSet.Slots, Has.Length.EqualTo(length));
+        });
     }
 }
