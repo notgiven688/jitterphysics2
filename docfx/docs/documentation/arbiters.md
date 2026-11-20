@@ -74,6 +74,8 @@ body.BeginCollide += (Arbiter arb) =>
 
 Since arbiters are per shape pair, a body with multiple shapes may trigger `BeginCollide` multiple times for the same opposing body—once for each shape pair.
 
+The order of the events within a step is not defined. With `SolveMode.Deterministic` they are raised in the order of the arbiter keys, which is the same on every run.
+
 ## Custom arbiters
 
 Arbiters are not limited to the engine's built-in collision detection.

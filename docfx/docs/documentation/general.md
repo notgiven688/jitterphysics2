@@ -30,13 +30,15 @@ NuGet packages use Release builds. To get the extra Debug checks, build Jitter2 
 
 ## Deterministic Simulation
 
-With `world.SolveMode = SolveMode.Deterministic`, Jitter2 produces repeatable results across platforms and thread counts when you use the same Jitter2 version, precision, time steps, and inputs. This is useful for tests, replays, rollback, and debugging. The result of a step then depends only on the state of the world, not on how it got there.
+With `world.SolveMode = SolveMode.Deterministic`, Jitter2 produces repeatable results across platforms and thread counts when you use the same Jitter2 version, precision, time steps, and inputs. This is useful for tests, replays, rollback, and debugging. The result of a step then depends only on the state of the world, not on how it got there. `BeginCollide` and `EndCollide` are raised in a fixed order, so code that reacts to them, for example by creating bodies, is repeatable as well.
 
 The default, `SolveMode.Regular`, is faster because it reuses solver bookkeeping from the previous step. Its result depends on the history of the world, and with several threads on the order in which the threads find new contacts. Two runs from the same start can therefore differ. See [the solver](world.md#solver) for how the two modes work.
 
 The creation order matters within each **island**, a group of bodies connected through contacts or constraints. Add the participating bodies, shapes, and constraints in the same order on every run. Unrelated parts of the world can be created in a different order.
 
 Float and double builds do not produce identical results, and results may change between Jitter2 versions.
+
+Soft bodies are not deterministic. Several of their shapes add contacts to the same arbiter, in an order that differs from run to run.
 
 > [!NOTE]
 > Cross-platform determinism is tested in CI on Linux x64, Windows x64, and macOS arm64. These tests support the claim for the configurations they cover; they cannot establish it for every possible scene or platform.

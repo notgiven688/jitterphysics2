@@ -345,6 +345,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// </summary>
     /// <remarks>
     /// The <see cref="Arbiter"/> contains the bodies and their contact points.
+    /// With <see cref="SolveMode.Deterministic"/> the events of a step are raised in the order of the
+    /// arbiter keys. Otherwise their order is not defined.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? BeginCollide;
@@ -355,6 +357,8 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
     /// </summary>
     /// <remarks>
     /// Explicit arbiter, body, or shape removal does not raise this event.
+    /// With <see cref="SolveMode.Deterministic"/> the events of a step are raised in the order of the
+    /// arbiter keys. Otherwise their order is not defined.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event Action<Arbiter>? EndCollide;

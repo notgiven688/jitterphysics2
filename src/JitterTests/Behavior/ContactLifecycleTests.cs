@@ -366,6 +366,41 @@ public class ContactLifecycleTests
 
     [TestCase(false)]
     [TestCase(true)]
+    public void CollideEvents_InDeterministicMode_FollowTheOrderOfTheArbiterKeys(bool multiThread)
+    {
+        var (world, floor) = CreateFloorWorld();
+        using (world)
+        {
+            world.SolveMode = SolveMode.Deterministic;
+
+            List<RigidBody> spheres = [];
+            for (int i = 0; i < 48; i++)
+            {
+                var sphere = world.CreateRigidBody();
+                sphere.AddShape(new SphereShape(0.5f));
+                sphere.Position = new JVector(i % 12 * 1.5f - 8, 0.45f, i / 12 * 1.5f - 2);
+                spheres.Add(sphere);
+            }
+
+            List<(ulong, ulong)> begun = [], ended = [];
+            floor.BeginCollide += arbiter => begun.Add((arbiter.Handle.Data.Key.Key1, arbiter.Handle.Data.Key.Key2));
+            floor.EndCollide += arbiter => ended.Add((arbiter.Handle.Data.Key.Key1, arbiter.Handle.Data.Key.Key2));
+
+            world.Step(1f / 60f, multiThread);
+
+            // All contacts end in the same step.
+            foreach (var sphere in spheres) sphere.Position += new JVector(0, 5, 0);
+            for (int i = 0; i < 3; i++) world.Step(1f / 60f, multiThread);
+
+            Assert.That(begun, Has.Count.EqualTo(spheres.Count));
+            Assert.That(ended, Has.Count.EqualTo(spheres.Count));
+            Assert.That(begun, Is.Ordered);
+            Assert.That(ended, Is.Ordered);
+        }
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
     public void BeginCollide_RemovingTheBodyInTheHandler_LeavesTheWorldConsistent(bool multiThread)
     {
         var (world, floor) = CreateFloorWorld();

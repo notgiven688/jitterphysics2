@@ -362,9 +362,26 @@ public sealed partial class World
         }
     }
 
+    // The threads find new and broken contacts in no fixed order. In deterministic mode both are
+    // put in the order of their keys, so that the events and the lists of the bodies and islands,
+    // which follow that order, are the same in every run.
+    private static readonly Comparison<Arbiter> compareArbiters =
+        static (a, b) => CompareKeys(a.Handle.Data.Key, b.Handle.Data.Key);
+
+    private static readonly Comparison<JHandle<ContactData>> compareContacts =
+        static (a, b) => CompareKeys(a.Data.Key, b.Data.Key);
+
+    private static int CompareKeys(in ArbiterKey a, in ArbiterKey b)
+    {
+        int result = a.Key1.CompareTo(b.Key1);
+        return result != 0 ? result : a.Key2.CompareTo(b.Key2);
+    }
+
     // Removes the arbiters whose manifold emptied in the previous step and was not refilled in this one.
     private void RemoveBrokenArbiters()
     {
+        if (solveMode == SolveMode.Deterministic) brokenArbiters.AsSpan().Sort(compareContacts);
+
         foreach (var handle in brokenArbiters)
         {
             if ((handle.Data.UsageMask & ContactData.MaskContactAll) != 0) continue;
@@ -393,6 +410,8 @@ public sealed partial class World
         {
             try
             {
+                if (solveMode == SolveMode.Deterministic) deferredArbiters.AsSpan().Sort(compareArbiters);
+
                 foreach (var arb in deferredArbiters)
                 {
                     IslandHelper.ArbiterCreated(islands, islandPool, arb);
