@@ -3,11 +3,9 @@ namespace JitterTests.Constraints;
 public class MotorTimeStepTests
 {
     // Keep the target unreachable so acceleration is determined by the force/torque cap.
-    [TestCase(SolveMode.Regular, false)]
-    [TestCase(SolveMode.Regular, true)]
-    [TestCase(SolveMode.Deterministic, false)]
-    [TestCase(SolveMode.Deterministic, true)]
-    public void MotorAcceleration_UsesElapsedTimeRegardlessOfSubsteps(SolveMode solveMode, bool multiThread)
+    [TestCase(false)]
+    [TestCase(true)]
+    public void MotorAcceleration_UsesElapsedTimeRegardlessOfSubsteps(bool multiThread)
     {
         foreach (bool angular in new[] { false, true })
         foreach (int steps in new[] { 30, 60, 120 })
@@ -17,7 +15,6 @@ public class MotorTimeStepTests
             {
                 Gravity = JVector.Zero,
                 AllowDeactivation = false,
-                SolveMode = solveMode,
                 SubstepCount = substeps
             };
             var body = world.CreateRigidBody();
@@ -47,11 +44,10 @@ public class MotorTimeStepTests
         }
     }
 
-    [TestCase(SolveMode.Regular)]
-    [TestCase(SolveMode.Deterministic)]
-    public void Stabilize_UsesTheWorldSubstepCount(SolveMode solveMode)
+    [Test]
+    public void Stabilize_UsesTheWorldSubstepCount()
     {
-        using var world = new World { Gravity = JVector.Zero, SolveMode = solveMode, SubstepCount = 4 };
+        using var world = new World { Gravity = JVector.Zero, SubstepCount = 4 };
         var body = world.CreateRigidBody();
         body.SetMassInertia(JSymmetricMatrix.Identity, 1);
         var motor = world.CreateConstraint<AngularMotor>(world.NullBody, body);

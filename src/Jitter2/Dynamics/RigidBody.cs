@@ -110,10 +110,12 @@ public struct RigidBodyData
     public int _index;
 
     /// <summary>
-    /// Internal synchronization flag used by the engine. Do not modify.
+    /// Bitfield encoding motion type (bits 0–1), active state (bit 2), gyroscopic forces (bit 3),
+    /// and locked world-space degrees of freedom (bits 4–9).
+    /// Use the corresponding properties instead of manipulating this directly.
     /// </summary>
     [FieldOffset(4)]
-    public int _lockFlag;
+    public int Flags;
 
     /// <summary>
     /// World-space position of the rigid body (center of mass).
@@ -175,12 +177,16 @@ public struct RigidBodyData
     public JVector InverseMassVector;
 
     /// <summary>
-    /// Bitfield encoding motion type (bits 0–1), active state (bit 2), gyroscopic forces (bit 3),
-    /// and locked world-space degrees of freedom (bits 4–9).
-    /// Use the corresponding properties instead of manipulating this directly.
+    /// The solver colors in use by the contacts of this body, one bit for each color.
     /// </summary>
     [FieldOffset(8 + 28 * sizeof(Real))]
-    public int Flags;
+    internal uint ContactColor;
+
+    /// <summary>
+    /// The solver colors in use by the constraints of this body, one bit for each color.
+    /// </summary>
+    [FieldOffset(8 + 28 * sizeof(Real) + 4)]
+    internal uint ConstraintColor;
 
     /// <summary>Permitted world-space motion. Set through <see cref="RigidBody.AllowedMotion"/>.</summary>
     public MotionAxes AllowedMotion
@@ -469,8 +475,6 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
         SetDefaultMassInertia();
 
         RigidBodyId = World.RequestId();
-
-        Data._lockFlag = 0;
     }
 
     /// <summary>
@@ -985,6 +989,7 @@ public sealed class RigidBody : IPartitionedSetIndex, IDebugDrawable, IFormattab
             if (value == MotionType.Static) World.RemoveConnections(this);
 
             Data.MotionType = value;
+            World.InvalidateContactColoring();
 
             if (wasStatic) World.BuildConnectionsFromExistingContacts(this);
             if (value != MotionType.Dynamic) World.RemoveStaticStaticContacts(this);

@@ -17,6 +17,7 @@ global using Real = System.Double;
 global using MathR = System.Math;
 global using Vector = System.Runtime.Intrinsics.Vector256;
 global using VectorReal = System.Runtime.Intrinsics.Vector256<System.Double>;
+global using Wide = System.Numerics.Vector<System.Double>;
 
 #else
 
@@ -24,6 +25,7 @@ global using Real = System.Single;
 global using MathR = System.MathF;
 global using Vector = System.Runtime.Intrinsics.Vector128;
 global using VectorReal = System.Runtime.Intrinsics.Vector128<System.Single>;
+global using Wide = System.Numerics.Vector<System.Single>;
 
 #endif
 

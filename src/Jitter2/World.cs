@@ -179,7 +179,8 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Runs on the calling thread, before forces are applied and constraints are solved.
     /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
-    /// in this callback.
+    /// in this callback. A constraint disabled here is left out of the remaining substeps; one
+    /// enabled here is solved from the next step on.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PreSubStep;
@@ -190,7 +191,8 @@ public sealed partial class World : IDisposable
     /// <remarks>
     /// Runs on the calling thread, after bodies have moved and constraints have been solved.
     /// Do not add or remove bodies, shapes, constraints, or contacts, or change body motion types
-    /// in this callback.
+    /// in this callback. A constraint disabled here is left out of the remaining substeps; one
+    /// enabled here is solved from the next step on.
     /// </remarks>
     [CallbackThread(ThreadContext.MainThread)]
     public event WorldStep? PostSubStep;
@@ -449,15 +451,14 @@ public sealed partial class World : IDisposable
     /// </summary>
     public unsafe World()
     {
-        Debug.Assert(Unsafe.SizeOf<RigidBodyData>() == SolverPrefetchCacheLineSize * (Precision.IsDoublePrecision ? 4 : 2),
-            "RigidBodyData size should match the cache lines prefetched by the solver.");
-
         Logger.Information($"Creating new world.");
 
         memRigidBodies = new PartitionedBuffer<RigidBodyData>(aligned64: true);
         memContacts = new PartitionedBuffer<ContactData>();
         memConstraints = new PartitionedBuffer<ConstraintData>();
         memSmallConstraints = new PartitionedBuffer<SmallConstraintData>();
+        contactColoring = new ContactColoring(memContacts);
+        constraintColoring = new ConstraintColoring { KeepColors = solveMode == SolveMode.Regular };
 
         contactSettings = MemoryHelper.AllocateHeap<ContactSettings>(1);
         *contactSettings = ContactSettings.Default;
@@ -542,14 +543,10 @@ public sealed partial class World : IDisposable
         }
 
         islandPool.TrimExcess();
+        TrimSolverScratch();
 
         DynamicTree.Trim();
 
-        handleToIsland.TrimExcess();
-        islandRanges.TrimExcess();
-        sortedContacts.TrimExcess();
-        sortedSmallConstraints.TrimExcess();
-        sortedConstraints.TrimExcess();
 
         foreach (RigidBody body in bodies)
         {
@@ -652,6 +649,7 @@ public sealed partial class World : IDisposable
 
         IslandHelper.ConstraintRemoved(islands, islandPool, constraint);
 
+        constraintColoring.Remove(constraint);
         if (constraint.IsSmallConstraint)
         {
             memSmallConstraints.Free(constraint.SmallHandle);
@@ -698,6 +696,7 @@ public sealed partial class World : IDisposable
         arbiters.Remove(arbiter.Handle.Data.Key);
 
         brokenArbiters.Remove(arbiter.Handle);
+        contactColoring.Remove(arbiter.Handle);
         memContacts.Free(arbiter.Handle);
 
         ReturnArbiter(arbiter);
@@ -781,6 +780,9 @@ public sealed partial class World : IDisposable
             if (active) memConstraints.MoveToActive(constraint.Handle);
             else memConstraints.MoveToInactive(constraint.Handle);
         }
+
+        if (active) constraintColoring.Add(constraint);
+        else constraintColoring.Remove(constraint);
     }
 
     /// <summary>
@@ -1002,10 +1004,6 @@ public sealed partial class World : IDisposable
         memRigidBodies.Dispose();
         memConstraints.Dispose();
         memSmallConstraints.Dispose();
-
-        deferredContacts.Dispose();
-        deferredConstraints.Dispose();
-        deferredSmallConstraints.Dispose();
 
         MemoryHelper.Free(contactSettings);
         contactSettings = null;

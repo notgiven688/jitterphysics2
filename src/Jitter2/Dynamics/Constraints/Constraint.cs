@@ -246,6 +246,12 @@ public abstract class Constraint : IDebugDrawable
     /// </summary>
     public JHandle<ConstraintData> Handle { internal set; get; }
 
+    // The solver color of this constraint, and its position in the list of that color.
+    internal int Color = NotColored;
+    internal int ColorIndex;
+
+    internal const int NotColored = -1;
+
     /// <summary>
     /// Gets a value indicating whether the underlying constraint data is still valid.
     /// </summary>
