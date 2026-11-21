@@ -1,6 +1,6 @@
 # Changelog
 
-### Jitter 2.15.0 (unreleased)
+### Jitter 2.15.0 (2026-11-21)
 
 - New lock-free solver: contacts and constraints use graph coloring for solving, and contacts are solved with SIMD. Stepping is faster in contact-heavy scenes.
 - `SolveMode.Deterministic` uses the same solver and is several times faster.
