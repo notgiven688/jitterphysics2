@@ -5,6 +5,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TargetFramework>net10.0</TargetFramework>
+        <!-- Run on a newer .NET runtime if the targeted one is not installed. -->
+        <RollForward>Major</RollForward>
     </PropertyGroup>
 
     <ItemGroup>
